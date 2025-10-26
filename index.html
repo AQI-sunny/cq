@@ -1,0 +1,300 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AQI Game - 网页解谜与工具平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb, #90caf9, #64b5f6);
+            color: #1a237e;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            color: #0d47a1;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #1565c0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .nav-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .nav-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(13, 71, 161, 0.2);
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(13, 71, 161, 0.1);
+        }
+
+            .nav-card:hover {
+                transform: translateY(-10px);
+                background: rgba(255, 255, 255, 0.95);
+                box-shadow: 0 15px 30px rgba(13, 71, 161, 0.2);
+            }
+
+        .nav-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+            color: #1976d2;
+        }
+
+        .nav-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #0d47a1;
+        }
+
+        .nav-description {
+            font-size: 1rem;
+            color: #1565c0;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .nav-link {
+            display: inline-block;
+            background: #1976d2;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 1px solid #1565c0;
+        }
+
+            .nav-link:hover {
+                background: #0d47a1;
+                transform: scale(1.05);
+            }
+
+        .features {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+            border: 1px solid rgba(13, 71, 161, 0.2);
+            box-shadow: 0 4px 15px rgba(13, 71, 161, 0.1);
+        }
+
+            .features h2 {
+                text-align: center;
+                font-size: 2.2rem;
+                margin-bottom: 30px;
+                color: #0d47a1;
+            }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+            color: #1976d2;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #0d47a1;
+        }
+
+        .feature-desc {
+            font-size: 0.95rem;
+            color: #1565c0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 40px;
+            border-top: 1px solid rgba(13, 71, 161, 0.2);
+            color: #1565c0;
+        }
+
+        .welcome-section {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+            border: 1px solid rgba(13, 71, 161, 0.2);
+            box-shadow: 0 4px 15px rgba(13, 71, 161, 0.1);
+        }
+
+            .welcome-section h2 {
+                font-size: 2rem;
+                margin-bottom: 20px;
+                color: #0d47a1;
+            }
+
+            .welcome-section p {
+                font-size: 1.1rem;
+                line-height: 1.7;
+                max-width: 800px;
+                margin: 0 auto;
+                color: #1565c0;
+            }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .nav-card {
+                padding: 20px;
+            }
+
+            .nav-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎮 AQI Game</h1>
+            <p class="subtitle">网页游戏与实用工具平台 - 探索与创造的数字世界</p>
+        </header>
+
+        <div class="welcome-section">
+            <h2>欢迎来到AQI Game平台</h2>
+            <p>这里是一个集网页游戏与实用工具于一体的数字空间。无论你是喜欢挑战智力的网页解谜游戏，还是喜欢摸鱼事件放松的休闲小游戏，或是需要便捷的网页工具，这里都能满足你的需求。探索隐藏的秘密，享受解谜的乐趣，或使用作者精心设计的实用工具提升效率。</p>
+            <p>
+                作者个人介绍：
+            </p>
+            <p>
+                一个为了摸鱼什么事情都能做的出来的people！（除了高数）
+                <!--梦想是做一名牛掰的独立游戏制作银（参与牛掰游戏开发也行。。我不挑orz）敬请期待！（删去）-->
+                梦想是能做出一款火爆的游戏0v0！
+            </p>
+        </div>
+
+        <div class="nav-container">
+            <div class="nav-card">
+                <span class="nav-icon">🗝️</span>
+                <h3 class="nav-title">网页解谜游戏-神秘的失物招领事件！</h3>
+                <p class="nav-description">进入作者新创作的网页解谜游戏，挑战你的逻辑思维和观察力！</p>
+                <a href="#" class="nav-link">开始解谜</a>
+            </div>
+
+            <div class="nav-card">
+                <span class="nav-icon">📖</span>
+                <h3 class="nav-title">小说阅读器</h3>
+                <p class="nav-description">方便快捷隐蔽的txt小说阅读工具，支持上传背景、单行阅读、双击消失的个性化设置！</p>
+                <a href="#" class="nav-link">开始阅读</a>
+            </div>
+
+            <!--<div class="nav-card">
+                <span class="nav-icon">🔍</span>
+                <h3 class="nav-title">密码破译器</h3>
+                <p class="nav-description">多种密码解密工具，帮助你解开各种加密信息</p>
+                <a href="#" class="nav-link">破译工具</a>
+            </div>
+
+            <div class="nav-card">
+                <span class="nav-icon">🧩</span>
+                <h3 class="nav-title">逻辑迷宫</h3>
+                <p class="nav-description">复杂的逻辑谜题和迷宫挑战，考验你的推理能力</p>
+                <a href="#" class="nav-link">挑战迷宫</a>
+            </div>
+
+            <div class="nav-card">
+                <span class="nav-icon">📝</span>
+                <h3 class="nav-title">文本编辑器</h3>
+                <p class="nav-description">功能丰富的在线文本编辑工具，支持格式化和导出</p>
+                <a href="#" class="nav-link">编辑工具</a>
+            </div>
+
+            <div class="nav-card">
+                <span class="nav-icon">📋</span>
+                <h3 class="nav-title">任务清单</h3>
+                <p class="nav-description">智能任务管理工具，帮助你规划和追踪解谜进度</p>
+                <a href="#" class="nav-link">任务管理</a>
+            </div>-->
+        </div>
+
+            <div class="features">
+                <h2>🌟 平台特色</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <span class="feature-icon">🎮</span>
+                        <h4 class="feature-title">互动解谜</h4>
+                        <p class="feature-desc">精心设计的解谜关卡，每一步都充满惊喜与挑战</p>
+                    </div>
+
+                    <div class="feature-item">
+                        <span class="feature-icon">⚡</span>
+                        <h4 class="feature-title">即时工具</h4>
+                        <p class="feature-desc">无需下载，即开即用的网页工具，摸鱼的绝佳选择！0v0</p>
+                    </div>
+
+                    <!--<div class="feature-item">
+                    <span class="feature-icon">🎨</span>
+                    <h4 class="feature-title">优雅界面</h4>-->
+
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <footer>
+                <p>© 2025 AQI Game Platform - 网页游戏与工具平台 | 探索数字世界的无限可能</p>
+            </footer>
+        </div>
+</body>
+</html>
