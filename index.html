@@ -185,6 +185,129 @@
                 color: #1565c0;
             }
 
+        /* 新增页脚样式 */
+        .footer-container {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px 30px;
+            margin-top: 40px;
+            border: 1px solid rgba(13, 71, 161, 0.2);
+            box-shadow: 0 4px 15px rgba(13, 71, 161, 0.1);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section {
+            padding: 15px;
+        }
+
+        .footer-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #0d47a1;
+            font-weight: bold;
+            border-bottom: 2px solid #1976d2;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .contact-info {
+            list-style: none;
+        }
+
+            .contact-info li {
+                margin-bottom: 12px;
+                display: flex;
+                align-items: center;
+            }
+
+        .contact-icon {
+            font-size: 1.2rem;
+            margin-right: 10px;
+            color: #1976d2;
+            width: 25px;
+            text-align: center;
+        }
+
+        .contact-link {
+            color: #1565c0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+            .contact-link:hover {
+                color: #0d47a1;
+                text-decoration: underline;
+            }
+
+        .qrcode-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .qrcode-row {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .qrcode-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qrcode {
+            width: 150px;
+            height: 150px;
+            border-radius: 10px;
+            border: 1px solid rgba(13, 71, 161, 0.2);
+            box-shadow: 0 4px 10px rgba(13, 71, 161, 0.1);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+        }
+
+            .qrcode img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .qrcode-label {
+            font-size: 0.9rem;
+            color: #0d47a1;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .qrcode-text {
+            font-size: 0.9rem;
+            color: #1565c0;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(13, 71, 161, 0.2);
+            color: #1565c0;
+            font-size: 0.9rem;
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.5rem;
@@ -201,6 +324,19 @@
             .nav-title {
                 font-size: 1.5rem;
             }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .qrcode-row {
+                gap: 20px;
+            }
+
+            .qrcode {
+                width: 130px;
+                height: 130px;
+            }
         }
     </style>
 </head>
@@ -215,7 +351,7 @@
             <h2>欢迎来到AQI Game平台</h2>
             <p>这里是一个集网页游戏与实用工具于一体的数字空间。无论你是喜欢挑战智力的网页解谜游戏，还是喜欢摸鱼事件放松的休闲小游戏，或是需要便捷的网页工具，这里都能满足你的需求。探索隐藏的秘密，享受解谜的乐趣，或使用作者精心设计的实用工具提升效率。</p>
             <p>
-                作者个人介绍：
+                作者阿柒的个人介绍：
             </p>
             <p>
                 一个为了摸鱼什么事情都能做的出来的people！（除了高数）
@@ -238,63 +374,55 @@
                 <p class="nav-description">方便快捷隐蔽的txt小说阅读工具，支持上传背景、单行阅读、双击消失的个性化设置！</p>
                 <a href="#" class="nav-link">开始阅读</a>
             </div>
-
-            <!--<div class="nav-card">
-                <span class="nav-icon">🔍</span>
-                <h3 class="nav-title">密码破译器</h3>
-                <p class="nav-description">多种密码解密工具，帮助你解开各种加密信息</p>
-                <a href="#" class="nav-link">破译工具</a>
-            </div>
-
-            <div class="nav-card">
-                <span class="nav-icon">🧩</span>
-                <h3 class="nav-title">逻辑迷宫</h3>
-                <p class="nav-description">复杂的逻辑谜题和迷宫挑战，考验你的推理能力</p>
-                <a href="#" class="nav-link">挑战迷宫</a>
-            </div>
-
-            <div class="nav-card">
-                <span class="nav-icon">📝</span>
-                <h3 class="nav-title">文本编辑器</h3>
-                <p class="nav-description">功能丰富的在线文本编辑工具，支持格式化和导出</p>
-                <a href="#" class="nav-link">编辑工具</a>
-            </div>
-
-            <div class="nav-card">
-                <span class="nav-icon">📋</span>
-                <h3 class="nav-title">任务清单</h3>
-                <p class="nav-description">智能任务管理工具，帮助你规划和追踪解谜进度</p>
-                <a href="#" class="nav-link">任务管理</a>
-            </div>-->
         </div>
 
-            <div class="features">
-                <h2>🌟 平台特色</h2>
-                <div class="features-grid">
-                    <div class="feature-item">
-                        <span class="feature-icon">🎮</span>
-                        <h4 class="feature-title">互动解谜</h4>
-                        <p class="feature-desc">精心设计的解谜关卡，每一步都充满惊喜与挑战</p>
-                    </div>
+        <div class="features">
+            <h2>🌟 平台特色</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <span class="feature-icon">🎮</span>
+                    <h4 class="feature-title">互动解谜</h4>
+                    <p class="feature-desc">精心设计的解谜关卡，每一步都充满惊喜与挑战</p>
+                </div>
 
-                    <div class="feature-item">
-                        <span class="feature-icon">⚡</span>
-                        <h4 class="feature-title">即时工具</h4>
-                        <p class="feature-desc">无需下载，即开即用的网页工具，摸鱼的绝佳选择！0v0</p>
-                    </div>
-
-                    <!--<div class="feature-item">
-                    <span class="feature-icon">🎨</span>
-                    <h4 class="feature-title">优雅界面</h4>-->
-
+                <div class="feature-item">
+                    <span class="feature-icon">⚡</span>
+                    <h4 class="feature-title">即时工具</h4>
+                    <p class="feature-desc">无需下载，即开即用的网页工具，摸鱼的绝佳选择！0v0</p>
                 </div>
             </div>
         </div>
 
-        <div>
-            <footer>
+        <!-- 新增页脚部分 -->
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">关注作者</h3>
+                    <div class="qrcode-container">
+                        <div class="qrcode-row">
+                            <div class="qrcode-item">
+                                <div class="qrcode">
+                                    <img src="https://github.com/AQI-sunny/cq/raw/main/gallery/vx.jpg" alt="微信公众号二维码">
+                                </div>
+                                <div class="qrcode-label">微信公众号</div>
+                            </div>
+                            <div class="qrcode-item">
+                                <div class="qrcode">
+                                    <img src="https://github.com/AQI-sunny/cq/raw/main/gallery/xhs.jpg" alt="小红薯维码">
+                                </div>
+                                <div class="qrcode-label">小红薯</div>
+                            </div>
+                        </div>
+                        <p class="qrcode-text">扫描二维码关注公众号和小红书<br>获取最新游戏资讯</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
                 <p>© 2025 AQI Game Platform - 网页游戏与工具平台 | 探索数字世界的无限可能</p>
-            </footer>
+                <p>Made with ❤️ by 阿柒</p>
+            </div>
         </div>
+    </div>
 </body>
 </html>
