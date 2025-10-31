@@ -1,0 +1,692 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>临渠早报 - 火灾特刊</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SimSun', '宋体', serif;
+        }
+
+        body {
+            background-color: #2c2c2c;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><rect fill="none" stroke="black" stroke-width="2" x="0" y="0" width="100" height="100"/></svg>');
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .newspaper-container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            background-color: #f9f3e5;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            border: 1px solid #8b4513;
+            position: relative;
+        }
+
+            .newspaper-container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(rgba(255,255,255,0) 90%, rgba(0,0,0,0.1) 100%);
+                pointer-events: none;
+            }
+
+        .header {
+            text-align: center;
+            border-bottom: 3px double #8b4513;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .newspaper-title {
+            font-family: 'KaiTi', '楷体', 'STKaiti', serif;
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            color: #8b0000;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+
+        .newspaper-subtitle {
+            font-size: 18px;
+            color: #555;
+            font-style: italic;
+        }
+
+        .date-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border-bottom: 1px solid #8b4513;
+            padding-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .main-headline {
+            font-family: 'KaiTi', '楷体', 'STKaiti', serif;
+            font-size: 32px;
+            text-align: center;
+            margin: 25px 0;
+            color: #8b0000;
+            border-top: 2px solid #8b4513;
+            border-bottom: 2px solid #8b4513;
+            padding: 10px 0;
+            line-height: 1.3;
+        }
+
+        .content {
+            column-count: 2;
+            column-gap: 30px;
+            text-align: justify;
+        }
+
+        .drop-cap::first-letter {
+            font-family: 'KaiTi', '楷体', 'STKaiti', serif;
+            font-size: 48px;
+            float: left;
+            line-height: 40px;
+            padding-right: 8px;
+            font-weight: bold;
+            color: #8b0000;
+        }
+
+        /* 自适应图片容器样式 */
+        .responsive-image-container {
+            width: 100%;
+            margin: 15px 0;
+            break-inside: avoid;
+            overflow: hidden;
+            background-color: #e0d5bc;
+            border: 1px dashed #8b4513;
+            position: relative;
+        }
+
+        .image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 宽高比 */
+            overflow: hidden;
+        }
+
+        .responsive-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.5s ease;
+            opacity: 0;
+        }
+
+            .responsive-image.loaded {
+                opacity: 1;
+            }
+
+        .image-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #e0d5bc;
+            color: #8b4513;
+            font-style: italic;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(139, 69, 19, 0.2);
+            border-left: 4px solid #8b4513;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .image-error {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #e0d5bc;
+            color: #8b4513;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .error-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .caption {
+            font-size: 14px;
+            text-align: center;
+            margin-top: 5px;
+            font-style: italic;
+            color: #666;
+            break-inside: avoid;
+        }
+
+        .highlight {
+            background-color: rgba(255, 200, 0, 0.2);
+            padding: 0 2px;
+            font-weight: bold;
+        }
+
+        .quote {
+            border-left: 3px solid #8b4513;
+            padding-left: 15px;
+            margin: 15px 0;
+            font-style: italic;
+            color: #555;
+            break-inside: avoid;
+        }
+
+        .byline {
+            text-align: right;
+            font-style: italic;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .footer {
+            margin-top: 30px;
+            border-top: 1px solid #8b4513;
+            padding-top: 10px;
+            font-size: 14px;
+            text-align: center;
+            color: #666;
+        }
+
+        .burn-effect {
+            position: relative;
+            display: inline-block;
+            font-family: 'KaiTi', '楷体', 'STKaiti', serif;
+        }
+
+            .burn-effect::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: linear-gradient(90deg, transparent, #ff4500, transparent);
+                opacity: 0.7;
+            }
+
+        /* 平板设备 (768px - 1024px) */
+        @media (max-width: 1024px) {
+            .newspaper-container {
+                padding: 25px;
+                margin: 10px;
+            }
+
+            .newspaper-title {
+                font-size: 42px;
+                letter-spacing: 3px;
+            }
+
+            .main-headline {
+                font-size: 28px;
+            }
+
+            .content {
+                column-gap: 25px;
+            }
+
+            .date-line {
+                font-size: 15px;
+            }
+        }
+
+        /* 大屏手机 (576px - 768px) */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .newspaper-container {
+                padding: 20px;
+                margin: 5px;
+            }
+
+            .newspaper-title {
+                font-size: 36px;
+                letter-spacing: 2px;
+            }
+
+            .newspaper-subtitle {
+                font-size: 16px;
+            }
+
+            .main-headline {
+                font-size: 24px;
+                margin: 20px 0;
+                padding: 8px 0;
+            }
+
+            .content {
+                column-count: 2;
+                column-gap: 20px;
+            }
+
+            .drop-cap::first-letter {
+                font-size: 42px;
+                line-height: 35px;
+            }
+
+            .responsive-image-container {
+                margin: 10px 0;
+            }
+
+            .date-line {
+                flex-direction: column;
+                text-align: center;
+                gap: 5px;
+            }
+
+                .date-line div {
+                    width: 100%;
+                }
+        }
+
+        /* 小屏手机 (小于576px) */
+        @media (max-width: 576px) {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+            }
+
+            .newspaper-container {
+                padding: 15px;
+                margin: 0;
+                box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            }
+
+            .newspaper-title {
+                font-size: 28px;
+                letter-spacing: 1px;
+                margin-bottom: 5px;
+            }
+
+            .newspaper-subtitle {
+                font-size: 14px;
+            }
+
+            .header {
+                padding-bottom: 10px;
+                margin-bottom: 15px;
+            }
+
+            .main-headline {
+                font-size: 20px;
+                margin: 15px 0;
+                padding: 6px 0;
+                line-height: 1.4;
+            }
+
+            .content {
+                column-count: 1;
+                column-gap: 0;
+            }
+
+            .drop-cap::first-letter {
+                font-size: 36px;
+                line-height: 30px;
+                padding-right: 6px;
+            }
+
+            .responsive-image-container {
+                margin: 10px 0;
+            }
+
+            .quote {
+                padding-left: 12px;
+                margin: 12px 0;
+            }
+
+            .date-line {
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+
+            .footer {
+                margin-top: 20px;
+                font-size: 12px;
+            }
+
+            .byline {
+                font-size: 13px;
+            }
+
+            .caption {
+                font-size: 13px;
+            }
+        }
+
+        /* 超小屏手机 (小于400px) */
+        @media (max-width: 400px) {
+            .newspaper-container {
+                padding: 12px;
+            }
+
+            .newspaper-title {
+                font-size: 24px;
+            }
+
+            .main-headline {
+                font-size: 18px;
+            }
+
+            .drop-cap::first-letter {
+                font-size: 32px;
+                line-height: 28px;
+            }
+
+            body {
+                padding: 8px;
+            }
+        }
+
+        /* 横屏手机优化 */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body {
+                align-items: flex-start;
+                padding: 10px;
+            }
+
+            .newspaper-container {
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+        }
+
+        /* 高分辨率屏幕优化 */
+        @media (min-width: 1200px) {
+            .newspaper-container {
+                max-width: 900px;
+            }
+        }
+
+        /* 打印样式 */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .newspaper-container {
+                box-shadow: none;
+                border: 1px solid #000;
+                margin: 0;
+                max-width: none;
+            }
+        }
+
+        /* 触摸设备优化 */
+        @media (hover: none) and (pointer: coarse) {
+            .highlight {
+                background-color: rgba(255, 200, 0, 0.3);
+            }
+
+            .newspaper-container {
+                -webkit-tap-highlight-color: transparent;
+            }
+        }
+
+        /* 减少动画（为偏好减少动画的用户） */
+        @media (prefers-reduced-motion: reduce) {
+            .burn-effect {
+                animation: none;
+            }
+
+            .loading-spinner {
+                animation: none;
+                border-left: 4px solid rgba(139, 69, 19, 0.2);
+            }
+
+            .responsive-image {
+                transition: none;
+            }
+        }
+
+        /* 黑暗模式支持 */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #1a1a1a;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="newspaper-container">
+        <div class="header">
+            <div class="newspaper-title">临渠早报</div>
+            <div class="newspaper-subtitle">临渠县火灾始末记录</div>
+        </div>
+
+        <div class="date-line">
+            <div>第 27 期</div>
+            <div>农历丁亥年七月十六</div>
+            <div>2007年8月28日</div>
+        </div>
+
+        <h1 class="main-headline">祭祀河灯突遇旋风 <span class="burn-effect">引发岸边大火</span></h1>
+
+        <div class="content">
+            <p class="drop-cap">昨日本是盂兰盆节，临渠两岸灯火辉煌，民众纷纷放灯祭祖，祈求平安。不料晚间八时许，一场突如其来的旋风打乱了平静的祭祀活动，导致多盏河灯偏离航道，其中一盏更是不幸引燃岸边堆放的祭祀草料，酿成火灾。</p>
+
+            <p>据现场目击者描述，当时河面上百盏河灯顺流而下，场面颇为壮观。突然一阵旋风从河心卷起，数盏河灯被吹向岸边。</p>
+
+            <!-- 自适应图片容器 -->
+            <div class="responsive-image-container">
+                <div class="image-wrapper">
+                    <img src="http://sylvie-seven-cq.top/gallery/sjygs.jpg"
+                         alt="火灾现场"
+                         class="responsive-image"
+                         data-src="http://sylvie-seven-cq.top/gallery/sjygs.jpg">
+                    <div class="image-placeholder">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="caption">火灾现场残留的灰烬和烧焦的树木（本报记者摄）</div>
+
+            <p>"那风来得太突然了，"目击者李大爷回忆道，"本来河灯都是往河心飘的，突然就转向了岸边，直接扑向了那堆草料。"</p>
+
+            <p>火势迅速蔓延，点燃了岸边多棵树木。现场民众惊慌失措，纷纷取水灭火。混乱中，<span class="highlight">一少年为抢救自己精心制作的河灯，不顾他人劝阻冲入火场。</span></p>
+
+            <div class="quote">
+                "我劝他别进去，太危险了，但他还是冲进去了，"少年的朋友王明告诉记者，"他说那盏灯是他为纪念已故祖母特制的，不能就这么烧掉。"
+            </div>
+
+            <p>不幸的是，该少年在火场中被掉落的燃烧树枝砸中，<span class="highlight">右手被严重烧伤</span>。虽经现场人员及时救出并送医治疗，但医生表示其右手将留下永久性疤痕。</p>
+
+            <p>消防部门接到报警后迅速赶到现场，经过两小时的扑救，火势被完全控制。据初步统计，此次火灾烧毁祭祀草料约三吨，烧焦岸边树木多棵，幸无人员死亡。</p>
+
+            <!-- 自适应图片容器 -->
+            <div class="responsive-image-container">
+                <div class="image-wrapper">
+                    <img src="http://sylvie-seven-cq.top/gallery/tu.jpg"
+                         alt="河灯路径示意图"
+                         class="responsive-image"
+                         data-src="http://sylvie-seven-cq.top/gallery/tu.jpg">
+                    <div class="image-placeholder">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="caption">专家绘制的河灯异常飘移路径示意图</div>
+
+            <p>气象专家表示，此类小范围旋风在夏秋之交的河谷地带并不罕见，但直接影响到祭祀活动并引发火灾实属罕见。</p>
+
+            <p>负责人表示，将加强对传统祭祀活动的安全管理，考虑划定专门的放灯区域，并配备必要的消防设施，防止类似事件再次发生。</p>
+
+            <p>截至发稿时，该少年仍在医院接受治疗，情况稳定。其家人表示，虽然孩子右手受伤严重，但他并不后悔抢救那盏寄托对祖母思念的河灯。</p>
+
+            <div class="byline">本报记者 秦蕙 报道</div>
+        </div>
+
+        <div class="footer">
+            <p>临渠报刊社地址：深南市临渠县流水路8号 电话：0773-XXXX-XXX 定价：每月1.5元</p>
+            <p>国内统一刊号：CN45-XXXX/G2 邮发代号：47-XXX</p>
+        </div>
+    </div>
+
+    <script>
+        // 添加一些交互效果
+        document.addEventListener('DOMContentLoaded', function () {
+            // 为烧伤效果文字添加闪烁动画
+            const burnEffect = document.querySelector('.burn-effect');
+            if (burnEffect) {
+                setInterval(() => {
+                    burnEffect.style.opacity = burnEffect.style.opacity === '0.7' ? '1' : '0.7';
+                }, 1000);
+            }
+
+            // 添加点击报纸的声音效果（模拟翻报纸）
+            const newspaper = document.querySelector('.newspaper-container');
+            if (newspaper) {
+                newspaper.addEventListener('click', function () {
+                    // 在实际应用中，这里可以添加翻页音效
+                    console.log('报纸被点击');
+                });
+            }
+
+            // 添加一些随机污渍效果
+            const container = document.querySelector('.newspaper-container');
+            if (container) {
+                // 只在非移动设备上添加污渍效果
+                if (window.innerWidth > 768) {
+                    for (let i = 0; i < 5; i++) {
+                        const stain = document.createElement('div');
+                        stain.style.position = 'absolute';
+                        stain.style.width = Math.random() * 20 + 5 + 'px';
+                        stain.style.height = Math.random() * 20 + 5 + 'px';
+                        stain.style.backgroundColor = 'rgba(0,0,0,0.05)';
+                        stain.style.borderRadius = '50%';
+                        stain.style.left = Math.random() * 100 + '%';
+                        stain.style.top = Math.random() * 100 + '%';
+                        stain.style.pointerEvents = 'none';
+                        container.appendChild(stain);
+                    }
+                }
+            }
+
+            // 图片懒加载和自适应处理
+            const images = document.querySelectorAll('.responsive-image');
+            images.forEach(img => {
+                const wrapper = img.parentElement;
+                const placeholder = wrapper.querySelector('.image-placeholder');
+
+                // 设置图片加载事件
+                img.addEventListener('load', function () {
+                    this.classList.add('loaded');
+                    if (placeholder) {
+                        placeholder.style.display = 'none';
+                    }
+                });
+
+                img.addEventListener('error', function () {
+                    if (placeholder) {
+                        placeholder.innerHTML = '<div class="image-error"><div class="error-icon">⚠️</div><div>图片加载失败</div></div>';
+                    }
+                });
+
+                // 开始加载图片
+                const src = img.getAttribute('data-src');
+                if (src) {
+                    img.src = src;
+                }
+            });
+
+            // 横屏检测
+            function checkOrientation() {
+                if (window.innerHeight < window.innerWidth) {
+                    document.body.classList.add('landscape');
+                } else {
+                    document.body.classList.remove('landscape');
+                }
+            }
+
+            window.addEventListener('resize', checkOrientation);
+            checkOrientation();
+
+            // 响应式图片容器调整
+            function adjustImageContainers() {
+                const containers = document.querySelectorAll('.responsive-image-container');
+                containers.forEach(container => {
+                    const wrapper = container.querySelector('.image-wrapper');
+                    if (wrapper) {
+                        // 根据容器宽度调整宽高比
+                        const containerWidth = container.offsetWidth;
+                        if (containerWidth < 400) {
+                            wrapper.style.paddingBottom = '75%'; // 4:3 宽高比
+                        } else {
+                            wrapper.style.paddingBottom = '56.25%'; // 16:9 宽高比
+                        }
+                    }
+                });
+            }
+
+            window.addEventListener('resize', adjustImageContainers);
+            adjustImageContainers();
+        });
+
+        // 防止缩放
+        document.addEventListener('touchstart', function (event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        });
+
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+</html>

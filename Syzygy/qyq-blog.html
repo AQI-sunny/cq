@@ -1,0 +1,596 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>秦砚秋记者的个人博客</title>
+    <style>
+        /* 基础样式 - 温暖风格 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Serif SC', 'STZhongsong', '宋体', serif;
+        }
+
+        body {
+            background-color: #fdf8f3; /* 暖米白 */
+            color: #444;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #5d4037; /* 深棕，温暖感 */
+            transition: color 0.3s ease;
+        }
+
+            a:hover {
+                color: #d87a16; /* 橙褐色，温暖亮色 */
+            }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 头部样式 - 温暖柔和 */
+        header {
+            background-color: #fffaf4; /* 暖白背景 */
+            box-shadow: 0 4px 20px rgba(216, 122, 22, 0.1); /* 橙色柔光阴影 */
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #f0e6dc;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 0;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #3e2723; /* 统一为深棕色 */
+            letter-spacing: 1px;
+            font-family: 'LiSu', '隶书', cursive;
+        }
+
+            .logo span {
+                color: #d87a16;
+                font-family: 'KaiTi', '楷体', serif;
+            }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+            nav ul li {
+                margin-left: 28px;
+            }
+
+                nav ul li a {
+                    font-weight: 500;
+                    font-size: 16px;
+                    position: relative;
+                    padding: 5px 0;
+                }
+
+                    nav ul li a:after {
+                        content: '';
+                        position: absolute;
+                        width: 0;
+                        height: 2px;
+                        bottom: 0;
+                        left: 0;
+                        background-color: #d87a16;
+                        transition: width 0.3s ease;
+                        border-radius: 1px;
+                    }
+
+                    nav ul li a:hover:after {
+                        width: 100%;
+                    }
+
+        /* 主要内容区 */
+        .main-content {
+            display: flex;
+            margin: 50px 0;
+            gap: 40px;
+        }
+
+        /* 文章区域 */
+        .articles {
+            flex: 2;
+        }
+
+        .article-card {
+            background-color: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(216, 122, 22, 0.08);
+            padding: 40px;
+            margin-bottom: 45px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid #f0c8a0; /* 暖棕边框 */
+        }
+
+            .article-card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 12px 35px rgba(216, 122, 22, 0.15);
+            }
+
+        .article-meta {
+            display: flex;
+            margin-bottom: 18px;
+            font-size: 14px;
+            color: #8d6e63; /* 暖灰棕 */
+        }
+
+        .article-date {
+            margin-right: 18px;
+        }
+
+        .article-category {
+            background-color: #fff3e0;
+            color: #bf360c;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .article-title {
+            font-size: 28px;
+            margin-bottom: 22px;
+            line-height: 1.4;
+            color: #3e2723;
+            font-weight: 600;
+            font-family: 'KaiTi', '楷体', serif;
+        }
+
+        .article-content {
+            color: #555;
+            margin-bottom: 28px;
+            font-size: 16px;
+            text-align: justify;
+        }
+
+            .article-content p {
+                margin-bottom: 20px;
+                text-indent: 2em;
+            }
+
+        .read-more {
+            display: inline-block;
+            color: #d87a16;
+            font-weight: 500;
+            font-size: 16px;
+            padding: 10px 0;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+            .read-more:hover {
+                border-color: #d87a16;
+            }
+
+        /* 侧边栏 */
+        .sidebar {
+            flex: 1;
+        }
+
+        .sidebar-widget {
+            background-color: #fff;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(216, 122, 22, 0.06);
+            padding: 30px;
+            margin-bottom: 35px;
+        }
+
+        .widget-title {
+            font-size: 20px;
+            margin-bottom: 22px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0e6dc;
+            color: #3e2723; /* 统一为深棕色 */
+            font-weight: 600;
+            font-family: 'KaiTi', '楷体', serif;
+        }
+
+        .about-me {
+            text-align: center;
+        }
+
+        .profile-img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            margin: 0 auto 18px;
+            background: linear-gradient(135deg, #d87a16, #a65a10);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+            box-shadow: 0 5px 15px rgba(216, 122, 22, 0.2);
+            font-family: 'LiSu', cursive;
+        }
+
+        .about-me p {
+            color: #6d4c41;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        .popular-posts li {
+            margin-bottom: 18px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #f0e6dc;
+        }
+
+            .popular-posts li:last-child {
+                margin-bottom: 0;
+                padding-bottom: 0;
+                border-bottom: none;
+            }
+
+        .popular-post-title {
+            font-weight: 500;
+            margin-bottom: 6px;
+            line-height: 1.4;
+            font-size: 15px;
+        }
+
+        .popular-post-date {
+            font-size: 13px;
+            color: #8d6e63;
+        }
+
+        .categories li {
+            margin-bottom: 12px;
+        }
+
+            .categories li a {
+                display: flex;
+                justify-content: space-between;
+                padding: 6px 0;
+                font-size: 15px;
+            }
+
+        .category-count {
+            background-color: #fff3e0;
+            color: #bf360c;
+            padding: 3px 9px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* 引用块 - 温暖风格 */
+        .quote {
+            border-left: 5px solid #f0c8a0;
+            padding: 16px 20px;
+            margin: 25px 0;
+            background-color: #fffaf4;
+            border-radius: 0 8px 8px 0;
+            color: #5d4037;
+            font-style: italic;
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        /* 图片占位 - 温暖风格 */
+        /*.article-image {
+            width: 100%;
+            height: 220px;
+            background-color: #fff3e0;
+            margin: 30px 0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8d6e63;
+            font-style: italic;
+            font-size: 15px;
+            border: 1px dashed #f0c8a0;
+            overflow: hidden;*/ /* 防止图片溢出圆角 */
+        /*}
+
+            .article-image img {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: cover;
+                border-radius: 10px;
+                box-shadow: 0 2px 8px rgba(216, 122, 22, 0.1);
+            }
+
+        .image-caption {
+            text-align: center;
+            font-size: 14px;
+            color: #8d6e63;
+            margin: -15px 0 25px;
+            font-style: italic;
+        }*/
+
+        /* 响应式设计 */
+        /*@media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                margin-top: 18px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+                nav ul li {
+                    margin: 6px 10px;
+                }
+
+            .article-card {
+                padding: 30px 20px;
+            }
+
+            .article-title {
+                font-size: 24px;
+            }
+
+            .article-image {
+                height: 180px;
+                margin: 20px 0;
+            }
+
+            .image-caption {
+                margin: -10px 0 18px;
+                font-size: 13px;
+            }
+        }*/
+        /* 图片占位 - 温暖风格 - 自适应版本 */
+        .article-image {
+            width: 100%;
+            /* 移除固定高度 */
+            /* height: 220px; */
+            background-color: #fff3e0;
+            margin: 30px 0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8d6e63;
+            font-style: italic;
+            font-size: 15px;
+            border: 1px dashed #f0c8a0;
+            overflow: hidden; /* 防止图片溢出圆角 */
+            /* 添加自适应属性 */
+            min-height: 100px; /* 最小高度，避免空容器太矮 */
+            padding: 20px; /* 内边距，让图片有呼吸空间 */
+        }
+
+            .article-image img {
+                max-width: 100%;
+                max-height: 80vh; /* 限制最大高度为视口的80% */
+                width: auto; /* 宽度自适应 */
+                height: auto; /* 高度自适应 */
+                object-fit: contain; /* 改为contain，保持图片完整比例 */
+                border-radius: 10px;
+                box-shadow: 0 2px 8px rgba(216, 122, 22, 0.1);
+            }
+
+        .image-caption {
+            text-align: center;
+            font-size: 14px;
+            color: #8d6e63;
+            margin: 15px 0 25px; /* 调整外边距 */
+            font-style: italic;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                margin-top: 18px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+                nav ul li {
+                    margin: 6px 10px;
+                }
+
+            .article-card {
+                padding: 30px 20px;
+            }
+
+            .article-title {
+                font-size: 24px;
+            }
+
+            .article-image {
+                /* 移动端移除固定高度 */
+                /* height: 180px; */
+                margin: 20px 0;
+                padding: 15px; /* 移动端内边距稍小 */
+            }
+
+                .article-image img {
+                    max-height: 60vh; /* 移动端最大高度稍小 */
+                }
+
+            .image-caption {
+                margin: 10px 0 18px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部 -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><span>秦砚秋</span></div>
+                <nav>
+                    <ul>
+                        <li><a href="#">首页</a></li>
+                        <li><a href="#">深度报道</a></li>
+                        <li><a href="#">社会观察</a></li>
+                        <li><a href="#">国际视野</a></li>
+                        <li><a href="#">关于我</a></li>
+                        <li><a href="#">联系</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <div class="container">
+        <div class="main-content">
+            <!-- 文章区域 -->
+            <div class="articles">
+                <!-- 文章1 -->
+                <article class="article-card">
+                    <div class="article-meta">
+                        <span class="article-date">2022年9月5日</span>
+                        <!--<span class="article-category">深度报道</span>-->
+                    </div>
+                    <h2 class="article-title">
+                        第一次走进静乔公寓时，我没看懂那杯草药茶
+                    </h2>
+                    <div class="article-content">
+                        <p>相册里有张褪色的照片，是我十八岁那年在静乔公寓楼道拍的。穿蓝白校服，手里攥着张校报剪报，边角被汗水浸得发皱——那是我发表的第一篇"作品"，关于学校食堂的卫生整改建议。</p>
+                        <p>那天是母亲带我去的。临渠县的青石板路刚过了梅雨季，鞋跟踩上去还黏糊糊的，母亲却特意让我换了双干净布鞋，说"见长辈，得郑重些"。她嘴里的长辈，就是顾姨，外婆那辈的远亲，在深南市这栋老公寓里住了快二十年。</p>
+                        <p>静乔公寓比我想象的旧。墙皮像被雨水泡过的宣纸，一层层往下掉，楼梯扶手摸上去有层薄灰。顾姨开门时，我先闻到的不是人的气息，是股说不清的味道——艾草的苦，檀香的沉，还有点像临渠县秋天的桂花香，混在一起，竟不觉得杂乱。</p>
+                        <p>她把我们往里让，我瞥见桌上的黄符纸和塔罗牌，心里咯噔一下。那时候我刚迷上新闻理论，满脑子都是"客观""实证"，觉得这些神神叨叨的东西，和我稿纸上的事实，根本是两个世界。</p>
+                        <div class="quote">
+                            "有些事，说不出道理，管用就行。"
+                        </div>
+                        <p>顾姨拉我手时，掌心的粗糙让我愣了愣。后来才知道，那是常年揉草药、剪符纸磨出来的。她夸我长得像母亲，又转身去倒茶，玻璃杯里浮着层细密的泡沫，褐色的茶汤透着点古怪的光泽。"这是安神的，你们坐了长途车。"她说着，又拿起张画着小人的牌，"你看这'愚人'，看着莽撞，其实心里亮堂。"</p>
+                        <p>我没接话。母亲在旁边笑，说"顾姐又说这些"，语气里却没有真的反对。那天我把顾姨的话都当耳旁风，满心想的是怎么写出更"硬"的报道，怎么用事实砸开所有模糊的角落。</p>
+                        <p>直到二十岁那年，我刚成了跑社会新闻的记者。在城中村蹲过传销窝点，在暴雨里追过溃堤的险情，也遇见过采访对象紧闭的门、闪烁其词的眼。有次在外地追查一条线索，被人堵在巷子里抢走了录音笔，深夜蹲在路边给母亲打电话，忍不住红了眼。没过几天，顾姨打来电话，声音温温的："深南这边房租贵，但我这公寓有空房，你搬来住段时间，离单位近，我也能照看着你。"她没说太多劝慰的话，可那句"照看着你"，让我忽然松了劲。</p>
+                        <p>九年前的秋天，我搬进了静乔公寓。那会儿公寓还是老样子，墙皮依旧斑驳，楼梯转角总堆着住户的杂物。顾姨提前把我那间房的墙重新刷了遍，窗台摆上她晒的艾草，说能去去潮气。有时清晨出门，会撞见她拿着抹布擦扶手，灰扑扑的木头上，被她擦出一小块发亮的地方。</p>
+                        <p>大前年春天，整栋公寓开始翻新。脚手架搭起来那天，顾姨站在窗边看了很久，手里还攥着包没晒完的桂花。等工期结束，墙皮换成了米白色的乳胶漆，楼梯扶手换成了光滑的金属，连楼道灯都换成了感应式的，脚步声一到就亮得晃眼。顾姨的屋里倒没怎么变，窗台的草药还在晒，只是窗外的晾衣绳换成了统一的晾衣架。</p>
+                        <p>如今我二十九岁，不知不觉中已在这栋翻新后的公寓里住了九年。顾姨的鬓角又多了些白，她还是常端出临渠县口味的酸笋汤，"你现在跑新闻总熬夜，这汤开胃"。她搅动着汤里的笋片，"有些事，说不出道理，管用就行。"</p>
+                        <p>我喝着汤，忽然想起母亲寄来的包裹里，总夹着临渠县的桂花糖。以前总觉得是母亲随口买的，那天才忽然明白，那糖和顾姨桌上的草药、我笔下的人间事，或许本质上是一样的——都在试图接住些什么，守护些什么。</p>
+                        <p>顾姨又去摆弄她的草药了，灯光落在她指间的叶片上，像撒了层碎金。我摸出采访本，想把这一刻记下来，笔握了半天，又放回去。</p>
+                        <p>有些故事，或许真的不必写在纸上。就像临渠县的水，漫过青石板路时，从不说自己在滋养什么，可两岸的草木，年年都绿得发亮。</p>
+                    </div>
+                    <!--<a href="#" class="read-more">阅读全文 &rarr;</a>-->
+                </article>
+
+                <!-- 文章2 -->
+                <article class="article-card">
+                    <div class="article-meta">
+                        <span class="article-date">2021年9月1日</span>
+                       <!-- <span class="article-category">社会观察</span>-->
+                    </div>
+                    <h2 class="article-title">
+                        在静乔公寓，我学会给新闻留一扇窗
+                    </h2>
+                    <div class="article-content">
+                        <p>搬进静乔公寓的第五年，我终于学会在采访本里夹一片干桂花。</p>
+                        <p>是顾姨给的。她的窗台上总晒着些奇奇怪怪的东西，有时是卷成筒的艾草，有时是铺成薄层的玉兰花瓣，最近换成了青涟渠畔的桂花——和我老家临渠县的味道一模一样。她不说这是做什么用的，只在我每次出门采访前，往我包里塞一小撮，说"闻着踏实"。</p>
+                        <p>以前我是不信这些的。刚做记者那两年，我总觉得世界该像新闻稿一样，要素清晰，逻辑闭环。时间、地点、人物、事件，缺一样都不算完整。直到上个月跑那个停水的社区，物业的解释条条是道，施工队的工期表写得明明白白，可镜头扫过独居老人用洗菜水浇绿萝的手时，我忽然发现采访本上的"原因分析""解决措施"，漏了点什么。</p>
+                        <p>那天深夜回公寓，顾姨在楼道里等我，手里端着碗姜枣茶。她说下午听3207的住户念叨，说我跑了趟远路，"风里来雨里去的，年轻人也扛不住"。那位住户的消息向来灵通，连我在小区门口买了个烤红薯都知道，但那天我没觉得被窥探，只觉得那碗茶的甜，比烤红薯还暖。新换的金属扶手泛着冷光，却让人想起翻新前，顾姨一点点擦旧木头扶手的样子，掌心的温度像还留在上面。</p>
+                        <div class="article-image">
+                            <img src="http://sylvie-seven-cq.top/gallery/晒桂花.png" alt="[配图：窗台上晒着的桂花，旁边压着半张未写完的采访提纲]">
+                        </div>
+                        <p class="image-caption">图：顾姨窗台上晒的桂花，与一张未完成的采访提纲。</p>
+                        <p>后来我又去了趟那个社区。没带录音笔，就坐在老人的小板凳上听他说，说年轻时在渠边种桂花的事，说停水这几天，对门小伙子每天给送半桶水。这些没写进新闻稿里，却被我夹在了采访本的最后一页，和顾姨给的桂花放在一起。</p>
+                        <p>顾姨的屋里还是有塔罗牌，藏在衣柜最底层的木箱里，被草药香盖着。那天我帮她整理储物间，不小心翻到了，她没慌忙收起来，只说"这东西像镜子，有时能照见人没说出口的话"。我忽然想起母亲寄来的包裹里，除了桂花糖，偶尔会夹张临渠县的照片，背面写着"家里一切都好"，字迹歪歪扭扭，却比任何话都让人安心。</p>
+                        <div class="quote">
+                            "有些东西，从来不需要写在纸上。"
+                        </div>
+                        <p>原来有些东西，从来不需要写在纸上。就像静乔公寓的楼道，翻新后依旧被擦得干干净净的扶手，顾姨窗台上永远新鲜的草药，还有深夜回来时，总为我留着的那盏廊灯。它们不在新闻的5W1H里，却让每个被记录的瞬间，都有了可以落脚的温度。</p>
+                        <p>今天出门采访，包里又多了片顾姨晒的玉兰花瓣。或许以后我的新闻稿还是会追求严谨，但我想给那些没被写下的部分，留一扇窗——就像这栋翻新后公寓的窗户，总在不经意间，漏进点桂花香，或是邻居的几句闲谈，让坚硬的世界，软了个角。</p>
+                    </div>
+                    <!--<a href="#" class="read-more">阅读全文 &rarr;</a>-->
+                </article>
+            </div>
+
+            <!-- 侧边栏 -->
+            <aside class="sidebar">
+                <!-- 关于我 -->
+                <div class="sidebar-widget about-me">
+                    <h3 class="widget-title">关于我</h3>
+                    <div class="profile-img">秦</div>
+                    <p>资深记者，从业9年，专注于社会深度报道和国际新闻。曾获多项新闻奖项，致力于通过文字记录时代变迁，传递真实声音。</p>
+                </div>
+
+                <!-- 热门文章 -->
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">热门文章</h3>
+                    <ul class="popular-posts">
+                        <li>
+                            <div class="popular-post-title">
+                                <a href="#">乡村振兴中的青年力量</a>
+                            </div>
+                            <div class="popular-post-date">2025年9月3日</div>
+                        </li>
+                        <li>
+                            <div class="popular-post-title">
+                                <a href="#">后疫情时代的教育变革</a>
+                            </div>
+                            <div class="popular-post-date">2025年9月2日</div>
+                        </li>
+                        <li>
+                            <div class="popular-post-title">
+                                <a href="#">人工智能伦理边界在哪里</a>
+                            </div>
+                            <div class="popular-post-date">2025年9月1日</div>
+                        </li>
+                        <li>
+                            <div class="popular-post-title">
+                                <a href="#">传统工艺的现代转型之路</a>
+                            </div>
+                            <div class="popular-post-date">2025年8月31日</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 分类 -->
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">文章分类</h3>
+                    <ul class="categories">
+                        <li>
+                            <a href="#">深度报道 <span class="category-count">12</span></a>
+                        </li>
+                        <li>
+                            <a href="#">社会观察 <span class="category-count">18</span></a>
+                        </li>
+                        <li>
+                            <a href="#">国际视野 <span class="category-count">9</span></a>
+                        </li>
+                        <li>
+                            <a href="#">人物专访 <span class="category-count">7</span></a>
+                        </li>
+                        <li>
+                            <a href="#">评论观点 <span class="category-count">15</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </div>
+</body>
+</html>

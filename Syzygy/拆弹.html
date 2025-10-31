@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>踩到了炸弹！</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .game-container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+        
+        .game-header {
+            background: linear-gradient(to right, #8b0000, #b22222);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #ffd700;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 30px;
+            background: rgba(20, 20, 40, 0.8);
+            border-bottom: 1px solid #444;
+        }
+        
+        .timer {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ff4444;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 15px;
+            border-radius: 5px;
+            border: 1px solid #ff4444;
+        }
+        
+        .cuts-remaining {
+            font-size: 1.2rem;
+            color: #ffd700;
+        }
+        
+        .game-content {
+            display: flex;
+            padding: 30px;
+            gap: 30px;
+        }
+        
+        .bomb-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .bomb {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #555 0%, #333 70%);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+            border: 5px solid #444;
+        }
+        
+        .bomb::before {
+            content: "";
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: #ff4444;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ff0000;
+        }
+        
+        .bomb::after {
+            content: "BOMB";
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        .wires-container {
+            flex: 2;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .wire {
+            height: 120px;
+            background: #222;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .wire:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+        }
+        
+        .wire.active {
+            border-color: #ffd700;
+        }
+        
+        .wire-cut {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .wire-cut::after {
+            content: "已剪断";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .wire-color {
+            width: 100%;
+            height: 20px;
+            border-radius: 10px;
+        }
+        
+        .wire-label {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
+        .wire-1 .wire-color { background: linear-gradient(to right, #ff0000, #cc0000); }
+        .wire-2 .wire-color { background: linear-gradient(to right, #00ff00, #00cc00); }
+        .wire-3 .wire-color { background: linear-gradient(to right, #0000ff, #0000cc); }
+        .wire-4 .wire-color { background: linear-gradient(to right, #ffff00, #cccc00); }
+        .wire-5 .wire-color { background: linear-gradient(to right, #ff5fcf, #ff5fcf); }
+        .wire-6 .wire-color { background: linear-gradient(to right, #00ffff, #00cccc); }
+        .wire-7 .wire-color { background: linear-gradient(to right, #ffa500, #cc8400); }
+        .wire-8 .wire-color { background: linear-gradient(to right, #b105cb, #b105cb); }
+        .wire-9 .wire-color { background: linear-gradient(to right, #a52a2a, #852222); }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            background: rgba(20, 20, 40, 0.8);
+            border-top: 1px solid #444;
+        }
+        
+        button {
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        #cut-btn {
+            background: linear-gradient(to bottom, #ff4444, #cc0000);
+            color: white;
+        }
+        
+        #cut-btn:hover {
+            background: linear-gradient(to bottom, #ff5555, #dd0000);
+            transform: scale(1.05);
+        }
+        
+        #cut-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        #reset-btn {
+            background: linear-gradient(to bottom, #4444ff, #0000cc);
+            color: white;
+        }
+        
+        #reset-btn:hover {
+            background: linear-gradient(to bottom, #5555ff, #1111dd);
+            transform: scale(1.05);
+        }
+        
+        .instructions {
+            padding: 20px;
+            background: rgba(30, 30, 60, 0.8);
+            border-top: 1px solid #444;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        .instructions h3 {
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+        
+        .hint {
+            color: #ffd700;
+            font-style: italic;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            border: 2px solid #ffd700;
+        }
+        
+        .modal h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #ffd700;
+        }
+        
+        .modal p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .success {
+            color: #00ff00;
+        }
+        
+        .failure {
+            color: #ff4444;
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        @media (max-width: 768px) {
+            .game-content {
+                flex-direction: column;
+            }
+            
+            .wires-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .wires-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>你踩到了炸弹！</h1>
+        </div>
+        
+        <div class="game-info">
+            <div class="timer">倒计时: <span id="time">01:00</span></div>
+            <div class="cuts-remaining">还需剪断: <span id="remaining">3</span> 条线</div>
+        </div>
+        
+        <div class="game-content">
+            <div class="bomb-container">
+                <div class="bomb"></div>
+            </div>
+            
+            <div class="wires-container">
+                <div class="wire wire-1" data-wire="1">
+                    <div class="wire-color"></div>
+                    <div class="wire-label">红线</div>
+                </div>
+                <div class="wire wire-2" data-wire="2">
+                    <div class="wire-color"></div>
+                    <div class="wire-label">绿线</div>
+                </div>
+                <div class="wire wire-3" data-wire="3">
+                    <div class="wire-color"></div>
+                    <div class="wire-label">蓝线</div>
+                </div>
+                <div class="wire wire-4" data-wire="4">
+                    <div class="wire-color"></div>
+                    <div class="wire-label">黄线</div>
+                </div>
+                <div class="wire wire-5" data-wire="5">
+                    <div class="wire-color"></div>
+                    <div class="wire-label">粉线</div>
+                </div>
+                <div class="wire wire-6" data-wire="6">
+                    <div class="wire-color"></div>
+                    <div class="wire-label">青线</div>
+                </div>
+                <div class="wire wire-7" data-wire="7">
+                    <div class="wire-color"></div>
+                    <div class="wire-label">橙线</div>
+                </div>
+                <div class="wire wire-8" data-wire="8">
+                    <div class="wire-color"></div>
+                    <div class="wire-label">紫线</div>
+                </div>
+                <div class="wire wire-9" data-wire="9">
+                    <div class="wire-color"></div>
+                    <div class="wire-label">褐线</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="cut-btn">剪断选中电线</button>
+            <!-- <button id="reset-btn">重新开始游戏</button> -->
+        </div>
+        
+        <div class="instructions">
+            <h3>恭喜你！踩到炸弹辣！</h3>
+            <p>你需要在1分钟内拆除这个炸弹！炸弹上有9条电线，其中只有3条是正确的安全线！剪断它们可以解除炸弹。剪错任何一条错误的电线你就会......boom！！仔细选择，祝你好运！</p>
+            <p class="hint">提示：无！ (ノ￣▽￣)偷笑.jpg</p>
+        </div>
+    </div>
+    
+    <div class="modal" id="result-modal">
+        <div class="modal-content">
+            <h2 id="result-title">你成功拆除了炸弹！</h2>
+            <p id="result-message">可恶，让你逃过一劫...继续前进吧！（咬牙切齿）</p>
+            <!-- <button id="play-again-btn">炸成薯片了不能再来哦~</button> -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 游戏状态变量
+            let timeLeft = 60; // 1分钟，单位秒
+            let correctWires = [2, 3, 5]; // 固定正确线路
+            let selectedWire = null;
+            let cutsRemaining = 3;
+            let gameActive = true;
+            let timerInterval;
+            
+            // DOM元素
+            const timerElement = document.getElementById('time');
+            const remainingElement = document.getElementById('remaining');
+            const cutButton = document.getElementById('cut-btn');
+            const resetButton = document.getElementById('reset-btn');
+            const wires = document.querySelectorAll('.wire');
+            const resultModal = document.getElementById('result-modal');
+            const resultTitle = document.getElementById('result-title');
+            const resultMessage = document.getElementById('result-message');
+            const playAgainButton = document.getElementById('play-again-btn');
+            
+            // 初始化游戏
+            function initGame() {
+                // 重置游戏状态
+                timeLeft = 60;
+                selectedWire = null;
+                cutsRemaining = 3;
+                gameActive = true;
+                
+                // 更新显示
+                updateTimerDisplay();
+                remainingElement.textContent = cutsRemaining;
+                
+                // 清除所有电线状态
+                wires.forEach(wire => {
+                    wire.classList.remove('active', 'wire-cut');
+                });
+                
+                // 隐藏结果模态框
+                resultModal.style.display = 'none';
+                
+                // 启动计时器
+                clearInterval(timerInterval);
+                timerInterval = setInterval(updateTimer, 1000);
+                
+                // 启用剪断按钮
+                cutButton.disabled = true;
+            }
+            
+            // 更新计时器显示
+            function updateTimerDisplay() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // 时间紧迫时添加闪烁效果
+                if (timeLeft <= 10) {
+                    timerElement.classList.add('blink');
+                } else {
+                    timerElement.classList.remove('blink');
+                }
+            }
+            
+            // 更新计时器
+            function updateTimer() {
+                if (!gameActive) return;
+                
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    endGame(false, "时间耗尽！炸弹爆炸了！");
+                }
+            }
+            
+            // 电线选择事件
+            wires.forEach(wire => {
+                wire.addEventListener('click', function() {
+                    if (!gameActive || this.classList.contains('wire-cut')) return;
+                    
+                    // 清除之前的选择
+                    wires.forEach(w => w.classList.remove('active'));
+                    
+                    // 设置新的选择
+                    this.classList.add('active');
+                    selectedWire = parseInt(this.getAttribute('data-wire'));
+                    cutButton.disabled = false;
+                });
+            });
+            
+            // 剪断电线事件
+            cutButton.addEventListener('click', function() {
+                if (!gameActive || !selectedWire) return;
+                
+                const wireElement = document.querySelector(`.wire[data-wire="${selectedWire}"]`);
+                wireElement.classList.add('wire-cut');
+                wireElement.classList.remove('active');
+                
+                // 检查是否正确
+                if (correctWires.includes(selectedWire)) {
+                    // 正确电线
+                    cutsRemaining--;
+                    remainingElement.textContent = cutsRemaining;
+                    
+                    if (cutsRemaining === 0) {
+                        // 所有正确电线已剪断
+                        endGame(true, "可恶，让你逃过一劫...继续前进吧！（咬牙切齿）");
+                    }
+                } else {
+                    // 错误电线
+                    endGame(false, "剪错了电线！炸弹爆炸辣！you die！");
+                }
+                
+                selectedWire = null;
+                cutButton.disabled = true;
+            });
+            
+            // 结束游戏
+            function endGame(success, message) {
+                gameActive = false;
+                clearInterval(timerInterval);
+                
+                // 显示结果模态框
+                resultModal.style.display = 'flex';
+                
+                if (success) {
+                    resultTitle.textContent = "你成功拆除了炸弹！";
+                    resultTitle.className = "success";
+                    resultMessage.textContent = message;
+                } else {
+                    resultTitle.textContent = "炸弹爆炸辣！";
+                    resultTitle.className = "failure";
+                    resultMessage.textContent = message;
+                }
+            }
+            
+            // 重置游戏
+            resetButton.addEventListener('click', initGame);
+            
+            // 再玩一次按钮
+            playAgainButton.addEventListener('click', initGame);
+            
+            // 初始化游戏
+            initGame();
+        });
+    </script>
+</body>
+</html>

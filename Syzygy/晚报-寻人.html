@@ -1,0 +1,256 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>临渠晚报 - 紧急寻人</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SimSun', '宋体', serif;
+        }
+
+        body {
+            background-color: #333;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .newspaper-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #f9f3e5;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .newspaper-title {
+            font-family: 'KaiTi', '楷体', 'STKaiti', cursive, serif;
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: 6px;
+            color: #8B0000;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .date-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 10px;
+        }
+
+        .main-headline {
+            font-family: 'KaiTi', '楷体', 'STKaiti', cursive, serif;
+            font-size: 32px;
+            text-align: center;
+            margin: 30px 0;
+            color: #d9534f;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+        }
+
+        .content {
+            column-count: 2;
+            column-gap: 30px;
+            text-align: justify;
+            font-size: 16px;
+        }
+
+        .drop-cap::first-letter {
+            font-family: 'KaiTi', '楷体', 'STKaiti', serif;
+            font-size: 48px;
+            float: left;
+            line-height: 40px;
+            padding-right: 8px;
+            font-weight: bold;
+            color: #8B0000;
+        }
+
+        .highlight {
+            background-color: rgba(255, 200, 0, 0.2);
+            padding: 0 2px;
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 30px;
+            border-top: 1px solid #333;
+            padding-top: 10px;
+            font-size: 14px;
+            text-align: center;
+            color: #666;
+        }
+
+        /* 图片容器样式 */
+        .cover-image-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .cover-image {
+            max-width: 100%;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* 缩小第一张图片 */
+        .cover-image-container:first-child .cover-image {
+            width: 70%;
+            max-width: 500px;
+        }
+
+        /* 响应式设计 - 平板设备 */
+        @media (max-width: 992px) {
+            .newspaper-container {
+                padding: 20px;
+            }
+
+            .newspaper-title {
+                font-size: 40px;
+                letter-spacing: 4px;
+            }
+
+            .main-headline {
+                font-size: 28px;
+            }
+
+            .content {
+                column-gap: 20px;
+            }
+
+            .cover-image-container:first-child .cover-image {
+                width: 80%;
+            }
+        }
+
+        /* 响应式设计 - 手机设备 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .newspaper-container {
+                padding: 15px;
+            }
+
+            .newspaper-title {
+                font-size: 32px;
+                letter-spacing: 2px;
+            }
+
+            .date-line {
+                flex-direction: column;
+                text-align: center;
+                gap: 5px;
+            }
+
+            .main-headline {
+                font-size: 24px;
+                margin: 20px 0;
+            }
+
+            .content {
+                column-count: 1;
+                font-size: 15px;
+            }
+
+            .drop-cap::first-letter {
+                font-size: 36px;
+                line-height: 32px;
+            }
+
+            .footer {
+                font-size: 13px;
+            }
+
+            .cover-image-container:first-child .cover-image {
+                width: 90%;
+            }
+        }
+
+        /* 响应式设计 - 小屏幕手机 */
+        @media (max-width: 480px) {
+            .newspaper-title {
+                font-size: 28px;
+            }
+
+            .main-headline {
+                font-size: 20px;
+            }
+
+            .content {
+                font-size: 14px;
+            }
+
+            .drop-cap::first-letter {
+                font-size: 32px;
+                line-height: 28px;
+            }
+
+            .cover-image-container:first-child .cover-image {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="newspaper-container">
+        <div class="header">
+            <div class="newspaper-title">临渠晚报</div>
+        </div>
+
+        <div class="date-line">
+            <div>2015年4月5日 星期日</div>
+            <div>第92期</div>
+        </div>
+
+        <h1 class="main-headline">紧急寻人：12岁女孩昨日傍晚在临渠县城走失</h1>
+
+        <!-- 第一张图片（缩小显示） -->
+        <div class="cover-image-container">
+            
+        </div>
+
+        <div class="content">
+            <p class="drop-cap">昨日傍晚18时许，临渠县居民赵先生夫妇向当地警方报案，称其12岁的女儿赵某于当日下午在县城中心广场附近走失，至今未归，家人万分焦急。</p>
+
+            <p>据赵先生介绍，女儿当日下午15时左右离家，前往中心广场旁的书店购买教辅资料，出门时身着浅蓝色T恤、白色运动鞋，扎马尾辫，随身携带一个红色书包。按照往常，16时30分左右即可到家，但直至23时仍未出现，彻夜未归，家人多方寻找无果后报警。</p>
+
+            <p>"孩子很懂事，平时从不贪玩，这次迟迟未归，我们心里特别慌。"赵先生的妻子哽咽着说，女儿成绩优异，尤其擅长数学，是班级里的学习委员，深受老师同学喜爱。</p>
+
+            <p>接警后，临渠县公安局立即组织警力展开搜寻，调取了中心广场及周边路段的监控录像，并联系社区志愿者协助寻找。截至发稿前，尚未发现女孩的明确行踪。</p>
+
+            <p>警方呼吁，如有市民在昨日傍晚至今日期间，在临渠县城区及周边看到符合上述特征的女孩，或有相关线索，请立即与临渠县公安局联系（联系电话：<span class="highlight">0898-XXXX-110</span>），也可直接拨打110提供信息。恳请知情市民积极提供线索，帮助孩子早日回到父母身边。</p>
+
+            <p>同时，警方提醒广大家长，务必加强对未成年人的监护，尽量避免孩子单独前往人员复杂的场所，确保孩子的人身安全。</p>
+        </div>
+
+        <!-- 第二张图片（保持原样） -->
+        <div class="cover-image-container">
+            
+        </div>
+
+        <div class="footer">
+            <p>临渠报刊社地址：深南市临渠县流水路8号 电话：0773-XXXX-XXX 定价：每月1.5元</p>
+            <p>国内统一刊号：CN45-XXXX/G2 邮发代号：47-XXX</p>
+        </div>
+    </div>
+</body>
+</html>
