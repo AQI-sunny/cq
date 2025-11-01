@@ -118,7 +118,7 @@ function performSearch(query, event = null, pageType = null) {
         );
         return true;
     }
-
+/*
     // 检查直接跳转的关键词
     for (const keyword in keywordRedirects) {
         if (query.toLowerCase().includes(keyword.toLowerCase())) {
@@ -130,7 +130,26 @@ function performSearch(query, event = null, pageType = null) {
                 return true;
             }
         }
+    }*/
+
+    // 检查直接跳转的关键词 - 修复这里！
+    for (const keyword in keywordRedirects) {
+        if (query.toLowerCase().includes(keyword.toLowerCase())) {
+            const redirectUrl = keywordRedirects[keyword];
+            logDebug('找到匹配的关键词:', keyword, '跳转URL:', redirectUrl);
+
+            // 使用 confirm 的返回值来判断用户选择
+            const userConfirmed = confirm(`找到关键词 "${keyword}"，是否跳转到对应页面？`);
+            if (userConfirmed) {
+                window.open(redirectUrl, '_blank');
+                return true; // 用户确认跳转，直接返回，不执行后续逻辑
+            } else {
+                logDebug('用户取消跳转');
+                return false; // 用户取消，直接返回false，不执行后续逻辑
+            }
+        }
     }
+
 
     // 根据关键词决定页面类型
     let targetPageType = pageType || 'general';
