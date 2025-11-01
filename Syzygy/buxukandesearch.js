@@ -112,7 +112,7 @@ function performSearch(query, event = null, pageType = null) {
     if (query.toLowerCase() === "kms赵晓棠".toLowerCase()) {
         logDebug('触发特殊关键词: kms赵晓棠');
         showSmsModal(
-            "你有新的快递",
+            "来自手机短信通知：",
             "你有新的快递 请尽快来取",
             "https://sylvie-seven-cq.top/Syzygy/取快递.html"
         );
@@ -318,5 +318,6 @@ window.showSmsModal = showSmsModal;
 window.initSearchPage = initSearchPage;
 window.getUrlParams = getUrlParams;
 window.logDebug = logDebug;
+
 
 logDebug('搜索模块初始化完成');
