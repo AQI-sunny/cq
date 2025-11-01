@@ -1,0 +1,1045 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>准备好！开始冒险辣！</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: white;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            font-size: 16px;
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -1;
+            transition: background-image 0.5s ease-in-out;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 0;
+        }
+
+        .game-container {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 15px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            color: #f8f9fa;
+            padding: 0 10px;
+        }
+
+        .location {
+            background-color: rgba(44, 62, 80, 0.85);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border-left: 5px solid #3498db;
+        }
+
+            .location h2 {
+                color: #3498db;
+                margin-bottom: 10px;
+                font-size: 1.4rem;
+            }
+
+            .location p {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 15px;
+            background: linear-gradient(to bottom, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+        }
+
+            button:hover {
+                background: linear-gradient(to bottom, #2980b9, #2573a7);
+                transform: translateY(-3px);
+                box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+            }
+
+            button:active {
+                transform: translateY(1px);
+            }
+
+            button::after {
+                content: "→";
+                position: absolute;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-weight: bold;
+            }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .success {
+            background-color: rgba(40, 167, 69, 0.85);
+            border-left: 5px solid #28a745;
+        }
+
+        .failure {
+            background-color: rgba(220, 53, 69, 0.85);
+            border-left: 5px solid #dc3545;
+        }
+
+        .hint {
+            font-size: 14px;
+            color: #bdc3c7;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .progress {
+            margin-top: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        .time-selection {
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .time-option {
+            padding: 12px;
+            background: rgba(52, 152, 219, 0.3);
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 70px;
+        }
+
+            .time-option:hover {
+                background: rgba(52, 152, 219, 0.5);
+                transform: scale(1.05);
+            }
+
+            .time-option.selected {
+                background: rgba(40, 167, 69, 0.5);
+                border: 2px solid #28a745;
+            }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* 平板样式 */
+        @media (min-width: 768px) {
+            .game-container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+                margin-bottom: 25px;
+            }
+
+            .location {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+
+                .location h2 {
+                    font-size: 1.6rem;
+                }
+
+                .location p {
+                    font-size: 1.1rem;
+                }
+
+            .options {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+                margin-top: 20px;
+            }
+
+            button {
+                font-size: 1.05rem;
+            }
+
+            .result {
+                margin-top: 25px;
+                padding: 20px;
+            }
+        }
+
+        /* 桌面样式 */
+        @media (min-width: 1024px) {
+            .options {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* 小屏幕手机优化 */
+        @media (max-width: 360px) {
+            .game-container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .location {
+                padding: 12px;
+            }
+
+                .location h2 {
+                    font-size: 1.2rem;
+                }
+
+            button {
+                padding: 12px;
+                font-size: 0.95rem;
+                min-height: 55px;
+            }
+
+            .time-option {
+                padding: 10px;
+                min-height: 60px;
+            }
+        }
+
+        /* 防止文本选择（提高触摸体验） */
+        button, .time-option {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+            button:focus, .time-option:focus {
+                outline: none;
+            }
+    </style>
+    <!-- 防护代码 -->
+    <script>
+        (function () {
+            'use strict';
+
+            var devTools = {
+                init: function () {
+                    this.disableRightClick();
+                    this.disableDevTools();
+                    this.disableTextSelect();
+                    this.antiInspect();
+                },
+
+                disableRightClick: function () {
+                    document.addEventListener('contextmenu', function (e) {
+                        e.preventDefault();
+                        alert('右键已被禁用！');
+                        return false;
+                    });
+                },
+
+                disableDevTools: function () {
+                    document.addEventListener('keydown', function (e) {
+                        // F12
+                        if (e.key === 'F12') {
+                            e.preventDefault();
+                            alert('开发者工具已被禁用！');
+                            return false;
+                        }
+
+
+                        // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+                        if (e.ctrlKey && e.shiftKey &&
+                            (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
+                            e.preventDefault();
+                            return false;
+                        }
+
+                        // Ctrl+U
+                        if (e.ctrlKey && e.key === 'u') {
+                            e.preventDefault();
+                            return false;
+                        }
+                    });
+                },
+
+                disableTextSelect: function () {
+                    document.addEventListener('selectstart', function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+                },
+
+                antiInspect: function () {
+                    // 多重检测机制
+                    setInterval(function () {
+                        // 窗口尺寸检测
+                        var widthThreshold = window.outerWidth - window.innerWidth > 160;
+                        var heightThreshold = window.outerHeight - window.innerHeight > 160;
+
+                        // 调试器检测
+                        var debuggerDetected = false;
+                        try {
+                            (function () {
+                                return false;
+                            }).constructor("debugger").call("action");
+                        } catch (e) {
+                            debuggerDetected = true;
+                        }
+
+                        // 性能检测
+                        var performanceDetected = false;
+                        var start = performance.now();
+                        debugger;
+                        var end = performance.now();
+                        if (end - start > 100) {
+                            performanceDetected = true;
+                        }
+
+                        if (widthThreshold || heightThreshold || debuggerDetected || performanceDetected) {
+                            // 阻止访问
+                            document.body.innerHTML = '<h1>请关闭开发者工具！</h1>';
+                            window.location.reload();
+                            return;
+                        }
+                    }, 500);
+
+                    // 额外的F12捕获
+                    window.addEventListener('keydown', function (e) {
+                        if (e.key === 'F12' || e.keyCode === 123) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            e.stopImmediatePropagation();
+                            return false;
+                        }
+                    }, true);
+                }
+            };
+
+            devTools.init();
+        })();
+    </script>
+</head>
+<body>
+    <div class="background" id="background"></div>
+    <div class="overlay"></div>
+
+    <div class="game-container">
+        <h1>公寓周边仔细探查中...</h1>
+
+        <div class="location" id="current-location">
+            <h2>当前位置：静乔公寓侧门口</h2>
+            <p>取完快递后，你从公寓侧门口出来，打算仔仔细细地探查一下周边环境~东侧是春华路辅路，西侧通向无名南巷。你选择：</p>
+        </div>
+
+        <div class="options" id="options-container">
+            <!-- 选项将动态生成 -->
+        </div>
+
+        <div class="result" id="result">
+            <!-- 结果将动态显示 -->
+        </div>
+
+        <!--<div class="progress" id="progress">
+            已探索地点: 静乔公寓门口
+        </div>-->
+    </div>
+
+    <script>
+        // 图片资源 - 与位置对应
+        const locationImages = {
+            apartment: "https://sylvie-seven-cq.top/gallery2/公寓侧门.jpg",
+            eastRoad: "https://sylvie-seven-cq.top/gallery2/辅路.jpg",
+            eastRoadEnd: "https://sylvie-seven-cq.top/gallery2/辅路.jpg",
+            greenBelt: "https://sylvie-seven-cq.top/gallery2/辅路.jpg",
+            observeCamera: "https://sylvie-seven-cq.top/gallery2/辅路.jpg",
+            westAlley: "https://sylvie-seven-cq.top/gallery2/包子铺.jpg",
+            westAlleyEnd: "https://sylvie-seven-cq.top/gallery2/包子铺.jpg",
+            gardenExit: "https://sylvie-seven-cq.top/gallery2/包子铺.jpg",
+            lifeSquare: "https://sylvie-seven-cq.top/gallery2/广场.jpg",
+            observeSquare: "https://sylvie-seven-cq.top/gallery2/广场.jpg",
+            mallSideDoor: "https://sylvie-seven-cq.top/gallery2/门.jpg",
+            oldUnitDoor: "https://sylvie-seven-cq.top/gallery2/老旧单元门.jpg",
+            checkDoorSystem: "https://sylvie-seven-cq.top/gallery2/老旧单元门.jpg",
+            observeResidents: "https://sylvie-seven-cq.top/gallery2/包子铺.jpg",
+            backyard: "https://sylvie-seven-cq.top/gallery2/后院.jpg",
+            checkBackyard: "https://sylvie-seven-cq.top/gallery2/后院.jpg",
+            communityGarden: "https://sylvie-seven-cq.top/gallery2/废弃花园.jpg",
+            exploreGarden: "https://sylvie-seven-cq.top/gallery2/废弃花园.jpg",
+            internetCafe: "https://sylvie-seven-cq.top/gallery2/网吧.jpg",
+            talkToManager: "https://sylvie-seven-cq.top/gallery2/网吧.jpg",
+            secondFloor: "https://sylvie-seven-cq.top/gallery2/网吧.jpg",
+            narrowAlley: "https://sylvie-seven-cq.top/gallery2/窄巷.jpg",
+            checkParcelLocker: "https://sylvie-seven-cq.top/gallery2/窄巷.jpg",
+            logisticsArea: "https://sylvie-seven-cq.top/gallery2/后勤区域.jpg",
+
+            baoziShop: "https://sylvie-seven-cq.top/gallery2/包子铺.jpg",
+            rooftop: "https://sylvie-seven-cq.top/gallery2/网吧顶楼.jpg",
+            checkRooftop: "https://sylvie-seven-cq.top/gallery2/网吧顶楼.jpg",
+            oppositeBuilding: "https://sylvie-seven-cq.top/gallery2/网吧顶楼.jpg",
+            checkPhone: "https://sylvie-seven-cq.top/gallery2/手机地图.jpg",
+            parkingLot: "https://sylvie-seven-cq.top/gallery2/停车场.jpg",
+            supermarketBackAlley: "https://sylvie-seven-cq.top/gallery2/后巷.jpg",
+            underground: "https://sylvie-seven-cq.top/gallery2/地下车库.jpg",
+            searchTrash: "https://sylvie-seven-cq.top/gallery2/rubbish.jpg",
+            garbageArea: "https://sylvie-seven-cq.top/gallery2/rubbish.jpg",
+
+            // 新增位置背景
+            observeOldUnit: "https://sylvie-seven-cq.top/gallery2/老旧单元门.jpg",
+            checkBackyardCorner: "https://sylvie-seven-cq.top/gallery2/后院.jpg",
+            checkGardenCorner: "https://sylvie-seven-cq.top/gallery2/废弃花园.jpg",
+            aroundParcelLocker: "https://sylvie-seven-cq.top/gallery2/窄巷.jpg",
+            leftPath: "https://sylvie-seven-cq.top/gallery2/窄巷.jpg",
+            rightPath: "https://sylvie-seven-cq.top/gallery2/窄巷.jpg",
+            middlePath: "https://sylvie-seven-cq.top/gallery2/窄巷.jpg",
+            checkTrashPile: "https://sylvie-seven-cq.top/gallery2/窄巷.jpg",
+            timeSelection: "https://sylvie-seven-cq.top/gallery2/后勤区域.jpg",
+            observeWorkers: "https://sylvie-seven-cq.top/gallery2/后勤区域.jpg",
+            inspectFlowerBed: "https://sylvie-seven-cq.top/gallery2/废弃花园.jpg",
+            checkGardenShed: "https://sylvie-seven-cq.top/gallery2/废弃花园.jpg",
+            examineBackyardWall: "https://sylvie-seven-cq.top/gallery2/后院.jpg",
+            searchBackyardToolshed: "https://sylvie-seven-cq.top/gallery2/后院.jpg"
+        };
+
+        // 游戏状态
+        let gameState = {
+            currentLocation: 'apartment',
+            path: ['apartment'],
+            foundBackAlley: false,
+            selectedTime: null
+        };
+
+        // 游戏位置和选项
+        const locations = {
+            apartment: {
+                name: "静乔公寓侧门口",
+                description: "取完快递后，你从公寓侧门口出来，打算仔仔细细地探查一下周边环境~东侧是春华路辅路，西侧通向无名南巷。你选择：",
+                options: [
+                    { text: "向东沿春华路辅路行走", target: "eastRoad" },
+                    { text: "向西进入无名南巷", target: "westAlley" },
+                    { text: "直接去生活广场", target: "lifeSquare" },
+                    { text: "探查公寓停车场", target: "parkingLot" },
+                    { text: "询问路人方向", target: "askDirections" },
+                    { text: "查看手机地图", target: "checkPhone" }
+                ]
+            },
+            eastRoad: {
+                name: "春华路辅路",
+                description: "你向东沿春华路辅路行走约200米。此路段主要为车行道和绿化带。",
+                options: [
+                    { text: "继续向东行走", target: "eastRoadEnd" },
+                    { text: "探查绿化带", target: "greenBelt" },
+                    { text: "观察交通摄像头", target: "observeCamera" },
+                    { text: "返回公寓", target: "apartment" }
+                ]
+            },
+            eastRoadEnd: {
+                name: "春华路辅路尽头",
+                description: "你走到了春华路辅路的尽头，这里只有一条繁忙的主干道，没有发现任何可疑地点。",
+                options: [
+                    { text: "返回公寓重新探索", target: "apartment" }
+                ],
+                isDeadEnd: true
+            },
+            greenBelt: {
+                name: "绿化带区域",
+                description: "你在绿化带中发现了一个市政检修井盖，但它被牢牢锁死，无法进入。",
+                options: [
+                    { text: "返回春华路辅路", target: "eastRoad" }
+                ],
+                isDeadEnd: true
+            },
+            observeCamera: {
+                name: "交通摄像头观察点",
+                description: "你注意到一个交通摄像头，但没有发现任何有用的线索。",
+                options: [
+                    { text: "返回春华路辅路", target: "eastRoad" }
+                ],
+                isDeadEnd: true
+            },
+            westAlley: {
+                name: "无名南巷",
+                description: "你进入无名南巷，前行约50米，看到一家包子铺。",
+                options: [
+                    { text: "继续向西行走", target: "westAlleyEnd" },
+                    { text: "进入包子铺打听消息", target: "baoziShop" },
+                    { text: "探查老旧单元门", target: "oldUnitDoor" },
+                    { text: "观察周围居民", target: "observeResidents" },
+                    { text: "返回公寓", target: "apartment" }
+                ]
+            },
+            westAlleyEnd: {
+                name: "南巷尽头",
+                description: "你走到了无名南巷的尽头，这里只有普通的居民楼入口，没有发现任何可疑地点。",
+                options: [
+                    { text: "返回公寓重新探索", target: "apartment" }
+                ],
+                isDeadEnd: true
+            },
+            baoziShop: {
+                name: "包子铺",
+                description: "你进入包子铺，老板热情地招呼你，但没有提供有用的信息。",
+                options: [
+                    { text: "返回无名南巷", target: "westAlley" }
+                ],
+                isDeadEnd: true
+            },
+            observeResidents: {
+                name: "居民观察点",
+                description: "你观察了周围的居民活动，但没有发现异常。",
+                options: [
+                    { text: "返回无名南巷", target: "westAlley" }
+                ],
+                isDeadEnd: true
+            },
+            oldUnitDoor: {
+                name: "老旧单元门",
+                description: "你发现一个可以打开的老旧单元门。",
+                options: [
+                    { text: "探查门禁系统", target: "checkDoorSystem" },
+                    { text: "观察周围环境", target: "observeOldUnit" },
+                    { text: "开门进去", target: "backyard" },
+                    { text: "返回无名南巷", target: "westAlley" }
+                ]
+            },
+            checkDoorSystem: {
+                name: "门禁系统探查",
+                description: "你探查了门禁系统，但没有发现任何异常。",
+                options: [
+                    { text: "返回老旧单元门", target: "oldUnitDoor" }
+                ],
+                isDeadEnd: true
+            },
+            observeOldUnit: {
+                name: "老旧单元门周围",
+                description: "你仔细观察了老旧单元门周围的环境，但没有发现有用的线索。",
+                options: [
+                    { text: "返回老旧单元门", target: "oldUnitDoor" }
+                ],
+                isDeadEnd: true
+            },
+            backyard: {
+                name: "后院",
+                description: "你穿过单元门来到一家后院，看到一道1.5米高的矮墙。",
+                options: [
+                    { text: "探查后院垃圾桶", target: "checkBackyard" },
+                    { text: "翻越矮墙", target: "communityGarden" },
+                    { text: "探查后院角落", target: "checkBackyardCorner" },
+                    { text: "探查后院墙壁", target: "examineBackyardWall" },
+                    { text: "探查后院工具棚", target: "searchBackyardToolshed" },
+                    { text: "返回老旧单元门", target: "oldUnitDoor" }
+                ]
+            },
+            checkBackyard: {
+                name: "后院探查",
+                description: "你探查了后院各个角落，但没有发现有用的线索。",
+                options: [
+                    { text: "返回后院", target: "backyard" }
+                ],
+                isDeadEnd: true
+            },
+            checkBackyardCorner: {
+                name: "后院角落",
+                description: "你仔细探查了后院的角落，但没有发现有用的线索。",
+                options: [
+                    { text: "返回后院", target: "backyard" }
+                ],
+                isDeadEnd: true
+            },
+            examineBackyardWall: {
+                name: "后院墙壁探查",
+                description: "你仔细探查了后院的墙壁，但没有发现任何异常。",
+                options: [
+                    { text: "返回后院", target: "backyard" }
+                ],
+                isDeadEnd: true
+            },
+            searchBackyardToolshed: {
+                name: "后院工具棚",
+                description: "你探查了后院的工具棚，没有发现有用的线索，但素捡到了一个大锤子~你鬼使神差的带上了~",
+                options: [
+                    { text: "返回后院", target: "backyard" }
+                ],
+                isDeadEnd: true
+            },
+            communityGarden: {
+                name: "花园",
+                description: "你翻过矮墙，来到一片半荒废的花园。",
+                options: [
+                    { text: "探查花园长椅", target: "exploreGarden" },
+                    { text: "探查花园角落", target: "checkGardenCorner" },
+                    { text: "探查花坛", target: "inspectFlowerBed" },
+                    { text: "寻找花园出口", target: "gardenExit" },
+                    { text: "探查花园小屋", target: "checkGardenShed" },
+                    { text: "返回后院", target: "backyard" }
+                ]
+            },
+            exploreGarden: {
+                name: "花园探查",
+                description: "你在花园中探查了一番，但没有发现有用的线索。",
+                options: [
+                    { text: "继续侦察", target: "communityGarden" }
+                ],
+                isDeadEnd: true
+            },
+            checkGardenCorner: {
+                name: "花园角落",
+                description: "你探查了花园的角落，但没有发现有用的线索。",
+                options: [
+                    { text: "返回社区花园", target: "communityGarden" }
+                ],
+                isDeadEnd: true
+            },
+            inspectFlowerBed: {
+                name: "花坛探查",
+                description: "你仔细探查了花园中的花坛，但没有发现任何异常。",
+                options: [
+                    { text: "返回社区花园", target: "communityGarden" }
+                ],
+                isDeadEnd: true
+            },
+            checkGardenShed: {
+                name: "花园小屋",
+                description: "你探查了花园中的小屋，但里面空无一物。",
+                options: [
+                    { text: "返回社区花园", target: "communityGarden" }
+                ],
+                isDeadEnd: true
+            },
+            gardenExit: {
+                name: "花园出口",
+                description: "你找到了花园的出口，走50m拐个弯发现又回到了包子铺附近。",
+                options: [
+                    { text: "进入包子铺旁的窄巷", target: "narrowAlley" },
+                    { text: "返回花园", target: "communityGarden" }
+                ]
+            },
+            narrowAlley: {
+                name: "包子铺旁窄巷",
+                description: "你刚刚才发现这有个窄巷~ 进入窄巷后，发现远处有个斜坡，在斜坡下看到一个快递柜。",
+                options: [
+                    { text: "探查快递柜", target: "checkParcelLocker" },
+                    { text: "绕过快递柜", target: "aroundParcelLocker" },
+                    { text: "返回花园出口", target: "gardenExit" }
+                ]
+            },
+            checkParcelLocker: {
+                name: "快递柜区域",
+                description: "你探查了快递柜，发现一切正常，没有任何有用的线索。（放心，不会再让你猜取件码辣）",
+                options: [
+                    { text: "返回窄巷", target: "narrowAlley" }
+                ],
+                isDeadEnd: true
+            },
+            aroundParcelLocker: {
+                name: "绕过快递柜",
+                description: "你绕过了快递柜，发现后面有几条不同的路径。",
+                options: [
+                    { text: "走左边", target: "leftPath" },
+                    { text: "走右边", target: "rightPath" },
+                    { text: "走中间", target: "middlePath" },
+                    { text: "探查旁边的杂物堆", target: "checkTrashPile" },
+                    { text: "返回窄巷", target: "narrowAlley" }
+                ]
+            },
+            leftPath: {
+                name: "左边",
+                description: "你选择走左边，但发现这是一条死路。",
+                options: [
+                    { text: "返回快递柜", target: "aroundParcelLocker" }
+                ],
+                isDeadEnd: true
+            },
+            rightPath: {
+                name: "右边",
+                description: "你选择走右边，但发现这是一条死路。",
+                options: [
+                    { text: "返回快递柜", target: "aroundParcelLocker" }
+                ],
+                isDeadEnd: true
+            },
+            middlePath: {
+                name: "中间",
+                description: "你选择走中间，发现前面好像是超市的后勤区域！",
+                options: [
+                    { text: "继续前进", target: "logisticsArea" }
+                ]
+            },
+            checkTrashPile: {
+                name: "杂物堆",
+                description: "你探查了旁边的杂物堆，但没有发现有用的线索。",
+                options: [
+                    { text: "返回快递柜", target: "aroundParcelLocker" }
+                ],
+                isDeadEnd: true
+            },
+            logisticsArea: {
+                name: "后勤区域",
+                description: "你到达了超市的后勤区域，看到了货运平台和通风设备。这里看起来是超市的物流中心，工作人员正在忙碌。",
+                options: [
+                    { text: "选择进入时间", target: "timeSelection" },
+                    { text: "观察工作人员", target: "observeWorkers" },
+                    { text: "返回快递柜", target: "aroundParcelLocker" }
+                ]
+            },
+            observeWorkers: {
+                name: "工作人员观察点",
+                description: "你观察了工作人员的活动，没发现什么可疑迹象。",
+                options: [
+                    { text: "返回后勤区域", target: "logisticsArea" }
+                ],
+                isDeadEnd: true
+            },
+            timeSelection: {
+                name: "选择进入时间",
+                description: "请选择一个时间进入后勤区域。",
+                options: [],
+                hasTimeSelection: true
+            },
+            supermarketBackAlley: {
+                name: "超市后巷",
+                description: '你成功到达了超市后巷！这里一看就很可疑，请选择继续深入调查或者...点击右上角的叉叉~ <br><button onclick="window.open(\'https://sylvie-seven-cq.top/Syzygy/可疑的墙.html\', \'_blank\')"> 深入调查 </button>',
+                options: [
+                    /*{ text: "继续游戏", target: "nextScene" }*/
+                ],
+                isSuccess: true
+            },
+            lifeSquare: {
+                name: "生活广场",
+                description: "你来到公寓楼北面的生活广场，这里居然一个人都没有！",
+                options: [
+                    { text: "进入网吧", target: "internetCafe" },
+                    { text: "探查垃圾集中点", target: "garbageArea" },
+                    { text: "侦察广场", target: "observeSquare" },
+                    { text: "探查商场侧门", target: "mallSideDoor" },
+                    { text: "返回公寓", target: "apartment" }
+                ]
+            },
+            mallSideDoor: {
+                name: "商场侧门",
+                description: "你探查了商场侧门，但门被锁住了，无法进入。",
+                options: [
+                    { text: "返回生活广场", target: "lifeSquare" }
+                ],
+                isDeadEnd: true
+            },
+            observeSquare: {
+                name: "广场",
+                description: "你侦察了广场上的各种角落，但没有发现有用的线索。",
+                options: [
+                    { text: "返回生活广场", target: "lifeSquare" }
+                ],
+                isDeadEnd: true
+            },
+            internetCafe: {
+                name: "24小时网吧",
+                description: "你进入网吧，看到通往二楼的楼梯。",
+                options: [
+                    { text: "上二楼", target: "secondFloor" },
+                    { text: "寻找网管", target: "talkToManager" },
+                    { text: "返回生活广场", target: "lifeSquare" }
+                ]
+            },
+            talkToManager: {
+                name: "网管",
+                description: "你找到了网管并与其交谈，但他对你的问题不感兴趣。",
+                options: [
+                    { text: "返回网吧", target: "internetCafe" }
+                ],
+                isDeadEnd: true
+            },
+            secondFloor: {
+                name: "网吧二楼",
+                description: "你来到网吧二楼，只看到一堆沉迷游戏的人，还有一个通往顶楼的楼梯。除了一堆开着的机子前面没人以外，一切正常。",
+                options: [
+                    { text: "上顶楼", target: "rooftop" },
+                    { text: "返回一楼", target: "internetCafe" }
+                ]
+            },
+            rooftop: {
+                name: "网吧顶楼",
+                description: "你来到网吧顶楼，发现对面楼似乎可以跨越过去！",
+                options: [
+                    { text: "尝试跨越到对面楼", target: "oppositeBuilding" },
+                    { text: "探查顶楼环境", target: "checkRooftop" },
+                    { text: "返回二楼", target: "secondFloor" }
+                ]
+            },
+            checkRooftop: {
+                name: "顶楼环境探查",
+                description: "你探查了顶楼的环境，但没有发现其他有用的线索。",
+                options: [
+                    { text: "返回网吧顶楼", target: "rooftop" }
+                ],
+                isDeadEnd: true
+            },
+            oppositeBuilding: {
+                name: "对面楼顶",
+                description: "你未能成功跨越到对面楼顶，摔鼠辣！",
+                options: [
+                    { text: "game over", target: "#" }
+                ],
+                isDeadEnd: true
+            },
+            garbageArea: {
+                name: "垃圾集中点",
+                description: "你在垃圾集中点发现了一个向下斜坡。",
+                options: [
+                    { text: "探查斜坡", target: "underground" },
+                    { text: "翻找垃圾箱", target: "searchTrash" },
+                    { text: "返回生活广场", target: "lifeSquare" }
+                ]
+            },
+            searchTrash: {
+                name: "垃圾箱搜索",
+                description: "你翻找了垃圾箱，但没有发现有用的线索。",
+                options: [
+                    { text: "返回垃圾集中点", target: "garbageArea" }
+                ],
+                isDeadEnd: true
+            },
+            underground: {
+                name: "地下区域",
+                description: "你来到地下车库，发现一个废弃货运电梯井，但入口被封锁无法进入。",
+                options: [
+                    { text: "返回地面", target: "garbageArea" }
+                ],
+                isDeadEnd: true
+            },
+            parkingLot: {
+                name: "公寓停车场",
+                description: "你探查了公寓停车场，但没有发现任何异常。",
+                options: [
+                    { text: "返回公寓门口", target: "apartment" }
+                ],
+                isDeadEnd: true
+            },
+            askDirections: {
+                name: "询问路人",
+                description: "你询问了几个路人，但他们什么也不知道。",
+                options: [
+                    { text: "返回公寓门口", target: "apartment" }
+                ],
+                isDeadEnd: true
+            },
+            checkPhone: {
+                name: "查看手机地图",
+                description: "你查看了手机地图，但地图上没有显示任何有用的信息。",
+                options: [
+                    { text: "返回公寓门口", target: "apartment" }
+                ],
+                isDeadEnd: true
+            }
+        };
+
+        // 时间选项
+        const timeOptions = [
+            { time: "上午9点", description: " ", success: false },
+            { time: "中午12点", description: " ", success: false },
+            { time: "下午1点", description: " ", success: true },
+            { time: "下午3点", description: " ", success: false },
+            { time: "晚上8点", description: " ", success: false }
+        ];
+
+        // 初始化游戏
+        function initGame() {
+            updateLocation();
+            changeBackground();
+        }
+
+        // 更新当前位置和选项
+        function updateLocation() {
+            const current = locations[gameState.currentLocation];
+            const locationElement = document.getElementById('current-location');
+            const optionsContainer = document.getElementById('options-container');
+            const resultElement = document.getElementById('result');
+            const progressElement = document.getElementById('progress');
+
+            // 更新位置信息
+            locationElement.innerHTML = `<h2>当前位置：${current.name}</h2><p>${current.description}</p>`;
+
+            // 清除之前的选项和结果
+            optionsContainer.innerHTML = '';
+            resultElement.style.display = 'none';
+            resultElement.className = 'result';
+
+            // 如果是时间选择页面
+            if (current.hasTimeSelection) {
+                const timeContainer = document.createElement('div');
+                timeContainer.className = 'time-selection';
+
+                timeOptions.forEach(timeOption => {
+                    const timeDiv = document.createElement('div');
+                    timeDiv.className = 'time-option';
+                    timeDiv.innerHTML = `<strong>${timeOption.time}</strong><br><small>${timeOption.description}</small>`;
+                    timeDiv.onclick = () => selectTime(timeOption);
+                    timeContainer.appendChild(timeDiv);
+                });
+
+                optionsContainer.appendChild(timeContainer);
+            } else {
+                // 添加普通选项
+                current.options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.textContent = option.text;
+                    button.onclick = () => selectOption(option.target);
+                    optionsContainer.appendChild(button);
+                });
+            }
+
+            // 显示结果（如果是终点）
+            if (current.isSuccess) {
+                resultElement.textContent = "恭喜！你成功找到了可疑地点--超市后巷！（这里怎么看怎么可疑！）";
+                resultElement.className = 'result success';
+                resultElement.style.display = 'block';
+                gameState.foundBackAlley = true;
+                // 成功后使用后巷图片
+                document.getElementById('background').style.backgroundImage = `url('${locationImages.supermarketBackAlley}')`;
+            } else if (current.isDeadEnd) {
+                resultElement.textContent = "你没有发现什么可疑的地方。";
+                resultElement.className = 'result failure';
+                resultElement.style.display = 'block';
+            }
+        }
+
+        // 处理选项选择
+        function selectOption(target) {
+            gameState.currentLocation = target;
+            gameState.path.push(target);
+            updateLocation();
+            changeBackground();
+        }
+
+        // 处理时间选择
+        function selectTime(timeOption) {
+            const resultElement = document.getElementById('result');
+
+            // 清除之前的选择
+            document.querySelectorAll('.time-option').forEach(el => {
+                el.classList.remove('selected');
+            });
+
+            // 标记当前选择
+            event.target.classList.add('selected');
+
+            // 显示选择结果
+            if (timeOption.success) {
+                resultElement.textContent = `你选择了${timeOption.time}进入后勤区域。这个时间点人员稀少，你成功潜入并发现了通往超市后巷的通道！`;
+                resultElement.className = 'result success';
+                resultElement.style.display = 'block';
+
+                // 延迟跳转到成功页面
+                setTimeout(() => {
+                    gameState.currentLocation = 'supermarketBackAlley';
+                    gameState.path.push('supermarketBackAlley');
+                    updateLocation();
+                    changeBackground();
+                }, 2000);
+            } else {
+                resultElement.textContent = `你选择了${timeOption.time}进入后勤区域。${timeOption.description}你被工作人员发现并被赶出了后勤区域。`;
+                resultElement.className = 'result failure';
+                resultElement.style.display = 'block';
+
+                // 延迟跳转到窄巷
+                setTimeout(() => {
+                    gameState.currentLocation = 'narrowAlley';
+                    gameState.path.push('narrowAlley');
+                    updateLocation();
+                    changeBackground();
+                }, 2000);
+            }
+        }
+
+        // 更换背景图片
+        function changeBackground() {
+            const image = locationImages[gameState.currentLocation] || locationImages.apartment;
+            document.getElementById('background').style.backgroundImage = `url('${image}')`;
+        }
+
+        // 开始游戏
+        window.onload = initGame;
+    </script>
+</body>
+</html>

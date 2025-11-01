@@ -1,0 +1,349 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>临渠县青涟渠畔月桂盛放 - 千年古渠浸润芬芳诗意</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .news-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .news-header {
+            background: linear-gradient(135deg, #2c5530 0%, #4a7c59 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .news-title {
+            font-size: 2.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .news-subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .news-meta {
+            background: #f8f9fa;
+            padding: 15px 30px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .news-content {
+            padding: 40px 30px;
+        }
+
+        .news-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #2c5530;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border-left: 4px solid #4a7c59;
+            padding-left: 15px;
+        }
+
+        .news-text {
+            font-size: 1.1em;
+            text-align: justify;
+            margin-bottom: 15px;
+            text-indent: 2em;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8e6cf 0%, #dcedc1 100%);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #4a7c59;
+        }
+
+        .quote {
+            font-style: italic;
+            color: #555;
+            border-left: 3px solid #4a7c59;
+            padding-left: 20px;
+            margin: 20px 0;
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .image-container {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            height: 300px;
+            border-radius: 8px;
+            margin: 25px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1976d2;
+            font-size: 1.1em;
+            border: 2px dashed #90caf9;
+            overflow: hidden;
+        }
+
+            .image-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .image-caption {
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        .news-footer {
+            background: #2c5530;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .tag {
+            background: #4a7c59;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .byline {
+            text-align: right;
+            font-style: italic;
+            margin: 20px 0;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .news-container {
+                margin: 10px;
+                border-radius: 8px;
+            }
+
+            .news-title {
+                font-size: 1.8em;
+            }
+
+            .news-content {
+                padding: 20px;
+            }
+        }
+
+        /* 动画效果 */
+        .news-section {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 为不同段落设置延迟动画 */
+        .news-section:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .news-section:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .news-section:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .news-section:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .news-section:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .news-section:nth-child(6) {
+            animation-delay: 0.6s;
+        }
+    </style>
+</head>
+<body>
+    <div class="news-container">
+        <header class="news-header">
+            <h1 class="news-title">临渠县青涟渠畔月桂盛放</h1>
+            <div class="news-subtitle">千年古渠浸润芬芳诗意</div>
+        </header>
+
+        <div class="news-meta">
+            本报讯（记者 秦砚秋） • 发布时间：2025年1月 • 分类：地方新闻 • 阅读量：2.8万
+        </div>
+
+        <article class="news-content">
+            <div class="news-section">
+                <div class="image-container">
+                    <img src="http://sylvie-seven-cq.top/gallery/laygs.jpg" alt="青涟渠月桂盛开">
+                </div>
+                <div class="image-caption">青涟渠两岸月桂盛开，渠面波光潋滟</div>
+
+                <p class="news-text">
+                    近日，临渠县青涟渠两岸的百余株月桂进入盛花期，金黄细碎的花瓣缀满枝头，清冽香气随渠水蜿蜒弥漫，为这座依水而居的小城披上了一层馥郁的秋意纱衣。
+                </p>
+            </div>
+
+            <div class="news-section">
+                <h2 class="section-title">千年古渠与百年桂香的交融</h2>
+                <p class="news-text">
+                    青涟渠作为临渠县的母亲河，已有千年历史，渠岸两侧的月桂树多为近百年老树，部分树龄甚至与周边古民居相仿。据县园林管理处工作人员介绍，这些月桂树是历代居民自发栽种、精心养护的成果，"老辈人说，青涟渠的水养人，也养树，你看这树干粗壮遒劲，每年开花都比别处更盛些。"
+                </p>
+                <p class="news-text">
+                    这些古树见证了临渠县的历史变迁，与千年古渠共同构成了独特的自然人文景观。月桂树不仅为城市增添了芬芳，更承载着深厚的历史文化内涵。
+                </p>
+            </div>
+
+            <div class="news-section">
+                <h2 class="section-title">桂香满城的诗意生活</h2>
+                <p class="news-text">
+                    清晨的青涟渠边，晨练的居民伴着桂香舒展筋骨，上学的孩童摘下落在肩头的花瓣夹进课本；傍晚时分，夕阳为渠水镀上金辉，晚风拂过，桂雨簌簌飘落，落在青石堤岸、木质廊桥，也落在散步市民的发间肩头。
+                </p>
+
+                <div class="highlight">
+                    <strong>居民回忆：</strong> "小时候跟着外婆来渠边捣衣，桂花开时，她总说'这香是渠水捎来的礼物'。"家住渠畔老街的居民周阿姨笑着说，如今每到花期，她都会带着孙女来捡桂花，"晾干了泡茶、做糕，是临渠人独有的秋天味道。"
+                </div>
+            </div>
+
+            <div class="news-section">
+                <h2 class="section-title">文化传承的芬芳记忆</h2>
+                <p class="news-text">
+                    月桂不仅是一种植物，更是临渠县文化传承的载体。在临渠县的文化传统中，月桂象征着吉祥、美好和幸福，许多民间传说和故事都与这些古树相关。
+                </p>
+                <p class="news-text">
+                    每年月桂花期，当地都会举办各种文化活动，居民们用桂花制作传统糕点，传承着古老的饮食文化，这些习俗代代相传，成为了临渠县独特的民俗文化组成部分。
+                </p>
+
+                <div class="image-container">
+                    <img src="http://sylvie-seven-cq.top/gallery/yuegpeit.jpg" alt="桂花文化活动">
+                </div>
+                <div class="image-caption">居民参与桂花文化活动，传承传统习俗</div>
+            </div>
+
+            <div class="news-section">
+                <h2 class="section-title">文旅融合的新篇章</h2>
+                <p class="news-text">
+                    县文旅局借此契机，推出"桂香渠韵"主题文旅活动，组织市民参与桂花诗词征集、古渠历史故事会等，让千年渠水与百年桂香碰撞出文化火花。"青涟渠的月桂不仅是风景，更是临渠人生活记忆的载体。"文旅局负责人表示，下一步将对沿岸月桂树进行系统性保护，增设休憩观景设施，让这份芬芳诗意长久留存。
+                </p>
+                <p class="news-text">
+                    这些举措不仅保护了珍贵的古树资源，也为当地旅游业发展注入了新的活力，吸引了更多游客前来感受临渠县独特的自然人文魅力。
+                </p>
+            </div>
+
+            <div class="news-section">
+                <h2 class="section-title">生态保护与可持续发展</h2>
+                <p class="news-text">
+                    月桂树对于临渠县的生态环境也有着重要的作用。它们扎根在青涟渠两岸，有助于保持水土，防止水土流失，为古渠的长久稳定运行提供了一定的生态保障。
+                </p>
+
+                <div class="quote">
+                    "青涟渠的月桂不仅是风景，更是临渠人生活记忆的载体。我们一定会好好保护它们，让它们一直在这里生长下去，让这份芬芳诗意长久留存。"
+                    <br><br>
+                    —— 临渠县文旅局负责人
+                </div>
+            </div>
+
+            <div class="news-section">
+                <h2 class="section-title">最佳观赏期与未来展望</h2>
+                <p class="news-text">
+                    截至发稿时，月桂花期已进入最佳观赏期，预计可持续至十月中旬。漫步青涟渠畔，看渠水悠悠、桂影婆娑，鼻尖萦绕着清甜香气，成为临渠县秋日里最动人的图景。
+                </p>
+                <p class="news-text">
+                    相信在当地政府和居民的共同努力下，月桂树将在青涟渠边继续茁壮成长，传承和延续临渠县的历史与文化，为子孙后代留下一片绿色的财富，让千年古渠与百年桂香的故事继续书写下去。
+                </p>
+
+                <div class="byline">记者 秦砚秋 报道</div>
+            </div>
+
+            <div class="tags">
+                <span class="tag">#临渠县</span>
+                <span class="tag">#月桂树</span>
+                <span class="tag">#青涟渠</span>
+                <span class="tag">#文化传承</span>
+                <span class="tag">#生态保护</span>
+                <span class="tag">#旅游景点</span>
+                <span class="tag">#古树名木</span>
+                <span class="tag">#诗意生活</span>
+            </div>
+        </article>
+
+        <footer class="news-footer">
+            <p>© 2025 临渠县新闻中心 • 千年古渠，百年桂香，诗意生活</p>
+        </footer>
+    </div>
+
+    <script>
+        // 简单的滚动动画
+        document.addEventListener('DOMContentLoaded', function () {
+            const sections = document.querySelectorAll('.news-section');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+

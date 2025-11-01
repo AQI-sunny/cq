@@ -1,0 +1,293 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>神秘的失物招领</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #0a0a12;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+            background-image: radial-gradient(circle at 10% 20%, rgba(28, 28, 50, 0.8) 0%, transparent 20%), radial-gradient(circle at 90% 80%, rgba(40, 10, 30, 0.6) 0%, transparent 20%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: rgba(18, 18, 30, 0.85);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid #2a2a3a;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: linear-gradient(90deg, #8a2be2, #4a0080);
+            }
+
+        h1 {
+            color: #d4c2fc;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 2.2rem;
+            text-shadow: 0 0 10px rgba(138, 43, 226, 0.3);
+            position: relative;
+        }
+
+            h1::after {
+                content: '';
+                display: block;
+                width: 100px;
+                height: 2px;
+                background: linear-gradient(90deg, transparent, #8a2be2, transparent);
+                margin: 10px auto;
+            }
+
+        .story-text {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            text-align: center; /* 修改：居中对齐 */
+        }
+
+        .highlight {
+            color: #b19cd9;
+            font-weight: bold;
+        }
+
+        .cover-image-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .cover-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border: 1px solid #2a2a3a;
+        }
+
+        .cover-image-first {
+            max-width: 50%; /* 第一张图缩小到70% */
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border: 1px solid #2a2a3a;
+        }
+
+        .cover-image-second {
+            max-width: 100%; /* 第二张图保持100% */
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border: 1px solid #2a2a3a;
+        }
+
+        .choices {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-width: 180px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6a0dad, #8a2be2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 6px 20px rgba(138, 43, 226, 0.6);
+            }
+
+        .btn-disabled {
+            background: linear-gradient(135deg, #3a3a4a, #5a5a6a);
+            color: #888;
+            cursor: pointer; /* 修改：允许点击 */
+            position: relative;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(138, 43, 226, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(138, 43, 226, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(138, 43, 226, 0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .btn {
+                min-width: 150px;
+            }
+        }
+
+        /* 自定义弹窗样式 */
+        .custom-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: black;
+            color: red;
+            padding: 20px;
+            border: 1px solid red;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            min-width: 300px;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+
+        /* 隐蔽链接样式 */
+        .disclaimer-link {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            color: #0a0a12;
+            font-size: 0.7rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+            .disclaimer-link:hover {
+                color: #4a4a5a;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>神秘的失物招领事件</h1>
+
+        <div class="story-text">
+            <p>我根本不记得我丢过什么<span class="highlight">黑色笔记本</span>！！</p>
+
+            <p>可是那则<span class="highlight">失物招领帖</span>上明晃晃地写着我家的门牌号！！</p>
+
+            <p>发帖的人说，她在<span class="highlight">33楼的楼梯间</span>捡到了它。</p>
+
+            <p>可这是<span class="highlight">33楼</span>！！平常没有人会走楼梯！并且楼梯间的门一直是锁着的......</p>
+
+            <p>我尝试回忆，却只感到一阵莫名的<span class="highlight">眩晕</span>，仿佛记忆被强行抹去了一小块。</p>
+        </div>
+
+        <div class="cover-image-container">
+            <img src="https://github.com/AQI-sunny/cq/raw/main/gallery/begin.jpg" alt="聊天记录" class="cover-image cover-image-first" />
+        </div>
+
+        <div class="cover-image-container">
+            <img src="https://github.com/AQI-sunny/cq/raw/main/gallery/beginfm.jpg" alt="失物招领帖" class="cover-image cover-image-second" />
+        </div>
+
+        <div class="choices">
+            <button id="investigate-btn" class="btn btn-primary pulse">【深入调查】</button>
+            <button id="ignore-btn" class="btn btn-disabled">【置之不理】</button>
+        </div>
+
+        <!-- 免责声明 -->
+        <a href="https://sylvie-seven-cq.top/Syzygy/disclaimer.html" class="disclaimer-link">免责声明</a>
+    </div>
+
+    <!-- 自定义弹窗 -->
+    <div id="customModal" class="custom-modal">
+        <div class="modal-content">
+            你真的能当做无事发生吗？
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('investigate-btn').addEventListener('click', function () {
+            window.location.href = 'https://sylvie-seven-cq.top/Syzygy/forum.html';
+        });
+
+        document.getElementById('ignore-btn').addEventListener('click', function () {
+            const modal = document.getElementById('customModal');
+            modal.style.display = 'block';
+
+            // 添加点击事件，点击弹窗外区域关闭弹窗
+            window.onclick = function (event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+

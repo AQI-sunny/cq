@@ -1,0 +1,761 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乔静 - 人物百科</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #6b8cbc;
+            --accent-color: #ff7e5f;
+            --light-color: #f8f9fa;
+            --dark-color: #2c3e50;
+            --text-color: #333;
+            --text-light: #777;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 60px 0;
+        }
+
+        h1, h2, h3, h4 {
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 36px;
+        }
+
+        h2 {
+            font-size: 30px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+            h2:after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 60px;
+                height: 3px;
+                background-color: var(--accent-color);
+            }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+            a:hover {
+                color: var(--accent-color);
+            }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+            .btn:hover {
+                background-color: var(--secondary-color);
+                color: white;
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+        .btn-accent {
+            background-color: var(--accent-color);
+        }
+
+            .btn-accent:hover {
+                background-color: #ff9a84;
+            }
+
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            transition: var(--transition);
+            height: 100%;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            }
+
+        /* 头部样式 */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 100px 0 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+            header:before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,138.7C672,128,768,160,864,170.7C960,181,1056,171,1152,149.3C1248,128,1344,96,1392,80L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+                background-size: cover;
+                background-position: center;
+            }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            margin: 0 auto 25px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 60px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .quick-facts {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .fact {
+            margin: 0 20px;
+            text-align: center;
+        }
+
+        .fact-number {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .fact-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* 导航 */
+        nav {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+            .logo span {
+                color: var(--primary-color);
+            }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+            .nav-links li {
+                margin-left: 30px;
+            }
+
+            .nav-links a {
+                color: var(--dark-color);
+                font-weight: 500;
+                position: relative;
+            }
+
+                .nav-links a:after {
+                    content: '';
+                    position: absolute;
+                    width: 0;
+                    height: 2px;
+                    bottom: -5px;
+                    left: 0;
+                    background-color: var(--accent-color);
+                    transition: var(--transition);
+                }
+
+                .nav-links a:hover:after {
+                    width: 100%;
+                }
+
+        /* 简介部分 */
+        .intro-content {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .intro-text {
+            flex: 2;
+        }
+
+        .intro-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            height: 300px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .intro-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        /* 产业布局 */
+        .business-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .business-card {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .business-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background-color: var(--light-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 30px;
+        }
+
+        /* 时间线 */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 40px auto 0;
+        }
+
+            .timeline:before {
+                content: '';
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 50%;
+                width: 2px;
+                background-color: var(--primary-color);
+                transform: translateX(-50%);
+            }
+
+        .timeline-item {
+            margin-bottom: 50px;
+            position: relative;
+            width: 50%;
+            padding-right: 40px;
+        }
+
+            .timeline-item:nth-child(even) {
+                margin-left: 50%;
+                padding-right: 0;
+                padding-left: 40px;
+            }
+
+        .timeline-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .timeline-item:after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: -10px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            border: 4px solid white;
+            box-shadow: 0 0 0 3px var(--primary-color);
+        }
+
+        .timeline-item:nth-child(even):after {
+            right: auto;
+            left: -10px;
+        }
+
+        .timeline-date {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        /* 社会贡献 */
+        .contributions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .contribution-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .contribution-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 20px;
+            background-color: var(--light-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            font-size: 24px;
+        }
+
+        /* 页脚 */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 30px;
+        }
+
+        .footer-title {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #bdc3c7;
+        }
+
+            .footer-links a:hover {
+                color: white;
+            }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: var(--transition);
+        }
+
+            .social-link:hover {
+                background-color: var(--accent-color);
+                transform: translateY(-3px);
+            }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+            color: #95a5a6;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .intro-content {
+                flex-direction: column;
+            }
+
+            .timeline:before {
+                left: 20px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-right: 0;
+                padding-left: 50px;
+            }
+
+                .timeline-item:nth-child(even) {
+                    margin-left: 0;
+                    padding-left: 50px;
+                }
+
+                .timeline-item:after {
+                    left: 10px;
+                    right: auto;
+                }
+
+                .timeline-item:nth-child(even):after {
+                    left: 10px;
+                }
+
+            .nav-container {
+                flex-direction: column;
+            }
+
+            .nav-links {
+                margin-top: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+                .nav-links li {
+                    margin: 5px 10px;
+                }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部 -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="profile-img">
+                    <img src="http://sylvie-seven-cq.top/gallery/qj.jpg" alt="乔静" style="width:100%;height:100%;object-fit:cover;">
+                </div>
+                <h1>乔静</h1>
+                <p>企业家 · 静乔公寓创始人 · 社会公益倡导者</p>
+
+                <div class="quick-facts">
+                    <div class="fact">
+                        <div class="fact-number">15+</div>
+                        <div class="fact-label">年从业经验</div>
+                    </div>
+                    <div class="fact">
+                        <div class="fact-number">8</div>
+                        <div class="fact-label">家企业</div>
+                    </div>
+                    <div class="fact">
+                        <div class="fact-number">500万+</div>
+                        <div class="fact-label">公益捐赠</div>
+                    </div>
+                    <div class="fact">
+                        <div class="fact-number">3</div>
+                        <div class="fact-label">城市布局</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 导航 -->
+    <nav>
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo">乔<span>静</span></div>
+                <ul class="nav-links">
+                    <li><a href="#intro">人物简介</a></li>
+                    <li><a href="#business">产业布局</a></li>
+                    <li><a href="#timeline">人生轨迹</a></li>
+                    <li><a href="#contributions">社会贡献</a></li>
+                    <li><a href="#contact">联系</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 人物简介 -->
+    <section id="intro">
+        <div class="container">
+            <h2>人物简介</h2>
+            <div class="intro-content">
+                <div class="intro-text">
+                    <p>乔静，中国企业家，静乔公寓创始人兼首席执行官，同时经营多家咖啡连锁店及其他商业实体。以其敏锐的商业洞察力和强烈的社会责任感闻名。</p>
+                    <p>出生于深南市，乔静从小展现出非凡的商业头脑。大学毕业后，她回到家乡，开始涉足房地产行业，并创立了静乔公寓品牌。经过多年发展，静乔公寓已成为当地知名的长租公寓品牌，以其优质的服务和独特的设计风格受到年轻专业人士的青睐。</p>
+                    <p>除了房地产，乔静还积极拓展其他商业领域，创立了多个福叁咖啡品牌，将精品咖啡文化引入二三线城市。她的商业理念是"创造价值，回馈社会"，这一理念贯穿于她所有的商业决策中。</p>
+                    <p>乔静不仅是一位成功的企业家，还是一位热心公益的社会活动家。她积极参与各类慈善活动，特别是在临渠县火灾后的援助工作中发挥了重要作用，为受灾群众提供了大量物资和资金支持。</p>
+                </div>
+                <div class="intro-image">
+                    <img src="http://sylvie-seven-cq.top/gallery/qj.jpg" alt="乔静">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 产业布局 -->
+    <section id="business" style="background-color: var(--light-color);">
+        <div class="container">
+            <h2>产业布局</h2>
+            <p>乔静的商业版图涵盖多个领域，以房地产为核心，辐射餐饮、文化等多个行业。</p>
+
+            <div class="business-grid">
+                <div class="card business-card">
+                    <div class="business-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3>静乔公寓</h3>
+                    <p>高品质长租公寓品牌，专注于为城市青年提供舒适、便捷的居住体验。目前在三个城市拥有15处物业，服务超过5000名租客。</p>
+                </div>
+
+                <div class="card business-card">
+                    <div class="business-icon">
+                        <i class="fas fa-coffee"></i>
+                    </div>
+                    <h3>福叁咖啡</h3>
+                    <p>精品咖啡连锁品牌，致力于推广咖啡文化。目前在临渠县及周边城市拥有8家门店，成为当地年轻人喜爱的社交场所。</p>
+                </div>
+
+                <div class="card business-card">
+                    <div class="business-icon">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <h3>晶益基金</h3>
+                    <p>专注于教育支持和社区发展的公益基金，已资助超过200名贫困学生，并支持了多个社区建设项目。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 人生轨迹 -->
+    <section id="timeline">
+        <div class="container">
+            <h2>人生轨迹</h2>
+            <p>深南市的企业家，其成长历程充满奋斗与坚持。</p>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2007年</div>
+                        <h3>大学毕业</h3>
+                        <p>毕业于京市工商大学企业管理专业，获得学士学位。大学期间就开始尝试小型商业项目，展现出创业天赋。</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2008年</div>
+                        <h3>创立静乔公寓</h3>
+                        <p>回到家乡深南市，利用家族闲置房产创立了第一家静乔公寓，以其独特的设计理念和贴心的服务迅速获得市场认可。</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2012年</div>
+                        <h3>业务扩张</h3>
+                        <p>静乔公寓扩展到周边两个城市，同时开设第一家福叁咖啡，开始多元化经营。</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2015年</div>
+                        <h3>临渠县火灾援助</h3>
+                        <p>临渠县发生重大火灾，乔静迅速组织救援团队，捐赠大量物资，并设立专项基金帮助受灾群众重建家园。</p>
+                    </div>
+                </div>
+
+
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2018年</div>
+                        <h3>与临渠文旅合作</h3>
+                        <p>与临渠县文旅局达成战略合作，共同开发文化旅游项目，推动当地旅游业发展。</p>
+                    </div>
+                </div>
+
+
+
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2021年</div>
+                        <h3>成立晶益基金</h3>
+                        <p>正式成立晶益基金，专注于教育公平和社区发展，系统化开展公益事业。</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2022年</div>
+                        <h3>焕新静乔公寓</h3>
+                        <p>对静乔公寓进行全面焕新升级，引入现代化设计理念和智能家居系统，提升居住体验，进一步巩固了在高端租赁市场的地位。</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 社会贡献 -->
+    <section id="contributions" style="background-color: var(--light-color);">
+        <div class="container">
+            <h2>社会贡献</h2>
+            <p>乔静始终坚信企业的成功离不开社会的支持，积极回馈社会是她商业哲学的重要组成部分。</p>
+
+            <div class="contributions-grid">
+                <div class="card contribution-card">
+                    <div class="contribution-icon">
+                        <i class="fas fa-fire-extinguisher"></i>
+                    </div>
+                    <h3>临渠县火灾援助</h3>
+                    <p>2015年临渠县发生特大火灾后，乔静第一时间组织救援团队，捐赠价值300万元的物资，并设立200万元专项重建基金，帮助200多户受灾家庭重建家园。</p>
+                </div>
+
+                <div class="card contribution-card">
+                    <div class="contribution-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>教育支持</h3>
+                    <p>通过晶益基金，已资助超过200名贫困学生完成学业，并在三所乡村小学建立了图书馆和计算机教室，改善教育条件。</p>
+                </div>
+
+                <div class="card contribution-card">
+                    <div class="contribution-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>文旅合作</h3>
+                    <p>与临渠县文旅局合作，开发特色文化旅游路线，投资建设文化创意园区，推动当地文化产业发展，创造就业机会。</p>
+                </div>
+
+                <div class="card contribution-card">
+                    <div class="contribution-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <h3>社区建设</h3>
+                    <p>在她的企业中推行"社区友好"政策，为当地居民提供就业培训，支持社区活动，积极参与社区治理。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">关于乔静</h3>
+                    <p>企业家，静乔公寓创始人，社会公益倡导者。</p>
+                    <p>致力于通过商业创新和社会贡献创造更美好的社区。</p>
+                    <!--<div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-weixin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                    </div>-->
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">相关企业</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">静乔公寓</a></li>
+                        <li><a href="#">福叁咖啡</a></li>
+                        <li><a href="#">晶益基金</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">联系信息</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope"></i> contact@qiaojing.com</li>
+                        <li><i class="fas fa-phone"></i> +86 138 XXXX 8888</li>
+                        <li><i class="fas fa-map-marker-alt"></i> 中国临渠县晶静大厦</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                &copy; 2025 乔静人物百科 | 本页面内容属神秘的失物招领事件宇宙
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
