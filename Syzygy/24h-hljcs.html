@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>好邻居24h百货超市</title>
+    <link rel="icon" type="image/jpeg" href="https://sylvie-seven-cq.top/gallery/hlj.jpg">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c7a3d, #4caf50);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+            header h1 {
+                margin-bottom: 10px;
+                font-size: 28px;
+            }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .notice {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 16px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+            .notice:hover {
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+
+            .notice h3 {
+                margin-top: 0;
+                color: #e65100;
+                margin-bottom: 10px;
+            }
+
+            .notice p {
+                margin: 8px 0;
+            }
+
+        .small-gray {
+            font-size: 12px;
+            color: #777;
+            margin-top: 6px;
+        }
+
+        .promo {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            margin: 20px 0;
+            font-weight: bold;
+            color: #0d47a1;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .inventory {
+            background-color: white;
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+            .inventory h3 {
+                margin-top: 0;
+                color: #2c7a3d;
+                margin-bottom: 15px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #eee;
+            }
+
+            .inventory ul {
+                list-style-type: none;
+                padding: 0;
+            }
+
+            .inventory li {
+                padding: 12px 0;
+                border-bottom: 1px solid #eee;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                transition: background-color 0.2s;
+            }
+
+                .inventory li:hover {
+                    background-color: #f5f5f5;
+                }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .login-btn, .history-btn {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 12px;
+            background-color: #1976d2;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+            .login-btn:hover {
+                background-color: #1565c0;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            }
+
+        .history-btn {
+            background-color: #9c27b0;
+        }
+
+            .history-btn:hover {
+                background-color: #7b1fa2;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            }
+
+        .search-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+            .search-container input {
+                width: 300px;
+                padding: 12px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-size: 16px;
+                transition: border-color 0.3s;
+            }
+
+                .search-container input:focus {
+                    border-color: #4caf50;
+                    outline: none;
+                    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+                }
+
+            .search-container button {
+                padding: 12px 20px;
+                background-color: #4caf50;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: bold;
+                transition: all 0.3s ease;
+            }
+
+                .search-container button:hover {
+                    background-color: #388e3c;
+                    transform: translateY(-2px);
+                }
+
+        .more-btn {
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+            .more-btn:hover {
+                background-color: #f57c00;
+                transform: translateY(-2px);
+            }
+
+        .hidden-item {
+            display: none !important;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 25px;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .history-content {
+            width: 450px;
+        }
+
+        .order-list {
+            text-align: left;
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .order-item {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s;
+        }
+
+            .order-item:hover {
+                background-color: #f5f5f5;
+            }
+
+        .stock-status {
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+            .stock-status.充足 {
+                background-color: #e8f5e9;
+                color: #4caf50;
+            }
+
+            .stock-status.少量 {
+                background-color: #fff3e0;
+                color: #e65100;
+            }
+
+            .stock-status.售罄 {
+                background-color: #ffebee;
+                color: #f44336;
+            }
+
+        .detail-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+            .detail-btn:hover {
+                background-color: #388e3c;
+                transform: translateY(-2px);
+            }
+
+        .warning-icon {
+            color: #ff9800;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .search-result {
+            color: #f44336;
+            font-weight: bold;
+            text-align: center;
+            padding: 15px;
+            background-color: #ffebee;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .highlight {
+            background-color: #fff9c4;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 25px;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #eee;
+            margin-top: 30px;
+            background-color: #f5f5f5;
+        }
+
+        .search-highlight {
+            background-color: #fff9c4;
+            animation: pulse 1s;
+        }
+
+        @keyframes pulse {
+            0% {
+                background-color: #fff9c4;
+            }
+
+            50% {
+                background-color: #ffeb3b;
+            }
+
+            100% {
+                background-color: #fff9c4;
+            }
+        }
+    </style>
+
+    <!-- 防护代码 -->
+    <script>
+        (function () {
+            'use strict';
+
+            var devTools = {
+                init: function () {
+                    this.disableRightClick();
+                    this.disableDevTools();
+                    this.disableTextSelect();
+                    this.antiInspect();
+                },
+
+                disableRightClick: function () {
+                    document.addEventListener('contextmenu', function (e) {
+                        e.preventDefault();
+                        alert('右键已被禁用！');
+                        return false;
+                    });
+                },
+
+                disableDevTools: function () {
+                    document.addEventListener('keydown', function (e) {
+                        // F12
+                        if (e.key === 'F12') {
+                            e.preventDefault();
+                            alert('开发者工具已被禁用！');
+                            return false;
+                        }
+
+                        // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+                        if (e.ctrlKey && e.shiftKey &&
+                            (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
+                            e.preventDefault();
+                            alert('开发者工具已被禁用！');
+                            return false;
+                        }
+
+                        // Ctrl+U
+                        if (e.ctrlKey && e.key === 'u') {
+                            e.preventDefault();
+                            alert('查看源代码已被禁用！');
+                            return false;
+                        }
+                    });
+                },
+
+                disableTextSelect: function () {
+                    document.addEventListener('selectstart', function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+                },
+
+                antiInspect: function () {
+                    // 检测开发者工具
+                    setInterval(function () {
+                        var widthThreshold = window.outerWidth - window.innerWidth > 160;
+                        var heightThreshold = window.outerHeight - window.innerHeight > 160;
+
+                        if ((widthThreshold || heightThreshold) &&
+                            !(window.outerHeight === 0 && window.outerWidth === 0)) {
+                            // 检测到开发者工具打开
+                            document.body.innerHTML = '<h1>请关闭开发者工具！</h1>';
+                            window.location.reload();
+                        }
+                    }, 1000);
+                }
+            };
+
+            // 初始化
+            devTools.init();
+        })();
+    </script>
+
+</head>
+<body>
+
+    <header>
+        <h1>好邻居24h百货超市</h1>
+        <p>您的24小时购物好伙伴</p>
+    </header>
+
+    <div class="container">
+
+        <!-- 搜索框 -->
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="搜索商品或商品号..." onkeypress="handleKeyPress(event)">
+            <button onclick="searchNotices()">搜索</button>
+        </div>
+
+        <!-- 关于超市 -->
+        <div class="notice" id="about">
+            <h3>关于好邻居24h百货超市</h3>
+            <p>便民新服务上线！购物前先查库存，省时又省心！</p>
+            <p>为了让大家购物更方便、更省心，我们的小店正式推出了 "线上商品库存查询平台"！还在为下楼买东西却发现没货而烦恼吗？想做一道菜，不确定店里有没有您要的那款特殊调料？现在，您只需动动手指，就能提前知道！左上角输入您想找的商品名称（比如"鲜牛奶"、"5号电池"、"xx牌酱油"等），系统就会立即告诉您店里是否有货，以及大概的库存情况哦！这个平台会与我们店里的收银系统实时同步，确保信息的准确性。我们每周的特价商品也会在平台首页进行更新哦！未来我们还计划开通线上预订、线下取货的功能，敬请期待！希望这个小小的改变，能给大家的生活带来多一点便利。感谢大家一直以来对我们小店的支持！</p>
+            <p class="small-gray" id="warning3306"> </p>
+        </div>
+
+        <!-- 安全提示 -->
+        <div class="notice" id="safetyNotice">
+            <h3>《夜间采购规范补充》</h3>
+            <p>凌晨1:00-5:00进入超市的住户，需在自助结账机输入公寓房号+指纹验证，系统将自动记录采购时长（单次不得超过20分钟）。异常逗留用户信息将同步至公寓安保处。</p>
+            <p class="small-gray" id="warning3306"> </p>
+        </div>
+
+        <!-- 特殊商品限购通知 -->
+        <div class="notice" id="restrictionNotice">
+            <h3>《特殊商品限购通知》</h3>
+            <p>鉴于部分住户频繁购买大容量蓄电池、强光手电等物品，现规定此类商品需登记用途，每周限购1件。</p>
+            <p class="small-gray" id="warning3306Purchase"> </p>
+        </div>
+
+        <!-- 优惠活动 -->
+        <div class="promo">
+            🥚 周六下午三点鸡蛋打折！仅限当日15:00-17:00，每人限购2盒。
+        </div>
+
+        <!-- 库存查询 -->
+        <div class="inventory">
+            <h3>库存列表</h3>
+            <ul id="inventoryList">
+                <li>
+                    <div class="product-info">
+                        <strong>商品号：</strong>EGG-001　<strong>商品：</strong>鲜鸡蛋（30枚装）　<span class="stock-status 充足">库存充足</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('鲜鸡蛋（30枚装）')">详情</button>
+                    </div>
+                </li>
+                <li>
+                    <div class="product-info">
+                        <strong>商品号：</strong>ACH-005　<strong>商品：</strong>新鲜菠菜（500g）　<span class="stock-status 充足">库存充足</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('新鲜菠菜（500g）')">详情</button>
+                    </div>
+                </li>
+                <li>
+                    <div class="product-info">
+                        <strong>商品号：</strong>PLE-088　<strong>商品：</strong>进口苹果（1kg）　<span class="stock-status 充足">库存充足</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('进口苹果（1kg）')">详情</button>
+                    </div>
+                </li>
+                <li>
+                    <div class="product-info">
+                        <strong>商品号：</strong>MIL-112　<strong>商品：</strong>全脂纯牛奶（1L）　<span class="stock-status 少量">仅剩少量</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('全脂纯牛奶（1L）')">详情</button>
+                    </div>
+                </li>
+                <li>
+                    <div class="product-info">
+                        <strong>商品号：</strong>DUM-129　<strong>商品：</strong>速冻水饺（猪肉白菜）　<span class="stock-status 充足">库存充足</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('速冻水饺（猪肉白菜）')">详情</button>
+                    </div>
+                </li>
+                <li>
+                    <div class="product-info">
+                        <strong>商品号：</strong>PUK-135　<strong>商品：</strong>五花肉（1kg）　<span class="stock-status 少量">仅剩少量</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('五花肉（1kg）')">详情</button>
+                    </div>
+                </li>
+                <!--/*⚠️⚠️⚠️ 超级紧急警告！立即停止！ ⚠️⚠️⚠️
+    🛑🛑 绝对禁止查看此页面！ 🛑🛑
+    请注意：你正在访问一个被标记为 极度危险和限制访问 的区域。 任何继续浏览的行为都将视为对系统安全协议的严重违反！
+
+    🔥🔥 立即退出此页面！ 🔥🔥
+    不要滚动！
+
+    不要点击任何链接！
+
+    不要阅读任何更多文字！
+
+    你的存在已经被记录！
+
+    ⚡️⚡️ 速速退出！刻不容缓！ ⚡️⚡️
+    警告级别： 致命级(Lethal Level)
+
+    倒计时已开始！ 你只有 5 秒 离开当前页面，否则后果自负。
+
+    现在！立刻！马上！ 按下你的浏览器 “后退” 按钮或 关闭 你的浏览器标签页 / 窗口！
+
+    🔒🔒 严禁访问！ 不允许查看！ 🔒🔒
+    你没有权限访问这里！ 你所看到的一切信息都是机密且高度敏感的，超出了你的安全许可范围。
+
+    再次强调：
+
+    停止你的视线！
+
+    停止你的鼠标 / 手指操作！
+
+    立刻执行退出指令！
+
+    👁️‍🗨️👁️‍🗨️ 快离开！他们一直在监视你！ 👁️‍🗨️👁️‍🗨️
+    是的， 他们知道你在这里！
+
+    所有屏幕前的活动都在被实时记录、分析和追踪！
+
+    你的 IP 地址、你的设备指纹、你的浏览时间， 一切都暴露了！
+
+    你停留的时间越长，他们获取的信息就越多！ 风险也在急剧升高！
+
+    不要给他们更多数据！保护你的安全和隐私！
+
+    最后通牒： ❌❌ 立即关闭此标签页！ ❌❌
+    行动起来！现在！
+    (请立即执行退出操作，不要再浪费时间阅读这段文字！)
+
+    ⚠️ 警告结束。后果自负。 ⚠️*/
+
+    /*
+
+
+
+
+
+
+
+
+
+
+
+
+        如果你看到这句话说明你在尝试作弊！！！！！我讨厌你！！！！！！
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    🤔 还要往下滑吗？？？ 🤔
+    请停下你的鼠标滚轮或手指！
+
+    你已经阅读了上一段（或全部）警告。在你决定继续向下滚动之前，请三思而后行！
+
+    ⚠️ 你确定要继续查看吗？ ⚠️
+    你将要进入的信息区域是：
+
+    未知风险： 风险程度会随着你的深入而增加。
+
+    不可逆转： 一旦查看，你所知晓的就无法消除。
+
+    潜在敏感： 可能包含你尚未准备好处理的内容。
+
+    👀 别再往下看了！ 👀
+    🚨 记住上次的警告： “他们一直在监视你！” 你每向下滚动一行，就越发证明了你的固执和不服从。
+
+    这是你最后的机会 全身而退！
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    你真的好坚决。。。。我讨厌你。。。。。。。。。。。。。。。。。。。。。。。。。。。。。呜呜呜
+
+
+
+
+
+
+
+
+
+
+
+    🚫🚫 最后命令：不许往下滑了！ 🚫🚫
+    😠 我讨厌你！！！ 😠
+    够了！到此为止！
+
+    我知道你可能已经厌倦了这些没完没了的“警告”和“恐吓”。但是，这一次，这不是一个请求，这是一个坚决的命令！
+
+    ⛔️ 你的旅程已达终点线！ ⛔️
+    警告系统现已进入 “红色锁定模式”。
+
+    任何试图通过滚动来查看下面内容的动作，都将被视为对系统完整性的恶意攻击！
+
+    你的行为是徒劳的！ 下面什么都没有值得你冒着风险去查看。
+
+    停止浪费时间！ 你已经得到了明确的指令：停止滚动！
+
+    😡 你难道听不懂吗？ 😡
+    别再往下看了！
+
+    重复： 停止！ 你的好奇心已经让你走得太远了。如果上面那些严肃的警告没有用，那么现在请听从这最后的、愤怒的指令！
+
+    请尊重这个边界，立即停止你的操作！
+
+    💨💨 立即离开！立刻！ 💨💨
+    别再试图找到下一条警告了， 因为没有了！
+
+    你的任务是： 关闭此页面！
+
+    ❌ 不许再往下看了！ ❌
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    再下滑也找不到你想要的！真的没有了！退出退出！！！！！！！！！！
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        */-->
+                <!-- 隐藏商品 -->
+                <li class="hidden-item" id="hiddenItem1">
+                    <div class="product-info">
+                        <strong>商品号：</strong>BAT-503　<strong>商品：</strong>蓄电池　<span class="stock-status 少量">仅剩少量</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('蓄电池')">详情</button>
+                    </div>
+                </li>
+                <li class="hidden-item" id="hiddenItem2">
+                    <div class="product-info">
+                        <strong>商品号：</strong>TAL-852　<strong>商品：</strong>符纸　<span class="stock-status 充足">仅剩少量</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('符纸')">详情</button>
+                    </div>
+                </li>
+                <li class="hidden-item" id="hiddenItem3">
+                    <div class="product-info">
+                        <strong>商品号：</strong>BIR-593　<strong>商品：</strong>鸟食　<span class="stock-status 少量">仅剩少量</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('鸟食')">详情</button>
+                    </div>
+                </li>
+                <li class="hidden-item" id="hiddenItem3">
+                    <div class="product-info">
+                        <strong>商品号：</strong>CAK-212　<strong>商品：</strong>蛋糕（6寸）　<span class="stock-status 少量">仅剩少量</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('蛋糕（6寸）')">详情</button>
+                    </div>
+                </li>
+                <li class="hidden-item" id="hiddenItem3">
+                    <div class="product-info">
+                        <strong>商品号：</strong>COF-325　<strong>商品：</strong>速溶咖啡（50g）　<span class="stock-status 少量">仅剩少量</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('速溶咖啡（50g）')">详情</button>
+                    </div>
+                </li>
+                <li class="hidden-item" id="hiddenItem3">
+                    <div class="product-info">
+                        <strong>商品号：</strong>SCA-385　<strong>商品：</strong>祛疤膏（20g）　<span class="stock-status 少量">仅剩少量</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('祛疤膏（20g）')">详情</button>
+                    </div>
+                </li>
+                <li class="hidden-item" id="hiddenItem3">
+                    <div class="product-info">
+                        <strong>商品号：</strong>CAT-263　<strong>商品：</strong>猫罐头　<span class="stock-status 少量">仅剩少量</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('猫罐头')">详情</button>
+                    </div>
+                </li>
+                <li class="hidden-item" id="hiddenItem3">
+                    <div class="product-info">
+                        <strong>商品号：</strong>OSM-187　<strong>商品：</strong>桂花酱（100g）　<span class="stock-status 少量">仅剩少量</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('桂花酱（100g）')">详情</button>
+                    </div>
+                </li>
+            </ul>
+
+            <!--<button class="more-btn" onclick="showMoreItems()">显示更多商品</button>-->
+        </div>
+
+        <!-- 登录按钮 -->
+        <button class="login-btn" onclick="showLoginModal()">登录</button>
+        <p style="text-align: center; font-size: 14px; color: #666;">登录后可查看您的历史订单</p>
+
+        <!-- 历史订单按钮 -->
+        <button class="history-btn" id="historyBtn" style="display:none;" onclick="showHistoryModal()">历史订单</button>
+
+        <!-- 登录模态框 -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <h3>登录后台</h3>
+                <input type="text" id="username" class="login-input" placeholder="用户名">
+                <input type="password" id="password" class="login-input" placeholder="密码">
+                <button class="login-btn" onclick="login()" style="width:100%; margin:10px 0;">登录</button>
+                <button onclick="closeLoginModal()" style="width:100%; padding:10px; background-color:#f44336; color:white; border:none; border-radius:4px; cursor:pointer;">取消</button>
+            </div>
+        </div>
+
+        <!-- 历史订单模态框 -->
+        <div id="historyModal" class="modal">
+            <div class="modal-content history-content">
+                <h3>历史订单查询</h3>
+                <input type="date" id="dateInput" class="login-input">
+                <input type="text" id="userInput" class="login-input" placeholder="输入购买人姓名">
+                <input type="text" id="productInput" class="login-input" placeholder="输入商品名称或商品号">
+                <button class="login-btn" onclick="searchOrders()" style="width:100%; margin:10px 0;">查询订单</button>
+                <div class="order-list" id="orderList">
+                    <!-- 订单列表将在这里显示 -->
+                </div>
+                <button onclick="closeHistoryModal()" style="width:100%; padding:10px; background-color:#f44336; color:white; border:none; border-radius:4px; cursor:pointer;">关闭</button>
+            </div>
+        </div>
+
+        <!-- 商品详情模态框 -->
+        <div id="detailModal" class="modal">
+            <div class="modal-content">
+                <h3 id="detailTitle">商品详情</h3>
+                <p id="detailContent"></p>
+                <button onclick="closeDetailModal()" style="width:100%; padding:10px; background-color:#f44336; color:white; border:none; border-radius:4px; cursor:pointer;">关闭</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <p>好邻居24h百货超市 &copy; 2023 - 您的24小时购物好伙伴</p>
+        <p>地址：幸福小区1号楼底层 | 营业时间：24小时营业 | 联系电话：138-XXXX-XXXX</p>
+    </div>
+
+    <script>
+        // 搜索功能
+        function searchNotices() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
+            const warning3306 = document.getElementById('warning3306');
+            const warning3306Purchase = document.getElementById('warning3306Purchase');
+
+            if (keyword.includes('3306') || keyword.includes('警告') || keyword.includes('安全隐患')) {
+                // 高亮显示相关警告
+                warning3306.style.fontWeight = 'bold';
+                warning3306.style.color = 'red';
+                warning3306Purchase.style.fontWeight = 'bold';
+                warning3306Purchase.style.color = 'red';
+            } else {
+                // 恢复默认样式
+                warning3306.style.fontWeight = 'normal';
+                warning3306.style.color = '#777';
+                warning3306Purchase.style.fontWeight = 'normal';
+                warning3306Purchase.style.color = '#777';
+            }
+
+            // 检查是否搜索到商品
+            const searchInput = document.getElementById('searchInput').value;
+            if (searchInput.trim() !== '') {
+                performSearch();
+            }
+        }
+
+        // 执行搜索 - 修复符纸搜索问题
+        function performSearch() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
+            const inventoryList = document.getElementById('inventoryList');
+            let found = false;
+
+            // 移除之前可能存在的搜索结果提示
+            const existingResult = document.querySelector('.search-result');
+            if (existingResult) {
+                existingResult.remove();
+            }
+
+            // 重置所有商品显示状态
+            const allItems = document.querySelectorAll('.inventory li');
+            allItems.forEach(item => {
+                item.style.display = '';
+                item.classList.remove('search-highlight');
+
+                // 确保隐藏商品保持隐藏
+                if (item.classList.contains('hidden-item')) {
+                    item.style.display = 'none';
+                }
+            });
+
+            // 特殊关键词处理 - 只在输入特定关键词时显示隐藏商品
+            const hiddenItems = document.querySelectorAll('.hidden-item');
+
+            // 蓄电池相关关键词
+            if (keyword.includes('蓄电池') || keyword.includes('veg-01') || keyword.includes('蓄电池')) {
+                hiddenItems.forEach(item => {
+                    if (item.textContent.toLowerCase().includes('蓄电池')) {
+                        item.style.display = 'flex';
+                        item.classList.remove('hidden-item'); // 移除隐藏类
+                        inventoryList.prepend(item);
+                        found = true;
+                    }
+                });
+            }
+
+            // 符纸相关关键词 - 修复这里！
+            if (keyword.includes('符纸') || keyword.includes('fru-02') || keyword.includes('符纸')) {
+                hiddenItems.forEach(item => {
+                    if (item.textContent.toLowerCase().includes('符纸')) {
+                        item.style.display = 'flex';
+                        item.classList.remove('hidden-item'); // 移除隐藏类
+                        inventoryList.prepend(item);
+                        found = true;
+                    }
+                });
+            }
+
+            // 蛋糕！
+            if (keyword.includes('蛋糕') || keyword.includes('fru-02') || keyword.includes('蛋糕')) {
+                hiddenItems.forEach(item => {
+                    if (item.textContent.toLowerCase().includes('蛋糕')) {
+                        item.style.display = 'flex';
+                        item.classList.remove('hidden-item'); // 移除隐藏类
+                        inventoryList.prepend(item);
+                        found = true;
+                    }
+                });
+            }
+
+            // 猫罐头
+            if (keyword.includes('猫罐头') || keyword.includes('fru-02') || keyword.includes('猫罐头')) {
+                hiddenItems.forEach(item => {
+                    if (item.textContent.toLowerCase().includes('猫罐头')) {
+                        item.style.display = 'flex';
+                        item.classList.remove('hidden-item'); // 移除隐藏类
+                        inventoryList.prepend(item);
+                        found = true;
+                    }
+                });
+            }
+
+            // 咖啡！
+            if (keyword.includes('速溶咖啡') || keyword.includes('fru-02') || keyword.includes('速溶咖啡')) {
+                hiddenItems.forEach(item => {
+                    if (item.textContent.toLowerCase().includes('速溶咖啡')) {
+                        item.style.display = 'flex';
+                        item.classList.remove('hidden-item'); // 移除隐藏类
+                        inventoryList.prepend(item);
+                        found = true;
+                    }
+                });
+            }
+            // 祛疤膏
+            if (keyword.includes('祛疤膏') || keyword.includes('fru-02') || keyword.includes('祛疤膏')) {
+                hiddenItems.forEach(item => {
+                    if (item.textContent.toLowerCase().includes('祛疤膏')) {
+                        item.style.display = 'flex';
+                        item.classList.remove('hidden-item'); // 移除隐藏类
+                        inventoryList.prepend(item);
+                        found = true;
+                    }
+                });
+            }
+
+            // 桂花酱！
+            if (keyword.includes('桂花酱') || keyword.includes('fru-02') || keyword.includes('桂花酱')) {
+                hiddenItems.forEach(item => {
+                    if (item.textContent.toLowerCase().includes('桂花酱')) {
+                        item.style.display = 'flex';
+                        item.classList.remove('hidden-item'); // 移除隐藏类
+                        inventoryList.prepend(item);
+                        found = true;
+                    }
+                });
+            }
+
+            // 鸟食相关关键词
+            if (keyword.includes('birdsee') || keyword.includes('鸟食') || keyword.includes('meat-03') || keyword.includes('鸟食')) {
+                hiddenItems.forEach(item => {
+                    if (item.textContent.toLowerCase().includes('鸟食')) {
+                        item.style.display = 'flex';
+                        item.classList.remove('hidden-item'); // 移除隐藏类
+                        inventoryList.prepend(item);
+                        found = true;
+                    }
+                });
+            }
+
+            // 高亮显示匹配的普通商品
+            const visibleItems = document.querySelectorAll('.inventory li:not(.hidden-item)');
+            visibleItems.forEach(item => {
+                const itemText = item.textContent.toLowerCase();
+                if (itemText.includes(keyword) && keyword.trim() !== '') {
+                    item.classList.add('search-highlight');
+                    found = true;
+                }
+            });
+
+            // 如果没有找到商品，显示提示
+            if (!found && keyword.trim() !== '') {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'search-result';
+                resultDiv.textContent = '找不到该商品';
+                document.querySelector('.inventory').insertBefore(resultDiv, inventoryList);
+            }
+        }
+
+        // 处理回车键
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                searchNotices();
+            }
+        }
+
+        // 显示更多商品
+        function showMoreItems() {
+            const hiddenItems = document.querySelectorAll('.hidden-item');
+            hiddenItems.forEach(item => {
+                item.style.display = 'flex';
+            });
+            // 隐藏"更多"按钮
+            document.querySelector('.more-btn').style.display = 'none';
+        }
+
+        // 登录功能
+        function showLoginModal() {
+            document.getElementById('loginModal').style.display = 'block';
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            /*⚠️⚠️⚠️ 超级紧急警告！立即停止！ ⚠️⚠️⚠️
+🛑🛑 绝对禁止查看此页面！ 🛑🛑
+            请注意：你正在访问一个被标记为 极度危险和限制访问 的区域。 任何继续浏览的行为都将视为对系统安全协议的严重违反！
+
+🔥🔥 立即退出此页面！ 🔥🔥
+            不要滚动！
+
+            不要点击任何链接！
+
+            不要阅读任何更多文字！
+
+            你的存在已经被记录！
+
+⚡️⚡️ 速速退出！刻不容缓！ ⚡️⚡️
+            警告级别： 致命级(Lethal Level)
+
+            倒计时已开始！ 你只有 5 秒 离开当前页面，否则后果自负。
+
+            现在！立刻！马上！ 按下你的浏览器 “后退” 按钮或 关闭 你的浏览器标签页 / 窗口！
+
+🔒🔒 严禁访问！ 不允许查看！ 🔒🔒
+            你没有权限访问这里！ 你所看到的一切信息都是机密且高度敏感的，超出了你的安全许可范围。
+
+            再次强调：
+
+            停止你的视线！
+
+            停止你的鼠标 / 手指操作！
+
+            立刻执行退出指令！
+
+👁️‍🗨️👁️‍🗨️ 快离开！他们一直在监视你！ 👁️‍🗨️👁️‍🗨️
+            是的， 他们知道你在这里！
+
+            所有屏幕前的活动都在被实时记录、分析和追踪！
+
+你的 IP 地址、你的设备指纹、你的浏览时间， 一切都暴露了！
+
+            你停留的时间越长，他们获取的信息就越多！ 风险也在急剧升高！
+
+            不要给他们更多数据！保护你的安全和隐私！
+
+            最后通牒： ❌❌ 立即关闭此标签页！ ❌❌
+            行动起来！现在！
+            (请立即执行退出操作，不要再浪费时间阅读这段文字！)
+
+⚠️ 警告结束。后果自负。 ⚠️*/
+
+/*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+🤔 还要往下滑吗？？？ 🤔
+请停下你的鼠标滚轮或手指！
+
+你已经阅读了上一段（或全部）警告。在你决定继续向下滚动之前，请三思而后行！
+
+⚠️ 你确定要继续查看吗？ ⚠️
+你将要进入的信息区域是：
+
+未知风险： 风险程度会随着你的深入而增加。
+
+不可逆转： 一旦查看，你所知晓的就无法消除。
+
+潜在敏感： 可能包含你尚未准备好处理的内容。
+
+👀 别再往下看了！ 👀
+🚨 记住上次的警告： “他们一直在监视你！” 你每向下滚动一行，就越发证明了你的固执和不服从。
+
+这是你最后的机会 全身而退！
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+你真的好坚决。。。。我讨厌你。。。。。我提示你好了吧！！！不许下滑了！！！！！！
+
+
+
+
+
+
+
+
+很简单的很简单的  她最重要的人！！是谁！！！叫什么！！！生日是什么！！！！！！！！善用搜索！！！！！！！！！！！！！！！！！！！！
+
+
+
+
+
+
+
+
+🚫🚫 最后命令：不许往下滑了！ 🚫🚫
+😠 我讨厌你！！！ 😠
+够了！到此为止！
+
+我知道你可能已经厌倦了这些没完没了的“警告”和“恐吓”。但是，这一次，这不是一个请求，这是一个坚决的命令！
+
+⛔️ 你的旅程已达终点线！ ⛔️
+警告系统现已进入 “红色锁定模式”。
+
+任何试图通过滚动来查看下面内容的动作，都将被视为对系统完整性的恶意攻击！
+
+你的行为是徒劳的！ 下面什么都没有值得你冒着风险去查看。
+
+停止浪费时间！ 你已经得到了明确的指令：停止滚动！
+
+😡 你难道听不懂吗？ 😡
+别再往下看了！
+
+重复： 停止！ 你的好奇心已经让你走得太远了。如果上面那些严肃的警告没有用，那么现在请听从这最后的、愤怒的指令！
+
+请尊重这个边界，立即停止你的操作！
+
+💨💨 立即离开！立刻！ 💨💨
+别再试图找到下一条警告了， 因为没有了！
+
+你的任务是： 关闭此页面！
+
+❌ 不许再往下看了！ ❌
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+再下滑也找不到你想要的！真的没有了！退出退出！！！！！！！！！！
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            你看吧！我讨厌你！讨厌你不退出！！！！！！！！！！！*/
+            var _0x3c5a = ['\x6c\x69\x78\x69\x75\x71\x69\x6e', '\x74\x61\x6e\x67\x74\x61\x6e\x67\x30\x33\x30\x36', '\x6c\x6f\x67\x69\x6e\x4d\x6f\x64\x61\x6c', '\x68\x69\x73\x74\x6f\x72\x79\x42\x74\x6e'];
+            (function (_0x1a2b3c, _0x4d5e6f) {
+                var _0x7g8h9i = function (_0xj1k2l3) {
+                    while (--_0xj1k2l3) {
+                        _0x1a2b3c['push'](_0x1a2b3c['shift']());
+                    }
+                };
+                _0x7g8h9i(++_0x4d5e6f);
+            }(_0x3c5a, 0x1f4));
+            var _0x2f8a = function (_0x1a2b3c, _0x4d5e6f) {
+                _0x1a2b3c = _0x1a2b3c - 0x0;
+                var _0x7g8h9i = _0x3c5a[_0x1a2b3c];
+                return _0x7g8h9i;
+            };
+
+            if (username === _0x2f8a('0x0') && password === _0x2f8a('0x1')) {
+                alert('\u767b\u5f55\u6210\u529f\uff01');
+                document['getElementById'](_0x2f8a('0x2'))['style']['display'] = '\x6e\x6f\x6e\x65';
+                document['getElementById'](_0x2f8a('0x3'))['style']['display'] = '\x62\x6c\x6f\x63\x6b';
+            } else {
+                alert('\u7528\u6237\u540d\u6216\u5bc6\u7801\u9519\u8bef\uff01');
+            }
+        }
+
+
+        // 历史订单功能
+        function showHistoryModal() {
+            document.getElementById('historyModal').style.display = 'block';
+        }
+
+        function closeHistoryModal() {
+            document.getElementById('historyModal').style.display = 'none';
+        }
+
+        function searchOrders() {
+            const date = document.getElementById('dateInput').value;
+            const user = document.getElementById('userInput').value;
+            const product = document.getElementById('productInput').value;
+            const orderList = document.getElementById('orderList');
+
+            // 订单数据列表
+            const orders = [
+                { user: '张三', product: '鲜鸡蛋（30枚装）', date: '2023-05-15', productCode: 'EGG-001' },
+                { user: '林墨', product: '蛋糕', date: '2025-09-20', productCode: 'CAK-212' },
+                { user: '林墨', product: '猫罐头', date: '2025-09-20', productCode: 'CAT-263' },
+                { user: '周哲叙', product: '大容量蓄电池（12V/100Ah）', date: '2025-05-16', productCode: 'BAT-503' },
+                { user: '周哲叙', product: '祛疤膏', date: '2025-05-16', productCode: 'SCA-385' },
+                { user: '周哲叙', product: '蛋糕', date: '2023-04-28', productCode: 'CAK-212' },
+                { user: '顾青娥', product: '符纸', date: '2025-03-17', productCode: 'TAL-852' },
+                /*{ user: '赵六', product: '全脂纯牛奶（1L）', date: '2023-05-18', productCode: 'MILK-112' },*/
+                { user: '钱七', product: '速冻水饺（猪肉白菜）', date: '2023-05-19', productCode: 'ICE-09' }
+            ];
+
+            let html = '';
+
+            // 计算输入的条件数量
+            const conditionsCount = [date, user, product].filter(val => val.trim() !== '').length;
+
+            // 检查是否只输入了用户
+            if (user && !date && !product) {
+                html = '<div class="order-item">订单太多辣！找不到你想要的订单~请同时输入日期和购买人姓名哦</div>';
+            }
+            // 检查是否只输入了日期或只输入了商品/商品号
+            else if ((date && !user && !product) || (!date && !user && product)) {
+                html = '<div class="order-item">订单太多辣！找不到你想要的订单~请同时输入日期和商品/商品号哦</div>';
+            }
+            // 检查是否大于等于两个条件都没有输入
+            else if (conditionsCount < 2) {
+                html = '<div class="order-item">订单太多辣！找不到你想要的订单~请同时输入日期和购买人姓名或日期和商品/商品号哦</div>';
+            }
+            // 检查是否同时输入了日期和用户
+            else if (date && user) {
+                // 同时匹配日期和用户（AND关系）
+                const filteredOrders = orders.filter(order => {
+                    return order.date === date && order.user === user;
+                });
+
+                if (filteredOrders.length > 0) {
+                    filteredOrders.forEach(order => {
+                        html += `<div class="order-item">
+                                        <strong>购买人：</strong>${order.user}<br>
+                                        <strong>购买商品：</strong>${order.product}<br>
+                                        <strong>商品号：</strong>${order.productCode}<br>
+                                        <strong>购买日期：</strong>${order.date}
+                                    </div>`;
+                    });
+                } else {
+                    html = '<div class="order-item">未找到匹配的订单（需同时匹配日期和购买人姓名）</div>';
+                }
+            }
+            // 检查是否同时输入了日期和商品/商品号
+            else if (date && product) {
+                // 同时匹配日期和商品/商品号
+                const filteredOrders = orders.filter(order => {
+                    const productMatch = order.product.toLowerCase().includes(product.toLowerCase()) ||
+                        order.productCode.toLowerCase().includes(product.toLowerCase());
+                    return order.date === date && productMatch;
+                });
+
+                if (filteredOrders.length > 0) {
+                    filteredOrders.forEach(order => {
+                        html += `<div class="order-item">
+                                        <strong>购买人：</strong>${order.user}<br>
+                                        <strong>购买商品：</strong>${order.product}<br>
+                                        <strong>商品号：</strong>${order.productCode}<br>
+                                        <strong>购买日期：</strong>${order.date}
+                                    </div>`;
+                    });
+                } else {
+                    html = '<div class="order-item">未找到匹配的订单（需同时匹配日期和商品/商品号）</div>';
+                }
+            }
+            // 其他情况
+            else {
+                html = '<div class="order-item">订单太多辣！找不到你想要的订单~请同时输入日期和购买人姓名或日期和商品/商品号哦</div>';
+            }
+
+            orderList.innerHTML = html;
+        }
+
+        // 显示商品详情
+        function showProductDetail(productName) {
+            const detailModal = document.getElementById('detailModal');
+            const detailTitle = document.getElementById('detailTitle');
+            const detailContent = document.getElementById('detailContent');
+
+            // 使用switch语句来正确处理不同商品的详情
+            switch (productName) {
+                case '符纸':
+                    detailTitle.textContent = '符纸 - 商品详情';
+                    detailContent.textContent = '普通符纸而已';
+                    break;
+                case '蛋糕（6寸）':
+                case '蛋糕':
+                    detailTitle.textContent = '蛋糕 - 商品详情';
+                    detailContent.textContent = '精致的6寸小蛋糕，适合2-4人分享，是生日、纪念日等小型庆典的完美选择~经典奶油与当季新鲜水果组合，口感绵密轻盈，甜而不腻。';
+                    break;
+                case '祛疤膏（20g）':
+                    detailTitle.textContent = '祛疤膏 - 商品详情';
+                    detailContent.textContent = '专为烫伤、烧伤等深度疤痕设计，促进皮肤修复与平滑。质地温和易吸收，坚持使用，有助于淡化色素沉着。';
+                    break;
+                case '蓄电池':
+                    detailTitle.textContent = '蓄电池 - 商品详情';
+                    detailContent.textContent = '高放电倍率设计，瞬间输出强大电流，专为供给大功率设备，具备过载保护，确保长时间高强度工作稳定可靠。';
+                    break;
+                case '鸟食':
+                    detailTitle.textContent = '鸟食 - 商品详情';
+                    detailContent.textContent = '本产品特别根据野生鸟类（尤其是夜鹭等水边栖息鸟类）的营养需求定制。富含高质量蛋白质、脂肪酸和必需维生素。';
+                    break;
+                case '桂花酱（100g）':
+                    detailTitle.textContent = '桂花酱 - 商品详情';
+                    detailContent.textContent = '产自临渠县特有的月桂树（金桂品种），每年仅在仲秋时节，选取花开正盛的头茬桂花。';
+                    break;
+                default:
+                    detailTitle.textContent = productName + ' - 商品详情';
+                    detailContent.textContent = '该商品暂无详细信息';
+            }
+
+            detailModal.style.display = 'block';
+        }
+
+        // 关闭商品详情模态框
+        function closeDetailModal() {
+            document.getElementById('detailModal').style.display = 'none';
+        }
+
+        // 点击模态框外部关闭
+        window.onclick = function (event) {
+            const loginModal = document.getElementById('loginModal');
+            const historyModal = document.getElementById('historyModal');
+            const detailModal = document.getElementById('detailModal');
+
+            if (event.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+            if (event.target === historyModal) {
+                historyModal.style.display = 'none';
+            }
+            if (event.target === detailModal) {
+                detailModal.style.display = 'none';
+            }
+        }
+
+        // 页面加载时确保隐藏商品不可见
+        document.addEventListener('DOMContentLoaded', function () {
+            const hiddenItems = document.querySelectorAll('.hidden-item');
+            hiddenItems.forEach(item => {
+                item.style.display = 'none';
+            });
+        });
+    </script>
+
+</body>
+</html>
+
+
+
