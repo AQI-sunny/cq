@@ -40,19 +40,19 @@ function buildResultsUrl(query, pageType = 'general', source = 'search') {
 
 // ==================== 统一的关键词映射 ====================
 const keywordRedirects = {
-    "临渠2015": "https://sylvie-seven-cq.top/sc2015.html",
-    "临渠2007": "https://sylvie-seven-cq.top/sc2007.html",
+    "临渠2015": "https://sylvie-seven-cq.top/Syzygy/sc2015.html",
+    "临渠2007": "https://sylvie-seven-cq.top/Syzygy/sc2007.html",
     "临渠县月桂树": "https://sylvie-seven-cq.top/Syzygy/月桂盛放.html",
-    "福叁咖啡": "https://sylvie-seven-cq.top/fu3coffee.html",
-    "奇闻异事馆": "https://sylvie-seven-cq.top/奇闻异事馆.html",
-    "记者网": "https://sylvie-seven-cq.top/qinyanqiu-blog.html",
-    "深南市桥安区": "https://sylvie-seven-cq.top/qiaoanqu.html",
-    "好邻居百货超市": "https://sylvie-seven-cq.top/supermarket.html",
-    "好邻居24h百货超市": "https://sylvie-seven-cq.top/supermarket.html",
-    "论坛": "https://sylvie-seven-cq.top/forum.html",
+    "福叁咖啡": "https://sylvie-seven-cq.top/Syzygy/fu3coffee.html",
+    "奇闻异事馆": "https://sylvie-seven-cq.top/Syzygy/奇闻异事馆.html",
+    "记者网": "https://sylvie-seven-cq.top/Syzygy/qinyanqiu-blog.html",
+    "深南市桥安区": "https://sylvie-seven-cq.top/Syzygy/qiaoanqu.html",
+    "好邻居百货超市": "https://sylvie-seven-cq.top/Syzygy/supermarket.html",
+    "好邻居24h百货超市": "https://sylvie-seven-cq.top/Syzygy/supermarket.html",
+    "论坛": "https://sylvie-seven-cq.top/Syzygy/forum.html",
     "乔静": "https://sylvie-seven-cq.top/Syzygy/qiaojing.html",
-    "临渠县2007年": "https://sylvie-seven-cq.top/sc2007.html",
-    "临渠县2015年": "https://sylvie-seven-cq.top/sc2015.html"
+    "临渠县2007年": "https://sylvie-seven-cq.top/Syzygy/sc2007.html",
+    "临渠县2015年": "https://sylvie-seven-cq.top/Syzygy/sc2015.html"
 };
 
 // ==================== 搜索结果数据 ====================
@@ -60,37 +60,37 @@ const searchResultsData = [
     {
         title: "临渠县2015新闻搜索结果",
         description: "临渠县2015年新闻最新最全搜索结果",
-        url: "https://sylvie-seven-cq.top/sc2015.html",
+        url: "https://sylvie-seven-cq.top/Syzygy/sc2015.html",
         keywords: ["临渠县2015", "临渠2015"]
     },
     {
         title: "福叁咖啡官方网站",
         description: "福叁咖啡提供优质的咖啡和舒适的环境。",
-        url: "https://sylvie-seven-cq.top/fu3coffee.html",
+        url: "https://sylvie-seven-cq.top/Syzygy/fu3coffee.html",
         keywords: ["福叁咖啡", "福叁"]
     },
     {
         title: "奇闻异事馆",
         description: "记录各地的奇闻异事和未解之谜。",
-        url: "https://sylvie-seven-cq.top/奇闻异事馆.html",
+        url: "https://sylvie-seven-cq.top/Syzygy/奇闻异事馆.html",
         keywords: ["奇闻异事馆", "奇闻异事馆论坛"]
     },
     {
         title: "记者网",
         description: "记者网提供最新的新闻资讯和深度报道。",
-        url: "https://sylvie-seven-cq.top/qinyanqiu-blog.html",
+        url: "https://sylvie-seven-cq.top/Syzygy/qinyanqiu-blog.html",
         keywords: ["记者网", "秦砚秋记者", "秦砚秋"]
     },
     {
         title: "好邻居百货超市",
         description: "好邻居百货超市提供各类生活用品和食品。",
-        url: "https://sylvie-seven-cq.top/supermarket.html",
+        url: "https://sylvie-seven-cq.top/Syzygy/supermarket.html",
         keywords: ["好邻居24h百货超市", "好邻居百货超市", "百货超市好邻居"]
     },
     {
         title: "公寓论坛",
         description: "社区论坛是用户交流和分享的平台。",
-        url: "https://sylvie-seven-cq.top/forum.html",
+        url: "https://sylvie-seven-cq.top/Syzygy/forum.html",
         keywords: ["静乔公寓论坛", "静乔公寓", "论坛"]
     }
 ];
@@ -112,27 +112,14 @@ function performSearch(query, event = null, pageType = null) {
     if (query.toLowerCase() === "kms赵晓棠".toLowerCase()) {
         logDebug('触发特殊关键词: kms赵晓棠');
         showSmsModal(
-            "来自手机短信通知：",
+            "你有新的快递",
             "你有新的快递 请尽快来取",
             "https://sylvie-seven-cq.top/Syzygy/取快递.html"
         );
         return true;
     }
-/*
+
     // 检查直接跳转的关键词
-    for (const keyword in keywordRedirects) {
-        if (query.toLowerCase().includes(keyword.toLowerCase())) {
-            const redirectUrl = keywordRedirects[keyword];
-            logDebug('找到匹配的关键词:', keyword, '跳转URL:', redirectUrl);
-
-            if (confirm(`找到关键词 "${keyword}"，是否跳转到对应页面？`)) {
-                window.open(redirectUrl, '_blank');
-                return true;
-            }
-        }
-    }*/
-
-    // 检查直接跳转的关键词 - 修复这里！
     for (const keyword in keywordRedirects) {
         if (query.toLowerCase().includes(keyword.toLowerCase())) {
             const redirectUrl = keywordRedirects[keyword];
@@ -141,15 +128,18 @@ function performSearch(query, event = null, pageType = null) {
             // 使用 confirm 的返回值来判断用户选择
             const userConfirmed = confirm(`找到关键词 "${keyword}"，是否跳转到对应页面？`);
             if (userConfirmed) {
+                logDebug('用户确认跳转');
                 window.open(redirectUrl, '_blank');
-                return true; // 用户确认跳转，直接返回，不执行后续逻辑
+                return true; // 用户确认跳转，直接返回true
             } else {
-                logDebug('用户取消跳转');
+                logDebug('用户取消跳转，停止搜索流程');
                 return false; // 用户取消，直接返回false，不执行后续逻辑
             }
         }
     }
 
+    // 如果执行到这里，说明没有直接跳转的关键词
+    logDebug('没有找到直接跳转的关键词，继续搜索逻辑');
 
     // 根据关键词决定页面类型
     let targetPageType = pageType || 'general';
@@ -167,7 +157,7 @@ function performSearch(query, event = null, pageType = null) {
         ) || query.toLowerCase() === result.title.toLowerCase();
 
         if (isMatch) {
-            logDebug('匹配到结果:', result.title);
+            logDebug('匹配到搜索结果:', result.title);
         }
         return isMatch;
     });
@@ -177,7 +167,7 @@ function performSearch(query, event = null, pageType = null) {
     // 如果有匹配结果，跳转到结果页面或直接打开
     if (matchedResults.length > 0) {
         if (matchedResults.length === 1) {
-            // 只有一个结果，直接打开
+            // 只有一个结果，直接打开（不询问用户）
             const result = matchedResults[0];
             logDebug('直接打开唯一结果:', result.title);
             window.open(result.url, '_blank');
@@ -190,12 +180,10 @@ function performSearch(query, event = null, pageType = null) {
         return true;
     }
 
-    // 没有精确匹配，跳转到通用结果页面
-    logDebug('无精确匹配，跳转到通用结果页面');
-    const resultsUrl = buildResultsUrl(query, targetPageType);
-    window.open(resultsUrl, '_blank');
-
-    return true;
+    // 没有找到任何匹配结果
+    logDebug('无任何匹配结果');
+    alert("未找到匹配的内容。请尝试其他关键词。");
+    return false;
 }
 
 // ==================== 结果页面初始化 ====================
