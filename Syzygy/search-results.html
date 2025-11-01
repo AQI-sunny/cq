@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜索结果</title>
+    <link rel="icon" type="image/jpeg" href="https://sylvie-seven-cq.top/gallery/search.png">
+    <style>
+        /* 基础样式 - 复制密码提示页面的样式 */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 20px;
+        }
+
+        .logo {
+            display: block;
+            margin: 0 auto 20px;
+            width: 120px;
+            height: 120px;
+            max-width: 100%;
+        }
+
+        .search-container {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 0 10px;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 500px;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            outline: none;
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+        }
+
+            .search-box:focus {
+                box-shadow: 0 1px 6px rgba(32,33,36,0.45);
+            }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+
+        .news-list {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        .news-item {
+            border-bottom: 1px solid #ddd;
+            padding: 15px 10px;
+        }
+
+            .news-item .title {
+                font-size: 16px;
+                font-weight: bold;
+                color: #1a0dab;
+                margin-bottom: 5px;
+                line-height: 1.4;
+            }
+
+            .news-item .source {
+                font-size: 14px;
+                color: #6a6a6a;
+                margin-bottom: 3px;
+            }
+
+            .news-item .date {
+                font-size: 12px;
+                color: #777;
+            }
+    </style>
+    <script src="https://sylvie-seven-cq.top/Syzygy/buxukandesearch.js"></script>
+</head>
+<body>
+    <div class="container">
+        <img src="https://sylvie-seven-cq.top/gallery/search.png" alt="Logo" class="logo">
+        <div class="search-container">
+            <input type="text" class="search-box" id="searchInput" placeholder="输入搜索内容...">
+        </div>
+        <h1 id="page-title">搜索结果</h1>
+        <ul class="news-list" id="search-results">
+            <li class="news-item">
+                <div class="title">暂无搜索结果...请尝试其他关键词~</div>
+                <div class="source" id="search-query-display"></div>
+                <div class="date" id="current-date"></div>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 显示当前日期
+            document.getElementById('current-date').textContent = new Date().toLocaleDateString();
+
+            // 初始化搜索页面
+            if (typeof initSearchPage !== 'undefined') {
+                initSearchPage();
+            } else {
+                // 如果外部JS加载失败，显示错误信息
+                document.getElementById('search-results').innerHTML = `
+                    <li class="news-item">
+                        <div class="title">页面加载错误</div>
+                        <div class="source">搜索功能暂时不可用</div>
+                        <div class="date">${new Date().toLocaleDateString()}</div>
+                    </li>
+                `;
+            }
+
+            // 设置搜索框事件
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(event) {
+                    if (event.key === 'Enter' && typeof performSearch !== 'undefined') {
+                        performSearch(this.value.trim(), event);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
