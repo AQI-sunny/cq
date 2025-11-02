@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R■■■■■■■E</title>
+    <style>
+        @font-face {
+            font-family: 'LingLiPiaoYi';
+            src: url('https://img.alicdn.com/tfs/TB1zBfZp4D1gK0jSZFyXXciOVXa.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: 'LingLiPiaoYi', 'KaiTi', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .system-text {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            color: #ff0000;
+            margin: 30px 0;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+            animation: blink 2s infinite;
+            line-height: 1.5;
+            font-family: 'LingLiPiaoYi', 'KaiTi', serif;
+        }
+
+        .typing-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background-color: #ff0000;
+            margin-left: 5px;
+            vertical-align: middle;
+            animation: blink 1s infinite;
+        }
+
+        .user-text {
+            text-align: right;
+            margin: 20px 0;
+            color: #aaa;
+            font-family: 'LingLiPiaoYi', 'KaiTi', serif;
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+        }
+
+        .system-response {
+            text-align: left;
+            margin: 20px 0;
+            color: #ff6666;
+            font-family: 'LingLiPiaoYi', 'KaiTi', serif;
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .input-area {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-row {
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+            gap: 10px;
+        }
+
+        input {
+            background-color: #111;
+            color: #fff;
+            border: 1px solid #ff0000;
+            padding: 10px;
+            flex: 1;
+            font-family: 'LingLiPiaoYi', 'KaiTi', serif;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            min-height: 40px;
+        }
+
+        button {
+            background-color: #ff0000;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: 'LingLiPiaoYi', 'KaiTi', serif;
+            font-weight: bold;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            min-height: 40px;
+        }
+
+            button:hover {
+                background-color: #ff3333;
+            }
+
+        .glitch-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient( 0deg, rgba(255,0,0,0.05), rgba(255,0,0,0.05) 1px, transparent 1px, transparent 2px );
+            pointer-events: none;
+            opacity: 0.3;
+            z-index: 10;
+        }
+
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .scan-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: rgba(255, 0, 0, 0.3);
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            animation: scan 4s linear infinite;
+            z-index: 100;
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0;
+            }
+
+            100% {
+                top: 100%;
+            }
+        }
+
+        .fade-out {
+            animation: fadeOut 1s forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .typewriter {
+            overflow: hidden;
+            border-right: .15em solid #ff0000;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .15em;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from {
+                width: 0
+            }
+
+            to {
+                width: 100%
+            }
+        }
+
+        @keyframes blink-caret {
+            from, to {
+                border-color: transparent
+            }
+
+            50% {
+                border-color: #ff0000;
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+
+            .system-text {
+                font-size: clamp(1.2rem, 5vw, 2rem);
+            }
+
+            .system-response {
+                font-size: clamp(1rem, 4vw, 1.5rem);
+            }
+
+            .input-row {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+                max-width: 300px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .system-text {
+                font-size: clamp(1rem, 6vw, 1.8rem);
+                margin: 20px 0;
+            }
+
+            .system-response {
+                font-size: clamp(0.9rem, 5vw, 1.3rem);
+            }
+
+            .user-text {
+                font-size: clamp(0.8rem, 4vw, 1rem);
+            }
+
+            .input-area {
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glitch-effect"></div>
+    <div class="scan-line"></div>
+
+    <div class="container">
+        <h1 id="mainTitle" style="color: #ff0000; text-shadow: 0 0 10px rgba(255,0,0,0.7); font-family: 'LingLiPiaoYi', 'KaiTi', serif;"></h1>
+
+        <div class="system-text" id="initialText">
+            R■■■■■■■E
+        </div>
+
+        <div class="system-response" id="dialogueContainer"></div>
+
+        
+    </div>
+
+    <script>
+        // 对话序列
+        const dialogues = [
+            { text: '又见面了。', delay: 1000 },
+            { text: '这次又想要什么提示？', delay: 1000 },
+            { text: '李老板的？你已了解她的故事了？', delay: 1000 },
+            { text: '哪有母亲会称呼自己宝贝女儿大名呢？你说对吧？', delay: 1000 },
+            { text: '试试忽略年份 毕竟许多人如此。', delay: 1000 },
+            { text: '行了 快走吧 别被发现了。', delay: 1000 }
+        ];
+
+        let currentDialogueElement = null;
+        let isTyping = false; // 标志是否正在打字
+        let typingInterval = null; // 存储打字效果的interval
+
+        // 按顺序显示对话序列
+        function showDialogues() {
+            let index = 0;
+
+            function showNextDialogue() {
+                if (index < dialogues.length) {
+                    const dialogue = dialogues[index];
+
+                    // 延迟执行当前对话
+                    setTimeout(() => {
+                        if (!isTyping) { // 只有当前没有正在打字时才执行
+                            showTypewriterEffect(dialogue.text, () => {
+                                // 打字完成后，等待一段时间再淡出
+                                setTimeout(() => {
+                                    if (currentDialogueElement) {
+                                        currentDialogueElement.classList.add('fade-out');
+                                        // 等待淡出动画完成后移除元素
+                                        setTimeout(() => {
+                                            if (currentDialogueElement && currentDialogueElement.parentNode) {
+                                                currentDialogueElement.parentNode.removeChild(currentDialogueElement);
+                                            }
+                                            // 继续下一句
+                                            index++;
+                                            showNextDialogue();
+                                        },200);
+                                    }
+                                }, 1000); // 显示完整文本的时间
+                            });
+                        }
+                    }, dialogue.delay);
+                }
+            }
+
+            showNextDialogue();
+        }
+
+        // 打字机效果
+        function showTypewriterEffect(text, onComplete) {
+            isTyping = true; // 设置正在打字标志
+
+            // 创建新的对话元素
+            const container = document.getElementById('dialogueContainer');
+            const responseDiv = document.createElement('div');
+            responseDiv.className = 'system-response';
+            container.appendChild(responseDiv);
+            currentDialogueElement = responseDiv;
+
+            // 打字机效果
+            let i = 0;
+            responseDiv.innerHTML = '';
+
+            // 清除之前的打字效果
+            if (typingInterval) {
+                clearInterval(typingInterval);
+            }
+
+            typingInterval = setInterval(() => {
+                if (i < text.length) {
+                    responseDiv.innerHTML += text.charAt(i);
+                    i++;
+                    responseDiv.scrollTop = responseDiv.scrollHeight;
+                } else {
+                    clearInterval(typingInterval);
+                    isTyping = false; // 打字完成，重置标志
+                    if (onComplete) onComplete();
+                }
+            }, 100);
+        }
+
+        // 开始显示对话
+        showDialogues();
+
+        function sendResponse() {
+            const input = document.getElementById('userInput');
+            const text = input.value.trim();
+
+            if (text) {
+                // 如果已有对话元素，则淡出
+                if (currentDialogueElement) {
+                    currentDialogueElement.classList.add('fade-out');
+                    // 等待淡出动画完成后移除元素
+                    setTimeout(() => {
+                        if (currentDialogueElement && currentDialogueElement.parentNode) {
+                            currentDialogueElement.parentNode.removeChild(currentDialogueElement);
+                        }
+                    }, 1000);
+                }
+
+                // 创建新的用户消息
+                const container = document.querySelector('.container');
+                const userDiv = document.createElement('div');
+                userDiv.className = 'user-text';
+                userDiv.textContent = `用户: ${text}`;
+                container.insertBefore(userDiv, document.querySelector('.input-area'));
+
+                
+
+                input.value = '';
+            }
+        }
+
+        // 回车发送
+        document.getElementById('userInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendResponse();
+            }
+        });
+
+        // 定期闪烁系统文字
+        setInterval(() => {
+            const systemText = document.querySelector('.system-text');
+            if (systemText && !systemText.classList.contains('fade-out')) {
+                systemText.style.opacity = '0.8';
+                setTimeout(() => {
+                    systemText.style.opacity = '1';
+                }, 200);
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
