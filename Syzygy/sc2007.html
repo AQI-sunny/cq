@@ -25,12 +25,10 @@
             height: 150px;
         }
 
-
-        
-
-       .search-container {
+        .search-container {
             text-align: center;
             margin-bottom: 30px;
+            position: relative;
         }
 
         .search-box {
@@ -45,6 +43,18 @@
 
         .search-box:focus {
             box-shadow: 0 1px 6px rgba(32, 33, 36, 0.45);
+        }
+
+        .search-button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #4285f4;
+            font-size: 16px;
         }
 
         h1 {
@@ -101,15 +111,21 @@
         .related-searches ul li a {
             color: #1a0dab;
             text-decoration: none;
+            cursor: pointer;
         }
 
         .related-searches ul li a:hover {
             text-decoration: underline;
         }
-    </style>
 
-    <script src="https://sylvie-seven-cq.top/Syzygy/buxukandesearch.js"></script>
-    
+        .no-results {
+            text-align: center;
+            color: #777;
+            font-size: 18px;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
@@ -117,8 +133,10 @@
         <img src="https://sylvie-seven-cq.top/gallery/search.png" alt="Logo" class="logo">
         <div class="search-container">
             <input type="text" class="search-box" placeholder="搜索临渠县相关新闻...">
+            <button class="search-button">搜索</button>
         </div>
         <h1>临渠县2007年新闻搜索列表</h1>
+        <div class="no-results">未找到相关新闻</div>
         <ul class="news-list">
             <li class="news-item">
                 <div class="title">临渠县启动新农村建设试点工程，首批10个村受益</div>
@@ -170,15 +188,73 @@
         <div class="related-searches">
             <h2>People also search for</h2>
             <ul>
-                <li><a href="#">临渠县 2007年 新农村建设</a></li>
-                <li><a href="#">临渠县 2007年 教育改革</a></li>
-                <li><a href="#">临渠县 2007年 工业园区</a></li>
-                <li><a href="#">临渠县 2007年 农业发展</a></li>
-                <li><a href="#">临渠县 2007年 退耕还林</a></li>
+                <li><a class="related-search">临渠县 2007年 新农村建设</a></li>
+                <li><a class="related-search">临渠县 2007年 教育改革</a></li>
+                <li><a class="related-search">临渠县 2007年 工业园区</a></li>
+                <li><a class="related-search">临渠县 2007年 农业发展</a></li>
+                <li><a class="related-search">临渠县 2007年 退耕还林</a></li>
             </ul>
         </div>
     </div>
 
-</body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchBox = document.querySelector('.search-box');
+            const searchButton = document.querySelector('.search-button');
+            const newsItems = document.querySelectorAll('.news-item');
+            const noResults = document.querySelector('.no-results');
+            const relatedSearches = document.querySelectorAll('.related-search');
+            
+            // 搜索功能
+            function performSearch() {
+                const searchTerm = searchBox.value.trim().toLowerCase();
+                let hasResults = false;
+                
+                if (searchTerm === '') {
+                    // 如果搜索框为空，显示所有新闻
+                    newsItems.forEach(item => {
+                        item.style.display = 'block';
+                    });
+                    noResults.style.display = 'none';
+                    return;
+                }
+                
+                // 遍历所有新闻项，检查是否匹配搜索词
+                newsItems.forEach(item => {
+                    const title = item.querySelector('.title').textContent.toLowerCase();
+                    const source = item.querySelector('.source').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || source.includes(searchTerm)) {
+                        item.style.display = 'block';
+                        hasResults = true;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                
+                // 如果没有匹配结果，显示提示信息
+                noResults.style.display = hasResults ? 'none' : 'block';
+            }
+            
+            // 绑定搜索按钮点击事件
+            searchButton.addEventListener('click', performSearch);
+            
+            // 绑定搜索框回车事件
+            searchBox.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            // 绑定相关搜索点击事件
+            relatedSearches.forEach(link => {
+                link.addEventListener('click', function() {
+                    searchBox.value = this.textContent;
+                    performSearch();
+                });
+            });
+        });
+    </script>
 
+</body>
 </html>
