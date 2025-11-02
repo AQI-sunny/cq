@@ -240,37 +240,42 @@
             }
         }
 
-        // 检查关键词映射
-        function checkKeywordRedirect(query) {
-            if (!keywordRedirects || Object.keys(keywordRedirects).length === 0) {
-                console.log('⚠️ 关键词映射未加载');
-                return false;
+        // 从JSON文件加载关键词映射并解码
+        async function loadKeywordRedirects() {
+            try {
+                console.log('开始加载关键词映射...');
+                document.getElementById('loadingIndicator').style.display = 'block';
+
+                // ✅ 修正：使用正确的URL路径
+                const url = 'https://sylvie-seven-cq.top/Syzygy/bugeikandejson.json?v=' + Date.now();
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    console.warn('关键词映射文件加载失败，状态码:', response.status);
+                    document.getElementById('loadingIndicator').style.display = 'none';
+                    return { encoded: {}, decoded: {} };
+                }
+
+                const data = await response.json();
+                console.log('✅ 关键词映射加载成功:', Object.keys(data).length, '个关键词');
+
+                // 解码所有关键词并建立映射
+                const decodedKeywords = {};
+                Object.keys(data).forEach(encodedKey => {
+                    const decodedKey = decodeKeyword(encodedKey);
+                    decodedKeywords[decodedKey] = data[encodedKey]; // 解码关键词 -> URL
+                    keywordRedirects[encodedKey] = data[encodedKey]; // 编码关键词 -> URL
+                    console.log(`   "${decodedKey}" -> ${data[encodedKey]}`);
+                });
+
+                console.log('总共解码了', Object.keys(decodedKeywords).length, '个关键词');
+                document.getElementById('loadingIndicator').style.display = 'none';
+                return { encoded: data, decoded: decodedKeywords };
+            } catch (error) {
+                console.error('❌ 加载关键词映射失败:', error);
+                document.getElementById('loadingIndicator').style.display = 'none';
+                return { encoded: {}, decoded: {} };
             }
-
-            const encodedQuery = encodeKeyword(query);
-            console.log(`🔎 搜索检查: "${query}" -> 编码: "${encodedQuery}"`);
-
-            // 首先检查编码后的关键词
-            if (keywordRedirects[encodedQuery]) {
-                console.log('🎯 找到匹配! 跳转到:', keywordRedirects[encodedQuery]);
-                // 立即跳转
-                setTimeout(() => {
-                    window.location.href = keywordRedirects[encodedQuery];
-                }, 100);
-                return true;
-            }
-
-            // 然后检查解码后的关键词（兼容性检查）
-            if (decodedKeywords[query]) {
-                console.log('🎯 找到解码后匹配! 跳转到:', decodedKeywords[query]);
-                setTimeout(() => {
-                    window.location.href = decodedKeywords[query];
-                }, 100);
-                return true;
-            }
-
-            console.log('❌ 未找到关键词映射');
-            return false;
         }
 
         // 搜索建议功能
@@ -309,11 +314,11 @@
         const searchResults = {
             "密码提示": [
                 {
-                    title: "如何创建安全的密码提示",
-                    source: "网络安全指南",
-                    date: "2023-10-15",
+                    title: "暂无搜索结果......",
+                    source: "请尝试其他关键词",
+                    date: "2025-9-7",
                     url: "#"
-                },
+                }/*,
                 {
                     title: "密码提示的最佳实践",
                     source: "信息安全杂志",
@@ -325,42 +330,42 @@
                     source: "技术博客",
                     date: "2023-08-05",
                     url: "#"
-                }
+                }*/
             ],
             "咖啡店后台密码": [
-                {
+                /*{
                     title: "咖啡店管理系统密码重置指南",
                     source: "咖啡店管理手册",
                     date: "2023-11-10",
                     url: "#"
-                },
+                },*/
                 {
-                    title: "如何保护咖啡店后台系统",
-                    source: "餐饮安全",
-                    date: "2023-10-28",
+                    title: "暂无搜索结果......",
+                    source: "请尝试其他关键词",
+                    date: "2025-9-7",
                     url: "#"
                 }
             ],
             "超市后台密码": [
                 
                 {
-                    title: "超市库存管理系统安全指南",
-                    source: "零售安全",
-                    date: "2023-09-18",
+                    title: "暂无搜索结果......",
+                    source: "请尝试其他关键词",
+                    date: "2025-9-7",
                     url: "#"
                 }
             ],
             "实验室密码": [
-                {
+                /*{
                     title: "实验室设备密码保护策略",
                     source: "实验室管理",
                     date: "2023-10-30",
                     url: "#"
-                },
+                },*/
                 {
-                    title: "科研数据安全与密码管理",
-                    source: "科研安全",
-                    date: "2023-09-12",
+                    title: "暂无搜索结果......",
+                    source: "请尝试其他关键词",
+                    date: "2025-9-7",
                     url: "#"
                 }
             ]
