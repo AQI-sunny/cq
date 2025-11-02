@@ -203,10 +203,21 @@
                 console.log('开始加载关键词映射...');
                 document.getElementById('loadingIndicator').style.display = 'block';
 
-                const response = await fetch('js/bugeikandejson.json?v=' + Date.now());
-                if (!response.ok) {
-                    const response = await fetch('js/bugeikandejson.json?v=' + Date.now());
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                async function loadKeywordRedirects() {
+                    // 使用正确的相对路径
+                    const url = '../Syzygy/bugeikandejson.json?v=' + Date.now();
+
+                    try {
+                        const response = await fetch('./bugeikandejson.json?v=' + Date.now());
+                        if (!response.ok) {
+                            console.warn('关键词映射文件加载失败，状态码:', response.status);
+                            return {}; // 返回空对象而不是抛出错误
+                        }
+                        return await response.json();
+                    } catch (error) {
+                        console.warn('加载关键词映射失败，使用空映射:', error);
+                        return {};
+                    }
                 }
                 const data = await response.json();
                 console.log('✅ 关键词映射加载成功:', Object.keys(data).length, '个关键词');
