@@ -198,36 +198,37 @@
         }
 
         // 从JSON文件加载关键词映射并解码
+        // 从JSON文件加载关键词映射并解码
         async function loadKeywordRedirects() {
             try {
                 console.log('开始加载关键词映射...');
                 document.getElementById('loadingIndicator').style.display = 'block';
 
-                async function loadKeywordRedirects() {
-                    // 使用正确的相对路径
-                    const url = '../Syzygy/bugeikandejson.json?v=' + Date.now();
+                // 使用正确的URL路径
+                const url = 'https://sylvie-seven-cq.top/Syzygy/bugeikandejson.json?v=' + Date.now();
+                const response = await fetch(url);
 
-                    try {
-                        const response = await fetch('./bugeikandejson.json?v=' + Date.now());
-                        if (!response.ok) {
-                            console.warn('关键词映射文件加载失败，状态码:', response.status);
-                            return {}; // 返回空对象而不是抛出错误
-                        }
-                        return await response.json();
-                    } catch (error) {
-                        console.warn('加载关键词映射失败，使用空映射:', error);
-                        return {};
-                    }
+                if (!response.ok) {
+                    console.warn('关键词映射文件加载失败，状态码:', response.status);
+                    document.getElementById('loadingIndicator').style.display = 'none';
+                    return { encoded: {}, decoded: {} };
                 }
+
                 const data = await response.json();
                 console.log('✅ 关键词映射加载成功:', Object.keys(data).length, '个关键词');
 
                 // 解码所有关键词并建立映射
+                const decodedKeywords = {};
                 Object.keys(data).forEach(encodedKey => {
                     const decodedKey = decodeKeyword(encodedKey);
-                    decodedKeywords[decodedKey] = data[encodedKey]; // 解码关键词 -> URL
-                    keywordRedirects[encodedKey] = data[encodedKey]; // 编码关键词 -> URL
-                    console.log(`   "${decodedKey}" -> ${data[encodedKey]}`);
+                    // 提取URL（你的JSON结构是数组包含对象）
+                    const redirectInfo = data[encodedKey][0]; // 取数组第一个元素
+                    const redirectUrl = redirectInfo.url;
+                    const title = redirectInfo.title;
+
+                    decodedKeywords[decodedKey] = redirectUrl; // 解码关键词 -> URL
+                    keywordRedirects[encodedKey] = redirectUrl; // 编码关键词 -> URL
+                    console.log(`   "${decodedKey}" -> ${redirectUrl} (${title})`);
                 });
 
                 console.log('总共解码了', Object.keys(decodedKeywords).length, '个关键词');
@@ -371,44 +372,55 @@
             ]
         };
 
-        // 执行普通搜索功能
-        function performNormalSearch(query) {
-            console.log('🔍 执行普通搜索:', query);
 
-            // 清空之前的搜索结果
-            resultsList.innerHTML = '';
-
-            // 更新页面标题
-            document.title = `${query} - 搜索结果`;
-            if (pageTitle) {
-                pageTitle.textContent = `${query} - 搜索结果列表`;
+        // 检查关键词映射
+        function checkKeywordRedirect(query) {
+            if (!keywordRedirects || Object.keys(keywordRedirects).length === 0) {
+                console.log('⚠️ 关键词映射未加载');
+                return false;
             }
 
-            // 获取搜索结果
-            const results = searchResults[query] || [];
+            const encodedQuery = encodeKeyword(query);
+            console.log(`🔎 搜索检查: "${query}" -> 编码: "${encodedQuery}"`);
 
-            if (results.length === 0) {
-                // 没有搜索结果
-                const noResultsItem = document.createElement('li');
-                noResultsItem.className = 'news-item';
-                noResultsItem.innerHTML = `
-                        <div class="title">搜索: ${query}</div>
-                        <div class="source">暂无搜索结果，请尝试其他关键词</div>
-                    `;
-                resultsList.appendChild(noResultsItem);
-            } else {
-                // 显示搜索结果
-                results.forEach(result => {
-                    const resultItem = document.createElement('li');
-                    resultItem.className = 'news-item';
-                    resultItem.innerHTML = `
-                            <a href="${result.url}" class="title">${result.title}</a>
-                            <div class="source">${result.source}</div>
-                            <div class="date">${result.date}</div>
-                        `;
-                    resultsList.appendChild(resultItem);
-                });
+            // 首先检查编码后的关键词
+            if (keywordRedirects[encodedQuery]) {
+                const redirectUrl = keywordRedirects[encodedQuery];
+                console.log('🎯 找到编码匹配! 跳转到:', redirectUrl);
+                // 立即跳转
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 100);
+                return true;
             }
+
+            // 然后检查解码后的关键词（兼容性检查）
+            if (decodedKeywords[query]) {
+                const redirectUrl = decodedKeywords[query];
+                console.log('🎯 找到解码后匹配! 跳转到:', redirectUrl);
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 100);
+                return true;
+            }
+
+            console.log('❌ 未找到关键词映射');
+            return false;
+        }
+
+        // 主搜索函数
+        function performSearch(query) {
+            console.log('🚀 开始搜索:', query);
+
+            // 首先检查关键词映射
+            if (checkKeywordRedirect(query)) {
+                console.log('✅ 关键词映射匹配，准备跳转');
+                return; // 如果找到映射，直接返回，不执行普通搜索
+            }
+
+            // 如果没有重定向，执行普通搜索
+            console.log('📝 执行普通搜索逻辑');
+            performNormalSearch(query);
         }
 
         // 生成相关搜索
