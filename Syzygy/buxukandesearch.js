@@ -64,6 +64,12 @@ const searchResultsData = [
         keywords: ["临渠县2015", "临渠2015"]
     },
     {
+        title: "临渠县2007新闻搜索结果",
+        description: "临渠县2007年新闻最新最全搜索结果",
+        url: "https://sylvie-seven-cq.top/Syzygy/sc2007.html",
+        keywords: ["临渠县2007", "临渠2007"]
+    },
+    {
         title: "福叁咖啡官方网站",
         description: "福叁咖啡提供优质的咖啡和舒适的环境。",
         url: "https://sylvie-seven-cq.top/Syzygy/fu3coffee.html",
@@ -318,6 +324,5 @@ window.showSmsModal = showSmsModal;
 window.initSearchPage = initSearchPage;
 window.getUrlParams = getUrlParams;
 window.logDebug = logDebug;
-
 
 logDebug('搜索模块初始化完成');
