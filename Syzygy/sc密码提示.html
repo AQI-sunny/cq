@@ -203,8 +203,8 @@
                 console.log('开始加载关键词映射...');
                 document.getElementById('loadingIndicator').style.display = 'block';
 
-                // 修改为正确的JSON文件URL
-                const url = 'https://sylvie-seven-cq.top/Syzygy/meizhaoledejson2?v=' + Date.now();
+                // 修正为正确的JSON文件URL（包含.json扩展名）
+                const url = 'https://sylvie-seven-cq.top/Syzygy/meizhaoledejson2.json?v=' + Date.now();
                 const response = await fetch(url);
 
                 if (!response.ok) {
