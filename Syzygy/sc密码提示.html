@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/jpeg" href="https://sylvie-seven-cq.top/gallery/search.png">
+    <title>密码提示 - 搜索结果</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding-top: 30px;
+        }
+
+        .logo {
+            display: block;
+            margin: 0 auto 20px;
+            width: 150px;
+            height: 150px;
+        }
+
+        .search-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            width: 500px;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            outline: none;
+            box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+        }
+
+            .search-box:focus {
+                box-shadow: 0 1px 6px rgba(32, 33, 36, 0.45);
+            }
+
+        .search-button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .news-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .news-item {
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+        }
+
+            .news-item .title {
+                font-size: 18px;
+                font-weight: bold;
+                color: #1a0dab;
+                text-decoration: none;
+            }
+
+                .news-item .title:hover {
+                    text-decoration: underline;
+                }
+
+            .news-item .source {
+                font-size: 14px;
+                color: #6a6a6a;
+            }
+
+            .news-item .date {
+                font-size: 12px;
+                color: #777;
+            }
+
+        .related-searches {
+            margin-top: 40px;
+        }
+
+            .related-searches h2 {
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+
+            .related-searches ul {
+                list-style-type: none;
+                padding-left: 0;
+            }
+
+                .related-searches ul li {
+                    font-size: 16px;
+                    margin-bottom: 5px;
+                }
+
+                    .related-searches ul li a {
+                        color: #1a0dab;
+                        text-decoration: none;
+                    }
+
+                        .related-searches ul li a:hover {
+                            text-decoration: underline;
+                        }
+
+        .search-suggestions {
+            position: absolute;
+            background: white;
+            border: 1px solid #dfe1e5;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 500px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+            .search-suggestions div {
+                padding: 10px 15px;
+                cursor: pointer;
+            }
+
+                .search-suggestions div:hover {
+                    background-color: #f5f5f5;
+                }
+
+        .suggestion-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://sylvie-seven-cq.top/gallery/search.png" alt="Logo" class="logo">
+        <div class="search-container">
+            <div class="suggestion-container">
+                <input type="text" class="search-box" id="searchInput" placeholder="搜索其他关键词..." value="密码提示">
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+            <button class="search-button" id="searchButton">搜索</button>
+        </div>
+        <h1 id="pageTitle">密码提示 - 搜索结果列表</h1>
+        <div id="loadingIndicator" class="loading" style="display: none;">加载中...</div>
+        <ul class="news-list" id="resultsList">
+            <!-- 搜索结果将在这里动态生成 -->
+        </ul>
+
+        <div class="related-searches">
+            <h2>猜你想搜</h2>
+            <ul id="relatedSearchesList">
+                <!-- 相关搜索将动态生成 -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量来存储关键词映射
+        let keywordRedirects = {};
+        let decodedKeywords = {}; // 存储解码后的关键词映射
+
+        // 编码解码函数
+        function encodeKeyword(keyword) {
+            return btoa(unescape(encodeURIComponent(keyword)));
+        }
+
+        function decodeKeyword(encodedKeyword) {
+            try {
+                return decodeURIComponent(escape(atob(encodedKeyword)));
+            } catch (e) {
+                console.error('解码失败:', encodedKeyword, e);
+                return encodedKeyword;
+            }
+        }
+
+        // 从JSON文件加载关键词映射并解码
+        async function loadKeywordRedirects() {
+            try {
+                console.log('开始加载关键词映射...');
+                document.getElementById('loadingIndicator').style.display = 'block';
+
+                const response = await fetch('js/bugeikandejson.json?v=' + Date.now());
+                if (!response.ok) {
+                    const response = await fetch('js/bugeikandejson.json?v=' + Date.now());
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('✅ 关键词映射加载成功:', Object.keys(data).length, '个关键词');
+
+                // 解码所有关键词并建立映射
+                Object.keys(data).forEach(encodedKey => {
+                    const decodedKey = decodeKeyword(encodedKey);
+                    decodedKeywords[decodedKey] = data[encodedKey]; // 解码关键词 -> URL
+                    keywordRedirects[encodedKey] = data[encodedKey]; // 编码关键词 -> URL
+                    console.log(`   "${decodedKey}" -> ${data[encodedKey]}`);
+                });
+
+                console.log('总共解码了', Object.keys(decodedKeywords).length, '个关键词');
+                document.getElementById('loadingIndicator').style.display = 'none';
+                return { encoded: data, decoded: decodedKeywords };
+            } catch (error) {
+                console.error('❌ 加载关键词映射失败:', error);
+                document.getElementById('loadingIndicator').style.display = 'none';
+                return { encoded: {}, decoded: {} };
+            }
+        }
+
+        // 检查关键词映射
+        function checkKeywordRedirect(query) {
+            if (!keywordRedirects || Object.keys(keywordRedirects).length === 0) {
+                console.log('⚠️ 关键词映射未加载');
+                return false;
+            }
+
+            const encodedQuery = encodeKeyword(query);
+            console.log(`🔎 搜索检查: "${query}" -> 编码: "${encodedQuery}"`);
+
+            // 首先检查编码后的关键词
+            if (keywordRedirects[encodedQuery]) {
+                console.log('🎯 找到匹配! 跳转到:', keywordRedirects[encodedQuery]);
+                // 立即跳转
+                setTimeout(() => {
+                    window.location.href = keywordRedirects[encodedQuery];
+                }, 100);
+                return true;
+            }
+
+            // 然后检查解码后的关键词（兼容性检查）
+            if (decodedKeywords[query]) {
+                console.log('🎯 找到解码后匹配! 跳转到:', decodedKeywords[query]);
+                setTimeout(() => {
+                    window.location.href = decodedKeywords[query];
+                }, 100);
+                return true;
+            }
+
+            console.log('❌ 未找到关键词映射');
+            return false;
+        }
+
+        // 搜索建议功能
+        function showSearchSuggestions(query) {
+            const suggestionsContainer = document.getElementById('searchSuggestions');
+            suggestionsContainer.innerHTML = '';
+
+            if (!query.trim()) {
+                suggestionsContainer.style.display = 'none';
+                return;
+            }
+
+            // 查找匹配的关键词
+            const matchingKeywords = Object.keys(decodedKeywords).filter(keyword =>
+                keyword.toLowerCase().includes(query.toLowerCase())
+            ).slice(0, 8); // 限制显示8个建议
+
+            if (matchingKeywords.length > 0) {
+                matchingKeywords.forEach(keyword => {
+                    const suggestionDiv = document.createElement('div');
+                    suggestionDiv.textContent = keyword;
+                    suggestionDiv.addEventListener('click', () => {
+                        document.getElementById('searchInput').value = keyword;
+                        suggestionsContainer.style.display = 'none';
+                        performSearch(keyword);
+                    });
+                    suggestionsContainer.appendChild(suggestionDiv);
+                });
+                suggestionsContainer.style.display = 'block';
+            } else {
+                suggestionsContainer.style.display = 'none';
+            }
+        }
+
+        // 模拟搜索结果数据
+        const searchResults = {
+            "密码提示": [
+                {
+                    title: "如何创建安全的密码提示",
+                    source: "网络安全指南",
+                    date: "2023-10-15",
+                    url: "#"
+                },
+                {
+                    title: "密码提示的最佳实践",
+                    source: "信息安全杂志",
+                    date: "2023-09-22",
+                    url: "#"
+                },
+                {
+                    title: "忘记密码时的提示策略",
+                    source: "技术博客",
+                    date: "2023-08-05",
+                    url: "#"
+                }
+            ],
+            "咖啡店后台密码": [
+                {
+                    title: "咖啡店管理系统密码重置指南",
+                    source: "咖啡店管理手册",
+                    date: "2023-11-10",
+                    url: "#"
+                },
+                {
+                    title: "如何保护咖啡店后台系统",
+                    source: "餐饮安全",
+                    date: "2023-10-28",
+                    url: "#"
+                }
+            ],
+            "超市后台密码": [
+                
+                {
+                    title: "超市库存管理系统安全指南",
+                    source: "零售安全",
+                    date: "2023-09-18",
+                    url: "#"
+                }
+            ],
+            "实验室密码": [
+                {
+                    title: "实验室设备密码保护策略",
+                    source: "实验室管理",
+                    date: "2023-10-30",
+                    url: "#"
+                },
+                {
+                    title: "科研数据安全与密码管理",
+                    source: "科研安全",
+                    date: "2023-09-12",
+                    url: "#"
+                }
+            ]
+        };
+
+        // 执行普通搜索功能
+        function performNormalSearch(query) {
+            console.log('🔍 执行普通搜索:', query);
+
+            // 清空之前的搜索结果
+            resultsList.innerHTML = '';
+
+            // 更新页面标题
+            document.title = `${query} - 搜索结果`;
+            if (pageTitle) {
+                pageTitle.textContent = `${query} - 搜索结果列表`;
+            }
+
+            // 获取搜索结果
+            const results = searchResults[query] || [];
+
+            if (results.length === 0) {
+                // 没有搜索结果
+                const noResultsItem = document.createElement('li');
+                noResultsItem.className = 'news-item';
+                noResultsItem.innerHTML = `
+                        <div class="title">搜索: ${query}</div>
+                        <div class="source">暂无搜索结果，请尝试其他关键词</div>
+                    `;
+                resultsList.appendChild(noResultsItem);
+            } else {
+                // 显示搜索结果
+                results.forEach(result => {
+                    const resultItem = document.createElement('li');
+                    resultItem.className = 'news-item';
+                    resultItem.innerHTML = `
+                            <a href="${result.url}" class="title">${result.title}</a>
+                            <div class="source">${result.source}</div>
+                            <div class="date">${result.date}</div>
+                        `;
+                    resultsList.appendChild(resultItem);
+                });
+            }
+        }
+
+        // 生成相关搜索
+        function generateRelatedSearches() {
+            const relatedList = document.getElementById('relatedSearchesList');
+            relatedList.innerHTML = '';
+
+            // 取前几个解码后的关键词作为相关搜索
+            const relatedKeywords = Object.keys(decodedKeywords).slice(0, 6);
+
+            relatedKeywords.forEach(keyword => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#';
+                a.className = 'related-search';
+                a.textContent = keyword;
+                a.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.getElementById('searchInput').value = keyword;
+                    performSearch(keyword);
+                });
+                li.appendChild(a);
+                relatedList.appendChild(li);
+            });
+        }
+
+        // 主搜索函数
+        function performSearch(query) {
+            console.log('🚀 开始搜索:', query);
+
+            // 首先检查关键词映射
+            if (checkKeywordRedirect(query)) {
+                console.log('✅ 关键词映射匹配，准备跳转');
+                return; // 如果找到映射，直接返回，不执行普通搜索
+            }
+
+            // 如果没有重定向，执行普通搜索
+            console.log('📝 执行普通搜索逻辑');
+            performNormalSearch(query);
+        }
+
+        // 获取DOM元素
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const resultsList = document.getElementById('resultsList');
+        const pageTitle = document.getElementById('pageTitle');
+        const searchSuggestions = document.getElementById('searchSuggestions');
+
+        // 初始化搜索功能
+        async function initSearch() {
+            console.log('🔧 初始化搜索功能...');
+
+            // 加载关键词映射
+            await loadKeywordRedirects();
+
+            // 初始化页面时执行搜索
+            performSearch('密码提示');
+
+            // 生成相关搜索
+            generateRelatedSearches();
+
+            // 为搜索按钮添加事件监听
+            searchButton.addEventListener('click', function () {
+                const query = searchInput.value.trim();
+                if (query) {
+                    searchSuggestions.style.display = 'none';
+                    performSearch(query);
+                } else {
+                    alert('请输入搜索关键词');
+                }
+            });
+
+            // 为输入框添加回车键搜索功能
+            searchInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    const query = searchInput.value.trim();
+                    if (query) {
+                        searchSuggestions.style.display = 'none';
+                        performSearch(query);
+                    }
+                }
+            });
+
+            // 实现搜索建议功能
+            searchInput.addEventListener('input', function () {
+                const query = searchInput.value.trim();
+                showSearchSuggestions(query);
+            });
+
+            // 点击页面其他地方隐藏建议
+            document.addEventListener('click', function (e) {
+                if (!searchInput.contains(e.target) && !searchSuggestions.contains(e.target)) {
+                    searchSuggestions.style.display = 'none';
+                }
+            });
+
+            console.log('✅ 搜索功能初始化完成');
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', initSearch);
+    </script>
+</body>
+</html>
+
+
+
