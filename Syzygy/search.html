@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>搜索</title>
+    <link rel="icon" type="image/jpeg" href="https://sylvie-seven-cq.top/gallery/search.png">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background: #fff;
+            scroll-behavior: smooth;
+        }
+
+        .page {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            background: #fff;
+        }
+
+            .page.active {
+                display: block;
+                opacity: 1;
+                z-index: 10;
+            }
+
+        /* Search page styles */
+        #searchEnginePage {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            height: 100vh;
+            width: 100vw;
+        }
+
+            #searchEnginePage header {
+                margin-bottom: 30px;
+                text-align: center;
+            }
+
+                #searchEnginePage header img {
+                    width: 200px;
+                    height: 60px;
+                    object-fit: contain;
+                    display: inline-block;
+                    max-width: 80%;
+                }
+
+        .search-box {
+            display: flex;
+            width: 500px;
+            max-width: 90%;
+            margin: 0 auto 20px;
+        }
+
+            .search-box input[type="text"] {
+                flex: 1;
+                padding: 12px 16px;
+                font-size: 16px;
+                border: 1px solid #ccc;
+                border-radius: 24px 0 0 24px;
+                outline: none;
+                min-height: 44px;
+            }
+
+            .search-box button {
+                padding: 10px 20px;
+                font-size: 16px;
+                border: 1px solid #ccc;
+                border-left: none;
+                background: #4285F4;
+                color: white;
+                border-radius: 0 24px 24px 0;
+                cursor: pointer;
+                transition: background 0.3s;
+                min-height: 44px;
+            }
+
+                .search-box button:hover {
+                    background: #357ae8;
+                }
+
+        .bookmarks {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            width: 100%;
+        }
+
+        .bookmark {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #000000;
+            font-size: 14px;
+            transition: transform 0.2s;
+            padding: 8px;
+            border-radius: 8px;
+            background: #f9f9f9;
+            border: 1px solid #eaeaea;
+            width: 60px;
+            height: 60px;
+            min-width: 60px;
+            min-height: 60px;
+        }
+
+            .bookmark img {
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+                background: #eee;
+                margin: 0;
+            }
+
+            .bookmark:hover, .bookmark:focus {
+                transform: scale(1.1);
+                background: #f0f0f0;
+                outline: none;
+            }
+
+            .bookmark.hidden {
+                display: none;
+            }
+
+        .clear-bookmarks {
+            margin-top: 15px;
+            padding: 8px 16px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            min-height: 44px;
+        }
+
+            .clear-bookmarks:hover {
+                background: #d32f2f;
+            }
+
+        /* 搜索结果样式 */
+        .search-results {
+            margin-top: 20px;
+            width: 500px;
+            max-width: 90%;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #eaeaea;
+            border-radius: 8px;
+            background: #f9f9f9;
+            padding: 10px;
+        }
+
+        .search-result-item {
+            padding: 10px;
+            border-bottom: 1px solid #eaeaea;
+            cursor: pointer;
+            transition: background 0.2s;
+            line-height: 1.4;
+        }
+
+            .search-result-item:hover {
+                background: #f0f0f0;
+            }
+
+            .search-result-item:last-child {
+                border-bottom: none;
+            }
+
+        .search-result-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        .search-result-url {
+            font-size: 12px;
+            color: #006621;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 14px;
+            background: #f0f0f0;
+            border-top: 1px solid #ccc;
+        }
+
+        /* Modal styles */
+        #modal {
+            display: none;
+            position: fixed;
+            z-index: 20;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        #modal-content-box {
+            background: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+        }
+
+        #modal-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        #modal-meta {
+            font-size: 12px;
+            color: #000000;
+            margin-bottom: 15px;
+        }
+
+        #modal-content {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .close {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #000000;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .close:hover {
+                color: #000;
+            }
+
+        /* System Notification Modal */
+        #system-modal {
+            display: none;
+            position: fixed;
+            z-index: 30;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            max-height: 100vh;
+            overflow: auto;
+            background-color: #000;
+        }
+
+        #system-modal-content {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #f00;
+            margin: 10% auto;
+            padding: 10px;
+            border: 2px solid #000000;
+            max-width: 700px;
+            max-height: calc(100vh - 30%); /* 30% 为上下外边距的合计高度 */
+            position: relative;
+            white-space: pre-line;
+            line-height: 1.4;
+            width: 90%;
+        }
+
+        /* SMS-like Modal */
+        /*#sms-modal {
+            display: none;
+            position: fixed;
+            z-index: 40;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+        }*/
+        #sms-modal {
+            display: none;
+            position: fixed;
+            z-index: 40;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: flex-start; /* 改为顶部对齐 */
+        }
+
+        #sms-modal-content {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 20px;
+            width: 80%;
+            max-width: 350px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: sms-pop 0.3s ease-out;
+            position: relative;
+        }
+
+        @keyframes sms-pop {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .sms-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 10px;
+        }
+
+        .sms-message {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .sms-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+            .sms-button:hover {
+                background: #45a049;
+            }
+
+        /* 响应式媒体查询 */
+        @media (max-width: 768px) {
+            #searchEnginePage {
+                padding: 15px;
+                justify-content: flex-start;
+                padding-top: 40px;
+            }
+
+                #searchEnginePage header {
+                    margin-bottom: 20px;
+                }
+
+            .search-box {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .search-results {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .bookmarks {
+                gap: 10px;
+            }
+
+            .bookmark {
+                width: 50px;
+                height: 50px;
+                min-width: 50px;
+                min-height: 50px;
+            }
+
+                .bookmark img {
+                    width: 35px;
+                    height: 35px;
+                }
+
+            #modal-content-box {
+                margin: 5% auto;
+                padding: 15px;
+            }
+
+            #modal-title {
+                font-size: 20px;
+            }
+
+            #modal-content {
+                font-size: 14px;
+            }
+
+            footer {
+                font-size: 12px;
+                padding: 8px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #searchEnginePage {
+                padding: 10px;
+                padding-top: 30px;
+            }
+
+                #searchEnginePage header img {
+                    width: 150px;
+                    height: 45px;
+                }
+
+            .search-box input[type="text"] {
+                font-size: 14px;
+                padding: 10px 14px;
+            }
+
+            .search-box button {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+
+            .bookmarks {
+                gap: 8px;
+            }
+
+            .bookmark {
+                width: 45px;
+                height: 45px;
+                min-width: 45px;
+                min-height: 45px;
+            }
+
+                .bookmark img {
+                    width: 30px;
+                    height: 30px;
+                }
+
+            .search-result-title {
+                font-size: 14px;
+            }
+
+            .search-result-item {
+                padding: 8px;
+            }
+        }
+    </style>
+
+    <!-- 防护代码 -->
+    <script>
+        (function () {
+            'use strict';
+
+            var devTools = {
+                init: function () {
+                    this.disableRightClick();
+                    this.disableDevTools();
+                    this.disableTextSelect();
+                    this.antiInspect();
+                },
+
+                disableRightClick: function () {
+                    document.addEventListener('contextmenu', function (e) {
+                        e.preventDefault();
+                        alert('右键已被禁用！');
+                        return false;
+                    });
+                },
+
+                disableDevTools: function () {
+                    document.addEventListener('keydown', function (e) {
+                        // F12
+                        if (e.key === 'F12') {
+                            e.preventDefault();
+                            alert('开发者工具已被禁用！');
+                            return false;
+                        }
+
+
+                        // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+                        if (e.ctrlKey && e.shiftKey &&
+                            (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
+                            e.preventDefault();
+                            return false;
+                        }
+
+                        // Ctrl+U
+                        if (e.ctrlKey && e.key === 'u') {
+                            e.preventDefault();
+                            return false;
+                        }
+                    });
+                },
+
+                disableTextSelect: function () {
+                    document.addEventListener('selectstart', function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+                },
+
+                antiInspect: function () {
+                    // 多重检测机制
+                    setInterval(function () {
+                        // 窗口尺寸检测
+                        var widthThreshold = window.outerWidth - window.innerWidth > 160;
+                        var heightThreshold = window.outerHeight - window.innerHeight > 160;
+
+                        // 调试器检测
+                        var debuggerDetected = false;
+                        try {
+                            (function () {
+                                return false;
+                            }).constructor("debugger").call("action");
+                        } catch (e) {
+                            debuggerDetected = true;
+                        }
+
+                        // 性能检测
+                        var performanceDetected = false;
+                        var start = performance.now();
+                        debugger;
+                        var end = performance.now();
+                        if (end - start > 100) {
+                            performanceDetected = true;
+                        }
+
+                        if (widthThreshold || heightThreshold || debuggerDetected || performanceDetected) {
+                            // 阻止访问
+                            document.body.innerHTML = '<h1>请关闭开发者工具！</h1>';
+                            window.location.reload();
+                            return;
+                        }
+                    }, 500);
+
+                    // 额外的F12捕获
+                    window.addEventListener('keydown', function (e) {
+                        if (e.key === 'F12' || e.keyCode === 123) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            e.stopImmediatePropagation();
+                            alert('开发者工具已被禁用！');
+                            return false;
+                        }
+                    }, true);
+                }
+            };
+
+            devTools.init();
+        })();
+    </script>
+
+</head>
+<body>
+
+    <div id="searchEnginePage" class="page active">
+        <header>
+            <img src="https://almostwinterao-eng.github.io/my-gallery/search.png" alt="Logo" />
+        </header>
+        <form class="search-box" onsubmit="performSearch(event)">
+            <input id="search-input" type="text" placeholder="输入搜索内容..." autocomplete="off" />
+            <button id="search-btn" type="submit">搜索</button>
+        </form>
+
+        <!-- 搜索结果区域 -->
+        <div class="search-results" id="search-results" style="display: none;">
+            <!-- 搜索结果将在这里动态生成 -->
+        </div>
+
+        <div class="bookmarks">
+            <a href="https://sylvie-seven-cq.top/fu3coffee" class="bookmark hidden" id="coffee-bookmark" onclick="window.open('https://sylvie-seven-cq.top/fu3coffee', '_blank'); return false;">
+                <img src="https://sylvie-seven-cq.top/gallery/coffee-logo.png" alt="Coffee Logo" />
+            </a>
+            <a href="https://sylvie-seven-cq.top/strange" class="bookmark hidden" id="wonder-bookmark" onclick="window.open('https://sylvie-seven-cq.top/strange', '_blank'); return false;">
+                <img src="https://sylvie-seven-cq.top/gallery/qiwenyishi logo.png" alt="  Logo" />
+            </a>
+            <a href="https://sylvie-seven-cq.top/qinyanqiu-blog" class="bookmark hidden" id="journalist-bookmark" onclick="window.open('https://sylvie-seven-cq.top/qinyanqiu-blog', '_blank'); return false;">
+                <img src="https://sylvie-seven-cq.top/gallery/jizhe.png" alt=" jz Logo" />
+            </a>
+            <a href="https://sylvie-seven-cq.top/supermarket" class="bookmark hidden" id="neighbor-bookmark" onclick="window.open('https://sylvie-seven-cq.top/supermarket', '_blank'); return false;">
+                <img src="https://sylvie-seven-cq.top/gallery/hlj.jpg" alt="cs  Logo" />
+            </a>
+            <a href="https://sylvie-seven-cq.top/forum" class="bookmark" id="forum-bookmark" target="_blank">
+                <img src="https://almostwinterao-eng.github.io/my-gallery/gylogo.png" alt="Forum" />
+            </a>
+
+        </div>
+        <!-- <button class="clear-bookmarks" onclick="clearAllBookmarks()">清除所有书签</button> -->
+    </div>
+
+    <div id="coffeePage" class="page">
+        <h2>咖啡店页面</h2>
+        <p>这里是咖啡店信息...</p>
+        <button onclick="showPage('searchEnginePage')">返回搜索页</button>
+    </div>
+
+    <div id="forumPage" class="page">
+        <h2>论坛页面</h2>
+        <p>这里是论坛内容...</p>
+        <button onclick="showPage('searchEnginePage')">返回搜索页</button>
+    </div>
+
+    <footer>
+        搜索引擎 &copy; 2025
+    </footer>
+
+    <!-- Modal structure -->
+    <div id="modal">
+        <div id="modal-content-box">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title">标题</h2>
+            <div id="modal-meta">状态 • 日期</div>
+            <div id="modal-content">内容</div>
+        </div>
+    </div>
+
+    <!-- System Notification Modal -->
+    <div id="system-modal">
+        <div id="system-modal-content">
+            [SYSTEM LOG: AUTO-GENERATED REPORT]
+            Patch v.2.1.4 deployment successful. Service stability improved...
+            Changelog:
+            - Optimized query latency for high-volume requests.
+            - Fixed memory leak issue related to cached image assets.
+            - Deprecated redundant API endpoints for community module.
+            - Addressed critical issue where 'Resonance' caches were not being resolved by standard queries. Service will now return direct links to unindexed pages when triggered by precise Keywords(e.g., project codenames, specific event IDs, unique phrases from archived data).
+            - Security protocol for local network queries updated.
+            [LOG ENDS]
+            [ATTENTION: Failed to post to secure developer channel. Posting to public channel as fallback. Manual review and deletion required.]
+            [ATTENTION:Please ignore this log！Please ignore this log！Please ignore this log！]
+        </div>
+    </div>
+
+    <!-- SMS-like Notification Modal -->
+    <div id="sms-modal">
+        <div id="sms-modal-content">
+            <div class="sms-title" id="sms-title">来自手机短信通知：</div>
+            <div class="sms-message" id="sms-message">你有新的快递 请尽快来取</div>
+            <button class="sms-button" id="sms-action-btn">去取快递→</button>
+        </div>
+    </div>
+
+    <script src="search.js"></script>
+
+</body>
+</html>
+
+
+
