@@ -1,0 +1,546 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客网 | 记录生活点滴与感悟</title>
+    <style>
+        /* 基础样式 - 温暖风格 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Serif SC', 'STZhongsong', '宋体', serif;
+        }
+
+        body {
+            background-color: #fdf8f3; /* 暖米白 */
+            color: #444;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #5d4037; /* 深棕，温暖感 */
+            transition: color 0.3s ease;
+        }
+
+            a:hover {
+                color: #d87a16; /* 橙褐色，温暖亮色 */
+            }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 头部样式 - 温暖柔和 */
+        header {
+            background-color: #fffaf4; /* 暖白背景 */
+            box-shadow: 0 4px 20px rgba(216, 122, 22, 0.1); /* 橙色柔光阴影 */
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #f0e6dc;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 0;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #3e2723; /* 统一为深棕色 */
+            letter-spacing: 1px;
+            font-family: 'LiSu', '隶书', cursive;
+        }
+
+            .logo span {
+                color: #d87a16;
+                font-family: 'KaiTi', '楷体', serif;
+            }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+            nav ul li {
+                margin-left: 28px;
+            }
+
+                nav ul li a {
+                    font-weight: 500;
+                    font-size: 16px;
+                    position: relative;
+                    padding: 5px 0;
+                }
+
+                    nav ul li a:after {
+                        content: '';
+                        position: absolute;
+                        width: 0;
+                        height: 2px;
+                        bottom: 0;
+                        left: 0;
+                        background-color: #d87a16;
+                        transition: width 0.3s ease;
+                        border-radius: 1px;
+                    }
+
+                    nav ul li a:hover:after {
+                        width: 100%;
+                    }
+
+        /* 搜索区域 */
+        .search-section {
+            background: linear-gradient(135deg, #fffaf4, #fff8f0);
+            padding: 60px 0;
+            border-bottom: 1px solid #f0e6dc;
+            margin-bottom: 40px;
+        }
+
+        .search-container {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .search-title {
+            font-size: 32px;
+            color: #3e2723;
+            margin-bottom: 20px;
+            font-family: 'KaiTi', '楷体', serif;
+        }
+
+        .search-subtitle {
+            font-size: 18px;
+            color: #8d6e63;
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            display: flex;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 16px 20px;
+            border: 2px solid #f0c8a0;
+            border-radius: 8px 0 0 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+            .search-input:focus {
+                border-color: #d87a16;
+            }
+
+        .search-button {
+            background-color: #d87a16;
+            color: white;
+            border: none;
+            padding: 0 30px;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+            .search-button:hover {
+                background-color: #c26a12;
+            }
+
+        /* 博客列表 */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .blog-card {
+            background-color: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(216, 122, 22, 0.08);
+            padding: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid #f0c8a0; /* 暖棕边框 */
+        }
+
+            .blog-card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 12px 35px rgba(216, 122, 22, 0.15);
+            }
+
+        .blog-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            color: #3e2723;
+            font-weight: 600;
+            font-family: 'KaiTi', '楷体', serif;
+        }
+
+        .blog-description {
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .blog-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #8d6e63;
+        }
+
+        .blog-category {
+            background-color: #fff3e0;
+            color: #bf360c;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .read-more {
+            display: inline-block;
+            color: #d87a16;
+            font-weight: 500;
+            font-size: 15px;
+            padding: 8px 0;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+            .read-more:hover {
+                border-color: #d87a16;
+            }
+
+        /* 分类导航 */
+        .category-nav {
+            background-color: #fff;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(216, 122, 22, 0.06);
+            padding: 20px;
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .category-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #3e2723;
+            font-weight: 600;
+            font-family: 'KaiTi', '楷体', serif;
+        }
+
+        .category-list {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category-item {
+            background-color: #fff3e0;
+            color: #bf360c;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            .category-item:hover {
+                background-color: #f0c8a0;
+            }
+
+        /* 引用块 - 温暖风格 */
+        .quote {
+            border-left: 5px solid #f0c8a0;
+            padding: 16px 20px;
+            margin: 25px 0;
+            background-color: #fffaf4;
+            border-radius: 0 8px 8px 0;
+            color: #5d4037;
+            font-style: italic;
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                margin-top: 18px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+                nav ul li {
+                    margin: 6px 10px;
+                }
+
+            .search-box {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .search-input {
+                border-radius: 8px;
+            }
+
+            .search-button {
+                border-radius: 8px;
+                padding: 12px;
+            }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部 -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><span>博客网</span></div>
+                <nav>
+                    <ul>
+                        <li><a href="#">首页</a></li>
+                        <li><a href="#">生活感悟</a></li>
+                        <li><a href="#">旅行日记</a></li>
+                        <li><a href="#">美食探索</a></li>
+                        <li><a href="#">读书笔记</a></li>
+                        <li><a href="#">心情日记</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- 搜索区域 -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-container">
+                <h1 class="search-title">发现生活美好</h1>
+                <p class="search-subtitle">记录每一个值得珍藏的瞬间</p>
+                <div class="search-box">
+                    <input type="text" class="search-input" id="searchInput" placeholder="请输入关键词搜索...">
+                    <button class="search-button" onclick="searchBlogs()">搜索</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 分类导航 -->
+    <div class="container">
+        <div class="category-nav">
+            <h3 class="category-title">按分类浏览</h3>
+            <div class="category-list">
+                <div class="category-item" onclick="filterByCategory('全部')">全部</div>
+                <div class="category-item" onclick="filterByCategory('生活感悟')">生活感悟</div>
+                <div class="category-item" onclick="filterByCategory('旅行日记')">旅行日记</div>
+                <div class="category-item" onclick="filterByCategory('美食探索')">美食探索</div>
+                <div class="category-item" onclick="filterByCategory('读书笔记')">读书笔记</div>
+                <div class="category-item" onclick="filterByCategory('心情日记')">心情日记</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 博客列表 -->
+    <div class="container">
+        <div class="blog-grid" id="blogGrid">
+
+            <!-- 已有博客卡片 ... -->
+
+            <div class="blog-card" data-category="生活感悟" data-tags="静乔公寓,草药茶,生活经历">
+                <div class="blog-meta">
+                    <span class="blog-date">2022年9月5日</span>
+                    <span class="blog-category">生活感悟</span>
+                </div>
+                <h3 class="blog-title">第一次走进静乔公寓时，我没看懂那杯草药茶</h3>
+                <p class="blog-description">相册里有张褪色的照片，是我十八岁那年在静乔公寓楼道拍的。穿蓝白校服，手里攥着张校报剪报，边角被汗水浸得发皱——那是我记录的第一篇"故事"，关于学校食堂的卫生整改建议。</p>
+                <a href="article1.html" class="read-more" onclick="navigateToArticle('article1.html')">阅读全文 &rarr;</a>
+            </div>
+
+            <div class="blog-card" data-category="生活感悟" data-tags="静乔公寓,生活记录,桂花">
+                <div class="blog-meta">
+                    <span class="blog-date">2021年9月1日</span>
+                    <span class="blog-category">生活感悟</span>
+                </div>
+                <h3 class="blog-title">在静乔公寓，我学会给生活留一扇窗</h3>
+                <p class="blog-description">搬进静乔公寓的第五年，我终于学会在日记本里夹一片干桂花。是顾姨给的。她的窗台上总晒着些奇奇怪怪的东西，有时是卷成筒的艾草，有时是铺成薄层的玉兰花瓣。</p>
+                <a href="article2.html" class="read-more" onclick="navigateToArticle('article2.html')">阅读全文 &rarr;</a>
+            </div>
+
+            <!--<div class="blog-card" data-category="旅行日记" data-tags="江南水乡,古镇,旅行">
+                <div class="blog-meta">
+                    <span class="blog-date">2022年9月3日</span>
+                    <span class="blog-category">旅行日记</span>
+                </div>
+                <h3 class="blog-title">江南水乡的慢时光</h3>
+                <p class="blog-description">在乌镇的小巷里漫步，青石板路湿润如玉，河水潺潺流淌。时光仿佛在这里放慢了脚步，让人忘却都市的喧嚣，只想静静地坐在河边，听船夫哼唱的小调。</p>
+                <a href="article3.html" class="read-more" onclick="navigateToArticle('#')">阅读全文 &rarr;</a>
+            </div>
+
+            <div class="blog-card" data-category="美食探索" data-tags="家常菜,烹饪,美食">
+                <div class="blog-meta">
+                    <span class="blog-date">2022年9月2日</span>
+                    <span class="blog-category">美食探索</span>
+                </div>
+                <h3 class="blog-title">厨房里的温暖记忆</h3>
+                <p class="blog-description">每一道家常菜都承载着记忆的味道。今天尝试了妈妈的红烧肉配方，慢火炖煮的香气弥漫整个厨房，仿佛回到了童年，那个有妈妈味道的家。</p>
+                <a href="article4.html" class="read-more" onclick="navigateToArticle('#')">阅读全文 &rarr;</a>
+            </div>-->
+
+            <!--<div class="blog-card" data-category="读书笔记" data-tags="阅读,文学,思考">
+                <div class="blog-meta">
+                    <span class="blog-date">2023年9月1日</span>
+                    <span class="blog-category">读书笔记</span>
+                </div>
+                <h3 class="blog-title">读《人间失格》有感</h3>
+                <p class="blog-description">太宰治笔下的叶藏，仿佛是每个人内心深处的另一个自己。在阅读中，我们不仅看到了人性的脆弱，也看到了对生命的渴望。每个人都是复杂的个体，值得被理解和包容。</p>
+                <a href="article5.html" class="read-more" onclick="navigateToArticle('#')">阅读全文 &rarr;</a>
+            </div>-->
+
+            <div class="blog-card" data-category="心情日记" data-tags="春天,花,自然">
+                <div class="blog-meta">
+                    <span class="blog-date">2023年8月31日</span>
+                    <span class="blog-category">心情日记</span>
+                </div>
+                <h3 class="blog-title">春天的樱花开了</h3>
+                <p class="blog-description">今天路过公园，看到樱花开了。粉色的花瓣在微风中轻舞，像是春天写给世界的情书。心情也跟着明朗起来，生活的美好就藏在这些不经意的瞬间里。</p>
+                <a href="#" class="read-more" onclick="navigateToArticle('#')">阅读全文 &rarr;</a>
+            </div>
+
+            <div class="blog-card" data-category="旅行日记" data-tags="海边,日落,度假">
+                <div class="blog-meta">
+                    <span class="blog-date">2024年8月28日</span>
+                    <span class="blog-category">旅行日记</span>
+                </div>
+                <h3 class="blog-title">海边的日落时光</h3>
+                <p class="blog-description">在海边看日落，天空被染成金黄色，海浪轻抚着沙滩。这一刻，所有的烦恼都被海风吹散，只剩下内心的宁静。旅行的意义，或许就在于这样的时刻。</p>
+                <a href="#" class="read-more" onclick="navigateToArticle('#')">阅读全文 &rarr;</a>
+            </div>
+
+            <div class="blog-card" data-category="美食探索" data-tags="烘焙,甜点,下午茶">
+                <div class="blog-meta">
+                    <span class="blog-date">2024年8月25日</span>
+                    <span class="blog-category">美食探索</span>
+                </div>
+                <h3 class="blog-title">自制下午茶点心</h3>
+                <p class="blog-description">周末的午后，尝试制作了柠檬玛德琳。烤箱里飘出的香气让整个房间都充满了甜蜜的味道。配上一杯红茶，享受属于自己的悠闲时光。</p>
+                <a href="#" class="read-more" onclick="navigateToArticle('#')">阅读全文 &rarr;</a>
+            </div>
+
+            <div class="blog-card" data-category="读书笔记" data-tags="心理学,成长,自我提升">
+                <div class="blog-meta">
+                    <span class="blog-date">2025年8月20日</span>
+                    <span class="blog-category">读书笔记</span>
+                </div>
+                <h3 class="blog-title">《月亮与六便士》读后感</h3>
+                <p class="blog-description">阿德勒心理学告诉我们，人生课题要分离，不要活在别人的期待里。每个人都有被讨厌的勇气，也有选择自己人生的自由。这本书让我重新思考了人际关系的边界。</p>
+                <a href="article9.html" class="read-more" onclick="navigateToArticle('#')">阅读全文 &rarr;</a>
+            </div>
+
+            <!-- 新增：隐藏博客 - 只有搜索“陈浩”才出现 -->
+            <div class="blog-card" data-category="hidden" data-tags="陈浩">
+                <div class="blog-meta">
+                    <span class="blog-date">2025年8月25日</span>
+                </div>
+                <h3 class="blog-title">窗台上的玉兰花瓣：等待“花期”的温柔盼头</h3>
+                <p class="blog-description">前阵子去看望住院的母亲。一进病房，就留意到窗台上落着几片玉兰花瓣，带着春天特有的新鲜和清香……这份盼头，比任何灵丹妙药都管用。</p>
+                <a href="article10.html" class="read-more" onclick="navigateToArticle('https://sylvie-seven-cq.top/Syzygy/ch-blog.html')">阅读全文 &rarr;</a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // 搜索功能
+        function searchBlogs() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const blogCards = document.querySelectorAll('.blog-card');
+
+            blogCards.forEach(card => {
+                const title = card.querySelector('.blog-title').textContent.toLowerCase();
+                const description = card.querySelector('.blog-description').textContent.toLowerCase();
+                const tags = card.getAttribute('data-tags') ? card.getAttribute('data-tags').toLowerCase() : '';
+
+                if (title.includes(searchTerm) || description.includes(searchTerm) || tags.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // 分类筛选 - 修改逻辑以正确处理隐藏博客
+        function filterByCategory(category) {
+            const blogCards = document.querySelectorAll('.blog-card');
+
+            blogCards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
+
+                // 如果是“全部”分类，只显示有明确分类的博客，隐藏标记为“hidden”的博客
+                if (category === '全部') {
+                    if (cardCategory && cardCategory !== 'hidden') {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }
+                // 如果是特定分类，只显示对应分类的博客
+                else if (cardCategory === category) {
+                    card.style.display = 'block';
+                }
+                // 否则隐藏
+                else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // 导航到文章页面
+        function navigateToArticle(articleUrl) {
+            window.location.href = articleUrl;
+        }
+
+        // 回车键搜索
+        document.getElementById('searchInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                searchBlogs();
+            }
+        });
+
+        // 页面加载完成后，立即执行一次“全部”分类筛选
+        document.addEventListener('DOMContentLoaded', function () {
+            filterByCategory('全部');
+        });
+    </script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,846 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人才招聘网 - 找到理想人才</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e5799 0%, #207cca 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+            nav ul li {
+                margin-left: 20px;
+            }
+
+                nav ul li a {
+                    color: white;
+                    text-decoration: none;
+                    font-weight: 500;
+                    transition: color 0.3s;
+                }
+
+                    nav ul li a:hover {
+                        color: #e6f7ff;
+                    }
+
+        .search-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        .search-title {
+            margin-bottom: 20px;
+            color: #1e5799;
+            font-size: 22px;
+        }
+
+        .search-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: 500;
+                color: #555;
+            }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+            .form-control:focus {
+                border-color: #1e5799;
+                outline: none;
+            }
+
+        .btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #1e5799;
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background-color: #16457a;
+            }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+            .btn-secondary:hover {
+                background-color: #e0e0e0;
+            }
+
+        .search-btn {
+            align-self: flex-end;
+            height: 42px;
+        }
+
+        .results-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            margin-bottom: 20px;
+            color: #1e5799;
+            font-size: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .candidate-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .candidate-card {
+            border: 1px solid #eaeaea;
+            border-radius: 8px;
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+            .candidate-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+
+        .candidate-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .candidate-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #666;
+            margin-right: 15px;
+        }
+
+        .candidate-info h3 {
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .candidate-info p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .candidate-skills {
+            margin-bottom: 15px;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            background-color: #e6f7ff;
+            color: #1e5799;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .candidate-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .resume-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 800px;
+            height: 600px; /* 4:3 比例 */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            padding: 20px;
+            background-color: #1e5799;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .resume-section {
+            margin-bottom: 25px;
+        }
+
+            .resume-section h3 {
+                margin-bottom: 10px;
+                color: #1e5799;
+                border-bottom: 1px solid #eaeaea;
+                padding-bottom: 5px;
+            }
+
+        .resume-item {
+            margin-bottom: 15px;
+        }
+
+            .resume-item h4 {
+                margin-bottom: 5px;
+                color: #333;
+            }
+
+            .resume-item .date {
+                color: #666;
+                font-size: 14px;
+                margin-bottom: 5px;
+            }
+
+            .resume-item p {
+                color: #555;
+            }
+
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                margin-top: 15px;
+                justify-content: center;
+            }
+
+            .modal-content {
+                width: 95%;
+                height: 80vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">人才招聘网</div>
+            <nav>
+                <ul>
+                    <li><a href="#">首页</a></li>
+                    <li><a href="#">职位搜索</a></li>
+                    <li><a href="#">企业服务</a></li>
+                    <li><a href="#">求职指南</a></li>
+                    <li><a href="#">关于我们</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="search-section">
+            <h2 class="search-title">搜索理想人才</h2>
+            <form class="search-form">
+                <div class="form-group">
+                    <label for="job-title">职位名称</label>
+                    <input type="text" id="job-title" class="form-control" placeholder="例如：前端开发工程师">
+                </div>
+                <div class="form-group">
+                    <label for="location">工作地点</label>
+                    <input type="text" id="location" class="form-control" placeholder="例如：临渠县">
+                </div>
+                <div class="form-group">
+                    <label for="experience">工作经验</label>
+                    <select id="experience" class="form-control">
+                        <option value="">不限</option>
+                        <option value="1">1年以下</option>
+                        <option value="1-3">1-3年</option>
+                        <option value="3-5">3-5年</option>
+                        <option value="5+">5年以上</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="education">学历要求</label>
+                    <select id="education" class="form-control">
+                        <option value="">不限</option>
+                        <option value="大专">大专</option>
+                        <option value="本科">本科</option>
+                        <option value="硕士">硕士</option>
+                        <option value="博士">博士</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-primary search-btn">搜索人才</button>
+            </form>
+        </section>
+
+        <section class="results-section">
+            <h2 class="section-title">
+                搜索结果
+                <span>找到 <strong id="resultCount">0</strong> 位符合条件的求职者</span>
+            </h2>
+            <div class="candidate-list" id="candidateList">
+                <!-- 求职者卡片将通过JavaScript动态生成 -->
+            </div>
+        </section>
+    </div>
+
+    <!-- 简历弹窗 -->
+    <div class="resume-modal" id="resumeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">个人简历</div>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body" id="resumeContent">
+                <!-- 简历内容将通过JavaScript动态填充 -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>人才招聘网 &copy; 2025 版权所有</p>
+            <p>联系我们: service@recruitment.com | 客服热线: 400-XXX-4567</p>
+        </div>
+    </footer>
+
+    <script>
+        // 简历数据
+        const resumeData = {
+            "张明": {
+                name: "张明",
+                position: "前端开发工程师",
+                experience: "5年",
+                education: "本科",
+                phone: "138****1234",
+                email: "zhangming@work.com",
+                summary: "具有5年前端开发经验，精通现代前端技术栈，擅长构建高性能、可维护的Web应用。",
+                workExperience: [
+                    {
+                        company: "ABC科技有限公司",
+                        position: "高级前端工程师",
+                        period: "2019年3月 - 至今",
+                        description: "负责公司核心产品的前端架构设计和开发，主导技术选型，优化页面性能，提升用户体验。"
+                    },
+                    {
+                        company: "XYZ互联网公司",
+                        position: "前端开发工程师",
+                        period: "2017年7月 - 2019年2月",
+                        description: "参与多个大型项目的前端开发，负责模块设计和实现，与后端团队协作完成产品功能。"
+                    }
+                ],
+                educationBackground: [
+                    {
+                        school: "北京理工大学",
+                        major: "计算机科学与技术",
+                        degree: "本科",
+                        period: "2013年9月 - 2017年6月"
+                    }
+                ],
+                skills: ["JavaScript", "React", "Vue", "HTML5", "CSS3", "Webpack", "Node.js", "TypeScript"]
+            },
+            "李华": {
+                name: "李华",
+                position: "UI/UX设计师",
+                experience: "4年",
+                education: "本科",
+                phone: "139****5678",
+                email: "lihua@work.com",
+                summary: "具有4年UI/UX设计经验，擅长用户研究和交互设计，能够创建直观、美观的用户界面。",
+                workExperience: [
+                    {
+                        company: "创意设计工作室",
+                        position: "高级UI设计师",
+                        period: "2018年5月 - 至今",
+                        description: "负责公司多个项目的UI设计和用户体验优化，与产品经理和开发团队紧密合作，确保设计落地。"
+                    },
+                    {
+                        company: "数字媒体公司",
+                        position: "UI设计师",
+                        period: "2016年8月 - 2018年4月",
+                        description: "参与移动端和Web端产品的界面设计，创建设计规范和组件库，提升团队设计效率。"
+                    }
+                ],
+                educationBackground: [
+                    {
+                        school: "中央美术学院",
+                        major: "视觉传达设计",
+                        degree: "本科",
+                        period: "2012年9月 - 2016年6月"
+                    }
+                ],
+                skills: ["UI设计", "用户体验", "Figma", "Sketch", "Photoshop", "Illustrator", "交互设计", "用户研究"]
+            },
+            "陈浩": {
+                name: "陈浩",
+                position: "咖啡店员工",
+                experience: "应届生",
+                education: "本科",
+                phone: "133****9031",
+                email: "chenhao@work.com",
+                summary: "新闻学专业应届毕业生，具备扎实的新闻采编能力和敏锐的新闻嗅觉。在校期间参与校报编辑工作，熟悉新闻采编流程，擅长深度报道和人物专访。",
+                workExperience: [
+                    {
+                        company: "校园新闻社",
+                        position: "实习记者",
+                        period: "2023年3月 - 2023年6月",
+                        description: "负责校园新闻采编工作，独立完成5篇深度报道，参与校报编辑排版工作。"
+                    }
+                ],
+                educationBackground: [
+                    {
+                        school: "深南大学新闻学院",
+                        major: "新闻学",
+                        degree: "本科",
+                        period: "2020年9月 - 2024年6月"
+                    }
+                ],
+                skills: ["新闻采编", "深度报道", "人物专访", "新闻摄影", "视频剪辑", "新媒体运营", "文案写作", "社交媒体管理"]
+            },
+            "王芳": {
+                name: "王芳",
+                position: "后端开发工程师",
+                experience: "6年",
+                education: "硕士",
+                phone: "137****9012",
+                email: "wangfang@work.com",
+                summary: "具有6年后端开发经验，精通Java技术栈和分布式系统设计，擅长高并发系统架构。",
+                workExperience: [
+                    {
+                        company: "云技术有限公司",
+                        position: "后端架构师",
+                        period: "2020年1月 - 至今",
+                        description: "负责公司核心系统的架构设计和优化，主导技术方案评审，提升系统稳定性和性能。"
+                    },
+                    {
+                        company: "数据科技公司",
+                        position: "高级Java开发工程师",
+                        period: "2017年3月 - 2019年12月",
+                        description: "参与分布式系统的设计和开发，负责核心模块的实现和性能优化。"
+                    },
+                    {
+                        company: "软件技术公司",
+                        position: "Java开发工程师",
+                        period: "2015年7月 - 2017年2月",
+                        description: "参与企业级应用开发，负责业务模块的设计和实现，积累了大量实战经验。"
+                    }
+                ],
+                educationBackground: [
+                    {
+                        school: "清华大学",
+                        major: "软件工程",
+                        degree: "硕士",
+                        period: "2012年9月 - 2015年6月"
+                    },
+                    {
+                        school: "北京大学",
+                        major: "计算机科学与技术",
+                        degree: "本科",
+                        period: "2008年9月 - 2012年6月"
+                    }
+                ],
+                skills: ["Java", "Spring Boot", "MySQL", "Redis", "分布式系统", "微服务", "Docker", "Kubernetes"]
+            },
+            "刘强": {
+                name: "刘强",
+                position: "产品经理",
+                experience: "7年",
+                education: "硕士",
+                phone: "136****3456",
+                email: "liuqiang@work.com",
+                summary: "具有7年产品管理经验，擅长从0到1的产品规划和迭代，对市场趋势有敏锐的洞察力。",
+                workExperience: [
+                    {
+                        company: "创新科技公司",
+                        position: "产品总监",
+                        period: "2021年3月 - 至今",
+                        description: "负责公司产品战略规划，领导产品团队完成多个成功产品的设计和上线，实现业务增长。"
+                    },
+                    {
+                        company: "互联网平台公司",
+                        position: "高级产品经理",
+                        period: "2018年6月 - 2021年2月",
+                        description: "负责核心产品的需求分析和产品设计，协调跨部门资源，推动产品迭代和优化。"
+                    },
+                    {
+                        company: "初创科技公司",
+                        position: "产品经理",
+                        period: "2015年9月 - 2018年5月",
+                        description: "从0到1参与产品设计和开发，负责用户调研、需求分析和产品功能规划。"
+                    }
+                ],
+                educationBackground: [
+                    {
+                        school: "复旦大学",
+                        major: "工商管理",
+                        degree: "硕士",
+                        period: "2012年9月 - 2015年6月"
+                    },
+                    {
+                        school: "上海交通大学",
+                        major: "信息管理",
+                        degree: "本科",
+                        period: "2008年9月 - 2012年6月"
+                    }
+                ],
+                skills: ["产品规划", "需求分析", "Axure", "项目管理", "市场分析", "用户研究", "数据分析", "团队协作"]
+            }
+        };
+
+        // 求职者数据
+        const candidates = [
+            {
+                name: "张明",
+                position: "前端开发工程师",
+                skills: ["JavaScript", "React", "Vue", "HTML5"],
+                avatar: "张"
+            },
+            {
+                name: "李华",
+                position: "UI/UX设计师",
+                skills: ["UI设计", "用户体验", "Figma", "Sketch"],
+                avatar: "李"
+            },
+            {
+                name: "王芳",
+                position: "后端开发工程师",
+                skills: ["Java", "Spring Boot", "MySQL", "Redis"],
+                avatar: "王"
+            },
+            {
+                name: "刘强",
+                position: "产品经理",
+                skills: ["产品规划", "需求分析", "Axure", "项目管理"],
+                avatar: "刘"
+            },
+            {
+                name: "陈浩",
+                position: "咖啡店员工",
+                skills: ["客户服务", "咖啡制作", "团队合作", "沟通能力"],
+                avatar: "陈"
+            }
+        ];
+
+        // 显示简历弹窗
+        function showResume(candidateName) {
+            const resume = resumeData[candidateName];
+            if (!resume) return;
+
+            const modal = document.getElementById('resumeModal');
+            const content = document.getElementById('resumeContent');
+
+            // 构建简历HTML
+            let resumeHTML = `
+                    <div class="resume-section">
+                        <h2>${resume.name} - ${resume.position}</h2>
+                        <p><strong>工作经验:</strong> ${resume.experience} | <strong>学历:</strong> ${resume.education}</p>
+                        <p><strong>联系电话:</strong> ${resume.phone} | <strong>邮箱:</strong> ${resume.email}</p>
+                    </div>
+
+                    <div class="resume-section">
+                        <h3>个人简介</h3>
+                        <p>${resume.summary}</p>
+                    </div>
+
+                    <div class="resume-section">
+                        <h3>工作经历</h3>
+                        ${resume.workExperience.map(exp => `
+                            <div class="resume-item">
+                                <h4>${exp.company} - ${exp.position}</h4>
+                                <div class="date">${exp.period}</div>
+                                <p>${exp.description}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="resume-section">
+                        <h3>教育背景</h3>
+                        ${resume.educationBackground.map(edu => `
+                            <div class="resume-item">
+                                <h4>${edu.school}</h4>
+                                <div class="date">${edu.period}</div>
+                                <p>${edu.major} - ${edu.degree}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="resume-section">
+                        <h3>专业技能</h3>
+                        <div class="candidate-skills">
+                            ${resume.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+
+            content.innerHTML = resumeHTML;
+            modal.style.display = 'flex';
+        }
+
+        // 关闭简历弹窗
+        function closeResumeModal() {
+            document.getElementById('resumeModal').style.display = 'none';
+        }
+
+        // 搜索功能
+        function performSearch() {
+            const jobTitle = document.getElementById('job-title').value.trim().toLowerCase();
+            const location = document.getElementById('location').value.trim().toLowerCase();
+            const experience = document.getElementById('experience').value;
+            const education = document.getElementById('education').value;
+
+            // 过滤求职者
+            let filteredCandidates = candidates.filter(candidate => {
+                // 职位名称搜索
+                let jobMatch = true;
+                if (jobTitle) {
+                    // 检查是否搜索的是咖啡店相关职位
+                    if ((jobTitle.includes('咖啡店员工') || jobTitle.includes('咖啡店职员') ||
+                        jobTitle.includes('咖啡店') || jobTitle.includes('咖啡'))) {
+                        // 只有陈浩的职位包含"咖啡店员工"
+                        jobMatch = candidate.name === '陈浩' && candidate.position.toLowerCase().includes('咖啡店');
+                    } else {
+                        // 其他职位按常规搜索
+                        jobMatch = candidate.position.toLowerCase().includes(jobTitle);
+                    }
+                }
+
+                // 工作地点搜索
+                let locationMatch = true;
+                if (location) {
+                    // 这里可以添加实际的工作地点数据进行匹配
+                    locationMatch = true; // 暂时忽略工作地点匹配
+                }
+
+                // 工作经验过滤
+                let expMatch = true;
+                if (experience) {
+                    // 这里可以添加实际的工作经验数据进行匹配
+                    expMatch = true; // 暂时忽略工作经验匹配
+                }
+
+                // 学历要求过滤
+                let eduMatch = true;
+                if (education) {
+                    // 这里可以添加实际的学历数据进行匹配
+                    eduMatch = true; // 暂时忽略学历匹配
+                }
+
+                return jobMatch && locationMatch && expMatch && eduMatch;
+            });
+
+            // 特殊处理：如果搜索"咖啡店员工"或"咖啡店职员"，只显示陈浩
+            if (jobTitle.includes('咖啡店员工') || jobTitle.includes('咖啡店职员')) {
+                filteredCandidates = candidates.filter(candidate =>
+                    candidate.name === '陈浩' && candidate.position === '咖啡店员工'
+                );
+            }
+
+            // 更新结果
+            displayResults(filteredCandidates);
+        }
+
+        // 显示结果
+        function displayResults(candidates) {
+            const container = document.getElementById('candidateList');
+            const countElement = document.getElementById('resultCount');
+
+            // 清空容器
+            container.innerHTML = '';
+
+            // 更新计数
+            countElement.textContent = candidates.length;
+
+            // 如果没有搜索结果，显示提示信息
+            if (candidates.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">暂无搜索结果，请输入关键词进行搜索</p>';
+                return;
+            }
+
+            // 生成求职者卡片
+            candidates.forEach(candidate => {
+                const card = document.createElement('div');
+                card.className = 'candidate-card';
+
+                card.innerHTML = `
+                        <div class="candidate-header">
+                            <div class="candidate-avatar">${candidate.avatar}</div>
+                            <div class="candidate-info">
+                                <h3>${candidate.name}</h3>
+                                <p>${candidate.position}</p>
+                            </div>
+                        </div>
+                        <div class="candidate-skills">
+                            ${candidate.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                        </div>
+                        <div class="candidate-actions">
+                            <button class="btn btn-secondary">收藏</button>
+                            <button class="btn btn-primary contact-btn" data-candidate="${candidate.name}">联系他</button>
+                        </div>
+                    `;
+
+                container.appendChild(card);
+            });
+
+            // 添加联系按钮事件
+            document.querySelectorAll('.contact-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const candidateName = this.getAttribute('data-candidate');
+                    showResume(candidateName);
+                });
+            });
+        }
+
+        // 初始化页面 - 不显示任何求职者
+        document.addEventListener('DOMContentLoaded', function () {
+            // 初始时显示0个求职者
+            displayResults([]);
+
+            // 搜索按钮点击事件
+            document.querySelector('.search-btn').addEventListener('click', performSearch);
+
+            // 回车键搜索
+            document.getElementById('job-title').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            // 其他表单元素变化时也触发搜索
+            document.getElementById('location').addEventListener('input', performSearch);
+            document.getElementById('experience').addEventListener('change', performSearch);
+            document.getElementById('education').addEventListener('change', performSearch);
+
+            // 关闭按钮点击事件
+            document.querySelector('.close-btn').addEventListener('click', closeResumeModal);
+
+            // 点击模态框外部关闭
+            document.getElementById('resumeModal').addEventListener('click', function (e) {
+                if (e.target === this) {
+                    closeResumeModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
