@@ -82,6 +82,13 @@ const searchResultsData = [
         url: "https://digiphoto.techbang.com/posts/7653-shortest-total-eclipse-of-the-century-april-4-2015-2145",
         keywords: [encryptKeyword("2015年新闻"), encryptKeyword("2015年"), encryptKeyword("2015")]
     },
+    
+    {
+        title: "密码提示",
+        description: "暂无搜索结果...",
+        url: "https://sylvie-seven-cq.top/Syzygy/sc密码提示.html",
+        keywords: [encryptKeyword("密码提示"), encryptKeyword("咖啡后台密码提示"), encryptKeyword("咖啡店后台密码提示")]
+    },
     {
         title: "2007年",
         description: "2007年8月的月食发生在2007年8月28日，是一次月全食...",
