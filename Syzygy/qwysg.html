@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奇闻异事馆</title>
+    <style>
+        /* 原有CSS样式保持不变 */
+        @import url('https://fonts.googleapis.com/css2?family=SimSun&display=swap');
+
+        :root {
+            --window-bg: #1a0000; /* 深红色背景 */
+            --content-bg: #0a0000; /* 更深的红色背景 */
+            --border-highlight: #ff3333;
+            --border-shadow: #660000;
+            --title-bg: #330000; /* 深红色标题栏 */
+            --text-color: #cc3333; /* 红色文字 */
+            --font-main: 'SimSun', '宋体', serif;
+            --font-ui: 'SimHei', '黑体', sans-serif;
+        }
+
+        body {
+            background: #000000 url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23cc3333' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E");
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: var(--font-ui);
+            padding: 20px;
+        }
+
+        .retro-app-window {
+            width: 800px;
+            background-color: var(--window-bg);
+            border: 1px solid;
+            border-color: var(--border-highlight) #000 #000 var(--border-highlight);
+            box-shadow: 5px 5px 15px rgba(255, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+            /* 添加做旧纹理效果 */
+            .retro-app-window::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: radial-gradient(circle at 20% 30%, rgba(255,0,0,0.1) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(0,0,0,0.1) 0%, transparent 40%), repeating-linear-gradient(0deg, rgba(255,0,0,0.03) 0px, rgba(255,0,0,0.03) 1px, transparent 1px, transparent 3px), repeating-linear-gradient(90deg, rgba(255,0,0,0.03) 0px, rgba(255,0,0,0.03) 1px, transparent 1px, transparent 3px);
+                pointer-events: none;
+                z-index: 10;
+            }
+
+        .title-bar {
+            background-color: var(--title-bg);
+            border-bottom: 1px solid var(--border-shadow);
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            width: 32px;
+            height: 32px;
+            margin-right: 8px;
+            background: url('https://sylvie-seven-cq.top/gallery/%E5%A5%87%E9%97%BB%E5%BC%82%E4%BA%8B%E9%A6%86%20logo.png') no-repeat center center;
+            background-size: contain;
+            border: 1px solid #5D0000;
+            position: relative;
+            box-shadow: inset 1px 1px #FF6666, inset -1px -1px #8B0000;
+        }
+
+        .title-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #cc3333;
+            letter-spacing: 2px;
+            flex-grow: 1;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+        }
+
+        .window-controls {
+            display: flex;
+        }
+
+        .control-button {
+            width: 20px;
+            height: 20px;
+            background-color: var(--window-bg);
+            border: 1px solid;
+            border-color: var(--border-highlight) var(--border-shadow) var(--border-shadow) var(--border-highlight);
+            margin-left: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 1px 1px 0px #000;
+            color: #cc3333;
+            cursor: pointer;
+        }
+
+        .sub-title-bar {
+            background-color: var(--window-bg);
+            border-top: 1px solid var(--border-highlight);
+            border-bottom: 1px solid var(--border-shadow);
+            padding: 2px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: var(--text-color);
+            position: relative;
+            z-index: 2;
+        }
+
+        .user-icons span {
+            margin-left: 8px;
+            font-weight: bold;
+        }
+
+        .window-main-content {
+            padding: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .content-frame {
+            background-color: var(--content-bg);
+            border: 1px solid;
+            border-color: var(--border-shadow) var(--border-highlight) var(--border-highlight) var(--border-shadow);
+            padding: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+            /* 添加复古效果 */
+            .content-frame::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(rgba(255,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,0,0,0.05) 1px, transparent 1px), repeating-linear-gradient(0deg, rgba(255,0,0,0.03) 0px, rgba(255,0,0,0.03) 1px, transparent 1px, transparent 3px), repeating-linear-gradient(90deg, rgba(255,0,0,0.03) 0px, rgba(255,0,0,0.03) 1px, transparent 1px, transparent 3px);
+                background-size: 20px 20px;
+                pointer-events: none;
+            }
+
+        .tabs {
+            display: flex;
+            background-color: var(--window-bg);
+            padding: 5px 5px 0 5px;
+            border-bottom: 1px solid var(--border-shadow);
+            position: relative;
+            z-index: 3;
+        }
+
+        .tab {
+            padding: 5px 15px;
+            border: 1px solid;
+            border-color: var(--border-highlight) var(--border-shadow) var(--border-shadow) var(--border-highlight);
+            border-bottom: none;
+            background-color: var(--window-bg);
+            position: relative;
+            top: 1px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-color);
+        }
+
+            .tab:hover {
+                background-color: #330000;
+            }
+
+            .tab.active {
+                background-color: var(--content-bg);
+                border-color: var(--border-highlight) var(--border-shadow) var(--content-bg) var(--border-highlight);
+                font-weight: bold;
+            }
+
+        .post-display {
+            padding: 15px;
+            height: 350px;
+            display: flex;
+            font-family: var(--font-main);
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-color);
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .post-content {
+            flex-grow: 1;
+            position: relative;
+        }
+
+        .post-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+            .post-title .icon {
+                color: #ff3333;
+                font-family: sans-serif;
+                margin-right: 5px;
+            }
+
+        .post-meta {
+            color: #cc6666;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .post-body, .post-reply {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+            .post-body::after, .post-reply::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: radial-gradient(circle at 20% 20%, rgba(255,0,0,0.03) 1px, transparent 2px), radial-gradient(circle at 80% 80%, rgba(255,0,0,0.03) 1px, transparent 2px), radial-gradient(circle at 40% 60%, rgba(255,0,0,0.03) 1px, transparent 2px), repeating-linear-gradient(0deg, rgba(255,0,0,0.02) 0px, rgba(255,0,0,0.02) 1px, transparent 1px, transparent 2px), repeating-linear-gradient(90deg, rgba(255,0,0,0.02) 0px, rgba(255,0,0,0.02) 1px, transparent 1px, transparent 2px);
+                pointer-events: none;
+            }
+
+        /* 特殊效果类 */
+        .glitch-effect {
+            animation: glitch 0.8s infinite;
+            color: #ff3333;
+        }
+
+        @keyframes glitch {
+            0% {
+                text-shadow: 0 0 2px #ff0000;
+            }
+
+            25% {
+                text-shadow: 2px 0 2px #ff3333;
+            }
+
+            50% {
+                text-shadow: -2px 0 2px #ff6666;
+            }
+
+            75% {
+                text-shadow: 0 2px 2px #ff9999;
+            }
+
+            100% {
+                text-shadow: 0 -2px 2px #ffcccc;
+            }
+        }
+
+        .offline-note {
+            color: #cc6666;
+            font-style: italic;
+        }
+
+        /* 自定义滚动条样式 */
+        .post-display::-webkit-scrollbar {
+            width: 18px;
+        }
+
+        .post-display::-webkit-scrollbar-track {
+            background-color: #330000;
+            border: 1px solid;
+            border-color: var(--border-shadow) var(--border-highlight) var(--border-highlight) var(--border-shadow);
+        }
+
+        .post-display::-webkit-scrollbar-thumb {
+            background-color: var(--window-bg);
+            border: 1px solid;
+            border-color: var(--border-highlight) var(--border-shadow) var(--border-shadow) var(--border-highlight);
+        }
+
+        .attachment-area {
+            margin-top: 10px;
+            border-top: 1px solid var(--border-shadow);
+            padding: 10px;
+            background-color: var(--content-bg);
+        }
+
+        .attachment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+
+        .attachment-image-container {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+            .attachment-image-container img {
+                max-width: 100%;
+                max-height: 200px;
+                border: 1px solid var(--border-shadow);
+                box-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+            }
+
+        .image-status-bar {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #cc6666;
+        }
+
+        .new-post-area {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: var(--content-bg);
+            border: 1px solid var(--border-shadow);
+        }
+
+        .new-post-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .new-post-input {
+            width: 100%;
+            background-color: #0a0000;
+            border: 1px solid var(--border-shadow);
+            color: var(--text-color);
+            padding: 5px;
+            margin-bottom: 10px;
+            font-family: var(--font-main);
+        }
+
+        .new-post-textarea {
+            width: 100%;
+            height: 100px;
+            background-color: #0a0000;
+            border: 1px solid var(--border-shadow);
+            color: var(--text-color);
+            padding: 5px;
+            margin-bottom: 10px;
+            font-family: var(--font-main);
+            resize: vertical;
+        }
+
+        .new-post-button {
+            background-color: var(--title-bg);
+            border: 1px solid;
+            border-color: var(--border-highlight) var(--border-shadow) var(--border-shadow) var(--border-highlight);
+            color: var(--text-color);
+            padding: 5px 15px;
+            cursor: pointer;
+            font-family: var(--font-ui);
+        }
+
+            .new-post-button:hover {
+                background-color: #330000;
+            }
+
+        .invite-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .invite-box {
+            background-color: var(--window-bg);
+            border: 2px solid var(--border-highlight);
+            padding: 20px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+
+        .invite-title {
+            font-size: 24px;
+            color: var(--text-color);
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+        }
+
+        .invite-input {
+            width: 80%;
+            padding: 10px;
+            background-color: #0a0000;
+            border: 1px solid var(--border-shadow);
+            color: var(--text-color);
+            font-size: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .invite-button {
+            background-color: var(--title-bg);
+            border: 1px solid;
+            border-color: var(--border-highlight) var(--border-shadow) var(--border-shadow) var(--border-highlight);
+            color: var(--text-color);
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: var(--font-ui);
+        }
+
+            .invite-button:hover {
+                background-color: #330000;
+            }
+
+        .invite-error {
+            color: #ff3333;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .posts-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-shadow);
+            padding: 5px;
+            background-color: #0a0000;
+        }
+
+        .post-item {
+            padding: 5px;
+            border-bottom: 1px solid var(--border-shadow);
+            cursor: pointer;
+            color: #00cc00; /* 新增：将帖子列表项字体改为绿色 */
+        }
+
+            .post-item:hover {
+                background-color: #330000;
+            }
+
+            .post-item.active {
+                background-color: #330000;
+                border-left: 3px solid var(--border-highlight);
+            }
+
+        .hidden {
+            display: none;
+        }
+
+        /* 新增：搜索区域样式 */
+        .search-area {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            background-color: #0a0000;
+            border: 1px solid var(--border-shadow);
+            color: var(--text-color);
+            padding: 5px;
+            font-family: var(--font-main);
+        }
+
+        .search-button {
+            background-color: var(--title-bg);
+            border: 1px solid;
+            border-color: var(--border-highlight) var(--border-shadow) var(--border-shadow) var(--border-highlight);
+            color: var(--text-color);
+            padding: 5px 15px;
+            cursor: pointer;
+            font-family: var(--font-ui);
+            margin-left: 5px;
+        }
+
+            .search-button:hover {
+                background-color: #330000;
+            }
+
+        /* 新增：隐藏帖子样式 */
+        .post-item.hidden-post {
+            display: none;
+        }
+
+            .post-item.hidden-post.revealed {
+                display: block;
+                color: #ff9900; /* 橙色表示隐藏帖子 */
+            }
+    </style>
+</head>
+<body>
+
+    <!-- 邀请码验证模态框 -->
+    <div class="invite-modal" id="inviteModal">
+        <div class="invite-box">
+            <div class="invite-title">访问授权</div>
+            <input type="password" class="invite-input" id="inviteCode" placeholder="请输入邀请码">
+            <button class="invite-button" id="submitInvite">进入</button>
+            <div class="invite-error" id="inviteError">邀请码错误，请重试</div>
+        </div>
+    </div>
+
+    <!-- 论坛主界面 -->
+    <div class="retro-app-window hidden" id="forumWindow">
+        <div class="title-bar">
+            <div class="logo"></div>
+            <div class="title-text">论坛综合交流区</div>
+            <div class="window-controls">
+                <div class="control-button">_</div>
+                <div class="control-button">□</div>
+                <div class="control-button" id="closeButton">X</div>
+            </div>
+        </div>
+        <div class="sub-title-bar">
+            <span>板块：芭蕉怪事</span>
+            <div class="user-icons">
+                <span>用户ID: 3307</span>
+            </div>
+        </div>
+        <div class="window-main-content">
+            <div class="content-frame">
+                <div class="tabs">
+                    <div class="tab">公告板</div>
+                    <div class="tab active">投稿</div>
+                </div>
+                <!-- 新增：搜索区域 -->
+                <div class="search-area">
+                    <input type="text" class="search-input" id="searchInput" placeholder="搜索帖子...">
+                    <button class="search-button" id="searchButton">搜索</button>
+                </div>
+                <div class="posts-list" id="postsList">
+                    <!-- 帖子列表将通过JavaScript动态加载 -->
+                </div>
+                <div class="post-display" id="postDisplay">
+                    <!-- 帖子内容将通过JavaScript动态加载 -->
+                </div>
+            </div>
+            <div class="new-post-area">
+                <div class="new-post-title">发表新帖子</div>
+                <input type="text" class="new-post-input" id="newPostTitle" placeholder="帖子标题">
+                <textarea class="new-post-textarea" id="newPostContent" placeholder="帖子内容"></textarea>
+                <input type="file" id="imageUpload" accept="image/*">
+                <button class="new-post-button" id="submitPost">发布帖子</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 随机乱码ID列表
+        const randomIds = [
+            '8Fg#2kL!9pQ', 'X$7mN@aR3tY', 'qW5!sDf*1Hj', 'Kp9@zM2$vBn', '3L#xTc6%hJk',
+            '!R8gYq0$NwX', 'Z2d#fV7@KmP', '9B$nJ4!sLrA', 'eK5%tH1#xWq', '!X3mC8@zRpV',
+            'aQ7$sD2!fGh', 'jL4#kP9%nMd', '!T6bN1$yHwS', 'rF3@vC8#mZx', 'Wq5%gJ0!tLk',
+            '9M#dS2@hXpN', '!B4vK7$cRfA', 'yT1#nP6%zLm', 'Hw8@jQ3!sDg', 'kF0$rV5#bNc',
+            '!L2pX9%mZqA', 'sD4@hJ7!tGk', 'Nc1#wM6$vBp', '!R3fT8%qYxZ', 'gH5@kL0!jDf',
+            'mV7$bN2#sXp', '!A9zQ4%cWrT', 'pK1#dF6@hLj', 'Bm3$sN8!yVg', '!Z0xJ5%qCtR'
+        ];
+
+        // 帖子数据
+        const posts = [
+            
+            
+            
+            {
+                title: "家里的智能猫眼总是半夜报警，吓得我心脏病都要犯了！",
+                author: "$%^#@_YZ666",
+                content: `最近我家智能猫眼跟中邪了一样，半夜三更老是自己响警报，有时候是检测到异常移动，有时候干脆就直接推送空无一人的照片。每次都被吓醒，搞得我神经衰弱。大家有遇到过这种情况吗？是猫眼坏了还是我家真的有什么不干净的东西？有没有靠谱的解决方案啊？`,
+                replies: [
+                    {
+                        author: "Gur43ter_404",
+                        content: "夜半三更，空无一人却频繁报警？这很像是灵体穿梭留下的磁场残留波动。先确认一下，您家门口有没有对着什么老物件、古树或路冲？ 异常移动很可能是捕捉到了肉眼不可见的能量体。"
+                    },
+                    {
+                        author: "Myry_Ssdr-1",
+                        content: "我以前听说过，某些老式猫眼在夜间红外模式下，会捕捉到肉眼看不见的气流，甚至可能是某些低频震动。别慌，试着在猫眼外挂个桃木符，或者撒点朱砂试试，物理和玄学双重防护！"
+                    },
+                    {
+                        author: "Unened-File.9",
+                        content: "哈哈，兄弟你是不是住老小区？可能是摄像头感应到地脉的异常能量了，尤其是在夜深人静之时。开玩笑的，但话说回来，老房子故事多，先试试关掉红外夜视功能，看它还报不报警！"
+                    },
+                    {
+                        author: "Anent-ver*",
+                        content: "不要轻易重置！这可能是它在试图给您发送某种信息！建议您把每次报警的时间、照片都记录下来， 也许能发现某种周期性规律或神秘符号。技术问题是表象，背后的玄机才是重点！"
+                    }
+                ],
+                offlineNote: false,
+                image: null,
+                hidden: false
+            },
+            {
+                title: "智能窗帘突然自己拉开，外面还下着大雨，我真的要崩溃了！",
+                author: "雨天不忧郁",
+                content: `昨晚睡得正香，半夜突然一道亮光把我晃醒，睁眼一看，我家智能窗帘！它！自己！拉！开！了！外面正下着瓢泼大雨，窗户上都是雨水，把我房间都快淋湿了！幸好我醒了及时关上。这已经不是第一次了，之前也偶尔会自己动一下。这种智能产品到底靠不靠谱啊？有没有人知道是什么原因？`,
+                replies: [
+                    {
+                        author: "阳光暖男",
+                        content: "检查一下有没有设置定时开关，或者是不是手机APP被不小心误触了。"
+                    },
+                    {
+                        author: "智能家居小白",
+                        content: "有没有可能是家里停电又来电，导致设备重启后恢复了出厂设置或者某个默认指令？"
+                    },
+                    {
+                        author: "雨神降临",
+                        content: "哇，好吓人！是不是跟楼下邻居的设备串频了？听说有些无线协议会互相干扰。"
+                    },
+                    {
+                        author: "隔壁老王爱象棋",
+                        content: "呵呵，可能是你的窗帘想看雨景了。认真讲，检查下电机是否受潮，或者控制模块是不是有短路现象。"
+                    }
+                ],
+                offlineNote: false,
+                image: null,
+                hidden: false
+            },
+            {
+                title: "智能音箱半夜自己播放音乐，而且还是诡异的童谣，谁能告诉我怎么回事？！",
+                author: "失眠的程序员",
+                content: `我已经好几天没睡好了！家里的智能音箱，它它它……半夜三更自己会播放音乐！关键是还不是我平时听的歌，是那种有点阴森森的童谣，声音还不小！每次都被吓得魂飞魄散。我确定没有设闹钟，也没有人动过它。我一个人住，真的有点毛骨悚然。有没有人遇到过类似的情况？到底是什么原因啊？`,
+                replies: [
+                    {
+                        author: "AI调教师",
+                        content: "检查一下音箱的语音唤醒记录，是不是有误唤醒，或者是不是被附近的电视声音、广播声音触发了。"
+                    },
+                    {
+                        author: "都市传说爱好者",
+                        content: "兄弟，这听起来有点像恐怖电影情节啊！有没有可能是被黑客入侵了？赶紧更改一下你的WIFI密码和音箱账号密码！"
+                    },
+                    {
+                        author: "程序猿他妈",
+                        content: "是不是你家猫咪不小心踩到了音箱上的按键？或者是不是连接了什么蓝牙设备，对方在播放？"
+                    },
+                    {
+                        author: "心理咨询师李",
+                        content: "先别慌，通常都是技术问题。尝试断电重启，或者恢复出厂设置。如果还不行，赶紧联系品牌售后，别自己吓自己。"
+                    }
+                ],
+                offlineNote: false,
+                image: null,
+                hidden: false
+            },
+            {
+                title: "智能马桶半夜自己冲水，吓得我以为有鬼在用！",
+                author: "爱干净的懒癌患者",
+                content: `说起来有点尴尬，但是真的快把我吓死了！我家智能马桶，最近半夜总是自己突然开始冲水，然后又加热！那水声哗啦哗啦的，黑灯瞎火的屋子里听到真的以为有人在里面。我检查了好几遍，确定没有漏水，也不是有人恶作剧。这种自己启动的情况，是马桶坏了还是怎么回事啊？求助各位大神！`,
+                replies: [
+                    {
+                        author: "厕所革命先锋",
+                        content: "哈哈哈，楼主你是被智能马桶'调戏'了吧！检查一下是不是有感应器被遮挡或者沾水，导致误判。"
+                    },
+                    {
+                        author: "家居小能手",
+                        content: "有没有可能是电压不稳定，导致设备重启或者内部程序错乱？"
+                    },
+                    {
+                        author: "隔壁老王爱象棋",
+                        content: "呵呵，可能是你的马桶盖半夜寂寞了，想自己活动活动。开玩笑的，多数是内部电路受潮或者传感器故障。"
+                    },
+                    {
+                        author: "五金店老张",
+                        content: "这种问题偶尔会有，尤其是南方潮湿地区。建议联系售后，让他们检查一下内部线路和传感器。"
+                    }
+                ],
+                offlineNote: false,
+                image: null,
+                hidden: false
+            },
+            {
+                title: "扫地机器人半夜突然启动，还发出诡异的'充电异常'提示音，吓得我一身冷汗！",
+                author: "佛系生活家",
+                content: `我家的扫地机器人，平时都很安静的。但是昨晚半夜，它突然自己从充电座上跑出来，还发出那种很机械、有点阴森的"充电异常，请检查"的提示音！声音还不小，把我从梦里惊醒了。我赶紧跑过去看，它就停在客厅中间一动不动，提示音还循环播放。这是怎么回事啊？吓得我都不敢睡觉了。`,
+                replies: [
+                    {
+                        author: "AI管家",
+                        content: "检查一下充电座和机器人底部的充电触点有没有脏污或者接触不良。"
+                    },
+                    {
+                        author: "机器人修缮师",
+                        content: "这种多半是电池或者充电模块出了问题。也可能是软件bug，尝试恢复出厂设置或者固件升级。"
+                    },
+                    {
+                        author: "深夜侦探",
+                        content: "哈哈，是不是它半夜想越狱了？认真讲，看看电池是不是老化了，或者充电线是不是有问题。"
+                    }
+                ],
+                offlineNote: false,
+                image: null,
+                hidden: false
+            },
+            {
+                title: "神婆vs暴躁男！我好像知道了什么不得了的东西？（附视频）",
+                author: "神秘目击者",
+                content: `补充下背景：我们公寓楼一直有个神神叨叨的老太太，整天推销一些符纸草药什么的，还特别没边界感的往别人家门口贴符！然后之前在我们公寓论坛刷到过有人吐槽某层楼有个暴躁男，今天居然让我碰到这两个人闹矛盾了！<br><br>
+                        一开始我就是摁错电梯了，听到外面有吵闹声，八卦的本质驱使我打开了手机录像。结果录下了不得了的事情！这栋公寓的风水怕是真的有问题！<br>
+                        [视频xxx不支持在线查看]`,
+                replies: [],
+                offlineNote: false,
+                image: null,
+                hidden: false
+            },
+            // 新增隐藏帖子
+            {
+                title: "【隐藏】深夜的异常信号",
+                author: "信号猎人",
+                content: `昨晚凌晨2:33，我在调试无线电设备时，意外捕捉到一个奇怪的信号。信号源似乎就在附近，但内容完全无法解析。更奇怪的是，当我尝试记录时，设备突然失灵了。有人知道"红月"这个代号吗？`,
+                replies: [
+                    {
+                        author: "匿名用户",
+                        content: "不要继续调查这件事！！！"
+                    }
+                ],
+                offlineNote: false,
+                image: null,
+                hidden: true,
+                searchKeyword: "红月"
+            },
+            {
+                title: "有人知道这个组织吗",
+                author: "信号猎人",
+                content: `昨晚`,
+                replies: [
+                    {
+                        author: "匿名用户",
+                        content: "不要继续调查这件事！！！"
+                    }
+                ],
+                offlineNote: false,
+                image: null,
+                hidden: true,
+                searchKeyword: "K"
+            }
+
+        ];
+
+        // 为帖子分配随机ID
+        function assignRandomIds() {
+            posts.forEach(post => {
+                // 为主帖作者分配随机ID
+                post.assignedId = getRandomId();
+
+                // 为回复作者分配随机ID
+                post.replies.forEach(reply => {
+                    reply.assignedId = getRandomId();
+                });
+            });
+        }
+
+        // 获取随机ID
+        function getRandomId() {
+            return randomIds[Math.floor(Math.random() * randomIds.length)];
+        }
+
+        // 邀请码验证
+        document.addEventListener('DOMContentLoaded', function () {
+            const inviteModal = document.getElementById('inviteModal');
+            const forumWindow = document.getElementById('forumWindow');
+            const inviteCodeInput = document.getElementById('inviteCode');
+            const submitInviteButton = document.getElementById('submitInvite');
+            const inviteError = document.getElementById('inviteError');
+            const closeButton = document.getElementById('closeButton');
+            const searchButton = document.getElementById('searchButton');
+            const searchInput = document.getElementById('searchInput');
+
+            // 正确的邀请码
+            const correctInviteCode = "1";
+
+            // 为帖子分配随机ID
+            assignRandomIds();
+
+            // 提交邀请码
+            submitInviteButton.addEventListener('click', function () {
+                if (inviteCodeInput.value === correctInviteCode) {
+                    inviteModal.style.display = 'none';
+                    forumWindow.classList.remove('hidden');
+                } else {
+                    inviteError.style.display = 'block';
+                    inviteCodeInput.value = '';
+                }
+            });
+
+            // 按回车键提交
+            inviteCodeInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    submitInviteButton.click();
+                }
+            });
+
+            // 关闭窗口按钮
+            closeButton.addEventListener('click', function () {
+                window.close();
+            });
+
+            // 搜索功能
+            searchButton.addEventListener('click', function () {
+                performSearch();
+            });
+
+            searchInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            // 初始化帖子列表
+            initPosts();
+
+            // 新帖子提交
+            document.getElementById('submitPost').addEventListener('click', function () {
+                const title = document.getElementById('newPostTitle').value;
+                const content = document.getElementById('newPostContent').value;
+                const imageInput = document.getElementById('imageUpload');
+
+                if (title && content) {
+                    // 创建新帖子对象
+                    const newPost = {
+                        title: title,
+                        author: "CurrentUser",
+                        assignedId: getRandomId(),
+                        content: content,
+                        replies: [],
+                        offlineNote: false,
+                        image: null,
+                        hidden: false
+                    };
+
+                    // 处理图片上传
+                    if (imageInput.files && imageInput.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            newPost.image = e.target.result;
+                            addNewPost(newPost);
+                        };
+                        reader.readAsDataURL(imageInput.files[0]);
+                    } else {
+                        addNewPost(newPost);
+                    }
+
+                    // 清空表单
+                    document.getElementById('newPostTitle').value = '';
+                    document.getElementById('newPostContent').value = '';
+                    imageInput.value = '';
+                }
+            });
+        });
+
+        // 执行搜索
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            const postItems = document.querySelectorAll('.post-item');
+
+            // 重置所有帖子显示
+            postItems.forEach(item => {
+                item.classList.remove('revealed');
+                if (item.classList.contains('hidden-post')) {
+                    item.style.display = 'none';
+                } else {
+                    item.style.display = 'block';
+                }
+            });
+
+            // 如果没有搜索词，显示所有非隐藏帖子
+            if (!searchTerm) {
+                return;
+            }
+
+            // 搜索并显示匹配的帖子
+            postItems.forEach(item => {
+                const postIndex = parseInt(item.getAttribute('data-post'));
+                const post = posts[postIndex];
+
+                // 检查是否匹配隐藏帖子的关键词
+                if (post.hidden && post.searchKeyword && searchTerm === post.searchKeyword.toLowerCase()) {
+                    item.classList.add('revealed');
+                    item.style.display = 'block';
+                }
+
+                // 普通搜索：检查标题和内容
+                if (!post.hidden &&
+                    (post.title.toLowerCase().includes(searchTerm) ||
+                        post.content.toLowerCase().includes(searchTerm))) {
+                    item.style.display = 'block';
+                } else if (!post.hidden) {
+                    item.style.display = 'none';
+                }
+            });
+
+            // 新增：检查是否有任何帖子显示
+            const visiblePosts = document.querySelectorAll('.post-item[style=""]').length +
+                document.querySelectorAll('.post-item[style="block"]').length +
+                document.querySelectorAll('.post-item.revealed').length;
+
+            // 如果有搜索词但没有显示任何帖子，显示提示
+            if (searchTerm && visiblePosts === 0) {
+                // 移除可能已存在的提示
+                const existingMessage = document.querySelector('.no-results-message');
+                if (existingMessage) {
+                    existingMessage.remove();
+                }
+
+                // 创建提示消息
+                const message = document.createElement('div');
+                message.className = 'no-results-message';
+                message.style.cssText = 'text-align: center; padding: 20px; color: #cc6666; font-style: italic;';
+                message.textContent = '没有找到相关帖子。';
+
+                // 将提示插入到帖子列表区域
+                const postsList = document.getElementById('postsList');
+                postsList.appendChild(message);
+            } else {
+                // 如果有帖子显示，移除提示
+                const existingMessage = document.querySelector('.no-results-message');
+                if (existingMessage) {
+                    existingMessage.remove();
+                }
+            }
+
+        }
+
+        // 初始化帖子列表
+        function initPosts() {
+            const postsList = document.getElementById('postsList');
+            const postDisplay = document.getElementById('postDisplay');
+
+            // 清空帖子列表
+            postsList.innerHTML = '';
+
+            // 添加帖子到列表
+            posts.forEach((post, index) => {
+                const postItem = document.createElement('div');
+                postItem.className = 'post-item';
+                if (post.hidden) {
+                    postItem.classList.add('hidden-post');
+                    postItem.style.display = 'none';
+                }
+                if (index === 0 && !post.hidden) postItem.classList.add('active');
+                postItem.setAttribute('data-post', index);
+                postItem.textContent = post.title;
+                postItem.addEventListener('click', function () {
+                    // 移除所有active类
+                    document.querySelectorAll('.post-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    // 添加active类到当前项
+                    this.classList.add('active');
+                    // 显示帖子内容
+                    displayPost(index);
+                });
+                postsList.appendChild(postItem);
+            });
+
+            // 显示第一个非隐藏帖子
+            let firstVisibleIndex = 0;
+            while (firstVisibleIndex < posts.length && posts[firstVisibleIndex].hidden) {
+                firstVisibleIndex++;
+            }
+            if (firstVisibleIndex < posts.length) {
+                displayPost(firstVisibleIndex);
+                document.querySelector(`.post-item[data-post="${firstVisibleIndex}"]`).classList.add('active');
+            }
+        }
+
+        // 显示帖子内容
+        function displayPost(index) {
+            const post = posts[index];
+            const postDisplay = document.getElementById('postDisplay');
+
+            let postHTML = `
+                        <div class="post-content">
+                            <div class="post-title"><span class="icon">${post.title.split(']')[0]}</span></div>
+                            <div class="post-meta">
+                                发帖人 (ID: ${post.assignedId})
+                            </div>
+                            <div class="post-body">
+                                ${post.content}
+                            </div>`;
+
+            if (post.image) {
+                postHTML += `
+                            <div class="attachment-area">
+                                <div class="attachment-header">
+                                    <span>附件</span>
+                                    <span>文件名：mystery_image.jpg</span>
+                                </div>
+                                <div class="attachment-image-container">
+                                    <img src="${post.image}" alt="附件图片">
+                                    <div class="image-status-bar">
+                                        <span>大小: 未知</span>
+                                    </div>
+                                </div>
+                            </div>`;
+            }
+
+            if (post.replies.length > 0) {
+                post.replies.forEach(reply => {
+                    postHTML += `
+                                <div class="post-reply">
+                                    <b>回复 (ID: ${reply.assignedId})</b><br>
+                                    <span class="${reply.special || ''}">${reply.content}</span>
+                                </div>`;
+                });
+            }
+
+            if (post.offlineNote) {
+                postHTML += `<div class="offline-note">(此后，ID: ${post.assignedId} 再未上线)</div>`;
+            }
+
+            postHTML += `</div>`;
+
+            postDisplay.innerHTML = postHTML;
+        }
+
+        // 添加新帖子
+        function addNewPost(newPost) {
+            posts.push(newPost);
+
+            // 更新帖子列表
+            const postsList = document.getElementById('postsList');
+            const postItem = document.createElement('div');
+            postItem.className = 'post-item';
+            postItem.setAttribute('data-post', posts.length - 1);
+            postItem.textContent = newPost.title;
+            postItem.addEventListener('click', function () {
+                // 移除所有active类
+                document.querySelectorAll('.post-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                // 添加active类到当前项
+                this.classList.add('active');
+                // 显示帖子内容
+                displayPost(posts.length - 1);
+            });
+            postsList.appendChild(postItem);
+
+            // 显示新帖子
+            document.querySelectorAll('.post-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            postItem.classList.add('active');
+            displayPost(posts.length - 1);
+        }
+    </script>
+</body>
+</html>
