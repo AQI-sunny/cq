@@ -1,4 +1,4 @@
-﻿// 关键词加密处理函数
+// 关键词加密处理函数
 function encryptKeyword(keyword) {
     // 使用简单的Base64编码进行加密
     return btoa(unescape(encodeURIComponent(keyword)));
@@ -21,7 +21,7 @@ const keywordRedirects = {
     [encryptKeyword("临渠2007")]: "https://sylvie-seven-cq.top/Syzygy/sc2007.html",
     [encryptKeyword("临渠县月桂树")]: "https://sylvie-seven-cq.top/Syzygy/月桂盛放.html",
     [encryptKeyword("福叁咖啡")]: "https://sylvie-seven-cq.top/Syzygy/fu3coffee.html",
-    [encryptKeyword("奇闻异事馆")]: "https://sylvie-seven-cq.top/Syzygy/奇闻异事馆.html",
+    [encryptKeyword("奇闻异事馆")]: "https://sylvie-seven-cq.top/Syzygy/qwysg.html",
     [encryptKeyword("记者网")]: "https://sylvie-seven-cq.top/Syzygy/qinyanqiu-blog.html",
     [encryptKeyword("深南市桥安区")]: "https://sylvie-seven-cq.top/Syzygy/qiaoanqu.html",
     [encryptKeyword("好邻居百货超市")]: "https://sylvie-seven-cq.top/Syzygy/supermarket.html",
@@ -37,7 +37,7 @@ const searchResultsData = [
     {
         title: "临渠县2015新闻搜索结果",
         description: "临渠县2015年新闻最新最全搜索结果",
-        url: "https://sylvie-seven-cq.top/临渠.html",
+        url: "https://sylvie-seven-cq.top/sc2015.html",
         keywords: [encryptKeyword("临渠县2015"), encryptKeyword("临渠2015")]
     },
     {
@@ -49,31 +49,67 @@ const searchResultsData = [
     {
         title: "福叁咖啡官方网站",
         description: "福叁咖啡提供优质的咖啡和舒适的环境。",
-        url: "https://sylvie-seven-cq.top/fu3",
+        url: "https://sylvie-seven-cq.top/fu3coffee.html",
         keywords: [encryptKeyword("福叁咖啡"), encryptKeyword("福叁")]
     },
     {
         title: "奇闻异事馆",
         description: "记录各地的奇闻异事和未解之谜。",
-        url: "https://sylvie-seven-cq.top/qwysg",
-        keywords: [encryptKeyword("奇闻异事馆"), encryptKeyword("奇闻异事馆论坛")]
+        url: "https://sylvie-seven-cq.top/qwysg.html",
+        keywords: [encryptKeyword("奇闻异事"), encryptKeyword("奇闻异事馆")]
     },
     {
         title: "记者网",
         description: "记者网提供最新的新闻资讯和深度报道。",
-        url: "https://sylvie-seven-cq.top/jz",
+        url: "https://sylvie-seven-cq.top/Syzygy/qinyanqiu-blog.html",
         keywords: [encryptKeyword("记者网"), encryptKeyword("秦砚秋记者"), encryptKeyword("秦砚秋")]
     },
     {
         title: "好邻居百货超市",
         description: "好邻居百货超市提供各类生活用品和食品。",
-        url: "https://sylvie-seven-cq.top/hljcs",
+        url: "https://sylvie-seven-cq.top/Syzygy/supermarket.html",
         keywords: [encryptKeyword("好邻居24h百货超市"), encryptKeyword("好邻居百货超市"), encryptKeyword("百货超市好邻居")]
+    },
+    {
+        title: "英仙座流星雨",
+        description: "英仙座流星雨是年度中最受欢迎的流星雨，出现于每年的7月17日至8月24日之间，在8月12日或13日流星数量会达到极大期。",
+        url: "http://interesting-sky.china-vo.org/2025sky-aug/#2025-8-13-%E8%8B%B1%E4%BB%99%E5%BA%A7%E6%B5%81%E6%98%9F%E9%9B%A8%E6%9E%81%E5%A4%A7%E6%9C%9F%EF%BC%88ZHR%EF%BD%9E100%EF%BC%89",
+        keywords: [encryptKeyword("英仙座流星雨"), encryptKeyword("英仙流星雨"), encryptKeyword("22年8月英仙座流星雨")]
+    },
+    {
+        title: "2015年",
+        description: "本世紀最短的月全食2015年4月4日...",
+        url: "https://digiphoto.techbang.com/posts/7653-shortest-total-eclipse-of-the-century-april-4-2015-2145",
+        keywords: [encryptKeyword("2015年新闻"), encryptKeyword("2015年"), encryptKeyword("2015")]
+    },
+    {
+        title: "2007年",
+        description: "2007年8月的月食发生在2007年8月28日，是一次月全食...",
+        url: "https://zh.wikipedia.org/wiki/2007%E5%B9%B48%E6%9C%8828%E6%97%A5%E6%9C%88%E9%A3%9F",
+        keywords: [encryptKeyword("2007年新闻"), encryptKeyword("07年新闻"), encryptKeyword("2007年月全食")]
+    },
+    {
+        title: "山村老尸",
+        description: "一部恐怖电影，于1999年11月4日上映。影片讲述拥有阴阳眼的小明遭遇的一系列灵异事件...",
+        url: "https://baike.baidu.com/item/%E5%B1%B1%E6%9D%91%E8%80%81%E5%B0%B8/10152770",
+        keywords: [encryptKeyword("山村老尸"), encryptKeyword("山村老尸电影"), encryptKeyword("山村老尸恐怖电影")]
+    },
+    {
+        title: "哭泣的天使",
+        description: "一款由CIA Embedded Devices Branch(嵌入式设备组)和英国MI5共同开发的针对三星智能电视的窃听软件...",
+        url: "https://www.leiphone.com/category/gbsecurity/CZLq8saMaHDvQe69.html",
+        keywords: [encryptKeyword("Weeping Angel(哭泣的天使)"), encryptKeyword("哭泣天使"), encryptKeyword("weepingangel")]
+    },
+    {
+        title: "宇宙魔方--河图与洛书",
+        description: "被誉为“宇宙魔方”的河图洛书是中国古代流传下来的两幅神秘图像...",
+        url: "https://www.hinews.cn/news/system/2021/12/13/032666104.shtml",
+        keywords: [encryptKeyword("宇宙魔方"), encryptKeyword("洛书"), encryptKeyword("河图")]
     },
     {
         title: "公寓论坛",
         description: "社区论坛是用户交流和分享的平台。",
-        url: "C:\\Users\\Admin\\Desktop\\Aqi-ez game\\页游\\game3 jqgy\\论坛页面代码\\luntan  new.html",
+        url: "https://sylvie-seven-cq.top/Syzygy/forum.html",
         keywords: [encryptKeyword("静乔公寓论坛"), encryptKeyword("静乔公寓")]
     }
 ];
