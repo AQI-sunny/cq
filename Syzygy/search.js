@@ -37,7 +37,7 @@ const searchResultsData = [
     {
         title: "临渠县2015新闻搜索结果",
         description: "临渠县2015年新闻最新最全搜索结果",
-        url: "https://sylvie-seven-cq.top/sc2015.html",
+        url: "https://sylvie-seven-cq.top/Syzygy/sc2015.html",
         keywords: [encryptKeyword("临渠县2015"), encryptKeyword("临渠2015")]
     },
     {
@@ -49,20 +49,26 @@ const searchResultsData = [
     {
         title: "福叁咖啡官方网站",
         description: "福叁咖啡提供优质的咖啡和舒适的环境。",
-        url: "https://sylvie-seven-cq.top/fu3coffee.html",
+        url: "https://sylvie-seven-cq.top/Syzygy/fu3coffee.html",
         keywords: [encryptKeyword("福叁咖啡"), encryptKeyword("福叁")]
     },
     {
         title: "奇闻异事馆",
         description: "记录各地的奇闻异事和未解之谜。",
-        url: "https://sylvie-seven-cq.top/qwysg.html",
+        url: "https://sylvie-seven-cq.top/Syzygy/qwysg.html",
         keywords: [encryptKeyword("奇闻异事"), encryptKeyword("奇闻异事馆")]
     },
     {
-        title: "记者网",
-        description: "记者网提供最新的新闻资讯和深度报道。",
+        title: "秦砚秋个人博客",
+        description: "第一次走进静乔公寓时，我没看懂那杯草药茶",
         url: "https://sylvie-seven-cq.top/Syzygy/qinyanqiu-blog.html",
-        keywords: [encryptKeyword("记者网"), encryptKeyword("秦砚秋记者"), encryptKeyword("秦砚秋")]
+        keywords: [encryptKeyword("博客网"), encryptKeyword("秦砚秋记者"), encryptKeyword("秦砚秋")]
+    },
+    {
+        title: "人才招聘网",
+        description: "搜索理想人才",
+        url: "https://sylvie-seven-cq.top/Syzygy/ch简历.html",
+        keywords: [encryptKeyword("招聘网"), encryptKeyword("兼职"), encryptKeyword("人才网")]
     },
     {
         title: "好邻居百货超市",
@@ -88,6 +94,18 @@ const searchResultsData = [
         description: "暂无搜索结果...",
         url: "https://sylvie-seven-cq.top/Syzygy/sc密码提示.html",
         keywords: [encryptKeyword("密码提示"), encryptKeyword("咖啡后台密码提示"), encryptKeyword("咖啡店后台密码提示")]
+    },
+    {
+        title: "超市密码提示",
+        description: "暂无搜索结果...",
+        url: "https://sylvie-seven-cq.top/Syzygy/sc密码提示 - supermarket.html",
+        keywords: [encryptKeyword("超市密码提示"), encryptKeyword("超市密码提示"), encryptKeyword("超市后台密码提示")]
+    },
+    {
+        title: "实验室密码提示",
+        description: "暂无搜索结果...",
+        url: "https://sylvie-seven-cq.top/Syzygy/sc密码提示 - 实验室.html",
+        keywords: [encryptKeyword("实验室密码提示"), encryptKeyword("QA实验室密码提示"), encryptKeyword("QA实验室密码")]
     },
     {
         title: "2007年",
