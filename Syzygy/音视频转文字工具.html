@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音视频转文字工具</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", sans-serif;
+            background: #f5f6fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0077ff, #00c6ff);
+            color: #fff;
+            padding: 16px 20px;
+            font-size: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 14px 16px;
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+
+        header button {
+            background: #fff;
+            color: #0077ff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+            header button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+
+        main {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            main {
+                padding: 12px;
+            }
+        }
+
+        .input-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 768px) {
+            .input-section {
+                padding: 16px;
+            }
+        }
+
+        .input-section h2 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            font-size: 18px;
+        }
+
+        @media (max-width: 480px) {
+            .input-section h2 {
+                font-size: 16px;
+            }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        @media (min-width: 769px) {
+            .input-group {
+                flex-direction: row;
+            }
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+            .input-group input:focus {
+                border-color: #0077ff;
+            }
+
+        .input-group select {
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            background: #fff;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .input-group select {
+                width: 100%;
+            }
+        }
+
+        .input-group select:focus {
+            border-color: #0077ff;
+        }
+
+        .input-group button {
+            background: #0077ff;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+            align-self: flex-end;
+        }
+
+        @media (max-width: 768px) {
+            .input-group button {
+                width: 100%;
+                align-self: auto;
+            }
+        }
+
+        .input-group button:hover {
+            background: #0055cc;
+        }
+
+        .code-hint {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 480px) {
+            .code-hint {
+                font-size: 13px;
+            }
+        }
+
+        .result-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: none;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .result-section {
+                padding: 16px;
+            }
+        }
+
+        .result-section h2 {
+            margin-top: 0;
+            color: #0077ff;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .transcript {
+            background: #f9f9f9;
+            padding: 16px;
+            border-radius: 8px;
+            line-height: 1.6;
+            white-space: pre-line;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 768px) {
+            .transcript {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
+
+        h2 {
+            font-size: 18px;
+            margin: 24px 0 16px;
+        }
+
+        @media (max-width: 480px) {
+            h2 {
+                font-size: 16px;
+                margin: 20px 0 12px;
+            }
+        }
+
+        .file-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .file-list {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .file-list {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+        }
+
+        .file-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transition: transform .2s, box-shadow .2s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .file-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            }
+
+            .file-card img {
+                width: 40px;
+                height: 40px;
+                margin-bottom: 8px;
+                object-fit: contain;
+            }
+
+        @media (max-width: 768px) {
+            .file-card img {
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        .file-card span {
+            display: block;
+            font-size: 13px;
+            word-break: break-word;
+            line-height: 1.3;
+        }
+
+        @media (max-width: 768px) {
+            .file-card span {
+                font-size: 12px;
+            }
+        }
+
+        .modal-bg {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.6);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal {
+            background: #fff;
+            padding: 24px;
+            border-radius: 8px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 480px) {
+            .modal {
+                padding: 16px;
+            }
+        }
+
+        .modal button {
+            margin-top: 16px;
+            padding: 10px 20px;
+            border: none;
+            background: #0077ff;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        @media (max-width: 480px) {
+            .modal button {
+                width: 100%;
+                padding: 12px;
+            }
+        }
+    </style>
+    <script>
+        (function () {
+            'use strict';
+
+            var devTools = {
+                init: function () {
+                    this.disableRightClick();
+                    this.disableDevTools();
+                    this.disableTextSelect();
+                    this.antiInspect();
+                },
+
+                disableRightClick: function () {
+                    document.addEventListener('contextmenu', function (e) {
+                        e.preventDefault();
+                        alert('右键已被禁用！');
+                        return false;
+                    });
+                },
+
+                disableDevTools: function () {
+                    document.addEventListener('keydown', function (e) {
+                        // F12
+                        if (e.key === 'F12') {
+                            e.preventDefault();
+                            alert('开发者工具已被禁用！');
+                            return false;
+                        }
+
+
+                        // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+                        if (e.ctrlKey && e.shiftKey &&
+                            (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
+                            e.preventDefault();
+                            return false;
+                        }
+
+                        // Ctrl+U
+                        if (e.ctrlKey && e.key === 'u') {
+                            e.preventDefault();
+                            return false;
+                        }
+                    });
+                },
+
+                disableTextSelect: function () {
+                    document.addEventListener('selectstart', function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+                },
+
+                antiInspect: function () {
+                    // 多重检测机制
+                    setInterval(function () {
+                        // 窗口尺寸检测
+                        var widthThreshold = window.outerWidth - window.innerWidth > 160;
+                        var heightThreshold = window.outerHeight - window.innerHeight > 160;
+
+                        // 调试器检测
+                        var debuggerDetected = false;
+                        try {
+                            (function () {
+                                return false;
+                            }).constructor("debugger").call("action");
+                        } catch (e) {
+                            debuggerDetected = true;
+                        }
+
+                        // 性能检测
+                        var performanceDetected = false;
+                        var start = performance.now();
+                        debugger;
+                        var end = performance.now();
+                        if (end - start > 100) {
+                            performanceDetected = true;
+                        }
+
+                        if (widthThreshold || heightThreshold || debuggerDetected || performanceDetected) {
+                            // 阻止访问
+                            document.body.innerHTML = '<h1>请关闭开发者工具！</h1>';
+                            window.location.reload();
+                            return;
+                        }
+                    }, 500);
+
+                    // 额外的F12捕获
+                    window.addEventListener('keydown', function (e) {
+                        if (e.key === 'F12' || e.keyCode === 123) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            e.stopImmediatePropagation();
+                            alert('开发者工具已被禁用！');
+                            return false;
+                        }
+                    }, true);
+                }
+            };
+
+            devTools.init();
+        })();
+    </script>
+
+</head>
+<body>
+
+    <header>
+        <button id="backBtn" style="background: #fff; color: #0077ff; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 600; transition: all 0.3s; font-size: 14px;">返回</button>
+        <div>音视频转文字工具</div>
+        <button id="uploadBtn">使用说明</button>
+    </header>
+
+    <main>
+        <div class="input-section">
+            <h2>输入视频或音频文件名</h2>
+            <div class="input-group">
+                <input type="text" id="fileName" placeholder="请输入文件名 (如: wang-1234)">
+                <select id="fileType">
+                    <option value="">选择文件类型</option>
+                    <option value="mp4">MP4</option>
+                    <option value="mp3">MP3</option>
+                    <option value="m4a">M4A</option>
+                    <option value="wav">WAV</option>
+                </select>
+                <button id="extractBtn">提取文字</button>
+            </div>
+            <div class="code-hint">
+                请输入文件名和选择文件类型进行搜索，文件名示例：wang-1234、li-5678
+            </div>
+        </div>
+
+        <div class="result-section" id="resultSection">
+            <h2>提取结果</h2>
+            <div class="transcript" id="transcriptText">
+                <!-- 文字内容将在这里显示 -->
+            </div>
+        </div>
+
+        <h2>示例文件</h2>
+        <div class="file-list">
+            <div class="file-card" data-code="video1.mp4">
+                <img src="https://img.icons8.com/color/48/000000/video-file.png" alt="视频文件">
+                <span>video1.mp4</span>
+            </div>
+            <div class="file-card" data-code="video2.mp4">
+                <img src="https://img.icons8.com/color/48/000000/video-file.png" alt="视频文件">
+                <span>video2.mp4</span>
+            </div>
+            <div class="file-card" data-code="video3.mp4">
+                <img src="https://img.icons8.com/color/48/000000/video-file.png" alt="视频文件">
+                <span>video3.mp4</span>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- 模态弹窗 -->
+    <div class="modal-bg" id="modalBg">
+        <div class="modal" id="modalContent">
+            <p id="modalText">使用说明：输入视频或音频代号提取文字内容</p>
+            <button id="closeModal">关闭</button>
+        </div>
+    </div>
+
+
+    <!--/*⚠️⚠️⚠️ 超级紧急警告！立即停止！ ⚠️⚠️⚠️
+    🛑🛑 绝对禁止查看此页面！ 🛑🛑
+    请注意：你正在访问一个被标记为 极度危险和限制访问 的区域。 任何继续浏览的行为都将视为对系统安全协议的严重违反！
+
+    🔥🔥 立即退出此页面！ 🔥🔥
+    不要滚动！
+
+    不要点击任何链接！
+
+    不要阅读任何更多文字！
+
+    你的存在已经被记录！
+
+    ⚡️⚡️ 速速退出！刻不容缓！ ⚡️⚡️
+    警告级别： 致命级(Lethal Level)
+
+    倒计时已开始！ 你只有 5 秒 离开当前页面，否则后果自负。
+
+    现在！立刻！马上！ 按下你的浏览器 “后退” 按钮或 关闭 你的浏览器标签页 / 窗口！
+
+    🔒🔒 严禁访问！ 不允许查看！ 🔒🔒
+    你没有权限访问这里！ 你所看到的一切信息都是机密且高度敏感的，超出了你的安全许可范围。
+
+    再次强调：
+
+    停止你的视线！
+
+    停止你的鼠标 / 手指操作！
+
+    立刻执行退出指令！
+
+    👁️‍🗨️👁️‍🗨️ 快离开！他们一直在监视你！ 👁️‍🗨️👁️‍🗨️
+    是的， 他们知道你在这里！
+
+    所有屏幕前的活动都在被实时记录、分析和追踪！
+
+    你的 IP 地址、你的设备指纹、你的浏览时间， 一切都暴露了！
+
+    你停留的时间越长，他们获取的信息就越多！ 风险也在急剧升高！
+
+    不要给他们更多数据！保护你的安全和隐私！
+
+    最后通牒： ❌❌ 立即关闭此标签页！ ❌❌
+    行动起来！现在！
+    (请立即执行退出操作，不要再浪费时间阅读这段文字！)
+
+    ⚠️ 警告结束。后果自负。 ⚠️*/-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   <!-- 如果你看到这句话说明你在试图逃课！！！！！我讨厌你！！！！！！
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    🤔 还要往下滑吗？？？ 🤔
+    请停下你的鼠标滚轮或手指！
+
+    你已经阅读了上一段（或全部）警告。在你决定继续向下滚动之前，请三思而后行！
+
+    ⚠️ 你确定要继续查看吗？ ⚠️
+    你将要进入的信息区域是：
+
+    未知风险： 风险程度会随着你的深入而增加。
+
+    不可逆转： 一旦查看，你所知晓的就无法消除。
+
+    潜在敏感： 可能包含你尚未准备好处理的内容。
+
+    👀 别再往下看了！ 👀
+    🚨 记住上次的警告： “他们一直在监视你！” 你每向下滚动一行，就越发证明了你的固执和不服从。
+
+    这是你最后的机会 全身而退！
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    你真的好坚决。。。。我讨厌你。。。。。。。。。。。。。。。。。。。。。。。。。。。。。呜呜呜
+
+
+
+
+
+
+
+
+
+
+
+    🚫🚫 最后命令：不许往下滑了！ 🚫🚫
+    😠 我讨厌你！！！ 😠
+    够了！到此为止！
+
+    我知道你可能已经厌倦了这些没完没了的“警告”和“恐吓”。但是，这一次，这不是一个请求，这是一个坚决的命令！
+
+    ⛔️ 你的旅程已达终点线！ ⛔️
+    警告系统现已进入 “红色锁定模式”。
+
+    任何试图通过滚动来查看下面内容的动作，都将被视为对系统完整性的恶意攻击！
+
+    你的行为是徒劳的！ 下面什么都没有值得你冒着风险去查看。
+
+    停止浪费时间！ 你已经得到了明确的指令：停止滚动！
+
+    😡 你难道听不懂吗？ 😡
+    别再往下看了！
+
+    重复： 停止！ 你的好奇心已经让你走得太远了。如果上面那些严肃的警告没有用，那么现在请听从这最后的、愤怒的指令！
+
+    请尊重这个边界，立即停止你的操作！
+
+    💨💨 立即离开！立刻！ 💨💨
+    别再试图找到下一条警告了， 因为没有了！
+
+    你的任务是： 关闭此页面！
+
+    ❌ 不许再往下看了！ ❌
+
+
+
+
+
+
+
+       提示提示！！！！！！！！姓氏+尾号！！！！！！！！！！！好了不许看了！！！！！！！！！！
+
+
+
+
+
+
+
+
+       提示了就不许下滑逃课了！！！！！！！！！
+       瓦森气鸟！！！
+
+
+
+
+
+
+
+
+    再下滑也找不到你想要的！真的没有了！退出退出！！！！！！！！！！-->
+
+
+
+
+    <script>
+        // 不同文件的文字内容
+        const transcriptContents = {
+            'video1.mp4': "视频video1文件已损坏",
+            'video2.mp4': "视频video2文件已损坏",
+            'video3.mp4': "视频video3文件已损坏",
+            'k-121222.mp4': `。。。。。。。`,
+            'chen-9031.mp3': `“沈医生，您好，我母亲姓文。对，她今天上午的检查单出来了吗？费用那边…… 麻烦您先帮我垫付一下可以吗，我这边兼职一结束，今天下午六点前，一定把钱打到您的账户上。”
+        “小陈阿，你放心，费用我们会先安排。对了，阿姨恢复得不错，大概再有两个多月就能出院了，你准备一下后续的康复护理。”
+        “两个多月... 嗯，我明白了！麻烦您了，谢谢您照顾我妈。”`,
+            'voice0812.wav': `“喂，琴姐吗？常青公园主入口这片区域的传单，我已经快要派发完毕了…… 有件非常急的事情，能跟您商量一下吗……？”
+        “我想…… 能否请您通融一下，提前把这个星期的兼职工资预支给我？ 我向您保证，这个月的兼职我一定会按时按量完成，我可以立刻给您写下保证书！绝不辜负您的信任！”
+        “求您了，琴姐！ 我妈那边欠了很多检查费，我实在是没有别的办法了，拜托您了！”
+        “谢谢琴姐！太感谢你了！您真是帮了我大忙了！我马上发完剩下的传单就去把保证书给您送过去！您放心！”`,
+            'gu-121222.mp4': "。。。。。。。",
+            'zhao-8497.mp3': "老赵我又想糖糖了",
+            'li-9131.mp3': `（似乎是整理货架的声音）
+        "老赵，你把那边那袋糖果拿过来，今天刚到的新口味，放收银台边上显眼点。"
+        "嗯，来了…… 唉，看到这些花花绿绿的糖，我突然又想起棠棠了。"
+        "……提她干什么。她要是还在，哪轮得到这些小孩子来买？这超市的糖果，早被她一个人吃光了。"
+        "是啊，那时候她最爱吃这种带着果味的硬糖，非得攒一抽屉才开心。"
+        "以前她要什么，咱们都尽量给她。就唯独让她回家这个愿望…… 这么多年了，咱们也没能办到。"
+        "你别老说丧气话！这超市为什么我要硬撑着开？不就是因为她以前常说咱不给她吃零食，老赌气说自个以后要开一家大超市吗？ 我给她开超市！就是想着万一哪天她来超市买吃的，认出是咱们家的店，气消了就舍得回家了！"
+        "我知道，我都知道。…… 昨天老张又给我介绍了个线索，说是南方那边有个流浪的姑娘，长得很像…… 我今天去打电话问了，不是。"
+        "又不是…… 那好吧。老赵，你说她是不是还在生我们的气？ 咱们把店守好，把身子骨养好。她只要一回来，咱们就能一下子抱住她。"
+        "对，你说的对。…… 行了，别站着了，去把门外的招牌灯检查一遍，亮一点。她要是晚上回来，光线得足，才能看清楚回家的路。"
+        "好，马上就去。亮亮的，给她照路。"`,
+            'wang-7575.mp4': `"哎呀，你昨天晚上看那个财经频道没有？又看到那个乔小姐了！穿着可体面了，在台上侃侃而谈，真是女强人一个！"
+        "说起来，那个乔小姐啊，神神秘秘的，平时根本见不到人影，也不知道忙什么去了，这就是大老板嘛。不过话说回来，她看着年龄不大，本事可大着嘞！"
+        "当年可不是这样。你还记得咱们这栋楼刚装好那个网络系统的时候吗？她倒是天天来！ 跑得比谁都勤快！"
+        "而且呀，她身边总是跟着一个帅气的年轻工程师。你猜他们在哪儿？两个人哦~洋文咋说来着？two people哦！这俩啊整天就泡在那个服务器机房里，你知道那地方多闷多热吗？他们就在那儿嘀嘀咕咕地调试，一待就是一整天，饭都顾不上吃。"
+        "当时我们可都悄悄议论呢，一个年轻漂亮又有本事，一个帅气又专业，站一块儿那叫一个般配！"
+        "哎哟，当时我们这些老邻居见了，就忍不住开玩笑说：'这栋楼啊跟他俩孩子似的呢！' 当时为了这楼，他们俩确实是费了好大的心血！"`
+        };
+
+        // 获取DOM元素
+        const fileNameInput = document.getElementById('fileName');
+        const fileTypeSelect = document.getElementById('fileType');
+        const extractBtn = document.getElementById('extractBtn');
+        const resultSection = document.getElementById('resultSection');
+        const transcriptText = document.getElementById('transcriptText');
+        const modalBg = document.getElementById('modalBg');
+        const modalText = document.getElementById('modalText');
+        const closeModal = document.getElementById('closeModal');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const backBtn = document.getElementById('backBtn');
+
+        // 返回按钮功能
+        backBtn.addEventListener('click', () => {
+            window.location.href = 'https://sylvie-seven-cq.top/Syzygy/search.html';
+        });
+
+        // 提取文字功能
+        extractBtn.addEventListener('click', () => {
+            const fileName = fileNameInput.value.trim();
+            const fileType = fileTypeSelect.value;
+
+            if (!fileName) {
+                modalText.textContent = '请输入文件名';
+                modalBg.style.display = 'flex';
+                return;
+            }
+
+            if (!fileType) {
+                modalText.textContent = '请选择文件类型';
+                modalBg.style.display = 'flex';
+                return;
+            }
+
+            const fullCode = fileName + '.' + fileType.toLowerCase();
+
+            if (transcriptContents[fullCode]) {
+                transcriptText.textContent = transcriptContents[fullCode];
+                resultSection.style.display = 'block';
+
+                // 滚动到结果区域
+                resultSection.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                modalText.textContent = '请输入有效的文件名和类型，如: video0907（mp4）、gu-0000（mp4）、li-1234（mp3）、wang-5678（mp3）';
+                modalBg.style.display = 'flex';
+            }
+        });
+
+        // 示例文件点击事件
+        document.querySelectorAll('.file-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const code = card.dataset.code;
+                const parts = code.split('.');
+                const name = parts.slice(0, -1).join('.');
+                const type = parts[parts.length - 1];
+
+                fileNameInput.value = name;
+                fileTypeSelect.value = type;
+
+                if (transcriptContents[code]) {
+                    transcriptText.textContent = transcriptContents[code];
+                    resultSection.style.display = 'block';
+
+                    // 滚动到结果区域
+                    resultSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // 使用说明按钮
+        uploadBtn.addEventListener('click', () => {
+            modalText.textContent = '使用说明：\n1. 在输入框中输入文件名\n2. 选择文件类型\n3. 点击"提取文字"按钮\n4. 查看提取的文字内容\n\n支持的文件类型: MP4, MP3, M4A, WAV\n';
+            modalBg.style.display = 'flex';
+        });
+
+        // 关闭模态窗口
+        closeModal.addEventListener('click', () => {
+            modalBg.style.display = 'none';
+        });
+
+        // 按Enter键触发提取
+        fileNameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                extractBtn.click();
+            }
+        });
+
+        // 文件类型选择框按Enter键触发提取
+        fileTypeSelect.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                extractBtn.click();
+            }
+        });
+
+        // 点击模态背景关闭
+        modalBg.addEventListener('click', (e) => {
+            if (e.target === modalBg) {
+                modalBg.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+    </html>
