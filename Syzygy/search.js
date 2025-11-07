@@ -93,7 +93,7 @@ const searchResultsData = [
         title: "密码提示",
         description: "暂无搜索结果...",
         url: "https://sylvie-seven-cq.top/Syzygy/sc密码提示.html",
-        keywords: [encryptKeyword("密码提示"), encryptKeyword("咖啡后台密码提示"), encryptKeyword("咖啡店后台密码提示")]
+        keywords: [encryptKeyword("密码提示"), encryptKeyword("咖啡后台密码提示"), encryptKeyword("咖啡店密码提示")]
     },
     {
         title: "超市密码提示",
@@ -374,4 +374,5 @@ window.onload = function () {
     const forumBookmark = document.getElementById("forum-bookmark");
     forumBookmark.classList.remove("hidden");
 };
+
 
