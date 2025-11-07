@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>listening flow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'KaiTi', '楷体', serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298, #2c7873);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 90%;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .text-line {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            line-height: 1.6;
+            opacity: 0;
+            margin: 12px 0;
+            padding: 0 10px;
+            transform: translateY(10px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .text-line.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .skip-btn, .continue-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            z-index: 100;
+        }
+
+        .continue-btn {
+            display: none;
+            top: auto;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .skip-btn:hover, .continue-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .decoration {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .decoration:nth-child(1) {
+            top: 10%; left: 10%;
+            width: clamp(50px, 10vw, 150px);
+            height: clamp(50px, 10vw, 150px);
+            animation-delay: 0s;
+        }
+        .decoration:nth-child(2) {
+            top: 70%; right: 10%;
+            width: clamp(40px, 8vw, 120px);
+            height: clamp(40px, 8vw, 120px);
+            animation-delay: 2s;
+        }
+        .decoration:nth-child(3) {
+            bottom: 20%; left: 20%;
+            width: clamp(30px, 6vw, 80px);
+            height: clamp(30px, 6vw, 80px);
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { padding: 10px; }
+            .skip-btn, .continue-btn {
+                top: 10px;
+                right: 10px;
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+            .continue-btn {
+                bottom: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .skip-btn, .continue-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="decoration"></div>
+    <div class="decoration"></div>
+    <div class="decoration"></div>
+
+    <button class="skip-btn" id="skipBtn">跳过</button>
+    <button class="continue-btn" id="continueBtn">继续</button>
+
+    <div class="container" id="textContainer">
+        <div class="text-line">我拨开那些摇摇欲坠、沾着尘土和霉斑的碎块，一脚踏过那道粗暴的裂口。</div>
+        <div class="text-line">墙后的世界瞬间颠覆了我所知的一切。这里不再是超市后方那种弥漫着腐败气息的潮湿后巷；取而代之的，是一个完全由冰冷、反光的合金铸成的巨大空间，被幽深、近乎有毒的磷光蓝线所笼罩，仿佛置身于一座被遗弃的巨型机械骨架之中。</div>
+        <div class="text-line">空气中，弥漫着一种令人不安的、带着电流焦灼感的臭氧，与高浓度消毒水混合而成的刺鼻金属腥气。这片空间仿佛拥有生命，却又彻底死寂，我的每一步足音都被这金属的寂静瞬间吞噬，压抑得令人窒息。</div>
+        <div class="text-line">我警惕地向前移动，每根神经都紧绷着，试图适应这片死域。</div>
+        <div class="text-line">就在这时，我的靴子轻微地、几乎难以察觉地压到了地板上一块微凸的合缝！刹那间，周围的金属壁上骤然弹开了数个狭小的射击口，伴随着一声尖锐刺耳的机械蜂鸣，铺天盖地的箭矢带着令人牙酸的呼啸风声，如密集暴雨般，无情地向我撕裂而来！</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const lines = document.querySelectorAll('.text-line');
+            const skipBtn = document.getElementById('skipBtn');
+            const continueBtn = document.getElementById('continueBtn');
+            const targetUrl = 'https://sylvie-seven-cq.top/Syzygy/箭来.html';
+
+            let autoPlay = true;
+            let currentIndex = 0;
+
+            // 逐行显示函数
+            function showNextLine() {
+                if (currentIndex < lines.length && autoPlay) {
+                    lines[currentIndex].classList.add('visible');
+                    currentIndex++;
+                    if (currentIndex < lines.length) {
+                        setTimeout(showNextLine, 400); // 每行间隔 0.4 秒，速度较快
+                    } else {
+                        // 所有行显示完毕，3秒后自动跳转
+                        // 在文字显示完成后调用
+    setTimeout(() => {
+        console.log('5秒延迟结束，准备显示确认弹窗'); // 调试信息
+        autoRedirectWithConfirm(
+            "https://sylvie-seven-cq.top/Syzygy/箭来.html", 
+            5000, 
+            '准备避开弓箭'
+        );
+    }, 5000);
+                    }
+                }
+            }
+            // 定义函数
+function autoRedirectWithConfirm(url, delay = 3000, message = '弓箭来也！') {
+  const userConfirmed = confirm(message + '');
+  
+  if (userConfirmed) {
+    window.location.href = url;
+  } else {
+    console.log('取消也没用 你被弓箭射薯辽~ ');
+    // 10秒后再次询问
+    setTimeout(() => {
+      autoRedirectWithConfirm(url, 0, 'ok你重生了，再次准备避开弓箭！');
+    }, 3000);
+  }
+}
+
+
+
+            // 开始播放
+            setTimeout(showNextLine, 500);
+
+            // 跳过按钮
+            skipBtn.addEventListener('click', function () {
+                if (confirm('确定要跳过动画吗？')) {
+                    autoPlay = false;
+                    window.location.href = targetUrl;
+                } else {
+                    // 用户点击“取消”，显示“继续”按钮
+                    continueBtn.style.display = 'block';
+                }
+            });
+
+            // 继续按钮
+            continueBtn.addEventListener('click', function () {
+                autoPlay = true;
+                continueBtn.style.display = 'none';
+                // 如果还有未显示的行，继续播放
+                if (currentIndex < lines.length) {
+                    showNextLine();
+                } else {
+                     // 如果已经播完
+    console.log('文字播放完成，准备设置自动跳转'); // 调试信息
+    
+    // 在文字显示完成后调用
+    setTimeout(() => {
+        console.log('5秒延迟结束，准备显示确认弹窗'); // 调试信息
+        autoRedirectWithConfirm(
+            "https://sylvie-seven-cq.top/Syzygy/箭来.html", 
+            5000, 
+            '准备避开弓箭'
+        );
+    }, 5000);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

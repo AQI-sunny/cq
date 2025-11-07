@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>मण्डलमण्डलमण्डलमण्डलमण्डल</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "Segoe UI", sans-serif;
+        }
+        
+        body {
+            background-color: #000000;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background: linear-gradient(to right, #8b1313, #a02d2d);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .top-links a {
+            color: #ff0000;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        
+        .top-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .logo-section {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .logo-section h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #ff0000;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .logo-section p {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .slogan {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .slogan-item {
+            text-align: center;
+            padding: 8px 15px;
+            background-color: rgba(139, 19, 19, 0.7);
+            border-radius: 4px;
+        }
+        
+        /* 导航栏样式 */
+        nav {
+            background-color: #8b1313;
+            padding: 12px 0;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+        
+        .nav-links li {
+            margin-right: 25px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 8px 5px;
+            display: block;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #ff0000;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 4px;
+        }
+        
+        .search-box {
+            display: flex;
+        }
+        
+        .search-box input {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            width: 200px;
+        }
+        
+        .search-box button {
+            background-color: #ff0000;
+            color: #8b1313;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        /* 主要内容区样式 */
+        .main-content {
+            display: flex;
+            margin: 20px 0;
+            gap: 20px;
+        }
+        
+        .content {
+            flex: 3;
+            background-color: rgb(0, 0, 0);
+            padding: 25px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar {
+            flex: 1;
+            background-color: rgb(0, 0, 0);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #fd0404;
+        }
+        
+        .breadcrumb a {
+            color: #8b1313;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        .article-title {
+            font-size: 24px;
+            color: #8b1313;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .article-meta {
+            font-size: 14px;
+            color: #fc0202;
+            margin-bottom: 20px;
+        }
+        
+        .article-content {
+            line-height: 1.8;
+        }
+        
+        .article-content h3 {
+            color: #8b1313;
+            margin: 20px 0 10px;
+        }
+        
+        .article-content p {
+            margin-bottom: 15px;
+        }
+        
+        .sidebar-title {
+            font-size: 18px;
+            color: #8b1313;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .master-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .master-item {
+            padding: 8px 5px;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .master-item a {
+            color: #333;
+            text-decoration: none;
+        }
+        
+        .master-item a:hover {
+            color: #8b1313;
+            text-decoration: underline;
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background-color: #8b1313;
+            color: white;
+            padding: 30px 0;
+            margin-top: 30px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-section h3 {
+            color: #ff0000;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 8px;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .footer-links a:hover {
+            color: #ff0000;
+            text-decoration: underline;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            font-size: 14px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .nav-links {
+                margin-bottom: 15px;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .search-box input {
+                width: 100%;
+            }
+            
+            .slogan {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        
+        /* 梵语字体样式 */
+        .sanskrit {
+            font-family: "Sanskrit Text", "Segoe UI", sans-serif;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部 -->
+    <header>
+        <div class="container">
+            <div class="top-bar">
+                <div class="top-links">
+                    <a href="#">मण्डल</a>
+                    <a href="#">मण्डल</a>
+                    <a href="#">मण्डल</a>
+                    <a href="#">मण्डल</a>
+                    <a href="#">मण्डल</a>
+                    <a href="#">मण्डल</a>
+                </div>
+                <div class="top-links">
+                    <a href="#">मण्डल</a>
+                    <a href="#">मण्डल</a>
+                    <a href="#">मण्डल</a>
+                </div>
+            </div>
+            
+            <div class="logo-section">
+                <h1>मण्डल</h1>
+            
+                
+                
+            </div>
+        </div>
+    </header>
+    
+    <!-- 导航栏 -->
+    <nav>
+        <div class="container nav-container">
+            <ul class="nav-links">
+                <li><a href="#" class="sanskrit">मण्डल</a></li>
+                <li><a href="#" class="sanskrit">मण्डल</a></li>
+                <li><a href="#" class="sanskrit">मण्डल</a></li>
+                <li><a href="#" class="sanskrit">मण्डल</a></li>
+                <li><a href="#" class="sanskrit">मण्डल</a></li>
+                <li><a href="#" class="sanskrit">मण्डल</a></li>
+                <li><a href="#" class="sanskrit">मण्डल</a></li>
+                <li><a href="#" class="sanskrit">मण्डल</a></li>
+                <li><a href="#" class="sanskrit">मण्डल</a></li>
+                <li><a href="#" class="sanskrit">मण्डल</a></li>
+                <li><a href="#" class="sanskrit">मण्डल</a></li>
+                
+                
+            </ul>
+            
+            <div class="search-box">
+                <input type="text" placeholder="मण्डल">
+                <button>मण्डल</button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 主要内容区 -->
+    <div class="container main-content">
+        <div class="content">
+            <div class="breadcrumb">
+                मण्डल：<a href="#">मण्डल</a> &gt; <a href="#">मण्डल</a> &gt; <a href="#">मण्डल</a>
+            </div>
+            
+            <h1 class="article-title">मण्डल</h1>
+            
+            <div class="article-meta">
+                मण्डल
+            </div>
+            
+            <div class="article-content">
+                <h3>一、 Core Definition: What is the Kālacakra Maṇḍala?</h3>
+                
+                <p>The Kālacakra Maṇḍala, known in Tibetan as "Dus 'khor" (杜库), originates from the fundamental Tantric scripture, the Kālacakra Tantra. It is a multi-dimensional cosmic model, a blueprint for practice, and a complete system for attaining fruition.</p>
+                
+                <p>Kālacakra: Meaning "Wheel of Time". It refers to both the external macrocosm (Bāhya Kālacakra)—the movements of celestial bodies and the laws of time's passage—and the internal microcosm (Adhyātma Kālacakra)—the flow of prāṇa (winds), nāḍī (channels), and bindu (drops) within the human body, as well as the cycle of birth, life, and death. The goal of Kālacakra practice is to transcend the bondage of the external time-wheel by mastering the internal one, thereby achieving the state of eternal awareness—the Para Kālacakra (Alternative Time).</p>
+                
+                <p>Vajra: Symbolizing a nature that is as immutable, indestructible, and invincible as a diamond. It represents the absolute, non-dual Śūnyatā (Emptiness) and Bodhicitta (Awakened Mind).</p>
+                
+                <p>Maṇḍala: Meaning "sacred circle" or "divine palace." It is far more than a geometric pattern. It is a Buddhakṣetra (Buddha-field), an assembly of Buddhas and Bodhisattvas, a microcosm of the universe, a map of the practitioner's mind, and the complete path to enlightenment.</p>
+                
+                <p>Therefore, the Kālacakra Maṇḍala is the complete practice system with the deity Kālacakra at its center. Through visualization and meditation within this Maṇḍala, the practitioner's kāya (body), vāk (speech), and citta (mind) become fully attuned with those of the Buddha, ultimately realizing the Buddha-hood, non-dual with Kālacakra.</p>
+                
+                <h3>二、 Philosophical and Symbolic System</h3>
+                
+                <p>The Kālacakra system is built upon a profound philosophical foundation, rich in symbolism.</p>
+                
+                <p>Dual Harmony:</p>
+                
+                <p>Upāya (Skillful Means) & Prajñā (Wisdom): The embracing form of Kālacakra and his consort Viśvamātā symbolizes the perfect union of Upāya and Prajñā. This represents the ultimate truth of the union of bliss and emptiness, and compassion and wisdom.</p>
+                
+                <p>External & Internal: It intimately connects the external universe (planetary movements, calendar) with internal life (physiology, psychology). The advanced Kālacakra calendar is an embodiment of this philosophy, positing that human physiological rhythms are synchronized with cosmic cycles.</p>
+                
+                <p>Purification of the Mundane:</p>
+                
+                <p>Every element within the Maṇḍala serves to purify the practitioner's attachment to the mundane world.</p>
+                
+                <p>The Pañca Skandha (Five Aggregates) are purified into the Pañca Tathāgata (Five Dhyani Buddhas).</p>
+                
+                <p>The Catur Mahābhūta (Four Great Elements) and the Pañca Kāma (Five Desires) are purified into the Maṇḍala's throne, lotus petals, etc.</p>
+                
+                <p>Time (past, present, future) is purified into the three faces of Kālacakra.</p>
+                
+                <p>Ultimate Goal – The Pure Land of Śambhala:</p>
+                
+                <p>The Kālacakra Tantra prophesies an earthly pure land—Śambhala. It is a Dharma realm ruled by emanations of Kālacakra, the Kings of Śambhala. The Kālacakra teachings are said to have been transmitted from the kingdom of Śambhala to the human world. Practicing Kālacakra is not only for personal liberation but also embodies the aspiration to establish a pure land on earth and awaits the future victory of the Śambhala armies over the forces of darkness in an eschatological narrative.</p>
+                
+                <h3>三、 Structure of the Maṇḍala: An Extremely Complex Cosmic Blueprint</h3>
+                
+                <p>The structure of the Kālacakra Maṇḍala is one of the most complex among all Tibetan Buddhist Maṇḍalas. It is a three-dimensional structure, typically represented in two-dimensional form as a painting or sand Maṇḍala.</p>
+                
+                <p>Primary Components:</p>
+                
+                <p>Outer Enclosures: The Protective Rings</p>
+                
+                <p>Fire of Wisdom: Symbolizes the fire of Prajñāpāramitā (Perfection of Wisdom), which burns all Avidyā (ignorance) and afflictions.</p>
+                
+                <p>Vajra Wall: Symbolizes an indestructible realm, impervious to obstacles.</p>
+                
+                <p>Lotus Ring: Symbolizes the pristine nature, unstained by the mud of Saṃsāra.</p>
+                
+                <p>The Center: The Palace</p>
+                
+                <p>The palace is square, with four great gates facing the cardinal directions, each with ornate gateways and staircases. This represents Mount Meru, the axis of the universe.</p>
+                
+                <p>The Central Deity: Kālacakra and Viśvamātā</p>
+                
+                <p>Located at the very heart of the palace.</p>
+                
+                <p>Iconography: Kālacakra is typically blue in color, with four faces (blue-front, red-right, white-left, yellow-back, representing the four activities of pacifying, increasing, magnetizing, and subjugating, as well as controlling the seasons and elements), twenty-four arms (representing the twenty-four solar terms or constellations), and two legs (symbolizing Upāya and Prajñā).</p>
+                
+                <p>Each arm and each handheld attribute (such as vajra, sword, lotus, kapāla /skull-cup) holds profound symbolic meaning, corresponding to the purification of different kleshas and concepts.</p>
+                
+                <p>He is in yab-yum (father-mother) union with his consort Viśvamātā, representing the state of Śūnyatā and Sukha (bliss) non-duality.</p>
+                
+                <p>Surrounding Deities: 722 Deities</p>
+                
+                <p>Surrounding Kālacakra are the deities of the Maṇḍala, totaling 722 Buddhas. They reside on different tiers and directions of the palace.</p>
+                
+                <p>These deities are not external gods but manifestations of the practitioner's own prāṇa, nāḍī, and bindu energies in an enlightened state. Each deity corresponds to a specific point of prāṇa within the cakra (psychic centers).</p>
+                
+                
+            </div>
+        </div>
+        
+        <div class="sidebar">
+            <h3 class="sidebar-title">मण्डल</h3>
+            
+            <div class="master-list">
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div class="master-item"><a href="#">मण्डल</a></div>
+                <div......
+
+
+

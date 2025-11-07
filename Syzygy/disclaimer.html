@@ -1,0 +1,417 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>解谜游戏网站 - 免责声明</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #0a0a12;
+            --accent-color: #8a2be2;
+            --light-color: #d4c2fc;
+            --dark-color: #0a0a12;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a12 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(18, 18, 30, 0.85);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+            header::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: linear-gradient(90deg, #8a2be2, #4a0080);
+            }
+
+        h1 {
+            color: var(--light-color);
+            margin-bottom: 15px;
+            font-size: 2.8rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .subtitle {
+            color: #b19cd9;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(18, 18, 30, 0.85);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            }
+
+            .card h2 {
+                color: var(--light-color);
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+                border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+                display: flex;
+                align-items: center;
+            }
+
+                .card h2 i {
+                    margin-right: 10px;
+                    font-size: 1.5rem;
+                }
+
+            .card p {
+                margin-bottom: 15px;
+                color: #e0e0e0;
+            }
+
+            .card ul {
+                margin-left: 20px;
+                margin-bottom: 20px;
+            }
+
+            .card li {
+                margin-bottom: 10px;
+                color: #e0e0e0;
+            }
+
+        .highlight {
+            background: rgba(138, 43, 226, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+            margin: 20px 0;
+        }
+
+        .footer {
+            background: rgba(18, 18, 30, 0.85);
+            padding: 40px 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .disclaimer {
+            margin-bottom: 30px;
+        }
+
+            .disclaimer h3 {
+                color: var(--light-color);
+                margin-bottom: 20px;
+                font-size: 1.5rem;
+            }
+
+        .disclaimer-section {
+            margin-bottom: 25px;
+        }
+
+            .disclaimer-section h4 {
+                color: var(--light-color);
+                margin-bottom: 10px;
+                font-size: 1.2rem;
+            }
+
+            .disclaimer-section p {
+                color: #b19cd9;
+                line-height: 1.7;
+            }
+
+        .copyright {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(138, 43, 226, 0.3);
+            font-size: 0.9rem;
+            color: #8a8a9e;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6a0dad, #8a2be2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 6px 20px rgba(138, 43, 226, 0.6);
+            }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--light-color);
+            border: 2px solid var(--light-color);
+        }
+
+            .btn-secondary:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+        .consent-notice {
+            background: rgba(46, 204, 113, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid rgba(46, 204, 113, 0.5);
+            margin: 20px 0;
+            text-align: center;
+        }
+
+            .consent-notice i {
+                color: #2ecc71;
+                margin-right: 10px;
+                font-size: 1.5rem;
+            }
+
+        .fictional-notice {
+            background: rgba(138, 43, 226, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid rgba(138, 43, 226, 0.5);
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .btn-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-puzzle-piece"></i> 神秘的失物招领事件</h1>
+            <p class="subtitle">沉浸式ARG网页解谜游戏</p>
+        </header>
+
+        <div class="content">
+            <div class="card">
+                <h2><i class="fas fa-exclamation-triangle"></i> 重要提示</h2>
+
+                <div class="consent-notice">
+                    <p><i class="fas fa-check-circle"></i> <strong>进入本网站即表示您已阅读、理解并同意本免责声明的所有条款。</strong></p>
+                </div>
+
+                <p>如果您不同意这些条款，请立即离开本网站。</p>
+
+                <div class="fictional-notice">
+                    <p><strong>关于虚构内容的特别声明：</strong> 为了保证游戏体验，本网站及其相关网站均不带任何"纯属虚构"的提示，但其内容均属于"神秘的失物招领事件"剧情宇宙，与真实的团体及个人无关，与真实历史无关。所有角色、组织、事件和地点均为虚构，如有雷同，纯属巧合。</p>
+                </div>
+
+                <p>本游戏可能包含：</p>
+                <ul>
+                    <li>复杂逻辑谜题和密码破译</li>
+                    <li>悬疑或轻微恐怖元素</li>
+                    <li>需要细心和专注力的挑战</li>
+                    <li>非线性叙事与碎片化信息</li>
+                    <!--<li>可能引起不适的视觉或听觉效果</li>-->
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-user-shield"></i> 玩家责任</h2>
+                <p>作为玩家，您同意：</p>
+                <ul>
+                    <li>仅将本网站用于合法的娱乐目的</li>
+                    <li>不尝试破解、修改或干扰网站的正常运行</li>
+                    <li>不将游戏解决方案大规模传播，影响其他玩家的体验</li>
+                    <li>如有不适，立即停止游戏并寻求帮助</li>
+                    <li>确保游戏环境安全，避免在驾驶或操作机械时游玩</li>
+                </ul>
+
+                <p>作者@棖柒ChengQi建议玩家：</p>
+                <ul>
+
+                    <li>在光线充足的环境下游玩~</li>
+                    <li>推荐使用excel做笔记~防止遗漏关键词</li>
+                    <li>本游戏不含任何恐怖画面、恐怖图片~也不含任何音效~</li>
+                    <li>善用论坛首页搜索功能及常用软件~密码均包含字母与数字~关注频繁出现的线索~</li>
+                    <!--<li>本游戏~</li>-->
+                    <li>本游戏包含多条支线，或影响推进主线，如影响游玩体验深感抱歉（90度鞠躬）</li>
+                    <li>如遇困难，可进入小红书群聊联系作者寻求提示~游戏结束后可在评论区打个卡~（你的反馈及建议对作者很重要>w0）</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="disclaimer">
+                    <h3><i class="fas fa-gavel"></i> 法律免责声明</h3>
+
+                    <div class="disclaimer-section">
+                        <h4>1. 内容准确性</h4>
+                        <p>本网站提供的所有谜题、故事和游戏内容均为虚构创作，不构成任何专业建议。作者@AQI尽力确保内容的准确性和趣味性，但不保证完全没有错误或缺陷。玩家应自行判断游戏内容的适用性。</p>
+                    </div>
+
+                    <div class="disclaimer-section">
+                        <h4>2. 责任限制</h4>
+                        <p>在任何情况下，本网站及其作者均不对因使用或无法使用本网站内容而导致的任何直接、间接、附带、特殊或后果性损害承担责任。</p>
+                    </div>
+
+                    <div class="disclaimer-section">
+                        <h4>3. 外部链接</h4>
+                        <p>本网站可能包含指向第三方网站的链接。这些链接仅为方便玩家、提升玩家游戏体验而提供，作者不对这些网站的内容、隐私政策或做法负责。访问这些链接的风险由玩家自行承担。</p>
+                    </div>
+
+                    <!--<div class="disclaimer-section">
+                        <h4>4. 知识产权</h4>
+                        <p>本网站所有原创内容，包括但不限于谜题设计、故事线、图形、音频和代码，均受版权法保护。未经作者明确书面许可，不得复制、修改、分发或用于商业目的。</p>
+                    </div>-->
+
+                    <div class="disclaimer-section">
+                        <h4>4. 游戏适度</h4>
+                        <p>解谜游戏旨在提供娱乐和智力挑战。作者鼓励玩家适度游戏，如感到过度紧张、焦虑或不适，请立即停止游戏并考虑寻求专业帮助。作者不承担因游戏引起的任何心理或生理不适的责任。</p>
+                    </div>
+
+                    <div class="disclaimer-section">
+                        <h4>5. 服务变更</h4>
+                        <p>作者保留随时修改、暂停或终止网站任何部分的权利，恕不另行通知。作者不对因这些变更导致的任何不便或损失承担责任。</p>
+                    </div>
+
+                    <div class="disclaimer-section">
+                        <h4>6. 适用法律</h4>
+                        <p>本免责声明受中华人民共和国法律管辖并据其解释。任何因本声明或使用本网站而产生的争议，应提交有管辖权的人民法院解决。</p>
+                    </div>
+
+                    <div class="disclaimer-section">
+                        <h4>7. 同意条款</h4>
+                        <p>通过访问和使用本网站，您确认已阅读、理解并同意受本免责声明所有条款的约束。如果您不同意这些条款，您必须立即停止使用本网站。</p>
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <a href="#" class="btn btn-primary" id="continue-btn">继续游戏</a>
+                    <a href="#" class="btn btn-secondary" id="leave-btn">离开网站</a>
+                </div>
+
+                <div class="copyright">
+                    <p>&copy; 2025 神秘的失物招领事件 - ARG网页解谜游戏 - 保留所有权利</p>
+                    <p>最后更新: 2025年10月25日</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const continueBtn = document.getElementById('continue-btn');
+            const leaveBtn = document.getElementById('leave-btn');
+
+            // 记录用户已查看免责声明
+            localStorage.setItem('disclaimerViewed', 'true');
+
+            if (continueBtn) {
+                continueBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    alert('欢迎来到神秘的失物招领事件游戏！祝您游戏愉快。');
+                    // 在实际应用中，这里可以跳转到游戏主页面
+                    window.location.href = 'https://sylvie-seven-cq.top/Syzygy/forum.html'; // 替换为实际游戏页面
+                });
+            }
+
+            if (leaveBtn) {
+                leaveBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    if (confirm('您确定要离开吗？如果您不同意我们的免责声明，请选择离开。')) {
+                        window.location.href = 'https://www.google.com'; // 替换为实际离开页面
+                    }
+                });
+            }
+
+            // 卡片动画
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateY(-5px)';
+                });
+
+                card.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // 显示访问时间（用于法律记录）
+            const visitTime = new Date().toLocaleString();
+            console.log(`用户访问免责声明页面时间: ${visitTime}`);
+        });
+    </script>
+</body>
+</html>
