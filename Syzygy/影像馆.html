@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时光影像馆 - 珍藏每一刻美好</title>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f5f2;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 导航栏样式 */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #8b7355;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #8b7355;
+        }
+        
+        .login-btn {
+            background-color: #8b7355;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #6d5c46;
+        }
+        
+        /* 英雄区域样式 */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                        url('https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+        
+        .hero-content h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .hero-content p {
+            font-size: 20px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        /* 服务介绍样式 */
+        .services {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 32px;
+            color: #333;
+        }
+        
+        .service-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .service-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .service-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .service-card-content {
+            padding: 20px;
+        }
+        
+        .service-card h3 {
+            margin-bottom: 10px;
+            color: #8b7355;
+        }
+        
+        /* 照片展示区域样式 */
+        .photo-gallery {
+            padding: 60px 0;
+            background-color: #f0ebe6;
+        }
+        
+        .gallery-container {
+            display: none; /* 默认隐藏，登录后显示 */
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .photo-item {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .photo-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .photo-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        /* 登录模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            background-color: #8b7355;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background-color: #6d5c46;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        /* 用户信息样式 */
+        .user-info {
+            display: none;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #8b7355;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #8b7355;
+            cursor: pointer;
+            margin-left: 15px;
+            font-weight: 500;
+        }
+        
+        /* 错误提示样式 */
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 20px;
+            color: #8b7355;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column a:hover {
+            color: #8b7355;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            color: #aaa;
+            font-size: 14px;
+        }
+        .login-btn:disabled {
+    background-color: #8b7355;
+    cursor: not-allowed;
+}
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+            }
+            
+            .nav-links {
+                margin-top: 20px;
+            }
+            
+            .nav-links li {
+                margin: 0 10px;
+            }
+            
+            .hero-content h1 {
+                font-size: 36px;
+            }
+            
+            .hero-content p {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">时光影像馆</a>
+                <ul class="nav-links">
+                    <li><a href="#">首页</a></li>
+                    <li><a href="#">服务项目</a></li>
+                    <li><a href="#">作品展示</a></li>
+                    <li><a href="#">关于我们</a></li>
+                    <li><a href="#">联系方式</a></li>
+                </ul>
+                <div class="user-info" id="userInfo">
+                    <div class="user-avatar" id="userAvatar">M</div>
+                    <span id="userName">momo</span>
+                    <button class="logout-btn" id="logoutBtn">退出</button>
+                </div>
+                <button class="login-btn" id="loginBtn">登录</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>珍藏每一刻美好</h1>
+            <p>时光影像馆，用镜头记录您生命中的珍贵瞬间，让美好回忆永存</p>
+            <button class="login-btn" id="heroLoginBtn">登录查看您的照片</button>
+        </div>
+    </section>
+
+    <!-- 服务介绍 -->
+    <section class="services">
+        <div class="container">
+            <h2 class="section-title">我们的服务</h2>
+            <div class="service-cards">
+                <div class="service-card">
+                    <img src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="个人写真">
+                    <div class="service-card-content">
+                        <h3>个人写真</h3>
+                        <p>专业摄影师为您打造独特的个人形象照，展现最真实的自己。</p>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="婚纱摄影">
+                    <div class="service-card-content">
+                        <h3>婚纱摄影</h3>
+                        <p>记录爱情最美好的时刻，为您打造梦幻般的婚纱摄影体验。</p>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="家庭摄影">
+                    <div class="service-card-content">
+                        <h3>家庭摄影</h3>
+                        <p>捕捉家庭的温馨时刻，记录家人之间的爱与关怀。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 照片展示区域 -->
+    <section class="photo-gallery" id="photoGallery">
+        <div class="container">
+            <h2 class="section-title">您的照片</h2>
+            <div class="gallery-container" id="galleryContainer">
+                <div class="gallery-grid">
+                    <div class="photo-item">
+                        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="照片1">
+                    </div>
+                    <div class="photo-item">
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="照片2">
+                    </div>
+                    <div class="photo-item">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80" alt="照片3">
+                    </div>
+                    <div class="photo-item">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="照片4">
+                    </div>
+                    <div class="photo-item">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="照片5">
+                    </div>
+                    <div class="photo-item">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="照片6">
+                    </div>
+                </div>
+            </div>
+            <div class="login-prompt" id="loginPrompt">
+                <p style="text-align: center; font-size: 18px; color: #666;">请登录后查看您的照片</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 登录模态框 -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModal">&times;</button>
+            <h2>登录时光影像馆</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" placeholder="请输入用户名" required>
+                </div>
+                <div class="form-group">
+                    <label for="yinbimima">密码</label>
+                    <input type="yinbimima" id="yinbimima" placeholder="请输入密码" required>
+                </div>
+                <div class="error-message" id="errorMessage">没有该账户</div>
+                <button type="submit" class="submit-btn">登录</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>时光影像馆</h3>
+                    <p>用镜头记录美好，让时光永驻。</p>
+                </div>
+                <div class="footer-column">
+                    <h3>服务项目</h3>
+                    <ul>
+                        <li><a href="#">个人写真</a></li>
+                        <li><a href="#">婚纱摄影</a></li>
+                        <li><a href="#">家庭摄影</a></li>
+                        <li><a href="#">儿童摄影</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>联系我们</h3>
+                    <ul>
+                        <li>地址：深南市桥安区晶静大厦A座</li>
+                        <li>电话：400-123-4567</li>
+                        <li>邮箱：contact@timephoto.com</li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>关注我们</h3>
+                    <ul>
+                        <li><a href="https://sylvie-seven-cq.top">微信公众号</a></li>
+                        <li><a href="#">微博</a></li>
+                        <li><a href="https://sylvie-seven-cq.top">小红书</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 时光影像馆 版权所有</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 获取DOM元素
+        const loginBtn = document.getElementById('loginBtn');
+        const heroLoginBtn = document.getElementById('heroLoginBtn');
+        const loginModal = document.getElementById('loginModal');
+        const closeModal = document.getElementById('closeModal');
+        const loginForm = document.getElementById('loginForm');
+        const userInfo = document.getElementById('userInfo');
+        const userName = document.getElementById('userName');
+        const userAvatar = document.getElementById('userAvatar');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const galleryContainer = document.getElementById('galleryContainer');
+        const loginPrompt = document.getElementById('loginPrompt');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        // 打开登录模态框
+        loginBtn.addEventListener('click', () => {
+            loginModal.style.display = 'flex';
+            errorMessage.style.display = 'none';
+        });
+        
+        heroLoginBtn.addEventListener('click', () => {
+            loginModal.style.display = 'flex';
+            errorMessage.style.display = 'none';
+        });
+        
+        // 关闭登录模态框
+        closeModal.addEventListener('click', () => {
+            loginModal.style.display = 'none';
+            errorMessage.style.display = 'none';
+        });
+        
+        // 点击模态框外部关闭
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+                errorMessage.style.display = 'none';
+            }
+        });
+        
+        // 处理登录表单提交
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const yinbimima = document.getElementById('yinbimima').value;
+            
+            // 验证登录信息
+            if (username === 'momo' && yinbimima === '916920') {
+                // 登录成功
+                loginBtn.style.display = 'none';
+                userInfo.style.display = 'flex';
+                userName.textContent = username;
+                userAvatar.textContent = username.charAt(0).toUpperCase();
+                
+                // 显示照片库
+                galleryContainer.style.display = 'block';
+                loginPrompt.style.display = 'none';
+                
+                // 修改英雄区域按钮文本
+                heroLoginBtn.textContent = '请下滑查看您的照片';
+                heroLoginBtn.disabled = true;
+                
+                // 关闭模态框
+                loginModal.style.display = 'none';
+                
+                // 清空表单
+                loginForm.reset();
+                errorMessage.style.display = 'none';
+            } else {
+                // 登录失败
+                errorMessage.style.display = 'block';
+            }
+        });
+        
+        // 处理退出登录
+        logoutBtn.addEventListener('click', () => {
+            // 模拟退出登录
+            loginBtn.style.display = 'block';
+            userInfo.style.display = 'none';
+            
+            // 隐藏照片库
+            galleryContainer.style.display = 'none';
+            loginPrompt.style.display = 'block';
+            
+            // 恢复英雄区域按钮文本
+            heroLoginBtn.textContent = '登录查看您的照片';
+            heroLoginBtn.disabled = false;
+        });
+    </script>
+    <footer style="position: fixed; bottom: 2px; right: 2px; font-size: 6px; color: transparent; opacity: 0.1;">
+            此页面纯属虚构，并属于神秘的失物招领事件游戏宇宙，本页面不承担任何责任
+    </footer>
+</body>
+</html>

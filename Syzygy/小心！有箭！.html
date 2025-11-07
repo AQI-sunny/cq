@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>小心！有箭！</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            background-color: #111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            color: red;
+            position: relative;
+            touch-action: none;
+        }
+
+        /* 全屏背景文字 */
+        #fullscreenBackground {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .kms-text {
+            position: absolute;
+            color: #ff0000;
+            font-size: 24px;
+            font-weight: bold;
+            opacity: 0.7;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        #gameContainer {
+            position: relative;
+            width: 95vw;
+            height: 95vh;
+            max-width: 1200px;
+            max-height: 800px;
+        }
+
+        #gameArea {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(34, 34, 34, 0.8);
+            overflow: hidden;
+            border: 2px solid #444;
+            border-radius: 5px;
+            touch-action: none;
+        }
+
+        #stickman {
+            position: absolute;
+            width: 30px;
+            height: 50px;
+            z-index: 10;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s;
+        }
+
+        .head {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            top: 0;
+            left: 5px;
+        }
+
+        .body {
+            position: absolute;
+            width: 4px;
+            height: 20px;
+            background-color: white;
+            top: 20px;
+            left: 13px;
+        }
+
+        .arm {
+            position: absolute;
+            width: 15px;
+            height: 4px;
+            background-color: white;
+            top: 25px;
+        }
+
+            .arm.left {
+                left: -2px;
+                transform: rotate(-30deg);
+            }
+
+            .arm.right {
+                right: -2px;
+                transform: rotate(30deg);
+            }
+
+        .leg {
+            position: absolute;
+            width: 4px;
+            height: 20px;
+            background-color: white;
+            top: 40px;
+        }
+
+            .leg.left {
+                left: 10px;
+                transform: rotate(-10deg);
+            }
+
+            .leg.right {
+                right: 10px;
+                transform: rotate(10deg);
+            }
+
+        .arrow {
+            position: absolute;
+            width: 40px;
+            height: 8px;
+            background-color: #8B4513;
+            border-radius: 4px;
+            z-index: 5;
+        }
+
+            .arrow::before {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 0;
+                border-left: 10px solid #8B4513;
+                border-top: 5px solid transparent;
+                border-bottom: 5px solid transparent;
+                right: -10px;
+                top: -1px;
+            }
+
+            .arrow::after {
+                content: '';
+                position: absolute;
+                width: 10px;
+                height: 10px;
+                background-color: #FFD700;
+                clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+                left: -10px;
+                top: -1px;
+            }
+
+        .tracking-arrow {
+            background-color: #ff0000;
+        }
+
+            .tracking-arrow::before {
+                border-left: 10px solid #ff0000;
+            }
+
+            .tracking-arrow::after {
+                background-color: #ff9900;
+            }
+
+        #enterButton {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #333;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 20;
+        }
+
+            #enterButton:hover {
+                background-color: #444;
+            }
+
+        #scoreDisplay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 18px;
+            color: red;
+            z-index: 15;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        #instructions {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 14px;
+            color: red;
+            z-index: 15;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        /* 移动设备适配 */
+        @media (max-width: 768px) {
+            #gameContainer {
+                width: 100vw;
+                height: 100vh;
+                max-width: none;
+                max-height: none;
+            }
+
+            #gameArea {
+                border: none;
+                border-radius: 0;
+            }
+
+            #scoreDisplay, #instructions {
+                font-size: 16px;
+            }
+
+            .kms-text {
+                font-size: 18px;
+            }
+
+            #stickman {
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+
+            .arrow {
+                transform: scale(1.2);
+            }
+        }
+
+        @media (max-width: 480px) {
+            #scoreDisplay, #instructions {
+                font-size: 16px;
+                padding: 5px;
+                background-color: rgba(0,0,0,0.5);
+                border-radius: 5px;
+            }
+
+            .kms-text {
+                font-size: 16px;
+            }
+
+            #stickman {
+                transform: translate(-50%, -50%) scale(1.3);
+            }
+
+            .arrow {
+                transform: scale(1.3);
+            }
+
+            #enterButton {
+                padding: 15px 30px;
+                font-size: 16px;
+            }
+        }
+
+        /* 触摸提示 */
+        #touchHint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+            background-color: rgba(0,0,0,0.7);
+            padding: 15px;
+            border-radius: 10px;
+            z-index: 25;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            #touchHint {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="fullscreenBackground"></div>
+    <div id="touchHint">挥动小手手助力躲避！</div>
+
+    <div id="gameContainer">
+        <div id="gameArea">
+            <div id="stickman">
+                <div class="head"></div>
+                <div class="body"></div>
+                <div class="arm left"></div>
+                <div class="arm right"></div>
+                <div class="leg left"></div>
+                <div class="leg right"></div>
+            </div>
+            <div id="scoreDisplay">已躲避弓箭: 0</div>
+            <div id="instructions">不好！泥踩到机关辣！快躲开弓箭</div>
+            <button id="enterButton" onclick="window.location.href='https://sylvie-seven-cq.top/Syzygy/K-QA实验室.html'">继续深入</button>
+        </div>
+    </div>
+
+    <script>
+        const gameArea = document.getElementById('gameArea');
+        const stickman = document.getElementById('stickman');
+        const enterButton = document.getElementById('enterButton');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const fullscreenBackground = document.getElementById('fullscreenBackground');
+        const touchHint = document.getElementById('touchHint');
+
+        let gameWidth = gameArea.clientWidth;
+        let gameHeight = gameArea.clientHeight;
+        let arrows = [];
+        let score = 0;
+        let gameActive = true;
+        let lastPlayerX = gameWidth / 2;
+        let lastPlayerY = gameHeight / 2;
+        let playerMoving = false;
+        let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        let targetScore = isMobile ? 8 : 15; // 手机端8个，电脑端15个
+        let arrowInterval = isMobile ? 700 : 500; // 手机端弓箭生成间隔更长
+
+        // 创建全屏背景文字
+        function createFullscreenBackground() {
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+
+            // 计算需要创建的文字数量（基于屏幕尺寸）
+            const textCount = Math.floor((screenWidth * screenHeight) / 8000);
+
+            for (let i = 0; i < textCount; i++) {
+                const text = document.createElement('div');
+                text.classList.add('kms-text');
+                text.textContent = 'KMS is God';
+                text.style.left = Math.random() * screenWidth + 'px';
+                text.style.top = Math.random() * screenHeight + 'px';
+                text.style.transform = `rotate(${Math.random() * 360}deg)`;
+                text.style.fontSize = (Math.random() * 20 + 12) + 'px';
+                text.style.opacity = 0.1 + Math.random() * 0.3;
+                fullscreenBackground.appendChild(text);
+            }
+        }
+
+        // 更新游戏区域尺寸
+        function updateGameAreaSize() {
+            gameWidth = gameArea.clientWidth;
+            gameHeight = gameArea.clientHeight;
+
+            // 重置火柴人位置到中心
+            stickmanX = gameWidth / 2;
+            stickmanY = gameHeight / 2;
+            stickman.style.left = stickmanX + 'px';
+            stickman.style.top = stickmanY + 'px';
+            lastPlayerX = stickmanX;
+            lastPlayerY = stickmanY;
+        }
+
+        // Set stickman initial position
+        let stickmanX = gameWidth / 2;
+        let stickmanY = gameHeight / 2;
+        stickman.style.left = stickmanX + 'px';
+        stickman.style.top = stickmanY + 'px';
+
+        // 检测玩家是否在移动
+        function checkPlayerMovement() {
+            const currentX = parseFloat(stickman.style.left);
+            const currentY = parseFloat(stickman.style.top);
+
+            // 如果玩家位置与上次记录的位置不同，则玩家在移动
+            playerMoving = (currentX !== lastPlayerX || currentY !== lastPlayerY);
+
+            // 更新最后记录的位置
+            lastPlayerX = currentX;
+            lastPlayerY = currentY;
+        }
+
+        // 移动火柴人 - 鼠标控制
+        gameArea.addEventListener('mousemove', (e) => {
+            if (!gameActive) return;
+
+            const rect = gameArea.getBoundingClientRect();
+            stickmanX = e.clientX - rect.left;
+            stickmanY = e.clientY - rect.top;
+
+            // Keep stickman within bounds
+            stickmanX = Math.max(15, Math.min(stickmanX, gameWidth - 15));
+            stickmanY = Math.max(25, Math.min(stickmanY, gameHeight - 25));
+
+            stickman.style.left = stickmanX + 'px';
+            stickman.style.top = stickmanY + 'px';
+        });
+
+        // 移动火柴人 - 触摸控制（移动设备）
+        gameArea.addEventListener('touchstart', (e) => {
+            if (!gameActive) return;
+            e.preventDefault();
+
+            // 隐藏触摸提示
+            touchHint.style.display = 'none';
+
+            const touch = e.touches[0];
+            const rect = gameArea.getBoundingClientRect();
+            stickmanX = touch.clientX - rect.left;
+            stickmanY = touch.clientY - rect.top;
+
+            // Keep stickman within bounds
+            stickmanX = Math.max(15, Math.min(stickmanX, gameWidth - 15));
+            stickmanY = Math.max(25, Math.min(stickmanY, gameHeight - 25));
+
+            stickman.style.left = stickmanX + 'px';
+            stickman.style.top = stickmanY + 'px';
+        }, { passive: false });
+
+        gameArea.addEventListener('touchmove', (e) => {
+            if (!gameActive) return;
+            e.preventDefault();
+
+            const touch = e.touches[0];
+            const rect = gameArea.getBoundingClientRect();
+            stickmanX = touch.clientX - rect.left;
+            stickmanY = touch.clientY - rect.top;
+
+            // Keep stickman within bounds
+            stickmanX = Math.max(15, Math.min(stickmanX, gameWidth - 15));
+            stickmanY = Math.max(25, Math.min(stickmanY, gameHeight - 25));
+
+            stickman.style.left = stickmanX + 'px';
+            stickman.style.top = stickmanY + 'px';
+        }, { passive: false });
+
+        // Function to create arrows from different directions
+        function createArrow() {
+            const arrow = document.createElement('div');
+
+            // 决定弓箭类型：普通弓箭或追踪弓箭
+            const arrowType = Math.random();
+            let isTracking = false;
+
+            // 手机端追踪弓箭概率降低
+            const trackingChance = isMobile ? 0.2 : 0.3;
+            if (arrowType < trackingChance) {
+                arrow.classList.add('arrow', 'tracking-arrow');
+                isTracking = true;
+            } else {
+                arrow.classList.add('arrow');
+            }
+
+            // 决定弓箭方向
+            const directionType = Math.random();
+            let startX, startY, angle;
+
+            // 手机端瞄准玩家的弓箭概率降低
+            const aimChance = isMobile ? 0.3 : 0.5;
+            if (directionType < aimChance) {
+                // 瞄准玩家的弓箭
+                const playerX = parseFloat(stickman.style.left);
+                const playerY = parseFloat(stickman.style.top);
+
+                // 随机选择从哪个方向瞄准玩家
+                const side = Math.floor(Math.random() * 4);
+
+                switch (side) {
+                    case 0: // From top
+                        startX = playerX;
+                        startY = -20;
+                        angle = 0;
+                        break;
+                    case 1: // From right
+                        startX = gameWidth + 20;
+                        startY = playerY;
+                        angle = 90;
+                        break;
+                    case 2: // From bottom
+                        startX = playerX;
+                        startY = gameHeight + 20;
+                        angle = 180;
+                        break;
+                    case 3: // From left
+                        startX = -20;
+                        startY = playerY;
+                        angle = 270;
+                        break;
+                }
+            } else {
+                // 随机方向的弓箭
+                const direction = Math.floor(Math.random() * 4);
+
+                switch (direction) {
+                    case 0: // From top
+                        startX = Math.random() * gameWidth;
+                        startY = -20;
+                        angle = 0;
+                        break;
+                    case 1: // From right
+                        startX = gameWidth + 20;
+                        startY = Math.random() * gameHeight;
+                        angle = 90;
+                        break;
+                    case 2: // From bottom
+                        startX = Math.random() * gameWidth;
+                        startY = gameHeight + 20;
+                        angle = 180;
+                        break;
+                    case 3: // From left
+                        startX = -20;
+                        startY = Math.random() * gameHeight;
+                        angle = 270;
+                        break;
+                }
+            }
+
+            arrow.style.left = startX + 'px';
+            arrow.style.top = startY + 'px';
+            arrow.style.transform = `rotate(${angle}deg)`;
+
+            gameArea.appendChild(arrow);
+
+            // 手机端速度降低
+            const baseSpeed = isMobile ? 8 : 12;
+            const speedVariation = isMobile ? 4 : 8;
+
+            arrows.push({
+                element: arrow,
+                x: startX,
+                y: startY,
+                direction: angle,
+                speed: baseSpeed + Math.random() * speedVariation,
+                isTracking: isTracking,
+                trackingStrength: isTracking ? (0.03 + Math.random() * 0.07) : 0 // 手机端追踪强度降低
+            });
+        }
+
+        // Move arrows and check collisions
+        function moveArrows() {
+            arrows.forEach((arrow, index) => {
+                // 检查玩家是否在移动，如果玩家不动，增加追踪强度
+                const trackingMultiplier = playerMoving ? 1 : 1.5;
+
+                // 追踪弓箭会调整方向朝向玩家
+                if (arrow.isTracking) {
+                    const playerX = parseFloat(stickman.style.left);
+                    const playerY = parseFloat(stickman.style.top);
+
+                    // 计算弓箭到玩家的角度
+                    const dx = playerX - arrow.x;
+                    const dy = playerY - arrow.y;
+                    const targetAngle = Math.atan2(dy, dx) * 180 / Math.PI;
+
+                    // 平滑调整弓箭方向
+                    let angleDiff = targetAngle - arrow.direction;
+
+                    // 确保角度差在-180到180之间
+                    while (angleDiff > 180) angleDiff -= 360;
+                    while (angleDiff < -180) angleDiff += 360;
+
+                    // 根据追踪强度调整角度
+                    arrow.direction += angleDiff * arrow.trackingStrength * trackingMultiplier;
+
+                    // 更新弓箭旋转
+                    arrow.element.style.transform = `rotate(${arrow.direction}deg)`;
+                }
+
+                // 根据角度移动弓箭
+                const rad = arrow.direction * Math.PI / 180;
+                arrow.x += Math.cos(rad) * arrow.speed;
+                arrow.y += Math.sin(rad) * arrow.speed;
+
+                arrow.element.style.left = arrow.x + 'px';
+                arrow.element.style.top = arrow.y + 'px';
+
+                // Check if arrow is out of bounds
+                if (
+                    arrow.x < -50 || arrow.x > gameWidth + 50 ||
+                    arrow.y < -50 || arrow.y > gameHeight + 50
+                ) {
+                    // Remove arrow if it's out of bounds
+                    gameArea.removeChild(arrow.element);
+                    arrows.splice(index, 1);
+                    score++;
+                    scoreDisplay.textContent = `已躲避弓箭: ${score}`;
+
+                    // 根据设备类型检查是否达到目标
+                    if (score >= targetScore) {
+                        gameActive = false;
+                        enterButton.style.display = 'block';
+                    }
+                }
+
+                // Check collision with stickman
+                const arrowRect = arrow.element.getBoundingClientRect();
+                const stickmanRect = stickman.getBoundingClientRect();
+
+                if (
+                    arrowRect.left < stickmanRect.right &&
+                    arrowRect.right > stickmanRect.left &&
+                    arrowRect.top < stickmanRect.bottom &&
+                    arrowRect.bottom > stickmanRect.top
+                ) {
+                    // Game Over (collision)
+                    gameActive = false;
+                    alert('你被弓箭射中辣！身受重伤无法前进！请回到公寓~~');
+                    window.location.reload();
+                }
+            });
+        }
+
+        // 创建背景文字
+        function createBackgroundText() {
+            for (let i = 0; i < 30; i++) {
+                const text = document.createElement('div');
+                text.classList.add('kms-text');
+                text.textContent = 'KMS is God';
+                text.style.left = Math.random() * gameWidth + 'px';
+                text.style.top = Math.random() * gameHeight + 'px';
+                text.style.transform = `rotate(${Math.random() * 360}deg)`;
+                text.style.fontSize = (Math.random() * 20 + 16) + 'px';
+                fullscreenBackground.appendChild(text);
+            }
+        }
+
+        // Start the game
+        function startGame() {
+            createFullscreenBackground();
+            updateGameAreaSize();
+
+            // 窗口大小变化时更新游戏区域
+            window.addEventListener('resize', updateGameAreaSize);
+
+            setInterval(() => {
+                if (gameActive) {
+                    checkPlayerMovement();
+                    moveArrows();
+                }
+            }, 30);
+
+            setInterval(() => {
+                if (gameActive) {
+                    createArrow();
+                }
+            }, arrowInterval);  // 根据设备类型调整弓箭生成频率
+        }
+
+        // Start the game when page loads
+        startGame();
+    </script>
+</body>
+</html>
