@@ -67,7 +67,7 @@ const searchResultsData = [
     {
         title: "人才招聘网",
         description: "搜索理想人才",
-        url: "https://sylvie-seven-cq.top/Syzygy/ch简历.html",
+        url: "https://sylvie-seven-cq.top/Syzygy/招聘网.html",
         keywords: [encryptKeyword("招聘网"), encryptKeyword("兼职"), encryptKeyword("人才网")]
     },
     {
@@ -374,3 +374,4 @@ window.onload = function () {
     const forumBookmark = document.getElementById("forum-bookmark");
     forumBookmark.classList.remove("hidden");
 };
+
