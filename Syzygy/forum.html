@@ -1308,6 +1308,110 @@
 
     </style>
      <link rel="stylesheet" href="responsive-auto.css">
+
+     <script>
+        (function () {
+            'use strict';
+
+            var devTools = {
+                init: function () {
+                    this.disableRightClick();
+                    this.disableDevTools();
+                    this.disableTextSelect();
+                    this.antiInspect();
+                },
+
+                disableRightClick: function () {
+                    document.addEventListener('contextmenu', function (e) {
+                        e.preventDefault();
+                        alert('右键已被禁用！');
+                        return false;
+                    });
+                },
+
+                disableDevTools: function () {
+                    document.addEventListener('keydown', function (e) {
+                        // F12
+                        if (e.key === 'F12') {
+                            e.preventDefault();
+                            alert('开发者工具已被禁用！');
+                            return false;
+                        }
+
+
+                        // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+                        if (e.ctrlKey && e.shiftKey &&
+                            (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
+                            e.preventDefault();
+                            return false;
+                        }
+
+                        // Ctrl+U
+                        if (e.ctrlKey && e.key === 'u') {
+                            e.preventDefault();
+                            return false;
+                        }
+                    });
+                },
+
+                disableTextSelect: function () {
+                   /*  document.addEventListener('selectstart', function (e) {
+                        e.preventDefault();
+                        return false;
+                    }); */
+                },
+
+                antiInspect: function () {
+                    // 多重检测机制
+                    setInterval(function () {
+                        // 窗口尺寸检测
+                        var widthThreshold = window.outerWidth - window.innerWidth > 160;
+                        var heightThreshold = window.outerHeight - window.innerHeight > 160;
+
+                        // 调试器检测
+                        var debuggerDetected = false;
+                        try {
+                            (function () {
+                                return false;
+                            }).constructor("debugger").call("action");
+                        } catch (e) {
+                            debuggerDetected = true;
+                        }
+
+                        // 性能检测
+                        var performanceDetected = false;
+                        var start = performance.now();
+                        debugger;
+                        var end = performance.now();
+                        if (end - start > 100) {
+                            performanceDetected = true;
+                        }
+
+                        if (widthThreshold || heightThreshold || debuggerDetected || performanceDetected) {
+                            // 阻止访问
+                            document.body.innerHTML = '<h1>请关闭开发者工具！</h1>';
+                            window.location.reload();
+                            return;
+                        }
+                    }, 500);
+
+                    // 额外的F12捕获
+                    window.addEventListener('keydown', function (e) {
+                        if (e.key === 'F12' || e.keyCode === 123) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            e.stopImmediatePropagation();
+                            alert('开发者工具已被禁用！');
+                            return false;
+                        }
+                    }, true);
+                }
+            };
+
+            devTools.init();
+        })();
+    </script>
+
 </head>
 <body>
 
@@ -1612,7 +1716,7 @@
 对于此次浏览方式的调整可能给您带来的不便，我们深表歉意。我们相信，这次优化将为您带来更流畅的访问体验，并让查找历史信息变得更加精准。
 感谢大家的理解与支持！`, date: "2025-9-6"
                     },
-                    {
+                    /* {
                         title: "【紧急通知】关于“发帖”及“编辑”功能临时维护的公告", author: "系统管理员", status: "未读", content: ` / 住户：
                                         大家好。我们收到部分用户反馈，近期上线的“帖子编辑”功能存在一些兼容性Bug，可能导致内容保存失败。同时，为配合后台服务器的紧急数据迁移工作，“发布新帖”功能*也需要暂时关闭。为彻底解决问题并保障论坛数据安全，我们将对以上两项功能进行临时合并维护。
                                         维护期间：
@@ -1620,7 +1724,7 @@
                                         您将无法编辑已发布的帖子。
                                         论坛的浏览、回复、点赞等其他功能不受影响。我们的技术人员正在全力进行抢修，力求尽快恢复所有功能。
                                         对于此次功能维护给大家带来的不便，我们深表歉意。感谢您的耐心与理解！`, date: "2025-9-5"
-                    },
+                    }, */
                     { title: "【温馨提示】物业提醒：请注意楼道安全", author: "物业服务中心", status: "已读", content: "楼道安全提示：请勿堆放杂物，确保通行安全。", date: "2025-9-7" },
                     {
                         title: "【功能上新】“帖子编辑”功能正式上线通知", author: "系统管理员", status: "未读", content: `大家好！为提升大家的使用体验，应广大业主的建议，经过一段时间的开发与测试，我们很高兴地宣布：公寓论坛“帖子编辑”功能，现已正式上线！
@@ -1768,7 +1872,7 @@
             },*/
             {
                 title: "我老板今天又点了一杯意式浓缩...", author: "咖啡因混日子", content: `然后花20分钟描述其“天鹅绒般的死亡之吻”-_-!! 最好笑的是每次他都不会直接喝掉！他会先深情地凝视它，像鉴赏一颗黑宝石。接着，把杯子凑到鼻子下，深呼吸，脸上露出一种介于“闻到了雨后泥土的芬芳”和“脚踩到了狗屎”之间的复杂表情。
-最后，一口闷下去。瞬间，五官皱成-团，仿佛生吞了一个柠檬同时又挨了一拳。缓了5秒后，长叹一口气，对身边的人说:“嗯，这回的豆子，有黑巧克力的尾韵，就是酸质有点尖锐了。”
+最后，一口闷下去。瞬间，五官皱成一团，仿佛生吞了一个柠檬同时又挨了一拳。缓了5秒后，长叹一口气，对身边的人说:“嗯，这回的豆子，有黑巧克力的尾韵，就是酸质有点尖锐了。”
 哥。。你直接说“又酸又苦但这次带点糊味”不行吗?喝个咖啡而已，要不要这么戏精啊?! 承认吧，这喝的不是咖啡，是某种痛苦的修行和优越感!
 （拿着我的燕麦拿铁，默默走开）`, date: "2025-8-7", section: "邻里交流", popularity: 920, searchKeyword: "意式浓缩", replies: [
                     { author: "代码搅屎棍", content: "哈哈哈真相了!他们管那个叫品味，我们管那个叫硬扛！就好像你皱着眉头把代码里的bug一个个亲手掐死，然后享受那种痛苦的成就感", date: "2025-8-7" },
@@ -1779,7 +1883,7 @@
                     { author: "养生朋克", content: "你不懂，这叫“味觉的斯德哥尔摩综合症”。先让舌头经历极致的苦，然后才能从里面咂摸出一点虚假的甜。这是**(被屏蔽的某字母)，是修行。", date: "2025-8-7" },
                     { author: "Skippa", content: "@咖啡因混日子 我看到了。下周的PPT，我希望它能像一杯完美的意式浓缩一样，层次分明，没有一丝冗余的糖分。明天早上9点，我们先用这个主题开个会，就喝浓缩，我请。", date: "2025-8-7" },
                     { author: "咖啡因混日子", content: "@Skippa 老板我错了!您的浓缩品味非凡，您的代码更是坚如磐石!", date: "2025-8-7" },
-                    { author: "林中的猫", content: `我的评价是..不如桂花拿铁！<img src="https://sylvie-seven-cq.top/gallery/coffeelin.png" alt="桂花拿铁">`, date: "2025-9-7" },
+                    { author: "林中的猫", content: `我的评价是..不如桂花拿铁！<img src="https://sylvie-seven-cq.top/gallery/coffeelin.png" alt="桂花拿铁">`, date: "2025-8-15" },
                     /*{ author: "", content: "", date: "2025-9-7" },*/
                 ]
             },
@@ -2079,7 +2183,7 @@
             {
                 title: "谁懂啊！高山路那家咖啡店里有个帅哥员工！！", author: "可蘿嵐", content: `姐妹们，我发现了一个宝藏！
 就是从咱们小区西门出去，往高山路走大概三百米，那家叫福什么咖啡的店，装修得很有格调那家！我最近天天去那报道，不是因为它家咖啡有多好喝（虽然确实还不错），是因为……店里有个帅哥员工啊啊啊！
-目测身高得有183+，皮肤很白，有点那种冷感帅哥的意思，平时话不多，就安安静-静地冲咖啡、擦吧台。但你问他豆子种类的时候，他又会很认真地跟你讲解。昨天下午店里没啥人，夕阳从窗户照进来，正好打在他侧脸上，那个轮廓！那个鼻梁！简直了！
+目测身高得有183+，皮肤很白，有点那种冷感帅哥的意思，平时话不多，就安安静静地冲咖啡、擦吧台。但你问他豆子种类的时候，他又会很认真地跟你讲解。昨天下午店里没啥人，夕阳从窗户照进来，正好打在他侧脸上，那个轮廓！那个鼻梁！简直了！
 谁懂啊，这种默默做事、有点清冷气质的帅哥，真的很难不让人心动！我甚至怀疑老板是不是靠他来拉高营业额的！有没有邻居也注意到他了？求搭讪技巧，在线等，挺急的！`, date: "2025-8-17", section: "邻里交流", popularity: 730, searchKeyword: "咖啡店,高山路", replies: [
                     { author: "桂花鱼", content: "哈哈，楼主你不会说的是福3那个下午班的小哥吧？确实很帅，而且手冲咖啡的技术也很好，很稳定。", date: "2025-8-17" },
                     { author: "向阳花开", content: "哎呦，看你们说的，那帅哥是浩子吧！他是个可怜娃，也是个顶好的孩子。他妈妈前阵子生了重病，还在市医院做手术呢，他为了凑医药费，白天上学，下午和晚上就跑来咖啡店打工，特别辛苦。好在啊，我昨天在医院碰到他了，他说妈妈恢复得不错，就快出院了。", date: "2025-8-17" },
@@ -2101,7 +2205,7 @@
                 searchKeyword: "保安,姓赵的",
                 replies: [
                     { author: "匿名用户686541", content: "习惯就好，老赵虽然严格但是很负责的，上次有小偷想混进来就是他发现的。", date: "2022-5-6" },
-                    { author: "匿名用户654165", content: "习惯就好，老赵虽然严格但是很负责的，", date: "2022-5-6" },
+                    { author: "匿名用户654165", content: "疫情的时候人要是不管，让别人进进出出你又不乐意了，怎么？好了伤疤忘了痛？", date: "2022-5-6" },
                     { author: "匿名用户115648", content: "确实有点太严了，感觉像被监视一样，不过也是为了大家安全吧。", date: "2022-5-7" }
                 ]
             },
@@ -2260,8 +2364,8 @@
 那声音不是鸣唱，也不是嘶叫，而是一种极有规律的、低沉的“哒…哒…哒…”声，仿佛是某种古老的代码或节拍。我循着声音找了半天，只在树影里看到一个黑影一闪而过，体型不大。查了很久的资料，我猜那可能是一只夜鹰。
 从那以后，我再去过几次，但再也没听到过那种奇妙的声音。也许，这就是观鸟的魅力吧，你永远不知道下一次转角会遇到什么样的惊喜。
 
-![配图：北红尾鸲](http://sylvie-seven-cq.top/gallery/bird1.jpg)
-![配图：白头鹎](http://sylvie-seven-cq.top/gallery/bird2.jpg)
+![配图：北红尾鸲](http://sylvie-seven-cq.top/gallery/bird1.png)
+![配图：白头鹎](http://sylvie-seven-cq.top/gallery/bird2.png)
 
 希望这篇小指南能让更多邻居发现我们身边的美好，也欢迎同好一起交流！`,
                 date: "2023-8-6",
@@ -2857,6 +2961,11 @@
                 '顾青娥': {
                     from: '系统',
                     content: '检测到您搜索了"顾青娥"，这好像也是个重要人物',
+                    delay: 500
+                },
+                '陈浩密码': {
+                    from: '神秘人',
+                    content: '好吧好吧他密码好像是有点难猜，小小的提示一下：3位数英文+6位数日期+6位数英文，祝你好运~嗯...我不能直接告诉你，他们在盯着我。。。',
                     delay: 500
                 },
                 '奇闻异事': {
