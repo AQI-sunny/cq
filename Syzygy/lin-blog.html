@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>林中的猫个人博客</title>
+    <style>
+        /* 基础样式 - 温暖风格 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Serif SC', 'STZhongsong', '宋体', serif;
+        }
+
+        body {
+            background-color: #fdf8f3; /* 暖米白 */
+            color: #444;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #5d4037; /* 深棕，温暖感 */
+            transition: color 0.3s ease;
+        }
+
+            a:hover {
+                color: #d87a16; /* 橙褐色，温暖亮色 */
+            }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 头部样式 - 温暖柔和 */
+        header {
+            background-color: #fffaf4; /* 暖白背景 */
+            box-shadow: 0 4px 20px rgba(216, 122, 22, 0.1); /* 橙色柔光阴影 */
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #f0e6dc;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 0;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #3e2723; /* 统一为深棕色 */
+            letter-spacing: 1px;
+            font-family: 'LiSu', '隶书', cursive;
+        }
+
+            .logo span {
+                color: #d87a16;
+                font-family: 'KaiTi', '楷体', serif;
+            }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+            nav ul li {
+                margin-left: 28px;
+            }
+
+                nav ul li a {
+                    font-weight: 500;
+                    font-size: 16px;
+                    position: relative;
+                    padding: 5px 0;
+                }
+
+                    nav ul li a:after {
+                        content: '';
+                        position: absolute;
+                        width: 0;
+                        height: 2px;
+                        bottom: 0;
+                        left: 0;
+                        background-color: #d87a16;
+                        transition: width 0.3s ease;
+                        border-radius: 1px;
+                    }
+
+                    nav ul li a:hover:after {
+                        width: 100%;
+                    }
+
+        /* 主要内容区 */
+        .main-content {
+            display: flex;
+            margin: 50px 0;
+            gap: 40px;
+        }
+
+        /* 文章区域 */
+        .articles {
+            flex: 2;
+        }
+
+        .article-card {
+            background-color: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(216, 122, 22, 0.08);
+            padding: 40px;
+            margin-bottom: 45px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid #f0c8a0; /* 暖棕边框 */
+        }
+
+            .article-card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 12px 35px rgba(216, 122, 22, 0.15);
+            }
+
+        .article-meta {
+            display: flex;
+            margin-bottom: 18px;
+            font-size: 14px;
+            color: #8d6e63; /* 暖灰棕 */
+        }
+
+        .article-date {
+            margin-right: 18px;
+        }
+
+        .article-category {
+            background-color: #fff3e0;
+            color: #bf360c;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .article-title {
+            font-size: 28px;
+            margin-bottom: 22px;
+            line-height: 1.4;
+            color: #3e2723;
+            font-weight: 600;
+            font-family: 'KaiTi', '楷体', serif;
+        }
+
+        .article-content {
+            color: #555;
+            margin-bottom: 28px;
+            font-size: 16px;
+            text-align: justify;
+        }
+
+            .article-content p {
+                margin-bottom: 20px;
+                text-indent: 2em;
+            }
+
+        .read-more {
+            display: inline-block;
+            color: #d87a16;
+            font-weight: 500;
+            font-size: 16px;
+            padding: 10px 0;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+            .read-more:hover {
+                border-color: #d87a16;
+            }
+
+        /* 侧边栏 */
+        .sidebar {
+            flex: 1;
+        }
+
+        .sidebar-widget {
+            background-color: #fff;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(216, 122, 22, 0.06);
+            padding: 30px;
+            margin-bottom: 35px;
+        }
+
+        .widget-title {
+            font-size: 20px;
+            margin-bottom: 22px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0e6dc;
+            color: #3e2723; /* 统一为深棕色 */
+            font-weight: 600;
+            font-family: 'KaiTi', '楷体', serif;
+        }
+
+        .about-me {
+            text-align: center;
+        }
+
+        .profile-img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            margin: 0 auto 18px;
+            background: linear-gradient(135deg, #d87a16, #a65a10);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+            box-shadow: 0 5px 15px rgba(216, 122, 22, 0.2);
+            font-family: 'LiSu', cursive;
+        }
+
+        .about-me p {
+            color: #6d4c41;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        .popular-posts li {
+            margin-bottom: 18px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #f0e6dc;
+        }
+
+            .popular-posts li:last-child {
+                margin-bottom: 0;
+                padding-bottom: 0;
+                border-bottom: none;
+            }
+
+        .popular-post-title {
+            font-weight: 500;
+            margin-bottom: 6px;
+            line-height: 1.4;
+            font-size: 15px;
+        }
+
+        .popular-post-date {
+            font-size: 13px;
+            color: #8d6e63;
+        }
+
+        .categories li {
+            margin-bottom: 12px;
+        }
+
+            .categories li a {
+                display: flex;
+                justify-content: space-between;
+                padding: 6px 0;
+                font-size: 15px;
+            }
+
+        .category-count {
+            background-color: #fff3e0;
+            color: #bf360c;
+            padding: 3px 9px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* 引用块 - 温暖风格 */
+        .quote {
+            border-left: 5px solid #f0c8a0;
+            padding: 16px 20px;
+            margin: 25px 0;
+            background-color: #fffaf4;
+            border-radius: 0 8px 8px 0;
+            color: #5d4037;
+            font-style: italic;
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        /* 图片占位 - 温暖风格 */
+        .article-image {
+            width: 100%;
+            /* 移除固定高度 */
+            /* height: 220px; */
+            background-color: #fff3e0;
+            margin: 30px 0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8d6e63;
+            font-style: italic;
+            font-size: 15px;
+            border: 1px dashed #f0c8a0;
+            overflow: hidden; /* 防止图片溢出圆角 */
+            /* 添加自适应属性 */
+            min-height: 100px; /* 最小高度，避免空容器太矮 */
+            padding: 20px; /* 内边距，让图片有呼吸空间 */
+        }
+
+            .article-image img {
+                max-width: 100%;
+                max-height: 80vh; /* 限制最大高度为视口的80% */
+                width: auto; /* 宽度自适应 */
+                height: auto; /* 高度自适应 */
+                object-fit: contain; /* 改为contain，保持图片完整比例 */
+                border-radius: 10px;
+                box-shadow: 0 2px 8px rgba(216, 122, 22, 0.1);
+            }
+
+        .image-caption {
+            text-align: center;
+            font-size: 14px;
+            color: #8d6e63;
+            margin: 15px 0 25px; /* 调整外边距 */
+            font-style: italic;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                margin-top: 18px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+                nav ul li {
+                    margin: 6px 10px;
+                }
+
+            .article-card {
+                padding: 30px 20px;
+            }
+
+            .article-title {
+                font-size: 24px;
+            }
+
+            .article-image {
+                /* 移动端移除固定高度 */
+                /* height: 180px; */
+                margin: 20px 0;
+                padding: 15px; /* 移动端内边距稍小 */
+            }
+
+                .article-image img {
+                    max-height: 60vh; /* 移动端最大高度稍小 */
+                }
+
+            .image-caption {
+                margin: 10px 0 18px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部 -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><span>林中的猫</span></div>
+                <nav>
+                    <ul>
+                        <li><a href="https://sylvie-seven-cq.top/Syzygy/blog.html">首页</a></li>
+                        <!--<li><a href="#">生活感悟</a></li>-->
+                        <li><a href="#">旅行日记</a></li>
+                        <li><a href="#">美食探索</a></li>
+                        <li><a href="#">读书笔记</a></li>
+                        <li><a href="#">心情日记</a></li>
+                        <li><a href="#">关于我</a></li>
+                        <li><a href="#">联系</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <div class="container">
+        <div class="main-content">
+            <!-- 文章区域 -->
+            <div class="articles">
+                <!-- 文章1 -->
+               
+                    <article class="article-card">
+                        <div class="article-meta">
+                            <span class="article-date">2022年8月27日</span>
+                            <span class="article-category">生活感悟</span>
+                        </div>
+                        <h2 class="article-title">
+                            一间充满徽州贡墨香气的书房：祖父的“慢生活”哲学
+                        </h2>
+                        <div class="article-content">
+                            <p>我家有一个特别的空间，它不属于电子屏，不属于高科技，它属于我的祖父。</p>
+                            <p>林老先生，一个将一生献给笔墨纸砚的"老派人"。祖父常说："文房四宝，便是我的知心老友。"对他而言，这不仅仅是工具，更是一种生活哲学。</p>
+                            <p>墨香是他书房里永不散去的气息，那古老的徽州贡墨，散发出的清雅烟香，比任何现代的香气都更让他心安神定。这种沉静而悠远的气息，仿佛能将时间拉回一个更古老的时代。</p>
+                            <p>的确，每逢谈起这些，祖父总有说不完的故事。他会细数宣纸的柔韧、端砚的温润，以及毛笔毫尖饱蘸墨汁时那份沉稳与力量。对他来说，每一笔、每一划，都是一次与历史、与心灵的庄重对话。</p>
+                            <p>电子时代的喧嚣，丝毫没有影响祖父对这份古典情怀的坚守。</p>
+                            <p>脑海里经常浮现祖父研墨时那沉稳而有力的身影、他提笔的神情，连同那满屋的墨香，一同构成的温柔画面。他书写时，从不打开刺眼的顶灯。只开着那盏老式台电灯微弱的一档，他更偏爱在自然光下与墨对话，享受那份安静、沉稳的仪式感。这是一种对"慢生活"近乎固执的坚持，在现代快节奏的生活中，它成了一种难得的精神享受和文化坚守。</p>
+                        </div>
+                        <!--<a href="#" class="read-more">阅读全文 &rarr;</a>-->
+                    </article>
+                 
+
+                
+            </div>
+
+            <!-- 侧边栏 -->
+            <aside class="sidebar">
+                <!-- 关于我 -->
+                <div class="sidebar-widget about-me">
+                    <h3 class="widget-title">关于我</h3>
+                    <div class="profile-img">林</div>
+                    <p>静卧林间，听风，观星，等一只路过的蝶。</p>
+                </div>
+
+                <!-- 热门文章 -->
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">热门Blog</h3>
+                    <ul class="popular-posts">
+                        <li>
+                            <div class="popular-post-title">
+                                <a href="#">乡村振兴中的青年力量</a>
+                            </div>
+                            <div class="popular-post-date">2025年9月3日</div>
+                        </li>
+                        <li>
+                            <div class="popular-post-title">
+                                <a href="#">后疫情时代的教育变革</a>
+                            </div>
+                            <div class="popular-post-date">2025年9月2日</div>
+                        </li>
+                        <li>
+                            <div class="popular-post-title">
+                                <a href="#">人工智能伦理边界在哪里</a>
+                            </div>
+                            <div class="popular-post-date">2025年9月1日</div>
+                        </li>
+                        <li>
+                            <div class="popular-post-title">
+                                <a href="#">传统工艺的现代转型之路</a>
+                            </div>
+                            <div class="popular-post-date">2025年8月31日</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 分类 -->
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">文章分类</h3>
+                    <ul class="categories">
+                        <li>
+                            <a href="#">生活感悟 <span class="category-count">8</span></a>
+                        </li>
+                        <li>
+                            <a href="#">旅行日记 <span class="category-count">7</span></a>
+                        </li>
+                        <li>
+                            <a href="#">美食探索 <span class="category-count">1</span></a>
+                        </li>
+                        <li>
+                            <a href="#">读书笔记 <span class="category-count">2</span></a>
+                        </li>
+                        <li>
+                            <a href="#">心情日记 <span class="category-count">9</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </div>
+</body>
+</html>
+
+
+

@@ -1,328 +1,377 @@
-﻿// search.js - 共享搜索逻辑（支持URL传参和调试）
+﻿// 关键词加密处理函数
+function encryptKeyword(keyword) {
+    // 使用简单的Base64编码进行加密
+    return btoa(unescape(encodeURIComponent(keyword)));
+}
 
-// ==================== 调试功能 ====================
-const SEARCH_DEBUG = localStorage.getItem('search_debug') === 'true' ||
-    new URLSearchParams(window.location.search).has('debug');
-
-// 调试日志函数
-function logDebug(...args) {
-    if (SEARCH_DEBUG) {
-        console.log(`%c[Search Debug]`, 'color: #4CAF50; font-weight: bold;', ...args);
+function decryptKeyword(encryptedKeyword) {
+    try {
+        return decodeURIComponent(escape(atob(encryptedKeyword)));
+    } catch (e) {
+        return encryptedKeyword; // 如果解密失败，返回原值
     }
 }
 
-// 初始化调试信息
-logDebug('搜索模块已加载，调试模式:', SEARCH_DEBUG);
-if (SEARCH_DEBUG) {
-    console.log('%c💡 调试提示: 在控制台输入 localStorage.setItem(\"search_debug\", \"true\") 开启调试',
-        'color: #FF9800; font-size: 14px;');
-}
+// 存储已显示的书签
+let displayedBookmarks = new Set();
 
-// ==================== URL参数处理 ====================
-function getUrlParams() {
-    const params = new URLSearchParams(window.location.search);
-    const result = {
-        q: params.get('q') || '',
-        type: params.get('type') || 'general',
-        page: Math.max(1, parseInt(params.get('page')) || 1),
-        debug: params.has('debug')
-    };
-
-    logDebug('URL参数解析:', result);
-    return result;
-}
-
-function buildResultsUrl(query, pageType = 'general', source = 'search') {
-    const url = `https://sylvie-seven-cq.top/Syzygy/search-results.html?q=${encodeURIComponent(query)}&type=${pageType}&source=${source}`;
-    logDebug('构建结果页面URL:', url);
-    return url;
-}
-
-// ==================== 统一的关键词映射 ====================
+// 加密后的关键词跳转映射表
 const keywordRedirects = {
-    "临渠2015": "https://sylvie-seven-cq.top/Syzygy/sc2015.html",
-    "临渠2007": "https://sylvie-seven-cq.top/Syzygy/sc2007.html",
-    "临渠县月桂树": "https://sylvie-seven-cq.top/Syzygy/月桂盛放.html",
-    "福叁咖啡": "https://sylvie-seven-cq.top/Syzygy/fu3coffee.html",
-    "奇闻异事馆": "https://sylvie-seven-cq.top/Syzygy/奇闻异事馆.html",
-    "记者网": "https://sylvie-seven-cq.top/Syzygy/qinyanqiu-blog.html",
-    "深南市桥安区": "https://sylvie-seven-cq.top/Syzygy/qiaoanqu.html",
-    "好邻居百货超市": "https://sylvie-seven-cq.top/Syzygy/supermarket.html",
-    "好邻居24h百货超市": "https://sylvie-seven-cq.top/Syzygy/supermarket.html",
-    "论坛": "https://sylvie-seven-cq.top/Syzygy/forum.html",
-    "乔静": "https://sylvie-seven-cq.top/Syzygy/qiaojing.html",
-    "临渠县2007年": "https://sylvie-seven-cq.top/Syzygy/sc2007.html",
-    "临渠县2015年": "https://sylvie-seven-cq.top/Syzygy/sc2015.html"
+    [encryptKeyword("临渠2015")]: "https://sylvie-seven-cq.top/Syzygy/sc2015.html",
+    [encryptKeyword("临渠2007")]: "https://sylvie-seven-cq.top/Syzygy/sc2007.html",
+    [encryptKeyword("临渠县月桂树")]: "https://sylvie-seven-cq.top/Syzygy/月桂盛放.html",
+    [encryptKeyword("福叁咖啡")]: "https://sylvie-seven-cq.top/Syzygy/fu3coffee.html",
+    [encryptKeyword("奇闻异事馆")]: "https://sylvie-seven-cq.top/Syzygy/qwysg.html",
+    [encryptKeyword("记者网")]: "https://sylvie-seven-cq.top/Syzygy/qinyanqiu-blog.html",
+    [encryptKeyword("深南市桥安区")]: "https://sylvie-seven-cq.top/Syzygy/qiaoanqu.html",
+    [encryptKeyword("好邻居百货超市")]: "https://sylvie-seven-cq.top/Syzygy/supermarket.html",
+    [encryptKeyword("好邻居24h百货超市")]: "https://sylvie-seven-cq.top/Syzygy/supermarket.html",
+    [encryptKeyword("论坛")]: "https://sylvie-seven-cq.top/Syzygy/forum.html",
+    [encryptKeyword("乔静")]: "https://sylvie-seven-cq.top/Syzygy/qiaojing.html",
+    [encryptKeyword("临渠县2007年")]: "https://sylvie-seven-cq.top/Syzygy/sc2007.html",
+    [encryptKeyword("临渠县2015年")]: "https://sylvie-seven-cq.top/Syzygy/sc2015.html"
 };
 
-// ==================== 搜索结果数据 ====================
+// 搜索结果数据 - 关键词也加密存储
 const searchResultsData = [
     {
         title: "临渠县2015新闻搜索结果",
         description: "临渠县2015年新闻最新最全搜索结果",
         url: "https://sylvie-seven-cq.top/Syzygy/sc2015.html",
-        keywords: ["临渠县2015", "临渠2015"]
+        keywords: [encryptKeyword("临渠县2015"), encryptKeyword("临渠2015")]
     },
     {
         title: "临渠县2007新闻搜索结果",
         description: "临渠县2007年新闻最新最全搜索结果",
         url: "https://sylvie-seven-cq.top/Syzygy/sc2007.html",
-        keywords: ["临渠县2007", "临渠2007"]
+        keywords: [encryptKeyword("临渠县2007"), encryptKeyword("临渠2007")]
     },
     {
         title: "福叁咖啡官方网站",
         description: "福叁咖啡提供优质的咖啡和舒适的环境。",
         url: "https://sylvie-seven-cq.top/Syzygy/fu3coffee.html",
-        keywords: ["福叁咖啡", "福叁"]
+        keywords: [encryptKeyword("福叁咖啡"), encryptKeyword("福叁")]
     },
     {
         title: "奇闻异事馆",
         description: "记录各地的奇闻异事和未解之谜。",
-        url: "https://sylvie-seven-cq.top/Syzygy/奇闻异事馆.html",
-        keywords: ["奇闻异事馆", "奇闻异事馆论坛"]
+        url: "https://sylvie-seven-cq.top/Syzygy/qwysg.html",
+        keywords: [encryptKeyword("奇闻异事"), encryptKeyword("奇闻异事馆")]
     },
     {
-        title: "记者网",
-        description: "记者网提供最新的新闻资讯和深度报道。",
+        title: "秦砚秋个人博客",
+        description: "第一次走进静乔公寓时，我没看懂那杯草药茶",
         url: "https://sylvie-seven-cq.top/Syzygy/qinyanqiu-blog.html",
-        keywords: ["记者网", "秦砚秋记者", "秦砚秋"]
+        keywords: [encryptKeyword("博客网"), encryptKeyword("秦砚秋记者"), encryptKeyword("秦砚秋")]
+    },
+    {
+        title: "人才招聘网",
+        description: "搜索理想人才",
+        url: "https://sylvie-seven-cq.top/Syzygy/招聘网.html",
+        keywords: [encryptKeyword("招聘网"), encryptKeyword("兼职"), encryptKeyword("人才网")]
     },
     {
         title: "好邻居百货超市",
         description: "好邻居百货超市提供各类生活用品和食品。",
         url: "https://sylvie-seven-cq.top/Syzygy/supermarket.html",
-        keywords: ["好邻居24h百货超市", "好邻居百货超市", "百货超市好邻居"]
+        keywords: [encryptKeyword("好邻居24h百货超市"), encryptKeyword("好邻居百货超市"), encryptKeyword("百货超市好邻居")]
+    },
+    {
+        title: "英仙座流星雨",
+        description: "英仙座流星雨是年度中最受欢迎的流星雨，出现于每年的7月17日至8月24日之间，在8月12日或13日流星数量会达到极大期。",
+        url: "http://interesting-sky.china-vo.org/2025sky-aug/#2025-8-13-%E8%8B%B1%E4%BB%99%E5%BA%A7%E6%B5%81%E6%98%9F%E9%9B%A8%E6%9E%81%E5%A4%A7%E6%9C%9F%EF%BC%88ZHR%EF%BD%9E100%EF%BC%89",
+        keywords: [encryptKeyword("英仙座流星雨"), encryptKeyword("英仙流星雨"), encryptKeyword("22年8月英仙座流星雨")]
+    },
+    {
+        title: "2015年",
+        description: "本世紀最短的月全食2015年4月4日...",
+        url: "https://digiphoto.techbang.com/posts/7653-shortest-total-eclipse-of-the-century-april-4-2015-2145",
+        keywords: [encryptKeyword("2015年新闻"), encryptKeyword("2015年"), encryptKeyword("2015")]
+    },
+    
+    {
+        title: "密码提示",
+        description: "暂无搜索结果...",
+        url: "https://sylvie-seven-cq.top/Syzygy/sc密码提示.html",
+        keywords: [encryptKeyword("密码提示"), encryptKeyword("咖啡后台密码提示"), encryptKeyword("咖啡店密码提示")]
+    },
+    {
+        title: "超市密码提示",
+        description: "暂无搜索结果...",
+        url: "https://sylvie-seven-cq.top/Syzygy/sc密码提示 - supermarket.html",
+        keywords: [encryptKeyword("超市密码提示"), encryptKeyword("超市密码提示"), encryptKeyword("超市后台密码提示")]
+    },
+    {
+        title: "实验室密码提示",
+        description: "暂无搜索结果...",
+        url: "https://sylvie-seven-cq.top/Syzygy/sc密码提示 - 实验室.html",
+        keywords: [encryptKeyword("实验室密码提示"), encryptKeyword("QA实验室密码提示"), encryptKeyword("QA实验室密码")]
+    },
+    {
+        title: "2007年",
+        description: "2007年8月的月食发生在2007年8月28日，是一次月全食...",
+        url: "https://zh.wikipedia.org/wiki/2007%E5%B9%B48%E6%9C%8828%E6%97%A5%E6%9C%88%E9%A3%9F",
+        keywords: [encryptKeyword("2007年新闻"), encryptKeyword("07年新闻"), encryptKeyword("2007年月全食")]
+    },
+    {
+        title: "山村老尸",
+        description: "一部恐怖电影，于1999年11月4日上映。影片讲述拥有阴阳眼的小明遭遇的一系列灵异事件...",
+        url: "https://baike.baidu.com/item/%E5%B1%B1%E6%9D%91%E8%80%81%E5%B0%B8/10152770",
+        keywords: [encryptKeyword("山村老尸"), encryptKeyword("山村老尸电影"), encryptKeyword("山村老尸恐怖电影")]
+    },
+    {
+        title: "哭泣的天使",
+        description: "一款由CIA Embedded Devices Branch(嵌入式设备组)和英国MI5共同开发的针对三星智能电视的窃听软件...",
+        url: "https://www.leiphone.com/category/gbsecurity/CZLq8saMaHDvQe69.html",
+        keywords: [encryptKeyword("Weeping Angel(哭泣的天使)"), encryptKeyword("哭泣天使"), encryptKeyword("weepingangel")]
+    },
+    {
+        title: "宇宙魔方--河图与洛书",
+        description: "被誉为“宇宙魔方”的河图洛书是中国古代流传下来的两幅神秘图像...",
+        url: "https://www.hinews.cn/news/system/2021/12/13/032666104.shtml",
+        keywords: [encryptKeyword("宇宙魔方"), encryptKeyword("洛书"), encryptKeyword("河图")]
     },
     {
         title: "公寓论坛",
         description: "社区论坛是用户交流和分享的平台。",
         url: "https://sylvie-seven-cq.top/Syzygy/forum.html",
-        keywords: ["静乔公寓论坛", "静乔公寓", "论坛"]
+        keywords: [encryptKeyword("静乔公寓论坛"), encryptKeyword("静乔公寓")]
     }
 ];
 
-// ==================== 主搜索函数 ====================
-function performSearch(query, event = null, pageType = null) {
-    if (event) event.preventDefault();
+// Page switching logic
+function showPage(id) {
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+    });
+    const page = document.getElementById(id);
+    if (page) {
+        page.classList.add('active');
+    }
+}
 
-    query = (query || '').trim();
-    logDebug('执行搜索，查询词:', query, '页面类型:', pageType);
+// Modal control
+const modal = document.getElementById("modal");
+const titleEl = document.getElementById("modal-title");
+const contentEl = document.getElementById("modal-content");
+const metaEl = document.getElementById("modal-meta");
 
-    if (!query) {
-        logDebug('搜索词为空');
-        alert("请输入搜索关键词");
-        return false;
+function showModal(post) {
+    titleEl.textContent = post.title || "无标题";
+    contentEl.textContent = post.content || "无内容";
+    metaEl.textContent = `状态：${post.status || '未知'} • 日期：${post.date || '未知'}`;
+    modal.style.display = "block";
+}
+function closeModal() {
+    modal.style.display = "none";
+}
+window.onclick = function (e) {
+    if (e.target === modal) {
+        closeModal();
+    }
+}
+
+// System Notification Modal
+const systemModal = document.getElementById("system-modal");
+
+function showSystemModal() {
+    systemModal.style.display = "block";
+
+    // Auto close after 2 seconds
+    setTimeout(function () {
+        systemModal.style.display = "none";
+    }, 300);
+}
+
+// Modified: Always show the system notification on page load (not just first visit)
+function checkFirstVisit() {
+    // Show the system notification on every visit
+    setTimeout(() => {
+        showSystemModal();
+    }, 500); // Slight delay to ensure page is loaded
+}
+
+// Dummy data for search — can be extended
+const sections = [
+    /* 搜索页直接弹窗 */
+    /* {
+       title: "首页",
+       posts: [
+         {
+           title: "欢迎来到模拟搜索引擎",
+           content: "这是首页的示例内容。",
+           status: "发布",
+           date: "2025-10-15"
+         }
+       ]
+     },
+     {
+       title: "临渠县",
+       posts: [
+         {
+           title: "临渠县介绍",
+           content: "临渠县是一个风景优美的地方，有着丰富的历史文化。",
+           status: "发布",
+           date: "2025-10-16"
+         }
+       ]
+     } */
+];
+
+/* // 清除所有书签
+function clearAllBookmarks() {
+  document.querySelectorAll('.bookmark').forEach(bookmark => {
+    if (bookmark.id !== 'forum-bookmark') {
+      bookmark.classList.add('hidden');
+    }
+  });
+  displayedBookmarks.clear();
+} */
+
+// 显示搜索结果
+function displaySearchResults(results) {
+    const resultsContainer = document.getElementById('search-results');
+    resultsContainer.innerHTML = '';
+
+    if (results.length === 0) {
+        resultsContainer.style.display = 'none';
+        return;
     }
 
-    // 特殊关键词拦截：kms赵晓棠
+    results.forEach(result => {
+        const resultItem = document.createElement('div');
+        resultItem.className = 'search-result-item';
+        resultItem.onclick = function () {
+            // 直接跳转到对应的URL
+            if (result.url.startsWith('http')) {
+                window.open(result.url, '_blank');
+            } else {
+                // 对于本地文件，使用新窗口打开
+                window.open(result.url, '_blank');
+            }
+        };
+
+        resultItem.innerHTML = `
+            <div class="search-result-title">${result.title}</div>
+            <div>${result.description}</div>
+            <div class="search-result-url">${result.url}</div>
+          `;
+
+        resultsContainer.appendChild(resultItem);
+    });
+
+    resultsContainer.style.display = 'block';
+}
+
+// 显示短信风格的弹窗
+function showSmsModal(title, message, url) {
+    document.getElementById("sms-title").textContent = title;
+    document.getElementById("sms-message").textContent = message;
+    document.getElementById("sms-action-btn").onclick = function () {
+        window.open(url, '_blank'); // 新标签页打开
+        document.getElementById("sms-modal").style.display = "none";
+    };
+    document.getElementById("sms-modal").style.display = "flex"; // 使用 flex 居中
+}
+
+// Search logic
+function performSearch(event) {
+    event.preventDefault();
+    const searchInput = document.getElementById("search-input");
+    const query = (searchInput.value || '').trim();
+
+    if (!query) {
+        alert("请输入搜索关键词");
+        return;
+    }
+
+    // === 特殊关键词拦截：kms赵晓棠 ===
     if (query.toLowerCase() === "kms赵晓棠".toLowerCase()) {
-        logDebug('触发特殊关键词: kms赵晓棠');
         showSmsModal(
             "来自手机短信通知：",
             "你有新的快递 请尽快来取",
             "https://sylvie-seven-cq.top/Syzygy/取快递.html"
         );
-        return true;
+        return; // 阻止后续搜索逻辑执行
     }
+    // ===================================
 
-    // 检查直接跳转的关键词
-    for (const keyword in keywordRedirects) {
-        if (query.toLowerCase().includes(keyword.toLowerCase())) {
-            const redirectUrl = keywordRedirects[keyword];
-            logDebug('找到匹配的关键词:', keyword, '跳转URL:', redirectUrl);
-
-            // 使用 confirm 的返回值来判断用户选择
-            const userConfirmed = confirm(`找到关键词 "${keyword}"，是否跳转到对应页面？`);
-            if (userConfirmed) {
-                logDebug('用户确认跳转');
-                window.open(redirectUrl, '_blank');
-                return true; // 用户确认跳转，直接返回true
-            } else {
-                logDebug('用户取消跳转，停止搜索流程');
-                return false; // 用户取消，直接返回false，不执行后续逻辑
+    // 检查是否有直接跳转的关键词（先加密查询词）
+    const encryptedQuery = encryptKeyword(query);
+    for (const encryptedKeyword in keywordRedirects) {
+        if (encryptedQuery.includes(encryptedKeyword) || query.toLowerCase().includes(decryptKeyword(encryptedKeyword).toLowerCase())) {
+            const redirectUrl = keywordRedirects[encryptedKeyword];
+            if (confirm(`找到关键词 "${decryptKeyword(encryptedKeyword)}"，是否跳转到对应页面？`)) {
+                if (redirectUrl.startsWith('http')) {
+                    window.open(redirectUrl, '_blank');
+                } else {
+                    // 对于本地文件，使用新窗口打开
+                    window.open(redirectUrl, '_blank');
+                }
+                return;
             }
         }
     }
 
-    // 如果执行到这里，说明没有直接跳转的关键词
-    logDebug('没有找到直接跳转的关键词，继续搜索逻辑');
+    // 根据搜索关键词显示相关书签（新增而不是覆盖）
+    let foundResults = false;
 
-    // 根据关键词决定页面类型
-    let targetPageType = pageType || 'general';
-    if (query.includes('密码') || query.includes('后台')) targetPageType = 'password';
-    if (query.includes('咖啡')) targetPageType = 'coffee';
-    if (query.includes('临渠')) targetPageType = 'linqu';
-    if (query.includes('实验室')) targetPageType = 'lab';
+    // 检查并显示相关书签
+    const bookmarks = [
+        { id: "coffee-bookmark", keywords: ["福叁咖啡"], displayText: "福叁咖啡" },
+        { id: "wonder-bookmark", keywords: ["奇闻异事馆"], displayText: "奇闻异事馆" },
+        { id: "journalist-bookmark", keywords: ["记者网", "秦砚秋"], displayText: "记者网" },
+        { id: "neighbor-bookmark", keywords: ["好邻居24h百货超市", "好邻居百货超市"], displayText: "好邻居百货超市" }
+    ];
 
-    logDebug('确定页面类型:', targetPageType);
+    bookmarks.forEach(bookmark => {
+        if (bookmark.keywords.some(keyword => query.toLowerCase().includes(keyword.toLowerCase()))) {
+            const bookmarkEl = document.getElementById(bookmark.id);
+            bookmarkEl.classList.remove("hidden");
+            displayedBookmarks.add(bookmark.id);
+            foundResults = true;
+        }
+    });
 
-    // 严格精确搜索匹配
+    // 确保论坛书签始终显示
+    const forumBookmark = document.getElementById("forum-bookmark");
+    forumBookmark.classList.remove("hidden");
+
+    // 严格精确搜索匹配的结果（使用解密后的关键词进行匹配）
     const matchedResults = searchResultsData.filter(result => {
-        const isMatch = result.keywords.some(keyword =>
-            query.toLowerCase() === keyword.toLowerCase()
-        ) || query.toLowerCase() === result.title.toLowerCase();
-
-        if (isMatch) {
-            logDebug('匹配到搜索结果:', result.title);
-        }
-        return isMatch;
+        return result.keywords.some(encryptedKeyword => {
+            const decryptedKeyword = decryptKeyword(encryptedKeyword);
+            return query.toLowerCase() === decryptedKeyword.toLowerCase();
+        }) || query.toLowerCase() === result.title.toLowerCase();
     });
 
-    logDebug('匹配结果数量:', matchedResults.length);
+    // 显示搜索结果
+    displaySearchResults(matchedResults);
 
-    // 如果有匹配结果，跳转到结果页面或直接打开
-    if (matchedResults.length > 0) {
-        if (matchedResults.length === 1) {
-            // 只有一个结果，直接打开（不询问用户）
-            const result = matchedResults[0];
-            logDebug('直接打开唯一结果:', result.title);
-            window.open(result.url, '_blank');
-        } else {
-            // 多个结果，跳转到结果页面
-            logDebug('跳转到结果页面，结果数量:', matchedResults.length);
-            const resultsUrl = buildResultsUrl(query, targetPageType);
-            window.open(resultsUrl, '_blank');
-        }
-        return true;
-    }
-
-    // 没有找到任何匹配结果
-    logDebug('无任何匹配结果');
-    alert("未找到匹配的内容。请尝试其他关键词。");
-    return false;
-}
-
-// ==================== 结果页面初始化 ====================
-function initSearchPage() {
-    const params = getUrlParams();
-    const searchQuery = params.q;
-    const pageType = params.type;
-
-    logDebug('初始化搜索页面:', { searchQuery, pageType });
-
-    // 设置搜索框值
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput && searchQuery) {
-        searchInput.value = searchQuery;
-        logDebug('设置搜索框值:', searchQuery);
-    }
-
-    // 根据页面类型设置标题
-    const titleMap = {
-        'general': '搜索结果',
-        'password': '密码提示 - 搜索结果',
-        'coffee': '咖啡店相关搜索结果',
-        'linqu': '临渠县相关信息',
-        'lab': '实验室相关信息'
-    };
-
-    const pageTitle = document.getElementById('page-title');
-    if (pageTitle) {
-        const title = titleMap[pageType] || '搜索结果';
-        pageTitle.textContent = title;
-        logDebug('设置页面标题:', title);
-    }
-
-    // 显示对应的搜索结果
-    displaySearchResults(searchQuery, pageType);
-
-    // 设置搜索事件
-    if (searchInput) {
-        searchInput.addEventListener('keypress', function (event) {
-            if (event.key === 'Enter') {
-                logDebug('回车键搜索');
-                performSearch(this.value.trim(), event);
-            }
-        });
-    }
-}
-
-// ==================== 结果显示函数 ====================
-function displaySearchResults(searchQuery, pageType, containerId = 'search-results') {
-    const container = document.getElementById(containerId);
-    if (!container) {
-        logDebug('结果容器不存在:', containerId);
-        return;
-    }
-
-    logDebug('显示搜索结果:', { searchQuery, pageType });
-
-    // 根据页面类型和搜索词筛选结果
-    let filteredResults = searchResultsData.filter(result => {
-        if (pageType === 'password') {
-            return result.keywords.some(kw => kw.includes('密码') || kw.includes('后台'));
-        } else if (pageType === 'coffee') {
-            return result.keywords.some(kw => kw.includes('咖啡'));
-        } else if (pageType === 'linqu') {
-            return result.keywords.some(kw => kw.includes('临渠'));
-        }
-        return true;
+    // Flatten all posts
+    let pool = [];
+    sections.forEach(s => {
+        pool = pool.concat(s.posts.map(p => ({ ...p, _section: s.title })));
     });
 
-    // 进一步根据搜索词筛选
-    if (searchQuery) {
-        filteredResults = filteredResults.filter(result =>
-            result.keywords.some(kw => kw.toLowerCase().includes(searchQuery.toLowerCase())) ||
-            result.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            result.description.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-    }
+    const results = pool.filter(p =>
+        (p.title + ' ' + p.content).toLowerCase().includes(query.toLowerCase())
+    );
 
-    logDebug('筛选后结果数量:', filteredResults.length);
-
-    if (filteredResults.length === 0) {
-        container.innerHTML = `
-            <div class="news-item">
-                <div class="title">暂无搜索结果</div>
-                <div class="source">请尝试其他关键词: "${searchQuery}"</div>
-                <div class="date">${new Date().toLocaleDateString()}</div>
-            </div>
-        `;
-        return;
-    }
-
-    container.innerHTML = filteredResults.map(result => `
-        <div class="news-item">
-            <div class="title">
-                <a href="${result.url}" target="_blank" onclick="trackResultClick('${result.title}')">${result.title}</a>
-            </div>
-            <div class="source">${result.description}</div>
-            <div class="date">相关搜索 • ${new Date().toLocaleDateString()}</div>
-        </div>
-    `).join('');
-}
-
-// ==================== 短信弹窗函数 ====================
-function showSmsModal(title, message, url) {
-    logDebug('显示短信弹窗:', { title, message, url });
-
-    const smsModal = document.getElementById("sms-modal");
-    if (smsModal) {
-        document.getElementById("sms-title").textContent = title;
-        document.getElementById("sms-message").textContent = message;
-        document.getElementById("sms-action-btn").onclick = function () {
-            logDebug('短信弹窗确认点击，跳转URL:', url);
-            window.open(url, '_blank');
-            smsModal.style.display = "none";
-        };
-        smsModal.style.display = "flex";
-    } else {
-        logDebug('短信弹窗容器不存在，直接跳转:', url);
-        window.open(url, '_blank');
+    if (results.length === 0 && !foundResults && matchedResults.length === 0) {
+        alert("未找到匹配的内容。请尝试其他关键词。");
+    } else if (results.length > 0) {
+        // Show first result in modal for demo purposes
+        showModal(results[0]);
     }
 }
 
-// ==================== 工具函数 ====================
-function trackResultClick(resultTitle) {
-    logDebug('用户点击搜索结果:', resultTitle);
-    // 这里可以添加统计代码
-}
+// 初始化页面
+window.onload = function () {
+    checkFirstVisit();
 
-// 导出函数供全局使用
-window.performSearch = performSearch;
-window.showSmsModal = showSmsModal;
-window.initSearchPage = initSearchPage;
-window.getUrlParams = getUrlParams;
-window.logDebug = logDebug;
+    // 确保论坛书签初始可见
+    const forumBookmark = document.getElementById("forum-bookmark");
+    forumBookmark.classList.remove("hidden");
+};
 
-logDebug('搜索模块初始化完成');
