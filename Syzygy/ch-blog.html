@@ -19,6 +19,23 @@
             line-height: 1.8;
             font-size: 16px;
         }
+        .hidden-text {
+    font-size: 7; /* 字体大小设为0 */
+    color: transparent;
+    display: inline-block;
+    position: relative;
+}
+
+.hidden-text span {
+    font-size: 16px; /* 恢复字体大小 */
+    color: transparent;
+    visibility: hidden;
+}
+
+.hidden-text span::selection {
+    color: #5d4037; /* 选中时显示文字颜色 */
+    visibility: visible;
+}
 
         a {
             text-decoration: none;
@@ -285,83 +302,9 @@
             line-height: 1.6;
         }
 
-        /* 图片占位 - 温暖风格 */
-        /*.article-image {
-            width: 100%;
-            height: 220px;
-            background-color: #fff3e0;
-            margin: 30px 0;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #8d6e63;
-            font-style: italic;
-            font-size: 15px;
-            border: 1px dashed #f0c8a0;
-            overflow: hidden;*/ /* 防止图片溢出圆角 */
-        /*}
-
-            .article-image img {
-                max-width: 100%;
-                max-height: 100%;
-                object-fit: cover;
-                border-radius: 10px;
-                box-shadow: 0 2px 8px rgba(216, 122, 22, 0.1);
-            }
-
-        .image-caption {
-            text-align: center;
-            font-size: 14px;
-            color: #8d6e63;
-            margin: -15px 0 25px;
-            font-style: italic;
-        }*/
-
-        /* 响应式设计 */
-        /*@media (max-width: 768px) {
-            .main-content {
-                flex-direction: column;
-            }
-
-            .header-content {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            nav ul {
-                margin-top: 18px;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-
-                nav ul li {
-                    margin: 6px 10px;
-                }
-
-            .article-card {
-                padding: 30px 20px;
-            }
-
-            .article-title {
-                font-size: 24px;
-            }
-
-            .article-image {
-                height: 180px;
-                margin: 20px 0;
-            }
-
-            .image-caption {
-                margin: -10px 0 18px;
-                font-size: 13px;
-            }
-        }*/
         /* 图片占位 - 温暖风格 - 自适应版本 */
         .article-image {
             width: 100%;
-            /* 移除固定高度 */
-            /* height: 220px; */
             background-color: #fff3e0;
             margin: 30px 0;
             border-radius: 12px;
@@ -372,18 +315,17 @@
             font-style: italic;
             font-size: 15px;
             border: 1px dashed #f0c8a0;
-            overflow: hidden; /* 防止图片溢出圆角 */
-            /* 添加自适应属性 */
-            min-height: 100px; /* 最小高度，避免空容器太矮 */
-            padding: 20px; /* 内边距，让图片有呼吸空间 */
+            overflow: hidden;
+            min-height: 100px;
+            padding: 20px;
         }
 
             .article-image img {
                 max-width: 100%;
-                max-height: 80vh; /* 限制最大高度为视口的80% */
-                width: auto; /* 宽度自适应 */
-                height: auto; /* 高度自适应 */
-                object-fit: contain; /* 改为contain，保持图片完整比例 */
+                max-height: 80vh;
+                width: auto;
+                height: auto;
+                object-fit: contain;
                 border-radius: 10px;
                 box-shadow: 0 2px 8px rgba(216, 122, 22, 0.1);
             }
@@ -392,7 +334,7 @@
             text-align: center;
             font-size: 14px;
             color: #8d6e63;
-            margin: 15px 0 25px; /* 调整外边距 */
+            margin: 15px 0 25px;
             font-style: italic;
         }
 
@@ -426,20 +368,22 @@
             }
 
             .article-image {
-                /* 移动端移除固定高度 */
-                /* height: 180px; */
                 margin: 20px 0;
-                padding: 15px; /* 移动端内边距稍小 */
+                padding: 15px;
             }
 
                 .article-image img {
-                    max-height: 60vh; /* 移动端最大高度稍小 */
+                    max-height: 60vh;
                 }
 
             .image-caption {
                 margin: 10px 0 18px;
                 font-size: 13px;
             }
+
+            
+
+
         }
     </style>
 </head>
@@ -452,7 +396,6 @@
                 <nav>
                     <ul>
                         <li><a href="https://sylvie-seven-cq.top/Syzygy/blog.html">首页</a></li>
-                        <!--<li><a href="#">生活感悟</a></li>-->
                         <li><a href="#">旅行日记</a></li>
                         <li><a href="#">美食探索</a></li>
                         <li><a href="#">读书笔记</a></li>
@@ -471,65 +414,77 @@
             <!-- 文章区域 -->
             <div class="articles">
                 <!-- 文章1 -->
-               
-                    <article class="article-card">
-                        <div class="article-meta">
-                            <span class="article-date">2025年8月25日</span>
-                            <span class="article-category">生活感悟</span>
-                        </div>
-                        <h2 class="article-title">
-                            窗台上的玉兰花瓣：等待“花期”的温柔盼头
-                        </h2>
-                        <div class="article-content">
-                            <p>前阵子去看望住院的母亲。一进病房，就留意到窗台上落着几片玉兰花瓣，带着春天特有的新鲜和清香。它们静静躺在那儿，不像是被风随意吹进来的。当时心头一动，只觉得这意外的点缀，让略显冰冷的病房多了几分生气。</p>
-                            <p>没过多久，我收到了住对门一位好心邻居的消息。她声音慢悠悠的，带着那种上了年纪的人特有的沉稳和安定：</p>
-                            <div class="quote">
-                                “那花瓣留着别扔，晒干了收在红布包里，压在枕头底下。这花性温，能安神，再者你母亲病房窗外那方位，近来犯点小冲，花瓣带些阳气，能挡一挡。”
-                            </div>
-                            <p>紧接着，她又嘱咐了一句：“我前日去看过她，顺手从院里折了枝放窗台上想着能添点生气。你记着，等她出院那天，把包花瓣的红布解了，埋在一棵老槐树下，回头我再画道符给你，保个顺遂。”</p>
-                            <p>我当时还笑她又来这套神神叨叨的“土法子”。但仔细一想，这位邻居说的那些草药、符咒，虽听着玄乎，可每次她的话里，总藏着一股说不出的妥帖与温柔。她不直说“会好的，别担心”，而是用这种带着仪式感的嘱咐，给我们家焦虑的情绪找了一个寄托。</p>
-                            <p>这玉兰花瓣，倒像是一个无需言明的记号。 它提醒着我，有些牵挂，不用明说，自有安排。它代表着一种默默的守护，一种“一切都会好起来”的信念。</p>
-                            <p>刚去医院给母亲送了些换洗衣物。病房里的阳光比上周暖和了许多，母亲正坐在窗边翻着日历，指着某一页念叨：“等过了这阵子天再热点，院子里的月季该开了，到时候给你做月季花茶喝。”</p>
-                            <p>回来的路上，又碰到了那位邻居。她默默塞给我一包晒干的玉兰花瓣，说按她上次说的法子收着，语气平静而笃定：</p>
-                            <div class="quote">
-                                “别急日子还早呢，等那月头过了，月底就能踏踏实实接人了，到时候我再给你娘熬副调理的草药，保准养得精神头足足的。”
-                            </div>
-                            <p>算着日子，确实还要些时日。</p>
-                            <p>但想着母亲能在月季花开得正好的时候出院，带着这份来自邻居、带着“安神”寓意的玉兰花瓣祝福回家，心头便多了份温暖的盼头。这份盼头，比任何灵丹妙药都管用。</p>
-                        </div>
-                        <!--<a href="#" class="read-more">阅读全文 &rarr;</a>-->
-                    </article>
-                 
-
-                <!-- 文章2 -->
-                <!--<article class="article-card">
+                <article class="article-card">
                     <div class="article-meta">
-                        <span class="article-date">2021年9月1日</span>
-                         <span class="article-category">生活感悟</span>
+                        <span class="article-date">2025年8月25日</span>
+                        <span class="article-category">生活感悟</span>
                     </div>
                     <h2 class="article-title">
-                        在静乔公寓，我学会给新闻留一扇窗
+                        窗台上的玉兰花瓣：等待"花期"的温柔盼头
                     </h2>
                     <div class="article-content">
-                        <p>搬进静乔公寓的第五年，我终于学会在采访本里夹一片干桂花。</p>
-                        <p>是顾姨给的。她的窗台上总晒着些奇奇怪怪的东西，有时是卷成筒的艾草，有时是铺成薄层的玉兰花瓣，最近换成了青涟渠畔的桂花——和我老家临渠县的味道一模一样。她不说这是做什么用的，只在我每次出门采访前，往我包里塞一小撮，说"闻着踏实"。</p>
-                        <p>以前我是不信这些的。刚做记者那两年，我总觉得世界该像新闻稿一样，要素清晰，逻辑闭环。时间、地点、人物、事件，缺一样都不算完整。直到上个月跑那个停水的社区，物业的解释条条是道，施工队的工期表写得明明白白，可镜头扫过独居老人用洗菜水浇绿萝的手时，我忽然发现采访本上的"原因分析""解决措施"，漏了点什么。</p>
-                        <p>那天深夜回公寓，顾姨在楼道里等我，手里端着碗姜枣茶。她说下午听3207的住户念叨，说我跑了趟远路，"风里来雨里去的，年轻人也扛不住"。那位住户的消息向来灵通，连我在小区门口买了个烤红薯都知道，但那天我没觉得被窥探，只觉得那碗茶的甜，比烤红薯还暖。新换的金属扶手泛着冷光，却让人想起翻新前，顾姨一点点擦旧木头扶手的样子，掌心的温度像还留在上面。</p>
-                        <div class="article-image">
-                            <img src="http://sylvie-seven-cq.top/gallery/晒桂花.png" alt="[配图：窗台上晒着的桂花，旁边压着半张未写完的采访提纲]">
-                        </div>
-                        <p class="image-caption">图：顾姨窗台上晒的桂花，与一张未完成的采访提纲。</p>
-                        <p>后来我又去了趟那个社区。没带录音笔，就坐在老人的小板凳上听他说，说年轻时在渠边种桂花的事，说停水这几天，对门小伙子每天给送半桶水。这些没写进新闻稿里，却被我夹在了采访本的最后一页，和顾姨给的桂花放在一起。</p>
-                        <p>顾姨的屋里还是有塔罗牌，藏在衣柜最底层的木箱里，被草药香盖着。那天我帮她整理储物间，不小心翻到了，她没慌忙收起来，只说"这东西像镜子，有时能照见人没说出口的话"。我忽然想起母亲寄来的包裹里，除了桂花糖，偶尔会夹张临渠县的照片，背面写着"家里一切都好"，字迹歪歪扭扭，却比任何话都让人安心。</p>
+                        <p>前阵子去看望住院的母亲。一进病房，就留意到窗台上落着几片玉兰花瓣，带着春天特有的新鲜和清香。它们静静躺在那儿，不像是被风随意吹进来的。当时心头一动，只觉得这意外的点缀，让略显冰冷的病房多了几分生气。</p>
+                        <p>没过多久，我收到了住对门一位好心邻居的消息。她声音慢悠悠的，带着那种上了年纪的人特有的沉稳和安定：</p>
                         <div class="quote">
-                            "有些东西，从来不需要写在纸上。"
+                            "那花瓣留着别扔，晒干了收在红布包里，压在枕头底下。这花性温，能安神，再者你母亲病房窗外那方位，近来犯点小冲，花瓣带些阳气，能挡一挡。"
                         </div>
-                        <p>原来有些东西，从来不需要写在纸上。就像静乔公寓的楼道，翻新后依旧被擦得干干净净的扶手，顾姨窗台上永远新鲜的草药，还有深夜回来时，总为我留着的那盏廊灯。它们不在新闻的5W1H里，却让每个被记录的瞬间，都有了可以落脚的温度。</p>
-                        <p>今天出门采访，包里又多了片顾姨晒的玉兰花瓣。或许以后我的新闻稿还是会追求严谨，但我想给那些没被写下的部分，留一扇窗——就像这栋翻新后公寓的窗户，总在不经意间，漏进点桂花香，或是邻居的几句闲谈，让坚硬的世界，软了个角。</p>
-                    </div>-->
-                    <!--<a href="#" class="read-more">阅读全文 &rarr;</a>-->
-                <!--</article>
-            </div>-->
+                        <p>紧接着，她又嘱咐了一句："我前日去看过她，顺手从院里折了枝放窗台上想着能添点生气。你记着，等她出院那天，把包花瓣的红布解了，埋在一棵老槐树下，回头我再画道符给你，保个顺遂。"</p>
+                        <p>我当时还笑她又来这套神神叨叨的"土法子"。但仔细一想，这位邻居说的那些草药、符咒，虽听着玄乎，可每次她的话里，总藏着一股说不出的妥帖与温柔。她不直说"会好的，别担心"，而是用这种带着仪式感的嘱咐，给我们家焦虑的情绪找了一个寄托。</p>
+                        <p>这玉兰花瓣，倒像是一个无需言明的记号。 它提醒着我，有些牵挂，不用明说，自有安排。它代表着一种默默的守护，一种"一切都会好起来"的信念。<span class="hidden-text">mom health</span></p>
+                        <p>刚去医院给母亲送了些换洗衣物。病房里的阳光比上周暖和了许多，母亲正坐在窗边翻着日历，指着某一页念叨："等过了这阵子天再热点，院子里的月季该开了，到时候给你做月季花茶喝。"</p>
+                        <p>回来的路上，又碰到了那位邻居。她默默塞给我一包晒干的玉兰花瓣，说按她上次说的法子收着，语气平静而笃定：</p>
+                        <div class="quote">
+                            "别急日子还早呢，等那月头过了，月底就能踏踏实实接人了，到时候我再给你娘熬副调理的草药，保准养得精神头足足的。"
+                        </div>
+                        <p>算着日子，确实还要些时日。</p>
+                        <p>但想着母亲能在月季花开得正好的时候出院，带着这份来自邻居、带着"安神"寓意的玉兰花瓣祝福回家，心头便多了份温暖的盼头。这份盼头，比任何灵丹妙药都管用。<span class="hidden-text">mom health</span></p>
+                    </div>
+                </article>
+
+                <!-- 文章2 -->
+                <article class="article-card">
+                    <div class="article-meta">
+                        <span class="article-date">2025年8月12日</span>
+                        <span class="article-category">生活感悟</span>
+                    </div>
+                    <h2 class="article-title">
+                        ✨ 星光下的咖啡香与未圆的流星愿 ✨
+                    </h2>
+                    <div class="article-content">
+                        <p>此刻的我，坐在打烊后寂静的咖啡店里，面前放着一杯加了双倍浓缩的冰美式——这是属于我的"夜间燃料"。窗外是东京街头午夜时分特有的宁静，但我的思绪却飘得很远，飘到了今夜闪耀着奇迹的流星雨。</p>
+                        <p>你们应该也都看到了新闻吧？今年的英仙座流星雨，据说规模空前，是十年来观测条件最好的一次。我一整天在吧台后忙碌，从早上的意式浓缩到下午的外卖拿铁，耳边一直嗡嗡响着这个消息。</p>
+                        <div class="quote">
+                            🌠 一个遥不可及的愿望
+                        </div>
+                        <p>坦白说，我不是一个特别浪漫的人，平时更关注咖啡豆的研磨度和牛奶的打发温度。但流星雨这三个字，却像一道闪光，瞬间点亮了我心底最柔软的角落。</p>
+                        <p>我多想去啊。<span class="hidden-text">mom health</span></p>
+                        <p>不是为了拍出什么惊艳的照片发朋友圈，也不是为了体验什么宇宙级的浪漫。我只是想在那个万籁俱寂、星光如雨的时刻，对着宇宙许一个最简单、最俗套、但对我来说比一切都重要的愿望：<span class="hidden-text">mom health</span></p>
+                        <p>"愿我的妈妈，身体健康，永远平安。"<span class="hidden-text">mom health</span></p>
+                        <p>我妈最近身体不太好，虽然只是些小毛病，但看着她疲惫的样子，心里总是揪着。如果真的有流星划过，能带走我的心愿，那该多好。我愿意用我这辈子调的咖啡里最醇厚的那一滴浓缩，去交换这个愿望。<span class="hidden-text">mom health</span></p>
+                        <div class="quote">
+                            ☕ 被咖啡香困住的夜晚
+                        </div>
+                        <p>然而，现实很骨感。作为一名兼职"咖喱人"（咖啡店打工人的自嘲），这个周末是我值晚班，人手紧张，我根本走不开。</p>
+                        <p>当朋友们在群里晒出他们准备的望远镜和野餐垫时，我正在对着收银机进行今晚的清点工作。当他们即将驱车前往城市郊外的观星点时，我正戴上耳机，开始清洗咖啡机的冲煮头。</p>
+                        <p>我被这四面墙、被磨豆机发出的轰鸣声、被空气里浓郁的咖啡和牛奶香气，结结实实地困在了这里。</p>
+                        <p>去不了，真的去不了。</p>
+                        <div class="quote">
+                            ✨ 我的咖啡店流星雨
+                        </div>
+                        <p>一开始有点失落，甚至有点羡慕和酸涩。</p>
+                        <p>但当我关掉店里的灯，只留下吧台上方那盏温暖的射灯时，我突然意识到：也许，许愿并不一定非要在山顶或海边，非要在流星划过的那一秒。</p>
+                        <p>我深吸了一口气，空气中弥漫着刚洗完的咖啡机的蒸汽和残留的烘焙香。</p>
+                        <p>我想，我的愿望，我的祝福，可以像此刻这杯美式一样，浓烈、真诚，并且持久。</p>
+                        <p>我决定，今晚，就在这里，在我的工作台前，面向着夜空，默默地，许下我的心愿。<span class="hidden-text">mom health</span></p>
+                        <p>即使没有流星为证，宇宙也一定能听到我最恳切的呼唤。<span class="hidden-text">mom health</span></p>
+                        <p>• 愿妈妈健康长寿。</p>
+                        <p>• 愿所有爱我的人和我爱的人，都能被星光照耀。</p>
+                        <p>如果你们今晚有机会看到那场盛大的流星雨，请替我多看几眼。如果你们也想许愿，请许一个关于爱与健康的愿望吧，它们才是这世间最珍贵的宝物。</p>
+                        <p>感谢今夜的咖啡香陪伴，也感谢这短暂的流星雨新闻带给我的温暖触动。</p>
+                        <p>晚安，全世界。</p>
+                    </div>
+                </article>
+            </div> <!-- 闭合 .articles -->
 
             <!-- 侧边栏 -->
             <aside class="sidebar">
@@ -576,16 +531,16 @@
                     <h3 class="widget-title">文章分类</h3>
                     <ul class="categories">
                         <li>
-                            <a href="#">生活感悟 <span class="category-count">2</span></a>
+                            <a href="#">生活感悟 <span class="category-count">7</span></a>
                         </li>
                         <li>
-                            <a href="#">旅行日记 <span class="category-count">7</span></a>
+                            <a href="#">旅行日记 <span class="category-count">1</span></a>
                         </li>
                         <li>
                             <a href="#">美食探索 <span class="category-count">1</span></a>
                         </li>
                         <li>
-                            <a href="#">读书笔记 <span class="category-count">18</span></a>
+                            <a href="#">读书笔记 <span class="category-count">8</span></a>
                         </li>
                         <li>
                             <a href="#">心情日记 <span class="category-count">9</span></a>
@@ -593,7 +548,7 @@
                     </ul>
                 </div>
             </aside>
-        </div>
-    </div>
+        </div> <!-- 闭合 .main-content -->
+    </div> <!-- 闭合 .container -->
 </body>
 </html>

@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>远程操控ing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background-color: #000;
+        }
+        
+        /* 连接密码对话框样式 */
+        #connectionDialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .connection-form {
+            background: linear-gradient(to bottom, #1a3a8a, #0a246a);
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 350px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        
+        .connection-form h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .connection-form input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+        }
+        
+        .connection-form button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to bottom, #4c9bfc, #0a246a);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .connection-form button:hover {
+            background: linear-gradient(to bottom, #5ca5ff, #1a3a8a);
+        }
+        
+        .connection-error {
+            color: #ff6b6b;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .desktop {
+            background: url('https://pic3.zhimg.com/v2-16e1212f3bd3a80e042d5fad6d24d972_1440w.jpg') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .desktop-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .desktop-icons {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            grid-auto-rows: minmax(80px, auto);
+            gap: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .desktop-icon {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 5px;
+            border-radius: 5px;
+            position: relative;
+        }
+        
+        .desktop-icon:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+        }
+        
+        .icon-img {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+            position: relative;
+        }
+        
+        .icon-img img {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+            object-fit: contain;
+        }
+        
+        .icon-label {
+            font-size: 12px;
+            color: white;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+            max-width: 80px;
+            word-wrap: break-word;
+            line-height: 1.2;
+        }
+        
+        .taskbar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(to bottom, #0a246a, #a3c6f3);
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            box-shadow: 0 -1px 5px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+        
+        .start-button {
+            height: 32px;
+            background: linear-gradient(to bottom, #4c9bfc, #0a246a);
+            color: white;
+            border: 1px solid #0a246a;
+            border-radius: 4px;
+            padding: 0 15px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .start-button:hover {
+            background: linear-gradient(to bottom, #5ca5ff, #1a3a8a);
+        }
+        
+        .start-icon {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+        }
+        
+        .taskbar-items {
+            display: flex;
+            flex: 1;
+            margin: 0 10px;
+        }
+        
+        .taskbar-item {
+            height: 30px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            margin: 0 2px;
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: white;
+            font-size: 12px;
+        }
+        
+        .taskbar-item:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .system-tray {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+        
+        .tray-item {
+            width: 24px;
+            height: 24px;
+            margin: 0 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+        
+        .clock {
+            color: white;
+            font-size: 12px;
+            padding: 0 5px;
+        }
+        
+        .dialog {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            padding: 20px;
+            width: 90%;
+            max-width: 350px;
+            z-index: 100;
+            display: none;
+        }
+        
+        .dialog-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .dialog-content {
+            margin-bottom: 20px;
+        }
+        
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .dialog-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background-color: #0078d7;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .confirmation-dialog {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            padding: 20px;
+            width: 90%;
+            max-width: 350px;
+            z-index: 101;
+        }
+        /* 我的电脑图标 - 蓝色显示器 */
+        .computer-icon {
+            fill: #0078D7;
+        }
+        /* 文档图标 - 深蓝色文件夹 */
+        .document-icon {
+            fill: #4C9BFC;
+        }
+        
+        .notification {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            display: none;
+            z-index: 102;
+        }
+        
+        .notification.success {
+            background-color: #28a745;
+        }
+        
+        .notification.error {
+            background-color: #dc3545;
+        }
+        
+        /* 恐怖侵入警告样式 - 修改动画减少闪烁 */
+        .intrusion-warning {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+        
+        .warning-text {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            font-size: 72px;
+            font-weight: bold;
+            color: #ff0000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            animation: flash 1s infinite, shake 0.5s infinite;
+            font-family: 'Creepster', cursive, 'Arial Black', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* 多个恐怖文字样式 - 减少动画频率 */
+        .warning-text-multiple {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: space-around;
+            justify-content: space-around;
+            align-items: center;
+            font-family: 'Creepster', cursive, 'Arial Black', sans-serif;
+            font-size: 48px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+            animation: backgroundFlash 2s infinite;
+            opacity: 0.8;
+        }
+        
+        .warning-text-multiple span {
+            animation: textShake 0.5s infinite;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+        }
+        /* 文件管理器样式 */
+        .file-manager {
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            width: 90%;
+            height: 90%;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 200;
+            display: none;
+            overflow: hidden;
+        }
+        
+        .file-manager-header {
+            background: linear-gradient(to bottom, #0a246a, #1a3a8a);
+            color: white;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        
+        .file-manager-title {
+            font-weight: bold;
+        }
+        
+        .file-manager-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        .file-manager-content {
+            padding: 15px;
+            height: calc(100% - 40px);
+            overflow-y: auto;
+        }
+        
+        .file-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+        }
+        
+        .file-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .file-item:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .file-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 5px;
+        }
+        
+        .file-name {
+            font-size: 12px;
+            text-align: center;
+            word-break: break-all;
+        }
+        
+        .file-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 300;
+            display: none;
+        }
+        
+        .file-content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .file-content-title {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .file-content-close {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #666;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        
+        .file-content-close:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .file-content-body {
+            white-space: pre-line;
+            line-height: 1.5;
+        }
+        
+        /* 密保问题对话框样式 */
+        #securityQuestionsDialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .security-questions-form {
+            background: linear-gradient(to bottom, #1a3a8a, #0a246a);
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 350px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            color: white;
+        }
+        
+        .security-questions-form h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .security-questions-form input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+        }
+        
+        .security-questions-form button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to bottom, #4c9bfc, #0a246a);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .security-questions-form button:hover {
+            background: linear-gradient(to bottom, #5ca5ff, #1a3a8a);
+        }
+        
+        .security-questions-error {
+            color: #ff6b6b;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+        }
+        .hidden-skip {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 7px; /* 字体变小 */
+            color: #999; /* 颜色变浅，不明显 */
+            cursor: pointer;
+            text-decoration: none;
+            background: transparent;
+            border: none;
+            padding: 4px 8px;
+            opacity: 0.3; /* 透明度降低 */
+        }
+        
+        .hidden-skip:hover {
+            color: #666; /* 悬停时稍微明显一些 */
+            opacity: 0.7;
+            text-decoration: underline;
+        }
+        
+        /* 文档密码对话框样式 */
+        #documentPasswordDialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .document-password-form {
+            background: linear-gradient(to bottom, #1a3a8a, #0a246a);
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 350px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            color: white;
+        }
+        
+        .document-password-form h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .document-password-form input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+        }
+        
+        .document-password-form button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to bottom, #4c9bfc, #0a246a);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .document-password-form button:hover {
+            background: linear-gradient(to bottom, #5ca5ff, #1a3a8a);
+        }
+        
+        .document-password-error {
+            color: #ff6b6b;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        /* 回收站文件管理器样式 */
+        #recycleBinManager {
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            width: 90%;
+            height: 90%;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 200;
+            display: none;
+            overflow: hidden;
+        }
+        
+        /* 隐蔽密码样式 - 默认桌面位置 */
+        .hidden-text {
+            position: absolute;
+            bottom: 100px;
+            right: 10px;
+            color: #2e343f;
+            font-size: 12px;
+            font-family: monospace;
+            cursor: default;
+            user-select: none;
+            z-index: 5;
+            transition: color 0.3s;
+        }
+        
+        .hidden-text:hover {
+            color: #2e343f;
+        }
+
+        .dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.dialog-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    min-width: 300px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+        
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            /* 平板设备 */
+            .hidden-text {
+                bottom: 200px;
+                right: 10%;
+                transform: translateX(-50%);
+            }
+            
+            .desktop-icons {
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+                gap: 12px;
+            }
+            
+            .desktop-icon {
+                height: 70px;
+            }
+            
+            .icon-img {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .icon-label {
+                font-size: 11px;
+            }
+            
+            .warning-text-multiple {
+                font-size: 36px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            /* 平板设备 - 小尺寸 */
+            .hidden-text {
+                bottom: 150px;
+                right: 10%;
+                transform: translateX(-50%);
+                font-size: 11px;
+            }
+            
+            .desktop-icons {
+                grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+                gap: 10px;
+            }
+            
+            .desktop-icon {
+                height: 65px;
+            }
+            
+            .icon-img {
+                width: 36px;
+                height: 36px;
+            }
+            
+            .icon-label {
+                font-size: 10px;
+            }
+            
+            .warning-text-multiple {
+                font-size: 28px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            /* 手机设备 */
+            .hidden-text {
+                bottom: 100px;
+                right: 10%;
+                transform: translateX(-50%);
+                font-size: 10px;
+            }
+            
+            .desktop-icons {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+                gap: 8px;
+                padding: 15px;
+            }
+            
+            .desktop-icon {
+                height: 60px;
+            }
+            
+            .icon-img {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .icon-label {
+                font-size: 9px;
+            }
+            
+            .taskbar {
+                height: 45px;
+            }
+            
+            .start-button {
+                height: 35px;
+                padding: 0 12px;
+                font-size: 14px;
+            }
+            
+            .clock {
+                font-size: 11px;
+            }
+            
+            .warning-text-multiple {
+                font-size: 20px;
+            }
+            
+            .connection-form,
+            .security-questions-form,
+            .document-password-form {
+                padding: 20px;
+            }
+            
+            .connection-form h2,
+            .security-questions-form h2,
+            .document-password-form h2 {
+                font-size: 20px;
+            }
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+        
+        /* 修改动画频率，减少闪烁 */
+        @keyframes flash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translate(-50%, -50%) translateX(0); }
+            25%, 75% { transform: translate(-50%, -50%) translateX(-5px); }
+            50% { transform: translate(-50%, -50%) translateX(5px); }
+        }
+        
+        @keyframes backgroundFlash {
+            0%, 100% { background-color: #000; }
+            50% { background-color: #330000; }
+        }
+        
+        @keyframes textShake {
+            0%, 100% { transform: translateX(0); }
+            25%, 75% { transform: translateX(-3px); }
+            50% { transform: translateX(3px); }
+        }
+        
+        /* 添加抖动动画 */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25%, 75% { transform: translateX(-3px); }
+        }
+    </style>
+
+    <script>
+(function () {
+    'use strict';
+
+    var devTools = {
+        init: function () {
+            this.disableRightClick();
+            this.disableDevToolsKeys();
+        },
+
+        disableRightClick: function () {
+            document.addEventListener('contextmenu', function (e) {
+                e.preventDefault();
+                alert('恭喜你获得成就：逃课大王！！！');
+                return false;
+            });
+        },
+
+        disableDevToolsKeys: function () {
+            document.addEventListener('keydown', function (e) {
+                // F12
+                if ((e.key === 'F12' || e.keyCode === 123) &&
+                    !e.ctrlKey && !e.altKey && !e.shiftKey && !e.metaKey) {
+                    e.preventDefault();
+                    alert('恭喜你获得成就：逃课大王！！！');
+                    return false;
+                }
+                // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+                if (e.ctrlKey && e.shiftKey &&
+                    (e.key === 'I' || e.key === 'J' || e.key === 'C'
+                     || e.key === 'i' || e.key === 'j' || e.key === 'c')) {
+                    e.preventDefault();
+                    alert('恭喜你获得成就：逃课大王！！！');
+                    return false;
+                }
+                // Ctrl+U
+                if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+                    e.preventDefault();
+                    alert('恭喜你获得成就：逃课大王！！！');
+                    return false;
+                }
+            });
+        }
+    };
+
+    devTools.init();
+})();
+</script>
+</head>
+<body>
+    <!-- 连接密码对话框 -->
+    <div id="connectionDialog">
+        <div class="connection-form">
+            <h2>远程连接</h2>
+            <p>请输入连接密码以访问电脑</p>
+            <input type="password" id="connectionPassword" placeholder="请输入连接密码">
+            <button onclick="checkConnectionPassword()">连接</button>
+            <div class="connection-error" id="connectionError">密码错误，请重试</div>
+            <span class="hidden-skip skip-link" onclick="showSecurityQuestions()">跳过</span>
+        </div>
+    </div>
+    
+    <!-- 密保问题对话框 -->
+    <div id="securityQuestionsDialog">
+        <div class="security-questions-form">
+            <h2>安全验证</h2>
+            <p>请输入密保问题答案以确认本人</p>
+            <input type="text" id="question1" placeholder="我最喜欢的咖啡是什么？">
+            <input type="text" id="question2" placeholder="我的真名是什么？">
+            <input type="text" id="question3" placeholder="我的家乡是？">
+            <button onclick="checkSecurityQuestions()">验证</button>
+            <div class="security-questions-error" id="securityQuestionsError">答案错误，请重试</div>
+        </div>
+    </div>
+    
+    <!-- 文档密码对话框 -->
+    <div id="documentPasswordDialog">
+        <div class="document-password-form">
+            <h2>文档访问</h2>
+            <p>请输入密码以访问私密文档</p>
+            <input type="password" id="documentPassword" placeholder="请输入文档密码">
+            <button onclick="checkDocumentPassword()">确认</button>
+            <button onclick="document.getElementById('documentPasswordDialog').style.display='none'">取消</button>
+            <div class="document-password-error" id="documentPasswordError">密码错误，请重试</div>
+        </div>
+    </div>
+    
+    <!-- 恐怖侵入警告 - 减少动画频率 -->
+    <div id="intrusionWarning" class="intrusion-warning">
+        <div class="warning-text-multiple">
+            <span>你是谁你想干什么</span>
+            <span>你是谁你想干什么</span>
+            <span>你是谁你想干什么</span>
+            <span>你是谁你想干什么</span>
+            <span>你是谁你想干什么</span>
+            <span>你是谁你想干什么</span>
+            <span>你是谁你想干什么</span>
+            <span>你是谁你想干什么</span>
+            <span>你是谁你想干什么</span>
+            <span>你是谁你想干什么</span>
+            <span>你是谁你想干什么</span>
+            <span>你是谁你想干什么</span>
+            <span>你是谁你想干什么</span>
+            <span>你是谁你想干什么</span>
+            <span>你是谁你想干什么</span>
+            <span>你是谁你想干什么</span>
+            <span>你是谁你想干什么</span>
+            <span>你是谁你想干什么</span>
+            <span>你是谁你想干什么</span>
+            <span>你是谁你想干什么</span>
+            <span>你是谁你想干什么</span>
+        </div>
+    </div>
+    
+    <!-- 桌面界面 -->
+    <div class="desktop" id="desktop">
+        <div class="desktop-overlay"></div>
+        
+        <!-- 隐蔽S -->
+        <div class="hidden-text" id="hiddenPassword">Expecto Patronum</div>
+        
+        <div class="desktop-icons">
+            
+            
+             <!-- 文档图标 -->
+        <div class="desktop-icon" onclick="openDocument()">
+            <div class="icon-img">
+                <svg viewBox="0 0 24 24" class="document-icon">
+                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                </svg>
+            </div>
+            <div class="icon-label">文档</div>
+        </div>
+            
+            <div class="desktop-icon">
+                <div class="icon-img">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzIxOTZGMyI+PHBhdGggZD0iTTguNSwxMy41TDExLDE2LjVMMTQuNSwxMkwxOSwxOEg1TTIxLDE5VjVDMjEsMy44OSAyMC4xLDMgMTksM0g1QTIsMiAwIDAsMCAzLDVWMTlBMCwwIDAgMCwwIDUsMjFIMTlBMCwwIDAgMCwwIDIxLDE5WiIvPjwvc3ZnPg==" alt="Image">
+                </div>
+                <div class="icon-label">图片</div>
+            </div>
+            
+            <!-- 回收站图标 -->
+<div class="desktop-icon" onclick="openRecycleBin()">
+    <div class="icon-img">
+        <svg viewBox="0 0 24 24" fill="#6C757D">
+            <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
+        </svg>
+    </div>
+    <div class="icon-label">回收站</div>
+</div>
+
+ <!-- 我的电脑图标 -->
+        <div class="desktop-icon">
+            <div class="icon-img">
+                <svg viewBox="0 0 24 24" class="computer-icon">
+                    <path d="M4 2.5C2.89 2.5 2 3.39 2 4.5V15.5C2 16.61 2.89 17.5 4 17.5H20C21.11 17.5 22 16.61 22 15.5V4.5C22 3.39 21.11 2.5 20 2.5H4M4 4H20V16H4V4M9 19V21H15V19H9M8 18H16V22H8V18Z"/>
+                </svg>
+            </div>
+            <div class="icon-label">我的电脑</div>
+        </div>
+
+<!-- 设置图标 -->
+<div class="desktop-icon">
+    <div class="icon-img">
+        <svg viewBox="0 0 24 24" fill="#0078D7">
+            <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.22,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.22,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/>
+        </svg>
+    </div>
+    <div class="icon-label">设置</div>
+</div>
+
+        </div>
+        
+        <div class="taskbar">
+            <div class="start-button">
+                <div class="start-icon">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2ZmZmZmZiI+PHBhdGggZD0iTTMsMThIMjFWMTZIM1YxOE0zLDEzSDIxVjExSDNWMTNNMyw2VjhIMjFWNkgzWiIvPjwvc3ZnPg==" alt="Start">
+                </div>
+                <span>开始</span>
+            </div>
+            
+            <div class="taskbar-items">
+                <!-- 任务栏项目可以放在这里 -->
+            </div>
+            
+            <div class="system-tray">
+                <div class="tray-item">🔊</div>
+                <div class="tray-item">🌐</div>
+                <div class="clock" id="clock">上午11:49</div>
+            </div>
+        </div>
+        
+        
+    </div>
+    
+    <!-- 文件内容显示 -->
+    <div class="file-content" id="fileContent">
+        <div class="file-content-header">
+            <div class="file-content-title" id="fileContentTitle">文件内容</div>
+            <button class="file-content-close" onclick="closeFileContent()">×</button>
+            
+        </div>
+        <div class="file-content-body" id="fileContentBody"></div>
+    </div>
+    
+    <!-- 回收站文件管理器 -->
+    <div id="recycleBinManager" class="file-manager">
+        <div class="file-manager-header">
+            <div class="file-manager-title">回收站</div>
+            <button class="file-manager-close" onclick="closeRecycleBin()">×</button>
+        </div>
+        <div class="file-manager-content">
+            <div class="file-list">
+                <div class="file-item" onclick="openRecycleFile('file1')">
+                    <div class="file-icon">
+                        <svg viewBox="0 0 24 24" fill="#4C9BFC">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                    </div>
+                    <div class="file-name">到底是谁.txt</div>
+                </div>
+                <div class="file-item" onclick="openRecycleFile('file2')">
+                    <div class="file-icon">
+                        <svg viewBox="0 0 24 24" fill="#4C9BFC">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                    </div>
+                    <div class="file-name">绝对不能忘的.txt</div>
+                </div>
+                <div class="file-item" onclick="openRecycleFile('file3')">
+                    <div class="file-icon">
+                        <svg viewBox="0 0 24 24" fill="#4C9BFC">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                    </div>
+                    <div class="file-name">守护神.txt</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const _0x4fa3e1=_0x4de5;(function(_0x5dbcdd,_0x238be6){const _0x19b65b=_0x4de5,_0x4c3701=_0x5dbcdd();while(!![]){try{const _0xb16682=parseInt(_0x19b65b(0x154))/0x1+parseInt(_0x19b65b(0x13c))/0x2+parseInt(_0x19b65b(0x155))/0x3+parseInt(_0x19b65b(0x12c))/0x4+-parseInt(_0x19b65b(0x12a))/0x5+-parseInt(_0x19b65b(0x159))/0x6+-parseInt(_0x19b65b(0x129))/0x7;if(_0xb16682===_0x238be6)break;else _0x4c3701['push'](_0x4c3701['shift']());}catch(_0x5551f8){_0x4c3701['push'](_0x4c3701['shift']());}}}(_0x5c3d,0x5594c));function checkConnectionPassword(){const _0x8093d=_0x4de5,_0x1b191e=document['getElementById']('connectionPassword')['value'],_0x273f1b=document[_0x8093d(0x146)](_0x8093d(0x11f));_0x1b191e===_0x8093d(0x13b)?(document[_0x8093d(0x146)](_0x8093d(0x134))[_0x8093d(0x167)][_0x8093d(0x126)]=_0x8093d(0x12e),document['getElementById'](_0x8093d(0x147))[_0x8093d(0x167)][_0x8093d(0x126)]='block'):(_0x273f1b['style']['display']=_0x8093d(0x153),document[_0x8093d(0x146)](_0x8093d(0x14f))[_0x8093d(0x169)]='',document[_0x8093d(0x146)](_0x8093d(0x14f))[_0x8093d(0x149)](),document[_0x8093d(0x15c)](_0x8093d(0x13d))['style'][_0x8093d(0x124)]=_0x8093d(0x143),setTimeout(()=>{const _0xa7d133=_0x8093d;document[_0xa7d133(0x15c)](_0xa7d133(0x13d))[_0xa7d133(0x167)]['animation']='';},0x1f4));}document[_0x4fa3e1(0x146)]('connectionPassword')[_0x4fa3e1(0x12f)](_0x4fa3e1(0x151),function(_0x33b704){const _0x4df190=_0x4fa3e1;_0x33b704[_0x4df190(0x13e)]==='Enter'&&checkConnectionPassword();});function showSecurityQuestions(){const _0x3ea7b6=_0x4fa3e1;document[_0x3ea7b6(0x146)](_0x3ea7b6(0x134))[_0x3ea7b6(0x167)][_0x3ea7b6(0x126)]=_0x3ea7b6(0x12e),document[_0x3ea7b6(0x146)](_0x3ea7b6(0x161))['style'][_0x3ea7b6(0x126)]=_0x3ea7b6(0x166);}function checkSecurityQuestions(){const _0x894538=_0x4fa3e1,_0x79ea47=document[_0x894538(0x146)](_0x894538(0x14b))['value'],_0x52a0c5=document['getElementById'](_0x894538(0x141))[_0x894538(0x169)],_0x32cdaf=document[_0x894538(0x146)]('question3')[_0x894538(0x169)],_0x40a2fa=document[_0x894538(0x146)](_0x894538(0x120)),_0x37d30f=_0x894538(0x15d),_0x2b9322=_0x894538(0x158),_0x412f79=_0x894538(0x123);_0x79ea47===_0x37d30f&&_0x52a0c5===_0x2b9322&&_0x32cdaf===_0x412f79?(document[_0x894538(0x146)]('securityQuestionsDialog')[_0x894538(0x167)]['display']=_0x894538(0x12e),document['getElementById']('desktop')[_0x894538(0x167)][_0x894538(0x126)]=_0x894538(0x153)):(_0x40a2fa[_0x894538(0x167)][_0x894538(0x126)]='block',document[_0x894538(0x146)](_0x894538(0x14b))[_0x894538(0x169)]='',document[_0x894538(0x146)](_0x894538(0x141))[_0x894538(0x169)]='',document['getElementById'](_0x894538(0x13a))[_0x894538(0x169)]='',document['getElementById'](_0x894538(0x14b))['focus'](),document['querySelector'](_0x894538(0x127))['style'][_0x894538(0x124)]=_0x894538(0x143),setTimeout(()=>{const _0x4f2948=_0x894538;document[_0x4f2948(0x15c)](_0x4f2948(0x127))[_0x4f2948(0x167)]['animation']='';},0x1f4),document[_0x894538(0x146)](_0x894538(0x13f))[_0x894538(0x167)][_0x894538(0x126)]=_0x894538(0x153),setTimeout(()=>{const _0x57f6fc=_0x894538;document[_0x57f6fc(0x146)](_0x57f6fc(0x13f))['style'][_0x57f6fc(0x126)]=_0x57f6fc(0x12e);},0xbb8));}function _0x4de5(_0x272758,_0x13cdd0){const _0x5c3da0=_0x5c3d();return _0x4de5=function(_0x4de59f,_0x4465f9){_0x4de59f=_0x4de59f-0x11f;let _0x1faac2=_0x5c3da0[_0x4de59f];return _0x1faac2;},_0x4de5(_0x272758,_0x13cdd0);}document[_0x4fa3e1(0x146)](_0x4fa3e1(0x14b))['addEventListener'](_0x4fa3e1(0x151),function(_0x186266){_0x186266['key']==='Enter'&&checkSecurityQuestions();}),document[_0x4fa3e1(0x146)](_0x4fa3e1(0x141))[_0x4fa3e1(0x12f)]('keypress',function(_0x2b654c){const _0x2d042b=_0x4fa3e1;_0x2b654c[_0x2d042b(0x13e)]===_0x2d042b(0x156)&&checkSecurityQuestions();}),document['getElementById'](_0x4fa3e1(0x13a))[_0x4fa3e1(0x12f)](_0x4fa3e1(0x151),function(_0x21dcc1){const _0x23ab57=_0x4fa3e1;_0x21dcc1['key']===_0x23ab57(0x156)&&checkSecurityQuestions();});function updateClock(){const _0x1706e9=_0x4fa3e1,_0x1fdb03=new Date(),_0x3e7c62=_0x1fdb03[_0x1706e9(0x148)](),_0x233aba=_0x1fdb03[_0x1706e9(0x165)]()[_0x1706e9(0x142)]()[_0x1706e9(0x132)](0x2,'0'),_0xca6a1=_0x3e7c62>=0xc?'PM':'AM',_0x218beb=_0x3e7c62%0xc||0xc;document['getElementById'](_0x1706e9(0x128))[_0x1706e9(0x160)]=_0x218beb+':'+_0x233aba+'\x20'+_0xca6a1;}setInterval(updateClock,0xea60),updateClock();function openFile(){const _0x2ad321=_0x4fa3e1;document[_0x2ad321(0x146)]('deleteDialog')['style'][_0x2ad321(0x126)]=_0x2ad321(0x153);}function closeDeleteDialog(){const _0x3bdc66=_0x4fa3e1;document[_0x3bdc66(0x146)](_0x3bdc66(0x14d))['style'][_0x3bdc66(0x126)]=_0x3bdc66(0x12e),document[_0x3bdc66(0x146)](_0x3bdc66(0x164))[_0x3bdc66(0x169)]='',document[_0x3bdc66(0x146)]('skipCheckbox')[_0x3bdc66(0x162)]=![];}function confirmDelete(){const _0x52a1c4=_0x4fa3e1,_0x318dab=document['getElementById'](_0x52a1c4(0x164))[_0x52a1c4(0x169)],_0x45bb51=document['getElementById']('skipCheckbox')[_0x52a1c4(0x162)];}function closeConfirmation(){const _0x1fcf59=_0x4fa3e1;document[_0x1fcf59(0x146)](_0x1fcf59(0x150))['style']['display']=_0x1fcf59(0x12e);}function showNotification(_0x1413b6,_0x1bcde1){const _0x31d7b4=_0x4fa3e1,_0x469fec=document[_0x31d7b4(0x146)](_0x31d7b4(0x135));_0x469fec[_0x31d7b4(0x160)]=_0x1413b6,_0x469fec['className']=_0x31d7b4(0x137)+_0x1bcde1,_0x469fec['style'][_0x31d7b4(0x126)]='block',setTimeout(()=>{const _0x537c47=_0x31d7b4;_0x469fec[_0x537c47(0x167)][_0x537c47(0x126)]=_0x537c47(0x12e);},0xbb8);}function openDocument(){const _0x42d6e9=_0x4fa3e1;document['getElementById'](_0x42d6e9(0x152))[_0x42d6e9(0x167)][_0x42d6e9(0x126)]=_0x42d6e9(0x166);}function checkDocumentPassword(){const _0x351cb7=_0x4fa3e1,_0x4dd18f=document[_0x351cb7(0x146)]('documentPassword')[_0x351cb7(0x169)],_0x3dbca3=document[_0x351cb7(0x146)](_0x351cb7(0x15f));_0x4dd18f==='stag'?(document[_0x351cb7(0x146)](_0x351cb7(0x152))[_0x351cb7(0x167)]['display']='none',document[_0x351cb7(0x146)](_0x351cb7(0x121))[_0x351cb7(0x160)]='文档内容',document[_0x351cb7(0x146)](_0x351cb7(0x139))[_0x351cb7(0x160)]=_0x351cb7(0x15a),document[_0x351cb7(0x146)](_0x351cb7(0x12d))['style']['display']='block',document[_0x351cb7(0x146)](_0x351cb7(0x15b))[_0x351cb7(0x169)]='',_0x3dbca3[_0x351cb7(0x167)]['display']=_0x351cb7(0x12e)):(_0x3dbca3[_0x351cb7(0x167)][_0x351cb7(0x126)]=_0x351cb7(0x153),document['getElementById'](_0x351cb7(0x15b))[_0x351cb7(0x169)]='',document[_0x351cb7(0x146)]('documentPassword')[_0x351cb7(0x149)](),document[_0x351cb7(0x15c)]('.document-password-form')['style'][_0x351cb7(0x124)]='shake\x200.5s',setTimeout(()=>{const _0x5a18a9=_0x351cb7;document[_0x5a18a9(0x15c)](_0x5a18a9(0x136))[_0x5a18a9(0x167)][_0x5a18a9(0x124)]='';},0x1f4));}document[_0x4fa3e1(0x146)](_0x4fa3e1(0x15b))[_0x4fa3e1(0x12f)](_0x4fa3e1(0x151),function(_0x37b0b8){const _0x583800=_0x4fa3e1;_0x37b0b8[_0x583800(0x13e)]===_0x583800(0x156)&&checkDocumentPassword();});function _0x5c3d(){const _0x1e1a07=['1737606XNVdcX','8月30日\x20阴雨\x0a今天，窗外又下起了连绵的雨。我透过厚厚的窗帘缝隙看出去，世界是湿漉漉的，可那不过是世界的表象。我知道，在那些光鲜亮丽的数据和信息下面，藏着另一张网。\x0a我已经多久没有好好睡一觉了？夜夜失眠，只能靠一杯又一杯苦咖啡麻痹自己。我早已经受够了这样的日子，可我无能为力。门窗紧闭，是我的铠甲，也是我的坟墓。我越是与世隔绝，就越能感觉到他们的眼睛。\x0a他们不是那种会扔炸弹的组织。他们更可怕。他们就像幽灵，只要轻轻拨动你生命中某个数字的小数点，就能引发一场灾难，把一个人的人生彻底扭曲。我失去的一切，我的钱，我的过去，我的未来，都是被他们用这种温柔又残忍的方式修正掉的。\x0a我想起小时候那场火灾，他们说那是意外。现在我知道，那不是意外！我应该知道的，怎么会这么巧刚好有场旋风，怎么会这么巧刚好是我那一盏灯。我不是没有反抗过。。。可是他们的力量太过强大。我不得不以面具示人，我害怕，我不知道他们为什么盯上我，我不想再经历了！可是。。。躲避了这么久，我已经受够了。我不能一辈子像只老鼠一样躲在阴暗的角落里。我必须做点什么。\x0a我查了好多年，才知道有一个存在叫守秘人，他们是唯一能和KMS抗衡的力量。我像一个溺水的人抓着最后一根稻草一样，拼命想找到他们，寻求帮助。可是他们藏得太深了，像传说一样，摸不着一丝痕迹。\x0a好在功夫不负有心人，我找到一个账号，她会是他们中的一员吗？还是KMS故意设下的陷阱，等着我这条鱼上钩？\x0a我不知道，但我不能再等了。哪怕是一头雾水，我也要试一试。这是我唯一的机会！希望那只鹿是真的，能指引我走出这片浓雾。\x0a如果这是陷阱……那我也认了。至少我尝试过。\x0a周哲叙\x20绝笔（也许）\x0a','documentPassword','querySelector','美式咖啡','file2','documentPasswordError','textContent','securityQuestionsDialog','checked','left','sealKey','getMinutes','flex','style','recycleBinManager','value','connectionError','securityQuestionsError','fileContentTitle','到底是谁.txt','临渠县','animation','.dialog-title','display','.security-questions-form','clock','3906903WGKjFg','653870DSgtSX','offsetLeft','656108bXjopl','fileContent','none','addEventListener','file3','open','padStart','https://sylvie-seven-cq.top/Syzygy/forum.html','connectionDialog','notification','.document-password-form','notification\x20','clientX','fileContentBody','question3','1cszscszcszcsczsdfwefcefbdtynfdwefcwefc436gf3f434f','908044yCpHGi','.connection-form','key','intrusionWarning','onmousemove','question2','toString','shake\x200.5s','event','preventDefault','getElementById','desktop','getHours','focus','onmouseup','question1','offsetTop','deleteDialog','file1','connectionPassword','confirmationDialog','keypress','documentPasswordDialog','block','477683VGXfoG','699936YguLKB','Enter','clientY','周哲叙'];_0x5c3d=function(){return _0x1e1a07;};return _0x5c3d();}function openRecycleBin(){const _0x371bd1=_0x4fa3e1;document[_0x371bd1(0x146)](_0x371bd1(0x168))[_0x371bd1(0x167)][_0x371bd1(0x126)]=_0x371bd1(0x153);}function closeRecycleBin(){const _0x22d9b3=_0x4fa3e1;document['getElementById'](_0x22d9b3(0x168))['style'][_0x22d9b3(0x126)]='none';}function openRecycleFile(_0x289a80){const _0x5c78d2=_0x4fa3e1;if(_0x289a80===_0x5c78d2(0x14e))document[_0x5c78d2(0x146)](_0x5c78d2(0x121))[_0x5c78d2(0x160)]=_0x5c78d2(0x122),document[_0x5c78d2(0x146)](_0x5c78d2(0x139))[_0x5c78d2(0x160)]='网名\x20\x20房号\x0a久酒\x20\x20\x201101已排除\x0a不知月\x092505\x20已排除\x0a可蘿嵐\x091603\x20已排除\x0a接好运喵喵喵\x092507\x20已排除\x0a小猫菜菜子\x093505\x20已排除\x0a黑字\x091202\x09已排除\x0a有四十九只小猫的阿姑\x092808\x20已排除\x0a银河电灯\x092106\x20已排除\x09\x0a无效空调\x20\x201901\x20已排除\x0a禾禾禾\x09\x20\x202702\x20已排除\x09\x0a小猫困困\x091508\x20已排除\x0a栀歌歌歌歌\x093108\x09已排除\x0a岁枳\x091706\x20\x20已排除\x09\x0amyosotis\x091304\x20已排除\x0a林中雀\x092309\x20已排除\x09\x0a满杯小香芋\x093203\x20已排除\x0a笨蛋nono\x091106\x20已排除\x09\x0a霏princess\x092801\x20已排除\x0a猕猴桃圈圈\x093201已排除\x0a长思\x09\x201705\x20已排除\x0a飞鸟\x09\x202202\x09已排除\x0a桂花鱼\x09\x202303\x20已排除\x0aLinkitty\x09\x202002\x09已排除\x0a学习吃晚饭\x093102\x20已排除\x0aNIDEXN\x20\x20\x201509\x20已排除\x09\x0akasumu\x09\x20\x20\x201807\x20已排除\x0a月球上漫舞\x092207\x20已排除\x0a七梓\x20\x20\x20\x203？06\x20\x20疑似\x0a',document[_0x5c78d2(0x146)](_0x5c78d2(0x12d))['style'][_0x5c78d2(0x126)]=_0x5c78d2(0x153);else{if(_0x289a80===_0x5c78d2(0x15e))document[_0x5c78d2(0x146)](_0x5c78d2(0x121))['textContent']='绝对不能忘的.txt',document['getElementById'](_0x5c78d2(0x139))[_0x5c78d2(0x160)]='钥匙钥匙钥匙！怎么老忘记！！！key\x20in\x20cabinet！！',document[_0x5c78d2(0x146)](_0x5c78d2(0x12d))[_0x5c78d2(0x167)][_0x5c78d2(0x126)]=_0x5c78d2(0x153);else _0x289a80===_0x5c78d2(0x130)&&(document[_0x5c78d2(0x146)](_0x5c78d2(0x121))[_0x5c78d2(0x160)]='守护神.txt',document[_0x5c78d2(0x146)](_0x5c78d2(0x139))['textContent']='teejbsd\x20\x207434844599',document[_0x5c78d2(0x146)](_0x5c78d2(0x12d))[_0x5c78d2(0x167)][_0x5c78d2(0x126)]='block');}}function openFileContent(_0x4915cc){const _0x15f008=_0x4fa3e1;if(_0x4915cc===_0x15f008(0x14e))document['getElementById'](_0x15f008(0x121))[_0x15f008(0x160)]='',document[_0x15f008(0x146)]('fileContentBody')['textContent']='',document['getElementById'](_0x15f008(0x12d))['style'][_0x15f008(0x126)]=_0x15f008(0x153);else _0x4915cc===_0x15f008(0x15e)&&window[_0x15f008(0x131)](_0x15f008(0x133),'_blank');}function closeFileContent(){const _0x1ac54b=_0x4fa3e1;document[_0x1ac54b(0x146)](_0x1ac54b(0x12d))[_0x1ac54b(0x167)]['display']=_0x1ac54b(0x12e);}document['addEventListener']('DOMContentLoaded',function(){const _0x4df88e=_0x4fa3e1,_0x40d362=document[_0x4df88e(0x146)]('deleteDialog'),_0x4e4ee2=document[_0x4df88e(0x146)](_0x4df88e(0x150));function _0x466b2e(_0x1abdc7){const _0x42a3c3=_0x4df88e;let _0x28cb2c=0x0,_0x50a39a=0x0,_0x250373=0x0,_0x1ee7e8=0x0;const _0x1b706a=_0x1abdc7['querySelector'](_0x42a3c3(0x125))||_0x1abdc7;_0x1b706a['onmousedown']=_0x4443f5;function _0x4443f5(_0x3084bc){const _0x334eff=_0x42a3c3;_0x3084bc=_0x3084bc||window[_0x334eff(0x144)],_0x3084bc[_0x334eff(0x145)](),_0x250373=_0x3084bc[_0x334eff(0x138)],_0x1ee7e8=_0x3084bc[_0x334eff(0x157)],document[_0x334eff(0x14a)]=_0x288ea2,document[_0x334eff(0x140)]=_0x269ae8;}function _0x269ae8(_0x134e4c){const _0x1f54a4=_0x42a3c3;_0x134e4c=_0x134e4c||window[_0x1f54a4(0x144)],_0x134e4c['preventDefault'](),_0x28cb2c=_0x250373-_0x134e4c[_0x1f54a4(0x138)],_0x50a39a=_0x1ee7e8-_0x134e4c[_0x1f54a4(0x157)],_0x250373=_0x134e4c['clientX'],_0x1ee7e8=_0x134e4c[_0x1f54a4(0x157)],_0x1abdc7['style']['top']=_0x1abdc7[_0x1f54a4(0x14c)]-_0x50a39a+'px',_0x1abdc7[_0x1f54a4(0x167)][_0x1f54a4(0x163)]=_0x1abdc7[_0x1f54a4(0x12b)]-_0x28cb2c+'px';}function _0x288ea2(){const _0x211fb3=_0x42a3c3;document[_0x211fb3(0x14a)]=null,document[_0x211fb3(0x140)]=null;}}_0x466b2e(_0x40d362),_0x466b2e(_0x4e4ee2);});
+        </script>
+</body>
+</html>

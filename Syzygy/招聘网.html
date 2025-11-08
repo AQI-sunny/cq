@@ -365,7 +365,7 @@
                 </div>
                 <div class="form-group">
                     <label for="location">工作地点</label>
-                    <input type="text" id="location" class="form-control" placeholder="例如：临渠县">
+                    <input type="text" id="location" class="form-control" placeholder="例如：深南市">
                 </div>
                 <div class="form-group">
                     <label for="experience">工作经验</label>
@@ -423,11 +423,11 @@
     </footer>
 
     <script>
-        // 简历数据
+        // 简历数据 - 根据职位不同，简历内容有所调整
         const resumeData = {
             "张明": {
                 name: "张明",
-                position: "前端开发工程师",
+                positions: ["前端开发工程师"],
                 experience: "5年",
                 education: "本科",
                 phone: "138****1234",
@@ -459,7 +459,7 @@
             },
             "李华": {
                 name: "李华",
-                position: "UI/UX设计师",
+                positions: ["UI/UX设计师"],
                 experience: "4年",
                 education: "本科",
                 phone: "139****5678",
@@ -491,12 +491,22 @@
             },
             "陈浩": {
                 name: "陈浩",
-                position: "咖啡店员工",
+                positions: ["咖啡店员工", "跑腿", "临时促销", "线上兼职"],
                 experience: "应届生",
                 education: "本科",
                 phone: "133****9031",
                 email: "chenhao@work.com",
-                summary: "新闻学专业应届毕业生，具备扎实的新闻采编能力和敏锐的新闻嗅觉。在校期间参与校报编辑工作，熟悉新闻采编流程，擅长深度报道和人物专访。",
+                // 根据职位不同，简历内容有所调整
+                getSummary: function(position) {
+                    const summaries = {
+                        "咖啡店员工": "新闻学专业应届毕业生，具备扎实的新闻采编能力和敏锐的新闻嗅觉。在校期间参与校报编辑工作，熟悉新闻采编流程，擅长深度报道和人物专访。对咖啡文化有浓厚兴趣，希望能在咖啡店工作中学习服务技能。",
+                        "跑腿": "新闻学专业应届毕业生，具备良好的沟通能力和时间管理能力。熟悉本地交通路线，能够高效完成各类跑腿任务。工作认真负责，注重细节。",
+                        "临时促销": "新闻学专业应届毕业生，具备良好的沟通表达能力和亲和力。在校期间参与多次校园活动策划，能够快速适应不同促销场景，有效传递产品信息。",
+                        "线上兼职": "新闻学专业应届毕业生，具备扎实的文字功底和网络操作能力。熟悉各类社交媒体平台，能够高效完成线上内容创作、数据录入等任务。"
+                    };
+                    return summaries[position] || this.defaultSummary;
+                },
+                defaultSummary: "新闻学专业应届毕业生，具备扎实的新闻采编能力和敏锐的新闻嗅觉。在校期间参与校报编辑工作，熟悉新闻采编流程，擅长深度报道和人物专访。",
                 workExperience: [
                     {
                         company: "校园新闻社",
@@ -513,37 +523,20 @@
                         period: "2020年9月 - 2024年6月"
                     }
                 ],
-                skills: ["新闻采编", "深度报道", "人物专访", "新闻摄影", "视频剪辑", "新媒体运营", "文案写作", "社交媒体管理"]
-            },
-            "陈浩": {
-                name: "陈浩",
-                position: "跑腿、接送小孩、临时促销、线上兼职",
-                experience: "应届生",
-                education: "本科",
-                phone: "133****9031",
-                email: "chenhao@work.com",
-                summary: "新闻学专业应届毕业生，具备扎实的新闻采编能力和敏锐的新闻嗅觉。在校期间参与校报编辑工作，熟悉新闻采编流程，擅长深度报道和人物专访。",
-                workExperience: [
-                    {
-                        company: "校园新闻社",
-                        position: "实习记者",
-                        period: "2023年3月 - 2023年6月",
-                        description: "负责校园新闻采编工作，独立完成5篇深度报道，参与校报编辑排版工作。"
-                    }
-                ],
-                educationBackground: [
-                    {
-                        school: "深南大学新闻学院",
-                        major: "新闻学",
-                        degree: "本科",
-                        period: "2020年9月 - 2024年6月"
-                    }
-                ],
-                skills: ["新闻采编", "深度报道", "人物专访", "新闻摄影", "视频剪辑", "新媒体运营", "文案写作", "社交媒体管理"]
+                // 根据职位不同，技能有所调整
+                getSkills: function(position) {
+                    const skills = {
+                        "咖啡店员工": ["客户服务", "咖啡制作", "团队合作", "沟通能力", "细心耐心", "清洁卫生"],
+                        "跑腿": ["时间管理", "路线规划", "沟通能力", "责任心", "灵活应变", "体力充沛"],
+                        "临时促销": ["沟通表达", "产品推广", "团队合作", "亲和力", "销售技巧", "适应能力"],
+                        "线上兼职": ["文字处理", "数据录入", "社交媒体", "内容创作", "时间管理", "网络操作"]
+                    };
+                    return skills[position] || ["新闻采编", "深度报道", "人物专访", "新闻摄影", "视频剪辑", "新媒体运营"];
+                }
             },
             "王芳": {
                 name: "王芳",
-                position: "后端开发工程师",
+                positions: ["后端开发工程师"],
                 experience: "6年",
                 education: "硕士",
                 phone: "137****9012",
@@ -587,7 +580,7 @@
             },
             "刘强": {
                 name: "刘强",
-                position: "产品经理",
+                positions: ["产品经理"],
                 experience: "7年",
                 education: "硕士",
                 phone: "136****3456",
@@ -631,78 +624,63 @@
             }
         };
 
-        // 求职者数据
+        // 求职者数据 - 每个人可以有多个职位
         const candidates = [
             {
                 name: "张明",
-                position: "前端开发工程师",
+                positions: ["前端开发工程师"],
                 skills: ["JavaScript", "React", "Vue", "HTML5"],
                 avatar: "张"
             },
             {
                 name: "李华",
-                position: "UI/UX设计师",
+                positions: ["UI/UX设计师"],
                 skills: ["UI设计", "用户体验", "Figma", "Sketch"],
                 avatar: "李"
             },
             {
                 name: "王芳",
-                position: "后端开发工程师",
+                positions: ["后端开发工程师"],
                 skills: ["Java", "Spring Boot", "MySQL", "Redis"],
                 avatar: "王"
             },
             {
                 name: "刘强",
-                position: "产品经理",
+                positions: ["产品经理"],
                 skills: ["产品规划", "需求分析", "Axure", "项目管理"],
                 avatar: "刘"
             },
             {
                 name: "陈浩",
-                position: "咖啡店员工",
-                skills: ["客户服务", "咖啡制作", "团队合作", "沟通能力"],
-                avatar: "陈"
-            },
-            {
-                name: "陈浩",
-                position: "零工",
-                skills: ["线上录入", "接送小孩", "线上校准", "沟通能力"],
-                avatar: "陈"
-            },
-            {
-                name: "陈浩",
-                position: "临时促销",
-                skills: ["客户服务", "宣发传单", "团队合作", "沟通能力"],
-                avatar: "陈"
-            },
-            {
-                name: "陈浩",
-                position: "兼职",
-                skills: ["嗓门好力气大", "细心耐心", "认真负责", "较强沟通能力"],
+                positions: ["咖啡店员工", "跑腿", "临时促销", "线上兼职"],
+                skills: ["客户服务", "沟通能力", "团队合作", "时间管理"],
                 avatar: "陈"
             }
-
         ];
 
         // 显示简历弹窗
-        function showResume(candidateName) {
+        function showResume(candidateName, position) {
             const resume = resumeData[candidateName];
             if (!resume) return;
 
             const modal = document.getElementById('resumeModal');
             const content = document.getElementById('resumeContent');
 
+            // 根据职位获取相应的简历内容
+            const summary = resume.getSummary ? resume.getSummary(position) : resume.summary;
+            const skills = resume.getSkills ? resume.getSkills(position) : resume.skills;
+
             // 构建简历HTML
             let resumeHTML = `
                     <div class="resume-section">
-                        <h2>${resume.name} - ${resume.position}</h2>
+                        <h2>${resume.name} - ${position}</h2>
                         <p><strong>工作经验:</strong> ${resume.experience} | <strong>学历:</strong> ${resume.education}</p>
                         <p><strong>联系电话:</strong> ${resume.phone} | <strong>邮箱:</strong> ${resume.email}</p>
                     </div>
 
                     <div class="resume-section">
                         <h3>个人简介</h3>
-                        <p>${resume.summary}</p>
+                        <p>${summary}</p>
                     </div>
 
                     <div class="resume-section">
@@ -730,7 +708,7 @@
                     <div class="resume-section">
                         <h3>专业技能</h3>
                         <div class="candidate-skills">
-                            ${resume.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                            ${skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
                         </div>
                     </div>
                 `;
@@ -752,50 +730,35 @@
             const education = document.getElementById('education').value;
 
             // 过滤求职者
-            let filteredCandidates = candidates.filter(candidate => {
-                // 职位名称搜索
-                let jobMatch = true;
-                if (jobTitle) {
-                    // 检查是否搜索的是咖啡店相关职位
-                    if ((jobTitle.includes('咖啡店员工') || jobTitle.includes('咖啡店职员') ||
-                        jobTitle.includes('咖啡店') || jobTitle.includes('咖啡'))) {
-                        // 只有陈浩的职位包含"咖啡店员工"
-                        jobMatch = candidate.name === '陈浩' && candidate.position.toLowerCase().includes('咖啡店');
-                    } else {
-                        // 其他职位按常规搜索
-                        jobMatch = candidate.position.toLowerCase().includes(jobTitle);
-                    }
-                }
+            let filteredCandidates = [];
 
-                // 工作地点搜索
-                let locationMatch = true;
-                if (location) {
-                    // 这里可以添加实际的工作地点数据进行匹配
-                    locationMatch = true; // 暂时忽略工作地点匹配
-                }
-
-                // 工作经验过滤
-                let expMatch = true;
-                if (experience) {
-                    // 这里可以添加实际的工作经验数据进行匹配
-                    expMatch = true; // 暂时忽略工作经验匹配
-                }
-
-                // 学历要求过滤
-                let eduMatch = true;
-                if (education) {
-                    // 这里可以添加实际的学历数据进行匹配
-                    eduMatch = true; // 暂时忽略学历匹配
-                }
-
-                return jobMatch && locationMatch && expMatch && eduMatch;
-            });
-
-            // 特殊处理：如果搜索"咖啡店员工"或"咖啡店职员"，只显示陈浩
-            if (jobTitle.includes('咖啡店员工') || jobTitle.includes('咖啡店职员')) {
-                filteredCandidates = candidates.filter(candidate =>
-                    candidate.name === '陈浩' && candidate.position === '咖啡店员工'
-                );
+            if (jobTitle) {
+                // 搜索所有候选人，检查他们的职位是否匹配
+                candidates.forEach(candidate => {
+                    candidate.positions.forEach(position => {
+                        if (position.toLowerCase().includes(jobTitle)) {
+                            // 创建一个新的候选人对象，包含匹配的职位
+                            filteredCandidates.push({
+                                name: candidate.name,
+                                position: position,
+                                skills: candidate.skills,
+                                avatar: candidate.avatar
+                            });
+                        }
+                    });
+                });
+            } else {
+                // 如果没有输入职位名称，显示所有候选人的所有职位
+                candidates.forEach(candidate => {
+                    candidate.positions.forEach(position => {
+                        filteredCandidates.push({
+                            name: candidate.name,
+                            position: position,
+                            skills: candidate.skills,
+                            avatar: candidate.avatar
+                        });
+                    });
+                });
             }
 
             // 更新结果
@@ -837,7 +800,7 @@
                         </div>
                         <div class="candidate-actions">
                             <button class="btn btn-secondary">收藏</button>
-                            <button class="btn btn-primary contact-btn" data-candidate="${candidate.name}">联系他</button>
+                            <button class="btn btn-primary contact-btn" data-candidate="${candidate.name}" data-position="${candidate.position}">联系他</button>
                         </div>
                     `;
 
@@ -848,7 +811,8 @@
             document.querySelectorAll('.contact-btn').forEach(button => {
                 button.addEventListener('click', function () {
                     const candidateName = this.getAttribute('data-candidate');
-                    showResume(candidateName);
+                    const position = this.getAttribute('data-position');
+                    showResume(candidateName, position);
                 });
             });
         }
@@ -886,6 +850,3 @@
     </script>
 </body>
 </html>
-
-
-
