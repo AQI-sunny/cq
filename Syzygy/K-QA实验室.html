@@ -1,0 +1,493 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-QA实验室</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background: url('https://sylvie-seven-cq.top/gallery/实验室.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .door-button {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(44, 44, 84, 0.2);
+            color: rgba(240, 240, 240, 0.6);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(3px);
+            border: 1px solid rgba(138, 43, 226, 0.15);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+            .door-button:hover {
+                transform: translateY(-3px) scale(1.1);
+                box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
+                background: rgba(64, 64, 122, 0.3);
+                color: rgba(240, 240, 240, 0.9);
+            }
+
+        .content-area {
+            background: rgba(25, 25, 45, 0.85);
+            border-radius: 12px;
+            padding: 25px;
+            width: 100%;
+            max-width: 800px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid #4a4a6a;
+            position: relative;
+            margin: 100px auto 20px;
+            z-index: 5;
+        }
+
+            .content-area::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, #6a0dad, #8a2be2, #4a0080);
+            }
+
+        h1 {
+            color: #d4c2fc;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+            position: relative;
+            width: 100%;
+        }
+
+            h1::after {
+                content: '';
+                display: block;
+                width: 150px;
+                height: 3px;
+                background: linear-gradient(90deg, transparent, #8a2be2, transparent);
+                margin: 15px auto;
+            }
+
+        .info-text {
+            margin: 10px 0;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+            text-align: center;
+            max-width: 90%;
+            width: 400px;
+            border: 2px solid gold;
+            color: white;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .notice-modal-content {
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+        }
+
+        .profile-modal-content {
+            background: linear-gradient(135deg, #000000, #330000, #000000);
+            border: 3px solid #8B0000;
+            box-shadow: 0 0 30px rgba(139, 0, 0, 0.7);
+            width: 500px;
+            max-width: 90%;
+            color: #fff;
+            position: relative;
+        }
+
+            .profile-modal-content::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(45deg, transparent 98%, #8B0000 100%);
+                pointer-events: none;
+            }
+
+        .modal-title {
+            color: #FFD700 !important; /* 改为黄色 */
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .notice-title {
+            text-align: left;
+            color: gold !important;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .notice-date {
+            text-align: right;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            background: rgba(50, 50, 70, 0.8);
+            border: 1px solid #6a0dad;
+            border-radius: 6px;
+            color: #f0f0f0;
+            font-size: 1rem;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #6a0dad, #8a2be2);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+            .modal-btn:hover {
+                background: linear-gradient(135deg, #8a2be2, #6a0dad);
+                transform: scale(1.05);
+            }
+
+        .profile-content {
+            text-align: left;
+            line-height: 1.8;
+        }
+
+        .profile-item {
+            margin: 12px 0;
+            padding: 10px;
+            background: rgba(139, 0, 0, 0.2);
+            border-radius: 5px;
+            border-left: 3px solid #8B0000;
+        }
+
+        .profile-label {
+            color: #FF6B6B;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(255, 107, 107, 0.3);
+        }
+
+        .deep-btn {
+            /*position: absolute;
+            top: 50%;
+            left: 50%;*/
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 2000;
+            box-shadow: 0 0 30px rgba(255, 75, 43, 0.7);
+            transition: all 0.3s ease;
+        }
+
+            .deep-btn:hover {
+                transform: translate(-50%, -50%) scale(1.1);
+                box-shadow: 0 0 40px rgba(255, 75, 43, 0.9);
+            }
+
+        .status-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: 1px solid #8a2be2;
+            z-index: 100;
+        }
+
+        .status-text {
+            font-size: 14px;
+            color: #d4c2fc;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .door-button {
+                width: 50px;
+                height: 50px;
+                font-size: 0.7rem;
+            }
+
+            .modal-content {
+                padding: 20px;
+                width: 95%;
+            }
+
+            .profile-modal-content {
+                width: 95%;
+            }
+
+            .deep-btn {
+                padding: 15px 30px;
+                font-size: 18px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .door-button {
+                width: 45px;
+                height: 45px;
+                font-size: 0.65rem;
+            }
+
+            .modal-content {
+                padding: 15px;
+            }
+
+            .modal-title {
+                font-size: 20px;
+            }
+
+            .deep-btn {
+                padding: 12px 25px;
+                font-size: 16px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .status-indicator {
+                top: 10px;
+                right: 10px;
+                padding: 8px 12px;
+            }
+        }
+
+        /* 平板优化 */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .door-button {
+                width: 55px;
+                height: 55px;
+            }
+        }
+    </style>
+    <!-- 防护代码 -->
+    <script>
+        (function () {
+            'use strict';
+
+            var devTools = {
+                init: function () {
+                    this.disableRightClick();
+                    this.disableDevTools();
+                    this.disableTextSelect();
+                    this.antiInspect();
+                },
+
+                disableRightClick: function () {
+                    document.addEventListener('contextmenu', function (e) {
+                        e.preventDefault();
+                        alert('右键已被禁用！');
+                        return false;
+                    });
+                },
+
+                disableDevTools: function () {
+                    document.addEventListener('keydown', function (e) {
+                        // F12
+                        if (e.key === 'F12') {
+                            e.preventDefault();
+                            alert('开发者工具已被禁用！');
+                            return false;
+                        }
+
+
+                        // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+                        if (e.ctrlKey && e.shiftKey &&
+                            (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
+                            e.preventDefault();
+                            return false;
+                        }
+
+                        // Ctrl+U
+                        if (e.ctrlKey && e.key === 'u') {
+                            e.preventDefault();
+                            return false;
+                        }
+                    });
+                },
+
+                disableTextSelect: function () {
+                    /* document.addEventListener('selectstart', function (e) {
+                        e.preventDefault();
+                        return false;
+                    }); */
+                },
+
+                antiInspect: function () {
+                    // 多重检测机制
+                    setInterval(function () {
+                        // 窗口尺寸检测
+                        var widthThreshold = window.outerWidth - window.innerWidth > 160;
+                        var heightThreshold = window.outerHeight - window.innerHeight > 160;
+
+                        // 调试器检测
+                        var debuggerDetected = false;
+                        try {
+                            (function () {
+                                return false;
+                            }).constructor("debugger").call("action");
+                        } catch (e) {
+                            debuggerDetected = true;
+                        }
+
+                        // 性能检测
+                        var performanceDetected = false;
+                        var start = performance.now();
+                        debugger;
+                        var end = performance.now();
+                        if (end - start > 100) {
+                            performanceDetected = true;
+                        }
+
+                        if (widthThreshold || heightThreshold || debuggerDetected || performanceDetected) {
+                            // 阻止访问
+                            document.body.innerHTML = '<h1>请关闭开发者工具！</h1>';
+                            window.location.reload();
+                            return;
+                        }
+                    }, 500);
+
+                    // 额外的F12捕获
+                    window.addEventListener('keydown', function (e) {
+                        if (e.key === 'F12' || e.keyCode === 123) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            e.stopImmediatePropagation();
+                            alert('开发者工具已被禁用！');
+                            return false;
+                        }
+                    }, true);
+                }
+            };
+
+            devTools.init();
+        })();
+    </script>
+</head>
+<body>
+    <!-- 状态指示器 -->
+    <div class="status-indicator">
+        <div class="status-text">已开启: <span id="openedCount">0</span>/5 道门</div>
+    </div>
+
+    <!-- 门按钮将通过JavaScript动态生成 -->
+    <div id="doors-container"></div>
+
+    <!-- 深入按钮 -->
+    <button id="deepBtn" class="deep-btn" style="display: none;" onclick="goDeeper()">深入实验室</button>
+
+    <!-- 密码输入弹窗 -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <h3 class="modal-title" id="modalTitle">输入密码</h3>
+            <input type="password" id="passwordInput" class="password-input" placeholder="请输入密码...">
+            <div>
+                <button class="modal-btn" onclick="checkPassword()">确认</button>
+                <button class="modal-btn" onclick="closePasswordModal()" style="background: #666;">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 档案显示弹窗 -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content profile-modal-content" id="profileModalContent">
+            <h3 class="modal-title" id="profileTitle">人物档案</h3>
+            <div class="profile-content" id="profileContent">
+                <!-- 档案内容将通过JavaScript动态生成 -->
+            </div>
+            <button class="modal-btn" onclick="closeProfileModal()">关闭</button>
+        </div>
+    </div>
+
+    <!-- 告示显示弹窗 -->
+    <div id="noticeModal" class="modal">
+        <div class="modal-content notice-modal-content">
+            <h3 class="modal-title notice-title" id="noticeTitle">告示内容</h3>
+            <div class="profile-content" id="noticeContent">
+                <!-- 告示内容将通过JavaScript动态生成 -->
+            </div>
+            <div class="notice-date" id="noticeDate">
+                <div>2025年X月X日</div>
+                <div>KMS安全应急中心</div>
+            </div>
+            <button class="modal-btn" onclick="closeNoticeModal()">关闭</button>
+        </div>
+    </div>
+
+    <script>
+       function _0x1595(_0x10b400,_0x250dfb){const _0x419245=_0x4192();return _0x1595=function(_0x159507,_0x2769c7){_0x159507=_0x159507-0xee;let _0x545ab7=_0x419245[_0x159507];return _0x545ab7;},_0x1595(_0x10b400,_0x250dfb);}const _0xeae2ec=_0x1595;(function(_0x39435f,_0x118951){const _0x4a0e46=_0x1595,_0xde17e4=_0x39435f();while(!![]){try{const _0x1e4c7f=parseInt(_0x4a0e46(0xf4))/0x1+-parseInt(_0x4a0e46(0x11d))/0x2+parseInt(_0x4a0e46(0x107))/0x3*(-parseInt(_0x4a0e46(0x138))/0x4)+parseInt(_0x4a0e46(0x115))/0x5+-parseInt(_0x4a0e46(0x13e))/0x6+-parseInt(_0x4a0e46(0x116))/0x7+parseInt(_0x4a0e46(0x104))/0x8;if(_0x1e4c7f===_0x118951)break;else _0xde17e4['push'](_0xde17e4['shift']());}catch(_0x113b4d){_0xde17e4['push'](_0xde17e4['shift']());}}}(_0x4192,0x24935));const doorPositions=[{'id':0x1,'top':'47%','left':'24%','label':'A门'},{'id':0x2,'top':_0xeae2ec(0x118),'right':_0xeae2ec(0x123),'label':'B门'},{'id':0x3,'top':_0xeae2ec(0x13b),'left':'40%','label':'C门'},{'id':0x4,'top':_0xeae2ec(0x13b),'right':_0xeae2ec(0x135),'label':'D门'},{'id':0x5,'top':_0xeae2ec(0x13b),'left':_0xeae2ec(0x11e),'transform':_0xeae2ec(0x125),'label':'E门'}],mobileDoorPositions=[{'id':0x1,'top':_0xeae2ec(0x113),'left':'5%','label':'A门'},{'id':0x2,'top':_0xeae2ec(0x113),'left':_0xeae2ec(0x131),'label':'B门'},{'id':0x3,'top':'60%','left':_0xeae2ec(0x11c),'label':'C门'},{'id':0x4,'top':_0xeae2ec(0x13b),'right':'15%','label':'D门'},{'id':0x5,'top':'60%','right':'15%','transform':_0xeae2ec(0x125),'label':'E门'}],noticePosition={'top':'30%','left':'12%','transform':_0xeae2ec(0x125),'label':'告示'},mobileNoticePosition={'top':_0xeae2ec(0x13b),'left':_0xeae2ec(0x13b),'transform':_0xeae2ec(0x125),'label':'告示'},passwords={0x1:_0xeae2ec(0xee),0x2:_0xeae2ec(0x10a),0x3:_0xeae2ec(0x130),0x4:_0xeae2ec(0x100),0x5:_0xeae2ec(0x114)},profiles={0x1:{'title':_0xeae2ec(0x101),'content':'\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>कालचक्रमण्डल</span>-स्थानं\x20हि\x20नित्यं\x20गणन-कार्येषु\x20प्रयुज्यते,\x20दत्त-केन्द्र-रूपेण\x20च\x20गण्यते।\x20परम\x20एतत्\x20रहस्य-मन्दिरम्,\x20अन्य-सर्वाभ्यो\x20कक्षाभ्यो\x20विलक्षणम्\x20अस्ति।\x20एतत्\x20लोशु-खण्डस्य\x20दिव्य-भावम्\x20अन्विष्यति,\x20भौतिक-रहस्यं\x20च\x20यज्ञ-वेद्यां\x20विचारयति।\x20अस्य\x20सङ्कल्पो\x20महत्तरः,\x20चित्तम्\x20अतिप्रसृतम्,\x20दैव-गूढं\x20चोरयित्वा\x20सनातनत्वम्\x20अभिलषति।\x0a\x0aयद्\x20अपेक्ष्यते,\x20तत्\x20केवलम्\x20आगामि-गामि-वृत्तान्त-मात्रं\x20न,\x20अपि\x20तु\x20कालातीतम्\x20अपि,\x20युग-विमुक्तं\x20च\x20“सनातन-ज्ञान-प्रवाहः”\x20अस्ति।\x20अतः\x20क्वन्टम्-ग्रन्थः\x20(Quantum\x20Entanglement),\x20परम-शैत्यं,冀于信息脱羁光阴之刹那，捕获其真\x20उच्च-शक्ति-कण-सङ्घर्षः\x20इत्यादि-आश्चर्यकर-तन्त्रैः,\x20सूचनायाः\x20काल-बन्धात्\x20मुक्तस्य\x20क्षणे\x20तस्य\x20सत्यं\x20ग्रहीतुम्\x20ईहाते।\x20इदं\x20साधयितुं\x20यत्\x20“निश्चितत्वम्”\x20एव\x20ज्ञानस्य\x20नित्य-स्थितौ\x20स्वभाविकं\x20रूपम्\x20इति।\x20एतत्-सिद्धौ\x20सत्याम्,\x20सा\x20संस्था\x20(司)\x20स्व-चेतनां\x20स्व-सङ्घटन-व्यवस्थां\x20च\x20अक्षर-प्रवाहे\x20लेखितुं\x20शक्नोति,\x20अनया\x20अमरत्वं\x20प्राप्यते।\x0a\x0aअपि\x20च,\x20सा\x20संस्था\x20(司)\x20दृढ़ं\x20विश्वसिति\x20यत्\x20लोशु-खण्डम्\x20एव\x20ब्रह्मणः\x20अधस्तल-सङ्केतः\x20(underlying\x20code)\x20अस्ति।\x20तस्य\x20सूचना-तरङ्गेभ्यः\x20उच्च-विमित्तक-सङ्ख्या\x20(high-dimensional\x20number)\x20प्राप्यते,\x20या\x20वास्तविक-जगतः\x20अव्यवस्थायाम्\x20\x20साक्षात्\x20हस्तक्षेपं\x20कर्तुं\x20शक्नोति।\x20एषा\x20सङ्ख्या-शृङ्खला\x20सप्तविंशति-अङ्क-युक्ता\x20जटिल-प्रथमाङ्क-माला\x20वा\x20स्यात्,\x20या\x20“दिव्य-सङ्केतः”\x20इति\x20नाम्ना\x20ज्ञायते।\x20अस्याः\x20शक्त्या\x20दत्त-विश्लेषणम्\x20अनपेक्ष्य\x20एव,\x20कस्यचित्\x20विशिष्ट-क्षेत्रस्य\x20“सम्भावना-भारः”\x20(Probability\x20Weight)\x20परिवर्तयितुं\x20शक्यते,\x20दिव्य-कीलकेन\x20च\x20कश्चन\x20परिणामः\x20साक्षात्\x20निश्चितः\x20क्रियते।\x20यथा,\x20यदि\x20एषः\x20सङ्केतः\x20वित्तीय-जाले\x20निवेक्ष्यते,\x20तर्हि\x20कस्याश्चित्\x20संस्थायाः\x20विनाश-सम्भावना\x20बलात्\x20शत-प्रतिशतं\x20वर्धयितुं\x20शक्यते,\x20विना\x20पारम्परिकम्\x20आक्रमणं\x20वा\x20शोषणं\x20वा।\x20एतत्\x20तु\x20दिव्य-सङ्केतेन\x20विश्व-सृष्टेः\x20कार्यं\x20संसोधयितुं\x20लोक-स्थितिं\x20च\x20परिवर्तयितुं\x20प्रयत्नः।此乃以神性之码，斡旋造化，篡改世局也。\x0a\x0aअपरं\x20च,\x20मण्डल(Mandala)-उक्तम्\x20“सनातन-मध्य-बिन्दुः”\x20(शून्यम्)\x20वस्तुतः\x20अरूपम्\x20अग्राह्यं\x20च।\x20इदानीम्\x20अतिचालक-सामग्रीभिः\x20\x20तथा\x20प्रति-गुरुत्वाकर्षण-क्षेत्रेण\x20(anti-gravitational\x20field)\x20“शून्य-कोषम्”\x20(Nest\x20of\x20the\x20Void)\x20निर्मातुम्\x20ईहते।\x20विश्वसिति\x20हि\x20यत्\x20ज्ञान-विक्षेपस्य\x20\x20पूर्ण-विनाशे\x20सति,\x20केन्द्रस्य\x20शक्तिः\x20अनन्ता\x20भवति।\x20एषः\x20कोषः\x20लोशु-खण्डस्य\x20चरम-रूपस्य\x20\x20धारणार्थम्,\x20अथवा\x20सर्वान्\x20उप-प्रयोग-शाला-भागान्\x20तत्काल-संयोजयितुं\x20केन्द्रीय-संसाधक-केन्द्रं\x20\x20वा\x20स्यात्।\x0a\x0a颂曰\x20(स्तुतिः):洛书残片，其神赫赫。\x0a以玄理之殿，夺不朽之数。\x0a篡改天命，定锚实相。\x0a太虚之巢既成，永寂之枢立矣。\x0a司之志，与天地同。\x0aलोशु-खण्डम्,\x20तस्या\x20देवता\x20हृष्टा।\x0aरहस्य-मण्डलात्,\x20अमृत-संख्या\x20चौर्यते॥\x0aदैव-विधिः\x20परिवर्तते,\x20तत्त्वं\x20च\x20कील्यते।\x0aशून्य-कोषे\x20सिद्धे,\x20नित्य-ध्रुवकः\x20स्थापितः॥\x0aतस्याः\x20संस्थायाः\x20(司)\x20अभिलाषः,\x20द्यौ-भूभ्यां\x20सह\x20समः।</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'},0x2:{'title':_0xeae2ec(0x126),'content':'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>Mandala</span>\x20太虚生曼陀罗华，形诡质戾，通幽明之窍，合生灭之机。曩所得洛书残章，今蜕形质，化宇宙本源信息流，奔涌无状，非器莫载。夫信息洪流，非**正时所诞灵躯不能容。遂以曼陀罗为媒，**之子为器，导流于灵台，以增残片之威，方可启司之伟业。择甲子岁白露亥时，采西域紫芯曼陀罗九株，根须俱全，华实并蒂。**者，阴气始凝，合敛藏之道。遴庚辰岁**辰时生者，承四正之气，灵台澄明，可为信息洪流之暂寓。置九宫玄冰龛，纳曼陀罗于坎位（水），置信息流于离宫（火），引受试者入震位（木，主生发）。列周天星斗仪廿八具，聚离火之精为赤丸，以量子雷枢激之。先击信息流，活性骤扬；次经曼陀罗华心折射，涤其暴虐；终注受试者灵台。设电磁共振圈于巽位，稳空间结构；置超导线圈于兑泽，导能量余波。</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>观测装置</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20悬昆仑镜（辅以核磁共映术），照容器形神之变与**扭曲；布浑天仪（接引力波探针），测信息流强度及微时涟漪；燃牵魂香（联脑机接口），接引灵识，观其信息幻象及现世干涉；录全息投影，显能量流转之立体轨迹</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>实验记录</span>寅时三刻，量子雷枢骤启，信息洪流如星瀑逆涌。曼陀罗承其威，倏忽绽现玄墨神光——墨色为底，浮彩流转，五色辉映若霓虹暗涌。华心霜晶凝结，化琉璃通道贯连接引。受试者灵台受注，周身经络显化如光纤维网，星图脉络隐约浮动。赤丸折射间，霜晶迸作纳米星雨，信息过载致七窍现朱丝。其识海幻境竟引现世异变：纸面墨迹量子涨落，器皿全息迁跃，混沌效应渐成。镜中受试者虚影额间骤现**，幽微尽览。浑天仪监测到信息潮汐十七重频，**轴震颤不已。然容器终持守灵台，惨片威能倍增，幽玄光芒渐敛于丹田。</div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>实验结论</span>\x20曼荼罗合信息洪流，借**容器，可增残片之威。然容器负荷极巨，须臾不可离阵。后续当以基因炼形术强其体魄，或设分布式神经网络分流信息，则秩序之界成可期。</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>容器档案</span>\x2045\x2063\x206C\x2069\x2070\x2074\x2069\x2063，\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x204C\x206F\x206E\x2067\x2069\x2074\x2075\x2064\x2065，number：M8</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'},0x3:{'title':_0xeae2ec(0xef),'content':_0xeae2ec(0xf1)},0x4:{'title':_0xeae2ec(0x112),'content':_0xeae2ec(0x12d)},0x5:{'title':'E门已开启，内含【S级绝密档案】','content':_0xeae2ec(0x119)},'notice':{'title':_0xeae2ec(0x12f),'content':_0xeae2ec(0x11f)}};let currentDoor=null,openedDoors=new Set();function isMobileDevice(){return window['innerWidth']<=0x300;}function getDoorPositions(){return isMobileDevice()?mobileDoorPositions:doorPositions;}function _0x4192(){const _0x1b7645=['profileContent','密码错误！请重新输入。','32LPCCGV','getElementById','doors-container','50%','数据:','modalTitle','120552GqbUYQ','KMSisGod','C门已开启，内含【机密档案】：','输入:','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>档案编号：</span>\x20\x20DX-2021-526</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>实验对象:</span>\x20李凯，出生日期为乙亥年十月十七，观测起始于公元2021年5月7日。生理参数：\x20身高186公分，体重82公斤（基准年：2021），血型A。常规生理指标检测未见偏移。性情表现偏向外倾，情感反应稳定，思维模式具逻辑性。对非实证概念持否定态度。与其父构成核心情感联结单元。此关系被标记为主要情感锚点。其父为现存唯一直系亲属，是其人生重大决策的核心顾问与情感支撑，依赖度评级基石级（9.7/10）。</div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>实验目标：</span>\x20验证通过非侵入式情感锚点移除，是否足以引发受试者长期性、根本性的人生轨迹偏移；\x0a观测“基石级依赖”个体在锚点崩塌后的心理—行为—社会功能连锁反应。</div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>实验过程摘要：</span>\x20阶段一（0–48小时）：\x0a于凌晨03:14触发情感锚点夜间急性心梗。向实验对象发送其父手机自动生成的紧急医疗求助信号（内容为“检测到心率异常，已自动呼叫急救”），同步伪造医院来电通知“李先生经抢救无效，已于凌晨03:27确认死亡”。\x0a实验对象在睡眠中被唤醒并接收信息，生理数据瞬间显示心率提升至162\x20bpm，皮质醇水平激增320%。\x0a阶段二（48小时–4周）：\x0a实验对象负责处理其父丧事期间表现出程序性行为，情感反应迟滞。\x0a第四周起，出现持续性决策障碍。\x0a辞去原建筑事务所主持设计师职务（原因为”无法集中精力“）；\x0a放弃已中标的文化中心项目（该项目曾由其父多次参与建议）；\x0a退出与合伙人的可持续社区计划（称“失去意义”）。\x0a\x0a阶段三（第2–6个月）：\x0a实验对象开始系统性切断社会联结，迁居至偏远城镇，从事低复杂度绘图工作，社交活动降至近乎零。情感模块损毁，实验对象核心社会关系单元被彻底移除。\x0a对象性情由外倾转为持续性内倾，职业活动进入长期停滞状态，主动寻求人生轨迹变动的动机显著降低至阈值以下。\x0a\x0a人生轨迹偏移分析：\x0a职业路径瓦解，原有人生模型预测其有91%概率成为区域级建筑领军者。事件后，其职业轨迹永久性降维至低创造性岗位，行业影响力归零。\x0a关系网络萎缩，其父生前为实验对象与多组社会、亲属、合作网络的枢纽。锚点消失后，凯主动剥离87%的社会联结，包括多名潜在合作伙伴与挚友。\x0a决策机制质变，心理追踪显示，实验对象此后所有决策均带有无锚点浮动特征。回避风险、拒绝长期承诺、对成就动机敏感度下降72%。</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>实验结论：</span>\x0a实验超额完成目标。基石级情感锚点的移除，不仅诱发急性心理、生理应激，更导致受试者核心人生脚本的永久性改写。此操作同时达成路径阻断与后续主动性抑制之双重效能。情感锚点的丧失对实验对象之精神造成了永久性、压制性创伤。其案例证明，个体可通过锚点依赖度的精准打击，实现非物理性清除但等同终身性社会功能废弃。建议将情感锚点剥离纳入高价值目标中长期弱化方案；对依赖度＞9.0的个体，可考虑作为人生轨迹重置样本进行归档。\x0a后续指令：\x0a观测永久化。不予预警，不予干涉。\x0a记录其未来可能构建之新情感锚点，并评估其稳定性。任何新深度联结均需标记为潜在干预触发器。</div>\x0a<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>旧世余烬化蒹葭，皆为洪炉薪火储。\x0a四时流转凝湖水，千帆竞发容器舻。\x0a静待赤轮照罗袜，碎片鸣响始复苏。\x0a天瞳噬月漫水光，幽穹独耀赤轮符。\x0a万流奔海即清晨，铸合为一莫迟暮。\x0a伟业终成祭禹王，新世万岁秩序固。</span></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','passwordModal','openedCount','19392ABothE','profileTitle','addEventListener','block','location','输入第','appendChild','content','title','button','noticeTitle','https://sylvie-seven-cq.top/Syzygy/拆弹.html','bailu','A门已开启，内有档案：','left','error','7059072dSGEYx','className','style','71157gvDwzX','key','flex','Mandala','noticeContent','top','textContent','none','display','passwordInput','notice','D门已开启，内含【绝密档案】','60%','butcher1962','129905lWlPIM','1906667eEGDdW','size','47%','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>档案编号：</span>MZ-2018-131</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>实验对象:</span>甲戌年四月廿一生，为月洛氏血脉。收容及观测始于公元2018年血月之时，收容地点为中原核心区，河洛古道地下深层设施。生理参数：\x20收容时身高166公分，体重49公斤，生命能量活性评级EX。细胞再生速度为常人的8.3倍，能量亲和性极强，尤与上古符文结构存在先天共振。实验对象性情温韧，具备极强调和能力，其与潮汐能量自然联结构成核心存在基础，此联结被标记为生命锚点。其血脉赋予残片天然温床潜质，依赖度评级为根源级（9.9/10）</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>实验目标：</span>验证实验对象是否可作为残片片生命基座，利用其磅礴生命能量滋养并激活碎片；\x20观测在剥离其生命锚点后，其生命能量是否能被完全导向并锁定于碎片滋养，杜绝任何形式的能量逸散或自我意识复苏。</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>实验过程摘要：</span>阶段一，即血月极盛时，携对象于河洛古道进行生命祈愿仪式时实施收容。同步执行枯寂程序，将其置于反生命场结界中，彻底切断其与潮汐的能量交换。在对象因生命连接断裂而陷入极度虚弱时，将数枚残片植入其心像空间。\x20植入瞬间，对象生命能量被碎片疯狂抽取，形体呈现半透明化，伴随全身脉络显现绛色符文流转。阶段二为收容后二至四月，持续向实验对象植入与其深层负面记忆相关联信息源，并灌输生命为碎片养料，此乃唯一价值的认知。对象自我认知开始瓦解，生命能量输出从自然散逸转为向碎片定向汇聚。碎片稳定性提升47%，碎片表面符文亮度增强19%。对象自身意识活动减弱至基准的32%。阶段三为收容后4至6月，目的即使实验对象完全容器化与部分碎片凝结，使其实验对象锚点完全崩塌后，其生命能量不再具备潮汐能量交换特性，而完全被碎片所束缚。其内部所含数枚碎片逐渐融合，解析出未知规则片段的速率提升400%。对象形体逐渐成为碎片能量的显化渠道，自身人格痕迹几近消失。其存在意义被彻底重构为洛书碎片的活体容器，生命能量的潮汐与碎片律动达成100%同步。</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>容器性能分析：</span>滋养效率：碎片活性从初始的7%提升至89%，并持续稳定上升，远超其余生命载体。\x0a同步率：\x20对象生命频率与碎片波动同步率已达100%，能量传递无损耗。\x0a稳定性：\x20在生命锚点被摧毁后，容器自身的意识干扰降至零，碎片解析进程未受任何影响。\x0a风险系数：\x20容器自身存在被碎片规则同化为纯粹能量体的可能（预计剩余时间：7.7年）。\x0a</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>实验结论：</span>实验目标完全达成。实验对象QJ-994MZ被证实为洛书碎片的完美生命基座。其生命锚点剥离是确保碎片获得纯粹、无干扰滋养的关键。该容器成功将碎片活性提升至可解析阈值之上，且自身意识已实现无害化处理。建议将此类特质个体列为甲贰级战略资产。\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>后续指令：</span>持续监测碎片解析进度与容器生命形态的转化趋势。\x20准备后续容器（备选编号LM-00JQF）以应对当前容器可能发生的规则化溶解。\x20尝试利用该容器与碎片的深度链接，于下轮血月之时逆向推演其他碎片可能的位置或状态。</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','transform','label','20%','591438xrRMTe','56%','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22>因突发能量波动异常，触发一级应急响应机制，现启动全员撤离预案...</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22>所有研究人员请立即前往安全区域，等待进一步指示。</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22>实验室入口将在30分钟后封锁，请抓紧时间撤离。</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','focus','档案数据加载失败！','档案显示成功','22%','forEach','translateX(-50%)','B门已开启，内含档案：','noticeModal','href','log','道门密码','createElement','door-button','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>档案编号：</span>BL-2022-118\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>抓捕背景:</span>目标持续调查档案对象***失踪行为，已触及**系列实验外围信息。其生时符合特殊人群特征，经风险评估委员会裁定，实施预防性收容。抓捕行动执行于公元2024年9月7日</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>行动过程:</span>阶段一：目标于行动当日完成******终稿，存入加密云端。行动组在其返家途中实施拦截。\x0a阶段二:\x0a使用记忆模糊剂，植入因压力过大主动休假旅游疗养的虚假记忆。目标反抗期间心率达140bpm，注射镇静剂后转入运输状态。\x0a阶段三:\x0a删除其电子设备中所有相关调查资料，伪造云端服务器故障导致稿件永久丢失。在其住所布置符合临时休假外出旅游的生活迹象。\x0a</div>\x0a<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>注：</span>该容器可做QJ-994MZ辅助容器，二候鵙始鸣，三候反舌无声。</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>收容状态:</span>\x20目标现收容于安东站点标准人形个体单元。\x20初步观察显示其具备强烈求知欲与敏锐洞察力，符合记者职业特征。****特质尚待进一步评估。</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22profile-item\x22><span\x20class=\x22profile-label\x22>后续处置:\x20</span>1.\x20持续观察其碎片感应敏感性\x202.\x20评估其作为碎片容器潜力\x203.\x20必要时进行深度记忆重构</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','door-button\x20notice-btn','紧急通知！！','huangjing255','95%','innerHTML','target','profileModal','37%'];_0x4192=function(){return _0x1b7645;};return _0x4192();}function getNoticePosition(){return isMobileDevice()?mobileNoticePosition:noticePosition;}function initializeDoors(){const _0x35f6bb=_0xeae2ec,_0x3137e2=document[_0x35f6bb(0x139)](_0x35f6bb(0x13a));_0x3137e2[_0x35f6bb(0x132)]='';const _0x287ea0=getDoorPositions();_0x287ea0[_0x35f6bb(0x124)](_0x426949=>{const _0x505499=_0x35f6bb,_0x2b7537=document[_0x505499(0x12b)](_0x505499(0xfd));_0x2b7537[_0x505499(0x105)]=_0x505499(0x12c),_0x2b7537['textContent']=_0x426949[_0x505499(0x11b)],_0x2b7537['onclick']=()=>showPasswordModal(_0x426949['id']),_0x2b7537[_0x505499(0x106)][_0x505499(0x10c)]=_0x426949['top'];if(_0x426949[_0x505499(0x102)])_0x2b7537[_0x505499(0x106)][_0x505499(0x102)]=_0x426949[_0x505499(0x102)];if(_0x426949['right'])_0x2b7537[_0x505499(0x106)]['right']=_0x426949['right'];if(_0x426949[_0x505499(0x11a)])_0x2b7537[_0x505499(0x106)]['transform']=_0x426949[_0x505499(0x11a)];_0x3137e2['appendChild'](_0x2b7537);});const _0x1d0955=getNoticePosition(),_0x286f5c=document['createElement'](_0x35f6bb(0xfd));_0x286f5c[_0x35f6bb(0x105)]=_0x35f6bb(0x12e),_0x286f5c[_0x35f6bb(0x10d)]=_0x1d0955[_0x35f6bb(0x11b)],_0x286f5c['onclick']=()=>showNoticeModal(),_0x286f5c[_0x35f6bb(0x106)][_0x35f6bb(0x10c)]=_0x1d0955[_0x35f6bb(0x10c)];if(_0x1d0955[_0x35f6bb(0x102)])_0x286f5c[_0x35f6bb(0x106)][_0x35f6bb(0x102)]=_0x1d0955['left'];if(_0x1d0955[_0x35f6bb(0x11a)])_0x286f5c['style'][_0x35f6bb(0x11a)]=_0x1d0955[_0x35f6bb(0x11a)];_0x3137e2[_0x35f6bb(0xfa)](_0x286f5c),updateStatusIndicator();}function showPasswordModal(_0x338229){const _0x2eaac8=_0xeae2ec;currentDoor=_0x338229;const _0x3b0f78=document[_0x2eaac8(0x139)]('passwordModal'),_0x4aa0bc=document[_0x2eaac8(0x139)](_0x2eaac8(0x13d));_0x4aa0bc[_0x2eaac8(0x10d)]=_0x2eaac8(0xf9)+_0x338229+_0x2eaac8(0x12a),document[_0x2eaac8(0x139)](_0x2eaac8(0x110))['value']='',_0x3b0f78[_0x2eaac8(0x106)][_0x2eaac8(0x10f)]=_0x2eaac8(0x109),document[_0x2eaac8(0x139)]('passwordInput')[_0x2eaac8(0x120)]();}function closePasswordModal(){const _0x2d542c=_0xeae2ec;document['getElementById'](_0x2d542c(0xf2))[_0x2d542c(0x106)][_0x2d542c(0x10f)]='none';}function checkPassword(){const _0x41ca52=_0xeae2ec,_0xcb03da=document[_0x41ca52(0x139)]('passwordInput')['value'];console[_0x41ca52(0x129)]('检查密码:',currentDoor,_0x41ca52(0xf0),_0xcb03da,'正确密码:',passwords[currentDoor]);if(passwords[currentDoor]&&_0xcb03da===passwords[currentDoor]){const _0x5aa71f=currentDoor;closePasswordModal(),openedDoors['add'](_0x5aa71f),updateStatusIndicator(),showProfileModal(_0x5aa71f),checkAllDoorsOpened(),currentDoor=null;}else alert(_0x41ca52(0x137)),document[_0x41ca52(0x139)]('passwordInput')['value']='',document[_0x41ca52(0x139)](_0x41ca52(0x110))[_0x41ca52(0x120)]();}function showProfileModal(_0x3eff13){const _0x31494d=_0xeae2ec;console[_0x31494d(0x129)]('显示档案:',_0x3eff13,_0x31494d(0x13c),profiles[_0x3eff13]);const _0x13394f=document[_0x31494d(0x139)](_0x31494d(0x134)),_0x1df58d=document['getElementById'](_0x31494d(0xf5)),_0x49aff2=document['getElementById'](_0x31494d(0x136));profiles[_0x3eff13]?(_0x1df58d[_0x31494d(0x10d)]=profiles[_0x3eff13][_0x31494d(0xfc)],_0x49aff2[_0x31494d(0x132)]=profiles[_0x3eff13]['content'],_0x13394f[_0x31494d(0x106)][_0x31494d(0x10f)]='flex',console['log'](_0x31494d(0x122))):(console[_0x31494d(0x103)]('未找到档案数据:',_0x3eff13),alert(_0x31494d(0x121)));}function showNoticeModal(){const _0xdbdd75=_0xeae2ec,_0x55740c=document[_0xdbdd75(0x139)](_0xdbdd75(0x127)),_0x5b2221=document['getElementById'](_0xdbdd75(0xfe)),_0x283280=document[_0xdbdd75(0x139)](_0xdbdd75(0x10b));profiles[_0xdbdd75(0x111)]&&(_0x5b2221[_0xdbdd75(0x10d)]=profiles['notice'][_0xdbdd75(0xfc)],_0x283280['innerHTML']=profiles['notice'][_0xdbdd75(0xfb)],_0x55740c[_0xdbdd75(0x106)]['display']='flex');}function closeProfileModal(){const _0x5c03cb=_0xeae2ec;document[_0x5c03cb(0x139)](_0x5c03cb(0x134))[_0x5c03cb(0x106)][_0x5c03cb(0x10f)]=_0x5c03cb(0x10e);}function closeNoticeModal(){const _0x2d209a=_0xeae2ec;document['getElementById'](_0x2d209a(0x127))[_0x2d209a(0x106)][_0x2d209a(0x10f)]='none';}function updateStatusIndicator(){const _0x490509=_0xeae2ec;document[_0x490509(0x139)](_0x490509(0xf3))['textContent']=openedDoors[_0x490509(0x117)];}function checkAllDoorsOpened(){const _0x424cfc=_0xeae2ec;openedDoors['size']===0x5&&(document[_0x424cfc(0x139)]('deepBtn')[_0x424cfc(0x106)][_0x424cfc(0x10f)]=_0x424cfc(0xf7));}function goDeeper(){const _0x10f254=_0xeae2ec;window[_0x10f254(0xf8)][_0x10f254(0x128)]=_0x10f254(0xff);}document['getElementById'](_0xeae2ec(0x110))[_0xeae2ec(0xf6)]('keypress',function(_0x8bc2ff){const _0x1a2fb0=_0xeae2ec;_0x8bc2ff[_0x1a2fb0(0x108)]==='Enter'&&checkPassword();}),window['addEventListener']('click',function(_0x44d67f){const _0x56ccd7=_0xeae2ec,_0x16740f=document[_0x56ccd7(0x139)](_0x56ccd7(0xf2)),_0x189b93=document['getElementById'](_0x56ccd7(0x134)),_0x88c13f=document[_0x56ccd7(0x139)]('noticeModal');_0x44d67f[_0x56ccd7(0x133)]===_0x16740f&&(currentDoor=null,closePasswordModal());if(_0x44d67f[_0x56ccd7(0x133)]===_0x189b93)closeProfileModal();if(_0x44d67f['target']===_0x88c13f)closeNoticeModal();}),window[_0xeae2ec(0xf6)]('load',function(){initializeDoors();}),window[_0xeae2ec(0xf6)]('resize',function(){initializeDoors();});
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>深入实验室</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
+  
+  body {
+    margin: 0;
+    font-family: "Ma Shan Zheng", cursive;
+    background: linear-gradient(135deg, #0a2463, #000000) fixed;
+    color: #e0e6ff;
+    overflow: hidden;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  /* 确保 html 元素也有高度 */
+  html {
+    height: 100%;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 80px auto;
+    padding: 20px;
+    white-space: pre-line;
+    line-height: 1.8;
+    font-size: 18px;
+    overflow-y: auto;
+    max-height: calc(100vh - 160px);
+    display: none; /* 初始隐藏 */
+  }
+
+  .hidden-line {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 1s ease, transform 1s ease;
+  }
+  .visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .file-btn {
+    display: none;
+    background: #0044aa;
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    margin-top: 30px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .file-btn:hover {
+    background: #0055ff;
+  }
+
+  /* 弹窗样式 */
+  #file-modal {
+    display: none;
+    position: fixed;
+    left: 0; top: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.95);
+    color: #00ffea;
+    font-family: "Courier New", monospace;
+    overflow-y: auto;
+    padding: 40px;
+    box-sizing: border-box;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #file-modal pre {
+    white-space: pre-wrap;
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 80%;
+    text-align: center;
+  }
+
+  .close-btn {
+    display: block;
+    margin: 30px auto;
+    background: #ff0033;
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  /* 选项按钮 */
+  #choices {
+    display: none;
+    text-align: center;
+    margin-top: 50px;
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    z-index: 10;
+  }
+  #choices button {
+    background: #0066cc;
+    color: #fff;
+    border: none;
+    margin: 0 15px;
+    padding: 10px 25px;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  #choices button:hover {
+    background: #00aaff;
+  }
+  
+  /* 密码输入区域 */
+  #password-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    position: fixed; /* 改为fixed以确保完全覆盖 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(135deg, #0a2463, #000000);
+    z-index: 200;
+  }
+  
+  #password-container .hidden-line {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  #password-input {
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 18px;
+    border: 2px solid #0055ff;
+    border-radius: 8px;
+    background: rgba(0, 30, 60, 0.7);
+    color: #e0e6ff;
+    width: 200px;
+    text-align: center;
+  }
+  
+  #open-door-btn {
+    margin-top: 20px;
+    padding: 10px 25px;
+    font-size: 18px;
+    background: #0044aa;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  #open-door-btn:hover {
+    background: #0055ff;
+  }
+  
+  .error-message {
+    color: #ff6666;
+    margin-top: 10px;
+    display: none;
+  }
+  
+  /* 文件标记 */
+  .file-marker {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: rgba(0, 100, 200, 0.7);
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 50;
+    border: 2px solid #00aaff;
+  }
+  
+  .file-marker:hover {
+    background: rgba(0, 150, 255, 0.9);
+    transform: scale(1.1);
+  }
+  
+  .file-marker::before {
+    content: "📄";
+    font-size: 24px;
+    color: white;
+  }
+  
+  /* 指纹错误提示 */
+  #fingerprint-error {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(7, 0, 0, 1);
+    color: rgb(250, 2, 2);
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 300;
+    font-size: 30px;
+    text-align: center;
+  }
+  
+  #fingerprint-error h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgb(255, 47, 0);
+    animation: blink 0.5s infinite alternate;
+  }
+  
+  @keyframes blink {
+    from { opacity: 1; }
+    to { opacity: 0.5; }
+  }
+  
+  /* 响应式设计 - 电脑端优化 */
+  @media (min-width: 769px) {
+    .container {
+      margin: 80px auto;
+      padding: 20px;
+      font-size: 18px;
+      max-height: calc(100vh - 160px);
+      width: calc(100% - 40px);
+      box-sizing: border-box;
+    }
+    
+    .file-marker {
+      width: 60px;
+      height: 60px;
+      bottom: 30px;
+      right: 30px;
+    }
+    
+    .file-marker::before {
+      font-size: 24px;
+    }
+    
+    #password-container .hidden-line {
+      font-size: 24px;
+    }
+    
+    #password-input {
+      width: 200px;
+      font-size: 18px;
+    }
+    
+    #open-door-btn, #password-option, #fingerprint-option {
+      padding: 10px 25px;
+      font-size: 18px;
+    }
+    
+    #choices button {
+      margin: 0 15px;
+      padding: 10px 25px;
+      font-size: 18px;
+    }
+    
+    #file-modal pre {
+      max-width: 80%;
+      font-size: 15px;
+    }
+    
+    .close-btn {
+      padding: 10px 25px;
+      font-size: 18px;
+    }
+    
+    #fingerprint-error h1 {
+      font-size: 48px;
+    }
+    
+    #choices {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+    }
+  }
+  
+  /* 平板端 */
+  @media (max-width: 768px) and (min-width: 481px) {
+    .container {
+      margin: 60px auto;
+      padding: 15px;
+      font-size: 16px;
+      max-height: calc(100vh - 120px);
+      width: calc(100% - 30px);
+    }
+    
+    .file-marker {
+      width: 50px;
+      height: 50px;
+      bottom: 20px;
+      right: 20px;
+    }
+    
+    .file-marker::before {
+      font-size: 20px;
+    }
+    
+    #password-container .hidden-line {
+      font-size: 20px;
+    }
+    
+    #password-input {
+      width: 160px;
+      font-size: 16px;
+    }
+    
+    #open-door-btn, #password-option, #fingerprint-option {
+      padding: 8px 20px;
+      font-size: 16px;
+    }
+    
+    #choices button {
+      margin: 10px 5px;
+      padding: 8px 20px;
+      font-size: 16px;
+    }
+    
+    #file-modal pre {
+      max-width: 90%;
+      font-size: 14px;
+    }
+  }
+  
+  /* 手机端 */
+  @media (max-width: 480px) {
+    .container {
+      margin: 40px auto;
+      padding: 10px;
+      font-size: 14px;
+      max-height: calc(100vh - 80px);
+      width: calc(100% - 20px);
+    }
+    
+    .file-marker {
+      width: 45px;
+      height: 45px;
+      bottom: 15px;
+      right: 15px;
+    }
+    
+    .file-marker::before {
+      font-size: 18px;
+    }
+    
+    #password-container .hidden-line {
+      font-size: 18px;
+    }
+    
+    #password-input {
+      width: 140px;
+      font-size: 14px;
+      padding: 8px;
+    }
+    
+    #open-door-btn, #password-option, #fingerprint-option {
+      padding: 6px 15px;
+      font-size: 14px;
+    }
+    
+    #choices button {
+      margin: 10px 3px;
+      padding: 6px 15px;
+      font-size: 14px;
+    }
+    
+    #file-modal {
+      padding: 20px;
+    }
+    
+    #file-modal pre {
+      max-width: 95%;
+      font-size: 12px;
+    }
+    
+    .close-btn {
+      padding: 8px 20px;
+      font-size: 14px;
+    }
+    
+    #fingerprint-error h1 {
+      font-size: 36px;
+    }
+    
+    #choices {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+    }
+  }
+  
+  @media (max-height: 600px) {
+    .container {
+      margin: 40px auto;
+      max-height: calc(100vh - 80px);
+    }
+    
+    #password-container {
+      justify-content: flex-start;
+      padding-top: 40px;
+    }
+    
+    #fingerprint-error h1 {
+      font-size: 28px;
+    }
+    
+    #choices {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- 密码输入页面 -->
+<div id="password-container">
+  <div id="initial-text" class="hidden-line">我看到一个紧闭着的。。需要指纹或密码才能进入的房间。。</div>
+  <div id="auth-options" style="display: none; margin-top: 30px;">
+    <button id="password-option" class="auth-btn" style="background: #0066cc; color: #fff; border: none; padding: 10px 25px; font-size: 18px; border-radius: 8px; cursor: pointer; margin: 0 10px;">输入密码</button>
+    <button id="fingerprint-option" class="auth-btn" style="background: #0066cc; color: #fff; border: none; padding: 10px 25px; font-size: 18px; border-radius: 8px; cursor: pointer; margin: 0 10px;">输入指纹</button>
+  </div>
+  <input type="password" id="password-input" placeholder="输入密码" style="display: none;">
+  <button id="open-door-btn" style="display: none;">开门</button>
+  <div id="error-message" class="error-message">密码错误，请重试</div>
+</div>
+
+<div class="container" id="story">
+</div>
+
+<!-- 文件标记按钮 -->
+<div class="file-marker" id="fileMarker"></div>
+
+<!-- 文件弹窗 -->
+<div id="file-modal">
+  <pre id="fileContent">
+【KMS 内部实验档案：绝密】 
+档案编号：JZ-2015-44
+实验对象编号：ZXT-003JZ
+当前状态：维度静滞，生命体征微弱，能量稳定中
+【I. 实验对象概览与捕获目的】
+捕获时间及地点： 2015年4月4日  临渠县中心广场
+核心价值：该个体拥有极强意志力，为储存和黏合现有残片的较理想载体。
+可充当【临时核心聚合器（Temporal Core Aggregator）】确保现有碎片不会散失。
+重要性：该容器是次级核心，重要性低于QJ-994MZ（即：我司须全力保护的最终聚合器）。
+其结构被指定为最理想物理承载体。
+【II. 聚合器稳定性研究与维持方案】
+当前状态： [75%稳定] 碎片在实验对象体内存在彼此排斥反应。
+维持方案：不可直接使用药物，须通过情感耦合输送系统。
+注入源：实验对象ZXT-003JZ情感锚点LXQ/ZDS。
+能量形式：纯粹的情感能量转化为反排斥镇定流，可麻痹容器意识并强行黏合残片。
+警报：结构性锁定。 ZXT-003JZ生命体已经与其提取的情感能量源建立了不可逆的关联。
+一旦移动或切断连接，情感锚点会瞬间断裂，易导致容器内部的17枚洛书碎片瞬间暴走、散落并永久消失。
+指令： ZXT-003JZ暂时必须原地静止。
+【III. 脉冲期冲击预测与应对策略】
+事件预测： 今晚血月降临之时，宇宙信息流脉冲（CDP）即将爆发。届时，新的碎片将会苏醒并具现化。
+核心任务： 维持ZXT-003JZ容器稳定，确保中原核心区关键信息体安全。
+风险分析： 存在最高风险干扰源LM-000JQF及不确定性变量与系统漏洞变量。
+最终指令： 
+1.最高优先级：所有战斗与精锐部队，须全部投入到中原核心区域！确保最终聚合器的绝对安全。
+2.次级指令：对 ZXT-003JZ，仅部署监控和低强度诱捕陷阱。
+3.核心目标：在 CDP 信息流彻底爆发前，确保中原核心区关键信息体QJ-994MZ安全无虞。
+4.ZXT-003JZ完整性：可降级处理。若存在不确定性变量破坏，果断切断情感耦合回路，仅回收已聚合碎片17枚。
+  </pre>
+  <button class="close-btn" id="closeFile">关闭文件</button>
+</div>
+
+<!-- 指纹错误提示 -->
+<div id="fingerprint-error">
+  <h1>警报！警报！</h1>
+  <p>指纹输入错误</p>
+  <p>未知人员闯入</p>
+  <p>你已被逮捕！</p>
+</div>
+
+<div id="choices">
+  <button id="rescue">选择解救</button>
+  <button id="leave">选择离开</button>
+</div>
+
+<script>
+const _0x365392=_0x4312;(function(_0x2b020c,_0x6be254){const _0x27658e=_0x4312,_0x5c17e9=_0x2b020c();while(!![]){try{const _0x318fba=-parseInt(_0x27658e(0x134))/0x1*(parseInt(_0x27658e(0x12e))/0x2)+parseInt(_0x27658e(0x141))/0x3*(parseInt(_0x27658e(0x13d))/0x4)+-parseInt(_0x27658e(0x122))/0x5*(parseInt(_0x27658e(0x131))/0x6)+-parseInt(_0x27658e(0x11b))/0x7+parseInt(_0x27658e(0x12a))/0x8+parseInt(_0x27658e(0x13a))/0x9+parseInt(_0x27658e(0x136))/0xa*(-parseInt(_0x27658e(0x145))/0xb);if(_0x318fba===_0x6be254)break;else _0x5c17e9['push'](_0x5c17e9['shift']());}catch(_0x36d309){_0x5c17e9['push'](_0x5c17e9['shift']());}}}(_0x87e8,0xf232e));const storyLines=[_0x365392(0x152),'这个空间很小，所有的墙壁都由一种布满绛色符文电路的黑色合金构成，没有一扇窗户，也没有任何多余的装饰，它是一个纯粹的、高效的信息隔离罐。','在房间的正中央，就是赵晓棠。',_0x365392(0x148),'舱体内部没有水，只有一种凝固的幽蓝色雾气，像被冻结的时光。赵晓棠就这么安静地、垂直地悬浮在里面。',_0x365392(0x12b),'在舱体的胸口位置，连接着一个拳头大小的黑色圆盘。圆盘边缘雕刻着古老的符号，正以一种极慢、极有规律的速度进行着微不可察的逆时针旋转。','赵晓棠的容貌，定格在十年前失踪的那一刻。她的脸庞没有岁月的痕迹，但却毫无生气。她的双眼紧闭，睫毛上似乎凝结着一层极细的冰霜。',_0x365392(0x149),'她已是一个容器，那圆盘下的胸腔，正在用一种被强行稳定下来的执拗心跳，为那个逆时针旋转的圆盘提供着稳定的、源源不断的能量。',_0x365392(0x124),_0x365392(0x14e)],passwordContainer=document[_0x365392(0x146)](_0x365392(0x11c)),initialText=document[_0x365392(0x146)]('initial-text'),authOptions=document['getElementById']('auth-options'),passwordInput=document[_0x365392(0x146)](_0x365392(0x121)),openDoorBtn=document[_0x365392(0x146)](_0x365392(0x154)),errorMessage=document[_0x365392(0x146)](_0x365392(0x12c)),storyContainer=document[_0x365392(0x146)](_0x365392(0x139)),fileMarker=document['getElementById'](_0x365392(0x158)),modal=document[_0x365392(0x146)]('file-modal'),closeFile=document[_0x365392(0x146)]('closeFile'),choices=document[_0x365392(0x146)]('choices'),fingerprintError=document[_0x365392(0x146)]('fingerprint-error'),passwordOption=document[_0x365392(0x146)](_0x365392(0x12f)),fingerprintOption=document[_0x365392(0x146)](_0x365392(0x140));setTimeout(()=>{const _0x3b4573=_0x365392;initialText[_0x3b4573(0x159)][_0x3b4573(0x11f)](_0x3b4573(0x156)),setTimeout(()=>{const _0x51ef8b=_0x3b4573;authOptions[_0x51ef8b(0x127)][_0x51ef8b(0x137)]=_0x51ef8b(0x133);},0x1f4);},0x1f4),passwordOption[_0x365392(0x153)]=()=>{const _0x3306dd=_0x365392;authOptions[_0x3306dd(0x127)][_0x3306dd(0x137)]=_0x3306dd(0x13c),passwordInput['style']['display']=_0x3306dd(0x12d),openDoorBtn['style'][_0x3306dd(0x137)]=_0x3306dd(0x12d),passwordInput[_0x3306dd(0x123)]();},fingerprintOption[_0x365392(0x153)]=()=>{const _0x43e0ab=_0x365392;fingerprintError[_0x43e0ab(0x127)]['display']=_0x43e0ab(0x133),setTimeout(()=>{const _0x3d2f14=_0x43e0ab;location[_0x3d2f14(0x143)]();},0x1388);},openDoorBtn[_0x365392(0x153)]=()=>{const _0x3b80b0=_0x365392,_0x1ce652=passwordInput[_0x3b80b0(0x13f)];if(_0x1ce652===_0x3b80b0(0x147)){passwordContainer[_0x3b80b0(0x127)]['display']=_0x3b80b0(0x13c),storyContainer['style'][_0x3b80b0(0x137)]=_0x3b80b0(0x12d),modal[_0x3b80b0(0x127)][_0x3b80b0(0x137)]=_0x3b80b0(0x13c),storyLines[_0x3b80b0(0x13e)](_0x217387=>{const _0x135047=_0x3b80b0,_0x248603=document[_0x135047(0x126)](_0x135047(0x125));_0x248603[_0x135047(0x155)]=_0x217387,_0x248603[_0x135047(0x14f)]='hidden-line',storyContainer['appendChild'](_0x248603);});const _0x491477=document['querySelectorAll'](_0x3b80b0(0x151));let _0x3b48ea=0x0;function _0x239d70(){const _0x14eeb9=_0x3b80b0;_0x3b48ea<_0x491477[_0x14eeb9(0x14a)]?(_0x491477[_0x3b48ea][_0x14eeb9(0x159)][_0x14eeb9(0x11f)](_0x14eeb9(0x156)),_0x3b48ea++,setTimeout(_0x239d70,0x1f4)):fileMarker[_0x14eeb9(0x127)][_0x14eeb9(0x137)]=_0x14eeb9(0x133);}_0x239d70();}else errorMessage[_0x3b80b0(0x127)]['display']=_0x3b80b0(0x12d),passwordInput['value']='',setTimeout(()=>{const _0xe346cf=_0x3b80b0;errorMessage[_0xe346cf(0x127)]['display']=_0xe346cf(0x13c);},0x7d0);},passwordInput['addEventListener'](_0x365392(0x14d),_0x4a72b0=>{const _0x38efb7=_0x365392;_0x4a72b0[_0x38efb7(0x157)]===_0x38efb7(0x132)&&openDoorBtn[_0x38efb7(0x130)]();}),fileMarker[_0x365392(0x153)]=()=>{const _0x1e9762=_0x365392;modal[_0x1e9762(0x127)][_0x1e9762(0x137)]=_0x1e9762(0x12d),fileMarker[_0x1e9762(0x127)][_0x1e9762(0x137)]=_0x1e9762(0x13c);},closeFile['onclick']=()=>{const _0x368e92=_0x365392;modal[_0x368e92(0x127)][_0x368e92(0x137)]=_0x368e92(0x13c),choices[_0x368e92(0x127)][_0x368e92(0x137)]='block';};function _0x4312(_0x2a841f,_0x47342d){const _0x87e80f=_0x87e8();return _0x4312=function(_0x4312ac,_0x4aa9ad){_0x4312ac=_0x4312ac-0x11b;let _0x1dda14=_0x87e80f[_0x4312ac];return _0x1dda14;},_0x4312(_0x2a841f,_0x47342d);}function autoRedirectWithConfirm(_0x504a23,_0x652e46=0xbb8,_0x243876=_0x365392(0x11e)){const _0x1d1cca=_0x365392,_0x3d7a4e=confirm(_0x243876+_0x1d1cca(0x135));_0x3d7a4e?window[_0x1d1cca(0x14b)]['href']=_0x504a23:(console[_0x1d1cca(0x14c)](_0x1d1cca(0x129)),setTimeout(()=>{const _0x1b0376=_0x1d1cca;autoRedirectWithConfirm(_0x504a23,0x0,_0x1b0376(0x142));},0x1388));}document[_0x365392(0x146)]('rescue')[_0x365392(0x153)]=()=>{const _0x11867a=_0x365392;choices[_0x11867a(0x127)][_0x11867a(0x137)]=_0x11867a(0x13c);const _0x7926f4=document[_0x11867a(0x126)]('div');_0x7926f4[_0x11867a(0x155)]=_0x11867a(0x11d),_0x7926f4[_0x11867a(0x14f)]=_0x11867a(0x13b),storyContainer['appendChild'](_0x7926f4),setTimeout(()=>{const _0x2f87ab=_0x11867a;_0x7926f4[_0x2f87ab(0x159)][_0x2f87ab(0x11f)](_0x2f87ab(0x156));},0x1f4),setTimeout(()=>{const _0x1156e9=_0x11867a;autoRedirectWithConfirm(_0x1156e9(0x150),0x1b58,_0x1156e9(0x138));},0x1b58);},document[_0x365392(0x146)](_0x365392(0x128))[_0x365392(0x153)]=()=>{const _0x3b29e1=_0x365392;choices[_0x3b29e1(0x127)][_0x3b29e1(0x137)]=_0x3b29e1(0x13c);const _0x10d0c0=document[_0x3b29e1(0x126)](_0x3b29e1(0x125));_0x10d0c0[_0x3b29e1(0x155)]=_0x3b29e1(0x144),_0x10d0c0['className']='hidden-line',storyContainer[_0x3b29e1(0x120)](_0x10d0c0),setTimeout(()=>{const _0x42aee0=_0x3b29e1;_0x10d0c0[_0x42aee0(0x159)][_0x42aee0(0x11f)](_0x42aee0(0x156));},0x1f4),setTimeout(()=>{autoRedirectWithConfirm('https://sylvie-seven-cq.top/Syzygy/forum.html',0x1b58,'是否现在返回公寓？');},0x1b58);};function _0x87e8(){const _0x3887de=['location','log','keyup','舱体旁边放着一份文件……','className','https://sylvie-seven-cq.top/Syzygy/forum.html','.hidden-line','我进入了房间……空气中弥漫着一种消毒水和臭氧混合的金属气味，每一步回声都被空间本身吞噬，死寂得令人发毛。','onclick','open-door-btn','textContent','visible','key','fileMarker','classList','6041329sdtlmm','password-container','我把她救出来了。\x0a我看着赵晓棠那平静而麻木的脸，知道留在这里的每一秒都是对KMS警报系统的挑衅。我不能眼睁睁的看着她留在这，此时此刻我脑海里只有一个念头：带她一起走。\x0a我抓起手边的东西猛地砸向那块连接在她胸口、缓缓旋转的黑色圆盘。圆盘应声而裂，发出一声尖锐刺耳的电流爆鸣。那些紧贴在她身上的红色光纤导管，瞬间熄灭、卷曲、脱落，像死去的藤蔓一样掉在地上。\x0a失去能量供应的垂直舱体轰隆一声倒下，舱内的幽蓝色雾气在快速消融。我迅速找到应急把手，将舱门强行掰开。\x0a晓棠的身体从舱内无力地滑出，我将她背起来，立刻带着她穿过这个冰冷的实验室，她好轻好轻......\x0a当我带着她从墙洞滚出来时，后巷的夜风吹拂到她的脸上。她的身体是冰冷、僵硬的，但她的胸口，开始传来微弱但真实的心跳。\x0a我开始犯了难...我总不能把她直接送到老赵夫妇面前，说这是从墙里救出来的，没准会被当成神经病抓走。\x0a更差的结果是万一大家觉得是我绑架了她这么多年，那可有得我坐牢的。\x0a我将晓棠安置在离静乔公寓不远的一条寂静街道上，确保她处于城市监控的盲区，但又极易被发现。\x0a给她盖上了一件废弃的，看起来像是流浪者遗落的旧外套后，我找到一个最老的公用电话亭，戴上手套，拨通了老赵的电话。\x0a电话很快被接起，传来老赵疲惫而略带沙哑的声音。\x0a我压低声音，尽量装出一种急促的、略带沙哑的陌生人口吻：\x0a\x22老赵，听我说，我是谁不重要，你听我说就行！\x22\x0a（停顿，确保他听清）\x0a\x22你女儿，晓棠，找到了。她就在静乔公寓东面那条老街，你家超市对面的第三个路口往里走，路边那个破旧的红色电话亭旁边。\x22\x0a\x22她可能…看起来有点不对劲，但她活着。你马上报警，但不要提是我的打电话，就说你做了个梦，梦见了一个地址。快！带上你妻子，马上过去！\x22\x0a老赵声音颤抖的问我：\x20\x22你、你是谁？！她…她……\x22\x0a我：\x20\x22别问了！\x20记住，梦里的地址！\x20越快越好，马上！\x22\x0a我猛地挂断电话，将话筒用外套的袖子擦拭干净，然后躲在暗处。\x0a确定老赵夫妻发现晓棠后，我离开了原地，回到了公寓。','即将回到公寓，是否继续？','add','appendChild','password-input','25SkHJIP','focus','我走近舱体，手触碰到冰冷的玻璃外壳，赵晓棠的睫毛轻轻颤动了一下。那一刻我感觉到的不是体温，而是一股被压抑十年的、即将爆发的情绪海啸。','div','createElement','style','leave','暂时不走','12081624cGUgCN','她的身体被无数细如发丝、闪烁着微弱红光的光纤导管所包裹。这些导管并非刺入皮肤，而是紧贴在她身上的穴位和神经节点上，像一张密不透风的红色血管网。','error-message','block','6FQfgNq','password-option','click','249828ZLgObi','Enter','flex','377343rBHZSD','\x0a\x0a点击\x22确定\x22立即离开\x0a点击\x22取消\x22停留在此','3353720wkruCS','display','是否现在返回公寓？','story','12579552RElMpt','hidden-line','none','4Tndnof','forEach','value','fingerprint-option','4886607VUywoP','再不走要被逮住了，还不走？','reload','我选择快速离开了实验室...\x0a在我准备砸碎舱体的一瞬间，我意识到三个现实而恐怖的问题：\x0a她出了舱体还能活吗？我看着她那一点起伏都没有的胸腔...这个女孩已经被仪器维持了十年，一旦断开连接，我感觉她像一个拔掉了电源的精密仪器，随时会彻底停止运转。\x0a到那时...我救出来的只是一具冰冷的尸体，而不是一个活人...就算她能活，我怎么把她带出去？\x0a一个在十年前失踪的人，突然出现在我家附近的超市后巷。我怎么跟老赵夫妇说？\x0a\x22我在一堵墙后面发现了一个秘密实验室，你女儿被困在一个大罐子里\x22？\x0a没有人会相信我，只会把我当作杀人犯或疯子。\x0a我已经闯入这个秘密基地太久！现在外面警报已经响了（即使只是内部警报），我带着她走出这里，就等于带着一个巨大的、会移动的\x22被盗物品\x22。\x0aKMS的全部力量，会像捕猎幽灵一样，瞬间锁定我和她，我要怎么带着她全身而退？\x0a恐惧，像冰冷的幽雾一样，瞬间淹没了我所有的英雄主义。\x0a我没有超能力，我只是一个被突然卷入的普通人。\x0a我声音颤抖，带着绝望的歉意说：\x20\x22对不起…对不起，晓棠。\x22\x0a犹豫半晌，我抓起工具，迅速砸向舱体后方一个被符文保护的能量核心，彻底切断了这里的总电源。\x0a整个空间瞬间陷入绝对的黑暗，只剩下电流爆鸣的滋滋声。\x0a我转身逃跑了。我以最快的速度，用手头能找到的所有材料，将那道破碎的墙洞重新塞满、掩盖。\x0a我不想知道她怎么样了。我只知道，我必须赶紧把自己从这个地狱里摘出来。\x0a我没有救她，我只是在一个不该被发现的秘密面前，选择了逃跑和自保的凡人。','44OAnOYL','getElementById','JZ-2015-44','她被放置在一个漂浮于半空的透明舱体内。舱体垂直悬挂，像一个巨大的、晶莹剔透的玻璃培养皿。','她的脸上带着一种极度平静、近乎麻木的表情——不是安睡，像是一种被程序格式化后的待机状态。','length'];_0x87e8=function(){return _0x3887de;};return _0x87e8();}
+</script>
+
+</body>
+</html>
+
+
+

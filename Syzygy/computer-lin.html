@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>远程操控ing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background-color: #000;
+        }
+        
+        /* 连接密码对话框样式 */
+        #connectionDialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .connection-form {
+            background: linear-gradient(to bottom, #1a3a8a, #0a246a);
+            border-radius: 10px;
+            padding: 30px;
+            width: 350px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            color: white;
+        }
+        
+        .connection-form h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .connection-form input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+        }
+        
+        .connection-form button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to bottom, #4c9bfc, #0a246a);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .connection-form button:hover {
+            background: linear-gradient(to bottom, #5ca5ff, #1a3a8a);
+        }
+        
+        .connection-error {
+            color: #ff6b6b;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .desktop {
+            background: url('https://c-ssl.duitang.com/uploads/item/202003/27/20200327230205_eiNRW.jpeg') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .desktop-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .desktop-icons {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 80px);
+            grid-auto-rows: minmax(80px, auto);
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .desktop-icon {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 5px;
+            border-radius: 5px;
+            position: relative;
+        }
+        
+        .desktop-icon:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+        }
+        
+        /* .icon-img {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+            position: relative;
+        }
+        
+        .icon-img img {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+            object-fit: contain;
+        }
+        
+        .icon-label {
+            font-size: 12px;
+            color: white;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+            max-width: 80px;
+            word-wrap: break-word;
+            line-height: 1.2;
+        }
+         */
+.icon-img {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-img svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .icon-label {
+            color: white;
+            font-size: 12px;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            word-break: break-all;
+            max-width: 80px;
+        }
+
+        .document-icon {
+            fill: #4C9BFC;
+        }
+
+        .document-content {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 500px;
+            max-width: 90vw;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .document-content h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #4C9BFC;
+            padding-bottom: 10px;
+        }
+
+        .document-content p {
+            line-height: 1.8;
+            color: #555;
+            font-size: 16px;
+            white-space: pre-line;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+        /* 以上为新增 */
+
+        .taskbar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(to bottom, #0a246a, #a3c6f3);
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            box-shadow: 0 -1px 5px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+        
+        .start-button {
+            height: 32px;
+            background: linear-gradient(to bottom, #4c9bfc, #0a246a);
+            color: white;
+            border: 1px solid #0a246a;
+            border-radius: 4px;
+            padding: 0 15px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .start-button:hover {
+            background: linear-gradient(to bottom, #5ca5ff, #1a3a8a);
+        }
+        
+        .start-icon {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+        }
+        
+        .taskbar-items {
+            display: flex;
+            flex: 1;
+            margin: 0 10px;
+        }
+        
+        .taskbar-item {
+            height: 30px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            margin: 0 2px;
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: white;
+            font-size: 12px;
+        }
+        
+        .taskbar-item:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .system-tray {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+        
+        .tray-item {
+            width: 24px;
+            height: 24px;
+            margin: 0 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+        
+        .clock {
+            color: white;
+            font-size: 12px;
+            padding: 0 5px;
+        }
+        
+        .dialog {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            padding: 20px;
+            width: 350px;
+            z-index: 100;
+            display: none;
+        }
+        
+        .dialog-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .dialog-content {
+            margin-bottom: 20px;
+        }
+        
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .dialog-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background-color: #0078d7;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .confirmation-dialog {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            padding: 20px;
+            width: 350px;
+            z-index: 101;
+        }
+        /* 我的电脑图标 - 蓝色显示器 */
+        .computer-icon {
+            fill: #0078D7;
+        }
+        /* 文档图标 - 深蓝色文件夹 */
+        .document-icon {
+            fill: #4C9BFC;
+        }
+        
+        .notification {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            display: none;
+            z-index: 102;
+        }
+        
+        .notification.success {
+            background-color: #28a745;
+        }
+        
+        .notification.error {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <!-- 连接密码对话框 -->
+    <div id="connectionDialog">
+        <div class="connection-form">
+            <h2>远程连接</h2>
+            <p>请输入连接密码以访问系统</p>
+            <input type="password" id="connectionPassword" placeholder="请输入连接密码">
+            <button onclick="checkConnectionPassword()">连接</button>
+            <div class="connection-error" id="connectionError">密码错误，请重试</div>
+        </div>
+    </div>
+    
+    <!-- 桌面界面 -->
+    <div class="desktop" id="desktop">
+        <div class="desktop-overlay"></div>
+        <div class="desktop-icons">
+            <div class="desktop-icon" onclick="openFile()">
+                <div class="icon-img">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI0ZGQzEwNyI+PHBhdGggZD0iTTEwLDRINEMyLjg5LDQgMiw0Ljg5IDIsNlYxOEEyLDIgMCAwLDAgNCwyMEgyMEEyLDIgMCAwLDAgMjIsMThWOEMyMiw2Ljg5IDIxLjEsNiAyMCw2SDEyTDEwLDRaIi8+PC9zdmc+" alt="Folder">
+                </div>
+                <div class="icon-label">重要文件夹</div>
+            </div>
+            
+              <!-- 文档图标 --
+         <div class="desktop-icon">
+            <div class="icon-img">
+                <svg viewBox="0 0 24 24" class="document-icon">
+                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                </svg>
+            </div>
+            <div class="icon-label">文档</div>
+         </div> 
+            -->
+         <!-- /* 以下为新增 */
+          <div class="desktop-container">
+         < 文档图标 -->
+         <div class="desktop-icon" onclick="openDocument()">
+            <div class="icon-img">
+                <svg viewBox="0 0 24 24" class="document-icon">
+                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                </svg>
+            </div>
+            <div class="icon-label">请你先看这个文档！</div>
+        </div>
+    
+
+     <div id="documentContent" class="document-content">
+        <button class="close-btn" onclick="closeDocument()">&times;</button>
+        <h2>致我的邻居</h2>
+        <p>林墨：
+            接下来请你阅读这个文档，并相信我的每一个字,我不是疯子，也不是在恶作剧。
+            我的名字是林墨，我的确是你的邻居，但我正被一个极其危险的组织追捕，你或许可以把他们理解为……一个技术实力顶尖的恐怖组织。情况万分危急，我没有别的选择，只能通过论坛用那种方式来向你求助。
+            我的父母是顶尖的数据工程师和网络安全研究员。他们在世时，致力于守护一个无法被追踪和审查的协议。它不是什么具体的数据，更像一把钥匙。但同时，如果这把钥匙落入坏人之手，它也能被用来打造一个前所未有的、能精准预测并操控所有人的数据牢笼。
+我父母因意外去世后，这个协议的最后一部分核心代码就留给了我，它被保存在一台独立的、永不联网的服务器里。而你现在连接上的，正是这台一直秘密存放在我家的服务器。
+那个组织...便称其为K吧，他们的真名我不能告诉你，这会给你带来麻烦。他们内部称自己为"司"。他们追杀我，就是为了得到这个协议。他们信奉一种技术性宿命论，认为通过大数据和算法，可以消除所有社会的不确定性，建立一个完全被规划好的完美世界。为了这个目标，他们不择手段。
+在接下来的几个小时内，协议将进入一个唯一的、极其短暂的维护窗口期。这是我唯一能彻底销毁它，或者将它永久封存的机会。一旦错过，它的防火墙将彻底失效。
+现在，是我为什么要求助于你的原因，这也是最关键的地方：
+我无法自己操作。 我父母设计的安保系统，将我的生物信息设置成了最高权限，但同时也设置了一个"胁迫锁定"机制。在维护窗口期，任何与我生物信息相关的操作，都会被系统判定为"被迫操作"，从而导致系统自锁，与此同时我的所在位置也会暴露。这是一个同归于尽的保险，为了防止我被捕后，被迫交出控制权。
+我不能报警或寻找其他朋友。 司的信息渗透能力超乎想象。他们能监控几乎所有的公共网络和通讯。任何官方的介入，都会瞬间被他们察觉。我联系过的任何人，都会立刻成为他们的目标。我不能再连累别人了。
+你一定很疑惑我为什么选择你，因为你是一个安全变量。我搬来之前，做过谨慎的调查，不是在监视你，而是在寻找一个盲点。你的生活规律，社交网络活动极少，几乎没有留下数字痕迹。在你连接上我服务器的那一刻，在K那张天罗地网般的数据地图里，你仍是一个干净、无害、不会触发任何警报的普通人。你是唯一一个可以悄无声息地接近服务器核心的人。
+我需要你的帮助，完成对协议的销毁。桌面上有一个重要文件夹，请你点击这个文件夹，为了安全我将其设置为仅可删除。系统会提示你输入一个销毁密钥，密钥是aoejq,K=我的名字+我的生日-壬午八月初十，（为了安全我只能将其加密，辛苦你啦~！ps:这个密码只有你才能解）你只需将其输入，系统将自动执行销毁和封印程序，彻底移除这份资料，永绝后患。
+我知道这听起来很疯狂。但那个组织已经锁定了这栋大楼。即使你不帮我，你也可能已经被卷入了危险之中。现在，帮我也是在帮你摆脱这个巨大的麻烦。
+拜托了。你是我最后的希望！
+</p>
+     </div>
+
+        <!-- /* 以上为新增 */ --> 
+            
+            <div class="desktop-icon">
+                <div class="icon-img">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzIxOTZGMyI+PHBhdGggZD0iTTguNSwxMy41TDExLDE2LjVMMTQuNSwxMkwxOSwxOEg1TTIxLDE5VjVDMjEsMy44OSAyMC4xLDMgMTksM0g1QTIsMiAwIDAsMCAzLDVWMTlBMCwwIDAgMCwwIDUsMjFIMTlBMCwwIDAgMCwwIDIxLDE5WiIvPjwvc3ZnPg==" alt="Image">
+                </div>
+                <div class="icon-label">图片</div>
+            </div>
+            
+            <!-- 回收站图标 -->
+<div class="desktop-icon">
+    <div class="icon-img">
+        <svg viewBox="0 0 24 24" fill="#6C757D">
+            <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
+        </svg>
+    </div>
+    <div class="icon-label">回收站</div>
+</div>
+
+ <!-- 我的电脑图标 -->
+        <div class="desktop-icon">
+            <div class="icon-img">
+                <svg viewBox="0 0 24 24" class="computer-icon">
+                    <path d="M4 2.5C2.89 2.5 2 3.39 2 4.5V15.5C2 16.61 2.89 17.5 4 17.5H20C21.11 17.5 22 16.61 22 15.5V4.5C22 3.39 21.11 2.5 20 2.5H4M4 4H20V16H4V4M9 19V21H15V19H9M8 18H16V22H8V18Z"/>
+                </svg>
+            </div>
+            <div class="icon-label">我的电脑</div>
+        </div>
+
+<!-- 设置图标 -->
+<div class="desktop-icon">
+    <div class="icon-img">
+        <svg viewBox="0 0 24 24" fill="#0078D7">
+            <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.22,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.22,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/>
+        </svg>
+    </div>
+    <div class="icon-label">设置</div>
+</div>
+
+        </div></div>
+        
+        <div class="taskbar">
+            <div class="start-button">
+                <div class="start-icon">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2ZmZmZmZiI+PHBhdGggZD0iTTMsMThIMjFWMTZIM1YxOE0zLDEzSDIxVjExSDNWMTNNMyw2VjhIMjFWNkgzWiIvPjwvc3ZnPg==" alt="Start">
+                </div>
+                <span>开始</span>
+            </div>
+            
+            <div class="taskbar-items">
+                <!-- 任务栏项目可以放在这里 -->
+            </div>
+            
+            <div class="system-tray">
+                <div class="tray-item">🔊</div>
+                <div class="tray-item">🌐</div>
+                <div class="clock" id="clock">上午11:49</div>
+            </div>
+        </div>
+        
+        <div id="deleteDialog" class="dialog">
+            <div class="dialog-title">该文件夹仅可执行删除操作，请确认是否删除</div>
+            <div class="dialog-content">
+                <p>您确定要删除"重要文件夹"吗？</p>
+                <p>删除前需要输入封印密钥：</p>
+                <input type="password" id="sealKey" placeholder="请输入封印密钥">
+                <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                    <input type="checkbox" id="skipCheckbox">
+                    <label for="skipCheckbox">跳过输入密钥</label>
+                </div>
+            </div>
+            <div class="dialog-buttons">
+                <button class="btn btn-secondary" onclick="closeDeleteDialog()">取消</button>
+                <button class="btn btn-primary" onclick="confirmDelete()">删除</button>
+            </div>
+        </div>
+        
+        <div id="confirmationDialog" class="confirmation-dialog">
+            <div class="dialog-title">系统提示</div>
+            <div class="dialog-content" id="dialogMessage">
+                封印失败，该"文件"不存在！
+            </div>
+            <div class="dialog-buttons">
+                <button class="btn btn-primary" onclick="closeConfirmation()">确定</button>
+            </div>
+        </div>
+        
+        <div id="notification" class="notification">
+            文件夹已删除
+        </div>
+    </div>
+
+    <script>
+    const _0x2e4ed0=_0xa117;(function(_0x4775b7,_0x3e98eb){const _0x37d127=_0xa117,_0x414c18=_0x4775b7();while(!![]){try{const _0x17ca08=parseInt(_0x37d127(0x140))/0x1+parseInt(_0x37d127(0x11a))/0x2+-parseInt(_0x37d127(0x142))/0x3+-parseInt(_0x37d127(0x12a))/0x4+parseInt(_0x37d127(0x13f))/0x5+parseInt(_0x37d127(0x133))/0x6+-parseInt(_0x37d127(0x125))/0x7;if(_0x17ca08===_0x3e98eb)break;else _0x414c18['push'](_0x414c18['shift']());}catch(_0x36a726){_0x414c18['push'](_0x414c18['shift']());}}}(_0x21b4,0x3e717));function checkConnectionPassword(){const _0x280833=_0xa117,_0x2a2fdf=document[_0x280833(0x132)](_0x280833(0x122))[_0x280833(0x13a)],_0x4571c3=document[_0x280833(0x132)](_0x280833(0x149));_0x2a2fdf===_0x280833(0x143)?(document[_0x280833(0x132)](_0x280833(0x135))['style']['display']=_0x280833(0x120),document[_0x280833(0x132)](_0x280833(0x130))[_0x280833(0x123)]['display']=_0x280833(0x147)):(_0x4571c3[_0x280833(0x123)]['display']='block',document[_0x280833(0x132)]('connectionPassword')[_0x280833(0x13a)]='',document[_0x280833(0x132)](_0x280833(0x122))[_0x280833(0x129)](),document[_0x280833(0x148)](_0x280833(0x13e))['style'][_0x280833(0x14e)]=_0x280833(0x131),setTimeout(()=>{const _0x41004a=_0x280833;document[_0x41004a(0x148)]('.connection-form')['style'][_0x41004a(0x14e)]='';},0x1f4));}document['getElementById'](_0x2e4ed0(0x122))['addEventListener'](_0x2e4ed0(0x136),function(_0x3086c9){const _0x2747d7=_0x2e4ed0;_0x3086c9['key']===_0x2747d7(0x12d)&&checkConnectionPassword();});function openDocument(){const _0x23fcd8=_0x2e4ed0;document[_0x23fcd8(0x132)]('documentContent')[_0x23fcd8(0x123)]['display']='block';}function closeDocument(){const _0x3a863c=_0x2e4ed0;document[_0x3a863c(0x132)]('documentContent')[_0x3a863c(0x123)][_0x3a863c(0x118)]=_0x3a863c(0x120);}function _0xa117(_0x2d3dfc,_0x373b8a){const _0x21b431=_0x21b4();return _0xa117=function(_0xa11714,_0x2ab862){_0xa11714=_0xa11714-0x115;let _0x122d1f=_0x21b431[_0xa11714];return _0x122d1f;},_0xa117(_0x2d3dfc,_0x373b8a);}function updateClock(){const _0xf3cd6e=_0x2e4ed0,_0x449a37=new Date(),_0x41c605=_0x449a37['getHours'](),_0x411dde=_0x449a37[_0xf3cd6e(0x14a)]()['toString']()['padStart'](0x2,'0'),_0x47307d=_0x41c605>=0xc?'PM':'AM',_0x731ca5=_0x41c605%0xc||0xc;document[_0xf3cd6e(0x132)](_0xf3cd6e(0x12f))['textContent']=_0x731ca5+':'+_0x411dde+'\x20'+_0x47307d;}setInterval(updateClock,0xea60),updateClock();function openFile(){const _0xe41da3=_0x2e4ed0;document[_0xe41da3(0x132)](_0xe41da3(0x11e))['style'][_0xe41da3(0x118)]=_0xe41da3(0x147);}function _0x21b4(){const _0x353e78=['1497535ZWWbFS','429829snjopn','.dialog-title','653187JNMwpj','linmo','checked','https://sylvie-seven-cq.top/Syzygy/bela.html','文件夹已删除','block','querySelector','connectionError','getMinutes','confirmationDialog','className','event','animation','skipCheckbox','left','onmousemove','display','preventDefault','370062SKlKwH','location','dialogMessage','clientY','deleteDialog','https://sylvie-seven-cq.top/Syzygy/forum.html','none','封印密钥错误','connectionPassword','style','onmouseup','2312947NKKCvV','sealKey','lssmr','DOMContentLoaded','focus','829784ddmVtk','top','success','Enter','onmousedown','clock','desktop','shake\x200.5s','getElementById','581976JNoEbB','notification\x20','connectionDialog','keypress','addEventListener','textContent','clientX','value','notification','删除失败，该文件不存在！','offsetTop','.connection-form'];_0x21b4=function(){return _0x353e78;};return _0x21b4();}function closeDeleteDialog(){const _0x25f66a=_0x2e4ed0;document[_0x25f66a(0x132)]('deleteDialog')[_0x25f66a(0x123)]['display']=_0x25f66a(0x120),document[_0x25f66a(0x132)](_0x25f66a(0x126))[_0x25f66a(0x13a)]='',document['getElementById'](_0x25f66a(0x115))[_0x25f66a(0x144)]=![];}function confirmDelete(){const _0x41d533=_0x2e4ed0,_0x4dbc7f=document[_0x41d533(0x132)](_0x41d533(0x126))[_0x41d533(0x13a)],_0x3de895=document['getElementById'](_0x41d533(0x115))[_0x41d533(0x144)];if(_0x3de895){showNotification(_0x41d533(0x146),_0x41d533(0x12c)),setTimeout(()=>{const _0x4b2d1e=_0x41d533;window[_0x4b2d1e(0x11b)]['href']=_0x4b2d1e(0x145);},0x3e8),closeDeleteDialog();return;}if(_0x4dbc7f===_0x41d533(0x127))document['getElementById'](_0x41d533(0x11c))[_0x41d533(0x138)]=_0x41d533(0x13c),document[_0x41d533(0x132)](_0x41d533(0x14b))[_0x41d533(0x123)][_0x41d533(0x118)]=_0x41d533(0x147),setTimeout(()=>{const _0x360a82=_0x41d533;window[_0x360a82(0x11b)]['href']=_0x360a82(0x11f);},0x7d0);else _0x4dbc7f?(document[_0x41d533(0x132)]('dialogMessage')['textContent']=_0x41d533(0x121),document[_0x41d533(0x132)]('confirmationDialog')[_0x41d533(0x123)][_0x41d533(0x118)]=_0x41d533(0x147)):alert('请输入封印密钥或勾选跳过选项');}function closeConfirmation(){const _0x1a8399=_0x2e4ed0;document[_0x1a8399(0x132)](_0x1a8399(0x14b))[_0x1a8399(0x123)][_0x1a8399(0x118)]=_0x1a8399(0x120);}function showNotification(_0x52c224,_0x1f17aa){const _0x2c7a55=_0x2e4ed0,_0x99f3b0=document[_0x2c7a55(0x132)](_0x2c7a55(0x13b));_0x99f3b0[_0x2c7a55(0x138)]=_0x52c224,_0x99f3b0[_0x2c7a55(0x14c)]=_0x2c7a55(0x134)+_0x1f17aa,_0x99f3b0[_0x2c7a55(0x123)][_0x2c7a55(0x118)]=_0x2c7a55(0x147),setTimeout(()=>{const _0xa3dd7c=_0x2c7a55;_0x99f3b0[_0xa3dd7c(0x123)]['display']=_0xa3dd7c(0x120);},0xbb8);}document[_0x2e4ed0(0x137)](_0x2e4ed0(0x128),function(){const _0x5c7ade=_0x2e4ed0,_0x2e96c3=document[_0x5c7ade(0x132)](_0x5c7ade(0x11e)),_0x4b13da=document['getElementById']('confirmationDialog');function _0x216a1f(_0x4c9d58){const _0x562a6f=_0x5c7ade;let _0x55dd62=0x0,_0x4b9eed=0x0,_0x3963ac=0x0,_0x15f22f=0x0;const _0x4e26dd=_0x4c9d58['querySelector'](_0x562a6f(0x141))||_0x4c9d58;_0x4e26dd[_0x562a6f(0x12e)]=_0xd1502a;function _0xd1502a(_0xf623ba){const _0x3e4127=_0x562a6f;_0xf623ba=_0xf623ba||window[_0x3e4127(0x14d)],_0xf623ba[_0x3e4127(0x119)](),_0x3963ac=_0xf623ba[_0x3e4127(0x139)],_0x15f22f=_0xf623ba[_0x3e4127(0x11d)],document['onmouseup']=_0x188e14,document[_0x3e4127(0x117)]=_0x120675;}function _0x120675(_0x5623fa){const _0x4636a1=_0x562a6f;_0x5623fa=_0x5623fa||window[_0x4636a1(0x14d)],_0x5623fa['preventDefault'](),_0x55dd62=_0x3963ac-_0x5623fa[_0x4636a1(0x139)],_0x4b9eed=_0x15f22f-_0x5623fa[_0x4636a1(0x11d)],_0x3963ac=_0x5623fa[_0x4636a1(0x139)],_0x15f22f=_0x5623fa[_0x4636a1(0x11d)],_0x4c9d58[_0x4636a1(0x123)][_0x4636a1(0x12b)]=_0x4c9d58[_0x4636a1(0x13d)]-_0x4b9eed+'px',_0x4c9d58[_0x4636a1(0x123)][_0x4636a1(0x116)]=_0x4c9d58['offsetLeft']-_0x55dd62+'px';}function _0x188e14(){const _0xc5b6a0=_0x562a6f;document[_0xc5b6a0(0x124)]=null,document[_0xc5b6a0(0x117)]=null;}}_0x216a1f(_0x2e96c3),_0x216a1f(_0x4b13da);});
+    </script>
+    
+    <style>
+        /* 添加抖动动画 */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+    </style>
+</body>
+</html>
+
+
+
