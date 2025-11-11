@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>复古书籍电子扫描件</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "SimSun", "宋体", serif;
+            background-color: #8B7355;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow: hidden;
+        }
+        
+        .book-container {
+            position: relative;
+            width: 90%;
+            max-width: 900px;
+            height: 90vh;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            border-radius: 5px;
+            overflow: hidden;
+            perspective: 1500px;
+        }
+        
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #F5EBD9;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><path d="M0,0 L100,100 M100,0 L0,100" stroke="%238B7355" stroke-width="1"/></svg>');
+            padding: 50px 70px;
+            display: none;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            text-align: left;
+            direction: ltr;
+            overflow: hidden;
+            transform-origin: right center;
+            transition: transform 0.8s ease-in-out;
+            z-index: 1;
+        }
+        
+        .page.active {
+            display: flex;
+            z-index: 2;
+        }
+        
+        .page.flipping {
+            display: flex;
+            z-index: 3;
+        }
+        
+        .page.prev {
+            transform: rotateY(-10deg);
+            z-index: 1;
+        }
+        
+        .page.next {
+            transform: rotateY(10deg);
+            z-index: 1;
+        }
+        
+        .page-number {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 14px;
+            color: #8B7355;
+        }
+        
+        .content {
+            width: 100%;
+            height: 100%;
+            direction: ltr;
+            text-align: left;
+            overflow: hidden;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 30px;
+            color: #5C3D2E;
+            text-align: center;
+            width: 100%;
+            border-bottom: 1px solid #8B7355;
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            font-size: 22px;
+            margin: 25px 0 15px;
+            color: #5C3D2E;
+            text-align: left;
+        }
+        
+        p {
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            text-align: justify;
+            text-justify: inter-ideograph;
+            color: #4A3526;
+        }
+        
+        .quote {
+            font-style: italic;
+            margin: 15px 0;
+            padding-left: 20px;
+            border-left: 2px solid #8B7355;
+        }
+        
+        .emphasized {
+            font-weight: bold;
+            color: #8B4513;
+        }
+        
+        .navigation {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        
+        button {
+            background: #8B7355;
+            color: #F5EBD9;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #5C3D2E;
+        }
+        
+        button:disabled {
+            background: #C4B5A0;
+            cursor: not-allowed;
+        }
+        
+        .book-spine {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 20px;
+            background: linear-gradient(to right, #5C3D2E, #8B7355, #5C3D2E);
+            box-shadow: inset -5px 0 10px rgba(0,0,0,0.5);
+            z-index: 5;
+        }
+        
+        .corner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 2px solid #8B7355;
+            z-index: 6;
+        }
+        
+        .corner-tl {
+            top: 15px;
+            left: 15px;
+            border-right: none;
+            border-bottom: none;
+        }
+        
+        .corner-tr {
+            top: 15px;
+            right: 15px;
+            border-left: none;
+            border-bottom: none;
+        }
+        
+        .corner-bl {
+            bottom: 15px;
+            left: 15px;
+            border-right: none;
+            border-top: none;
+        }
+        
+        .corner-br {
+            bottom: 15px;
+            right: 15px;
+            border-left: none;
+            border-top: none;
+        }
+        
+        .stain {
+            position: absolute;
+            opacity: 0.1;
+            background-color: #8B7355;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .stain-1 {
+            width: 120px;
+            height: 80px;
+            top: 20%;
+            left: 10%;
+            transform: rotate(30deg);
+        }
+        
+        .stain-2 {
+            width: 100px;
+            height: 100px;
+            bottom: 15%;
+            right: 15%;
+            transform: rotate(-20deg);
+        }
+        
+        .page-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #8B7355;
+            font-size: 14px;
+            z-index: 10;
+        }
+        
+        /* 翻页动画效果 */
+        @keyframes flipToLeft {
+            0% {
+                transform: rotateY(0deg) translateX(0);
+            }
+            30% {
+                transform: rotateY(-45deg) translateY(-30px) translateX(-10px);
+            }
+            60% {
+                transform: rotateY(-90deg) translateY(-20px) translateX(-20px);
+            }
+            100% {
+                transform: rotateY(-180deg);
+            }
+        }
+        
+        @keyframes flipFromRight {
+            0% {
+                transform: rotateY(180deg);
+            }
+            100% {
+                transform: rotateY(0deg);
+            }
+        }
+        
+        .flip-to-left {
+            animation: flipToLeft 0.8s ease-in-out forwards;
+        }
+        
+        .flip-from-right {
+            animation: flipFromRight 0.8s ease-in-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="book-container">
+        <div class="book-spine"></div>
+        
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+        
+        <div class="stain stain-1"></div>
+        <div class="stain stain-2"></div>
+        
+        <div class="page-indicator" id="pageIndicator">1/6</div>
+        
+        <!-- 第一页 -->
+        <div class="page active" id="page1">
+            <div class="content">
+                <h1>夜观六则</h1>
+                
+                <h2>夜观第一则：天轨之秘</h2>
+                <p class="quote">"天机自转。可记其轨，不可言其变。"</p>
+                <p>天机乃永恒之引擎，其转动自有定数。它不以任何日生之愿而停，更不因任何日生之期而改。 吾辈之职，乃是司夜之史官，恪守笔墨之本分，唯忠实记录其已成之轨迹。</p>
+                <p>星轨之变，乃天道自身之谶言。凡人绝不可妄言其变，此言一出，则等同于以凡人之躯，僭越了天道预言之权柄。此罪孽将直接反噬所有受此星轨影响的'日生'之人， 引动万物秩序错乱。故，宁可将未证之变烂于腹中，也不可让一字流于唇齿。</p>
+            </div>
+            <div class="page-number">一</div>
+        </div>
+        
+        <!-- 第二页 -->
+        <div class="page" id="page2">
+            <div class="content">
+                <h2>夜观第二则：宿命之界</h2>
+                <p><span class="quote">"观星而不卜命，卜命而不改运。"</span></p>
+                <p>望星空，乃为知晓宇宙之序，此为静观，安全无虞。然若由星象牵引，意图通过<span class="emphasized">辰</span>星之位与<span class="emphasized">辰</span>星之运，推算人之命数，则已涉足阴影之界，需万分谨慎。</p>
+                <p>即便由<span class="emphasized">辰</span>星所推算出的命数已然清晰， 吾族亦需视其为已烧灼的印记，不得妄动。命运如大江，其流向已成定局。凡试图'改运'者，皆是向宇宙讨要了本不属于自身的'代价'，此代价必十倍于所改之运，从观测者的<span class="emphasized">辰</span>运，甚至血脉中取回。 知晓即是终点，干预即是永劫。"</p>
+            </div>
+            <div class="page-number">二</div>
+        </div>
+        
+        <!-- 第三页 -->
+        <div class="page" id="page3">
+            <div class="content">
+                <h2>夜观第三则：观测之罪</h2>
+                <p><span class="quote">"勿以己意增减其色。增色者，祸及七代。"</span></p>
+                <p></p>
+                <p>星辰之光，其色必真，不得有第三种主观之色。观测时，心境务求空寂，不得以自身之欲念去'粉饰'或'贬低'所见之象。即便是微小的、不足<span class="emphasized">寸入宅</span>的误差，也绝不允许。</p>
+                <p>所谓增色，并非简单的记录错误，而是带有情感的蓄意曲解。哪怕只是让星光在观星台的记录上<span class="emphasized">寸入宅</span>（即一丝一毫）地失真， 其罪孽亦是向天机撒谎。此等大罪，必追溯至其后七代的血脉中，使其世世代代皆不得安宁，以偿还扭曲天机之重罚。"</p>
+            </div>
+            <div class="page-number">三</div>
+        </div>
+        
+        <!-- 第四页 -->
+        <div class="page" id="page4">
+            <div class="content">
+                <h2>夜观第四则：远迎之礼</h2>
+                <p><span class="quote">"星辰入宅，其势自成。吾辈职在远迎，不在近镇。"</span></p>
+                <p>"当星辰的'意志'凝结成势，似要直入观测者气场所构筑的结界（宅）时，吾辈必须保持谦卑的姿态。星辰之力，不关乎地脉之盛衰，不计较凡人田间之<span class="emphasized">'禾'</span>的丰歉。"</p>
+                <p>"星辰之势已然完整且不可逆转。我们的职责，是像接待一位强大而不可测的远客，在安全距离之外，以最恭敬的心态'迎候'。绝不可试图以家族之法，去'近镇'或阻断这股力量，以求保全凡世的<span class="emphasized">'禾'</span>。 任何'近镇'的尝试，都将被星辰视作宣战，引来远超对凡间<span class="emphasized">'禾'</span>的价值的、毁灭性的报复。"</p>
+            </div>
+            <div class="page-number">四</div>
+        </div>
+        
+        <!-- 第五页 -->
+        <div class="page" id="page5">
+            <div class="content">
+                <h2>夜观第五则：心念之清</h2>
+                <p><span class="quote">"心有挂碍，则气脉先乱，观测则谬。"</span></p>
+                <p></p>
+                <p>"观测夜空，并非纯粹的视觉行为。心神之纯净，乃是观测有效的<span class="emphasized">'必'</span>要条件。 它要求观星者将自身的气脉与星辰的运行频率调谐一致。心神必须是一面澄澈、无波的古镜。"</p>
+                <p>"一旦观星者心中存有对世俗的贪恋、未竟的执念，这些'杂质'便会扰乱流经全身的气脉，使其运转紊乱。心有挂碍，则气脉先乱，观测之果<span class="emphasized">'必'</span>然为谬。 携带私心窥探天机，<span class="emphasized">'必'</span>遭反噬，此乃不可逆之天律。"</p>
+            </div>
+            <div class="page-number">五</div>
+        </div>
+        
+        <!-- 第六页 -->
+        <div class="page" id="page6">
+            <div class="content">
+                <h2>夜观第六则：避脉眼之戒</h2>
+                <p><span class="quote">"避开脉眼。勿以人力，妄引天光入宅。"</span></p>
+                <p>"'脉眼'，乃是地脉与天光的交汇点，是规则的断层。 严禁任何人动用人为的手段，去'汇聚'或'引导'那些本不该集中流入的'天光'，并将其强行牵引至居住或观测的'宅'中。"</p>
+                <p>"此举无异于妄引未经炼化的神性火焰。其后果，将是<span class="emphasized">'倾倒山'</span>岳般巨大的灾难。那股狂暴的能量，将如滔天<span class="emphasized">'水'</span>势般吞噬一切，造成山<span class="emphasized">'倾倒'</span>、流<span class="emphasized">'水'</span>逆行的恐怖景象。观测者自身的血肉、房屋、甚至周围的地貌，都将被那股狂暴的能量所吞噬殆尽，绝无幸存之理。 避之，远之，切勿妄引天光。"</p>
+            </div>
+            <div class="page-number">六</div>
+        </div>
+        
+        <div class="navigation">
+            <button id="prevBtn">上一页</button>
+            <button id="nextBtn">下一页</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const pages = document.querySelectorAll('.page');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const pageIndicator = document.getElementById('pageIndicator');
+            let currentPage = 0;
+            let isAnimating = false;
+            
+            // 初始化显示第一页
+            showPage(currentPage);
+            
+            // 上一页按钮事件
+            prevBtn.addEventListener('click', function() {
+                if (currentPage > 0 && !isAnimating) {
+                    flipPage(currentPage - 1, 'prev');
+                }
+            });
+            
+            // 下一页按钮事件
+            nextBtn.addEventListener('click', function() {
+                if (currentPage < pages.length - 1 && !isAnimating) {
+                    flipPage(currentPage + 1, 'next');
+                }
+            });
+            
+            // 翻页动画
+            function flipPage(pageIndex, direction) {
+                isAnimating = true;
+                
+                // 添加翻页动画类
+                if (direction === 'next') {
+                    pages[currentPage].classList.add('flip-to-right');
+                } else {
+                    pages[currentPage].classList.add('flip-from-left');
+                }
+                
+                // 短暂延迟后切换到新页面
+                setTimeout(() => {
+                    showPage(pageIndex);
+                    pages[currentPage].classList.remove('flip-to-left', 'flip-from-right');
+                    isAnimating = false;
+                }, 800);
+            }
+            
+            // 显示指定页面
+            function showPage(pageIndex) {
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                });
+                pages[pageIndex].classList.add('active');
+                currentPage = pageIndex;
+                
+                // 更新按钮状态
+                prevBtn.disabled = (pageIndex === 0);
+                nextBtn.disabled = (pageIndex === pages.length - 1);
+                
+                // 更新页面指示器
+                pageIndicator.textContent = `${pageIndex + 1}/${pages.length}`;
+            }
+            
+            // 添加键盘翻页支持
+            document.addEventListener('keydown', function(event) {
+                if (isAnimating) return;
+                
+                if (event.key === 'ArrowLeft' && currentPage > 0) {
+                    flipPage(currentPage - 1, 'prev');
+                } else if (event.key === 'ArrowRight' && currentPage < pages.length - 1) {
+                    flipPage(currentPage + 1, 'next');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

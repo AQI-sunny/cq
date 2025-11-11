@@ -1,0 +1,871 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <title>可疑的墙</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            overflow: hidden;
+        }
+
+        .game-container {
+            text-align: center;
+            position: relative;
+            width: 100vw;
+            width: 100dvw;
+            height: 100vh;
+            height: 100dvh;
+            max-height: 100vh;
+            max-height: 100dvh;
+            background-color: #111;
+            border: 3px solid #f00;
+            /* box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wall {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #222 25%, transparent 25%), linear-gradient(-45deg, #222 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #222 75%), linear-gradient(-45deg, transparent 75%, #222 75%);
+            background-size: 40px 40px;
+            background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
+            background-image: url('https://sylvie-seven-cq.top/gallery/qiang.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .weak-spot {
+            position: absolute;
+            width: clamp(60px, 15vw, 100px);
+            height: clamp(60px, 15vw, 100px);
+            background-color: transparent;
+            border: 2px dashed transparent;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            touch-action: manipulation;
+        }
+
+        .weak-spot:hover {
+            background-color: rgba(139, 0, 0, 0.1);
+            border-color: transparent;
+        }
+
+        .broken-hole {
+            position: absolute;
+            width: clamp(100px, 20vw, 150px);
+            height: clamp(100px, 20vw, 150px);
+            background-color: #000;
+            border: 5px solid #f00;
+            border-radius: 50%;
+           /*  box-shadow: 0 0 20px rgba(255, 0, 0, 0.8); */
+            z-index: 20;
+        }
+
+        .enter-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: clamp(12px, 3vw, 20px) clamp(24px, 6vw, 40px);
+            background-color: #f00;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: clamp(16px, 4vw, 24px);
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+            z-index: 100;
+            transition: all 0.3s ease;
+           /*  box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4); */
+            touch-action: manipulation;
+            min-width: 120px;
+        }
+
+        .enter-btn:hover,
+        .enter-btn:active {
+            background-color: #ff3333;
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+
+        .instructions {
+            margin-bottom: 20px;
+            font-size: clamp(14px, 3.5vw, 20px);
+            font-weight: bold;
+            color: #f00;
+            /* text-shadow: 0 0 10px rgba(255, 0, 0, 0.7); */
+            position: fixed;
+            top: max(2vh, 20px);
+            z-index: 1000;
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+            padding: clamp(8px, 2vw, 16px);
+            box-sizing: border-box;
+            /* background-color: rgba(0, 0, 0, 0.7); */
+            border-radius: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            /* backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); */
+            line-height: 1.4;
+        }
+
+        .hit-effect {
+            position: absolute;
+            width: clamp(20px, 6vw, 40px);
+            height: clamp(20px, 6vw, 40px);
+            border: 3px solid #f00;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: hitAnimation 0.5s forwards;
+            z-index: 50;
+        }
+
+        .hint {
+            position: absolute;
+            width: clamp(120px, 30vw, 200px);
+            height: clamp(120px, 30vw, 200px);
+            border: 3px dashed #ff0;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: hintPulse 2s infinite;
+            z-index: 30;
+        }
+
+        .hint-text {
+            position: absolute;
+            top: clamp(-30px, -8vw, -20px);
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ff0;
+            font-weight: bold;
+            /* text-shadow: 0 0 5px rgba(255, 255, 0, 0.8); */
+            z-index: 31;
+            white-space: nowrap;
+            font-size: clamp(14px, 3vw, 20px);
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 4px 12px;
+            border-radius: 8px;
+        }
+
+        @keyframes hitAnimation {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+
+        @keyframes hintPulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.0);
+                opacity: 0.4;
+            }
+            100% {
+                transform: scale(0.8);
+                opacity: 0.7;
+            }
+        }
+
+        /* 横屏优化 */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .instructions {
+                top: 10px;
+                font-size: clamp(12px, 2.5vw, 16px);
+                padding: 6px 12px;
+                width: 95%;
+            }
+            
+            .weak-spot {
+                width: clamp(50px, 12vh, 80px);
+                height: clamp(50px, 12vh, 80px);
+            }
+            
+            .broken-hole {
+                width: clamp(80px, 16vh, 120px);
+                height: clamp(80px, 16vh, 120px);
+            }
+            
+            .enter-btn {
+                padding: clamp(10px, 2vh, 16px) clamp(20px, 4vh, 32px);
+                font-size: clamp(14px, 3vh, 20px);
+            }
+        }
+
+        /* 平板优化 */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .instructions {
+                font-size: clamp(16px, 2.5vw, 22px);
+                top: 3vh;
+            }
+            
+            .weak-spot {
+                width: clamp(70px, 12vw, 90px);
+                height: clamp(70px, 12vw, 90px);
+            }
+            
+            .broken-hole {
+                width: clamp(110px, 18vw, 140px);
+                height: clamp(110px, 18vw, 140px);
+            }
+            
+            .enter-btn {
+                padding: clamp(16px, 2.5vw, 22px) clamp(32px, 5vw, 44px);
+                font-size: clamp(18px, 3vw, 26px);
+            }
+        }
+
+        /* 小屏幕手机优化 */
+        @media (max-width: 360px) {
+            .instructions {
+                font-size: clamp(12px, 4vw, 16px);
+                top: 1vh;
+                padding: 6px 10px;
+                width: 95%;
+            }
+            
+            .weak-spot {
+                width: clamp(45px, 18vw, 65px);
+                height: clamp(45px, 18vw, 65px);
+            }
+            
+            .broken-hole {
+                width: clamp(70px, 22vw, 100px);
+                height: clamp(70px, 22vw, 100px);
+            }
+            
+            .hint {
+                width: clamp(100px, 35vw, 160px);
+                height: clamp(100px, 35vw, 160px);
+            }
+            
+            .hint-text {
+                font-size: clamp(12px, 3.5vw, 16px);
+                top: clamp(-25px, -10vw, -15px);
+            }
+            
+            .enter-btn {
+                padding: clamp(10px, 4vw, 16px) clamp(20px, 8vw, 32px);
+                font-size: clamp(14px, 5vw, 18px);
+                min-width: 100px;
+            }
+        }
+
+        /* 超小屏幕优化 */
+        @media (max-width: 320px) {
+            .instructions {
+                font-size: 12px;
+                padding: 4px 8px;
+            }
+            
+            .weak-spot {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .enter-btn {
+                min-width: 90px;
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+
+        /* iOS Safari 特定优化 */
+        @supports (-webkit-touch-callout: none) {
+            .game-container {
+                height: -webkit-fill-available;
+            }
+            
+            body {
+                height: -webkit-fill-available;
+            }
+            
+            /* 修复 iOS 按钮样式 */
+            .enter-btn {
+                -webkit-appearance: none;
+                border-radius: 12px;
+            }
+            
+            /* 修复 iOS 点击延迟 */
+            .weak-spot, .enter-btn {
+                cursor: pointer;
+            }
+        }
+
+        /* 防止文本缩放 */
+        @media screen and (max-device-width: 480px) {
+            body {
+                -webkit-text-size-adjust: 100%;
+                text-size-adjust: 100%;
+            }
+        }
+
+        /* 高DPI屏幕优化 */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .weak-spot, .broken-hole, .hit-effect, .hint {
+                image-rendering: -webkit-optimize-contrast;
+                image-rendering: crisp-edges;
+            }
+        }
+
+        /* 防止长按菜单 */
+        .weak-spot, .enter-btn {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* 工具选择界面 */
+        .tool-selection {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .tool-selection h1 {
+            color: #f00;
+            font-size: clamp(24px, 5vw, 32px);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .tool-options {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .tool-btn {
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+            border: 2px solid #666;
+            border-radius: 12px;
+            font-size: clamp(18px, 4vw, 24px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .tool-btn:hover {
+            background-color: #444;
+            border-color: #f00;
+        }
+
+        .tool-btn:active {
+            transform: scale(0.98);
+        }
+
+        .no-tool-message {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            text-align: center;
+            color: #f00;
+            font-size: clamp(20px, 4vw, 28px);
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 工具选择界面 -->
+    <div class="tool-selection" id="toolSelection">
+        <h1>你发现一堵可疑的墙，你记得在哪里有个锤子来着？</h1>
+        <div class="tool-options">
+            <div class="tool-btn" id="backyardBtn">后院工具棚</div>
+            <div class="tool-btn" id="kitchenBtn">花园小屋</div>
+            <div class="tool-btn" id="bedroomBtn">南巷尽头</div>
+            <div class="tool-btn" id="bathroomBtn">后院角落</div>
+        </div>
+    </div>
+
+    <!-- 没有工具提示 -->
+    <div class="no-tool-message" id="noToolMessage" style="display: none;">
+        由于没有趁手工具，你悻悻而归
+    </div>
+
+    <div class="instructions" id="instructions">探测墙壁薄弱点，找到后快速点击破墙！</div>
+
+    <div class="game-container" id="gameContainer" style="display: none;">
+        <div class="wall" id="wall"></div>
+        <button class="enter-btn" id="enterBtn">进入</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toolSelection = document.getElementById('toolSelection');
+            const noToolMessage = document.getElementById('noToolMessage');
+            const gameContainer = document.getElementById('gameContainer');
+            const wall = document.getElementById('wall');
+            const instructions = document.getElementById('instructions');
+            const enterBtn = document.getElementById('enterBtn');
+            const backyardBtn = document.getElementById('backyardBtn');
+            const kitchenBtn = document.getElementById('kitchenBtn');
+            const bedroomBtn = document.getElementById('bedroomBtn');
+            const bathroomBtn = document.getElementById('bathroomBtn');
+
+            let clickCount = 0;
+            let weakSpotFound = false;
+            let weakSpot = null;
+            let clicksInTimeFrame = 0;
+            let lastClickTime = 0;
+            let hintTimeout = null;
+            let hintElement = null;
+            let hintTextElement = null;
+            let hintCount = 0;
+            let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+            // 选择工具函数
+            function selectTool(tool) {
+                if (tool === 'backyard') {
+                    // 选择后院工具棚，开始游戏
+                    toolSelection.style.display = 'none';
+                    gameContainer.style.display = 'flex';
+                    initGame();
+                } else {
+                    // 选择其他选项，显示提示并黑屏
+                    toolSelection.style.display = 'none';
+                    noToolMessage.style.display = 'flex';
+                    // 3秒后刷新页面
+                    setTimeout(() => {
+                        location.reload();
+                    }, 3000);
+                }
+            }
+
+            // 为工具按钮添加事件监听器
+            backyardBtn.addEventListener('click', () => selectTool('backyard'));
+            kitchenBtn.addEventListener('click', () => selectTool('kitchen'));
+            bedroomBtn.addEventListener('click', () => selectTool('bedroom'));
+            bathroomBtn.addEventListener('click', () => selectTool('bathroom'));
+
+            // 防止移动端双击缩放
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function (event) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+
+            // 修复 iOS 橡皮筋效果
+            document.body.addEventListener('touchmove', function (e) {
+                if (e.target === gameContainer || e.target === wall) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+
+            // 随机生成薄弱点位置
+            function generateWeakSpot() {
+                const containerRect = gameContainer.getBoundingClientRect();
+                // 为移动设备留出更大的边距
+                const margin = Math.min(containerRect.width * 0.15, containerRect.height * 0.15);
+                const maxX = containerRect.width - 100 - 2 * margin;
+                const maxY = containerRect.height - 100 - 2 * margin;
+
+                const x = margin + Math.random() * maxX;
+                const y = margin + Math.random() * maxY;
+
+                weakSpot = document.createElement('div');
+                weakSpot.className = 'weak-spot';
+                weakSpot.style.left = `${x}px`;
+                weakSpot.style.top = `${y}px`;
+                weakSpot.dataset.broken = 'false';
+
+                // 为移动设备增加点击区域
+                if (isMobile) {
+                    weakSpot.style.width = '70px';
+                    weakSpot.style.height = '70px';
+                }
+
+                gameContainer.appendChild(weakSpot);
+
+                // 开始提示循环
+                hintTimeout = setTimeout(showHint, 30000);
+            }
+
+            // 创建击中效果
+            function createHitEffect(x, y) {
+                const effect = document.createElement('div');
+                effect.className = 'hit-effect';
+                effect.style.left = `${x - 20}px`;
+                effect.style.top = `${y - 20}px`;
+                gameContainer.appendChild(effect);
+
+                setTimeout(() => {
+                    if (effect.parentNode) {
+                        effect.remove();
+                    }
+                }, 500);
+            }
+
+            // 处理点击事件
+            function handleClick(e) {
+                if (weakSpot && weakSpot.dataset.broken === 'true') return;
+
+                clickCount++;
+
+                const rect = gameContainer.getBoundingClientRect();
+                let x, y;
+
+                if (e.type === 'touchstart' || e.type === 'touchend') {
+                    const touch = e.changedTouches[0];
+                    x = touch.clientX - rect.left;
+                    y = touch.clientY - rect.top;
+                } else {
+                    x = e.clientX - rect.left;
+                    y = e.clientY - rect.top;
+                }
+
+                createHitEffect(x, y);
+
+                // 检查是否点击到薄弱点
+                if (weakSpot && !weakSpotFound) {
+                    const spotRect = weakSpot.getBoundingClientRect();
+                    const spotX = spotRect.left - rect.left + spotRect.width / 2;
+                    const spotY = spotRect.top - rect.top + spotRect.height / 2;
+                    const distance = Math.sqrt(Math.pow(x - spotX, 2) + Math.pow(y - spotY, 2));
+                    const spotRadius = spotRect.width / 2;
+
+                    // 移动设备增加点击容错范围
+                    const tolerance = isMobile ? 2.0 : 1.5;
+
+                    if (distance < spotRadius * tolerance) {
+                        weakSpotFound = true;
+                        instructions.textContent = '找到薄弱点！快速点击破墙！（拿大锤子砸ing~）';
+                        instructions.style.color = '#ff0';
+
+                        // 清除提示
+                        if (hintElement) {
+                            hintElement.remove();
+                            hintElement = null;
+                        }
+                        if (hintTextElement) {
+                            hintTextElement.remove();
+                            hintTextElement = null;
+                        }
+
+                        // 清除定时器
+                        if (hintTimeout) {
+                            clearTimeout(hintTimeout);
+                            hintTimeout = null;
+                        }
+
+                        // 添加破墙事件监听
+                        weakSpot.addEventListener(isMobile ? 'touchend' : 'click', breakWall);
+                    }
+                }
+
+                // 检查是否需要显示提示（点击超过30次）
+                if (clickCount >= 30 && !weakSpotFound) {
+                    if (hintElement) {
+                        hintElement.remove();
+                        hintElement = null;
+                    }
+                    if (hintTextElement) {
+                        hintTextElement.remove();
+                        hintTextElement = null;
+                    }
+                    clearTimeout(hintTimeout);
+                    setTimeout(showHint, 500);
+                    clickCount = 0;
+                }
+            }
+
+            // 破墙函数
+            function breakWall(e) {
+                if (e.type === 'touchend') {
+                    e.preventDefault();
+                }
+                e.stopPropagation();
+
+                const currentTime = Date.now();
+
+                // 如果超过3秒没有点击，重置计数
+                if (currentTime - lastClickTime > 3000) {
+                    clicksInTimeFrame = 0;
+                }
+
+                lastClickTime = currentTime;
+                clicksInTimeFrame++;
+
+                // 更新指令显示点击进度
+                instructions.textContent = `找到薄弱点！快速点击砸破这辣鸡墙！${clicksInTimeFrame}`;
+
+                // 检查是否达到10次快速点击
+                if (clicksInTimeFrame >= 10) {
+                    // 破墙成功
+                    weakSpot.dataset.broken = 'true';
+
+                    // 创建破洞
+                    const hole = document.createElement('div');
+                    hole.className = 'broken-hole';
+                    const spotRect = weakSpot.getBoundingClientRect();
+                    const containerRect = gameContainer.getBoundingClientRect();
+                    hole.style.left = `${spotRect.left - containerRect.left}px`;
+                    hole.style.top = `${spotRect.top - containerRect.top}px`;
+                    gameContainer.appendChild(hole);
+
+                    // 移除薄弱点
+                    weakSpot.remove();
+
+                    // 清除提示
+                    if (hintElement) {
+                        hintElement.remove();
+                        hintElement = null;
+                    }
+                    if (hintTextElement) {
+                        hintTextElement.remove();
+                        hintTextElement = null;
+                    }
+
+                    // 显示进入按钮
+                    enterBtn.style.display = 'block';
+
+                    instructions.textContent = '拿大锤子破墙成功辣！快进入继续！或者你也可以...（点击叉叉~快速逃离~）';
+                    instructions.style.color = '#0f0';
+
+                    // 重置点击计数
+                    clicksInTimeFrame = 0;
+                }
+            }
+
+            // 显示区域提示
+            function showHint() {
+                if (weakSpotFound || !weakSpot) return;
+
+                // 清除之前的提示
+                if (hintElement) {
+                    hintElement.remove();
+                    hintElement = null;
+                }
+                if (hintTextElement) {
+                    hintTextElement.remove();
+                    hintTextElement = null;
+                }
+
+                // 创建提示元素
+                hintElement = document.createElement('div');
+                hintElement.className = 'hint';
+
+                // 获取薄弱点位置
+                const spotRect = weakSpot.getBoundingClientRect();
+                const containerRect = gameContainer.getBoundingClientRect();
+
+                const spotX = spotRect.left - containerRect.left + spotRect.width / 2;
+                const spotY = spotRect.top - containerRect.top + spotRect.height / 2;
+
+                // 根据提示次数调整提示区域大小和精确度
+                let hintSize = isMobile ? 150 : 200;
+                let offsetRange = isMobile ? 80 : 100;
+
+                if (hintCount >= 3) {
+                    hintSize = isMobile ? 100 : 120;
+                    offsetRange = isMobile ? 40 : 60;
+                } else if (hintCount >= 1) {
+                    hintSize = isMobile ? 120 : 160;
+                    offsetRange = isMobile ? 60 : 80;
+                }
+
+                // 在薄弱点周围的一个区域内随机选择提示位置
+                const hintX = spotX + (Math.random() - 0.5) * offsetRange;
+                const hintY = spotY + (Math.random() - 0.5) * offsetRange;
+
+                // 确保提示在容器范围内
+                const maxX = gameContainer.clientWidth - hintSize;
+                const maxY = gameContainer.clientHeight - hintSize;
+
+                const finalX = Math.max(20, Math.min(maxX - 20, hintX - hintSize / 2));
+                const finalY = Math.max(20, Math.min(maxY - 20, hintY - hintSize / 2));
+
+                hintElement.style.left = `${finalX}px`;
+                hintElement.style.top = `${finalY}px`;
+                hintElement.style.width = `${hintSize}px`;
+                hintElement.style.height = `${hintSize}px`;
+
+                gameContainer.appendChild(hintElement);
+
+                // 添加提示文字
+                hintTextElement = document.createElement('div');
+                hintTextElement.className = 'hint-text';
+                hintTextElement.textContent = hintCount === 0 ? '首次提示！' :
+                    hintCount === 1 ? '再次提示...' :
+                        hintCount === 2 ? '接近了！' :
+                            hintCount >= 3 ? '就在附近！' : '提示';
+                hintTextElement.style.top = `${finalY - 30}px`;
+                hintTextElement.style.left = `${finalX + hintSize / 2}px`;
+                gameContainer.appendChild(hintTextElement);
+
+                // 5秒后移除提示
+                setTimeout(() => {
+                    if (hintElement && hintElement.parentNode) {
+                        hintElement.remove();
+                        hintElement = null;
+                    }
+                    if (hintTextElement && hintTextElement.parentNode) {
+                        hintTextElement.remove();
+                        hintTextElement = null;
+                    }
+                }, 5000);
+
+                hintCount++;
+
+                // 根据提示次数调整下次提示的间隔
+                let nextHintDelay = isMobile ? 25000 : 30000;
+                if (hintCount >= 3) {
+                    nextHintDelay = isMobile ? 15000 : 20000;
+                } else if (hintCount >= 1) {
+                    nextHintDelay = isMobile ? 20000 : 25000;
+                }
+
+                // 重置点击计数器
+                clickCount = 0;
+
+                // 重新设置下一次提示
+                hintTimeout = setTimeout(showHint, nextHintDelay);
+            }
+
+            // 跳转到新页面
+            function goToNextPage() {
+                // 这里可以替换为实际的目标页面
+                alert('即将进入...');
+                window.location.href = 'https://sylvie-seven-cq.top/Syzygy/K-QA实验室.html';
+            }
+
+            // 初始化游戏
+            function initGame() {
+                generateWeakSpot();
+                
+                // 添加事件监听
+                const eventType = isMobile ? 'touchstart' : 'click';
+                gameContainer.addEventListener(eventType, handleClick);
+                enterBtn.addEventListener('click', goToNextPage);
+
+                // 移动设备触摸事件处理
+                if (isMobile) {
+                    gameContainer.addEventListener('touchstart', function (e) {
+                        e.preventDefault();
+                    }, { passive: false });
+
+                    enterBtn.addEventListener('touchstart', function (e) {
+                        e.preventDefault();
+                        this.style.transform = 'translate(-50%, -50%) scale(0.95)';
+                    });
+
+                    enterBtn.addEventListener('touchend', function (e) {
+                        e.preventDefault();
+                        this.style.transform = 'translate(-50%, -50%) scale(1)';
+                        goToNextPage();
+                    });
+                }
+            }
+
+            // 等待页面完全加载后初始化
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initGame);
+            } else {
+                initGame();
+            }
+
+            // 处理窗口大小变化
+            window.addEventListener('resize', function () {
+                // 在窗口大小变化时，重新调整元素大小
+                if (hintElement) {
+                    hintElement.remove();
+                    hintElement = null;
+                }
+                if (hintTextElement) {
+                    hintTextElement.remove();
+                    hintTextElement = null;
+                }
+                if (hintTimeout) {
+                    clearTimeout(hintTimeout);
+                    hintTimeout = null;
+                }
+            });
+
+            // 防止页面滚动
+            document.addEventListener('touchmove', function (e) {
+                if (e.target === document.body || e.target === document.documentElement) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        });
+    </script>
+</body>
+</html>
+
+

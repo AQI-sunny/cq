@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>上山</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'KaiTi', '楷体', serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298, #2c7873);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: auto;
+            position: relative;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 90%;
+            width: 100%;
+            padding: 20px;
+            position: relative;
+            min-height: 80vh;
+        }
+
+        .text-line {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            line-height: 1.6;
+            opacity: 0;
+            margin: 30px 0;
+            padding: 0 10px;
+            transition: opacity 0.8s ease;
+            width: 60%;
+            text-align: center;
+            z-index: 5;
+            position: absolute;
+        }
+
+        .text-line.visible {
+            opacity: 1;
+        }
+
+        /* 第一场景 - 文字1和2在右上角 */
+        .text-line:nth-child(2) { /* 文字1 - 右上角 */
+            top: 10%;
+            right: 5%;
+        }
+        
+        .text-line:nth-child(3) { /* 文字2 - 右上角 */
+            top: 30%;
+            right: 5%;
+        }
+        
+        /* 第二场景 - 文字3和4在左下角 */
+        .text-line:nth-child(5) { /* 文字3 - 左下角 */
+            bottom: 30%;
+            left: 5%;
+        }
+        
+        .text-line:nth-child(6) { /* 文字4 - 左下角 */
+            bottom: 10%;
+            left: 5%;
+        }
+        
+        /* 第三场景 - 文字5在中央下方 */
+        .text-line:nth-child(8) { /* 文字5 - 中央下方 */
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+        }
+
+        .image-container {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            position: absolute;
+            z-index: 10;
+        }
+
+        .image-container.visible {
+            opacity: 1;
+        }
+
+        /* 第一场景 - 图片1在左上角 */
+        .image-container.left-top {
+            top: 10%;
+            left: 5%;
+            transform: translateX(-100%) translateY(-100%);
+        }
+
+        .image-container.left-top.visible {
+            transform: translateX(0) translateY(0);
+        }
+
+        /* 第二场景 - 图片2在右下角 */
+        .image-container.right-bottom {
+            bottom: 10%;
+            right: 5%;
+            transform: translateX(100%) translateY(100%);
+        }
+
+        .image-container.right-bottom.visible {
+            transform: translateX(0) translateY(0);
+        }
+
+        /* 第三场景 - 图片3在中央上方 */
+        .image-container.center-top {
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100%);
+        }
+
+        .image-container.center-top.visible {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .image-container img {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .image-container.visible img {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .skip-btn, .continue-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            z-index: 100;
+        }
+
+        .continue-btn {
+            display: none;
+            top: auto;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .skip-btn:hover, .continue-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .decoration {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 15s infinite ease-in-out;
+            z-index: 1;
+        }
+
+        .decoration:nth-child(1) {
+            top: 10%; left: 10%;
+            width: clamp(50px, 10vw, 150px);
+            height: clamp(50px, 10vw, 150px);
+            animation-delay: 0s;
+        }
+        .decoration:nth-child(2) {
+            top: 70%; right: 10%;
+            width: clamp(40px, 8vw, 120px);
+            height: clamp(40px, 8vw, 120px);
+            animation-delay: 2s;
+        }
+        .decoration:nth-child(3) {
+            bottom: 20%; left: 20%;
+            width: clamp(30px, 6vw, 80px);
+            height: clamp(30px, 6vw, 80px);
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* 平板设备 (768px - 1024px) */
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .container {
+                max-width: 95%;
+                padding: 15px;
+            }
+            
+            .image-container {
+                max-width: 180px;
+                max-height: 180px;
+            }
+            
+            .image-container img {
+                max-width: 180px;
+                max-height: 180px;
+            }
+            
+            .text-line {
+                width: 55%;
+                font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+            }
+            
+            .skip-btn, .continue-btn {
+                padding: 9px 18px;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* 手机和平板通用响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                max-width: 98%;
+                padding: 10px;
+            }
+            
+            .image-container {
+                position: fixed;
+                max-width: 35%;
+                max-height: 35%;
+            }
+            
+            .image-container img {
+                max-width: 100%;
+                max-height: 100%;
+            }
+            
+            .image-container.left-top {
+                top: 8%;
+                left: 8%;
+            }
+            
+            .image-container.right-bottom {
+                bottom: 8%;
+                right: 8%;
+            }
+            
+            .image-container.center-top {
+                top: 12%;
+            }
+            
+            .text-line {
+                margin: 15px 0;
+                width: 45%;
+                font-size: clamp(0.8rem, 2.2vw, 1rem);
+                padding: 0 8px;
+            }
+            
+            /* 移动端文字位置调整 */
+            .text-line:nth-child(2),
+            .text-line:nth-child(3) {
+                top: 8%;
+                right: 8%;
+            }
+            
+            .text-line:nth-child(2) {
+                top: 12%;
+            }
+            
+            .text-line:nth-child(3) {
+                top: 40%;
+            }
+            
+            .text-line:nth-child(5),
+            .text-line:nth-child(6) {
+                bottom: 8%;
+                left: 8%;
+            }
+            
+            .text-line:nth-child(5) {
+                bottom: 40%;
+            }
+            
+            .text-line:nth-child(6) {
+                bottom: 12%;
+            }
+            
+            .text-line:nth-child(8) {
+                bottom: 12%;
+                width: 85%;
+            }
+            
+            body { 
+                padding: 15px; 
+                justify-content: flex-start;
+            }
+            
+            .skip-btn, .continue-btn {
+                top: 15px;
+                right: 15px;
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+            
+            .continue-btn {
+                bottom: 15px;
+            }
+        }
+
+        /* 小屏手机 (480px以下) */
+        @media (max-width: 480px) {
+            .container {
+                max-width: 100%;
+                padding: 5px;
+                min-height: 85vh;
+            }
+            
+            .image-container {
+                max-width: 40%;
+                max-height: 40%;
+            }
+            
+            .image-container.left-top {
+                top: 5%;
+                left: 5%;
+            }
+            
+            .image-container.right-bottom {
+                bottom: 5%;
+                right: 5%;
+            }
+            
+            .image-container.center-top {
+                top: 8%;
+            }
+            
+            .text-line {
+                margin: 10px 0;
+                width: 40%;
+                font-size: 0.75rem;
+                padding: 0 5px;
+                line-height: 1.5;
+            }
+            
+            .text-line:nth-child(2),
+            .text-line:nth-child(3) {
+                top: 5%;
+                right: 5%;
+            }
+            
+            .text-line:nth-child(2) {
+                top: 10%;
+            }
+            
+            .text-line:nth-child(3) {
+                top: 45%;
+            }
+            
+            .text-line:nth-child(5),
+            .text-line:nth-child(6) {
+                bottom: 5%;
+                left: 5%;
+            }
+            
+            .text-line:nth-child(5) {
+                bottom: 45%;
+            }
+            
+            .text-line:nth-child(6) {
+                bottom: 10%;
+            }
+            
+            .text-line:nth-child(8) {
+                bottom: 8%;
+                width: 90%;
+                font-size: 0.8rem;
+            }
+            
+            body { 
+                padding: 10px; 
+            }
+            
+            .skip-btn, .continue-btn {
+                top: 10px;
+                right: 10px;
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .continue-btn {
+                bottom: 10px;
+            }
+            
+            .decoration:nth-child(1) {
+                width: clamp(30px, 8vw, 100px);
+                height: clamp(30px, 8vw, 100px);
+            }
+            .decoration:nth-child(2) {
+                width: clamp(25px, 6vw, 80px);
+                height: clamp(25px, 6vw, 80px);
+            }
+            .decoration:nth-child(3) {
+                width: clamp(20px, 5vw, 60px);
+                height: clamp(20px, 5vw, 60px);
+            }
+        }
+
+        /* 横屏手机特殊处理 */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .container {
+                min-height: 90vh;
+            }
+            
+            .image-container {
+                max-width: 25%;
+                max-height: 25%;
+            }
+            
+            .text-line {
+                width: 50%;
+                font-size: 0.7rem;
+                line-height: 1.4;
+            }
+            
+            .text-line:nth-child(2) {
+                top: 5%;
+            }
+            
+            .text-line:nth-child(3) {
+                top: 35%;
+            }
+            
+            .text-line:nth-child(5) {
+                bottom: 35%;
+            }
+            
+            .text-line:nth-child(6) {
+                bottom: 5%;
+            }
+            
+            .text-line:nth-child(8) {
+                bottom: 5%;
+            }
+        }
+
+        /* 超大屏平板优化 */
+        @media (min-width: 1025px) and (max-width: 1366px) {
+            .image-container {
+                max-width: 220px;
+                max-height: 220px;
+            }
+            
+            .image-container img {
+                max-width: 220px;
+                max-height: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="decoration"></div>
+    <div class="decoration"></div>
+    <div class="decoration"></div>
+
+    <button class="skip-btn" id="skipBtn">跳过</button>
+    <button class="continue-btn" id="continueBtn">继续</button>
+
+    <div class="container" id="textContainer">
+        <!-- 第一场景 -->
+        <!-- 图片1 - 左上角 -->
+        <div class="image-container left-top" id="image1">
+            <img src="https://sylvie-seven-cq.top/gallery/等候.jpg" alt="等候">
+        </div>
+        
+        <!-- 文字1 - 右上角 -->
+        <div class="text-line" id="text1">你抱着电脑run到公寓楼下，看到一个挑染蓝色头发的女生戴着头盔跨坐在一辆摩托车上，她穿着一套深蓝色套装，手里还抱着一个粉色头盔。
+"我是林墨！先上车！没时间解释了！"
+        </div>
+        <!-- 文字2 - 右上角 -->
+        <div class="text-line" id="text2">你跳上后座，紧紧抱住她的腰。摩托车引擎发出一声咆哮，猛地冲了出去，在夜色中划出一道黑色的残影。
+（摩托车在城市车流中穿梭，风声呼啸，林墨的声音穿透风噪，在你耳边急促地响起。）
+        </div>
+        
+        <!-- 第二场景 -->
+        <!-- 图片2 - 右下角 -->
+        <div class="image-container right-bottom" id="image2">
+            <img src="https://sylvie-seven-cq.top/gallery/疾驰.jpg" alt="疾驰">
+        </div>
+        
+        <!-- 文字3 - 左下角 -->
+        <div class="text-line" id="text3">"想必你已经知道现在最重要的是封印洛书碎片！月升之时，洛河将息！ 我们得赶在碎片暴走前借助月光封印它！还有七分钟月全食进入生光阶段，后山是最合适封印它的地方！待一切尘埃落定，我会跟你解释。"
+        </div>
+        <!-- 文字4 - 左下角 -->
+        <div class="text-line" id="text4">她猛地拐过一个路口，车身倾斜，你感到心脏几乎要跳出来。
+"我们马上就到了，我会一直陪着你的，我相信你这次一定能成功。"
+        </div>
+        
+        <!-- 第三场景 -->
+        <!-- 图片3 - 中央上方 -->
+        <div class="image-container center-top" id="image3">
+            <img src="https://sylvie-seven-cq.top/gallery/生光.jpg" alt="生光">
+        </div>
+        
+        <!-- 文字5 - 中央下方 -->
+        <div class="text-line" id="text5">摩托车停在后山公园平台处，你和林墨一起跑上山顶。
+"生光阶段开始了！快打开电脑连接我的服务器！"
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const textLines = document.querySelectorAll('.text-line');
+            const images = document.querySelectorAll('.image-container');
+            const skipBtn = document.getElementById('skipBtn');
+            const continueBtn = document.getElementById('continueBtn');
+            
+            // 设置跳转目标URL
+            const targetUrl = 'https://sylvie-seven-cq.top/Syzygy/computer-lin2.html';
+
+            let autoPlay = true;
+            let currentStep = 0;
+            let sceneInterval;
+
+            // 步骤定义
+            const steps = [
+                // 第一场景 - 显示图片1
+                function() {
+                    hideAll();
+                    document.getElementById('image1').classList.add('visible');
+                    document.getElementById('image1').style.display = 'block';
+                },
+                // 第一场景 - 显示文字1
+                function() {
+                    document.getElementById('text1').classList.add('visible');
+                },
+                // 第一场景 - 显示文字2
+                function() {
+                    document.getElementById('text2').classList.add('visible');
+                },
+                // 第二场景 - 显示图片2
+                function() {
+                    hideAll();
+                    document.getElementById('image2').classList.add('visible');
+                    document.getElementById('image2').style.display = 'block';
+                },
+                // 第二场景 - 显示文字3
+                function() {
+                    document.getElementById('text3').classList.add('visible');
+                },
+                // 第二场景 - 显示文字4
+                function() {
+                    document.getElementById('text4').classList.add('visible');
+                },
+                // 第三场景 - 清屏后显示图片3
+                function() {
+                    hideAll();
+                    document.getElementById('image3').classList.add('visible');
+                    document.getElementById('image3').style.display = 'block';
+                },
+                // 第三场景 - 显示文字5
+                function() {
+                    document.getElementById('text5').classList.add('visible');
+                }
+            ];
+
+            // 隐藏所有元素
+            function hideAll() {
+                textLines.forEach(text => {
+                    text.classList.remove('visible');
+                });
+                images.forEach(img => {
+                    img.classList.remove('visible');
+                    img.style.display = 'none';
+                });
+            }
+
+            // 执行下一步
+            function executeNextStep() {
+                if (currentStep < steps.length && autoPlay) {
+                    steps[currentStep]();
+                    currentStep++;
+                    
+                    if (currentStep < steps.length) {
+                        sceneInterval = setTimeout(executeNextStep, 2000);
+                    } else {
+                        // 所有步骤完成，显示继续按钮
+                        continueBtn.style.display = 'block';
+                        continueBtn.textContent = '打开电脑';
+                    }
+                }
+            }
+
+            // 开始播放
+            setTimeout(executeNextStep, 500);
+
+            // 跳过按钮
+            skipBtn.addEventListener('click', function () {
+                if (confirm('确定要跳过这段路程吗？')) {
+                    autoPlay = false;
+                    clearTimeout(sceneInterval);
+                    window.location.href = targetUrl;
+                } else {
+                    // 用户点击"取消"，显示"继续"按钮
+                    continueBtn.style.display = 'block';
+                }
+            });
+
+            // 继续按钮
+            continueBtn.addEventListener('click', function () {
+                if (currentStep < steps.length) {
+                    // 如果还有未显示的步骤，继续播放
+                    autoPlay = true;
+                    continueBtn.style.display = 'none';
+                    executeNextStep();
+                } else {
+                    // 所有步骤已显示，弹出是否准备好跳转的提示框
+                    if (confirm('打开电脑中......')) {
+                        window.location.href = targetUrl;
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
