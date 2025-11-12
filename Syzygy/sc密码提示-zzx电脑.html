@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/jpeg" href="https://sylvie-seven-cq.top/gallery/search.png">
-    <title>密码提示 - 搜索结果</title>
+    <title>周哲叙电脑提示 - 搜索结果</title>
+    <!-- ch-->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -120,33 +121,6 @@
                             text-decoration: underline;
                         }
 
-        .search-suggestions {
-            position: absolute;
-            background: white;
-            border: 1px solid #dfe1e5;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            width: 500px;
-            max-height: 300px;
-            overflow-y: auto;
-            z-index: 1000;
-            display: none;
-        }
-
-            .search-suggestions div {
-                padding: 10px 15px;
-                cursor: pointer;
-            }
-
-                .search-suggestions div:hover {
-                    background-color: #f5f5f5;
-                }
-
-        .suggestion-container {
-            position: relative;
-            display: inline-block;
-        }
-
         .loading {
             text-align: center;
             padding: 20px;
@@ -158,13 +132,10 @@
     <div class="container">
         <img src="https://sylvie-seven-cq.top/gallery/search.png" alt="Logo" class="logo">
         <div class="search-container">
-            <div class="suggestion-container">
-                <input type="text" class="search-box" id="searchInput" placeholder="搜索其他关键词..." value="密码提示">
-                <div class="search-suggestions" id="searchSuggestions"></div>
-            </div>
+            <input type="text" class="search-box" id="searchInput" placeholder="搜索其他关键词..." value="周哲叙电脑提示">
             <button class="search-button" id="searchButton">搜索</button>
         </div>
-        <h1 id="pageTitle">密码提示 - 搜索结果列表</h1>
+        <h1 id="pageTitle">周哲叙电脑提示 - 搜索结果列表</h1>
         <div id="loadingIndicator" class="loading" style="display: none;">加载中...</div>
         <ul class="news-list" id="resultsList">
             <!-- 搜索结果将在这里动态生成 -->
@@ -174,12 +145,9 @@
             <h2>猜你想搜</h2>
             <ul id="relatedSearchesList">
                 <!-- 固定显示三个关键词 -->
-                <li><a href="https://sylvie-seven-cq.top/Syzygy/system-responsech.html" class="related-search" data-keyword="咖啡店后台密码">咖啡店后台密码</a></li>
-                <li><a href="https://base64.us/" class="related-search" data-keyword="Base64在线编码解码">Base64在线编码解码</a></li>
-                <li><a href="https://www.qqxiuzi.cn/bianma/zhalanmima.php" class="related-search" data-keyword="栅栏密码加密解密">栅栏密码加密解密</a></li>
-                <li><a href="https://www.metools.info/code/c70.html" class="related-search" data-keyword="凯撒密码在线解码">凯撒密码在线解码</a></li>
-                <li><a href="https://www.metools.info/code/c71.html" class="related-search" data-keyword="维吉尼亚密码在线转换">维吉尼亚密码在线转换</a></li>
-                <li><a href="https://www.metools.info/code/playfair_186.html" class="related-search" data-keyword="Playfair加密解密">Playfair加密解密</a></li>
+
+                <li><a href="javascript:void(0)" class="related-search" data-keyword="周哲叙电脑怎么连接？">周哲叙电脑怎么连接？</a></li>
+
             </ul>
         </div>
     </div>
@@ -211,12 +179,12 @@
                 Object.keys(data).forEach(key => {
                     try {
                         const value = data[key];
-                        
+
                         // 如果值是字符串（直接URL格式），则转换为数组格式
                         if (typeof value === 'string') {
                             keywordRedirects[key] = value;
                             console.log(`   "${key}" -> ${value} (直接URL格式)`);
-                        } 
+                        }
                         // 如果值是数组（原格式），则取第一个元素的URL
                         else if (Array.isArray(value) && value.length > 0) {
                             const redirectInfo = value[0];
@@ -251,9 +219,7 @@
             if (keywordRedirects[query]) {
                 const redirectUrl = keywordRedirects[query];
                 console.log('🎯 找到匹配! 跳转到:', redirectUrl);
-                setTimeout(() => {
-                    window.location.href = redirectUrl;
-                }, 100);
+                window.location.href = redirectUrl; // 使用window.location.href进行跳转
                 return true;
             }
 
@@ -280,19 +246,19 @@
                 const noResultsItem = document.createElement('li');
                 noResultsItem.className = 'news-item';
                 noResultsItem.innerHTML = `
-                    <div class="title">搜索: ${query}</div>
-                    <div class="source">暂无搜索结果，请尝试其他关键词</div>
-                `;
+                                <div class="title">搜索: ${query}</div>
+                                <div class="source">暂无搜索结果，请尝试其他关键词</div>
+                            `;
                 resultsList.appendChild(noResultsItem);
             } else {
                 results.forEach(result => {
                     const resultItem = document.createElement('li');
                     resultItem.className = 'news-item';
                     resultItem.innerHTML = `
-                        <a href="${result.url}" class="title">${result.title}</a>
-                        <div class="source">${result.source}</div>
-                        <div class="date">${result.date}</div>
-                    `;
+                                    <a href="${result.url}" class="title" target="_blank">${result.title}</a>
+                                    <div class="source">${result.source}</div>
+                                    <div class="date">${result.date}</div>
+                                `;
                     resultsList.appendChild(resultItem);
                 });
             }
@@ -311,37 +277,6 @@
             performNormalSearch(query);
         }
 
-        // 搜索建议功能
-        function showSearchSuggestions(query) {
-            const suggestionsContainer = document.getElementById('searchSuggestions');
-            suggestionsContainer.innerHTML = '';
-
-            if (!query.trim()) {
-                suggestionsContainer.style.display = 'none';
-                return;
-            }
-
-            const matchingKeywords = Object.keys(keywordRedirects).filter(keyword =>
-                keyword.toLowerCase().includes(query.toLowerCase())
-            ).slice(0, 8);
-
-            if (matchingKeywords.length > 0) {
-                matchingKeywords.forEach(keyword => {
-                    const suggestionDiv = document.createElement('div');
-                    suggestionDiv.textContent = keyword;
-                    suggestionDiv.addEventListener('click', () => {
-                        document.getElementById('searchInput').value = keyword;
-                        suggestionsContainer.style.display = 'none';
-                        performSearch(keyword);
-                    });
-                    suggestionsContainer.appendChild(suggestionDiv);
-                });
-                suggestionsContainer.style.display = 'block';
-            } else {
-                suggestionsContainer.style.display = 'none';
-            }
-        }
-
         // 生成固定的相关搜索
         function generateRelatedSearches() {
             // 为固定的相关搜索添加点击事件
@@ -356,103 +291,22 @@
             });
         }
 
-        // 模拟搜索结果数据 - 修复：添加所有相关密码关键词
+        // 模拟搜索结果数据
         const searchResults = {
-            "密码提示": [
-                {
-                    title: "暂无搜索结果......",
-                    source: "请尝试其他关键词",
-                    date: "2025-9-7",
-                    url: "#"
-                }
-            ],
-            "咖啡店后台密码": [
+            "周哲叙电脑怎么连接？": [
                 {
                     title: "暂无搜索结果！",
-                    source: "请尝试其他关键词！",
+                    source: "请尝试其他关键词",
                     date: "2025-9-7",
-                    url: "https://sylvie-seven-cq.top/Syzygy/system-responsech.html"
+                    url: "https://sylvie-seven-cq.top/Syzygy/system-responsezzx.html"
                 }
             ],
-            "Base64在线编码解码": [
+            "周哲叙电脑怎么连接？": [
                 {
-                    title: "Base64在线编码解码",
-                    source: "Base64工具网站",
+                    title: "暂无搜索结果！",
+                    source: "请尝试其他关键词",
                     date: "2025-9-7",
-                    url: "https://base64.us/"
-                }
-            ],
-            "栅栏密码加密解密": [
-                {
-                    title: "栅栏密码加密解密",
-                    source: "栅栏密码在线工具网站",
-                    date: "2025-9-7",
-                    url: "https://www.qqxiuzi.cn/bianma/zhalanmima.php"
-                }
-            ],
-            "凯撒密码在线解码": [
-                {
-                    title: "凯撒密码在线解码",
-                    source: "凯撒密码在线工具网站",
-                    date: "2025-9-7",
-                    url: "https://www.metools.info/code/c70.html"
-                }
-            ],
-            "维吉尼亚密码在线转换": [
-                {
-                    title: "维吉尼亚密码在线转换",
-                    source: "维吉尼亚密码在线工具网站",
-                    date: "2025-9-7",
-                    url: "https://www.metools.info/code/c71.html"
-                }
-            ],
-            "Playfair加密解密": [
-                {
-                    title: "Playfair加密解密",
-                    source: "Playfair在线工具网站",
-                    date: "2025-9-7",
-                    url: "https://www.metools.info/code/playfair_186.html"
-                }
-            ],
-            // 添加更多密码相关关键词
-            "Base64密码": [
-                {
-                    title: "Base64在线编码解码",
-                    source: "Base64工具网站",
-                    date: "2025-9-7",
-                    url: "https://base64.us/"
-                }
-            ],
-            "栅栏密码": [
-                {
-                    title: "栅栏密码加密解密",
-                    source: "在线工具网站",
-                    date: "2025-9-7",
-                    url: "https://www.qqxiuzi.cn/bianma/zhalanmima.php"
-                }
-            ],
-            "凯撒密码": [
-                {
-                    title: "凯撒密码在线解码",
-                    source: "在线工具网站",
-                    date: "2025-9-7",
-                    url: "https://www.metools.info/code/c70.html"
-                }
-            ],
-            "维吉尼亚密码": [
-                {
-                    title: "维吉尼亚密码在线转换",
-                    source: "在线工具网站",
-                    date: "2025-9-7",
-                    url: "https://www.metools.info/code/c71.html"
-                }
-            ],
-            "Playfair密码": [
-                {
-                    title: "Playfair加密解密",
-                    source: "在线工具网站",
-                    date: "2025-9-7",
-                    url: "https://www.metools.info/code/playfair_186.html"
+                    url: "https://sylvie-seven-cq.top/Syzygy/system-responsezzx.html"
                 }
             ]
         };
@@ -462,20 +316,18 @@
         const searchButton = document.getElementById('searchButton');
         const resultsList = document.getElementById('resultsList');
         const pageTitle = document.getElementById('pageTitle');
-        const searchSuggestions = document.getElementById('searchSuggestions');
 
         // 初始化搜索功能
         async function initSearch() {
             console.log('🔧 初始化搜索功能...');
 
             await loadKeywordRedirects();
-            performSearch('密码提示');
+            performSearch('周哲叙电脑提示');
             generateRelatedSearches();
 
             searchButton.addEventListener('click', function () {
                 const query = searchInput.value.trim();
                 if (query) {
-                    searchSuggestions.style.display = 'none';
                     performSearch(query);
                 } else {
                     alert('请输入搜索关键词');
@@ -486,20 +338,8 @@
                 if (e.key === 'Enter') {
                     const query = searchInput.value.trim();
                     if (query) {
-                        searchSuggestions.style.display = 'none';
                         performSearch(query);
                     }
-                }
-            });
-
-            searchInput.addEventListener('input', function () {
-                const query = searchInput.value.trim();
-                showSearchSuggestions(query);
-            });
-
-            document.addEventListener('click', function (e) {
-                if (!searchInput.contains(e.target) && !searchSuggestions.contains(e.target)) {
-                    searchSuggestions.style.display = 'none';
                 }
             });
 
@@ -510,3 +350,6 @@
     </script>
 </body>
 </html>
+
+
+

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>listening flow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'KaiTi', '楷体', serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298, #2c7873);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 90%;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .text-line {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            line-height: 1.6;
+            opacity: 0;
+            margin: 12px 0;
+            padding: 0 10px;
+            transform: translateY(10px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .text-line.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .skip-btn, .continue-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            z-index: 100;
+        }
+
+        .continue-btn {
+            display: none;
+            top: auto;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .skip-btn:hover, .continue-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .decoration {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .decoration:nth-child(1) {
+            top: 10%; left: 10%;
+            width: clamp(50px, 10vw, 150px);
+            height: clamp(50px, 10vw, 150px);
+            animation-delay: 0s;
+        }
+        .decoration:nth-child(2) {
+            top: 70%; right: 10%;
+            width: clamp(40px, 8vw, 120px);
+            height: clamp(40px, 8vw, 120px);
+            animation-delay: 2s;
+        }
+        .decoration:nth-child(3) {
+            bottom: 20%; left: 20%;
+            width: clamp(30px, 6vw, 80px);
+            height: clamp(30px, 6vw, 80px);
+            animation-delay: 4s;
+        }
+
+        /* 短信弹窗样式 */
+        .sms-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            color: black;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            z-index: 1000;
+            text-align: center;
+            min-width: 280px;
+            max-width: 90%;
+            display: none;
+            animation: fadeIn 0.5s ease;
+            border: 1px solid #ddd;
+        }
+        
+        .sms-modal.active {
+            display: block;
+        }
+        
+        .sms-modal .message {
+            margin-bottom: 20px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .sms-modal .confirm-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        
+        .sms-modal .confirm-btn:hover {
+            background: #0056b3;
+        }
+        
+        .sms-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 999;
+            display: none;
+        }
+        
+        .sms-modal-overlay.active {
+            display: block;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -60%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { padding: 10px; }
+            .skip-btn, .continue-btn {
+                top: 10px;
+                right: 10px;
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+            .continue-btn {
+                bottom: 10px;
+            }
+            
+            .sms-modal {
+                padding: 20px;
+                min-width: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .skip-btn, .continue-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .sms-modal {
+                padding: 15px;
+                min-width: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="decoration"></div>
+    <div class="decoration"></div>
+    <div class="decoration"></div>
+    
+    <!-- 短信弹窗 -->
+    <!-- <div class="sms-modal-overlay" id="smsOverlay"></div>
+    <div class="sms-modal" id="smsModal">
+        <div class="message" id="smsMessage">林墨：<br>下楼！带上电脑！</div>
+        <button class="confirm-btn" id="confirmBtn">立即下楼</button>
+    </div> -->
+    
+    <!-- 画面 -->
+   <!--  <button class="skip-btn" id="skipBtn">跳过</button>
+    <button class="continue-btn" id="continueBtn">继续</button> -->
+     
+    <div class="container" id="textContainer">
+        <div class="text-line">作者嘟碎碎念</div>
+        <div class="text-line">今天是2025年11月12日，一开始只是想做个网页解谜游戏，刚好上班没事干总是摸鱼，刚好一直想做游戏。在开始做这个游戏之前我正在学unity，但是这是个漫长枯燥的过程，短期内几乎没有什么正反馈。于是总是学着学着注意力就被转移了，甚至为了摸鱼看小说做了个网页阅读器。。。。。直到国庆之后返工，我朋友给我推了银河电灯劳斯的网页解谜游戏，然后接触了type help，从此踏上网页解谜的道路一去不复返。。。沉浸在解谜世界里的感觉让我上瘾，当时还没有这么多网页解谜游戏涌现出来，想玩。。又找不到代餐。。于是我灵机一动，也想做一个自己的网页解谜游戏。</div>
+        <div class="text-line">10月13号，是我开始起步做这个游戏的日期，一开始完全没灵感，只能求助D劳斯。。。刚开始全是新鲜感，一边做页面，一边改剧情，一边想谜题。我是个纯粹的工科生。。。高中最头疼的就是写作文了。。。想剧情什么的越到后面我越痛苦。一开始敲定的是个本格游戏，新住户和神秘的邻居会发生怎样的故事。到后面想要反转。。想要把解谜过程拉长。。然后剧情就往变格方向歪了。。还多了很多支线。。再后面又想要剧情和解谜逻辑合理。。。绞尽脑汁想谜题又想不出来的结果就是。。。</div>
+        <div class="text-line">暂停，，，我不应该这么早写碎碎念，，，我应该先把游戏彻底完成。。。我这个拖延症真的是！！</div>
+        <div class="text-line"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const lines = document.querySelectorAll('.text-line');
+            const skipBtn = document.getElementById('skipBtn');
+            const continueBtn = document.getElementById('continueBtn');
+            const smsModal = document.getElementById('smsModal');
+            const smsOverlay = document.getElementById('smsOverlay');
+            const confirmBtn = document.getElementById('confirmBtn');
+            const smsMessage = document.getElementById('smsMessage');
+            const targetUrl = 'https://sylvie-seven-cq.top/Syzygy/结局前.html';
+
+            let autoPlay = true;
+            let currentIndex = 0;
+            let isTextComplete = false;
+
+            // 逐行显示函数
+            function showNextLine() {
+                if (currentIndex < lines.length && autoPlay) {
+                    lines[currentIndex].classList.add('visible');
+                    currentIndex++;
+                    if (currentIndex < lines.length) {
+                        setTimeout(showNextLine, 500); // 每行间隔 0.4 秒，速度较快
+                    } else {
+                        // 所有行显示完毕
+                        isTextComplete = true;
+                        console.log('文字播放完成，准备显示短信弹窗');
+                        
+                        // 延迟1秒后显示短信弹窗
+                        setTimeout(showSMSModal, 3000);
+                    }
+                }
+            }
+
+            // 显示短信弹窗
+            function showSMSModal() {
+                smsModal.classList.add('active');
+                smsOverlay.classList.add('active');
+            }
+
+            // 隐藏短信弹窗
+            function hideSMSModal() {
+                smsModal.classList.remove('active');
+                smsOverlay.classList.remove('active');
+            }
+
+            // 开始播放
+            setTimeout(showNextLine, 500);
+
+            // 跳过按钮
+            skipBtn.addEventListener('click', function () {
+                if (confirm('确定要跳过动画吗？')) {
+                    autoPlay = false;
+                    window.location.href = targetUrl;
+                } else {
+                    // 用户点击"取消"，显示"继续"按钮
+                    continueBtn.style.display = 'block';
+                }
+            });
+
+            // 继续按钮
+            continueBtn.addEventListener('click', function () {
+                autoPlay = true;
+                continueBtn.style.display = 'none';
+                // 如果还有未显示的行，继续播放
+                if (currentIndex < lines.length) {
+                    showNextLine();
+                } else if (isTextComplete) {
+                    // 如果已经播完但还没显示短信弹窗
+                    showSMSModal();
+                }
+            });
+
+            // 确认按钮
+            confirmBtn.addEventListener('click', function() {
+                hideSMSModal();
+                window.location.href = targetUrl;
+            });
+            
+            // 点击遮罩层关闭弹窗
+            smsOverlay.addEventListener('click', function() {
+                hideSMSModal();
+            });
+        });
+    </script>
+</body>
+</html>

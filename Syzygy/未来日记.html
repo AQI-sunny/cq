@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>“我的日记”</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+        
+        body {
+            background-color: #000;
+            color: #ff0033;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        
+        .glitch-text {
+            text-shadow: 2px 2px 0 #ff0033, -2px -2px 0 #00ffff;
+            animation: glitch 2s infinite;
+        }
+        
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 1px solid #ff0033;
+            padding-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            letter-spacing: 5px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #cc0033;
+        }
+        
+        .diary-entry {
+            background-color: rgba(20, 0, 5, 0.8);
+            border: 1px solid #ff0033;
+            border-radius: 5px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 15px rgba(255, 0, 51, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .diary-entry:hover {
+            box-shadow: 0 0 25px rgba(255, 0, 51, 0.5);
+            transform: translateY(-5px);
+        }
+        
+        .date {
+            color: #ff3366;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #ff0033;
+            padding-bottom: 10px;
+        }
+        
+        .content {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #ff6666;
+        }
+        
+        .choice-section {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            background-color: rgba(30, 0, 10, 0.9);
+            border: 1px solid #ff0033;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(255, 0, 51, 0.4);
+        }
+        
+        .choice-title {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: #ff3366;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .btn-yes {
+            background-color: #ff0033;
+            color: #000;
+        }
+        
+        .btn-yes:hover {
+            background-color: #cc0029;
+            box-shadow: 0 0 20px rgba(255, 0, 51, 0.7);
+        }
+        
+        .btn-no {
+            background-color: #000;
+            color: #ff0033;
+            border: 2px solid #ff0033;
+        }
+        
+        .btn-no:hover {
+            background-color: #ff0033;
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 0, 51, 0.7);
+        }
+        
+        .terminal {
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 1px solid #ff0033;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 30px;
+            font-family: 'Courier New', monospace;
+            color: #00ff00;
+            height: 150px;
+            overflow-y: auto;
+        }
+        
+        .terminal-line {
+            margin-bottom: 5px;
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        .scan-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #ff0033, transparent);
+            animation: scan 3s linear infinite;
+            z-index: 2;
+            pointer-events: none;
+        }
+        
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-bg" id="matrixBg"></div>
+    <div class="scan-line"></div>
+    
+    <div class="container">
+        <header>
+            <h1 class="glitch-text">系统发生错误 系统发生错误 系统发生错误 系统发生错误</h1>
+            <p class="subtitle">我的日记：</p>
+        </header>
+        
+        <div class="diary-entry">
+            <div class="date">XX年5月10日</div>
+            <div class="weather">阴雨，像我此刻的心情。</div>
+            <div class="content">
+                我避开了那辆车。
+就在今天下午，我走在回家路上，脑海中突然浮现出三天前看到的那一幕：一辆黑色的轿车，失控地冲向人行道。我全身的汗毛都竖起来了。当我听到轮胎刺耳的摩擦声时，我几乎是本能地，带着一种被预言驱使的疯狂，猛地向后跳。
+我摔倒了，手肘擦破了皮，但那辆车几乎是擦着我的衣角冲过去了，然后撞上了路边的灯柱。周围一片尖叫，人们惊魂未定，而我坐在地上，只有一种冰冷的、确凿的认知：预言实现了，但我也活下来了。
+我以为，我的抗争成功了。我以为，知识就是力量。
+但当我颤抖着打开手机，想要告诉自己“没事了”的时候，屏幕上跳出了一条又一条的银行短信通知——一连串的异地消费和转账。我的积蓄，我辛苦工作攒下的，让我感到安全的存款，化为乌有。
+我避开了死亡，却被命运剥夺了生存的权利。
+            </div>
+        </div>
+        
+        <div class="diary-entry">
+            <div class="date">xx年10月29日 </div>
+            <div class="weather">晴转阴</div>
+            <div class="content">
+                
+2025年10月29日 晴转阴
+今天的心跳一直不正常，像有人在里面急促地擂鼓。坐在办公桌前，我努力想集中精神，但脑子里不断闪回一些可怕的碎片。它们没有逻辑，但每一个都那么清晰、那么令人心惊。
+最开始是那个花瓶，我一直珍藏的那个。画面里，它无声无息地倒在公寓的地板上，碎裂成无数尖锐的残骸。那不是重点，但它开启了一扇门。紧接着，是银行账户——一串冰冷的数字，后面跟着一个刺眼的“0”。我能感觉到那种吸气后的窒息，辛苦积攒的一切就这样蒸发了，只留下巨大的空洞和无边的愤怒。
+但真正让我感到生理性恐慌的，是路的尽头。我走在一条熟悉的街上，然后是尖锐的刹车声和金属扭曲的巨响。我看到了失控的汽车，迎面冲来。接着是白色的冲击，然后是彻底的寂静和双腿传来的那种令人绝望的麻木感。画面很短暂，但我至今能感觉到那种撞击的疼痛和随后彻底的无力。
+恐惧不是来自外面的世界，而是来自脑海里那些挥之不去的景象。这种感觉太真实了，真实到让我对明天心生畏惧。我需要平静下来。
+            </div>
+        </div>
+        
+        <div class="diary-entry">
+            <div class="date">xx年10月30日 </div>
+            <div class="weather">阴雨</div>
+            <div class="content">
+                
+2025年10月29日 晴转阴
+今天的心跳一直不正常，像有人在里面急促地擂鼓。坐在办公桌前，我努力想集中精神，但脑子里不断闪回一些可怕的碎片。它们没有逻辑，但每一个都那么清晰、那么令人心惊。
+最开始是那个花瓶，我一直珍藏的那个。画面里，它无声无息地倒在公寓的地板上，碎裂成无数尖锐的残骸。那不是重点，但它开启了一扇门。紧接着，是银行账户——一串冰冷的数字，后面跟着一个刺眼的“0”。我能感觉到那种吸气后的窒息，辛苦积攒的一切就这样蒸发了，只留下巨大的空洞和无边的愤怒。
+但真正让我感到生理性恐慌的，是路的尽头。我走在一条熟悉的街上，然后是尖锐的刹车声和金属扭曲的巨响。我看到了失控的汽车，迎面冲来。接着是白色的冲击，然后是彻底的寂静和双腿传来的那种令人绝望的麻木感。画面很短暂，但我至今能感觉到那种撞击的疼痛和随后彻底的无力。
+恐惧不是来自外面的世界，而是来自脑海里那些挥之不去的景象。这种感觉太真实了，真实到让我对明天心生畏惧。我需要平静下来。
+2025年10月30日 阴雨
+整晚都在做噩梦，或者说，是那些碎片化的画面又在我眼前重新组合。这次的冲击是关于“信任”和“自由”。
+我看到自己身处一个极其冰冷、狭小的空间，四周是坚硬的墙壁和铁栏杆。这不是电影场景，那股彻骨的寒意太真实了。更可怕的是，我清楚地知道我在这里的境地，是源于一个我曾亲密无间、完全信任的朋友。那种被至亲之人突然推入深渊的画面，比任何身体上的痛苦都更让人绝望。
+我现在开始怀疑我身边的每一个人。我的手心在冒汗，我感觉自己像被困在一个没有出口的迷宫里。我甚至不敢接任何电话，不敢回应任何消息。我已经失去了财产的稳定，难道现在连基本的社会关系也要崩溃吗？这种无能为力感像一块巨大的石头压在我的胸口，让我几乎喘不过气。
+为什么是这些？为什么一切都指向最坏的结局？我只是想过平静的生活。
+            </div>
+        </div>
+        
+        <div class="diary-entry">
+            <div class="date">xx年10月30日 </div>
+            <div class="weather"> 雾霾</div>
+            <div class="content">
+                我感觉自己快要崩溃了。昨晚，我看到了最不能承受的画面，那份冲击力让我直到现在双眼都胀痛。
+画面里有一个角落，一个我无比熟悉的身影就在那里。我清楚地看到了，一瞬间的意外，一个不可逆转的错误，然后是那种令人心悸的静止。那种无声的、充满鲜红的景象，比任何尖叫都更刺耳。我甚至不敢去想象，那到底是谁。
+我无法接受。财产的损失，身体的残缺，朋友的背叛，现在，连最熟悉的人都面临着如此可怕的终结。我像站在一条正在崩塌的桥上，周围的一切都在碎裂、下坠，而我只能眼睁睁地看着，伸不出手，喊不出声。
+这种感觉太折磨人了。恐惧和无力感已经完全占据了我，它们不是抽象的概念，而是具体的，带着泥土和鲜血的气味，带着铁栏杆的冰冷和账户清零的空虚。我害怕去任何地方，我害怕看到任何人。我不知道该怎么办，我只是觉得，我正在被某种巨大的、看不见的力量碾碎。我希望这一切只是我过度疲劳产生的错觉，但它们太真实了，真实到让人发抖。
+            </div>
+        </div>
+        
+        <div class="choice-section">
+            <h2 class="choice-title">网络接入选择</h2>
+            <p style="margin-bottom: 20px; color: #ff6666;">请做出您的选择：</p>
+            
+            <div class="terminal">
+                <div class="terminal-line">> 系统提示：确定性网络接入协议等待确认</div>
+                <div class="terminal-line">> 接入后将获得：完美预测、零风险生活、最高效率</div>
+                <!-- <div class="terminal-line">> 代价：自由意志、不确定性、创造性思维</div> -->
+                <div class="terminal-line">> 请选择：<span class="blink">_</span></div>
+            </div>
+            
+            <div class="buttons">
+                <button class="btn btn-yes" id="yesBtn">接入确定性网络</button>
+                <button class="btn btn-no" id="noBtn">拒绝接入</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 创建矩阵背景效果
+        function createMatrix() {
+            const matrixBg = document.getElementById('matrixBg');
+            const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+            const fontSize = 14;
+            const columns = Math.floor(window.innerWidth / fontSize);
+            
+            // 创建列
+            for (let i = 0; i < columns; i++) {
+                const column = document.createElement('div');
+                column.style.position = 'absolute';
+                column.style.top = '-100px';
+                column.style.left = i * fontSize + 'px';
+                column.style.width = fontSize + 'px';
+                column.style.color = '#ff0033';
+                column.style.fontSize = fontSize + 'px';
+                column.style.fontFamily = 'monospace';
+                column.style.textAlign = 'center';
+                column.style.opacity = Math.random() * 0.5 + 0.1;
+                column.style.animation = `fall ${Math.random() * 5 + 3}s linear infinite`;
+                column.style.animationDelay = Math.random() * 5 + 's';
+                
+                // 创建字符
+                let content = '';
+                const rows = Math.floor(window.innerHeight / fontSize) + 1;
+                for (let j = 0; j < rows; j++) {
+                    content += chars[Math.floor(Math.random() * chars.length)];
+                }
+                
+                column.textContent = content;
+                matrixBg.appendChild(column);
+                
+                // 添加动画
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes fall {
+                        0% { transform: translateY(-100px); }
+                        100% { transform: translateY(${window.innerHeight}px); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+        
+        // 初始化矩阵背景
+        createMatrix();
+        
+        // 添加终端效果
+        const terminal = document.querySelector('.terminal');
+        const terminalLines = [
+            "> 系统分析：用户已阅读全部日记记录",
+            "> 情感波动检测：不确定性焦虑指数 78%",
+            "> 自由意志保留度：92%",
+            /* "> 建议：拒绝接入以保持人类本质",
+            "> 警告：拒绝接入将导致社会服务降级", */
+            "> 最终决定权：用户自由意志"
+        ];
+        
+        let lineIndex = 0;
+        const typewriter = setInterval(() => {
+            if (lineIndex < terminalLines.length) {
+                const line = document.createElement('div');
+                line.className = 'terminal-line';
+                line.textContent = terminalLines[lineIndex];
+                terminal.appendChild(line);
+                terminal.scrollTop = terminal.scrollHeight;
+                lineIndex++;
+            } else {
+                clearInterval(typewriter);
+            }
+        }, 800);
+        
+        // 添加按钮事件
+        document.getElementById('yesBtn').addEventListener('click', function() {
+            // 在实际应用中，这里应该跳转到坏结局页面
+            alert("正在接入确定性网络...");
+            window.location.href = "又be辣.html";
+        });
+        
+        document.getElementById('noBtn').addEventListener('click', function() {
+            // 在实际应用中，这里应该跳转到好结局页面
+            alert("林墨：干得漂亮！你识破了窥命司的阴谋！！！");
+            window.location.href = "https://sylvie-seven-cq.top/Syzygy/computer-lin2.html";
+        });
+        
+        // 添加窗口调整大小时的响应
+        window.addEventListener('resize', function() {
+            document.getElementById('matrixBg').innerHTML = '';
+            createMatrix();
+        });
+    </script>
+</body>
+</html>

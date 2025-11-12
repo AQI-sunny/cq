@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>结局C</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: url('https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExdHJ4NG0zOGprbWxwcWo2Y2tsMDZzbXNvZ3E5Zzl3Z2NhdHcxbTV4eiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/7AtHoQ9XWbpwLRxs0t/giphy.gif') center/cover no-repeat fixed;
+            color: #e0e0ff;
+            min-height: 100vh;
+            line-height: 1.6;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 42, 0.7);
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(20, 20, 50, 0.7);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(74, 140, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #4a8cff;
+            text-align: center;
+            text-shadow: 0 0 15px rgba(74, 140, 255, 0.5);
+            letter-spacing: 1px;
+        }
+        
+        .content-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(74, 140, 255, 0.2);
+        }
+        
+        .content-section:last-child {
+            border-bottom: none;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+        
+        .highlight {
+            color: #4a8cff;
+            font-weight: bold;
+        }
+        
+        .fade-text {
+            color: #a0a0ff;
+            font-style: italic;
+        }
+        
+        .glitch {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 #ff4a4a;
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+            opacity: 0.7;
+        }
+        
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 #4a8cff;
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+            opacity: 0.7;
+        }
+        
+        @keyframes glitch-anim {
+            0% { clip: rect(42px, 9999px, 44px, 0); }
+            5% { clip: rect(12px, 9999px, 59px, 0); }
+            10% { clip: rect(48px, 9999px, 29px, 0); }
+            15% { clip: rect(42px, 9999px, 73px, 0); }
+            20% { clip: rect(63px, 9999px, 27px, 0); }
+            25% { clip: rect(34px, 9999px, 55px, 0); }
+            30% { clip: rect(86px, 9999px, 73px, 0); }
+            35% { clip: rect(20px, 9999px, 20px, 0); }
+            40% { clip: rect(26px, 9999px, 60px, 0); }
+            45% { clip: rect(25px, 9999px, 66px, 0); }
+            50% { clip: rect(57px, 9999px, 98px, 0); }
+            55% { clip: rect(5px, 9999px, 46px, 0); }
+            60% { clip: rect(82px, 9999px, 31px, 0); }
+            65% { clip: rect(54px, 9999px, 27px, 0); }
+            70% { clip: rect(28px, 9999px, 99px, 0); }
+            75% { clip: rect(45px, 9999px, 69px, 0); }
+            80% { clip: rect(23px, 9999px, 85px, 0); }
+            85% { clip: rect(54px, 9999px, 84px, 0); }
+            90% { clip: rect(45px, 9999px, 47px, 0); }
+            95% { clip: rect(37px, 9999px, 20px, 0); }
+            100% { clip: rect(4px, 9999px, 91px, 0); }
+        }
+        
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); }
+            5% { clip: rect(52px, 9999px, 74px, 0); }
+            10% { clip: rect(79px, 9999px, 85px, 0); }
+            15% { clip: rect(75px, 9999px, 5px, 0); }
+            20% { clip: rect(67px, 9999px, 61px, 0); }
+            25% { clip: rect(14px, 9999px, 79px, 0); }
+            30% { clip: rect(1px, 9999px, 66px, 0); }
+            35% { clip: rect(86px, 9999px, 30px, 0); }
+            40% { clip: rect(23px, 9999px, 98px, 0); }
+            45% { clip: rect(85px, 9999px, 72px, 0); }
+            50% { clip: rect(71px, 9999px, 75px, 0); }
+            55% { clip: rect(2px, 9999px, 48px, 0); }
+            60% { clip: rect(30px, 9999px, 16px, 0); }
+            65% { clip: rect(59px, 9999px, 50px, 0); }
+            70% { clip: rect(41px, 9999px, 62px, 0); }
+            75% { clip: rect(2px, 9999px, 82px, 0); }
+            80% { clip: rect(47px, 9999px, 73px, 0); }
+            85% { clip: rect(3px, 9999px, 27px, 0); }
+            90% { clip: rect(26px, 9999px, 55px, 0); }
+            95% { clip: rect(42px, 9999px, 97px, 0); }
+            100% { clip: rect(38px, 9999px, 49px, 0); }
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(74, 140, 255, 0.2);
+            color: #7070a0;
+            font-size: 0.9rem;
+        }
+        
+        .footer-link {
+            color: #4a8cff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-link:hover {
+            color: #e0e0ff;
+            text-decoration: underline;
+        }
+        
+        .author-button {
+            display: block;
+            margin: 2rem auto 0;
+            padding: 0.8rem 1.5rem;
+            background: rgba(74, 140, 255, 0.2);
+            color: #e0e0ff;
+            border: 1px solid rgba(74, 140, 255, 0.5);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            max-width: 200px;
+        }
+        
+        .author-button:hover {
+            background: rgba(74, 140, 255, 0.4);
+            box-shadow: 0 0 10px rgba(74, 140, 255, 0.5);
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="glitch" data-text="结局C">结局C</h1>
+        
+        <div class="content-section">
+            <p>点击接入确定性网络的瞬间，一股冰冷、强大的数据洪流瞬间击穿了我的意识，耳边是刺耳的蜂鸣声，紧接着是深不见底的黑暗，我像一块被高速抛光的鹅卵石，瞬间失去所有棱角和温度，一头栽倒在地。</p>
+        </div>
+        
+        <div class="content-section">
+            <p>当我终于在弥漫着消毒水气息的私人诊所病房中睁开眼睛，已是三天后。医生说我是过度疲劳引发的短暂晕厥，没什么大碍。我对着天花板眨了眨眼，脑子里干干净净的，像被格式化过的硬盘——这很正常，谁会记得晕倒前的每一个细节呢？</p>
+        </div>
+        
+        <div class="content-section">
+            <p>生活很快回到正轨，流畅得像设定好的程序。每天准时从智能公寓出发，走进公司那栋玻璃幕墙建筑，待办事项在屏幕上有序排列，吃饭、睡觉、处理工作，一切都精准得恰到好处。同事们说我状态越来越好，做事效率高，情绪稳定得像块磐石。他们升职时，我会露出恰到好处的微笑，公式化地说声"恭喜"；看那些据说能让人痛哭流涕的电影，我只觉得画面构图尚可，眼眶里平静得没有一丝波澜。这没什么不好，理性、高效，本就是成年人该有的样子。</p>
+        </div>
+        
+        <div class="content-section">
+            <p>偶尔走在街上，某个背影、一串斑驳的涂鸦会让我莫名顿一下，像系统运行时的轻微卡顿，但也仅此而已。下一秒，口袋里的工作提醒弹出，思绪立刻被拉回待处理的报表，刚才那点莫名的感觉早被抛到脑后，仿佛从未出现过。</p>
+        </div>
+        
+        <div class="content-section">
+            <p>夜里有时会做些光怪陆离的梦，色彩浓烈，情绪翻涌，梦里似乎有个很亲近的人，能感受到模糊的温度和气息，甚至有过强烈的情绪波动。但醒来后，那些画面就像被晨光蒸发的露水，什么都留不下。我揉了揉额角，翻身起床，智能闹钟显示离上班还有两小时。大概是最近项目压力大，才会做这种没头没尾的梦吧。</p>
+        </div>
+        
+        <div class="content-section">
+            <p>洗漱时看着镜子里的自己，眼神平静，气色不错。这就是我的生活，规律、稳定，没什么可挑剔的。至于那些转瞬即逝的恍惚和模糊的梦境，不过是日常运行中的微小杂音，不值一提。</p>
+             <a href="https://sylvie-seven-cq.top/Syzygy/begin.html" class="footer-link" target="_blank">三年后......</a>
+        </div>
+        
+        <a href="作者碎碎念.html" class="author-button">作者碎碎念</a>
+        
+        <footer>
+            一切混乱，皆已平息 |  感谢游玩，你的<a href="https://sylvie-seven-cq.top" class="footer-link" target="_blank">反馈</a>是我最大的动力 ——AQI
+                   
+
+        </footer>
+    </div>
+
+    <script>
+        // 简单的交互效果 - 段落点击时添加高亮
+        document.addEventListener('DOMContentLoaded', function() {
+            const paragraphs = document.querySelectorAll('.content-section p');
+            
+            paragraphs.forEach(p => {
+                p.addEventListener('click', function() {
+                    this.classList.toggle('highlight');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
