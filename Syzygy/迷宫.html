@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>逃出迷宫</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .background-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                repeating-linear-gradient(
+                    0deg,
+                    #333 0px,
+                    #333 1px,
+                    transparent 1px,
+                    transparent 20px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    #333 0px,
+                    #333 1px,
+                    transparent 1px,
+                    transparent 20px
+                );
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .text-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(20, 5%);
+            grid-template-rows: repeat(20, 5%);
+            pointer-events: none;
+        }
+
+        .text-cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            color: rgba(255, 0, 0, 0.15);
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.2);
+        }
+
+        /* 响应式迷宫大小 */
+        #maze {
+            display: grid;
+            gap: 1px;
+            border: 2px solid #f00;
+            background-color: rgba(15, 0, 0, 0.8);
+            padding: 8px;
+            z-index: 10;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            margin: 10px;
+            position: relative;
+        }
+
+        /* 添加迷宫整体金色边框 - 饱和度降低50% */
+        #maze::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border: 2px solid #b39700; /* 降低金色饱和度 */
+            border-radius: 6px;
+            pointer-events: none;
+            z-index: 5;
+            box-shadow: 0 0 15px rgba(179, 151, 0, 0.5); /* 降低金色饱和度 */
+        }
+
+        /* 默认尺寸 - 桌面 */
+        #maze {
+            grid-template-columns: repeat(15, 20px);
+            grid-template-rows: repeat(15, 20px);
+        }
+
+        .cell {
+            width: 20px;
+            height: 20px;
+            background-color: #111;
+            border-radius: 2px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        /* 路径 - 移除金色边框 */
+        .path {
+            background-color: #200;
+            box-shadow: inset 1px 1px 2px rgba(255,100,100,0.1);
+        }
+
+        /* 为墙壁添加明显的金色边框 - 饱和度降低50% */
+        .wall {
+            background-color: #400;
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .wall::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            border: 2px solid rgba(179, 151, 0, 0.6); /* 降低金色饱和度 */
+            border-radius: 3px;
+            pointer-events: none;
+            box-shadow: 0 0 8px rgba(179, 151, 0, 0.4); /* 降低金色饱和度 */
+        }
+
+        /* 平板尺寸 */
+        @media (max-width: 768px) {
+            #maze {
+                grid-template-columns: repeat(15, 16px);
+                grid-template-rows: repeat(15, 16px);
+            }
+            
+            .cell {
+                width: 16px;
+                height: 16px;
+            }
+            
+            .text-cell {
+                font-size: 12px;
+            }
+        }
+
+        /* 手机尺寸 */
+        @media (max-width: 480px) {
+            #maze {
+                grid-template-columns: repeat(15, 12px);
+                grid-template-rows: repeat(15, 12px);
+            }
+            
+            .cell {
+                width: 12px;
+                height: 12px;
+            }
+            
+            .text-cell {
+                font-size: 10px;
+            }
+            
+            .controls {
+                font-size: 14px;
+            }
+        }
+
+        /* 玩家改为蓝点 */
+        .player {
+            background-color: #00f;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00f, inset 0 0 5px #fff;
+            animation: pulse 1.5s infinite alternate;
+            z-index: 2;
+            position: relative;
+        }
+
+        .player::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 2px solid #b39700; /* 降低金色饱和度 */
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 8px rgba(179, 151, 0, 0.6); /* 降低金色饱和度 */
+            animation: goldPulse 2s infinite alternate;
+        }
+
+        @keyframes goldPulse {
+            from { box-shadow: 0 0 8px rgba(179, 151, 0, 0.4); } /* 降低金色饱和度 */
+            to { box-shadow: 0 0 15px rgba(179, 151, 0, 0.8); } /* 降低金色饱和度 */
+        }
+
+        @keyframes pulse {
+            from { transform: scale(0.9); }
+            to { transform: scale(1.1); }
+        }
+
+        .exit {
+            background-color: #0f0;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #0f0, inset 0 0 5px #fff;
+            animation: glow 2s infinite alternate;
+            z-index: 2;
+            position: relative;
+        }
+
+        .exit::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 2px solid #b39700; /* 降低金色饱和度 */
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 8px rgba(179, 151, 0, 0.6); /* 降低金色饱和度 */
+            animation: goldPulse 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 10px #0f0, inset 0 0 5px #fff; }
+            to { box-shadow: 0 0 20px #0f0, inset 0 0 10px #fff; }
+        }
+
+        /* 追逐者改为红点 */
+        .chaser {
+            background-color: #f00;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #f00, inset 0 0 5px #fff;
+            animation: chase 1.2s infinite alternate; /* 加快追逐者动画 */
+            z-index: 2;
+            position: relative;
+        }
+
+        .chaser::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 2px solid #b39700; /* 降低金色饱和度 */
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 8px rgba(179, 151, 0, 0.6); /* 降低金色饱和度 */
+            animation: goldPulse 1.5s infinite alternate; /* 加快金色边框动画 */
+        }
+
+        @keyframes chase {
+            from { box-shadow: 0 0 10px #f00, inset 0 0 5px #fff; }
+            to { box-shadow: 0 0 15px #f00, inset 0 0 8px #fff; }
+        }
+
+        .message {
+            position: absolute;
+            top: 20px;
+            font-size: 24px;
+            color: #f00;
+            display: none;
+            text-shadow: 0 0 10px #f00;
+            font-weight: bold;
+            z-index: 20;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: 2px solid #b39700; /* 降低金色饱和度 */
+            box-shadow: 0 0 15px rgba(179, 151, 0, 0.5); /* 降低金色饱和度 */
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            color: #f00;
+            font-size: 16px;
+            text-align: center;
+            text-shadow: 0 0 5px #f00;
+            z-index: 20;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 1px solid #b39700; /* 降低金色饱和度 */
+        }
+
+        /* 触摸控制按钮 */
+        .touch-controls {
+            display: none;
+            position: absolute;
+            bottom: 80px;
+            width: 150px;
+            height: 150px;
+            z-index: 20;
+        }
+
+        .touch-controls .up, .touch-controls .down, 
+        .touch-controls .left, .touch-controls .right {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 0, 0, 0.104);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            user-select: none;
+            border: 2px solid #b39700; /* 降低金色饱和度 */
+            box-shadow: 0 0 8px rgba(179, 151, 0, 0.4); /* 降低金色饱和度 */
+        }
+
+        .touch-controls .up {
+            top: 0;
+            left: 50px;
+        }
+
+        .touch-controls .down {
+            bottom: 0;
+            left: 50px;
+        }
+
+        .touch-controls .left {
+            top: 50px;
+            left: 0;
+        }
+
+        .touch-controls .right {
+            top: 50px;
+            right: 0;
+        }
+
+        /* 在触摸设备上显示控制按钮 */
+        @media (hover: none) and (pointer: coarse) {
+            .touch-controls {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-text">
+        <div class="text-layer" id="textLayer"></div>
+    </div>
+    
+    <div class="message" id="message">逃！</div>
+    <div id="maze"></div>
+    <div class="controls">使用方向键或WASD移动</div>
+    
+    <!-- 触摸控制按钮 -->
+    <div class="touch-controls">
+        <div class="up">↑</div>
+        <div class="down">↓</div>
+        <div class="left">←</div>
+        <div class="right">→</div>
+    </div>
+
+    <script>
+        // 创建背景文字层
+        const textLayer = document.getElementById('textLayer');
+        for (let i = 0; i < 400; i++) { // 20x20网格
+            const cell = document.createElement('div');
+            cell.className = 'text-cell';
+            cell.textContent = '快逃！！';
+            textLayer.appendChild(cell);
+        }
+
+        const mazeSize = 15;
+        const mazeContainer = document.getElementById('maze');
+        const message = document.getElementById('message');
+
+        let playerPos = { x: 0, y: 0 };
+        let exitPos = { x: mazeSize - 1, y: mazeSize - 1 };
+        let chaserPos = { x: 0, y: 0 };
+        let maze = [];
+        let gameActive = true;
+        let chaserActive = false; // 控制追逐者是否激活
+        let startPos = { x: 1, y: 1 }; // 起点位置
+
+        // 生成迷宫
+        class MazeDFS {
+            constructor(rows, cols) {
+                this.rows = rows;
+                this.cols = cols;
+                this.grid = [];
+                this.stack = [];
+                this.initGrid();
+            }
+
+            initGrid() {
+                for (let r = 0; r < this.rows; r++) {
+                    const row = [];
+                    for (let c = 0; c < this.cols; c++) {
+                        row.push({
+                            r,
+                            c,
+                            walls: { top: true, right: true, bottom: true, left: true },
+                            visited: false,
+                        });
+                    }
+                    this.grid.push(row);
+                }
+            }
+
+            getUnvisitedNeighbors(cell) {
+                const neighbors = [];
+                const { r, c } = cell;
+
+                if (r > 0 && !this.grid[r - 1][c].visited) neighbors.push(this.grid[r - 1][c]); // 上
+                if (c < this.cols - 1 && !this.grid[r][c + 1].visited) neighbors.push(this.grid[r][c + 1]); // 右
+                if (r < this.rows - 1 && !this.grid[r + 1][c].visited) neighbors.push(this.grid[r + 1][c]); // 下
+                if (c > 0 && !this.grid[r][c - 1].visited) neighbors.push(this.grid[r][c - 1]); // 左
+
+                return neighbors;
+            }
+
+            removeWalls(current, next) {
+                const x = current.c - next.c;
+                const y = current.r - next.r;
+
+                if (x === 1) {
+                    current.walls.left = false;
+                    next.walls.right = false;
+                } else if (x === -1) {
+                    current.walls.right = false;
+                    next.walls.left = false;
+                }
+                if (y === 1) {
+                    current.walls.top = false;
+                    next.walls.bottom = false;
+                } else if (y === -1) {
+                    current.walls.bottom = false;
+                    next.walls.top = false;
+                }
+            }
+
+            generate() {
+                const start = this.grid[0][0];
+                start.visited = true;
+                this.stack.push(start);
+
+                while (this.stack.length > 0) {
+                    const current = this.stack[this.stack.length - 1];
+                    const neighbors = this.getUnvisitedNeighbors(current);
+
+                    if (neighbors.length > 0) {
+                        const next = neighbors[Math.floor(Math.random() * neighbors.length)];
+                        this.removeWalls(current, next);
+                        next.visited = true;
+                        this.stack.push(next);
+                    } else {
+                        this.stack.pop();
+                    }
+                }
+
+                return this.convertToBinaryMaze();
+            }
+
+            // 将墙信息转换为二进制迷宫表示
+            convertToBinaryMaze() {
+                const binaryMaze = Array(this.rows * 2 + 1).fill().map(() => Array(this.cols * 2 + 1).fill(1));
+                
+                // 设置路径
+                for (let r = 0; r < this.rows; r++) {
+                    for (let c = 0; c < this.cols; c++) {
+                        const cell = this.grid[r][c];
+                        const binaryR = r * 2 + 1;
+                        const binaryC = c * 2 + 1;
+                        
+                        // 中心是路径
+                        binaryMaze[binaryR][binaryC] = 0;
+                        
+                        // 根据墙信息设置相邻单元格
+                        if (!cell.walls.top) binaryMaze[binaryR - 1][binaryC] = 0;
+                        if (!cell.walls.right) binaryMaze[binaryR][binaryC + 1] = 0;
+                        if (!cell.walls.bottom) binaryMaze[binaryR + 1][binaryC] = 0;
+                        if (!cell.walls.left) binaryMaze[binaryR][binaryC - 1] = 0;
+                    }
+                }
+                
+                return binaryMaze;
+            }
+        }
+
+        // 生成迷宫
+        function generateMaze() {
+            const mazeDFS = new MazeDFS(mazeSize, mazeSize);
+            const binaryMaze = mazeDFS.generate();
+            
+            // 确保起点和终点是路径
+            binaryMaze[1][1] = 0; // 起点
+            binaryMaze[binaryMaze.length - 2][binaryMaze[0].length - 2] = 0; // 终点
+            
+            return binaryMaze;
+        }
+
+        // 初始化游戏
+        function initGame() {
+            maze = generateMaze();
+            
+            // 调整玩家和出口位置以适应新的迷宫格式
+            playerPos = { x: 1, y: 1 };
+            exitPos = { 
+                x: maze[0].length - 2, 
+                y: maze.length - 2 
+            };
+            
+            // 设置追逐者的初始位置在起点，但不激活
+            chaserPos = { x: 1, y: 1 };
+            chaserActive = false;
+            
+            gameActive = true;
+            createMaze();
+        }
+
+        function createMaze() {
+            mazeContainer.innerHTML = '';
+            mazeContainer.style.gridTemplateColumns = `repeat(${maze[0].length}, 1fr)`;
+            mazeContainer.style.gridTemplateRows = `repeat(${maze.length}, 1fr)`;
+            
+            for (let y = 0; y < maze.length; y++) {
+                for (let x = 0; x < maze[0].length; x++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    if (maze[y][x] === 1) {
+                        cell.classList.add('wall');
+                    } else if (y === playerPos.y && x === playerPos.x) {
+                        cell.classList.add('player');
+                    } else if (y === exitPos.y && x === exitPos.x) {
+                        cell.classList.add('exit');
+                    } else if (chaserActive && y === chaserPos.y && x === chaserPos.x) {
+                        cell.classList.add('chaser');
+                    } else {
+                        cell.classList.add('path');
+                    }
+                    mazeContainer.appendChild(cell);
+                }
+            }
+        }
+
+        // 计算两点之间的曼哈顿距离
+        function manhattanDistance(pos1, pos2) {
+            return Math.abs(pos1.x - pos2.x) + Math.abs(pos1.y - pos2.y);
+        }
+
+        // 追逐者寻路算法 - 使用广度优先搜索
+        function findPath(start, target) {
+            const queue = [{ pos: start, path: [] }];
+            const visited = new Set();
+            visited.add(`${start.x},${start.y}`);
+            
+            const directions = [
+                { dx: 0, dy: -1 }, // 上
+                { dx: 1, dy: 0 },  // 右
+                { dx: 0, dy: 1 },  // 下
+                { dx: -1, dy: 0 }  // 左
+            ];
+            
+            while (queue.length > 0) {
+                const { pos, path } = queue.shift();
+                
+                // 如果到达目标位置
+                if (pos.x === target.x && pos.y === target.y) {
+                    return path.length > 0 ? path[0] : null;
+                }
+                
+                // 检查所有可能的方向
+                for (const dir of directions) {
+                    const newX = pos.x + dir.dx;
+                    const newY = pos.y + dir.dy;
+                    
+                    // 检查是否在迷宫范围内且是路径
+                    if (newX >= 0 && newX < maze[0].length && 
+                        newY >= 0 && newY < maze.length && 
+                        maze[newY][newX] === 0) {
+                        
+                        const key = `${newX},${newY}`;
+                        if (!visited.has(key)) {
+                            visited.add(key);
+                            queue.push({
+                                pos: { x: newX, y: newY },
+                                path: [...path, { dx: dir.dx, dy: dir.dy }]
+                            });
+                        }
+                    }
+                }
+            }
+            
+            // 如果没有找到路径，随机移动
+            const possibleMoves = directions.filter(dir => {
+                const newX = start.x + dir.dx;
+                const newY = start.y + dir.dy;
+                return newX >= 0 && newX < maze[0].length && 
+                       newY >= 0 && newY < maze.length && 
+                       maze[newY][newX] === 0;
+            });
+            
+            if (possibleMoves.length > 0) {
+                return possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
+            }
+            
+            return null;
+        }
+
+        // 移动追逐者 - 加快追逐速度
+        function moveChaser() {
+            if (!gameActive || !chaserActive) return;
+            
+            // 追逐者每次玩家移动都会尝试移动（加快追逐速度）
+            const move = findPath(chaserPos, playerPos);
+            
+            if (move) {
+                const newX = chaserPos.x + move.dx;
+                const newY = chaserPos.y + move.dy;
+                
+                if (newX >= 0 && newX < maze[0].length && 
+                    newY >= 0 && newY < maze.length && 
+                    maze[newY][newX] === 0) {
+                    chaserPos.x = newX;
+                    chaserPos.y = newY;
+                    createMaze();
+                    
+                    // 检查是否被抓住
+                    if (chaserPos.x === playerPos.x && chaserPos.y === playerPos.y) {
+                        gameActive = false;
+                        message.textContent = "被抓住了！";
+                        message.style.display = 'block';
+                        setTimeout(() => {
+                            message.style.display = 'none';
+                            initGame();
+                        }, 2000);
+                    }
+                }
+            }
+        }
+
+        function movePlayer(dx, dy) {
+            if (!gameActive) return;
+            
+            const newX = playerPos.x + dx;
+            const newY = playerPos.y + dy;
+
+            if (newX >= 0 && newX < maze[0].length && newY >= 0 && newY < maze.length && maze[newY][newX] === 0) {
+                playerPos.x = newX;
+                playerPos.y = newY;
+                
+                // 检查玩家是否离开了起点五格以上，如果是则激活追逐者
+                if (!chaserActive && manhattanDistance(playerPos, startPos) >= 5) {
+                    chaserActive = true;
+                    // 追逐者从起点开始
+                    chaserPos = { x: startPos.x, y: startPos.y };
+                    createMaze(); // 更新显示追逐者
+                }
+                
+                createMaze();
+
+                // 移动追逐者 - 立即移动，不再延迟
+                moveChaser();
+
+                if (playerPos.x === exitPos.x && playerPos.y === exitPos.y) {
+                    gameActive = false;
+                    message.textContent = "成功逃脱！......了吗？";
+                    message.style.display = 'block';
+                    setTimeout(() => {
+                        // 跳转到结局页面
+                        window.location.href = "https://sylvie-seven-cq.top/Syzygy/结局.html";
+                    }, 1500);
+                }
+            }
+        }
+
+        window.addEventListener('keydown', (event) => {
+            switch(event.key.toLowerCase()) {
+                case 'arrowup':
+                case 'w':
+                    movePlayer(0, -1);
+                    event.preventDefault();
+                    break;
+                case 'arrowdown':
+                case 's':
+                    movePlayer(0, 1);
+                    event.preventDefault();
+                    break;
+                case 'arrowleft':
+                case 'a':
+                    movePlayer(-1, 0);
+                    event.preventDefault();
+                    break;
+                case 'arrowright':
+                case 'd':
+                    movePlayer(1, 0);
+                    event.preventDefault();
+                    break;
+            }
+        });
+
+        // 添加触摸控制
+        document.querySelector('.touch-controls .up').addEventListener('click', () => movePlayer(0, -1));
+        document.querySelector('.touch-controls .down').addEventListener('click', () => movePlayer(0, 1));
+        document.querySelector('.touch-controls .left').addEventListener('click', () => movePlayer(-1, 0));
+        document.querySelector('.touch-controls .right').addEventListener('click', () => movePlayer(1, 0));
+
+        // 初始化游戏
+        initGame();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拼图~</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1a0000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a0000 0%, #330000 100%);
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #puzzle {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 2px;
+            border: 3px solid #FFD700;
+            position: relative;
+            width: 300px;
+            height: 300px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            border-radius: 5px;
+            background-color: #000;
+        }
+
+        .piece {
+            width: 100px;
+            height: 100px;
+            background-size: 300px 300px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .piece:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+        }
+
+        #enterButton {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            font-size: 18px;
+            color: #FFD700;
+            background-color: #8B0000;
+            border: 2px solid #FFD700;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        #enterButton:hover {
+            background-color: #FF0000;
+            color: #000;
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+
+        #completeButton {
+            margin-top: 20px;
+            padding: 12px 25px;
+            font-size: 16px;
+            color: #FFD700;
+            background-color: #8B0000;
+            border: 2px solid #FFD700;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        #completeButton:hover {
+            background-color: #FF0000;
+            color: #000;
+            transform: scale(1.05);
+        }
+
+        .title {
+            color: #FFD700;
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .instructions {
+            color: #FFD700;
+            font-size: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 500px;
+            line-height: 1.5;
+        }
+
+        .timer {
+            color: #FFD700;
+            font-size: 18px;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="title">破损的黑色笔记本电子扫描件</div>
+        <div class="instructions">拖动碎片完成笔记本内页拼图，你有3分钟时间</div>
+        <div id="puzzle"></div>
+        <button id="completeButton" onclick="checkCompletion()">提交</button>
+        <div class="timer" id="timer">剩余时间: 3:00</div>
+    </div>
+    
+    <button id="enterButton" onclick="window.location.href='https://sylvie-seven-cq.top/Syzygy/记忆.html'">进入</button>
+
+    <script>
+        const puzzleContainer = document.getElementById('puzzle');
+        const enterButton = document.getElementById('enterButton');
+        const completeButton = document.getElementById('completeButton');
+        const timerElement = document.getElementById('timer');
+        const imageUrl = 'https://sylvie-seven-cq.top/gallery/mi1.png';
+        const rows = 3;
+        const cols = 3;
+        let pieces = [];
+        let positions = []; // 存储当前每个位置的正确背景位置
+        let originalPositions = []; // 存储原始位置
+        let autoCompleteTimeout;
+        let timeLeft = 180; // 3分钟，单位秒
+        let timerInterval;
+
+        // Create puzzle pieces
+        function createPuzzle() {
+            pieces = [];
+            positions = [];
+            originalPositions = [];
+            
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    let piece = document.createElement('div');
+                    piece.classList.add('piece');
+                    piece.style.backgroundPosition = `-${j * 100}px -${i * 100}px`;
+                    piece.style.backgroundImage = `url('${imageUrl}')`;
+                    piece.setAttribute('data-id', `${i}-${j}`);
+                    piece.setAttribute('data-row', i);
+                    piece.setAttribute('data-col', j);
+                    piece.setAttribute('data-current-row', i);
+                    piece.setAttribute('data-current-col', j);
+                    piece.setAttribute('draggable', 'true');
+                    piece.addEventListener('dragstart', handleDragStart);
+                    piece.addEventListener('dragover', handleDragOver);
+                    piece.addEventListener('drop', handleDrop);
+                    piece.addEventListener('dragend', handleDragEnd);
+                    puzzleContainer.appendChild(piece);
+                    pieces.push(piece);
+                    positions.push({row: i, col: j});
+                    originalPositions.push({row: i, col: j});
+                }
+            }
+            shufflePieces();
+            startTimer();
+            startAutoCompleteTimer();
+        }
+
+        // 计时器功能
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    if (!isPuzzleComplete()) {
+                        alert("没时间了！快进去！");
+                        autoCompletePuzzle();
+                    }
+                }
+            }, 1000);
+        }
+
+        // 更新计时器显示
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerElement.textContent = `剩余时间: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            
+            // 时间少于30秒时改变颜色
+            if (timeLeft <= 30) {
+                timerElement.style.color = '#FF0000';
+                timerElement.style.textShadow = '0 0 10px rgba(255, 0, 0, 0.7)';
+            }
+        }
+
+        // Start timer for auto completion (3分钟)
+        function startAutoCompleteTimer() {
+            clearTimeout(autoCompleteTimeout);
+            autoCompleteTimeout = setTimeout(() => {
+                if (!isPuzzleComplete()) {
+                    alert("没时间了！快进去！");
+                    autoCompletePuzzle();
+                }
+            }, 180000); // 3分钟后自动完成
+        }
+
+        // Auto complete the puzzle
+        function autoCompletePuzzle() {
+            clearInterval(timerInterval);
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const pieceIndex = i * cols + j;
+                    pieces[pieceIndex].style.backgroundPosition = `-${j * 100}px -${i * 100}px`;
+                    pieces[pieceIndex].dataset.currentRow = i;
+                    pieces[pieceIndex].dataset.currentCol = j;
+                }
+            }
+            enterButton.style.display = 'block';
+        }
+
+        // Shuffle pieces randomly
+        function shufflePieces() {
+            // 打乱位置数组
+            for (let i = positions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [positions[i], positions[j]] = [positions[j], positions[i]];
+            }
+            
+            // 更新每个拼图块的背景位置
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const pieceIndex = i * cols + j;
+                    const pos = positions[pieceIndex];
+                    pieces[pieceIndex].style.backgroundPosition = `-${pos.col * 100}px -${pos.row * 100}px`;
+                    pieces[pieceIndex].dataset.currentRow = pos.row;
+                    pieces[pieceIndex].dataset.currentCol = pos.col;
+                }
+            }
+        }
+
+        // Handle drag start
+        function handleDragStart(event) {
+            clearTimeout(autoCompleteTimeout);
+            event.dataTransfer.setData('text', event.target.dataset.id);
+        }
+
+        // Handle drag over
+        function handleDragOver(event) {
+            event.preventDefault();
+        }
+
+        // Handle drop
+        function handleDrop(event) {
+            event.preventDefault();
+            const draggedId = event.dataTransfer.getData('text');
+            const targetId = event.target.dataset.id;
+
+            const draggedPiece = document.querySelector(`[data-id="${draggedId}"]`);
+            const targetPiece = event.target;
+
+            if (draggedPiece && targetPiece && draggedId !== targetId) {
+                // 获取当前行和列
+                const draggedRow = parseInt(draggedPiece.dataset.currentRow);
+                const draggedCol = parseInt(draggedPiece.dataset.currentCol);
+                const targetRow = parseInt(targetPiece.dataset.currentRow);
+                const targetCol = parseInt(targetPiece.dataset.currentCol);
+
+                // 交换背景位置
+                const tempPos = draggedPiece.style.backgroundPosition;
+                draggedPiece.style.backgroundPosition = targetPiece.style.backgroundPosition;
+                targetPiece.style.backgroundPosition = tempPos;
+
+                // 交换数据属性
+                draggedPiece.dataset.currentRow = targetRow;
+                draggedPiece.dataset.currentCol = targetCol;
+                targetPiece.dataset.currentRow = draggedRow;
+                targetPiece.dataset.currentCol = draggedCol;
+
+                // 更新positions数组
+                const draggedIndex = draggedRow * cols + draggedCol;
+                const targetIndex = targetRow * cols + targetCol;
+                [positions[draggedIndex], positions[targetIndex]] = [positions[targetIndex], positions[draggedIndex]];
+            }
+
+            startAutoCompleteTimer();
+        }
+
+        // Handle drag end
+        function handleDragEnd() {
+            startAutoCompleteTimer();
+        }
+
+        // Check if the puzzle is completed
+        function checkCompletion() {
+            if (isPuzzleComplete()) {
+                enterButton.style.display = 'block';
+                clearTimeout(autoCompleteTimeout);
+                clearInterval(timerInterval);
+                alert("别放过任何数字");
+            } else {
+                alert("拼图尚未完成...");
+            }
+        }
+
+        // Check if puzzle is complete
+        function isPuzzleComplete() {
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const pieceIndex = i * cols + j;
+                    const piece = pieces[pieceIndex];
+                    
+                    // 检查这个位置的拼图块是否应该在这个位置
+                    const currentRow = parseInt(piece.dataset.currentRow);
+                    const currentCol = parseInt(piece.dataset.currentCol);
+                    
+                    // 如果当前位置的拼图块的原始位置正好是当前位置，则拼图完成
+                    if (!(currentRow === i && currentCol === j)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        // Initialize the puzzle
+        createPuzzle();
+    </script>
+</body>
+</html>

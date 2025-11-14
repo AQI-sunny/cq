@@ -132,6 +132,57 @@
             animation: glitch-anim2 5s infinite linear alternate-reverse;
             opacity: 0.7;
         }
+        footer {
+    background: #0a1a3a;
+    padding: 30px 20px;
+    margin-top: 40px;
+    border-radius: 8px;
+    box-shadow: 
+        0 0 0 2px rgba(74, 158, 255, 0.3),
+        0 0 20px rgba(74, 158, 255, 0.4),
+        inset 0 0 15px rgba(74, 158, 255, 0.1);
+    border: 1px solid rgba(74, 158, 255, 0.2);
+}
+
+footer p {
+    text-align: center;
+    color: #e0e0e0;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.footer-link {
+    color: #4a9eff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-link:hover {
+    color: #ff6b9d;
+    text-decoration: underline;
+}
+
+.button-container {
+    text-align: center;
+}
+
+.nav-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #2d5aa0, #4a9eff);
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    transition: all 0.3s;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(74, 158, 255, 0.3);
+}
+
+.nav-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(74, 158, 255, 0.5);
+    background: linear-gradient(135deg, #4a9eff, #2d5aa0);
+}
         
         @keyframes glitch-anim {
             0% { clip: rect(42px, 9999px, 44px, 0); }
@@ -317,7 +368,7 @@
         <div class="content-section" id="section8"> 
             <p>此刻你的头颅仿佛成了一个透明的容器，里面装满了陌生的光点和声音。而“你”——那个会为打翻的水杯皱眉的意识，会为清晨第一缕阳光而雀跃的灵魂，在日复一日的循环中偶尔追问生命意义的“你”……正在被这些外来之物稀释、冲刷，
                像一勺糖融进银河那么大的水里，最终只剩下容器本身，冷冷地盛着整个宇宙的喧嚣，对身边所有的人间烟火，对那个倒在血泊中的身影，浑然不觉。</p> 
-        
+        </div>
         <!-- 添加导航按钮 -->
         
         
@@ -328,7 +379,7 @@
             <a href="作者碎碎念.html" class="nav-button">作者嘟碎碎念</a>
          </div>
         </footer>
-    </div>
+    
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

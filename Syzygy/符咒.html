@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>初阶符咒学习</title>
+  <style>
+    :root{
+      --bg:#07101a; --panel:#0f1724; --accent:#e6c07b;
+      --door-w:180px; --door-h:260px;
+    }
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,'Noto Sans SC',sans-serif;background:linear-gradient(180deg,#07101a 0%,#0b1220 100%);color:#fff}
+    .wrap{max-width:1240px;margin:20px auto;padding:20px;display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start}
+    .stage{background:rgba(255,255,255,0.03);border-radius:12px;padding:20px;min-height:600px;display:flex;flex-direction:column;align-items:center}
+
+    /* 修复：两上门相邻居中，三下门均匀分布 */
+    .doors-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto;gap:20px;width:100%;max-width:720px;justify-items:center;margin-top:8px}
+    .doors-grid > .door:nth-child(1){grid-column:1.5} /* 第一门居中 */
+    .doors-grid > .door:nth-child(2){grid-column:2.5} /* 第二门在右 */
+    /* 下三门（3,4,5）自然占满第二行的三列 */
+
+    .door{position:relative;width:var(--door-w);height:var(--door-h);display:flex;align-items:center;justify-content:center;cursor:pointer}
+    .door img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 12px 20px rgba(0,0,0,0.7))}
+
+    /* 修复：更明显的黑雾黑气效果 */
+    .smoke{position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;opacity:0.8;z-index:2}
+    .smoke::before,.smoke::after{
+      content:"";position:absolute;left:50%;top:50%;width:200%;height:200%;transform:translate(-50%,-50%);
+      background:
+        radial-gradient(ellipse at 30% 40%, rgba(20,10,30,0.9) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 60%, rgba(10,20,40,0.8) 0%, transparent 45%),
+        radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.7) 0%, transparent 60%);
+      filter:blur(25px) brightness(0.8);
+      animation:swirl 15s linear infinite;
+    }
+    .smoke::after{
+      animation-duration:20s;filter:blur(35px) brightness(0.6);opacity:0.7;
+      background:
+        radial-gradient(ellipse at 60% 30%, rgba(30,15,50,0.8) 0%, transparent 55%),
+        radial-gradient(ellipse at 40% 70%, rgba(15,25,45,0.7) 0%, transparent 50%);
+    }
+    @keyframes swirl{
+      0%{transform:translate(-50%,-50%) rotate(0deg) scale(1)}
+      50%{transform:translate(-45%,-55%) rotate(180deg) scale(1.1)}
+      100%{transform:translate(-50%,-50%) rotate(360deg) scale(1)}
+    }
+
+    .door-label{position:absolute;left:50%;transform:translateX(-50%);bottom:8px;background:rgba(0,0,0,0.7);padding:6px 12px;border-radius:8px;font-weight:700;color:var(--accent);font-size:14px;pointer-events:none;z-index:3;border:1px solid rgba(230,192,123,0.3)}
+
+    /* 符咒布局：三上两下，符咒放大 */
+    .panel{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:14px;border-radius:12px}
+    .charms{margin-top:6px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto;gap:16px;justify-items:center;align-items:center}
+    .charms .charm{width:110px;height:160px;cursor:grab;touch-action:none;display:flex;align-items:center;justify-content:center;transition:transform 0.2s ease}
+    .charms .charm:hover{transform:scale(1.05)}
+    /* 下排两张排在中右 */
+    .charms .charm:nth-child(4){grid-column:1}
+    .charms .charm:nth-child(5){grid-column:2}
+    .charm img{width:100%;height:100%;object-fit:contain;user-drag:none;user-select:none;filter:drop-shadow(0 8px 16px rgba(0,0,0,0.5))}
+
+    .message{margin-top:14px;font-size:16px;color:#e6c07b;min-height:26px;text-align:center;padding:8px 12px;background:rgba(230,192,123,0.1);border-radius:6px;border:1px solid rgba(230,192,123,0.2)}
+
+    /* 响应式 */
+    @media (max-width:1100px){.wrap{grid-template-columns:1fr}}
+    @media (max-width:760px){
+      .doors-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:auto;gap:14px}
+      .doors-grid > .door:nth-child(1), .doors-grid > .door:nth-child(2){grid-column:auto}
+      .charms{grid-template-columns:repeat(2,1fr)}
+      .charms .charm:nth-child(4){grid-column:1}
+      .charms .charm:nth-child(5){grid-column:2}
+      .wrap{padding:12px}
+      .panel{margin-top:14px}
+      .door{width:150px;height:220px}
+      .charms .charm{width:100px;height:140px}
+    }
+    @media (max-width:420px){
+      .charms .charm{width:85px;height:120px}
+      .door{width:130px;height:190px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="stage">
+      <h2 style="margin:0 0 8px 0;font-size:22px;color:var(--accent);text-shadow:0 2px 8px rgba(0,0,0,0.5)">初阶符咒学习</h2>
+      <div class="message" id="msg">五扇门对应不同煞气，拖放或点触正确符咒到门上以驱散黑气。</div>
+
+      <div class="doors-grid" id="doorsGrid" aria-hidden="false">
+        <!-- 门由 JS 填充 -->
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3 style="margin:0 0 8px 0;color:var(--accent);text-shadow:0 2px 8px rgba(0,0,0,0.3)">符咒</h3>
+      <div class="charms" id="charms">
+        <!-- 符咒由 JS 填充 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 成功提示 -->
+  <div style="position:fixed;left:50%;top:10%;transform:translateX(-50%);z-index:80;pointer-events:none">
+    <div id="success" style="background:linear-gradient(135deg,#e6c07b,#d4af37);color:#111;padding:14px 20px;border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,0.6);opacity:0;transform:scale(0.95);transition:all .4s;font-weight:700;border:2px solid rgba(255,255,255,0.3)">封印完成 — 煞气已被完全驱散</div>
+  </div>
+
+<script>
+/* 五行相克关系 */
+const doorEvilNames = [
+  '枯荣瘴',    // 木属性，被金克
+  '焚心业火',  // 火属性，被水克
+  '寂灭尘',    // 土属性，被木克
+  '百兵煞',    // 金属性，被火克
+  '无定渊'     // 水属性，被土克
+];
+
+const talismansData = [
+  { id:'shui', name:'玄冥涤魂符', type:'水', src:'https://almostwinterao-eng.github.io/my-gallery/1/%E6%B0%B4%E7%AC%A6.png', counters:'焚心业火' },
+  { id:'huo',  name:'离明护身符', type:'火', src:'https://almostwinterao-eng.github.io/my-gallery/1/%E7%81%AB%E7%AC%A6.png', counters:'百兵煞' },
+  { id:'jin',  name:'太白破障符', type:'金', src:'https://almostwinterao-eng.github.io/my-gallery/1/%E9%87%91%E7%AC%A6.png', counters:'枯荣瘴' },
+  { id:'mu',   name:'青帝长生符', type:'木', src:'https://almostwinterao-eng.github.io/my-gallery/1/%E6%9C%A8%E7%AC%A6.png', counters:'寂灭尘' },
+  { id:'tu',   name:'坤元安岳符', type:'土', src:'https://almostwinterao-eng.github.io/my-gallery/1/%E5%9C%9F%E7%AC%A6.png', counters:'无定渊' }
+];
+
+const doorsGrid = document.getElementById('doorsGrid');
+const charmsEl = document.getElementById('charms');
+const msgEl = document.getElementById('msg');
+const successEl = document.getElementById('success');
+
+let placed = {};
+let completed = 0;
+let selectedCharm = null;
+
+function shuffle(a){ 
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  } 
+  return a; 
+}
+
+function msg(text) {
+  msgEl.textContent = text;
+}
+
+// 渲染门 - 修复布局
+function renderDoors(){
+  doorsGrid.innerHTML = '';
+  const order = shuffle([...doorEvilNames]);
+  
+  order.forEach((evil, idx) => {
+    const d = document.createElement('div');
+    d.className = 'door';
+    d.id = `door-${idx}`;
+    d.dataset.evil = evil;
+
+    const img = document.createElement('img');
+    img.src = 'https://almostwinterao-eng.github.io/my-gallery/1/door.png';
+    img.alt = '门';
+    img.style.zIndex = '1';
+
+    const smoke = document.createElement('div');
+    smoke.className = 'smoke';
+
+    const label = document.createElement('div');
+    label.className = 'door-label';
+    label.textContent = evil;
+
+    d.appendChild(img);
+    d.appendChild(smoke);
+    d.appendChild(label);
+
+    d.addEventListener('dragover', e=>e.preventDefault());
+    d.addEventListener('drop', handleDropOnDoor);
+
+    d.addEventListener('click', ()=>{
+      if(selectedCharm){
+        attemptPlace(selectedCharm, d);
+      } else if(placed[d.id]){
+        d.animate([{transform:'translateY(0)'},{transform:'translateY(-6px)'},{transform:'translateY(0)'}],{duration:260});
+      }
+    });
+
+    doorsGrid.appendChild(d);
+  });
+}
+
+// 渲染符咒 - 修复自动打乱
+function renderCharms(){
+  charmsEl.innerHTML = '';
+  const shuffled = shuffle([...talismansData]);
+  
+  shuffled.forEach((t, i) => {
+    const c = document.createElement('div');
+    c.className = 'charm';
+    c.id = `c-${t.id}`;
+    c.draggable = true;
+    c.dataset.tid = t.id;
+    c.dataset.counters = t.counters;
+    c.dataset.type = t.type;
+    c.title = `${t.name}`;
+
+    const img = document.createElement('img');
+    img.src = t.src;
+    img.alt = t.name;
+
+    c.appendChild(img);
+
+    c.addEventListener('dragstart', e=>{
+      e.dataTransfer.setData('text/plain', c.id);
+      setTimeout(()=>c.classList.add('dragging'), 10);
+    });
+    
+    c.addEventListener('dragend', ()=>{
+      c.classList.remove('dragging');
+    });
+
+    c.addEventListener('click', (ev)=>{
+      if(selectedCharm === c){
+        selectedCharm = null;
+        c.style.outline = '';
+        msg('');
+      } else {
+        document.querySelectorAll('.charm').forEach(x=>x.style.outline='');
+        selectedCharm = c;
+        c.style.outline = '3px solid rgba(230,192,123,0.8)';
+        c.style.outlineOffset = '2px';
+        msg(`已选择 ${t.name}，请点按目标门放置`);
+      }
+      ev.stopPropagation();
+    });
+
+    charmsEl.appendChild(c);
+  });
+}
+
+function handleDropOnDoor(e){
+  e.preventDefault();
+  const doorCard = e.currentTarget;
+  const doorId = doorCard.id;
+  if(placed[doorId]) return;
+
+  const charmId = e.dataTransfer.getData('text/plain');
+  const charmEl = document.getElementById(charmId);
+  if(!charmEl) return;
+
+  attemptPlace(charmEl, doorCard);
+}
+
+function attemptPlace(charmEl, doorCard){
+  const doorId = doorCard.id;
+  if(placed[doorId]) return;
+
+  const counters = charmEl.dataset.counters;
+  const evilType = doorCard.dataset.evil;
+
+  if(counters === evilType){
+    // 成功封印
+    const smoke = doorCard.querySelector('.smoke');
+    if(smoke) {
+      smoke.animate([
+        {opacity:0.8},
+        {opacity:0}
+      ], {duration:800, fill:'forwards'});
+      setTimeout(() => smoke.style.display = 'none', 800);
+    }
+
+    charmEl.style.display = 'none';
+    placed[doorId] = charmEl.id;
+    completed = Object.keys(placed).length;
+    msg(`✓ 封印成功：${charmEl.title.split(' - ')[0]} 克制 ${evilType}`);
+    
+    showPlacedMark(doorCard, charmEl);
+
+    if(selectedCharm){
+      selectedCharm.style.outline = '';
+      selectedCharm = null;
+    }
+
+    checkAllSealed();
+  } else {
+    // 错误 - 自动打乱符咒
+    playWrongFeedback(doorCard);
+    setTimeout(() => {
+      resetAll();
+      renderCharms(); // 自动打乱符咒
+      msg('符咒放错！已自动打乱符咒位置。');
+    }, 400);
+  }
+}
+
+function showPlacedMark(doorCard, charmEl){
+  const timg = document.createElement('img');
+  const imgEl = charmEl.querySelector('img');
+  timg.src = imgEl ? imgEl.src : '';
+  timg.style.position = 'absolute';
+  timg.style.width = '42%';
+  timg.style.bottom = '25%';
+  timg.style.left = '50%';
+  timg.style.transform = 'translateX(-50%)';
+  timg.style.filter = 'drop-shadow(0 8px 16px rgba(0,0,0,0.7))';
+  timg.style.zIndex = '3';
+  doorCard.appendChild(timg);
+  
+  timg.animate([
+    {transform:'translateX(-50%) translateY(20px)', opacity:0},
+    {transform:'translateX(-50%) translateY(0)', opacity:1}
+  ], {duration:500, fill:'forwards'});
+}
+
+function playWrongFeedback(doorCard){
+  doorCard.animate([
+    {transform:'translateX(0)'},
+    {transform:'translateX(-8px)'},
+    {transform:'translateX(8px)'},
+    {transform:'translateX(-8px)'},
+    {transform:'translateX(8px)'},
+    {transform:'translateX(0)'}
+  ], {duration:400});
+  
+  const overlay = document.createElement('div');
+  overlay.style.position='absolute'; 
+  overlay.style.inset='0'; 
+  overlay.style.background='rgba(255,50,50,0.3)'; 
+  overlay.style.pointerEvents='none';
+  overlay.style.zIndex='4';
+  doorCard.appendChild(overlay);
+  setTimeout(()=>overlay.remove(),400);
+}
+
+/* function resetAll(){
+  document.querySelectorAll('.charm').forEach(c=>{
+    c.style.display = 'flex';
+    c.style.outline = '';
+    charmsEl.appendChild(c);
+  });
+  
+  document.querySelectorAll('.door .smoke').forEach(s=>{
+    s.style.display = 'block';
+    s.style.opacity = '0.8';
+  });
+  
+  document.querySelectorAll('.door img[style]').forEach(img=>{
+    if(img.style && img.style.width && img.style.width.includes('%') && img.style.position === 'absolute') {
+      img.remove();
+    }
+  });
+  
+  placed = {}; 
+  completed = 0;
+  
+  if(selectedCharm){ 
+    selectedCharm.style.outline=''; 
+    selectedCharm=null; 
+  }
+} */
+
+function resetAll(){
+  document.querySelectorAll('.charm').forEach(c=>{
+    c.style.display = 'flex';
+    c.style.outline = '';
+    charmsEl.appendChild(c);
+  });
+  
+  // 修复黑气重置问题
+  document.querySelectorAll('.door .smoke').forEach(s=>{
+    s.style.display = 'block';
+    s.style.opacity = '0.8';
+    // 清除之前的淡出动画
+    s.getAnimations().forEach(anim => anim.cancel());
+  });
+  
+  document.querySelectorAll('.door img[style]').forEach(img=>{
+    if(img.style && img.style.width && img.style.width.includes('%') && img.style.position === 'absolute') {
+      img.remove();
+    }
+  });
+  
+  placed = {}; 
+  completed = 0;
+  
+  if(selectedCharm){ 
+    selectedCharm.style.outline=''; 
+    selectedCharm=null; 
+  }
+}
+
+function checkAllSealed(){
+  if(completed >= 5){
+    successEl.style.opacity = '1';
+    successEl.style.transform = 'scale(1)';
+    setTimeout(()=>{ 
+      successEl.style.opacity='0'; 
+      successEl.style.transform='scale(.95)'; 
+    }, 3000);
+    msg('恭喜完成初阶符咒学习，获得野火符箓卷，提取码94355');
+    
+    // 庆祝动画
+    document.querySelectorAll('.door').forEach(door => {
+      door.animate([
+        {transform: 'scale(1)'},
+        {transform: 'scale(1.05)'},
+        {transform: 'scale(1)'}
+      ], {duration: 600, iterations: 2});
+    });
+  }
+}
+
+document.body.addEventListener('click', (e)=>{
+  if(!e.target.closest('.charm') && !e.target.closest('.door')){
+    if(selectedCharm){ 
+      selectedCharm.style.outline=''; 
+      selectedCharm=null; 
+      msg(''); 
+    }
+  }
+});
+
+// 初始化
+renderDoors();
+renderCharms();
+msg('请将符咒拖放或点选后点门进行封印（贴错一次将自动打乱符咒）。');
+
+document.addEventListener('contextmenu', e=>e.preventDefault());
+</script>
+</body>
+</html>

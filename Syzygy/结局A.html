@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>结局A</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        body {
+            background: #000;
+            color: #f0f0ff;
+            min-height: 100vh;
+            line-height: 1.8;
+            padding: 2rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* GIF背景 */
+        .gif-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: url('https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3NTJmeDEzM2I2azJxM3ppcm5vZ2RkOXlmZ2txcTRmMmx0dHhzNnUxdyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l4KihuqeuJEi9qLSM/giphy.gif') center center;
+            background-size: cover;
+            opacity: 1;
+        }
+        
+        /* 背景遮罩 - 调整为更浅的遮罩以适应晨曦背景 */
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: rgba(15, 25, 45, 0.75);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(25, 35, 65, 0.6);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(120, 160, 255, 0.3);
+            backdrop-filter: blur(8px);
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            color: #ffd166;
+            text-align: center;
+            text-shadow: 0 0 20px rgba(255, 209, 102, 0.6);
+            letter-spacing: 2px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+        }
+        
+        .content-section {
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(120, 160, 255, 0.3);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease;
+            text-align: center;
+        }
+        
+        .content-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .content-section:last-child {
+            border-bottom: none;
+        }
+        
+        p {
+            margin-bottom: 1.2rem;
+            text-align: center;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #e8f4ff;
+        }
+        
+        .highlight {
+            color: #ffd166;
+            font-weight: bold;
+        }
+        
+        .fade-text {
+            color: #b8d4ff;
+            font-style: italic;
+        }
+        
+        .glitch {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 #ff6b6b;
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+            opacity: 0.7;
+        }
+        
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 #78c0ff;
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+            opacity: 0.7;
+        }
+        
+        @keyframes glitch-anim {
+            0% { clip: rect(42px, 9999px, 44px, 0); }
+            5% { clip: rect(12px, 9999px, 59px, 0); }
+            10% { clip: rect(48px, 9999px, 29px, 0); }
+            15% { clip: rect(42px, 9999px, 73px, 0); }
+            20% { clip: rect(63px, 9999px, 27px, 0); }
+            25% { clip: rect(34px, 9999px, 55px, 0); }
+            30% { clip: rect(86px, 9999px, 73px, 0); }
+            35% { clip: rect(20px, 9999px, 20px, 0); }
+            40% { clip: rect(26px, 9999px, 60px, 0); }
+            45% { clip: rect(25px, 9999px, 66px, 0); }
+            50% { clip: rect(57px, 9999px, 98px, 0); }
+            55% { clip: rect(5px, 9999px, 46px, 0); }
+            60% { clip: rect(82px, 9999px, 31px, 0); }
+            65% { clip: rect(54px, 9999px, 27px, 0); }
+            70% { clip: rect(28px, 9999px, 99px, 0); }
+            75% { clip: rect(45px, 9999px, 69px, 0); }
+            80% { clip: rect(23px, 9999px, 85px, 0); }
+            85% { clip: rect(54px, 9999px, 84px, 0); }
+            90% { clip: rect(45px, 9999px, 47px, 0); }
+            95% { clip: rect(37px, 9999px, 20px, 0); }
+            100% { clip: rect(4px, 9999px, 91px, 0); }
+        }
+        
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); }
+            5% { clip: rect(52px, 9999px, 74px, 0); }
+            10% { clip: rect(79px, 9999px, 85px, 0); }
+            15% { clip: rect(75px, 9999px, 5px, 0); }
+            20% { clip: rect(67px, 9999px, 61px, 0); }
+            25% { clip: rect(14px, 9999px, 79px, 0); }
+            30% { clip: rect(1px, 9999px, 66px, 0); }
+            35% { clip: rect(86px, 9999px, 30px, 0); }
+            40% { clip: rect(23px, 9999px, 98px, 0); }
+            45% { clip: rect(85px, 9999px, 72px, 0); }
+            50% { clip: rect(71px, 9999px, 75px, 0); }
+            55% { clip: rect(2px, 9999px, 48px, 0); }
+            60% { clip: rect(30px, 9999px, 16px, 0); }
+            65% { clip: rect(59px, 9999px, 50px, 0); }
+            70% { clip: rect(41px, 9999px, 62px, 0); }
+            75% { clip: rect(2px, 9999px, 82px, 0); }
+            80% { clip: rect(47px, 9999px, 73px, 0); }
+            85% { clip: rect(3px, 9999px, 27px, 0); }
+            90% { clip: rect(26px, 9999px, 55px, 0); }
+            95% { clip: rect(42px, 9999px, 97px, 0); }
+            100% { clip: rect(38px, 9999px, 49px, 0); }
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(120, 160, 255, 0.3);
+            color: #a0b8e0;
+            font-size: 0.9rem;
+        }
+        
+        .footer-link {
+            color: #ffd166;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-link:hover {
+            color: #78c0ff;
+            text-decoration: underline;
+        }
+        
+        /* 按钮样式 */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 2rem;
+        }
+        
+        .nav-button {
+            background: rgba(255, 209, 102, 0.2);
+            color: #f0f0ff;
+            border: 1px solid rgba(255, 209, 102, 0.5);
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .glitch {
+            text-align: center;
+            width: 100%;
+        }
+        
+        .nav-button:hover {
+            background: rgba(255, 209, 102, 0.4);
+            box-shadow: 0 0 15px rgba(255, 209, 102, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        /* 加载进度条 */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(25, 35, 65, 0.5);
+            z-index: 1000;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ffd166, #78c0ff);
+            transition: width 0.3s ease;
+        }
+        
+        /* 页脚 */
+        footer {
+            background: rgba(20, 35, 65, 0.8);
+            padding: 30px 20px;
+            margin-top: 40px;
+            border-radius: 8px;
+            box-shadow: 
+                0 0 0 2px rgba(120, 160, 255, 0.3),
+                0 0 20px rgba(120, 160, 255, 0.4),
+                inset 0 0 15px rgba(120, 160, 255, 0.1);
+            border: 1px solid rgba(120, 160, 255, 0.2);
+        }
+
+        footer p {
+            text-align: center;
+            color: #e8f4ff;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .footer-link {
+            color: #ffd166;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: #78c0ff;
+            text-decoration: underline;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        .nav-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #ffb347, #ffd166);
+            color: #1a2a4a;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 209, 102, 0.3);
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 209, 102, 0.5);
+            background: linear-gradient(135deg, #ffd166, #ffb347);
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .container {
+                padding: 1.5rem;
+            }
+            
+            p {
+                font-size: 1rem;
+            }
+            
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gif-background"></div>
+    <div class="bg-overlay"></div>
+    
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    
+    <div class="container">
+        <h1 class="glitch" data-text="结局A">结局A</h1>
+        
+        <div class="content-section" id="section1">
+    <p>你删除文件的瞬间，屏幕上那些乱码文件名化作无数细碎的银辉，像被晚风卷走的星尘般湮灭。几乎是同一时间，林墨的电脑发出一声低沉的嗡鸣，机身外壳浮现出淡金色的纹路，如同沉睡的古咒被唤醒，沿着键盘边缘游走成闭环——封印程序启动了。</p>
+</div>
+
+<div class="content-section" id="section2">
+    <p>进度条以肉眼可见的速度爬升，最后一格填满时，空气中那股若有若无的、属于洛书碎片的躁动彻底平息，像被收进了密不透风的琉璃盏。</p>
+</div>
+
+<div class="content-section" id="section3">
+    <p>你长舒一口气，抬头时正对上林墨的目光。她脸色比刚才更白了些，唇色淡得近乎透明，额角甚至沁出了一层薄汗，但那双眼睛亮得惊人，嘴角的笑意里裹着如释重负的轻颤："你终于成功了。"她顿了顿，声音轻得像羽毛落在心尖，"想起来我是谁了吗？"</p>
+</div>
+
+<div class="content-section" id="section4">
+    <p>这句话像一把钥匙，骤然撞开了记忆的闸门。好运莲莲的微信头像率先浮现在脑海。那个你记不清何时认识的自来熟"网友"；那个声称在公寓团购群里相识、总是精确提醒"楼下有你快递哦"的"邻居"；那个不厌其烦互道早晚安的ID。原来，所有这一切都不是偶然，她根本就不是一个飘渺的"网友"。每一个被点击的录音条里，都曾藏着她说话时，那微微上扬的、你早已熟悉的尾音。</p>
+</div>
+
+<div class="content-section" id="section5">
+    <p>你想起三年前的10月22号，她穿着洗得发白的牛仔外套，抱着一盆薄荷站在隔壁门口，阳光落在她发梢，说"你好~我是你的邻居，看你经常摆弄花草，送你一盆薄荷~它很好养活的"；你生日那天，她拎着蛋糕敲你的门，蜡烛火苗在她眼里跳，"多买了一个，不吃完要浪费的~"。</p>
+</div>
+
+<div class="content-section" id="section6">
+    <p>还有无数个傍晚，你们在公寓楼下的长椅上分食一袋橘子，她讲那些光怪陆离的传说，你说单位的趣事，晚风里全是薄荷和橘子混在一起的清香。这些画面不是零散的碎片，是连贯的潮水，瞬间漫过了记忆里那片被掏空的荒原。</p>
+</div>
+
+<div class="content-section" id="section7">
+    <p>"林墨……"你开口时，喉咙像被温水浸过，又酸又软。她笑着点头，眼眶却红了："上次封印失败后，窥命司用碎片能量篡改了你的记忆，我也被反噬，一睡就是两年。他们以为我们俩再掀不起大浪……"</p>
+</div>
+
+<div class="content-section" id="section8">
+    <p>"可他们不知道，静乔公寓是月洛氏族人建造的安全屋。我醒来那天，窗外正挂着残月，就知道还不是时候和你相认。需等到今天这枚碎片显现时，引你亲自完成对3326碎片的封印，便能让你想起一切。"</p>
+</div>
+
+<div class="content-section" id="section9">
+    <p>你这才明白，那个失物招领帖、论坛里若有若无的引导、甚至顾姨"无意间"透露的月洛族书线索，全是她的安排。她知道失去记忆的你像只惊弓之鸟，不肯轻信任何人，便绕了这么大一个圈子，引起你的注意。既能封印新的碎片，又能把你从遗忘的迷雾里拉出来。</p>
+</div>
+
+<div class="content-section" id="section10">
+    <p>"晓棠她......" "她没事，不过被关了十年，后遗症总是有的。你可以啊，居然知道他们把她藏在哪并且救出她，这个我属实没料到。" "为什么一定要我们这些局外人来封印？我有些想不起来了，你说过吗？" "因为你们没有月洛血"她笑了，带着点狡黠，"碎片对我们族人有感应，容易使我们被窥命司追踪，但对局外人而言，它只是'需要被封印的东西'。而且……"她声音轻下来，"我知道，就算忘了我，你的本能也不会让你放任碎片被坏人拿走。"</p>
+</div>
+
+<div class="content-section" id="section11">
+    <p>月亮不知何时隐入了云层，天边泛起淡淡的鱼肚白。你突然走上前，给了她一个用力的拥抱。她的肩膀很轻，带着点凉意，却让你想起三年来无数个瞬间。她愣了一下，随即伸手回抱住你，力道很紧，像要把这几年的空白都填满。</p>
+</div>
+
+<div class="content-section" id="section12">
+    <p>"好了，"她在你耳边说，声音闷闷的，"去吃早餐吧，南巷那家包子铺，你以前总说他们的糖糕炸得最酥。"你们并肩离开山顶时，旭日正好挣脱云层，金色的光泼在树梢上。路边的野草沾着晨露，空气里飘着草木的清新气味，一切皆已尘埃落定。</p>
+</div>
+
+<div class="content-section" id="section13">
+    <p>晨光漫过静乔公寓的窗台时，你和林墨正坐在包子铺的长凳上，糖糕的热气模糊了你的眼镜片。她咬了一口糕，碎屑沾在嘴角，像极了三年前你们第一次在这里分食早餐的模样。</p>
+</div>
+
+<div class="content-section" id="section14">
+    <p>"往后啊，"她抬手抹掉嘴角的糖渣，眼里闪着亮，"血月还会有，窥命司那群人也不会罢休。"你搅动着碗里的豆浆，看着热气在晨光里散开："那就让他们来。"</p>
+</div>
+
+<div class="content-section" id="section15">
+    <p>话音刚落，巷口的风卷着几片落叶飘过，带着初秋的凉意。你想起刚才路过公寓时，似乎看到墙面上的那些淡金色的古咒纹路。它们在阳光下若隐若现，林墨说过，静乔公寓里藏着不少像她一样的族人，还有些知道秘密却选择留下的普通人，大家早就心照不宣地守着同一个约定。"下次血月，"你抬头看向她，嘴角带着笑，"我们可以提前熬锅姜汤，守在楼顶等。"</p>
+</div>
+
+<div class="content-section" id="section17">
+    <p>林墨眼睛一亮："再加两包瓜子？就像以前看球赛那样。""还要带件厚外套，"你补充道，"上次你在楼顶吹风感冒了，赖了我三天粥。"她拍了下你的胳膊，笑骂"就你记仇"，笑声落在豆浆碗里，漾起细小的涟漪。</p>
+</div>
+
+<div class="content-section" id="section18">
+    <p>阳光穿过她的发梢，在她手背上投下细碎的光斑，那双手曾在两年的昏迷里冰凉苍白，此刻却温暖得能握住滚烫的豆浆碗。你们都知道，窥命司不会善罢甘休。洛书碎片的诱惑太大，那些想把世界塞进秩序框架里的人，总会像苍蝇一样围上来。</p>
+</div>
+
+<div class="content-section" id="section19">
+    <p>但没关系，血月会升起一轮又一轮，清晨也会准时升起。就像此刻，你们面前的空碗里还残留着豆浆的甜香，巷口的煎饼摊又支起了油锅，生活里的烟火气，本就是最坚韧的盾牌。</p>
+</div>
+
+<div class="content-section" id="section20">
+    <p>离开包子铺时，你看到公寓楼下的茶梅又抽出了新芽，嫩绿的叶子在风里轻轻晃悠。林墨说，这是月洛氏的规矩，每次风波过后，都要种点新的植物，提醒自己希望总在生长。"走吧，"她推了推你的胳膊，"回去补个觉，下午还得去给桂圆买猫粮。"</p>
+</div>
+
+<div class="content-section" id="section21">
+    <p>你点头跟上，脚步踩在晨光里，踏实而坚定。未来的血月尽管带着寒意降临，暗处的眼睛也尽管盯着好了。只要你们还站在这里，还能一起分食一块糖糕，还能在彼此眼中看到光亮，就没什么好怕的。</p>
+</div>
+
+<div class="content-section" id="section22">
+    <p>你想起窥命司的野心——集齐碎片，创造所谓的"秩序世界"，可他们不懂，真正的未来从来不是被规划好的图纸，而本该是不确定的。就像此刻，你牵着林墨的手走在晨光里，不知道下一个转角会遇见什么，却知道身边有她，有记忆里的薄荷香，有无数个充满变数却永远值得期待的清晨。</p>
+</div>
+
+<div class="content-section" id="section23">
+    <p>随他们放马过来罢，日子总要在无数个血月与清晨的交替中，慢慢过出无限可能。</p>
+</div>
+        
+        <footer>
+            <p>感谢游玩，你的<a href="https://sylvie-seven-cq.top" class="footer-link">反馈</a>是我最大的动力——AQI</p>
+            <div class="button-container">
+                <a href="作者碎碎念.html" class="nav-button">作者嘟碎碎念</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.content-section');
+            const progressBar = document.getElementById('progressBar');
+            
+            // 更新进度条
+            function updateProgress() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollProgress = (scrollTop / scrollHeight) * 100;
+                progressBar.style.width = scrollProgress + '%';
+            }
+            
+            // 检查元素是否在视口中
+            function isElementInViewport(el) {
+                const rect = el.getBoundingClientRect();
+                return (
+                    rect.top >= 0 &&
+                    rect.left >= 0 &&
+                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                );
+            }
+            
+            // 显示当前可见的段落
+            function showVisibleSections() {
+                sections.forEach((section, index) => {
+                    if (isElementInViewport(section) && !section.classList.contains('visible')) {
+                        section.classList.add('visible');
+                    }
+                });
+            }
+            
+            // 初始显示第一段
+            if (sections.length > 0) {
+                sections[0].classList.add('visible');
+            }
+            
+            // 滚动事件监听
+            window.addEventListener('scroll', function() {
+                updateProgress();
+                showVisibleSections();
+            });
+            
+            // 点击段落高亮效果
+            const paragraphs = document.querySelectorAll('.content-section p');
+            paragraphs.forEach(p => {
+                p.addEventListener('click', function() {
+                    this.classList.toggle('highlight');
+                });
+            });
+            
+            // 初始更新进度条
+            updateProgress();
+        });
+    </script>
+</body>
+</html>
