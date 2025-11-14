@@ -197,7 +197,7 @@
             font-weight: bold;
         }
 
-        .status-未读 {
+        .status-new {
             color: #d9534f;
             font-weight: bold;
         }
@@ -1303,12 +1303,49 @@
     color: #dfeff7;
     opacity: 0.8;
 }
+/* 以下为新增 */
+/* 阅读状态样式 */
+.post-card.unread {
+    background-color: #f8f9fa !important;
+    border-left: 3px solid #007bff !important;
+}
 
- 
+.post-card.read {
+    opacity: 0.8;
+}
 
+.status-最新\! {
+    color: #ff6600 !important;
+    font-weight: bold !important;
+}
+
+.status-已读 {
+    color: #5cb85c !important;
+    font-weight: bold !important;
+}
+
+.unread-badge {
+    background: #dc3545;
+    color: white;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 8px;
+}
+
+.post-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.post-card:hover {
+    background-color: #f0f0f0 !important;
+}
+    /* 以上为新增 */
     </style>
      <link rel="stylesheet" href="responsive-auto.css">
-
+     <link rel="stylesheet" href="password-manager.css">
+     <!-- <link rel="stylesheet" href="forum-status.css"> -->
      <script>
         (function () {
             'use strict';
@@ -1679,7 +1716,7 @@
                 posts: [
                     /*{ title: "关于论坛图片显示问题", author: "系统管理员", status: "未读", content: ``, date: "2025-9-7" },*/
                     {
-                        title: "【异常通知】关于论坛遭遇恶意攻击的公告", author: "系统管理员", status: "未读", content: `亲爱的各位业主/住户：
+                        title: "【异常通知】关于论坛遭遇恶意攻击的公告", author: "系统管理员", status: "最新!", content: `亲爱的各位业主/住户：
 我们非常抱歉地通知大家，今日凌晨，本公寓论坛服务器遭遇了一次恶意的外部网络攻击。我们已在第一时间启动应急预案，切断了攻击源，目前论坛主体功能已恢复稳定。
 然而，经过技术人员的紧急排查，我们发现此次攻击主要针对的是论坛的时间戳数据库，导致了部分数据被恶意篡改。
 目前，这会造成以下主要问题：
@@ -1691,7 +1728,7 @@
 感谢大家的理解与耐心！`, date: "2025-9-7"
                     },
                     {
-                        title: "【安全提醒】警惕不明链接，防范网络诈骗！", author: "系统管理员", status: "未读", content: `亲爱的各位业主/住户：
+                        title: "【安全提醒】警惕不明链接，防范网络诈骗！", author: "系统管理员", status: "最新!", content: `亲爱的各位业主/住户：
 大家好！
 我们注意到，近期论坛内出现了一些由个人用户发布的、含有外部网站链接的帖子。这些帖子内容多样，可能涉及商品团购、二手交易、趣味测试或信息分享等。
 在此，物业服务中心需要特别提醒大家：部分不法分子可能会利用论坛的邻里关系，伪装成普通住户发布带有“钓鱼网站”或恶意软件的链接，以窃取您的个人信息和财产。
@@ -1703,7 +1740,7 @@
 网络安全无小事，保护好个人信息是防范诈骗的第一步。感谢大家的理解与配合，让我们共同维护一个安全、可信的社区交流平台！`, date: "2025-9-6"
                     },
                     {
-                        title: "【重要通知】关于论坛系统升级及浏览方式调整的公告", author: "系统管理员", status: "未读", content: `亲爱的各位业主/住户：大家好！
+                        title: "【重要通知】关于论坛系统升级及浏览方式调整的公告", author: "系统管理员", status: "最新!", content: `亲爱的各位业主/住户：大家好！
 为了给大家提供一个更稳定、更高效的交流环境，我们已于近日完成了对本公寓官方论坛的系统升级。
 在本次升级中，我们引入了全新的“内容归档与快速加载”机制，并对论坛的浏览和搜索方式进行了如下调整：
 页面显示优化： 为了大幅提升论坛页面的加载速度，所有板块的主列表页面现在将默认只显示近15天内发布的帖子。
@@ -1717,15 +1754,14 @@
 感谢大家的理解与支持！`, date: "2025-9-6"
                     },
                      {
-                        title: "【紧急通知】关于“发帖”及“编辑”功能临时维护的公告", author: "系统管理员", status: "未读", content: ` / 住户：
-                                        大家好。我们收到部分用户反馈，近期上线的“帖子编辑”功能存在一些兼容性Bug，可能导致内容保存失败。同时，为配合后台服务器的紧急数据迁移工作，“发布新帖”功能*也需要暂时关闭。为彻底解决问题并保障论坛数据安全，我们将对以上两项功能进行临时合并维护。
-                                        维护期间：
-                                        您将无法发布新的帖子。
-                                        您将无法编辑已发布的帖子。
-                                        论坛的浏览、回复、点赞等其他功能不受影响。我们的技术人员正在全力进行抢修，力求尽快恢复所有功能。
-                                        对于此次功能维护给大家带来的不便，我们深表歉意。感谢您的耐心与理解！`, date: "2025-9-5"
-                    }, 
-                    { title: "【温馨提示】物业提醒：请注意楼道安全", author: "物业服务中心", status: "已读", content: "楼道安全提示：请勿堆放杂物，确保通行安全。", date: "2025-9-7" },
+                        title: "【紧急通知】关于“发帖”及“编辑”功能临时维护的公告", author: "系统管理员", status: "最新!", content: ` 各位住户：大家好。我们收到部分用户反馈，近期上线的“帖子编辑”功能存在一些兼容性Bug，可能导致内容保存失败。同时，为配合后台服务器的紧急数据迁移工作，“发布新帖”功能*也需要暂时关闭。为彻底解决问题并保障论坛数据安全，我们将对以上两项功能进行临时合并维护。
+维护期间：
+您将无法发布新的帖子。
+您将无法编辑已发布的帖子。
+论坛的浏览、回复等其他功能不受影响。我们的技术人员正在全力进行抢修，力求尽快恢复所有功能。
+对于此次功能维护给大家带来的不便，我们深表歉意。感谢您的耐心与理解！`, date: "2025-9-5"
+                    } , 
+                    /*{ title: "【温馨提示】物业提醒：请注意楼道安全", author: "物业服务中心", status: "new!", content: "楼道安全提示：请勿堆放杂物，确保通行安全。", date: "2025-9-7" }, */
                     /* {
                         title: "【功能上新】“帖子编辑”功能正式上线通知", author: "系统管理员", status: "未读", content: `大家好！为提升大家的使用体验，应广大业主的建议，经过一段时间的开发与测试，我们很高兴地宣布：公寓论坛“帖子编辑”功能，现已正式上线！
 从现在起，在您成功发布帖子后的 24小时内，您可以在自己帖子的下方找到【编辑】按钮，点击即可对内容进行修改和补充。
@@ -1814,7 +1850,7 @@
                 title: "活动专区",
                 posts: [
                     {
-                        title: "周末公寓烧烤聚会", author: "无效空调", status: "报名中", content: `这个周末，别再宅在家里啦！我们将在公园里组织一场温馨又热闹的烧烤聚会，诚邀各位邻居带上好心情，一起来享受美食与闲暇时光。
+                        title: "周末公园烧烤聚会", author: "无效空调", status: "报名中", content: `这个周末，别再宅在家里啦！我们将在公园里组织一场温馨又热闹的烧烤聚会，诚邀各位邻居带上好心情，一起来享受美食与闲暇时光。
 【活动亮点】
 •	畅享美食：我们准备了丰富的烧烤食材（牛羊肉串、鸡翅、香肠、玉米、茄子等）和各类饮品，无限量供应，让你一次吃个过瘾！
 •	互动交友：认识一下你隔壁的“网友”，在轻松的氛围中结识新朋友，聊聊工作，分享生活，让邻里关系更近一步。
@@ -2146,7 +2182,7 @@ replies: [
             
             {
                 title: "有没有临渠县的老乡?咱那儿的金桂该开花了吧?",
-                author: "匿名用户89413",
+                author: "匿名用户894135",
                 content: "刚在百货超市买速溶咖啡，货架上摆着新到的桂花糖，突然就想起老家临渠的金桂了，咱那儿的金桂跟别处不一样，都长在渠边的石缝里，树干歪歪扭扭的，可到了开花的季节，那花香能香透半条街！小时候皮，经常去摘桂花，我妈总说'别爬那么高，渠边滑’--现在想起来，她手里的桂花糕才是最香的。前几天给家里打电话，我爸说今年雨水多，有几棵老金桂的枝桠被冲断了，县上正组织人加固。突然就挺想家的，不知道有没有老乡记得，渠口那棵最粗的金桂，树干上有个小孩拳头大的树洞?小时候总往里面塞硬币说能求个好运气。对了，超市最近搞活动，桂花糖买二送一。有没有人要拼单的?算我一个。",
                 date: "2020-3-6",
                 section: "邻里交流",
@@ -2154,7 +2190,7 @@ replies: [
                 searchKeyword: "临渠县,金桂,桂花糖,速溶咖啡",
                 replies: [
                     { author: "向阳花开", content: "哟，临渠县啊?我认识个老姐妹嫁在那附近说你们那儿的桂花能做酒呢!不过我劝你少买那糖，添加剂多。对了，你也是这公寓的?住哪栋啊?半夜还在逛超市，作息跟33楼那暴躁小伙子似的，可得注意身体哟。", date: "2025-3-6" },
-                    { author: "匿名用户89413", content: "谢谢阿姨关心，桂花酒是咱那儿的老手艺了，得用渠水酿才够味。那树洞去年回去看，还在呢，就是里面的硬币被人掏光了。", date: "2025-3-7" },
+                    { author: "匿名用户894135", content: "谢谢阿姨关心，桂花酒是咱那儿的老手艺了，得用渠水酿才够味。那树洞去年回去看，还在呢，就是里面的硬币被人掏光了。", date: "2025-3-7" },
                     { author: "404", content: "树洞里的硬币可不能乱掏！！那些人不听老辈人的话就等着倒霉吧！呵！", date: "2025-3-7" },
                     { author: "猕猴桃圈圈", content: "欸楼主，拼单你可以找朱大姐呀！！她有内部渠道~团购价可便宜了~~还外送到公寓楼呢！", date: "2025-3-7" }
                 ]
@@ -2229,16 +2265,16 @@ replies: [
 
             {
                 title: "【吐槽】静乔公寓的保安是不是管得太宽了？感觉像住在军事基地！",
-                author: "匿名用户6351215",
+                author: "匿名用户635125",
                 content: "新搬来没多久，但真的被我们这儿的保安队长（就是那个姓赵的，有点黑的中年大叔）搞得有点神经衰弱。我不是说他不好啊，就是……太负责了。上次我朋友晚上来找我，在大厅多问了两句，他就跟审犯人一样盘问人家，查了半天访客码。还有，我就是晚上想去天台吹吹风，他拿着手电筒照过来，说那里晚上不开放，语气严肃得好像我要干嘛一样。感觉他每天都在楼里来回巡逻，眼神犀利得跟鹰似的，好像我们每个住户都是潜在的危险分子。大家有同感吗？这管得也太严了吧，让人压力好大。",
                 date: "2022-5-6",
                 section: "邻里交流",
                 popularity: 6,
                 searchKeyword: "保安,姓赵的",
                 replies: [
-                    { author: "匿名用户686541", content: "习惯就好，老赵虽然严格但是很负责的，上次有小偷想混进来就是他发现的。", date: "2022-5-6" },
-                    { author: "匿名用户654165", content: "疫情的时候人要是不管，让别人进进出出你又不乐意了，怎么？好了伤疤忘了痛？", date: "2022-5-6" },
-                    { author: "匿名用户115648", content: "确实有点太严了，感觉像被监视一样，不过也是为了大家安全吧。", date: "2022-5-7" }
+                    { author: "长点肌肉", content: "习惯就好，老赵虽然严格但是很负责的，上次有小偷想混进来就是他发现的。", date: "2022-5-6" },
+                    { author: "南宫问阳", content: "疫情的时候人要是不管，让别人进进出出你又不乐意了，怎么？好了伤疤忘了痛？", date: "2022-5-6" },
+                    { author: "不熬夜主义", content: "确实有点太严了，感觉像被监视一样，不过也是为了大家安全吧。", date: "2022-5-7" }
                 ]
             },
             {
@@ -2308,7 +2344,7 @@ replies: [
                 searchKeyword: "草药,烧香,净化磁场,消防隐患,檀香",
                 replies: [
                     { author: "myosotis", content: "顾姨人很好的，就是信这些，你可以跟她商量下在室内烧。", date: "2025-6-6" },
-                    { author: "应赢樱", content: "确实要注意消防安全，建议跟物业反映一下。", date: "2025-6-7" }
+                    { author: "纯情蟑螂火辣辣", content: "确实要注意消防安全，建议跟物业反映一下。", date: "2025-6-7" }
                 ]
             },
             {
@@ -2320,8 +2356,8 @@ replies: [
                 popularity: 6,
                 searchKeyword: "王大妈",
                 replies: [
-                    { author: "匿名用户875125", content: "王大妈确实这样，我都习惯了，笑笑不回答就好。", date: "2025-9-6" },
-                    { author: "匿名用户487126", content: "你可以说'阿姨我赶时间'快速溜走，或者戴耳机假装听不见。", date: "2025-9-7" }
+                    { author: "猛兽潜艇糕手", content: "王大妈确实这样，我都习惯了，笑笑不回答就好。", date: "2025-9-6" },
+                    { author: "大寄特寄", content: "你可以说'阿姨我赶时间'快速溜走，或者戴耳机假装听不见。", date: "2025-9-7" }
                 ]
             },
             {
@@ -2333,8 +2369,8 @@ replies: [
                 popularity: 66,
                 searchKeyword: "3307,幽灵,暴躁",
                 replies: [
-                    { author: "匿名用户651844", content: "谢谢提醒！我就住33楼……刚搬来就被捶墙了，正在考虑搬家……", date: "2022-9-6", },
-                    { author: "匿名用户648461", content: "听说那是个程序员，日夜颠倒的，可能确实对声音比较敏感。。。", date: "2022-9-7" }
+                    { author: "匿名用户651844", content: " 谢谢提醒！我就住33楼……刚搬来就被捶墙了，正在考虑搬家……", date: "2022-9-6", },
+                    { author: "忧郁忧郁忧郁起来", content: " 听说那是个程序员，日夜颠倒的，可能确实对声音比较敏感。。。", date: "2022-9-7" }
                 ]
             },
             {
@@ -2687,8 +2723,7 @@ replies: [
 
         // 初始化用户个人数据
         function initUserProfile(username) {
-            console.log('当前 username:', username);
-            console.log('initUserProfile 调用：', username); // 调试
+            
             if (!userProfiles[username]) {
                 if (username === '林中的猫') {
                     userProfiles[username] = {
@@ -2721,7 +2756,7 @@ replies: [
             // 在页面上显示用户名或显示名
             const profile = userProfiles[username] || {}; // 确保 profile 变量被正确定义
             usernameDisplay.textContent = profile.displayName || username;
-            console.log('显示名更新为:', usernameDisplay.textContent);
+            
 
             // 为新注册用户发送欢迎私信
             if (username !== 'Resonance' && username !== '林中的猫') {
@@ -2808,12 +2843,12 @@ replies: [
             // 更新消息计数
             updateMessageCount();
 
-            console.log('已为林中的猫初始化私信:', privateMessages['林中的猫']);
+            
         }
         /*以上为新增代码*/
 
         window.onload = function () {
-            console.log('页面加载完成');
+            
             let username = '林中的猫';
             initUserProfile(username);
             setTimeout(() => initUserProfile(username), 300);
@@ -2830,7 +2865,7 @@ replies: [
             localStorage.setItem('privateMessages', JSON.stringify(privateMessages));
         }
         // 使用 Proxy 代替 defineProperty
-        console.log('=== 开始监控 currentUser ===');
+        
 
         // 先保存原始值
         const originalCurrentUser = window.currentUser;
@@ -2839,14 +2874,14 @@ replies: [
         window.currentUser = new Proxy({ value: originalCurrentUser }, {
             get(target, prop) {
                 if (prop === 'value') {
-                    console.log('📢 读取 currentUser:', target.value);
+                    /*  */
                     return target.value;
                 }
                 return target[prop];
             },
             set(target, prop, value) {
                 if (prop === 'value') {
-                    console.log('📢 设置 currentUser:', value);
+                    /*  */
                     console.trace('设置调用栈'); // 显示调用栈
                     target.value = value;
                     return true;
@@ -2856,12 +2891,12 @@ replies: [
         });
         // 触发阿哲弹窗
         function triggerAzhePopup() {
-            console.log('=== 弹窗调试 ===');
-            console.log('1. currentUser:', currentUser);
-            console.log('2. localStorage azheTriggered:', localStorage.getItem('azheTriggered'));
+            /* 
+            
+            ); */
             // 检查是否已经触发过
             if (localStorage.getItem('azheTriggered')) {
-                console.log('弹窗已触发过，跳过');
+                
                 return; // 已经触发过，不再显示
             }
 
@@ -2874,14 +2909,14 @@ replies: [
 
             // 新增：设置弹窗内容
             const popupContent = document.querySelector('.azhe-popup-content');
-            console.log('3. 弹窗元素:', popupContent);
+            /*  */
 
             if (popupContent) {
                 const userName = currentUser || '匿名用户';
-                console.log('4. 最终用户名:', userName);
-                console.log('5. 用户名长度:', userName.length);
+                /*  */
+                
                 popupContent.innerHTML = `${userName}你这个臭邻居！！！ 乱搜我的名字干什么！！不想活了吗！！！`;
-                console.log('6. 设置后的内容:', popupContent.innerHTML);
+                /*  */
             }
 
             document.body.classList.add('resonance-theme');
@@ -3170,12 +3205,12 @@ replies: [
 
                 // 林中的猫用户不触发弹窗
                 if (currentUser === '林中的猫') {
-                    console.log('林中的猫用户搜索阿哲，不触发弹窗');
+                    /*  */
                     // 继续正常搜索
                 }
                 // 普通用户触发弹窗
                 else {
-                    console.log('普通用户搜索阿哲，触发弹窗，用户:', currentUser);
+                    /*  */
                     triggerAzhePopup();
                     return; // 触发弹窗后停止搜索
                 }
@@ -3548,7 +3583,7 @@ replies: [
                 // 显示提示
                 showMessageNotification(`您有新的私信`);
 
-                console.log(`关键词"${keyword}"触发私信已发送给用户:`, currentUser);
+                /*  */
             }, messageConfig.delay);
         }
 
@@ -3858,7 +3893,7 @@ replies: [
                 else if (registeredUsers.some(user => user.username === username && user.password === password)) {
                     currentUser = username;
                     initUserProfile(username); // 初始化用户个人数据
-                    console.log('普通用户登录成功:', currentUser);
+                    /*  */
                     updateAuthUI();
                     loginModal.style.display = 'none';
                     document.getElementById('login-username').value = '';
@@ -3870,10 +3905,10 @@ replies: [
                 else {
                     alert('用户名或密码错误！');
                 }
-                console.log('=== 用户状态检查 ===');
-                console.log('currentUser:', currentUser);
-                console.log('currentUser 类型:', typeof currentUser);
-                console.log('currentUser 值长度:', currentUser ? currentUser.length : 'null');
+                /* 
+                
+                
+                 */
                 // 如果登录成功，阻止弹窗触发事件
                 /*if (loginSuccess) {
                     setupAzhePopupPrevention();
@@ -3883,14 +3918,14 @@ replies: [
 
         // 阻止弹窗的函数 - 使用事件阻止方法
         function preventAzhePopup() {
-            console.log('执行阻止azhe-popup弹窗');
+            /*  */
 
             // 方法1: 直接隐藏弹窗元素
             const popup = document.getElementById('azhe-popup');
             if (popup) {
                 popup.style.display = 'none';
                 popup.style.visibility = 'hidden';
-                console.log('已隐藏azhe-popup元素');
+                /*  */
             }
 
             // 方法2: 移除相关元素
@@ -3902,14 +3937,14 @@ replies: [
 
         // 设置弹窗阻止机制
         function setupAzhePopupPrevention() {
-            console.log('设置azhe-popup阻止机制');
+            /*  */
 
             // 阻止弹窗触发事件
             document.addEventListener('click', function (e) {
                 if (e.target.closest('[onclick*="azhe"], [href*="azhe"]')) {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('阻止了azhe相关点击事件');
+                    /*  */
                 }
             }, true); // 使用捕获阶段
 
@@ -3921,7 +3956,7 @@ replies: [
                         activeElement.className.includes('azhe'))) {
                         e.preventDefault();
                         e.stopPropagation();
-                        console.log('阻止了azhe相关键盘事件');
+                       /*   */
                     }
                 }
             }, true);
@@ -3936,7 +3971,7 @@ replies: [
                                 (node.innerHTML && node.innerHTML.includes('azhe'))) {
                                 node.style.display = 'none';
                                 node.remove();
-                                console.log('阻止了动态创建的azhe弹窗');
+                                /*  */
                             }
                         }
                     });
@@ -3952,7 +3987,7 @@ replies: [
             if (typeof window.showAzhePopup === 'function') {
                 window.originalShowAzhePopup = window.showAzhePopup;
                 window.showAzhePopup = function () {
-                    console.log('azhe-popup弹窗已被阻止');
+                    /*  */
                     return false;
                 };
             }
@@ -3960,11 +3995,11 @@ replies: [
             if (typeof window.azhePopup !== 'undefined') {
                 window.azhePopup = {
                     show: function () {
-                        console.log('azhe-popup显示方法已被阻止');
+                        /*  */
                         return false;
                     },
                     open: function () {
-                        console.log('azhe-popup打开方法已被阻止');
+                        /*  */
                         return false;
                     }
                 };
@@ -4400,15 +4435,15 @@ const keywords = ['黑色笔记本', '窥命司'];
 function monitorSearchInputs() {
     const inputs = document.querySelectorAll('input[type="text"], input[type="search"]');
     
-    console.log('开始监控输入框...');
-    console.log('检测到的输入框数量:', inputs.length);
+    
+    /*  */
     
     // 判断是否为Resonance用户，如果是，则直接返回
     const isResonance = isResonanceUser();
-    console.log('是否是Resonance用户:', isResonance);
+    /*  */
     
     if (isResonance) {
-        console.log('🔒 Resonance用户，永久锁定主题并跳过监控');
+        /*  */
         document.body.classList.add('resonance-theme');
         
         // 使用MutationObserver确保主题永远不会被移除
@@ -4416,7 +4451,7 @@ function monitorSearchInputs() {
             mutations.forEach(function(mutation) {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
                     if (!document.body.classList.contains('resonance-theme')) {
-                        console.log('🚨 检测到主题被移除，立即恢复！');
+                        /*  */
                         document.body.classList.add('resonance-theme');
                     }
                 }
@@ -4431,35 +4466,35 @@ function monitorSearchInputs() {
         return;
     } else {
         // 如果不是Resonance用户，确保主题被移除
-        console.log('普通用户或未登录，移除主题');
+        /*  */
         document.body.classList.remove('resonance-theme');
     }
 
-    console.log('普通用户，开始设置输入监控');
+    
 
     // 如果不是Resonance用户，执行以下代码
     inputs.forEach((input, index) => {
         // 避免重复绑定事件
         if (!input.dataset.monitoring) {
-            console.log(`设置监控输入框 ${index + 1}:`, input);
+           /*   */
             
             input.addEventListener('input', () => {
                 const value = input.value.toLowerCase();
-                console.log('输入内容:', value);
+                
                 
                 const matched = keywords.some(keyword => {
                     const includes = value.includes(keyword.toLowerCase());
-                    console.log(`检查关键词 "${keyword}": ${includes}`);
+                    
                     return includes;
                 });
                 
-                console.log('是否匹配关键词:', matched);
+                
 
                 if (matched) {
-                    console.log('添加 resonance-theme 主题');
+                    
                     document.body.classList.add('resonance-theme');
                 } else {
-                    console.log('移除 resonance-theme 主题');
+                    
                     document.body.classList.remove('resonance-theme');
                 }
             });
@@ -4472,7 +4507,7 @@ function monitorSearchInputs() {
 function isResonanceUser() {
     // 方法1: 直接从您的系统变量获取
     if (window.currentUser && window.currentUser.toLowerCase() === 'resonance') {
-        console.log('🎯 从window.currentUser检测到Resonance用户！');
+        
         return true;
     }
     
@@ -4482,16 +4517,16 @@ function isResonanceUser() {
                       sessionStorage.getItem('currentUser');
     
     if (storedUser && storedUser.toLowerCase() === 'resonance') {
-        console.log('🎯 从存储检测到Resonance用户:', storedUser);
+        
         return true;
     }
     
     // 方法3: 从页面文本中提取用户名（更精确的提取）
     const userText = extractUsernameFromPage();
-    console.log('从页面提取的用户名:', userText);
+    
     
     if (userText && userText.toLowerCase().includes('resonance')) {
-        console.log('🎯 从页面文本检测到Resonance用户！');
+        
         return true;
     }
     
@@ -4499,11 +4534,11 @@ function isResonanceUser() {
     const urlParams = new URLSearchParams(window.location.search);
     const urlUser = urlParams.get('user') || urlParams.get('username');
     if (urlUser && urlUser.toLowerCase() === 'resonance') {
-        console.log('🎯 从URL参数检测到Resonance用户！');
+        
         return true;
     }
     
-    console.log('不是Resonance用户');
+    
     return false;
 }
 
@@ -4526,7 +4561,7 @@ function extractUsernameFromPage() {
                 const cleanText = text.replace(/欢迎[，,]\s*/, '').trim();
                 const lines = cleanText.split('\n').map(line => line.trim()).filter(line => line);
                 if (lines.length > 0) {
-                    console.log(`从选择器 "${selector}" 找到文本:`, lines[0]);
+                    
                     return lines[0]; // 返回第一行（应该是用户名）
                 }
             }
@@ -4538,7 +4573,7 @@ function extractUsernameFromPage() {
 
 // 监听退出登录事件
 function setupLogoutListener() {
-    console.log('设置退出登录监听...');
+    
     
     // 方法1: 监听退出按钮点击
     document.addEventListener('click', function(e) {
@@ -4549,7 +4584,7 @@ function setupLogoutListener() {
             target.closest('a')?.textContent.includes('退出') ||
             target.closest('button')?.textContent.includes('退出')) {
             
-            console.log('检测到退出登录操作，移除主题');
+            
             // 延迟执行，确保退出操作完成
             setTimeout(() => {
                 document.body.classList.remove('resonance-theme');
@@ -4563,7 +4598,7 @@ function setupLogoutListener() {
     window.addEventListener('storage', function(e) {
         if ((e.key === 'currentUser' && !e.newValue) || 
             (e.key === 'username' && !e.newValue)) {
-            console.log('检测到用户数据被清除，移除主题');
+            
             document.body.classList.remove('resonance-theme');
             setTimeout(monitorSearchInputs, 500);
         }
@@ -4573,7 +4608,7 @@ function setupLogoutListener() {
     const originalRemoveItem = localStorage.removeItem;
     localStorage.removeItem = function(key) {
         if (key === 'currentUser' || key === 'username') {
-            console.log('检测到用户数据删除，移除主题');
+            
             document.body.classList.remove('resonance-theme');
         }
         return originalRemoveItem.apply(this, arguments);
@@ -4581,7 +4616,7 @@ function setupLogoutListener() {
     
     const originalClear = localStorage.clear;
     localStorage.clear = function() {
-        console.log('检测到localStorage清除，移除主题');
+        
         document.body.classList.remove('resonance-theme');
         return originalClear.apply(this, arguments);
     };
@@ -4591,7 +4626,7 @@ function setupLogoutListener() {
 
 // 初始化
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM加载完成，初始化监控');
+    
     addDebugButton();
     setupLogoutListener();
     
@@ -4605,10 +4640,10 @@ document.addEventListener('DOMContentLoaded', function() {
 setInterval(() => {
     const isResonance = isResonanceUser();
     if (isResonance && !document.body.classList.contains('resonance-theme')) {
-        console.log('🛡️ 保护机制：检测到Resonance用户但主题缺失，立即恢复！');
+        
         document.body.classList.add('resonance-theme');
     } else if (!isResonance && document.body.classList.contains('resonance-theme')) {
-        console.log('🛡️ 保护机制：检测到非Resonance用户但有主题，立即移除！');
+        
         document.body.classList.remove('resonance-theme');
     }
 }, 3000);
@@ -4730,6 +4765,8 @@ setInterval(() => {
        onmouseover="this.style.opacity='0.8'"
        onmouseout="this.style.opacity='0.7'">免责声明</a>
     </footer>
+    <script src="userStorage.js"></script>
+    <script src="passwordManager.js"></script>
     
 </body>
 </html>
