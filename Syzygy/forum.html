@@ -1309,7 +1309,7 @@
     </style>
      <link rel="stylesheet" href="responsive-auto.css">
 
-     <script>
+     <!-- <script>
         (function () {
             'use strict';
 
@@ -1395,6 +1395,130 @@
                         }
                     }, 500);
 
+                    // 额外的F12捕获
+                    window.addEventListener('keydown', function (e) {
+                        if (e.key === 'F12' || e.keyCode === 123) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            e.stopImmediatePropagation();
+                            alert('恭喜你获得成就：逃课大王！');
+                            return false;
+                        }
+                    }, true);
+                }
+            };
+
+            devTools.init();
+        })();
+    </script> -->
+
+ <script>
+        (function () {
+            'use strict';
+
+            var devTools = {
+                isDevToolsOpen: false,
+                detectionCount: 0,
+                maxDetectionCount: 3,
+                
+                init: function () {
+                    this.disableRightClick();
+                    this.disableDevTools();
+                    this.disableTextSelect();
+                    this.antiInspect();
+                },
+
+                disableRightClick: function () {
+                    document.addEventListener('contextmenu', function (e) {
+                        e.preventDefault();
+                        alert('恭喜你获得成就：逃课大王！');
+                        return false;
+                    });
+                },
+
+                disableDevTools: function () {
+                    document.addEventListener('keydown', function (e) {
+                        // F12
+                        if (e.key === 'F12') {
+                            e.preventDefault();
+                            alert('恭喜你获得成就：逃课大王！');
+                            return false;
+                        }
+
+                        // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+                        if (e.ctrlKey && e.shiftKey &&
+                            (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
+                            e.preventDefault();
+                            return false;
+                        }
+
+                        // Ctrl+U
+                        if (e.ctrlKey && e.key === 'u') {
+                            e.preventDefault();
+                            return false;
+                        }
+                    });
+                },
+
+                disableTextSelect: function () {
+                    // 注释掉文本选择禁用，因为这会降低用户体验
+                    /* document.addEventListener('selectstart', function (e) {
+                        e.preventDefault();
+                        return false;
+                    }); */
+                },
+
+                antiInspect: function () {
+                    var self = this;
+                    
+                    // 使用更可靠的检测方法
+                    setInterval(function () {
+                        // 调试器检测
+                        var debuggerDetected = false;
+                        try {
+                            // 创建一个简单的调试器检测
+                            (function testDebugger() {
+                                var startTime = Date.now();
+                                debugger;
+                                var endTime = Date.now();
+                                // 如果执行时间过长，可能是在调试器中暂停了
+                                if (endTime - startTime > 100) {
+                                    debuggerDetected = true;
+                                }
+                            })();
+                        } catch (e) {
+                            // 某些情况下会抛出异常
+                            debuggerDetected = true;
+                        }
+
+                        // 控制台检测
+                        var consoleDetected = false;
+                        if (window.console && window.console.firebug) {
+                            consoleDetected = true;
+                        }
+                        
+                        // 如果检测到开发者工具
+                        if (debuggerDetected || consoleDetected) {
+                            if (!self.isDevToolsOpen) {
+                                self.isDevToolsOpen = true;
+                                self.detectionCount++;
+                                
+                                if (self.detectionCount <= self.maxDetectionCount) {
+                                    alert('检测到开发者工具已打开，请关闭！');
+                                } else {
+                                    document.body.innerHTML = '<h1>请关闭开发者工具！</h1>';
+                                    window.location.reload();
+                                }
+                            }
+                        } else {
+                            // 开发者工具已关闭
+                            if (self.isDevToolsOpen) {
+                                self.isDevToolsOpen = false;
+                                self.detectionCount = 0; // 重置计数
+                            }
+                        }
+                    }, 1000);
+                    
                     // 额外的F12捕获
                     window.addEventListener('keydown', function (e) {
                         if (e.key === 'F12' || e.keyCode === 123) {
