@@ -345,9 +345,9 @@
             font-size: 14px;
         }
         .login-btn:disabled {
-    background-color: #8b7355;
-    cursor: not-allowed;
-}
+            background-color: #8b7355;
+            cursor: not-allowed;
+        }
         
         /* 响应式设计 */
         @media (max-width: 768px) {
@@ -440,25 +440,8 @@
         <div class="container">
             <h2 class="section-title">您的照片</h2>
             <div class="gallery-container" id="galleryContainer">
-                <div class="gallery-grid">
-                    <div class="photo-item">
-                        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="照片1">
-                    </div>
-                    <div class="photo-item">
-                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="照片2">
-                    </div>
-                    <div class="photo-item">
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80" alt="照片3">
-                    </div>
-                    <div class="photo-item">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="照片4">
-                    </div>
-                    <div class="photo-item">
-                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="照片5">
-                    </div>
-                    <div class="photo-item">
-                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="照片6">
-                    </div>
+                <div class="gallery-grid" id="galleryGrid">
+                    <!-- 照片会通过JavaScript动态加载 -->
                 </div>
             </div>
             <div class="login-prompt" id="loginPrompt">
@@ -478,10 +461,10 @@
                     <input type="text" id="username" placeholder="请输入用户名" required>
                 </div>
                 <div class="form-group">
-                    <label for="yinbimima">密码</label>
-                    <input type="yinbimima" id="yinbimima" placeholder="请输入密码" required>
+                    <label for="password">密码</label>
+                    <input type="password" id="password" placeholder="请输入密码" required>
                 </div>
-                <div class="error-message" id="errorMessage">没有该账户</div>
+                <div class="error-message" id="errorMessage">用户名或密码错误</div>
                 <button type="submit" class="submit-btn">登录</button>
             </form>
         </div>
@@ -539,8 +522,30 @@
         const userAvatar = document.getElementById('userAvatar');
         const logoutBtn = document.getElementById('logoutBtn');
         const galleryContainer = document.getElementById('galleryContainer');
+        const galleryGrid = document.getElementById('galleryGrid');
         const loginPrompt = document.getElementById('loginPrompt');
         const errorMessage = document.getElementById('errorMessage');
+        
+        // 用户数据
+        const users = {
+            'momo': {
+                password: '916920',
+                photos: [
+                    'https://sylvie-seven-cq.top/gallery/合照.jpg',
+                    'https://sylvie-seven-cq.top/gallery/合照2.png',
+                    'https://sylvie-seven-cq.top/gallery/mint.jpg',
+                    'https://sylvie-seven-cq.top/gallery/金桂圆圆.jpg',
+                    'https://sylvie-seven-cq.top/gallery/生日.jpg',
+                    'https://sylvie-seven-cq.top/gallery/合照3.png'
+                ]
+            },
+            'kms': {
+                password: 'bianliang',
+                photos: [
+                    'https://sylvie-seven-cq.top/gallery/危险变量.jpg'
+                ]
+            }
+        };
         
         // 打开登录模态框
         loginBtn.addEventListener('click', () => {
@@ -571,19 +576,18 @@
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const username = document.getElementById('username').value;
-            const yinbimima = document.getElementById('yinbimima').value;
+            const password = document.getElementById('password').value;
             
             // 验证登录信息
-            if (username === 'momo' && yinbimima === '916920') {
+            if (users[username] && users[username].password === password) {
                 // 登录成功
                 loginBtn.style.display = 'none';
                 userInfo.style.display = 'flex';
                 userName.textContent = username;
                 userAvatar.textContent = username.charAt(0).toUpperCase();
                 
-                // 显示照片库
-                galleryContainer.style.display = 'block';
-                loginPrompt.style.display = 'none';
+                // 显示相应用户的照片库
+                displayUserPhotos(username);
                 
                 // 修改英雄区域按钮文本
                 heroLoginBtn.textContent = '请下滑查看您的照片';
@@ -600,6 +604,29 @@
                 errorMessage.style.display = 'block';
             }
         });
+        
+        // 显示用户照片
+        function displayUserPhotos(username) {
+            // 清空现有照片
+            galleryGrid.innerHTML = '';
+            
+            // 添加用户照片
+            users[username].photos.forEach(photoUrl => {
+                const photoItem = document.createElement('div');
+                photoItem.className = 'photo-item';
+                
+                const img = document.createElement('img');
+                img.src = photoUrl;
+                img.alt = '用户照片';
+                
+                photoItem.appendChild(img);
+                galleryGrid.appendChild(photoItem);
+            });
+            
+            // 显示照片库
+            galleryContainer.style.display = 'block';
+            loginPrompt.style.display = 'none';
+        }
         
         // 处理退出登录
         logoutBtn.addEventListener('click', () => {
