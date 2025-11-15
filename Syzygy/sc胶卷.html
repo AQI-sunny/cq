@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/jpeg" href="https://sylvie-seven-cq.top/gallery/search.png">
-    <title>密码提示 - 搜索结果</title>
-   <!-- ch-->
+    <title>彩色胶卷处理 - 搜索结果</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,25 +12,21 @@
             margin: 0;
             padding: 0;
         }
-
         .container {
             width: 80%;
             margin: 0 auto;
             padding-top: 30px;
         }
-
         .logo {
             display: block;
             margin: 0 auto 20px;
             width: 150px;
             height: 150px;
         }
-
         .search-container {
             text-align: center;
             margin-bottom: 30px;
         }
-
         .search-box {
             width: 500px;
             padding: 12px 20px;
@@ -41,11 +36,9 @@
             outline: none;
             box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
         }
-
-            .search-box:focus {
-                box-shadow: 0 1px 6px rgba(32, 33, 36, 0.45);
-            }
-
+        .search-box:focus {
+            box-shadow: 0 1px 6px rgba(32, 33, 36, 0.45);
+        }
         .search-button {
             background-color: #4285f4;
             color: white;
@@ -55,103 +48,57 @@
             cursor: pointer;
             margin-left: 10px;
         }
-
         h1 {
             text-align: center;
             font-size: 36px;
             margin-bottom: 20px;
         }
-
         .news-list {
             list-style-type: none;
             padding-left: 0;
         }
-
         .news-item {
             border-bottom: 1px solid #ddd;
             padding: 15px 0;
         }
-
-            .news-item .title {
-                font-size: 18px;
-                font-weight: bold;
-                color: #1a0dab;
-                text-decoration: none;
-            }
-
-                .news-item .title:hover {
-                    text-decoration: underline;
-                }
-
-            .news-item .source {
-                font-size: 14px;
-                color: #6a6a6a;
-            }
-
-            .news-item .date {
-                font-size: 12px;
-                color: #777;
-            }
-
+        .news-item .title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1a0dab;
+            text-decoration: none;
+        }
+        .news-item .title:hover {
+            text-decoration: underline;
+        }
+        .news-item .source {
+            font-size: 14px;
+            color: #6a6a6a;
+        }
+        .news-item .date {
+            font-size: 12px;
+            color: #777;
+        }
         .related-searches {
             margin-top: 40px;
         }
-
-            .related-searches h2 {
-                font-size: 24px;
-                margin-bottom: 10px;
-            }
-
-            .related-searches ul {
-                list-style-type: none;
-                padding-left: 0;
-            }
-
-                .related-searches ul li {
-                    font-size: 16px;
-                    margin-bottom: 5px;
-                }
-
-                    .related-searches ul li a {
-                        color: #1a0dab;
-                        text-decoration: none;
-                    }
-
-                        .related-searches ul li a:hover {
-                            text-decoration: underline;
-                        }
-
-        .search-suggestions {
-            position: absolute;
-            background: white;
-            border: 1px solid #dfe1e5;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            width: 500px;
-            max-height: 300px;
-            overflow-y: auto;
-            z-index: 1000;
-            display: none;
+        .related-searches h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
         }
-
-            .search-suggestions div {
-                padding: 10px 15px;
-                cursor: pointer;
-            }
-
-                .search-suggestions div:hover {
-                    background-color: #f5f5f5;
-                }
-
-        .suggestion-container {
-            position: relative;
-            display: inline-block;
+        .related-searches ul {
+            list-style-type: none;
+            padding-left: 0;
         }
-
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: #666;
+        .related-searches ul li {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .related-searches ul li a {
+            color: #1a0dab;
+            text-decoration: none;
+        }
+        .related-searches ul li a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -159,359 +106,55 @@
     <div class="container">
         <img src="https://sylvie-seven-cq.top/gallery/search.png" alt="Logo" class="logo">
         <div class="search-container">
-            <div class="suggestion-container">
-                <input type="text" class="search-box" id="searchInput" placeholder="搜索其他关键词..." value="密码提示">
-                <div class="search-suggestions" id="searchSuggestions"></div>
-            </div>
+            <input type="text" class="search-box" id="searchInput" placeholder="搜索其他关键词..." value="彩色胶卷处理">
             <button class="search-button" id="searchButton">搜索</button>
         </div>
-        <h1 id="pageTitle">密码提示 - 搜索结果列表</h1>
-        <div id="loadingIndicator" class="loading" style="display: none;">加载中...</div>
+        <h1 id="pageTitle">彩色胶卷处理 - 搜索结果列表</h1>
         <ul class="news-list" id="resultsList">
-            <!-- 搜索结果将在这里动态生成 -->
+            <li class="news-item">
+                <a href="https://sylvie-seven-cq.top/Syzygy/影像馆.html" class="title">彩色胶卷处理 - 搜索结果</a>
+                <div class="source">影像技术</div>
+                <div class="date">2025-9-7</div>
+            </li>
         </ul>
 
-        <!-- <div class="related-searches">
+        <div class="related-searches">
             <h2>猜你想搜</h2>
             <ul id="relatedSearchesList">
-                固定显示三个关键词 -
-                
-                <li><a href="https://sylvie-seven-cq.top/Syzygy/system-responsech.html" class="related-search" data-keyword="咖啡店后台密码">咖啡店后台密码</a></li>
-                
+                <li><a href="#" class="related-search" data-keyword="时光影像馆">时光影像馆</a></li>
             </ul>
-        </div> -->
-
-        <div class="related-searches">
-    <h2>猜你想搜</h2>
-    <ul id="relatedSearchesList">
-        <!-- 固定显示三个关键词 -->
-        <li><a href="#" class="related-search" data-keyword="息脉定流符">息脉定流符</a></li>
-        <li><a href="#" class="related-search" data-keyword="彩色胶卷处理">彩色胶卷处理</a></li>
-        <li><a href="#" class="related-search" data-keyword="提取码">提取码</a></li>
-    </ul>
-</div>
+        </div>
     </div>
 
     <script>
-        // 全局变量来存储关键词映射
-        let keywordRedirects = {};
-
-        // 从JSON文件加载关键词映射
-        async function loadKeywordRedirects() {
-            try {
-                console.log('开始加载关键词映射...');
-                document.getElementById('loadingIndicator').style.display = 'block';
-
-                // 修正为正确的JSON文件URL（包含.json扩展名）
-                const url = 'https://sylvie-seven-cq.top/Syzygy/meizhaoledejson2.json?v=' + Date.now();
-                const response = await fetch(url);
-
-                if (!response.ok) {
-                    console.warn('关键词映射文件加载失败，状态码:', response.status);
-                    document.getElementById('loadingIndicator').style.display = 'none';
-                    return;
-                }
-
-                const data = await response.json();
-                console.log('✅ 关键词映射加载成功:', Object.keys(data).length, '个关键词');
-
-                // 适配不同的JSON格式：直接URL格式或数组格式
-                Object.keys(data).forEach(key => {
-                    try {
-                        const value = data[key];
-                        
-                        // 如果值是字符串（直接URL格式），则转换为数组格式
-                        if (typeof value === 'string') {
-                            keywordRedirects[key] = value;
-                            console.log(`   "${key}" -> ${value} (直接URL格式)`);
-                        } 
-                        // 如果值是数组（原格式），则取第一个元素的URL
-                        else if (Array.isArray(value) && value.length > 0) {
-                            const redirectInfo = value[0];
-                            const redirectUrl = redirectInfo.url || redirectInfo;
-                            keywordRedirects[key] = redirectUrl;
-                            console.log(`   "${key}" -> ${redirectUrl} (数组格式)`);
-                        }
-                    } catch (e) {
-                        console.warn('处理关键词失败:', key, e);
-                    }
-                });
-
-                console.log('总共加载了', Object.keys(keywordRedirects).length, '个关键词');
-                document.getElementById('loadingIndicator').style.display = 'none';
-
-            } catch (error) {
-                console.error('❌ 加载关键词映射失败:', error);
-                document.getElementById('loadingIndicator').style.display = 'none';
-            }
-        }
-
-        // 检查关键词映射 - 直接匹配
-        function checkKeywordRedirect(query) {
-            if (!keywordRedirects || Object.keys(keywordRedirects).length === 0) {
-                console.log('⚠️ 关键词映射未加载');
-                return false;
-            }
-
-            console.log(`🔎 搜索检查: "${query}"`);
-
-            // 直接检查关键词映射
-            if (keywordRedirects[query]) {
-                const redirectUrl = keywordRedirects[query];
-                console.log('🎯 找到匹配! 跳转到:', redirectUrl);
-                setTimeout(() => {
-                    window.location.href = redirectUrl;
-                }, 100);
-                return true;
-            }
-
-            console.log('❌ 未找到关键词映射');
-            return false;
-        }
-
-        // 执行普通搜索功能
-        function performNormalSearch(query) {
-            console.log('🔍 执行普通搜索:', query);
-
-            const resultsList = document.getElementById('resultsList');
-            resultsList.innerHTML = '';
-
-            document.title = `${query} - 搜索结果`;
-            const pageTitle = document.getElementById('pageTitle');
-            if (pageTitle) {
-                pageTitle.textContent = `${query} - 搜索结果列表`;
-            }
-
-            const results = searchResults[query] || [];
-
-            if (results.length === 0) {
-                const noResultsItem = document.createElement('li');
-                noResultsItem.className = 'news-item';
-                noResultsItem.innerHTML = `
-                    <div class="title">搜索: ${query}</div>
-                    <div class="source">暂无搜索结果，请尝试其他关键词</div>
-                `;
-                resultsList.appendChild(noResultsItem);
-            } else {
-                results.forEach(result => {
-                    const resultItem = document.createElement('li');
-                    resultItem.className = 'news-item';
-                    resultItem.innerHTML = `
-                        <a href="${result.url}" class="title">${result.title}</a>
-                        <div class="source">${result.source}</div>
-                        <div class="date">${result.date}</div>
-                    `;
-                    resultsList.appendChild(resultItem);
-                });
-            }
-        }
-
-        // 主搜索函数
-        function performSearch(query) {
-            console.log('🚀 开始搜索:', query);
-
-            if (checkKeywordRedirect(query)) {
-                console.log('✅ 关键词映射匹配，准备跳转');
-                return;
-            }
-
-            console.log('📝 执行普通搜索逻辑');
-            performNormalSearch(query);
-        }
-
-        /*// 搜索建议功能
-        function showSearchSuggestions(query) {
-            const suggestionsContainer = document.getElementById('searchSuggestions');
-            suggestionsContainer.innerHTML = '';
-
-            if (!query.trim()) {
-                suggestionsContainer.style.display = 'none';
-                return;
-            }
-
-            const matchingKeywords = Object.keys(keywordRedirects).filter(keyword =>
-                keyword.toLowerCase().includes(query.toLowerCase())
-            ).slice(0, 8);
-
-            if (matchingKeywords.length > 0) {
-                matchingKeywords.forEach(keyword => {
-                    const suggestionDiv = document.createElement('div');
-                    suggestionDiv.textContent = keyword;
-                    suggestionDiv.addEventListener('click', () => {
-                        document.getElementById('searchInput').value = keyword;
-                        suggestionsContainer.style.display = 'none';
-                        performSearch(keyword);
-                    });
-                    suggestionsContainer.appendChild(suggestionDiv);
-                });
-                suggestionsContainer.style.display = 'block';
-            } else {
-                suggestionsContainer.style.display = 'none';
-            }
-        }*/
-
-        // 生成固定的相关搜索
-        function generateRelatedSearches() {
-            // 为固定的相关搜索添加点击事件
-            const relatedSearchLinks = document.querySelectorAll('.related-search');
-            relatedSearchLinks.forEach(link => {
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const keyword = this.getAttribute('data-keyword');
-                    document.getElementById('searchInput').value = keyword;
-                    performSearch(keyword);
-                });
-            });
-        }
-
-        /* // 模拟搜索结果数据
-        const searchResults = {
-            "密码提示": [
-                {
-                    title: "暂无搜索结果......",
-                    source: "请尝试其他关键词",
-                    date: "2025-9-7",
-                    url: "#"
-                }
-            ],
-            "咖啡店后台密码": [
-                {
-                    title: "暂无搜索结果......",
-                    source: "请尝试其他关键词",
-                    date: "2025-9-7",
-                    url: "https://sylvie-seven-cq.top/Syzygy/system-responsech.html"
-                }
-            ],
-            "提示密码": [
-                {
-                    title: "暂无搜索结果......",
-                    source: "请尝试其他关键词",
-                    date: "2025-9-7",
-                    url: "#"
-                }
-            ],
-            "密码": [
-                {
-                    title: "暂无搜索结果......",
-                    source: "请尝试其他关键词",
-                    date: "2025-9-7",
-                    url: "#"
-                }
-            ]
-        }; */
-        // 模拟搜索结果数据
-const searchResults = {
-    "密码提示": [
-        {
-            title: "密码提示 - 搜索结果",
-            source: "系统安全",
-            date: "2025-9-7",
-            url: "#"
-        }
-    ],
-    "咖啡店后台密码": [
-        {
-            title: "咖啡店后台密码 - 搜索结果",
-            source: "餐饮管理系统",
-            date: "2025-9-7",
-            url: "https://sylvie-seven-cq.top/Syzygy/system-responsech.html"
-        }
-    ],
-    "息脉定流符": [
-        {
-            title: "息脉定流符 - 搜索结果",
-            source: "符咒学习",
-            date: "2025-9-7",
-            url: "https://sylvie-seven-cq.top/Syzygy/符咒.html"
-        }
-    ],
-    "彩色胶卷处理": [
-        {
-            title: "彩色胶卷处理 - 搜索结果",
-            source: "影像技术",
-            date: "2025-9-7",
-            url: "https://sylvie-seven-cq.top/Syzygy/影像馆.html"
-        }
-    ],
-    "提取码": [
-        {
-            title: "提取码 - 搜索结果",
-            source: "云盘服务",
-            date: "2025-9-7",
-            url: "https://sylvie-seven-cq.top/Syzygy/云盘.html"
-        }
-    ],
-    "提示密码": [
-        {
-            title: "提示密码 - 搜索结果",
-            source: "密码管理",
-            date: "2025-9-7",
-            url: "#"
-        }
-    ],
-    "密码": [
-        {
-            title: "密码 - 搜索结果",
-            source: "信息安全",
-            date: "2025-9-7",
-            url: "#"
-        }
-    ]
-};
-
-        // 获取DOM元素
         const searchInput = document.getElementById('searchInput');
         const searchButton = document.getElementById('searchButton');
-        const resultsList = document.getElementById('resultsList');
-        const pageTitle = document.getElementById('pageTitle');
-        const searchSuggestions = document.getElementById('searchSuggestions');
 
-        // 初始化搜索功能
-        async function initSearch() {
-            console.log('🔧 初始化搜索功能...');
+        searchButton.addEventListener('click', function() {
+            const query = searchInput.value.trim();
+            if (query) {
+                window.location.href = `?q=${encodeURIComponent(query)}`;
+            }
+        });
 
-            await loadKeywordRedirects();
-            performSearch('密码提示');
-            generateRelatedSearches();
-
-            searchButton.addEventListener('click', function () {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
                 const query = searchInput.value.trim();
                 if (query) {
-                    searchSuggestions.style.display = 'none';
-                    performSearch(query);
-                } else {
-                    alert('请输入搜索关键词');
+                    window.location.href = `?q=${encodeURIComponent(query)}`;
                 }
+            }
+        });
+
+        // 相关搜索点击事件
+        document.querySelectorAll('.related-search').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const keyword = this.getAttribute('data-keyword');
+                searchInput.value = keyword;
+                window.location.href = `?q=${encodeURIComponent(keyword)}`;
             });
-
-            searchInput.addEventListener('keypress', function (e) {
-                if (e.key === 'Enter') {
-                    const query = searchInput.value.trim();
-                    if (query) {
-                        searchSuggestions.style.display = 'none';
-                        performSearch(query);
-                    }
-                }
-            });
-
-            searchInput.addEventListener('input', function () {
-                const query = searchInput.value.trim();
-                showSearchSuggestions(query);
-            });
-
-            document.addEventListener('click', function (e) {
-                if (!searchInput.contains(e.target) && !searchSuggestions.contains(e.target)) {
-                    searchSuggestions.style.display = 'none';
-                }
-            });
-
-            console.log('✅ 搜索功能初始化完成');
-        }
-
-        document.addEventListener('DOMContentLoaded', initSearch);
+        });
     </script>
 </body>
 </html>
-
-
-
