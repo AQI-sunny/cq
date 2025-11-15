@@ -112,7 +112,7 @@
         <h1 id="pageTitle">息脉定流符 - 搜索结果列表</h1>
         <ul class="news-list" id="resultsList">
             <li class="news-item">
-                <a href="#" class="title">息脉定流符 - 搜索结果</a>
+                <!-- <a href="#" class="title">息脉定流符 - 搜索结果</a> -->
                 <div class="source">符咒学习</div>
                 <div class="date">2025-9-7</div>
             </li>
@@ -121,7 +121,11 @@
         <div class="related-searches">
             <h2>猜你想搜</h2>
             <ul id="relatedSearchesList">
-                <li><a href="https://sylvie-seven-cq.top/Syzygy/符咒.html" class="related-search" data-keyword="初阶符咒学习">初阶符咒学习</a></li>
+                <li><a href="#" class="related-search" data-keyword="符咒材料准备">符咒材料准备</a></li>
+                <li><a href="https://sylvie-seven-cq.top/Syzygy/符咒.html" class="related-search">初阶符咒学习</a></li>
+                <li><a href="#" class="related-search" data-keyword="高阶符咒绘制">高阶符咒绘制</a></li>
+                
+                <li><a href="#" class="related-search" data-keyword="符咒效果验证">符咒效果验证</a></li>
             </ul>
         </div>
     </div>
@@ -130,30 +134,77 @@
         const searchInput = document.getElementById('searchInput');
         const searchButton = document.getElementById('searchButton');
 
+        // 搜索功能
+        function performSearch(query) {
+            if (query) {
+                // 在实际应用中，这里应该发送搜索请求到服务器
+                // 这里只是模拟搜索
+                document.getElementById('pageTitle').textContent = query + ' - 搜索结果列表';
+                
+                // 更新搜索结果列表
+                const resultsList = document.getElementById('resultsList');
+                resultsList.innerHTML = `
+                <li class="news-item">
+                        <a href="#" class="title">${query}暂无搜索结果</a>
+                        <div class="source"> </div>
+                        <div class="date">2025-9-7</div>
+                    </li>
+                    <li class="news-item">
+                        <a href="#" class="title">高阶符咒怎么绘制？</a>
+                        <div class="source">符咒学习</div>
+                        <div class="date">2023-9-7</div>
+                    </li>
+                    <li class="news-item">
+                        <a href="#" class="title">中级符咒有哪些？</a>
+                        <div class="source">符咒百科</div>
+                        <div class="date">2024-8-15</div>
+                    </li>
+                    <li class="news-item">
+                        <a href="#" class="title">太白破障符使用注意事项</a>
+                        <div class="source">符咒安全指南</div>
+                        <div class="date">2025-7-22</div>
+                    </li>
+                `;
+            }
+        }
+
+        // 搜索按钮点击事件
         searchButton.addEventListener('click', function() {
             const query = searchInput.value.trim();
-            if (query) {
-                window.location.href = `?q=${encodeURIComponent(query)}`;
-            }
+            performSearch(query);
         });
 
+        // 搜索框回车事件
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 const query = searchInput.value.trim();
-                if (query) {
-                    window.location.href = `?q=${encodeURIComponent(query)}`;
-                }
+                performSearch(query);
             }
         });
 
-        // 相关搜索点击事件
+        // 相关搜索点击事件 - 修复版本
         document.querySelectorAll('.related-search').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
-                const keyword = this.getAttribute('data-keyword');
+                const keyword = this.textContent || this.getAttribute('data-keyword');
+                
+                // 更新搜索框内容
                 searchInput.value = keyword;
-                window.location.href = `?q=${encodeURIComponent(keyword)}`;
+                
+                // 执行搜索
+                performSearch(keyword);
+                
+                // 如果链接有实际URL，则跳转到该URL
+                const href = this.getAttribute('href');
+                if (href && href !== '#') {
+                    window.location.href = href;
+                }
             });
+        });
+
+        // 页面加载时执行初始搜索
+        window.addEventListener('DOMContentLoaded', function() {
+            performSearch('息脉定流符');
         });
     </script>
 </body>
