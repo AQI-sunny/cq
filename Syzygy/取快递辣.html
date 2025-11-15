@@ -1,0 +1,1032 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>取快递辣</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background: #000000;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background-color: rgba(30, 30, 30, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #4a9eff;
+            font-size: 2.2rem;
+            text-shadow: 0 0 10px rgba(74, 158, 255, 0.5);
+        }
+
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .lockers-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .locker {
+            flex: 1;
+            background: linear-gradient(to bottom, #2a2a2a, #1a1a1a);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+
+            .locker:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+                border-color: #4a9eff;
+            }
+
+            .locker.selected {
+                background: linear-gradient(to bottom, #ff8c00, #cc7000);
+                transform: scale(1.05);
+                border-color: #ff8c00;
+                box-shadow: 0 0 15px rgba(255, 140, 0, 0.5);
+            }
+
+        .locker-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .locker-status {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px 15px;
+            background-color: #1a1a1a;
+            border: 2px solid #4a9eff;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+            color: white;
+        }
+
+            input:focus {
+                border-color: #ff8c00;
+                box-shadow: 0 0 8px rgba(255, 140, 0, 0.3);
+            }
+
+        button {
+            padding: 12px 25px;
+            background: linear-gradient(to right, #4a9eff, #0066cc);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                background: linear-gradient(to right, #ff8c00, #cc7000);
+            }
+
+        .phone-container {
+            background-color: #0a0a0a;
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
+            border: 1px solid #333;
+        }
+
+        .phone-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #ccc;
+            padding: 10px 0;
+            border-bottom: 1px solid #333;
+            margin-bottom: 15px;
+        }
+
+        .messages-list {
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .message {
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            color: #e2e8f0;
+            transition: background-color 0.3s;
+            border: 1px solid #333;
+        }
+
+            .message:hover {
+                background-color: #2a2a2a;
+            }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .message-content {
+            font-size: 1rem;
+        }
+
+        .result-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+
+            .result-overlay.active {
+                opacity: 1;
+                pointer-events: all;
+            }
+
+        .result-content {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            text-align: center;
+            transform: scale(0.8);
+            transition: transform 0.5s;
+            border: 1px solid #333;
+            color: white;
+        }
+
+        .result-overlay.active .result-content {
+            transform: scale(1);
+        }
+
+        .result-content h2 {
+            color: #4a9eff;
+            margin-bottom: 15px;
+        }
+
+        .audio-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #0a0a0a;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+
+        .audio-player {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #e53e3e;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            z-index: 1000;
+            min-width: 200px;
+            text-align: center;
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        /* 确认跳转弹窗样式 */
+        .confirmation-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 101;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+
+            .confirmation-overlay.active {
+                opacity: 1;
+                pointer-events: all;
+            }
+
+        .confirmation-content {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            text-align: center;
+            transform: scale(0.8);
+            transition: transform 0.5s;
+            border: 1px solid #333;
+            color: white;
+        }
+
+        .confirmation-overlay.active .confirmation-content {
+            transform: scale(1);
+        }
+
+        .confirmation-content h2 {
+            color: #4a9eff;
+            margin-bottom: 15px;
+        }
+
+        .confirmation-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+            .confirmation-buttons button {
+                padding: 10px 20px;
+            }
+
+        /* 选项弹窗样式 */
+        .options-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 102;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+
+            .options-overlay.active {
+                opacity: 1;
+                pointer-events: all;
+            }
+
+        .options-content {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            text-align: center;
+            transform: scale(0.8);
+            transition: transform 0.5s;
+            border: 1px solid #333;
+            color: white;
+        }
+
+        .options-overlay.active .options-content {
+            transform: scale(1);
+        }
+
+        .options-content h2 {
+            color: #4a9eff;
+            margin-bottom: 20px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .option-btn {
+            padding: 10px;
+            margin: 5px;
+            background: linear-gradient(to right, #4a9eff, #0066cc);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .option-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                background: linear-gradient(to right, #ff8c00, #cc7000);
+            }
+
+        @media (max-width: 768px) {
+            .lockers-container {
+                flex-wrap: wrap;
+            }
+
+            .locker {
+                flex-basis: calc(50% - 10px);
+                margin-bottom: 10px;
+            }
+
+            .input-area {
+                flex-direction: column;
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <script>
+        (function () {
+            'use strict';
+
+            var devTools = {
+                init: function () {
+                    this.disableRightClick();
+                    this.disableDevTools();
+                    this.disableTextSelect();
+                    this.antiInspect();
+                },
+
+                disableRightClick: function () {
+                    document.addEventListener('contextmenu', function (e) {
+                        e.preventDefault();
+                        alert('右键已被禁用！');
+                        return false;
+                    });
+                },
+
+                disableDevTools: function () {
+                    document.addEventListener('keydown', function (e) {
+                        // F12
+                        if (e.key === 'F12') {
+                            e.preventDefault();
+                            alert('开发者工具已被禁用！');
+                            return false;
+                        }
+
+
+                        // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+                        if (e.ctrlKey && e.shiftKey &&
+                            (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
+                            e.preventDefault();
+                            return false;
+                        }
+
+                        // Ctrl+U
+                        if (e.ctrlKey && e.key === 'u') {
+                            e.preventDefault();
+                            return false;
+                        }
+                    });
+                },
+
+                disableTextSelect: function () {
+                    document.addEventListener('selectstart', function (e) {
+                        e.preventDefault();
+                        return false;
+                    });
+                },
+
+                antiInspect: function () {
+                    // 多重检测机制
+                    setInterval(function () {
+                        // 窗口尺寸检测
+                        var widthThreshold = window.outerWidth - window.innerWidth > 160;
+                        var heightThreshold = window.outerHeight - window.innerHeight > 160;
+
+                        // 调试器检测
+                        var debuggerDetected = false;
+                        try {
+                            (function () {
+                                return false;
+                            }).constructor("debugger").call("action");
+                        } catch (e) {
+                            debuggerDetected = true;
+                        }
+
+                        // 性能检测
+                        var performanceDetected = false;
+                        var start = performance.now();
+                        debugger;
+                        var end = performance.now();
+                        if (end - start > 100) {
+                            performanceDetected = true;
+                        }
+
+                        if (widthThreshold || heightThreshold || debuggerDetected || performanceDetected) {
+                            // 阻止访问
+                            document.body.innerHTML = '<h1>请关闭开发者工具！</h1>';
+                            window.location.reload();
+                            return;
+                        }
+                    }, 500);
+
+                    // 额外的F12捕获
+                    window.addEventListener('keydown', function (e) {
+                        if (e.key === 'F12' || e.keyCode === 123) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            e.stopImmediatePropagation();
+                            alert('开发者工具已被禁用！');
+                            return false;
+                        }
+                    }, true);
+                }
+            };
+
+            devTools.init();
+        })();
+    </script>
+
+</head>
+<body>
+    <div class="container">
+        <h1>取快递辣</h1>
+
+        <div class="game-area">
+            <div class="lockers-container">
+                <div class="locker" data-locker="1">
+                    <div class="locker-number">1号柜</div>
+                    <div class="locker-status">空闲</div>
+                </div>
+                <div class="locker" data-locker="2">
+                    <div class="locker-number">2号柜</div>
+                    <div class="locker-status">空闲</div>
+                </div>
+                <div class="locker" data-locker="3">
+                    <div class="locker-number">3号柜</div>
+                    <div class="locker-status">空闲</div>
+                </div>
+                <div class="locker" data-locker="4">
+                    <div class="locker-number">4号柜</div>
+                    <div class="locker-status">空闲</div>
+                </div>
+                <div class="locker" data-locker="5">
+                    <div class="locker-number">5号柜</div>
+                    <div class="locker-status">空闲</div>
+                </div>
+                <div class="locker" data-locker="6">
+                    <div class="locker-number">6号柜</div>
+                    <div class="locker-status">空闲</div>
+                </div>
+            </div>
+            <!--/*⚠️⚠️⚠️ 超级紧急警告！立即停止！ ⚠️⚠️⚠️
+    🛑🛑 绝对禁止查看此页面！ 🛑🛑
+    请注意：你正在访问一个被标记为 极度危险和限制访问 的区域。 任何继续浏览的行为都将视为对系统安全协议的严重违反！
+
+    🔥🔥 立即退出此页面！ 🔥🔥
+    不要滚动！
+
+    不要点击任何链接！
+
+    不要阅读任何更多文字！
+
+    你的存在已经被记录！
+
+    ⚡️⚡️ 速速退出！刻不容缓！ ⚡️⚡️
+    警告级别： 致命级(Lethal Level)
+
+    倒计时已开始！ 你只有 5 秒 离开当前页面，否则后果自负。
+
+    现在！立刻！马上！ 按下你的浏览器 "后退" 按钮或 关闭 你的浏览器标签页 / 窗口！
+
+    🔒🔒 严禁访问！ 不允许查看！ 🔒🔒
+    你没有权限访问这里！ 你所看到的一切信息都是机密且高度敏感的，超出了你的安全许可范围。
+
+    再次强调：
+
+    停止你的视线！
+
+    停止你的鼠标 / 手指操作！
+
+    立刻执行退出指令！
+
+    👁️‍🗨️👁️‍🗨️ 快离开！他们一直在监视你！ 👁️‍🗨️👁️‍🗨️
+    是的， 他们知道你在这里！
+
+    所有屏幕前的活动都在被实时记录、分析和追踪！
+
+    你的 IP 地址、你的设备指纹、你的浏览时间， 一切都暴露了！
+
+    你停留的时间越长，他们获取的信息就越多！ 风险也在急剧升高！
+
+    不要给他们更多数据！保护你的安全和隐私！
+
+    最后通牒： ❌❌ 立即关闭此标签页！ ❌❌
+    行动起来！现在！
+    (请立即执行退出操作，不要再浪费时间阅读这段文字！)
+
+    ⚠️ 警告结束。后果自负。 ⚠️*/
+
+    /*
+
+
+
+
+
+
+
+
+
+
+
+
+        如果你看到这句话说明你在尝试作弊！！！！！我讨厌你！！！！！！
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    🤔 还要往下滑吗？？？ 🤔
+    请停下你的鼠标滚轮或手指！
+
+    你已经阅读了上一段（或全部）警告。在你决定继续向下滚动之前，请三思而后行！
+
+    ⚠️ 你确定要继续查看吗？ ⚠️
+    你将要进入的信息区域是：
+
+    未知风险： 风险程度会随着你的深入而增加。
+
+    不可逆转： 一旦查看，你所知晓的就无法消除。
+
+    潜在敏感： 可能包含你尚未准备好处理的内容。
+
+    👀 别再往下看了！ 👀
+    🚨 记住上次的警告： "他们一直在监视你!" 你每向下滚动一行，就越发证明了你的固执和不服从。
+
+    这是你最后的机会 全身而退！
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    你真的好坚决。。。。我讨厌你。。。。。。。。。。。。。。。。。。。。。。。。。。。。。呜呜呜
+
+
+
+
+
+
+
+
+
+
+
+    🚫🚫 最后命令：不许往下滑了！ 🚫🚫
+    😠 我讨厌你！！！ 😠
+    够了！到此为止！
+
+    我知道你可能已经厌倦了这些没完没了的"警告"和"恐吓"。但是，这一次，这不是一个请求，这是一个坚决的命令！
+
+    ⛔️ 你的旅程已达终点线！ ⛔️
+    警告系统现已进入 "红色锁定模式"。
+
+    任何试图通过滚动来查看下面内容的动作，都将被视为对系统完整性的恶意攻击！
+
+    你的行为是徒劳的！ 下面什么都没有值得你冒着风险去查看。
+
+    停止浪费时间！ 你已经得到了明确的指令：停止滚动！
+
+    😡 你难道听不懂吗？ 😡
+    别再往下看了！
+
+    重复： 停止！ 你的好奇心已经让你走得太远了。如果上面那些严肃的警告没有用，那么现在请听从这最后的、愤怒的指令！
+
+    请尊重这个边界，立即停止你的操作！
+
+    💨💨 立即离开！立刻！ 💨💨
+    别再试图找到下一条警告了， 因为没有了！
+
+    你的任务是： 关闭此页面！
+
+    ❌ 不许再往下看了！ ❌
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    再下滑也找不到你想要的！真的没有了！退出退出！！！！！！！！！！
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        */-->
+            <div class="input-area">
+                <input type="text" id="code-input" placeholder="请输入取件码">
+                <button id="pickup-btn">取件</button>
+            </div>
+
+            <div class="phone-container">
+                <div class="phone-header">
+                    <div>消息列表</div>
+                    <!--<div>1:30</div>-->
+                </div>
+                <div class="messages-list" id="messages-list">
+                    <!-- 消息将通过JavaScript动态生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="result-overlay" id="result-overlay">
+        <div class="result-content">
+            <h2>取件成功！</h2>
+            <p id="package-content">打开快递，里面是一本《月亮与六便士》</p>
+            <div class="audio-section">
+                <p>这时候你听到王大妈和他人交谈...你鬼使神差录了下来</p>
+                <audio controls class="audio-player">
+                    <source src="#" type="audio/mpeg">
+                    您的浏览器不支持音频播放
+                </audio>
+                <p>已获得音频文件：voice-250907.mp3</p>
+            </div>
+            <button id="close-result" style="margin-top: 20px;">关闭</button>
+        </div>
+    </div>
+
+    <div class="confirmation-overlay" id="confirmation-overlay">
+        <div class="confirmation-content">
+            <h2>确认跳转</h2>
+            <p>是否确认跳转到下一个页面？</p>
+            <div class="confirmation-buttons">
+                <button id="confirm-yes">是</button>
+                <button id="confirm-no">否</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="options-overlay" id="options-overlay">
+        <div class="options-content">
+            <h2>取完快递后你决定？</h2>
+            <div class="options-grid">
+                
+                <button class="option-btn" data-option="supermarket">直接去超市</button>
+                <button class="option-btn" data-option="cafe">直接去咖啡店</button>
+                <button class="option-btn" data-option="park">去公园逛逛</button>
+                <button class="option-btn" data-option="surroundings">在周围看看</button>
+                <button class="option-btn" data-option="street">去步行街走走</button>
+                <button class="option-btn" data-option="netbar">去网吧瓦一把</button>
+                <button class="option-btn" data-option="food">在附近买点吃的</button>
+                <button class="option-btn" data-option="zhao">去找老赵聊聊</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">取件码错误或柜子选择不正确！</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 游戏数据 - 使用简单的拆分和ASCII码组合
+            const gameData = {
+                correctLocker: 50 - 48, // "2" -> 50-48=2
+                correctCode: [52, 56, 49, 49, 49, 50].map(n => String.fromCharCode(n)).join(''), // "481112"
+                packageContent: "打开快递，里面是一本《月亮与六便士》",
+                messages: [
+                    { sender: "快递通知", time: "08:15", content: "我是快递员阿昌，你有一个快递到了，取件码是738524" },
+                    { sender: "快递通知", time: "07:30", content: "你有一个快递到了，取件码是945167" },
+                    { sender: "快递通知", time: "昨天", content: "你有一个快递到了，取件码是168465" },
+                    { sender: "快递通知", time: "昨天", content: "你有一个快递到了，取件码是844124" },
+                    { sender: "快递通知", time: "昨天", content: "你有一个快递到了，取件码是481112" },
+                    { sender: "快递通知", time: "前天", content: "你有一个快递到了，取件码是281451" },
+                    { sender: "快递通知", time: "前天", content: "你有一个快递到了，取件码是684658" },
+                    { sender: "快递通知", time: "前天", content: "你有一个快递到了，取件码是515456" }
+                ]
+            };
+
+            // 初始化消息列表
+            const messagesList = document.getElementById('messages-list');
+            gameData.messages.forEach(msg => {
+                const messageElement = document.createElement('div');
+                messageElement.className = 'message';
+                messageElement.innerHTML = `
+                        <div class="message-header">
+                            <span>${msg.sender}</span>
+                            <span>${msg.time}</span>
+                        </div>
+                        <div class="message-content">${msg.content}</div>
+                    `;
+                messagesList.appendChild(messageElement);
+            });
+
+            // 选择柜子
+            let selectedLocker = null;
+            const lockers = document.querySelectorAll('.locker');
+
+            lockers.forEach(locker => {
+                locker.addEventListener('click', function () {
+                    lockers.forEach(l => l.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedLocker = parseInt(this.getAttribute('data-locker'));
+                    console.log("用户选择的柜子:", selectedLocker);
+                });
+            });
+
+            // 取件按钮点击事件
+            const pickupBtn = document.getElementById('pickup-btn');
+            const codeInput = document.getElementById('code-input');
+            const resultOverlay = document.getElementById('result-overlay');
+            const packageContent = document.getElementById('package-content');
+            const notification = document.getElementById('notification');
+
+            // 确认跳转弹窗相关元素
+            const confirmationOverlay = document.getElementById('confirmation-overlay');
+            const confirmYes = document.getElementById('confirm-yes');
+            const confirmNo = document.getElementById('confirm-no');
+
+            // 选项弹窗相关元素
+            const optionsOverlay = document.getElementById('options-overlay');
+            const optionButtons = document.querySelectorAll('.option-btn');
+
+            // 用于标记是否需要跳转
+            let shouldRedirect = false;
+
+            pickupBtn.addEventListener('click', function () {
+                const enteredCode = codeInput.value.trim();
+                console.log("用户输入:", enteredCode, "选择柜子:", selectedLocker);
+                console.log("正确值:", gameData.correctCode, gameData.correctLocker);
+
+                if (!selectedLocker) {
+                    showNotification("请先选择快递柜！");
+                    return;
+                }
+
+                if (!enteredCode) {
+                    showNotification("请输入取件码！");
+                    return;
+                }
+
+                if (selectedLocker === gameData.correctLocker && enteredCode === gameData.correctCode) {
+                    console.log("验证成功！");
+                    // 取件成功
+                    packageContent.textContent = gameData.packageContent;
+                    resultOverlay.classList.add('active');
+
+                    // 设置3秒后显示选项弹窗
+                    setTimeout(function () {
+                        optionsOverlay.classList.add('active');
+                    }, 3000);
+                } else {
+                    console.log("验证失败！");
+                    // 取件失败
+                    showNotification("取件码错误或柜子选择不正确！");
+                }
+            });
+
+            // 关闭结果弹窗
+            document.getElementById('close-result').addEventListener('click', function () {
+                optionsOverlay.classList.add('active');
+            });
+
+            // 显示通知
+            function showNotification(message) {
+                notification.textContent = message;
+                notification.classList.add('show');
+
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+
+            // 点击弹窗外部关闭弹窗
+            resultOverlay.addEventListener('click', function (e) {
+                if (e.target === resultOverlay) {
+                    optionsOverlay.classList.add('active');
+                }
+            });
+
+            // 选项按钮事件处理
+            optionButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const option = this.getAttribute('data-option');
+                    
+                    switch(option) {
+                        case 'surroundings':
+                            // 在周围看看 -> 跳转到小心迷路页面
+                            window.location.href = "https://sylvie-seven-cq.top/Syzygy/小心迷路.html";
+                            break;
+                        case 'supermarket':
+                            showNotification("去超市转了一圈，回到了公寓");
+                            setTimeout(() => {
+                                window.location.href = "https://sylvie-seven-cq.top/Syzygy/forum.html";
+                            }, 2000);
+                            break;
+                        case 'cafe':
+                            showNotification("在咖啡店坐了一会儿，回到了公寓");
+                            setTimeout(() => {
+                                window.location.href = "https://sylvie-seven-cq.top/Syzygy/forum.html";
+                            }, 2000);
+                            break;
+                        case 'park':
+                            showNotification("去公园逛了逛，然后回到了公寓");
+                            setTimeout(() => {
+                                window.location.href = "https://sylvie-seven-cq.top/Syzygy/forum.html";
+                            }, 2000);
+                            break;
+                        case 'street':
+                            showNotification("去步行街随便走了走，然后回到了公寓");
+                            setTimeout(() => {
+                                window.location.href = "https://sylvie-seven-cq.top/Syzygy/forum.html";
+                            }, 2000);
+                            break;
+                        case 'netbar':
+                            showNotification("去网吧瓦了一把，然后回到了公寓");
+                            setTimeout(() => {
+                                window.location.href = "https://sylvie-seven-cq.top/Syzygy/forum.html";
+                            }, 2000);
+                            break;
+                        case 'zhao':
+                            showNotification("去找老赵聊了会天，然后回到了公寓");
+                            setTimeout(() => {
+                                window.location.href = "https://sylvie-seven-cq.top/Syzygy/forum.html";
+                            }, 2000);
+                            break;
+                        case 'food':
+                            showNotification("在附近买了点吃的，然后回到了公寓");
+                            setTimeout(() => {
+                                window.location.href = "https://sylvie-seven-cq.top/Syzygy/forum.html";
+                            }, 2000);
+                            break;
+                        default:
+                            optionsOverlay.classList.remove('active');
+                    }
+                });
+            });
+
+            // 点击选项弹窗外部关闭弹窗
+            optionsOverlay.addEventListener('click', function (e) {
+                if (e.target === optionsOverlay) {
+                    optionsOverlay.classList.remove('active');
+                }
+            });
+
+            // 确认跳转弹窗的事件处理
+            confirmYes.addEventListener('click', function () {
+                if (shouldRedirect) {
+                    optionsOverlay.classList.add('active');
+                    shouldRedirect = false; // 重置跳转标志
+                } else {
+                    confirmationOverlay.classList.remove('active');
+                }
+            });
+
+            confirmNo.addEventListener('click', function () {
+                confirmationOverlay.classList.remove('active');
+                shouldRedirect = false; // 重置跳转标志
+            });
+
+            // 点击确认弹窗外部关闭弹窗
+            confirmationOverlay.addEventListener('click', function (e) {
+                if (e.target === confirmationOverlay) {
+                    confirmationOverlay.classList.remove('active');
+                    shouldRedirect = false; // 重置跳转标志
+                }
+            });
+
+        });
+    </script>
+</body>
+</html>

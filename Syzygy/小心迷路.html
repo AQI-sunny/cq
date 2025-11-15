@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>准备好！开始冒险辣！</title>
+    <title>开始探险辣！</title>
     <style>
         * {
             margin: 0;
@@ -552,7 +552,7 @@
             },
             westAlleyEnd: {
                 name: "南巷尽头",
-                description: "你走到了无名南巷的尽头，这里只有普通的居民楼入口，没有发现任何可疑地点。",
+                description: "你走到了无名南巷的尽头，这里只有普通的居民楼入口，地上有一个老式灭火器，没有发现任何可疑地方。",
                 options: [
                     { text: "返回公寓重新探索", target: "apartment" }
                 ],
@@ -576,7 +576,7 @@
             },
             oldUnitDoor: {
                 name: "老旧单元门",
-                description: "你发现一个可以打开的老旧单元门。",
+                description: "你注意到一扇锈迹斑斑的老旧单元门，轻轻一推，发现它没锁。",
                 options: [
                     { text: "探查门禁系统", target: "checkDoorSystem" },
                     { text: "观察周围环境", target: "observeOldUnit" },
@@ -594,7 +594,7 @@
             },
             observeOldUnit: {
                 name: "老旧单元门周围",
-                description: "你仔细观察了老旧单元门周围的环境，但没有发现有用的线索。",
+                description: "你仔细观察了老旧单元门周围的环境，有一个用来挡门的砖头，除此之外没有发现有用的线索。",
                 options: [
                     { text: "返回老旧单元门", target: "oldUnitDoor" }
                 ],
@@ -602,7 +602,7 @@
             },
             backyard: {
                 name: "后院",
-                description: "你穿过单元门来到一家后院，看到一道1.5米高的矮墙。",
+                description: "你穿过单元门来到一家后院，看到一个耙子和一道1.5米高的矮墙。",
                 options: [
                     { text: "探查后院垃圾桶", target: "checkBackyard" },
                     { text: "翻越矮墙", target: "communityGarden" },
@@ -613,8 +613,8 @@
                 ]
             },
             checkBackyard: {
-                name: "后院探查",
-                description: "你探查了后院各个角落，但没有发现有用的线索。",
+                name: "后院垃圾桶",
+                description: "你掀开生锈的垃圾桶盖，里面只有几个空罐子和腐烂的食物残渣。一股酸臭味扑面而来，你赶紧松开了手。",
                 options: [
                     { text: "返回后院", target: "backyard" }
                 ],
@@ -622,7 +622,7 @@
             },
             checkBackyardCorner: {
                 name: "后院角落",
-                description: "你仔细探查了后院的角落，但没有发现有用的线索。",
+                description: "在院子的最角落，你发现了一个铁锹，除此之外别无他物。",
                 options: [
                     { text: "返回后院", target: "backyard" }
                 ],
@@ -630,7 +630,7 @@
             },
             examineBackyardWall: {
                 name: "后院墙壁探查",
-                description: "你仔细探查了后院的墙壁，但没有发现任何异常。",
+                description: "你用手指轻轻敲击墙壁，传来实心的闷响。墙面的漆皮已经大面积剥落，露出里面暗红色的砖块，没有任何暗门或机关的痕迹。",
                 options: [
                     { text: "返回后院", target: "backyard" }
                 ],
@@ -638,7 +638,7 @@
             },
             searchBackyardToolshed: {
                 name: "后院工具棚",
-                description: "你探查了后院的工具棚，没有发现有用的线索，但素捡到了一个大锤子~你鬼使神差的带上了~",
+                description: "工具棚里堆满了杂物。在生锈的园艺剪和一团纠缠的麻绳下面，你发现了一把沉重的大锤子，锤头布满了锈迹但依然结实。",
                 options: [
                     { text: "返回后院", target: "backyard" }
                 ],
@@ -646,7 +646,7 @@
             },
             communityGarden: {
                 name: "花园",
-                description: "你翻过矮墙，来到一片半荒废的花园。",
+                description: "你轻松翻过矮墙，落在了一片半荒废的花园里。杂草在石板缝间肆意生长，远处一张铁艺长椅孤零零地立着。",
                 options: [
                     { text: "探查花园长椅", target: "exploreGarden" },
                     { text: "探查花园角落", target: "checkGardenCorner" },
@@ -657,8 +657,8 @@
                 ]
             },
             exploreGarden: {
-                name: "花园探查",
-                description: "你在花园中探查了一番，但没有发现有用的线索。",
+                name: "花园长椅",
+                description: "长椅的绿色油漆已经斑驳脱落，坐上去会发出轻微的吱呀声。你在座位下摸索，只摸到一些干枯的树叶和泥土。",
                 options: [
                     { text: "继续侦察", target: "communityGarden" }
                 ],
@@ -666,31 +666,31 @@
             },
             checkGardenCorner: {
                 name: "花园角落",
-                description: "你探查了花园的角落，但没有发现有用的线索。",
+                description: "在小花园的东南角，茂密的灌木丛几乎形成了一道天然的墙壁。你拨开枝叶，后面除了堆积的落叶和一个破旧的洒水器外空无一物。",
                 options: [
-                    { text: "返回社区花园", target: "communityGarden" }
+                    { text: "返回花园", target: "communityGarden" }
                 ],
                 isDeadEnd: true
             },
             inspectFlowerBed: {
                 name: "花坛探查",
-                description: "你仔细探查了花园中的花坛，但没有发现任何异常。",
+                description: "花坛如今只剩下几株顽强的野草。泥土干燥板结，看不出最近有人打理过的痕迹。",
                 options: [
-                    { text: "返回社区花园", target: "communityGarden" }
+                    { text: "返回花园", target: "communityGarden" }
                 ],
                 isDeadEnd: true
             },
             checkGardenShed: {
                 name: "花园小屋",
-                description: "你探查了花园中的小屋，但里面空无一物。",
+                description: "小屋的木门虚掩着，你推门而入。里面空荡荡的，除了桌上的园艺剪，只有一些蜘蛛网和灰尘。",
                 options: [
-                    { text: "返回社区花园", target: "communityGarden" }
+                    { text: "返回花园", target: "communityGarden" }
                 ],
                 isDeadEnd: true
             },
             gardenExit: {
                 name: "花园出口",
-                description: "你找到了花园的出口，走50m拐个弯发现又回到了包子铺附近。",
+                description: "沿着一条石板小径走了约50米，拐过一个弯后，你惊讶地发现自己又回到了那家熟悉的包子铺附近。蒸包子的热气在傍晚的空气中格外显眼。",
                 options: [
                     { text: "进入包子铺旁的窄巷", target: "narrowAlley" },
                     { text: "返回花园", target: "communityGarden" }
@@ -698,7 +698,7 @@
             },
             narrowAlley: {
                 name: "包子铺旁窄巷",
-                description: "你刚刚才发现这有个窄巷~ 进入窄巷后，发现远处有个斜坡，在斜坡下看到一个快递柜。",
+                description: "你小心翼翼地走入窄巷，前行数十步后，视野豁然开朗——前方出现一道斜坡。顺着坡道向下望去，一个醒目的快递柜赫然闯入视野。",
                 options: [
                     { text: "探查快递柜", target: "checkParcelLocker" },
                     { text: "绕过快递柜", target: "aroundParcelLocker" },
@@ -749,7 +749,7 @@
             },
             checkTrashPile: {
                 name: "杂物堆",
-                description: "你探查了旁边的杂物堆，但没有发现有用的线索。",
+                description: "你不放过任何角落，将杂物堆仔细翻查了一遍。然而，除了让灰尘沾满双手外，并无任何有价值的线索。你有些不甘地拍了拍手，只得放弃。",
                 options: [
                     { text: "返回快递柜", target: "aroundParcelLocker" }
                 ],
@@ -807,7 +807,7 @@
             },
             observeSquare: {
                 name: "广场",
-                description: "你侦察了广场上的各种角落，但没有发现有用的线索。",
+                description: "你穿行于广场，仔细检查了雕像基座、长椅下方和喷泉边缘。然而，除了日常的痕迹，这里只有被风吹动的沙沙声，并无任何有价值的线索。",
                 options: [
                     { text: "返回生活广场", target: "lifeSquare" }
                 ],
@@ -865,7 +865,7 @@
             },
             garbageArea: {
                 name: "垃圾集中点",
-                description: "你在垃圾集中点发现了一个向下斜坡。",
+                description: "在垃圾集中点的杂物中，你的目光被一张皱巴巴的纸条吸引。上面写着：-.- -- ...；-... .. .- -. .-.. .. .- -. --.。正当你陷入沉思时，眼角余光瞥见不远处，一道斜坡通向地下更深沉的黑暗。",
                 options: [
                     { text: "探查斜坡", target: "underground" },
                     { text: "翻找垃圾箱", target: "searchTrash" },
