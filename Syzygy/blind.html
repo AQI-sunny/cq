@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REMEMBER THEM</title>
+    <style>
+        /* 原有样式保持不变 */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1a0000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            position: relative;
+            background: linear-gradient(135deg, #1a0000 0%, #330000 100%);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .title {
+            color: #FFD700;
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .instructions {
+            color: #FFD700;
+            font-size: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        .challenge-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .stage-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 2px solid #FFD700;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .stage-title {
+            color: #FFD700;
+            font-size: 24px;
+            margin-bottom: 15px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+        }
+
+        .stage-description {
+            color: #FFD700;
+            font-size: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 500px;
+            line-height: 1.5;
+        }
+
+        .symbol-display {
+            background-color: #000;
+            border: 2px solid #FFD700;
+            border-radius: 10px;
+            padding: 20px;
+            width: 200px;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+
+        .symbol-cell {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 15px;
+            width: 120px;
+            height: 180px;
+            background: #333;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .symbol-point {
+            width: 25px;
+            height: 25px;
+            background: #666;
+            border-radius: 50%;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+
+        .symbol-point.active {
+            background: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+        }
+
+        .current-symbol {
+            font-size: 48px;
+            color: #FFD700;
+            margin: 15px 0;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .answer-input {
+            padding: 12px;
+            font-size: 16px;
+            background-color: #000;
+            color: #FFD700;
+            border: 2px solid #FFD700;
+            border-radius: 5px;
+            width: 80px;
+            text-align: center;
+        }
+
+        .submit-btn, .next-btn, .hint-btn, .return-btn {
+            padding: 12px 25px;
+            font-size: 16px;
+            background-color: #8B0000;
+            color: #FFD700;
+            border: 2px solid #FFD700;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .submit-btn:hover, .next-btn:hover, .hint-btn:hover, .return-btn:hover {
+            background-color: #FF0000;
+            color: #000;
+        }
+
+        .feedback {
+            font-size: 18px;
+            color: #FFD700;
+            margin: 10px 0;
+            min-height: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feedback.correct {
+            color: #00FF00;
+        }
+
+        .feedback.incorrect {
+            color: #FF0000;
+        }
+
+        .progress {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            position: sticky;
+            top: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 20px;
+            z-index: 100;
+        }
+
+        .progress-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: #8B0000;
+            border: 2px solid #FFD700;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .progress-dot.active {
+            background-color: #FFD700;
+        }
+
+        .progress-dot.completed {
+            background-color: #00FF00;
+        }
+
+        .final-message {
+            font-size: 28px;
+            color: #FFD700;
+            display: none;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+            font-weight: bold;
+        }
+        
+        .variable-display {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .variable-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px;
+        }
+        
+        .variable-name {
+            color: #FFD700;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .variable-cell {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 8px;
+            width: 80px;
+            height: 120px;
+            background: #333;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .variable-point {
+            width: 15px;
+            height: 15px;
+            background: #666;
+            border-radius: 50%;
+            margin: 0 auto;
+        }
+        
+        .variable-point.active {
+            background: #FFD700;
+        }
+        
+        .calculation-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .calculation-cell {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 10px;
+            width: 80px;
+            height: 120px;
+            background: #333;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .calculation-point {
+            width: 15px;
+            height: 15px;
+            background: #666;
+            border-radius: 50%;
+            margin: 0 auto;
+        }
+        
+        .calculation-point.active {
+            background: #FFD700;
+        }
+        
+        .operator {
+            color: #FFD700;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .calculation-result {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .result-label {
+            color: #FFD700;
+            font-size: 16px;
+        }
+        
+        .scroll-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: #8B0000;
+            color: #FFD700;
+            border: 2px solid #FFD700;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: bold;
+            z-index: 100;
+        }
+        
+        .scroll-btn:hover {
+            background-color: #FF0000;
+            color: #000;
+        }
+        
+        .stage-completed {
+            border-color: #00FF00;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .input-label {
+            color: #FFD700;
+            font-size: 14px;
+        }
+        
+        .stage-hidden {
+            display: none;
+        }
+        
+        .return-btn {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">REMEMBER THEM</h1>
+    <p class="instructions"> </p>
+    
+    <div class="challenge-container">
+        <div class="progress" id="progress">
+            <!-- 进度点将通过JavaScript动态生成 -->
+        </div>
+        
+        <!-- 阶段一 -->
+        <div class="stage-container" id="stage-one">
+            <div class="stage-title">请记住以下字母对应的图案</div>
+            <div class="stage-description">输入字母对应数字进入下一阶段</div>
+            
+            <div class="variable-display" id="variable-display">
+                <!-- 变量显示区域将通过JavaScript动态生成 -->
+            </div>
+            
+            <div class="input-container">
+                <div class="input-group">
+                    <div class="input-label"> </div>
+                    <input type="text" class="answer-input" id="answer-a" placeholder="A">
+                </div>
+                
+                <div class="input-group">
+                    <div class="input-label">  </div>
+                    <input type="text" class="answer-input" id="answer-b" placeholder="B">
+                </div>
+                <div class="input-group">
+                    <div class="input-label"> </div>
+                    <input type="text" class="answer-input" id="answer-c" placeholder="C">
+                </div>
+            </div>
+            
+            <div class="input-container">
+                <button class="submit-btn" id="submit-one">确认</button>
+                <button class="hint-btn" id="hint-btn-one">提示</button>
+            </div>
+            
+            <div class="feedback" id="feedback-one"></div>
+        </div>
+        
+        <!-- 阶段二 -->
+        <div class="stage-container stage-hidden" id="stage-two">
+            <div class="stage-title">输入正确数字进入下一阶段</div>
+            <div class="stage-description">√，floor</div>
+            
+            <div class="calculation-display">
+                <div class="calculation-cell" id="calc-a">
+                    <div class="calculation-point" data-point="one"></div>
+                    <div class="calculation-point" data-point="four"></div>
+                    <div class="calculation-point" data-point="four"></div>
+                    <div class="calculation-point" data-point="five"></div>
+                    <div class="calculation-point" data-point="three"></div>
+                    <div class="calculation-point" data-point="six"></div>
+                </div>
+            </div>
+            
+            <div class="input-container">
+                <input type="text" class="answer-input" id="answer-two" placeholder="输入数字E">
+                <button class="submit-btn" id="submit-two">确认</button>
+                <button class="hint-btn" id="hint-btn-two">提示</button>
+            </div>
+            
+            <div class="feedback" id="feedback-two"></div>
+        </div>
+        
+        <!-- 阶段三 -->
+        <div class="stage-container stage-hidden" id="stage-three">
+            <div class="stage-title">输入正确数字进入下一阶段</div>
+            <div class="stage-description">立方</div>
+            
+            <div class="calculation-display">
+                <div class="calculation-cell" id="calc-c">
+                    <div class="calculation-point" data-point="one"></div>
+                    
+                    <div class="calculation-point" data-point="two"></div>
+                    <div class="calculation-point" data-point="four"></div>
+                    <div class="calculation-point" data-point="five"></div>
+                    <div class="calculation-point" data-point="three"></div>
+                    <div class="calculation-point" data-point="six"></div>
+                </div>
+            </div>
+            
+            <div class="input-container">
+                <input type="text" class="answer-input" id="answer-three" placeholder="输入数字D">
+                <button class="submit-btn" id="submit-three">确认</button>
+                <button class="hint-btn" id="hint-btn-three">提示</button>
+            </div>
+            
+            <div class="feedback" id="feedback-three"></div>
+        </div>
+        
+        <!-- 阶段四 -->
+        <div class="stage-container stage-hidden" id="stage-four">
+            <div class="stage-title">输入正确数字进入下一阶段</div>
+            <div class="stage-description"> </div>
+            
+            <div class="calculation-display">
+                <div class="calculation-cell" id="calc-e">
+                    <div class="calculation-point active" data-point="one"></div>
+                    <div class="calculation-point" data-point="two"></div>
+                    <div class="calculation-point" data-point="three"></div>
+                    <div class="calculation-point active" data-point="four"></div>
+                    
+                    <div class="calculation-point" data-point="five"></div>
+                    
+                    
+                    <div class="calculation-point" data-point="six"></div>
+                    
+                    
+                </div>
+                <div class="operator">-</div>
+                <div class="operator">（</div>
+                <div class="calculation-cell" id="calc-b">
+                   <div class="calculation-point" data-point="one"></div>
+                    <div class="calculation-point" data-point="two"></div>
+                    <div class="calculation-point" data-point="three"></div>
+                    <div class="calculation-point" data-point="four"></div>
+                    
+                    <div class="calculation-point" data-point="five"></div>
+                    
+                    
+                    <div class="calculation-point" data-point="six"></div>
+                </div>
+                <div class="operator">-</div>
+                <div class="calculation-cell" id="calc-c">
+                    <div class="calculation-point active" data-point="one"></div>
+                    <div class="calculation-point active" data-point="two"></div>
+                    <div class="calculation-point" data-point="three"></div>
+                    <div class="calculation-point" data-point="four"></div>
+                    
+                    <div class="calculation-point" data-point="five"></div>
+                    
+                    
+                    <div class="calculation-point" data-point="six"></div>
+                </div>
+                <div class="operator">）</div>
+            </div>
+            
+            <div class="input-container">
+                <input type="text" class="answer-input" id="answer-four" placeholder="输入数字G">
+                <button class="submit-btn" id="submit-four">确认</button>
+                <button class="hint-btn" id="hint-btn-four">提示</button>
+            </div>
+            
+            <div class="feedback" id="feedback-four"></div>
+        </div>
+        
+        <!-- 阶段五 -->
+        <div class="stage-container stage-hidden" id="stage-five">
+            <div class="stage-title">输入正确数字进入下一阶段</div>
+            <div class="stage-description">平方</div>
+            
+            <div class="calculation-display">
+                <div class="calculation-cell" id="calc-g">
+                    <div class="calculation-point active" data-point="one"></div>
+                    <div class="calculation-point active" data-point="two"></div>
+                    <div class="calculation-point active" data-point="three"></div>
+                    <div class="calculation-point active" data-point="four"></div>
+                    
+                    <div class="calculation-point" data-point="five"></div>
+                    
+                    
+                    <div class="calculation-point" data-point="six"></div>
+                </div>
+                <!-- <div class="operator"> </div>
+                <div class="operator"> </div>
+                <div class="calculation-cell" id="calc-h">
+                    <div class="calculation-point" data-point="one"></div>
+                    <div class="calculation-point" data-point="two"></div>
+                    <div class="calculation-point" data-point="three"></div>
+                    <div class="calculation-point" data-point="four"></div>
+                    
+                    <div class="calculation-point" data-point="five"></div>
+                    
+                    
+                    <div class="calculation-point" data-point="six"></div>
+                </div> -->
+            </div>
+            
+            <div class="input-container">
+                <input type="text" class="answer-input" id="answer-five" placeholder="输入数字H">
+                <button class="submit-btn" id="submit-five">确认</button>
+                <button class="hint-btn" id="hint-btn-five">提示</button>
+            </div>
+            
+            <div class="feedback" id="feedback-five"></div>
+        </div>
+        
+        <!-- 阶段六 -->
+        <div class="stage-container stage-hidden" id="stage-six">
+            <div class="stage-title">输入正确数字进入下一阶段</div>
+            <div class="stage-description"> </div>
+            
+            <div class="calculation-display">
+                <div class="calculation-cell" id="calc-d">
+                    <div class="calculation-point active" data-point="one"></div>
+                    <div class="calculation-point active" data-point="two"></div>
+                    <div class="calculation-point" data-point="three"></div>
+                    <div class="calculation-point active" data-point="four"></div>
+                    
+                    <div class="calculation-point" data-point="five"></div>
+                    
+                    
+                    <div class="calculation-point" data-point="six"></div>
+                </div>
+                <div class="operator">-</div>
+                <div class="calculation-cell" id="calc-h">
+                   <div class="calculation-point active" data-point="one"></div>
+                    <div class="calculation-point" data-point="two"></div>
+                    <div class="calculation-point active" data-point="three"></div>
+                    <div class="calculation-point active" data-point="four"></div>
+                    
+                    <div class="calculation-point" data-point="five"></div>
+                    
+                    
+                    <div class="calculation-point" data-point="six"></div>
+                </div>
+                <div class="operator">=</div>
+                <!-- <div class="calculation-cell" id="calc-q">
+                    <div class="calculation-point" data-point="one"></div>
+                    <div class="calculation-point" data-point="four"></div>
+                    <div class="calculation-point" data-point="two"></div>
+                    <div class="calculation-point" data-point="five"></div>
+                    <div class="calculation-point" data-point="three"></div>
+                    <div class="calculation-point" data-point="six"></div>
+                </div> -->
+            </div>
+            
+            <div class="input-container">
+                <input type="text" class="answer-input" id="answer-six" placeholder="输入数字Q">
+                <button class="submit-btn" id="submit-six">确认</button>
+                <button class="hint-btn" id="hint-btn-six">提示</button>
+            </div>
+            
+            <div class="feedback" id="feedback-six"></div>
+        </div>
+        
+        <div class="final-message" id="final-message">恭喜！你已成功完成所有挑战！</div>
+        
+        <!-- 新增的返回按钮 -->
+        <button class="return-btn" id="return-btn">返回林墨的电脑</button>
+    </div>
+    
+    <button class="scroll-btn" id="scroll-btn">回到顶部</button>
+
+    <script>
+        // 点阵符号数据
+        const symbolData = [
+            { symbol: 'A', points: [1], name: '符号 A', value: 112 },
+            { symbol: 'B', points: [1,3], name: '符号 B', value: 18 },
+            { symbol: 'C', points: [1,2], name: '符号 C', value: 15 },
+            { symbol: 'D', points: [1,2,4], name: '符号 D', value: 3375 },
+            { symbol: 'E', points: [1,4], name: '符号 E', value: 10 },
+            { symbol: 'F', points: [1,2,3], name: '符号 F', value: 3 },
+            { symbol: 'G', points: [1,2,3,4], name: '符号 G', value: 7 },
+            { symbol: 'H', points: [1,3,4], name: '符号 H', value: 49 },
+            { symbol: 'Q', points: [1,2,3,4,5], name: '符号 Q', value: 3326 }
+        ];
+
+        // 挑战状态
+        let currentStage = 1;
+        const answers = {
+            stageOne: null,
+            stageTwo: null,
+            stageThree: null,
+            stageFour: null,
+            stageFive: null,
+            stageSix: null
+        };
+
+        // 初始化挑战
+        function initChallenge() {
+            createProgressDots();
+            createVariableDisplay();
+            setupCalculationDisplays();
+            setupEventListeners();
+            updateProgress();
+        }
+
+        // 创建进度点
+        function createProgressDots() {
+            const progressContainer = document.getElementById('progress');
+            for (let i = 1; i <= 6; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot';
+                if (i === 1) dot.classList.add('active');
+                dot.id = `progress-${i}`;
+                dot.dataset.stage = i;
+                dot.addEventListener('click', () => navigateToStage(i));
+                progressContainer.appendChild(dot);
+            }
+        }
+
+        // 导航到指定阶段
+        function navigateToStage(stage) {
+            // 如果目标阶段已完成或当前阶段已完成，允许跳转
+            if (answers[`stage${stage}`] || answers[`stage${currentStage}`]) {
+                // 显示目标阶段
+                document.querySelectorAll('.stage-container').forEach((container, index) => {
+                    if (index + 1 === stage) {
+                        container.classList.remove('stage-hidden');
+                    } else if (index + 1 > 1) {
+                        container.classList.add('stage-hidden');
+                    }
+                });
+                
+                // 更新当前阶段
+                currentStage = stage;
+                updateProgress();
+                
+                // 滚动到目标阶段
+                document.getElementById(`stage-${getStageNameForStage(stage)}`).scrollIntoView({ behavior: 'smooth' });
+            } else {
+                // 如果目标阶段未解锁，显示提示
+                alert(`请先完成第${currentStage}阶段`);
+            }
+        }
+
+        // 创建变量显示区域
+        function createVariableDisplay() {
+            const variableDisplay = document.getElementById('variable-display');
+            symbolData.forEach(item => {
+                const variableItem = document.createElement('div');
+                variableItem.className = 'variable-item';
+                
+                const variableName = document.createElement('div');
+                variableName.className = 'variable-name';
+                // 只显示符号名称，不显示数值
+                variableName.textContent = `${item.symbol}`;
+                
+                const variableCell = document.createElement('div');
+                variableCell.className = 'variable-cell';
+                
+                // 创建六个点
+                for (let i = 1; i <= 6; i++) {
+                    const point = document.createElement('div');
+                    point.className = 'variable-point';
+                    if (item.points.includes(i)) {
+                        point.classList.add('active');
+                    }
+                    variableCell.appendChild(point);
+                }
+                
+                variableItem.appendChild(variableName);
+                variableItem.appendChild(variableCell);
+                variableDisplay.appendChild(variableItem);
+            });
+        }
+
+        // 设置计算显示
+        function setupCalculationDisplays() {
+            // 阶段二：A -> E
+            updateCalculationDisplay('calc-a', 'A');
+            
+            // 阶段三：C³ = F
+            updateCalculationDisplay('calc-c', 'C');
+            
+            // 阶段四：B - F = G
+            updateCalculationDisplay('calc-b', 'B');
+            updateCalculationDisplay('calc-f', 'F');
+            
+            // 阶段五：G² = H
+            updateCalculationDisplay('calc-g', 'G');
+            
+            // 阶段六：D - H = Q
+            updateCalculationDisplay('calc-d', 'D');
+            updateCalculationDisplay('calc-h', 'H');
+        }
+
+        // 更新计算显示
+        function updateCalculationDisplay(elementId, symbol) {
+            const element = document.getElementById(elementId);
+            const symbolDataItem = symbolData.find(item => item.symbol === symbol);
+            
+            if (symbolDataItem && element) {
+                const points = element.querySelectorAll('.calculation-point');
+                points.forEach(point => {
+                    const pointNum = getPointNumber(point.getAttribute('data-point'));
+                    if (symbolDataItem.points.includes(pointNum)) {
+                        point.classList.add('active');
+                    } else {
+                        point.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        // 获取点编号
+        function getPointNumber(pointName) {
+            const pointMap = {
+                'one': 1,
+                'two': 2,
+                'three': 3,
+                'four': 4,
+                'five': 5,
+                'six': 6
+            };
+            return pointMap[pointName];
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 第一阶段按钮
+            document.getElementById('submit-one').addEventListener('click', () => checkAnswer(1));
+            document.getElementById('hint-btn-one').addEventListener('click', () => showHintForStage(1));
+            
+            // 第二阶段按钮
+            document.getElementById('submit-two').addEventListener('click', () => checkAnswer(2));
+            document.getElementById('hint-btn-two').addEventListener('click', () => showHintForStage(2));
+            
+            // 第三阶段按钮
+            document.getElementById('submit-three').addEventListener('click', () => checkAnswer(3));
+            document.getElementById('hint-btn-three').addEventListener('click', () => showHintForStage(3));
+            
+            // 第四阶段按钮
+            document.getElementById('submit-four').addEventListener('click', () => checkAnswer(4));
+            document.getElementById('hint-btn-four').addEventListener('click', () => showHintForStage(4));
+            
+            // 第五阶段按钮
+            document.getElementById('submit-five').addEventListener('click', () => checkAnswer(5));
+            document.getElementById('hint-btn-five').addEventListener('click', () => showHintForStage(5));
+            
+            // 第六阶段按钮
+            document.getElementById('submit-six').addEventListener('click', () => checkAnswer(6));
+            document.getElementById('hint-btn-six').addEventListener('click', () => showHintForStage(6));
+            
+            // 滚动按钮
+            document.getElementById('scroll-btn').addEventListener('click', scrollToNextStage);
+            
+            // 返回按钮
+            document.getElementById('return-btn').addEventListener('click', () => {
+                window.location.href = 'https://sylvie-seven-cq.top/Syzygy/computer-lin2.html';
+            });
+        }
+
+        // 显示阶段特定提示
+        function showHintForStage(stage) {
+            const hints = {
+                1: "回忆前两页内容~",
+                2: "计算A的平方根后floor",
+                3: "计算C的立方",
+                4: "计算B减F",
+                5: "对G取平方",
+                6: "用D减去H"
+            };
+            const feedbackElement = document.getElementById(`feedback-${getStageNameForStage(stage)}`);
+            feedbackElement.textContent = `提示: ${hints[stage]}`;
+            feedbackElement.className = 'feedback';
+        }
+
+        // 获取阶段的名称
+        function getStageNameForStage(stage) {
+            const names = ['one', 'two', 'three', 'four', 'five', 'six'];
+            return names[stage - 1];
+        }
+
+        // 检查答案
+        function checkAnswer(stage) {
+            const feedbackElement = document.getElementById(`feedback-${getStageNameForStage(stage)}`);
+            let correct = false;
+            let message = "";
+            
+            switch(stage) {
+                case 1:
+                    // 检查A、B、C对应的数字
+                    const aValue = document.getElementById('answer-a').value;
+                    const bValue = document.getElementById('answer-b').value;
+                    const cValue = document.getElementById('answer-c').value;
+                    
+                    correct = aValue === "112" && bValue === "18" && cValue === "15";
+                    if (correct) {
+                        message = "正确！下一阶段~";
+                    } else {
+                        message = "答案不正确，请再试一次。";
+                    }
+                    break;
+                case 2:
+                    // A的平方根向下取整
+                    const inputTwo = document.getElementById('answer-two').value;
+                    
+                    correct = inputTwo === "10";
+                    if (correct) {
+                        message = `正确！下一阶段~`;
+                    } else {
+                        message = "答案不正确，请再试一次。";
+                    }
+                    break;
+                case 3:
+                    // C的立方
+                    const inputThree = document.getElementById('answer-three').value;
+                    
+                    correct = inputThree === "3375";
+                    if (correct) {
+                        message = `正确！下一阶段~`;
+                    } else {
+                        message = "答案不正确，请再试一次。";
+                    }
+                    break;
+                case 4:
+                    // B-F=G
+                    const inputFour = document.getElementById('answer-four').value;
+                    
+                    correct = inputFour === "7";
+                    if (correct) {
+                        message = `正确！下一阶段~`;
+                    } else {
+                        message = "答案不正确，请再试一次。";
+                    }
+                    break;
+                case 5:
+                    // G的平方
+                    const inputFive = document.getElementById('answer-five').value;
+                    
+                    correct = inputFive === "49";
+                    if (correct) {
+                        message = `正确！下一阶段~`;
+                    } else {
+                        message = "答案不正确，请再试一次。";
+                    }
+                    break;
+                case 6:
+                    // D-H=Q
+                    const inputSix = document.getElementById('answer-six').value;
+                    
+                    correct = inputSix === "3326";
+                    if (correct) {
+                        message = `正确！你已取得最终答案`;
+                    } else {
+                        message = "答案不正确，请再试一次。";
+                    }
+                    break;
+            }
+            
+            if (correct) {
+                feedbackElement.textContent = message;
+                feedbackElement.className = 'feedback correct';
+                answers[`stage${stage}`] = true;
+                
+                // 标记阶段为已完成
+                document.getElementById(`stage-${getStageNameForStage(stage)}`).classList.add('stage-completed');
+                
+                // 更新进度
+                updateProgress();
+                
+                // 显示下一阶段
+                if (stage < 6) {
+                    setTimeout(() => {
+                        document.getElementById(`stage-${getStageNameForStage(stage+1)}`).classList.remove('stage-hidden');
+                        scrollToNextStage();
+                    }, 1000);
+                } else {
+                    completeChallenge();
+                }
+            } else {
+                feedbackElement.textContent = message;
+                feedbackElement.className = 'feedback incorrect';
+            }
+        }
+
+        // 更新进度
+        function updateProgress() {
+            // 更新进度点
+            for (let i = 1; i <= 6; i++) {
+                const dot = document.getElementById(`progress-${i}`);
+                if (answers[`stage${i}`]) {
+                    dot.classList.add('completed');
+                    dot.classList.remove('active');
+                } else if (i === currentStage) {
+                    dot.classList.add('active');
+                    dot.classList.remove('completed');
+                } else {
+                    dot.classList.remove('active');
+                    dot.classList.remove('completed');
+                }
+            }
+        }
+
+        // 滚动到下一阶段
+        function scrollToNextStage() {
+            // 找到下一个未完成的阶段
+            let nextStage = currentStage;
+            for (let i = currentStage + 1; i <= 6; i++) {
+                if (!answers[`stage${i}`]) {
+                    nextStage = i;
+                    break;
+                }
+            }
+            
+            // 如果所有阶段都已完成，滚动到底部
+            if (nextStage === currentStage && answers.stageSix) {
+                document.getElementById('final-message').scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+            
+            // 滚动到下一个阶段
+            document.getElementById(`stage-${getStageNameForStage(nextStage)}`).scrollIntoView({ behavior: 'smooth' });
+            currentStage = nextStage;
+            updateProgress();
+        }
+
+        // 完成挑战
+        function completeChallenge() {
+            document.getElementById('final-message').style.display = 'block';
+            document.getElementById('return-btn').style.display = 'block'; // 显示返回按钮
+            document.getElementById('final-message').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('scroll-btn').textContent = '回到顶部';
+            document.getElementById('scroll-btn').onclick = function() {
+                document.getElementById('stage-one').scrollIntoView({ behavior: 'smooth' });
+            };
+        }
+
+        // 初始化挑战
+        window.onload = initChallenge;
+    </script>
+</body>
+</html>
