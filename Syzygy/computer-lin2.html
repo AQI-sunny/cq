@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>远程操控ing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            height: 100%;
+            background-color: #000;
+        }
+        /* 
+.hidden-text {
+    color: transparent;
+    background-color: transparent;
+    user-select: none;
+}
+
+/* 选中时显示隐藏文字 
+.hidden-text::selection {
+    color: #ff0000;
+    background-color: rgba(255, 0, 0, 0.2);
+}
+
+/* 兼容不同浏览器 
+.hidden-text::-moz-selection {
+    color: #ff0000;
+    background-color: rgba(255, 0, 0, 0.2);
+} */
+ /* 隐藏文字样式 */
+.hidden-text {
+    color: transparent;
+    background-color: transparent;
+    /* 移除 user-select: none */
+}
+
+/* 选中时显示隐藏文字 */
+.hidden-text::selection {
+    color: #ff0000;
+    background-color: rgba(255, 0, 0, 0.2);
+}
+
+/* 兼容不同浏览器 */
+.hidden-text::-moz-selection {
+    color: #ff0000;
+    background-color: rgba(255, 0, 0, 0.2);
+}
+        
+        .desktop {
+            background: url('https://c-ssl.duitang.com/uploads/item/202003/27/20200327230205_eiNRW.jpeg') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .desktop-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .desktop-icons {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 80px);
+            grid-auto-rows: minmax(80px, auto);
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .desktop-icon {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 5px;
+            border-radius: 5px;
+            position: relative;
+        }
+        
+        .desktop-icon:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+        }
+        
+        .icon-img {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-img svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .icon-label {
+            color: white;
+            font-size: 12px;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            word-break: break-all;
+            max-width: 80px;
+        }
+
+        .document-icon {
+            fill: #4C9BFC;
+        }
+
+        .document-content {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 500px;
+            max-width: 90vw;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .document-content h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #4C9BFC;
+            padding-bottom: 10px;
+        }
+
+        .document-content p {
+            line-height: 1.8;
+            color: #555;
+            font-size: 16px;
+            white-space: pre-line;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .taskbar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(to bottom, #0a246a, #a3c6f3);
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            box-shadow: 0 -1px 5px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+        
+        .start-button {
+            height: 32px;
+            background: linear-gradient(to bottom, #4c9bfc, #0a246a);
+            color: white;
+            border: 1px solid #0a246a;
+            border-radius: 4px;
+            padding: 0 15px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .start-button:hover {
+            background: linear-gradient(to bottom, #5ca5ff, #1a3a8a);
+        }
+        
+        .start-icon {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+        }
+        
+        .taskbar-items {
+            display: flex;
+            flex: 1;
+            margin: 0 10px;
+        }
+        
+        .taskbar-item {
+            height: 30px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            margin: 0 2px;
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: white;
+            font-size: 12px;
+        }
+        
+        .taskbar-item:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .system-tray {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+        
+        .tray-item {
+            width: 24px;
+            height: 24px;
+            margin: 0 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+        
+        .clock {
+            color: white;
+            font-size: 12px;
+            padding: 0 5px;
+        }
+        
+        .dialog {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            padding: 20px;
+            width: 350px;
+            z-index: 100;
+            display: none;
+        }
+        
+        .dialog-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .dialog-content {
+            margin-bottom: 20px;
+        }
+        
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .dialog-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background-color: #0078d7;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .confirmation-dialog {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            padding: 20px;
+            width: 350px;
+            z-index: 101;
+        }
+        
+        /* 我的电脑图标 - 蓝色显示器 */
+        .computer-icon {
+            fill: #0078D7;
+        }
+        
+        /* 文档图标 - 深蓝色文件夹 */
+        .document-icon {
+            fill: #4C9BFC;
+        }
+
+        /* 回收站文件管理器样式 */
+        #recycleBinManager {
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            width: 90%;
+            height: 90%;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 200;
+            display: none;
+            overflow: hidden;
+        }
+        
+        .file-manager-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .file-manager-title {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .file-manager-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .file-manager-close:hover {
+            color: #333;
+        }
+        
+        .file-manager-content {
+            padding: 15px;
+            height: calc(100% - 60px);
+            overflow-y: auto;
+        }
+        
+        .file-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+        }
+        
+        .file-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .file-item:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .file-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 8px;
+        }
+        
+        .file-name {
+            font-size: 12px;
+            text-align: center;
+            word-break: break-all;
+        }
+        
+        .recycle-file-content {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 500px;
+            max-width: 90vw;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 201;
+        }
+        
+        .notification {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            display: none;
+            z-index: 102;
+        }
+        
+        .notification.success {
+            background-color: #28a745;
+        }
+        
+        .notification.error {
+            background-color: #dc3545;
+        }
+
+        
+    </style>
+
+  <!-- 防护代码 -->
+    <script>
+        (function () {
+            'use strict';
+
+            var devTools = {
+                init: function () {
+                    this.disableRightClick();
+                    this.disableDevTools();
+                    this.disableTextSelect();
+                    this.antiInspect();
+                },
+
+                disableRightClick: function () {
+                    document.addEventListener('contextmenu', function (e) {
+                        e.preventDefault();
+                        alert('右键已被禁用！');
+                        return false;
+                    });
+                },
+
+                disableDevTools: function () {
+                    document.addEventListener('keydown', function (e) {
+                        // F12
+                        if (e.key === 'F12') {
+                            e.preventDefault();
+                            alert('开发者工具已被禁用！');
+                            return false;
+                        }
+
+
+                        // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+                        if (e.ctrlKey && e.shiftKey &&
+                            (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
+                            e.preventDefault();
+                            return false;
+                        }
+
+                        // Ctrl+U
+                        if (e.ctrlKey && e.key === 'u') {
+                            e.preventDefault();
+                            return false;
+                        }
+                    });
+                },
+
+                disableTextSelect: function () {
+                    /* document.addEventListener('selectstart', function (e) {
+                        e.preventDefault();
+                        return false;
+                    }); */
+                },
+
+                antiInspect: function () {
+                    // 多重检测机制
+                    setInterval(function () {
+                        // 窗口尺寸检测
+                        var widthThreshold = window.outerWidth - window.innerWidth > 160;
+                        var heightThreshold = window.outerHeight - window.innerHeight > 160;
+
+                        // 调试器检测
+                        var debuggerDetected = false;
+                        try {
+                            (function () {
+                                return false;
+                            }).constructor("debugger").call("action");
+                        } catch (e) {
+                            debuggerDetected = true;
+                        }
+
+                        // 性能检测
+                        var performanceDetected = false;
+                        var start = performance.now();
+                        debugger;
+                        var end = performance.now();
+                        if (end - start > 100) {
+                            performanceDetected = true;
+                        }
+
+                        if (widthThreshold || heightThreshold || debuggerDetected || performanceDetected) {
+                            // 阻止访问
+                            document.body.innerHTML = '<h1>请关闭开发者工具！</h1>';
+                            window.location.reload();
+                            return;
+                        }
+                    }, 500);
+
+                    // 额外的F12捕获
+                    window.addEventListener('keydown', function (e) {
+                        if (e.key === 'F12' || e.keyCode === 123) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            e.stopImmediatePropagation();
+                            alert('开发者工具已被禁用！');
+                            return false;
+                        }
+                    }, true);
+                }
+            };
+
+            devTools.init();
+        })();
+    </script>
+
+</head>
+<body>
+    <!-- 桌面界面 -->
+    <div class="desktop" id="desktop">
+        <div class="desktop-overlay"></div>
+        <div class="desktop-icons">
+            <!-- 重要文件夹图标 - 修改为直接跳转 -->
+            <div class="desktop-icon" onclick="openImportantFolder()">
+                <div class="icon-img">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI0ZGQzEwNyI+PHBhdGggZD0iTTEwLDRINEMyLjg5LDQgMiw0Ljg5IDIsNlYxOEEyLDIgMCAwLDAgNCwyMEgyMEEyLDIgMCAwLDAgMjIsMThWOEMyMiw2Ljg5IDIxLjEsNiAyMCw2SDEyTDEwLDRaIi8+PC9zdmc+" alt="Folder">
+                </div>
+                <div class="icon-label">重要文件夹</div>
+            </div>
+            
+            <!-- 文档图标 -->
+            <div class="desktop-icon" onclick="openDocument()">
+                <div class="icon-img">
+                    <svg viewBox="0 0 24 24" class="document-icon">
+                        <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                    </svg>
+                </div>
+                <div class="icon-label">这里什么也没有</div>
+            </div>
+            
+            <div class="desktop-icon">
+                <div class="icon-img">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzIxOTZGMyI+PHBhdGggZD0iTTguNSwxMy41TDExLDE2LjVMMTQuNSwxMkwxOSwxOEg1TTIxLDE5VjVDMjEsMy44OSAyMC4xLDMgMTksM0g1QTIsMiAwIDAsMCAzLDVWMTlBMCwwIDAgMCwwIDUsMjFIMTlBMCwwIDAgMCwwIDIxLDE5WiIvPjwvc3ZnPg==" alt="Image">
+                </div>
+                <div class="icon-label">图片</div>
+            </div>
+            
+            <!-- 回收站图标 -->
+            <div class="desktop-icon" onclick="openRecycleBin()">
+                <div class="icon-img">
+                    <svg viewBox="0 0 24 24" fill="#6C757D">
+                        <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
+                    </svg>
+                </div>
+                <div class="icon-label">回收站</div>
+            </div>
+
+            <!-- 我的电脑图标 -->
+            <div class="desktop-icon">
+                <div class="icon-img">
+                    <svg viewBox="0 0 24 24" class="computer-icon">
+                        <path d="M4 2.5C2.89 2.5 2 3.39 2 4.5V15.5C2 16.61 2.89 17.5 4 17.5H20C21.11 17.5 22 16.61 22 15.5V4.5C22 3.39 21.11 2.5 20 2.5H4M4 4H20V16H4V4M9 19V21H15V19H9M8 18H16V22H8V18Z"/>
+                    </svg>
+                </div>
+                <div class="icon-label">我的电脑</div>
+            </div>
+
+            <!-- 设置图标 -->
+            <div class="desktop-icon">
+                <div class="icon-img">
+                    <svg viewBox="0 0 24 24" fill="#0078D7">
+                        <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.22,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.22,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/>
+                    </svg>
+                </div>
+                <div class="icon-label">设置</div>
+            </div>
+        </div>
+
+        <!-- 文档内容 -->
+        <div id="documentContent" class="document-content">
+            <button class="close-btn" onclick="closeDocument()">&times;</button>
+            <h2>都说了森魔也木有辣</h2>
+            <!-- <p>
+            欢迎访问系统！这是一个模拟的远程桌面界面。
+            
+            您可以点击不同的图标来探索功能：
+            - "重要文件夹"将带您前往特定页面
+            - "文档"显示此信息
+            - 其他图标目前仅用于展示
+            
+            感谢您的访问！
+            </p> -->
+        </div>
+        
+        <!-- 回收站文件管理器 -->
+        <div id="recycleBinManager" class="file-manager">
+            <div class="file-manager-header">
+                <div class="file-manager-title">回收站</div>
+                <button class="file-manager-close" onclick="closeRecycleBin()">×</button>
+            </div>
+            <div class="file-manager-content">
+                <div class="file-list">
+                    <div class="file-item" onclick="openRecycleFile('file1')">
+                        <div class="file-icon">
+                            <svg viewBox="0 0 24 24" fill="#4C9BFC">
+                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                            </svg>
+                        </div>
+                        <div class="file-name">点开我 点开我 点开我 点开我 点开我.txt</div>
+                    </div>
+                    <!-- <div class="file-item" onclick="openRecycleFile('file2')">
+                        <div class="file-icon">
+                            <svg viewBox="0 0 24 24" fill="#4C9BFC">
+                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                            </svg>
+                        </div>
+                        <div class="file-name">绝对不能忘的.txt</div>
+                    </div> -->
+                    <!-- <div class="file-item" onclick="openRecycleFile('file3')">
+                        <div class="file-icon">
+                            <svg viewBox="0 0 24 24" fill="#4C9BFC">
+                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                            </svg>
+                        </div>
+                        <div class="file-name">守护神.txt</div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- 回收站文件内容 -->
+        <div id="recycleFileContent" class="recycle-file-content">
+            <button class="close-btn" onclick="closeRecycleFile()">&times;</button>
+            <h2 id="recycleFileTitle">文件内容</h2>
+            <p id="recycleFileText"></p>
+        </div>
+        
+        <div class="taskbar">
+            <div class="start-button">
+                <div class="start-icon">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2ZmZmZmZiI+PHBhdGggZD0iTTMsMThIMjFWMTZIM1YxOE0zLDEzSDIxVjExSDNWMTNNMyw2VjhIMjFWNkgzWiIvPjwvc3ZnPg==" alt="Start">
+                </div>
+                <span>开始</span>
+            </div>
+            
+            <div class="taskbar-items">
+                <!-- 任务栏项目可以放在这里 -->
+            </div>
+            
+            <div class="system-tray">
+                <div class="tray-item">🔊</div>
+                <div class="tray-item">🌐</div>
+                <div class="clock" id="clock">上午11:49</div>
+            </div>
+        </div>
+        
+        <div id="deleteDialog" class="dialog">
+            <div class="dialog-title">该文件夹仅可执行删除操作，请确认是否删除</div>
+            <div class="dialog-content">
+                <p>您确定要删除"重要文件夹"吗？</p>
+                <p>删除前需要输入封印密钥：</p>
+                <input type="password" id="sealKey" placeholder="请输入封印密钥">
+                <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                    <input type="checkbox" id="skipCheckbox">
+                    <label for="skipCheckbox">跳过输入密钥</label>
+                </div>
+            </div>
+            <div class="dialog-buttons">
+                <button class="btn btn-secondary" onclick="closeDeleteDialog()">取消</button>
+                <button class="btn btn-primary" onclick="confirmDelete()">删除</button>
+            </div>
+        </div>
+        
+        <div id="confirmationDialog" class="confirmation-dialog">
+            <div class="dialog-title">系统提示</div>
+            <div class="dialog-content" id="dialogMessage">
+                封印失败，该"文件"不存在！
+            </div>
+            <div class="dialog-buttons">
+                <button class="btn btn-primary" onclick="closeConfirmation()">确定</button>
+            </div>
+        </div>
+        
+        <div id="notification" class="notification">
+            文件夹已删除
+        </div>
+    </div>
+
+    <script>
+        // 打开重要文件夹 - 直接跳转
+        function openImportantFolder() {
+            window.location.href = 'https://sylvie-seven-cq.top/Syzygy/结局.html';
+        }
+        
+        function openDocument() {
+            document.getElementById('documentContent').style.display = 'block';
+        }
+
+        function closeDocument() {
+            document.getElementById('documentContent').style.display = 'none';
+        }
+        
+        // 打开回收站
+        function openRecycleBin() {
+            document.getElementById('recycleBinManager').style.display = 'block';
+        }
+        
+        // 关闭回收站
+        function closeRecycleBin() {
+            document.getElementById('recycleBinManager').style.display = 'none';
+        }
+        
+        // 打开回收站中的文件
+        /* function openRecycleFile(fileId) {
+            const fileTitle = document.getElementById('recycleFileTitle');
+            const fileText = document.getElementById('recycleFileText');
+            
+            // 根据文件ID设置不同的内容
+            switch(fileId) {
+                case 'file1':
+                    fileTitle.textContent = '到底是谁.txt';
+                    fileText.textContent = '这个文件似乎被清空了...\n\n或者，它本来就没有内容？<span class="hidden-text">其实有的兄弟，有的。search 你的日记</span>';
+                    break;
+                case 'file2':
+                    fileTitle.textContent = '绝对不能忘的.txt';
+                    fileText.textContent = '重要的事情：\n\n1. 不要忘记密码\n2. 备份重要文件\n3. 定期检查系统安全\n\n但这里似乎没有你想要的信息...';
+                    break;
+                case 'file3':
+                    fileTitle.textContent = '守护神.txt';
+                    fileText.textContent = '守护神保佑着这个系统...\n\n但也许它已经离开了？\n\n或者，它从未存在过？';
+                    break;
+                default:
+                    fileTitle.textContent = '未知文件';
+                    fileText.textContent = '无法读取文件内容。';
+            }
+            
+            document.getElementById('recycleFileContent').style.display = 'block';
+        } */
+       // 打开回收站中的文件
+function openRecycleFile(fileId) {
+    const fileTitle = document.getElementById('recycleFileTitle');
+    const fileText = document.getElementById('recycleFileText');
+    
+    // 根据文件ID设置不同的内容
+    switch(fileId) {
+        case 'file1':
+            fileTitle.textContent = '到底是谁.txt';
+            fileText.innerHTML = '这个文件似乎被清空了...<br><br>或者，它本来就没有内容？<span class="hidden-text">其实有的兄弟，有的。search 你的日记</span>';
+            break;
+        case 'file2':
+            fileTitle.textContent = '绝对不能忘的.txt';
+            fileText.innerHTML = '重要的事情：<br><br>1. 不要忘记密码<br>2. 备份重要文件<br>3. 定期检查系统安全<br><br>但这里似乎没有你想要的信息...';
+            break;
+        case 'file3':
+            fileTitle.textContent = '守护神.txt';
+            fileText.innerHTML = '守护神保佑着这个系统...<br><br>但也许它已经离开了？<br><br>或者，它从未存在过？';
+            break;
+        default:
+            fileTitle.textContent = '未知文件';
+            fileText.textContent = '无法读取文件内容。';
+    }
+    
+    document.getElementById('recycleFileContent').style.display = 'block';
+}
+        
+        // 关闭回收站文件
+        function closeRecycleFile() {
+            document.getElementById('recycleFileContent').style.display = 'none';
+        }
+        
+        // 更新时钟
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = hours % 12 || 12;
+            document.getElementById('clock').textContent = `${displayHours}:${minutes} ${ampm}`;
+        }
+        
+        setInterval(updateClock, 60000); // 每分钟更新一次
+        updateClock(); // 初始化时更新
+        
+        function openFile() {
+            document.getElementById('deleteDialog').style.display = 'block';
+        }
+        
+        function closeDeleteDialog() {
+            document.getElementById('deleteDialog').style.display = 'none';
+            document.getElementById('sealKey').value = '';
+            document.getElementById('skipCheckbox').checked = false;
+        }
+        
+        function confirmDelete() {
+            const key = document.getElementById('sealKey').value;
+            const skipChecked = document.getElementById('skipCheckbox').checked;
+            
+            if (skipChecked) {
+                // 显示通知
+                showNotification('文件夹已删除', 'success');
+                setTimeout(() => {
+                    window.location.href = 'https://sylvie-seven-cq.top/Syzygy/bela.html';
+                }, 1000);
+                closeDeleteDialog();
+                return;
+            }
+            
+            if (key === 'lssmr') {
+                // 显示确认对话框
+                document.getElementById('dialogMessage').textContent = '删除失败，该文件不存在！';
+                document.getElementById('confirmationDialog').style.display = 'block';
+                
+                // 5秒后跳转
+                setTimeout(() => {
+                    window.location.href = 'https://sylvie-seven-cq.top/Syzygy/forum.html';
+                }, 2000);
+            } else if (key) {
+                // 密钥错误
+                document.getElementById('dialogMessage').textContent = '封印密钥错误';
+                document.getElementById('confirmationDialog').style.display = 'block';
+            } else {
+                // 未输入密钥
+                alert('请输入封印密钥或勾选跳过选项');
+            }
+        }
+        
+        function closeConfirmation() {
+            document.getElementById('confirmationDialog').style.display = 'none';
+        }
+        
+        // 显示通知弹窗
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification ' + type;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        // 使窗口可拖动
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteDialog = document.getElementById('deleteDialog');
+            const confirmationDialog = document.getElementById('confirmationDialog');
+            const recycleBinManager = document.getElementById('recycleBinManager');
+            const recycleFileContent = document.getElementById('recycleFileContent');
+            
+            // 添加窗口拖动功能
+            function makeDraggable(element) {
+                let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+                const header = element.querySelector('.dialog-title') || element;
+                
+                header.onmousedown = dragMouseDown;
+                
+                function dragMouseDown(e) {
+                    e = e || window.event;
+                    e.preventDefault();
+                    pos3 = e.clientX;
+                    pos4 = e.clientY;
+                    document.onmouseup = closeDragElement;
+                    document.onmousemove = elementDrag;
+                }
+                
+                function elementDrag(e) {
+                    e = e || window.event;
+                    e.preventDefault();
+                    pos1 = pos3 - e.clientX;
+                    pos2 = pos4 - e.clientY;
+                    pos3 = e.clientX;
+                    pos4 = e.clientY;
+                    element.style.top = (element.offsetTop - pos2) + "px";
+                    element.style.left = (element.offsetLeft - pos1) + "px";
+                }
+                
+                function closeDragElement() {
+                    document.onmouseup = null;
+                    document.onmousemove = null;
+                }
+            }
+            
+            // 为对话框添加拖动功能
+            makeDraggable(deleteDialog);
+            makeDraggable(confirmationDialog);
+            makeDraggable(recycleBinManager);
+            makeDraggable(recycleFileContent);
+        });
+    </script>
+</body>
+</html>

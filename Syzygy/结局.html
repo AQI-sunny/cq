@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>系统崩溃模拟</title>
+    <title>系统崩溃</title>
     <style>
         * {
             margin: 0;
@@ -524,7 +524,7 @@
             <div class="progress-bar">
                 <div class="progress" id="progress1"></div>
             </div>
-            <button class="btn" id="btn-next1">继续</button>
+            <button class="btn" id="btn-next1">返回！！！</button>
         </div>
         
         <!-- 第二阶段：系统崩溃 -->
@@ -541,7 +541,7 @@
             <div class="progress-bar">
                 <div class="progress" id="progress2"></div>
             </div>
-            <button class="btn" id="btn-next2">继续</button>
+            <button class="btn" id="btn-next2">返回！！！不要点我！！！</button>
         </div>
         
         <!-- 第三阶段：求生通道 -->
@@ -574,9 +574,9 @@
         
         <!-- 第六阶段：密码验证 -->
         <div id="screen6" class="screen">
-            <h1>系统安全验证</h1>
-            <p>请输入管理员密码以访问文件系统</p>
-            <p class="password-hint">提示: 密码是"SECURE123"</p>
+            <h1>WHO AM I?</h1>
+            <p>输入正确代号即可访问</p>
+            <p class="password-hint">提示：CQ</p>
             <input type="password" class="password-input" id="password-input" placeholder="输入密码">
             <div>
                 <button class="btn" id="btn-verify-password">验证</button>
@@ -1038,10 +1038,10 @@
                 modal.style.display = 'none';
                 if (action === 'open') {
                     // 跳转到结局1
-                    window.location.href = '结局1.html';
+                    window.location.href = 'https://sylvie-seven-cq.top/Syzygy/结局B.html';
                 } else if (action === 'delete') {
                     // 跳转到结局2
-                    window.location.href = '结局2.html';
+                    window.location.href = 'https://sylvie-seven-cq.top/Syzygy/结局A.html';
                 }
             };
             
