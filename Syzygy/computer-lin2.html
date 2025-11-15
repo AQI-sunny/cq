@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>远程操控ing</title>
     <style>
+        /* 原有样式保持不变 */
         * {
             margin: 0;
             padding: 0;
@@ -17,42 +18,21 @@
             height: 100%;
             background-color: #000;
         }
-        /* 
-.hidden-text {
-    color: transparent;
-    background-color: transparent;
-    user-select: none;
-}
+        
+        .hidden-text {
+            color: transparent;
+            background-color: transparent;
+        }
 
-/* 选中时显示隐藏文字 
-.hidden-text::selection {
-    color: #ff0000;
-    background-color: rgba(255, 0, 0, 0.2);
-}
+        .hidden-text::selection {
+            color: #ff0000;
+            background-color: rgba(255, 0, 0, 0.2);
+        }
 
-/* 兼容不同浏览器 
-.hidden-text::-moz-selection {
-    color: #ff0000;
-    background-color: rgba(255, 0, 0, 0.2);
-} */
- /* 隐藏文字样式 */
-.hidden-text {
-    color: transparent;
-    background-color: transparent;
-    /* 移除 user-select: none */
-}
-
-/* 选中时显示隐藏文字 */
-.hidden-text::selection {
-    color: #ff0000;
-    background-color: rgba(255, 0, 0, 0.2);
-}
-
-/* 兼容不同浏览器 */
-.hidden-text::-moz-selection {
-    color: #ff0000;
-    background-color: rgba(255, 0, 0, 0.2);
-}
+        .hidden-text::-moz-selection {
+            color: #ff0000;
+            background-color: rgba(255, 0, 0, 0.2);
+        }
         
         .desktop {
             background: url('https://sylvie-seven-cq.top/gallery2/lin桌面壁纸.jpg') no-repeat center center fixed;
@@ -338,6 +318,11 @@
             fill: #4C9BFC;
         }
 
+        /* 浏览器图标 - 蓝色地球 */
+        .browser-icon {
+            fill: #0078D7;
+        }
+
         /* 回收站文件管理器样式 */
         #recycleBinManager {
             position: absolute;
@@ -452,11 +437,9 @@
         .notification.error {
             background-color: #dc3545;
         }
-
-        
     </style>
 
-  <!-- 防护代码 -->
+    <!-- 防护代码 -->
     <script>
         (function () {
             'use strict';
@@ -485,7 +468,6 @@
                             alert('开发者工具已被禁用！');
                             return false;
                         }
-
 
                         // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
                         if (e.ctrlKey && e.shiftKey &&
@@ -559,7 +541,6 @@
             devTools.init();
         })();
     </script>
-
 </head>
 <body>
     <!-- 桌面界面 -->
@@ -582,6 +563,49 @@
                     </svg>
                 </div>
                 <div class="icon-label">这里什么也没有</div>
+            </div>
+            
+            <!-- 浏览器图标 -->
+            <div class="desktop-icon" onclick="openBrowser()">
+                <div class="icon-img">
+                  <svg viewBox="0 0 24 24" width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <!-- 定义蓝色渐变 -->
+  <defs>
+    <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0078d7"/>
+      <stop offset="50%" stop-color="#106ebe"/>
+      <stop offset="100%" stop-color="#005a9e"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- 圆形背景 -->
+  <circle cx="12" cy="12" r="10" fill="url(#blueGradient)"/>
+  
+  <!-- 字母Q -->
+  <g transform="translate(7, 5)">
+    <!-- Q字母的圆形部分 -->
+    <path d="M4,0 C7,0 9,2 9,5 C9,8 7,10 4,10 C1,10 -1,8 -1,5 C-1,2 1,0 4,0 Z" 
+          fill="white"/>
+    
+    <!-- Q字母的尾巴 -->
+    <path d="M5,8 L8,12" 
+          stroke="white" 
+          stroke-width="1.5" 
+          stroke-linecap="round"/>
+    
+    <!-- 中心高亮点 -->
+    <circle cx="2" cy="2" r="0.8" fill="url(#blueGradient)" opacity="0.7"/>
+  </g>
+  
+  <!-- 右上角高光 -->
+  <circle cx="8" cy="8" r="1" fill="white" opacity="0.3"/>
+</svg>
+
+
+
+
+                </div>
+                <div class="icon-label">浏览器</div>
             </div>
             
             <div class="desktop-icon">
@@ -626,16 +650,6 @@
         <div id="documentContent" class="document-content">
             <button class="close-btn" onclick="closeDocument()">&times;</button>
             <h2>都说了森魔也木有辣</h2>
-            <!-- <p>
-            欢迎访问系统！这是一个模拟的远程桌面界面。
-            
-            您可以点击不同的图标来探索功能：
-            - "重要文件夹"将带您前往特定页面
-            - "文档"显示此信息
-            - 其他图标目前仅用于展示
-            
-            感谢您的访问！
-            </p> -->
         </div>
         
         <!-- 回收站文件管理器 -->
@@ -654,22 +668,6 @@
                         </div>
                         <div class="file-name">点开我 点开我 点开我 点开我 点开我.txt</div>
                     </div>
-                    <!-- <div class="file-item" onclick="openRecycleFile('file2')">
-                        <div class="file-icon">
-                            <svg viewBox="0 0 24 24" fill="#4C9BFC">
-                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                            </svg>
-                        </div>
-                        <div class="file-name">绝对不能忘的.txt</div>
-                    </div> -->
-                    <!-- <div class="file-item" onclick="openRecycleFile('file3')">
-                        <div class="file-icon">
-                            <svg viewBox="0 0 24 24" fill="#4C9BFC">
-                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                            </svg>
-                        </div>
-                        <div class="file-name">守护神.txt</div>
-                    </div> -->
                 </div>
             </div>
         </div>
@@ -738,6 +736,11 @@
             window.location.href = 'https://sylvie-seven-cq.top/Syzygy/结局.html';
         }
         
+        // 打开浏览器 - 跳转到search.html
+        function openBrowser() {
+            window.location.href = 'search.html';
+        }
+        
         function openDocument() {
             document.getElementById('documentContent').style.display = 'block';
         }
@@ -757,7 +760,7 @@
         }
         
         // 打开回收站中的文件
-        /* function openRecycleFile(fileId) {
+        function openRecycleFile(fileId) {
             const fileTitle = document.getElementById('recycleFileTitle');
             const fileText = document.getElementById('recycleFileText');
             
@@ -765,15 +768,15 @@
             switch(fileId) {
                 case 'file1':
                     fileTitle.textContent = '到底是谁.txt';
-                    fileText.textContent = '这个文件似乎被清空了...\n\n或者，它本来就没有内容？<span class="hidden-text">其实有的兄弟，有的。search 你的日记</span>';
+                    fileText.innerHTML = '这个文件似乎被清空了...<br><br>或者，它本来就没有内容？<span class="hidden-text">其实有的兄弟，有的。打开浏览器search 你的未来日记</span>';
                     break;
                 case 'file2':
                     fileTitle.textContent = '绝对不能忘的.txt';
-                    fileText.textContent = '重要的事情：\n\n1. 不要忘记密码\n2. 备份重要文件\n3. 定期检查系统安全\n\n但这里似乎没有你想要的信息...';
+                    fileText.innerHTML = '重要的事情：<br><br>1. 不要忘记密码<br>2. 备份重要文件<br>3. 定期检查系统安全<br><br>但这里似乎没有你想要的信息...';
                     break;
                 case 'file3':
                     fileTitle.textContent = '守护神.txt';
-                    fileText.textContent = '守护神保佑着这个系统...\n\n但也许它已经离开了？\n\n或者，它从未存在过？';
+                    fileText.innerHTML = '守护神保佑着这个系统...<br><br>但也许它已经离开了？<br><br>或者，它从未存在过？';
                     break;
                 default:
                     fileTitle.textContent = '未知文件';
@@ -781,33 +784,7 @@
             }
             
             document.getElementById('recycleFileContent').style.display = 'block';
-        } */
-       // 打开回收站中的文件
-function openRecycleFile(fileId) {
-    const fileTitle = document.getElementById('recycleFileTitle');
-    const fileText = document.getElementById('recycleFileText');
-    
-    // 根据文件ID设置不同的内容
-    switch(fileId) {
-        case 'file1':
-            fileTitle.textContent = '到底是谁.txt';
-            fileText.innerHTML = '这个文件似乎被清空了...<br><br>或者，它本来就没有内容？<span class="hidden-text">其实有的兄弟，有的。search 你的未来日记</span>';
-            break;
-        case 'file2':
-            fileTitle.textContent = '绝对不能忘的.txt';
-            fileText.innerHTML = '重要的事情：<br><br>1. 不要忘记密码<br>2. 备份重要文件<br>3. 定期检查系统安全<br><br>但这里似乎没有你想要的信息...';
-            break;
-        case 'file3':
-            fileTitle.textContent = '守护神.txt';
-            fileText.innerHTML = '守护神保佑着这个系统...<br><br>但也许它已经离开了？<br><br>或者，它从未存在过？';
-            break;
-        default:
-            fileTitle.textContent = '未知文件';
-            fileText.textContent = '无法读取文件内容。';
-    }
-    
-    document.getElementById('recycleFileContent').style.display = 'block';
-}
+        }
         
         // 关闭回收站文件
         function closeRecycleFile() {
