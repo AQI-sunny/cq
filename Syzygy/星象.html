@@ -133,8 +133,8 @@ canvas{display:block}
 <div id="game">
   <canvas id="c"></canvas>
   <div class="ui"><strong>点击或拖动连接星星</strong></div>
-  <div class="hint">提示：连完目标链条后显示「月氏辅星」</div>
-  <div class="info-bar">目标：连接所有星点形成天秤座图案</div>
+  <div class="hint">提示：我们的使命是...</div>
+  <div class="info-bar">目标：连接所有星点形成对应星象</div>
   <button class="reset-btn" id="resetBtn">重置</button>
   <div id="msg" class="msg"><div id="msgText"></div></div>
 </div>
@@ -293,7 +293,7 @@ function onPointerUp(e){isPointerDown=false;const pos=pointerPos(e);const idx=fi
 canvas.addEventListener('mouseup',onPointerUp);
 canvas.addEventListener('touchend',e=>{e.preventDefault();if(startIdx!==-1 && lastPointerPos){const idx=findNearestStar(lastPointerPos.x,lastPointerPos.y,32);if(idx>=0&&idx!==startIdx) connectTwo(startIdx,idx);}startIdx=-1;isPointerDown=false;draw();},{passive:false});
 
-function connectTwo(a,b){if(a===b) return;const key=edgeKey(a,b);if(!drawnEdgesSet.has(key)) drawnEdgesSet.add(key);if(checkWin()) showMessage('月氏辅星');}
+function connectTwo(a,b){if(a===b) return;const key=edgeKey(a,b);if(!drawnEdgesSet.has(key)) drawnEdgesSet.add(key);if(checkWin()) showMessage('5pyI5rSb5q6L5Y23');}
 function showMessage(text){msgText.innerText=text;msg.classList.add('show');}
 
 // 重置按钮事件

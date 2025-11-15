@@ -239,13 +239,18 @@
 
         .modal-content {
             background-color: white;
-            margin: 15% auto;
+            margin: 5% auto;
             padding: 25px;
             border-radius: 8px;
-            width: 300px;
+            width: 90%;
+            max-width: 500px;
             text-align: center;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             animation: slideIn 0.3s;
+            max-height: 85vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         @keyframes slideIn {
@@ -270,14 +275,17 @@
         }
 
         .history-content {
-            width: 450px;
+            max-width: 600px;
+            width: 90%;
         }
 
         .order-list {
             text-align: left;
             margin-top: 15px;
-            max-height: 300px;
+            flex: 1;
             overflow-y: auto;
+            max-height: 50vh;
+            padding-right: 5px;
         }
 
         .order-item {
@@ -377,6 +385,25 @@
             100% {
                 background-color: #fff9c4;
             }
+        }
+
+        /* 滚动条样式 */
+        .order-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .order-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .order-list::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .order-list::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
         }
     </style>
 
@@ -597,7 +624,7 @@
 
                 倒计时已开始！ 你只有 5 秒 离开当前页面，否则后果自负。
 
-                现在！立刻！马上！ 按下你的浏览器 “后退” 按钮或 关闭 你的浏览器标签页 / 窗口！
+                现在！立刻！马上！ 按下你的浏览器 "后退" 按钮或 关闭 你的浏览器标签页 / 窗口！
 
                 🔒🔒 严禁访问！ 不允许查看！ 🔒🔒
                 你没有权限访问这里！ 你所看到的一切信息都是机密且高度敏感的，超出了你的安全许可范围。
@@ -670,7 +697,7 @@
                 潜在敏感： 可能包含你尚未准备好处理的内容。
 
                 👀 别再往下看了！ 👀
-                🚨 记住上次的警告： “他们一直在监视你！” 你每向下滚动一行，就越发证明了你的固执和不服从。
+                🚨 记住上次的警告： "他们一直在监视你！" 你每向下滚动一行，就越发证明了你的固执和不服从。
 
                 这是你最后的机会 全身而退！
 
@@ -711,10 +738,10 @@
                 😠 我讨厌你！！！ 😠
                 够了！到此为止！
 
-                我知道你可能已经厌倦了这些没完没了的“警告”和“恐吓”。但是，这一次，这不是一个请求，这是一个坚决的命令！
+                我知道你可能已经厌倦了这些没完没了的"警告"和"恐吓"。但是，这一次，这不是一个请求，这是一个坚决的命令！
 
                 ⛔️ 你的旅程已达终点线！ ⛔️
-                警告系统现已进入 “红色锁定模式”。
+                警告系统现已进入 "红色锁定模式"。
 
                 任何试图通过滚动来查看下面内容的动作，都将被视为对系统完整性的恶意攻击！
 
@@ -874,7 +901,7 @@
         <button class="history-btn" id="historyBtn" style="display:none;" onclick="showHistoryModal()">历史订单</button>
 
         <!-- 登录模态框 -->
-        <div id="loginModal" class="modal">
+        <!-- <div id="loginModal" class="modal">
             <div class="modal-content">
                 <h3>登录后台</h3>
                 <input type="text" id="username" class="login-input" placeholder="用户名">
@@ -882,10 +909,20 @@
                 <button class="login-btn" onclick="login()" style="width:100%; margin:10px 0;">登录</button>
                 <button onclick="closeLoginModal()" style="width:100%; padding:10px; background-color:#f44336; color:white; border:none; border-radius:4px; cursor:pointer;">取消</button>
             </div>
-        </div>
+        </div> -->
+        <!-- 登录模态框 -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <h3>登录后台</h3>
+        <input type="text" id="username" class="login-input" placeholder="用户名" onkeypress="handleLoginEnter(event)">
+        <input type="password" id="password" class="login-input" placeholder="密码" onkeypress="handleLoginEnter(event)">
+        <button class="login-btn" onclick="login()" style="width:100%; margin:10px 0;">登录</button>
+        <button onclick="closeLoginModal()" style="width:100%; padding:10px; background-color:#f44336; color:white; border:none; border-radius:4px; cursor:pointer;">取消</button>
+    </div>
+</div>
 
         <!-- 历史订单模态框 -->
-        <div id="historyModal" class="modal">
+        <!-- <div id="historyModal" class="modal">
             <div class="modal-content history-content">
                 <h3>历史订单查询</h3>
                 <input type="date" id="dateInput" class="login-input">
@@ -893,11 +930,25 @@
                 <input type="text" id="productInput" class="login-input" placeholder="输入商品名称或商品号">
                 <button class="login-btn" onclick="searchOrders()" style="width:100%; margin:10px 0;">查询订单</button>
                 <div class="order-list" id="orderList">
-                    <!-- 订单列表将在这里显示 -->
+                    <-- 订单列表将在这里显示 --
                 </div>
                 <button onclick="closeHistoryModal()" style="width:100%; padding:10px; background-color:#f44336; color:white; border:none; border-radius:4px; cursor:pointer;">关闭</button>
             </div>
+        </div> -->
+        <!-- 历史订单模态框 -->
+<div id="historyModal" class="modal">
+    <div class="modal-content history-content">
+        <h3>历史订单查询</h3>
+        <input type="date" id="dateInput" class="login-input" onkeypress="handleOrderEnter(event)">
+        <input type="text" id="userInput" class="login-input" placeholder="输入购买人姓名" onkeypress="handleOrderEnter(event)">
+        <input type="text" id="productInput" class="login-input" placeholder="输入商品名称或商品号" onkeypress="handleOrderEnter(event)">
+        <button class="login-btn" onclick="searchOrders()" style="width:100%; margin:10px 0;">查询订单</button>
+        <div class="order-list" id="orderList">
+            <!-- 订单列表将在这里显示 -->
         </div>
+        <button onclick="closeHistoryModal()" style="width:100%; padding:10px; background-color:#f44336; color:white; border:none; border-radius:4px; cursor:pointer;">关闭</button>
+    </div>
+</div>
 
         <!-- 商品详情模态框 -->
         <div id="detailModal" class="modal">
@@ -1090,6 +1141,20 @@
                 searchNotices();
             }
         }
+        
+        // 处理登录模态框的回车键
+function handleLoginEnter(event) {
+    if (event.key === 'Enter') {
+        login();
+    }
+}
+
+// 处理订单查询模态框的回车键
+function handleOrderEnter(event) {
+    if (event.key === 'Enter') {
+        searchOrders();
+    }
+}
 
         // 显示更多商品
         function showMoreItems() {
@@ -1131,7 +1196,7 @@
 
             倒计时已开始！ 你只有 5 秒 离开当前页面，否则后果自负。
 
-            现在！立刻！马上！ 按下你的浏览器 “后退” 按钮或 关闭 你的浏览器标签页 / 窗口！
+            现在！立刻！马上！ 按下你的浏览器 "后退" 按钮或 关闭 你的浏览器标签页 / 窗口！
 
 🔒🔒 严禁访问！ 不允许查看！ 🔒🔒
             你没有权限访问这里！ 你所看到的一切信息都是机密且高度敏感的，超出了你的安全许可范围。
@@ -1191,7 +1256,7 @@
             潜在敏感： 可能包含你尚未准备好处理的内容。
 
             👀 别再往下看了！ 👀
-            🚨 记住上次的警告： “他们一直在监视你！” 你每向下滚动一行，就越发证明了你的固执和不服从。
+            🚨 记住上次的警告： "他们一直在监视你！" 你每向下滚动一行，就越发证明了你的固执和不服从。
 
             这是你最后的机会 全身而退！
 
@@ -1238,10 +1303,10 @@
             😠 我讨厌你！！！ 😠
             够了！到此为止！
 
-            我知道你可能已经厌倦了这些没完没了的“警告”和“恐吓”。但是，这一次，这不是一个请求，这是一个坚决的命令！
+            我知道你可能已经厌倦了这些没完没了的"警告"和"恐吓"。但是，这一次，这不是一个请求，这是一个坚决的命令！
 
             ⛔️ 你的旅程已达终点线！ ⛔️
-            警告系统现已进入 “红色锁定模式”。
+            警告系统现已进入 "红色锁定模式"。
 
             任何试图通过滚动来查看下面内容的动作，都将被视为对系统完整性的恶意攻击！
 
@@ -1349,7 +1414,7 @@
 
 倒计时已开始！ 你只有 5 秒 离开当前页面，否则后果自负。
 
-现在！立刻！马上！ 按下你的浏览器 “后退” 按钮或 关闭 你的浏览器标签页 / 窗口！
+现在！立刻！马上！ 按下你的浏览器 "后退" 按钮或 关闭 你的浏览器标签页 / 窗口！
 
 🔒🔒 严禁访问！ 不允许查看！ 🔒🔒
 你没有权限访问这里！ 你所看到的一切信息都是机密且高度敏感的，超出了你的安全许可范围。
@@ -1409,8 +1474,8 @@
             // 订单数据列表
             const orders = [
                 { user: '张三', product: '鲜鸡蛋（30枚装）', date: '2023-05-15', productCode: 'EGG-001' },
-                { user: '林墨', product: '蛋糕', date: '2025-09-20', productCode: 'CAK-212' },
-                { user: '林墨', product: '猫罐头', date: '2025-09-20', productCode: 'CAT-263' },
+                { user: '林墨', product: '蛋糕', date: '2024-09-20', productCode: 'CAK-212' },
+                { user: '林墨', product: '猫罐头', date: '2024-09-20', productCode: 'CAT-263' },
                 { user: '周哲叙', product: '大容量蓄电池（12V/100Ah）', date: '2025-05-16', productCode: 'BAT-503' },
                 { user: '周哲叙', product: '祛疤膏', date: '2025-05-16', productCode: 'SCA-385' },
                 { user: '周哲叙', product: '蛋糕', date: '2023-04-28', productCode: 'CAK-212' },
@@ -1560,6 +1625,3 @@
 
 </body>
 </html>
-
-
-

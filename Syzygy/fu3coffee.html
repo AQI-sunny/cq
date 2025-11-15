@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>福叁咖啡</title>
-    <!-- 在head中添加多个图标定义 -->
-<link rel="shortcut icon" href="https://sylvie-seven-cq.top/gallery/coffee-logo.png">
-<link rel="icon" href="https://sylvie-seven-cq.top/gallery/coffee-logo.png">
     <style>
         body {
             margin: 0;
@@ -155,6 +152,8 @@
             margin-bottom: 15px;
             border-radius: 8px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            box-sizing: border-box;
         }
 
             .order-card h4 {
@@ -169,14 +168,18 @@
         .search-bar {
             text-align: center;
             margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
         }
 
             .search-bar input {
                 padding: 8px;
                 border: 1px solid #ccc;
                 border-radius: 5px;
-                margin: 0 5px;
                 width: 200px;
+                box-sizing: border-box;
             }
 
             .search-bar button {
@@ -186,12 +189,78 @@
                 padding: 8px 15px;
                 border-radius: 5px;
                 cursor: pointer;
-                margin: 0 2px;
             }
 
                 .search-bar button:hover {
                     background: #5a3b2c;
                 }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .hero h2 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .search-bar {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .search-bar input {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .search-bar button {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .card {
+                width: 100%;
+                max-width: 350px;
+            }
+            
+            .card img {
+                height: 350px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 40px 15px;
+            }
+            
+            .hero h2 {
+                font-size: 28px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            .section {
+                padding: 30px 15px;
+            }
+            
+            nav {
+                flex-wrap: wrap;
+            }
+            
+            nav a {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            
+            .modal-content {
+                width: 90%;
+                padding: 20px;
+            }
+        }
     </style>
 
     <!-- 防护代码 -->
@@ -241,10 +310,10 @@
                 },
 
                 disableTextSelect: function () {
-                    /* document.addEventListener('selectstart', function (e) {
+                    document.addEventListener('selectstart', function (e) {
                         e.preventDefault();
-                        return false; 
-                    });*/
+                        return false;
+                    });
                 },
 
                 antiInspect: function () {
@@ -398,8 +467,8 @@
 
         // 模拟订单数据
         const ordersData = [
-            { date: "2025-09-05", name: "桂花拿铁", time: "12:15", note: "双份", type: "外送", address: "3308" },
-            { date: "2025-08-23", name: "卡布奇诺", time: "14:20", note: "常温", type: "外送", address: "静乔公寓3305" },
+            { date: "2025-08-15", name: "桂花拿铁", time: "12:15", note: "一杯桂花拿铁，多放一份桂花，日落时刻送达", type: "外送", address: "静乔公寓3308，186-XXXX-0290,林女士" },
+            { date: "2025-08-10", name: "美式咖啡", time: "14:20", note: "不加糖不加奶", type: "外送", address: "静乔公寓3303,139-XXXX-8204,周先生" },
             { date: "2025-09-05", name: "卡布奇诺", time: "10:30", note: "加糖", type: "自提", address: "门店前台" },
             { date: "2025-08-23", name: "摩卡咖啡", time: "16:45", note: "少糖", type: "外送", address: "静乔公寓2201" }
         ];
@@ -438,6 +507,23 @@
             }
         }
 
+        
+// 为密码输入框添加回车键登录功能
+document.getElementById('password').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        login();
+    }
+});
+
+// 为用户名输入框添加回车键登录功能（可选，根据需求）
+document.getElementById('username').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        // 如果用户名输入框按回车，可以跳转到密码输入框或直接登录
+        document.getElementById('password').focus();
+        // 或者直接调用登录：login();
+    }
+});
+
         // 合并查询功能 - 需要同时输入日期和咖啡名
         function searchOrdersCombined() {
             const searchDate = document.getElementById('searchDate').value.trim();
@@ -473,6 +559,20 @@
             }
         }
 
+        // 为咖啡名称输入框添加回车键查询功能
+document.getElementById('searchCoffeeName').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        searchOrdersCombined();
+    }
+});
+
+// 为日期输入框添加回车键查询功能
+document.getElementById('searchDate').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        searchOrdersCombined();
+    }
+});
+
         // 点击背景关闭登录框
         window.onclick = (e) => {
             if (e.target === loginModal) {
@@ -483,10 +583,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-

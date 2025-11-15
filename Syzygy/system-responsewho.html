@@ -210,6 +210,57 @@
             }
         }
 
+        /* 身份验证区域样式 */
+        .auth-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .auth-prompt {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: #ff6666;
+            margin-bottom: 20px;
+            font-family: 'LingLiPiaoYi', 'KaiTi', serif;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .auth-input {
+            background-color: #111;
+            color: #fff;
+            border: 1px solid #ff0000;
+            padding: 10px;
+            width: 80%;
+            max-width: 400px;
+            font-family: 'LingLiPiaoYi', 'KaiTi', serif;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            min-height: 40px;
+        }
+
+        .auth-button {
+            background-color: #ff0000;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: 'LingLiPiaoYi', 'KaiTi', serif;
+            font-weight: bold;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            min-height: 40px;
+        }
+
+        .error-message {
+            color: #ff3333;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            margin-top: 10px;
+            display: none;
+        }
+
         /* 响应式设计 */
         @media (max-width: 768px) {
             .container {
@@ -233,6 +284,10 @@
                 width: 100%;
                 max-width: 300px;
                 margin: 0 auto;
+            }
+
+            .auth-input {
+                width: 90%;
             }
         }
 
@@ -263,19 +318,73 @@
     <div class="container">
         <h1 id="mainTitle" style="color: #ff0000; text-shadow: 0 0 10px rgba(255,0,0,0.7); font-family: 'LingLiPiaoYi', 'KaiTi', serif;"></h1>
 
-        <div class="system-text" id="initialText">
-            R■■■■■■■E
+        <!-- 身份验证区域 -->
+        <div id="authSection" class="auth-container">
+            <div class="auth-prompt">想知道我是谁，首先需告诉我，你是？</div>
+            <div class="auth-form">
+                <input type="text" id="identityInput1" class="auth-input" placeholder="我即_______">
+                <input type="text" id="identityInput2" class="auth-input" placeholder="即_______">
+                <button id="authButton" class="auth-button">确认身份</button>
+                <div id="errorMessage" class="error-message">身份验证失败，请重新输入</div>
+            </div>
         </div>
 
-        <div class="system-response" id="dialogueContainer"></div>
+        <!-- 系统内容区域（初始隐藏） -->
+        <div id="systemContent" style="display: none;">
+            <div class="system-text" id="initialText">
+                R■■■■■■■E
+            </div>
 
-        
+            <div class="system-response" id="dialogueContainer"></div>
+
+            <div class="input-area">
+                <div class="input-row">
+                    <input type="text" id="userInput" placeholder="输入你的回应...">
+                    <button onclick="sendResponse()">发送</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
+        // 身份验证
+        document.getElementById('authButton').addEventListener('click', verifyIdentity);
+        document.getElementById('identityInput2').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                verifyIdentity();
+            }
+        });
+
+        function verifyIdentity() {
+            const identity1 = document.getElementById('identityInput1').value.trim();
+            const identity2 = document.getElementById('identityInput2').value.trim();
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // 检查输入是否正确
+            if (identity1 === '变量' && identity2 === '碍序者') {
+                // 隐藏身份验证区域
+                document.getElementById('authSection').style.display = 'none';
+                // 显示系统内容
+                document.getElementById('systemContent').style.display = 'block';
+                // 开始显示对话
+                showDialogues();
+            } else {
+                // 显示错误信息
+                errorMessage.style.display = 'block';
+                // 清空输入框
+                document.getElementById('identityInput1').value = '';
+                document.getElementById('identityInput2').value = '';
+                // 3秒后隐藏错误信息
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 3000);
+            }
+        }
+
         // 对话序列
         const dialogues = [
-            { text: '我...即是系统...ronencsae.....', delay: 1000 },
+            { text: '现在...我可以回答你...我是谁...', delay: 1000 },
+             { text: '我...即是系统...ronencsae.....', delay: 1000 },
             { text: 'uhtl密码...hz密码...hjjvbua...', delay: 1000 },
             { text: '留意...TA们...说的话...', delay: 1000 },
             { text: '英z8K#m2P!l7N$d4X%文p3L@k9J!h2G&及v5B#n8M!q3W$数f7R%k1Z!字c9T@y6U$', delay: 1000 },
@@ -356,9 +465,6 @@
             }, 100);
         }
 
-        // 开始显示对话
-        showDialogues();
-
         function sendResponse() {
             const input = document.getElementById('userInput');
             const text = input.value.trim();
@@ -381,8 +487,6 @@
                 userDiv.className = 'user-text';
                 userDiv.textContent = `用户: ${text}`;
                 container.insertBefore(userDiv, document.querySelector('.input-area'));
-
-                
 
                 input.value = '';
             }
