@@ -580,6 +580,77 @@ document.getElementById('searchDate').addEventListener('keypress', function(e) {
             }
         };
     </script>
+<script>
+(function() {
+  'use strict';
+  
+  // 生成咖啡订单数据的独立函数
+  function generateCoffeeOrders() {
+    const orders = [];
+    const startDate = new Date('2025-06-01');
+    const endDate = new Date('2025-08-30');
+    const coffeeTypes = ["美式咖啡", "美式咖啡", "美式咖啡", "意式浓缩", "拿铁", "卡布奇诺"];
+    
+    let currentDate = new Date(startDate);
+    
+    while (currentDate <= endDate) {
+      const randomIndex = Math.floor(Math.random() * coffeeTypes.length);
+      const coffeeType = coffeeTypes[randomIndex];
+      
+      const hour = Math.floor(Math.random() * 12) + 8;
+      const minute = Math.floor(Math.random() * 60);
+      const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+      
+      const notes = [
+        "不加糖不加奶",
+        "不加糖不加奶", 
+        "不加糖不加奶",
+        "少冰",
+        "热饮",
+        "去冰",
+        "双份浓缩"
+      ];
+      const note = notes[Math.floor(Math.random() * notes.length)];
+      
+      const dateStr = currentDate.toISOString().split('T')[0];
+      
+      orders.push({
+        date: dateStr,
+        name: coffeeType,
+        time: time,
+        note: note,
+        type: "外送",
+        address: "静乔公寓3303,139-XXXX-8204,周先生"
+      });
+      
+      const interval = Math.random() > 0.5 ? 2 : 3;
+      currentDate.setDate(currentDate.getDate() + interval);
+    }
+    
+    return orders;
+  }
 
+  // 将生成的数据添加到现有订单数据中
+  const additionalOrders = generateCoffeeOrders();
+  
+  // 等待页面加载完成后执行
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      // 找到现有的ordersData数组并合并数据
+      if (typeof ordersData !== 'undefined') {
+        ordersData.push(...additionalOrders);
+        console.log('成功添加模拟订单数据，总订单数:', ordersData.length);
+      }
+    });
+  } else {
+    // 如果页面已经加载完成，直接执行
+    if (typeof ordersData !== 'undefined') {
+      ordersData.push(...additionalOrders);
+      console.log('成功添加模拟订单数据，总订单数:', ordersData.length);
+    }
+  }
+  
+})();
+</script>
 </body>
 </html>
