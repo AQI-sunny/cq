@@ -5,6 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>奇闻异事馆</title>
     <link rel="stylesheet" href="forum-styles.css">
+
+    <!-- 防护代码 -->
+    <script>
+(function () {
+    'use strict';
+
+    var devTools = {
+        init: function () {
+            this.disableRightClick();
+            this.disableDevToolsKeys();
+        },
+
+        disableRightClick: function () {
+            document.addEventListener('contextmenu', function (e) {
+                e.preventDefault();
+                alert('恭喜你获得成就：逃课大王！！！');
+                return false;
+            });
+        },
+
+        disableDevToolsKeys: function () {
+            document.addEventListener('keydown', function (e) {
+                // F12
+                if ((e.key === 'F12' || e.keyCode === 123) &&
+                    !e.ctrlKey && !e.altKey && !e.shiftKey && !e.metaKey) {
+                    e.preventDefault();
+                    alert('恭喜你获得成就：逃课大王！！！');
+                    return false;
+                }
+                // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+                if (e.ctrlKey && e.shiftKey &&
+                    (e.key === 'I' || e.key === 'J' || e.key === 'C'
+                     || e.key === 'i' || e.key === 'j' || e.key === 'c')) {
+                    e.preventDefault();
+                    alert('恭喜你获得成就：逃课大王！！！');
+                    return false;
+                }
+                // Ctrl+U
+                if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+                    e.preventDefault();
+                    alert('恭喜你获得成就：逃课大王！！！');
+                    return false;
+                }
+            });
+        }
+    };
+
+    devTools.init();
+})();
+</script>
 </head>
 <body>
     <!-- 邀请码验证模态框 -->
