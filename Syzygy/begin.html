@@ -37,15 +37,15 @@
             overflow: hidden;
         }
 
-            .container::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 3px;
-                background: linear-gradient(90deg, #8a2be2, #4a0080);
-            }
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #8a2be2, #4a0080);
+        }
 
         h1 {
             color: #d4c2fc;
@@ -56,19 +56,19 @@
             position: relative;
         }
 
-            h1::after {
-                content: '';
-                display: block;
-                width: 100px;
-                height: 2px;
-                background: linear-gradient(90deg, transparent, #8a2be2, transparent);
-                margin: 10px auto;
-            }
+        h1::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #8a2be2, transparent);
+            margin: 10px auto;
+        }
 
         .story-text {
             margin-bottom: 25px;
             font-size: 1.1rem;
-            text-align: center; /* 修改：居中对齐 */
+            text-align: center;
         }
 
         .highlight {
@@ -80,6 +80,7 @@
             display: flex;
             justify-content: center;
             margin: 20px 0;
+            position: relative;
         }
 
         .cover-image {
@@ -88,10 +89,11 @@
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
             border: 1px solid #2a2a3a;
+            transition: opacity 0.3s ease;
         }
 
         .cover-image-first {
-            max-width: 50%; /* 第一张图缩小到70% */
+            max-width: 70%;
             height: auto;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
@@ -99,11 +101,30 @@
         }
 
         .cover-image-second {
-            max-width: 100%; /* 第二张图保持100% */
+            max-width: 100%;
             height: auto;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
             border: 1px solid #2a2a3a;
+        }
+
+        .image-loading, .image-error {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #b19cd9;
+            font-size: 1rem;
+            text-align: center;
+            background-color: rgba(18, 18, 30, 0.8);
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 1px dashed #8a2be2;
+        }
+
+        .image-error {
+            color: #ff6b6b;
         }
 
         .choices {
@@ -132,15 +153,15 @@
             box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
         }
 
-            .btn-primary:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 6px 20px rgba(138, 43, 226, 0.6);
-            }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(138, 43, 226, 0.6);
+        }
 
         .btn-disabled {
             background: linear-gradient(135deg, #3a3a4a, #5a5a6a);
             color: #888;
-            cursor: pointer; /* 修改：允许点击 */
+            cursor: pointer;
             position: relative;
         }
 
@@ -159,27 +180,11 @@
             0% {
                 box-shadow: 0 0 0 0 rgba(138, 43, 226, 0.7);
             }
-
             70% {
                 box-shadow: 0 0 0 10px rgba(138, 43, 226, 0);
             }
-
             100% {
                 box-shadow: 0 0 0 0 rgba(138, 43, 226, 0);
-            }
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-            }
-
-            h1 {
-                font-size: 1.8rem;
-            }
-
-            .btn {
-                min-width: 150px;
             }
         }
 
@@ -224,9 +229,69 @@
             transition: color 0.3s ease;
         }
 
-            .disclaimer-link:hover {
-                color: #4a4a5a;
+        .disclaimer-link:hover {
+            color: #4a4a5a;
+        }
+
+        /* 响应式设计优化 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
             }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .story-text {
+                font-size: 1rem;
+            }
+            
+            .cover-image-first {
+                max-width: 90%;
+            }
+            
+            .btn {
+                min-width: 150px;
+                padding: 10px 20px;
+            }
+            
+            .choices {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .cover-image-first {
+                max-width: 100%;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+
+        /* 针对iOS设备的特定优化 */
+        @supports (-webkit-touch-callout: none) {
+            .btn {
+                -webkit-appearance: none;
+                border-radius: 6px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -246,11 +311,23 @@
         </div>
 
         <div class="cover-image-container">
-            <img src="https://github.com/AQI-sunny/cq/raw/main/gallery/begin.jpg" alt="聊天记录" class="cover-image cover-image-first" />
+            <div class="image-loading">图片加载中...</div>
+            <div class="image-error">图片加载失败</div>
+            <img src="https://sylvie-seven-cq.top/gallery/begin.jpg" 
+                 alt="聊天记录" 
+                 class="cover-image cover-image-first"
+                 onload="hideImageStatus(this)"
+                 onerror="showImageError(this)" />
         </div>
 
         <div class="cover-image-container">
-            <img src="https://github.com/AQI-sunny/cq/raw/main/gallery/beginfm.jpg" alt="失物招领帖" class="cover-image cover-image-second" />
+            <div class="image-loading">图片加载中...</div>
+            <div class="image-error">图片加载失败</div>
+            <img src="https://sylvie-seven-cq.top/gallery/beginfm.jpg" 
+                 alt="失物招领帖" 
+                 class="cover-image cover-image-second"
+                 onload="hideImageStatus(this)"
+                 onerror="showImageError(this)" />
         </div>
 
         <div class="choices">
@@ -270,6 +347,42 @@
     </div>
 
     <script>
+        // 图片加载状态处理
+        function hideImageStatus(img) {
+            const container = img.parentElement;
+            const loading = container.querySelector('.image-loading');
+            const error = container.querySelector('.image-error');
+            
+            loading.style.display = 'none';
+            error.style.display = 'none';
+            img.style.opacity = '1';
+        }
+        
+        function showImageError(img) {
+            const container = img.parentElement;
+            const loading = container.querySelector('.image-loading');
+            const error = container.querySelector('.image-error');
+            
+            loading.style.display = 'none';
+            error.style.display = 'block';
+            img.style.opacity = '0.3';
+        }
+        
+        // 页面加载完成后检查图片状态
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('.cover-image');
+            images.forEach(img => {
+                if (img.complete) {
+                    if (img.naturalHeight === 0) {
+                        showImageError(img);
+                    } else {
+                        hideImageStatus(img);
+                    }
+                }
+            });
+        });
+
+        // 按钮事件处理
         document.getElementById('investigate-btn').addEventListener('click', function () {
             window.location.href = 'https://sylvie-seven-cq.top/Syzygy/forum.html';
         });
@@ -288,6 +401,3 @@
     </script>
 </body>
 </html>
-
-
-
