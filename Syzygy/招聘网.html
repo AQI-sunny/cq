@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>人才招聘网 - 找到理想人才</title>
     <style>
+        /* 样式保持不变 */
         * {
             margin: 0;
             padding: 0;
@@ -732,6 +733,7 @@
             // 过滤求职者
             let filteredCandidates = [];
 
+            // 只有当职位名称不为空时才进行搜索
             if (jobTitle) {
                 // 搜索所有候选人，检查他们的职位是否匹配
                 candidates.forEach(candidate => {
@@ -747,19 +749,8 @@
                         }
                     });
                 });
-            } else {
-                // 如果没有输入职位名称，显示所有候选人的所有职位
-                candidates.forEach(candidate => {
-                    candidate.positions.forEach(position => {
-                        filteredCandidates.push({
-                            name: candidate.name,
-                            position: position,
-                            skills: candidate.skills,
-                            avatar: candidate.avatar
-                        });
-                    });
-                });
             }
+            // 如果职位名称为空，则不显示任何结果
 
             // 更新结果
             displayResults(filteredCandidates);

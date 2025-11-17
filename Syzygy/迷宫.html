@@ -2,9 +2,12 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>逃出迷宫</title>
     <style>
+        /* 原有CSS代码保持不变 */
         body {
             margin: 0;
             padding: 0;
@@ -16,6 +19,10 @@
             font-family: Arial, sans-serif;
             overflow: hidden;
             position: relative;
+            /* 防止iOS橡皮筋效果 */
+            position: fixed;
+            width: 100%;
+            height: 100%;
         }
 
         .background-text {
@@ -320,6 +327,10 @@
             user-select: none;
             border: 2px solid #b39700; /* 降低金色饱和度 */
             box-shadow: 0 0 8px rgba(179, 151, 0, 0.4); /* 降低金色饱和度 */
+            /* 添加Safari兼容性 */
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            cursor: pointer;
         }
 
         .touch-controls .up {
@@ -346,6 +357,26 @@
         @media (hover: none) and (pointer: coarse) {
             .touch-controls {
                 display: block;
+            }
+        }
+        
+        /* iOS Safari特定优化 */
+        @supports (-webkit-touch-callout: none) {
+            body {
+                /* 防止iOS上的橡皮筋效果 */
+                overscroll-behavior: none;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .touch-controls .up, .touch-controls .down, 
+            .touch-controls .left, .touch-controls .right {
+                /* 优化iOS上的触摸反馈 */
+                -webkit-touch-callout: none;
+            }
+            
+            #maze {
+                /* 确保迷宫在iOS上正确渲染 */
+                -webkit-transform: translateZ(0);
             }
         }
     </style>
@@ -712,6 +743,15 @@
         document.querySelector('.touch-controls .down').addEventListener('click', () => movePlayer(0, 1));
         document.querySelector('.touch-controls .left').addEventListener('click', () => movePlayer(-1, 0));
         document.querySelector('.touch-controls .right').addEventListener('click', () => movePlayer(1, 0));
+        
+        // 添加触摸事件以防止iOS上的默认行为
+        document.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+        
+        document.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+        }, { passive: false });
 
         // 初始化游戏
         initGame();
