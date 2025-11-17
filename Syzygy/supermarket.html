@@ -409,107 +409,53 @@
 
     <!-- 防护代码 -->
     <script>
-        (function () {
-            'use strict';
+(function () {
+    'use strict';
 
-            var devTools = {
-                init: function () {
-                    this.disableRightClick();
-                    this.disableDevTools();
-                    this.disableTextSelect();
-                    this.antiInspect();
-                },
+    var devTools = {
+        init: function () {
+            this.disableRightClick();
+            this.disableDevToolsKeys();
+        },
 
-                disableRightClick: function () {
-                    document.addEventListener('contextmenu', function (e) {
-                        e.preventDefault();
-                        alert('右键已被禁用！');
-                        return false;
-                    });
-                },
+        disableRightClick: function () {
+            document.addEventListener('contextmenu', function (e) {
+                e.preventDefault();
+                alert('恭喜你获得成就：逃课大王！！！');
+                return false;
+            });
+        },
 
-                disableDevTools: function () {
-                    document.addEventListener('keydown', function (e) {
-                        // F12
-                        if (e.key === 'F12') {
-                            e.preventDefault();
-                            alert('开发者工具已被禁用！');
-                            return false;
-                        }
-
-
-                        // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
-                        if (e.ctrlKey && e.shiftKey &&
-                            (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
-                            e.preventDefault();
-                            return false;
-                        }
-
-                        // Ctrl+U
-                        if (e.ctrlKey && e.key === 'u') {
-                            e.preventDefault();
-                            return false;
-                        }
-                    });
-                },
-
-                disableTextSelect: function () {
-                    /* document.addEventListener('selectstart', function (e) {
-                        e.preventDefault();
-                        return false;
-                    }); */
-                },
-
-                antiInspect: function () {
-                    // 多重检测机制
-                    setInterval(function () {
-                        // 窗口尺寸检测
-                        var widthThreshold = window.outerWidth - window.innerWidth > 160;
-                        var heightThreshold = window.outerHeight - window.innerHeight > 160;
-
-                        // 调试器检测
-                        var debuggerDetected = false;
-                        try {
-                            (function () {
-                                return false;
-                            }).constructor("debugger").call("action");
-                        } catch (e) {
-                            debuggerDetected = true;
-                        }
-
-                        // 性能检测
-                        var performanceDetected = false;
-                        var start = performance.now();
-                        debugger;
-                        var end = performance.now();
-                        if (end - start > 100) {
-                            performanceDetected = true;
-                        }
-
-                        if (widthThreshold || heightThreshold || debuggerDetected || performanceDetected) {
-                            // 阻止访问
-                            document.body.innerHTML = '<h1>请关闭开发者工具！</h1>';
-                            window.location.reload();
-                            return;
-                        }
-                    }, 500);
-
-                    // 额外的F12捕获
-                    window.addEventListener('keydown', function (e) {
-                        if (e.key === 'F12' || e.keyCode === 123) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            e.stopImmediatePropagation();
-                            alert('开发者工具已被禁用！');
-                            return false;
-                        }
-                    }, true);
+        disableDevToolsKeys: function () {
+            document.addEventListener('keydown', function (e) {
+                // F12
+                if ((e.key === 'F12' || e.keyCode === 123) &&
+                    !e.ctrlKey && !e.altKey && !e.shiftKey && !e.metaKey) {
+                    e.preventDefault();
+                    alert('恭喜你获得成就：逃课大王！！！');
+                    return false;
                 }
-            };
+                // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+                if (e.ctrlKey && e.shiftKey &&
+                    (e.key === 'I' || e.key === 'J' || e.key === 'C'
+                     || e.key === 'i' || e.key === 'j' || e.key === 'c')) {
+                    e.preventDefault();
+                    alert('恭喜你获得成就：逃课大王！！！');
+                    return false;
+                }
+                // Ctrl+U
+                if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+                    e.preventDefault();
+                    alert('恭喜你获得成就：逃课大王！！！');
+                    return false;
+                }
+            });
+        }
+    };
 
-            devTools.init();
-        })();
-    </script>
+    devTools.init();
+})();
+</script>
 
 </head>
 <body>
