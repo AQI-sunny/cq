@@ -340,7 +340,7 @@
                 performLogin(username, password, loginSubmit, originalText);
             } catch (error) {
                 console.error('Login error:', error);
-                showErrorMessage('login', '登录过程中发生错误');
+                /* showErrorMessage('login', '登录过程中发生错误'); */
                 resetButton(loginSubmit, originalText);
                 isProcessing = false;
             }
@@ -398,7 +398,7 @@
                 performRegister(username, password, registerSubmit, originalText);
             } catch (error) {
                 console.error('Register error:', error);
-                showErrorMessage('register', '注册过程中发生错误');
+              /*   showErrorMessage('register', '注册过程中发生错误'); */
                 resetButton(registerSubmit, originalText);
                 isProcessing = false;
             }
@@ -728,4 +728,5 @@
     }
 
     console.log('Auth system loaded successfully');
+
 })();
