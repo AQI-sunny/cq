@@ -19,10 +19,16 @@
             font-family: Arial, sans-serif;
             overflow: hidden;
             position: relative;
-            /* 防止iOS橡皮筋效果 */
+            /* 防止iOS和安卓橡皮筋效果 */
             position: fixed;
             width: 100%;
             height: 100%;
+            /* 安卓特定优化 */
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         .background-text {
@@ -327,10 +333,22 @@
             user-select: none;
             border: 2px solid #b39700; /* 降低金色饱和度 */
             box-shadow: 0 0 8px rgba(179, 151, 0, 0.4); /* 降低金色饱和度 */
-            /* 添加Safari兼容性 */
+            /* 添加Safari和安卓兼容性 */
             -webkit-tap-highlight-color: transparent;
             -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
             cursor: pointer;
+            /* 安卓触摸反馈优化 */
+            touch-action: manipulation;
+        }
+
+        /* 触摸按钮激活状态 */
+        .touch-controls .up:active, .touch-controls .down:active, 
+        .touch-controls .left:active, .touch-controls .right:active {
+            background-color: rgba(255, 0, 0, 0.3);
+            transform: scale(0.95);
+            transition: transform 0.1s, background-color 0.1s;
         }
 
         .touch-controls .up {
@@ -358,6 +376,19 @@
             .touch-controls {
                 display: block;
             }
+            
+            /* 安卓设备特定优化 */
+            body {
+                /* 防止安卓上的橡皮筋效果 */
+                overscroll-behavior: none;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            #maze {
+                /* 确保迷宫在安卓上正确渲染 */
+                -webkit-transform: translateZ(0);
+                transform: translateZ(0);
+            }
         }
         
         /* iOS Safari特定优化 */
@@ -377,6 +408,22 @@
             #maze {
                 /* 确保迷宫在iOS上正确渲染 */
                 -webkit-transform: translateZ(0);
+            }
+        }
+        
+        /* 安卓Chrome特定优化 */
+        @media not all and (pointer: fine) {
+            /* 针对安卓设备的触摸优化 */
+            .touch-controls .up, .touch-controls .down, 
+            .touch-controls .left, .touch-controls .right {
+                min-height: 44px; /* 安卓触摸目标最小尺寸 */
+                min-width: 44px;
+            }
+            
+            /* 安卓设备上的字体渲染优化 */
+            body {
+                -webkit-font-smoothing: antialiased;
+                text-rendering: optimizeLegibility;
             }
         }
     </style>
@@ -420,6 +467,11 @@
         let gameActive = true;
         let chaserActive = false; // 控制追逐者是否激活
         let startPos = { x: 1, y: 1 }; // 起点位置
+
+        // 检测安卓设备
+        function isAndroid() {
+            return /Android/i.test(navigator.userAgent);
+        }
 
         // 生成迷宫
         class MazeDFS {
@@ -744,7 +796,7 @@
         document.querySelector('.touch-controls .left').addEventListener('click', () => movePlayer(-1, 0));
         document.querySelector('.touch-controls .right').addEventListener('click', () => movePlayer(1, 0));
         
-        // 添加触摸事件以防止iOS上的默认行为
+        // 添加触摸事件以防止iOS和安卓上的默认行为
         document.addEventListener('touchstart', function(e) {
             e.preventDefault();
         }, { passive: false });
@@ -752,6 +804,20 @@
         document.addEventListener('touchmove', function(e) {
             e.preventDefault();
         }, { passive: false });
+
+        // 安卓设备特定优化
+        if (isAndroid()) {
+            // 安卓设备上的额外优化
+            document.body.style.webkitFontSmoothing = 'antialiased';
+            document.body.style.textRendering = 'optimizeLegibility';
+            
+            // 安卓设备上的触摸目标优化
+            const touchButtons = document.querySelectorAll('.touch-controls .up, .touch-controls .down, .touch-controls .left, .touch-controls .right');
+            touchButtons.forEach(button => {
+                button.style.minHeight = '44px';
+                button.style.minWidth = '44px';
+            });
+        }
 
         // 初始化游戏
         initGame();
