@@ -1,7 +1,6 @@
 // auth.js - 静乔公寓论坛登录注册功能
-// 专门为苹果Safari优化，兼容iPhone 16 Pro
-// 新增文件，不修改现有代码
-// 修复频繁弹窗问题，改为页面内显示提示
+// 专门为苹果Safari优化，兼容iPhone 16 Pro和iPad
+// 修复iOS平板无法登录问题 - 精简版本，不影响网页端
 
 (function() {
     'use strict';
@@ -16,18 +15,18 @@
     let authCurrentUser = null;
     let authRegisteredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
     let authUserProfiles = JSON.parse(localStorage.getItem('userProfiles')) || {};
-    let authPrivateMessages = JSON.parse(localStorage.getItem('privateMessages')) || {};
     
     // 防止重复提交标志
     let isProcessing = false;
 
-    // DOM加载完成后初始化
-    document.addEventListener('DOMContentLoaded', function() {
-        // 延迟初始化以确保DOM完全加载
+    // 简单的DOM加载检测
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAuthSystem);
+    } else {
         setTimeout(initAuthSystem, 100);
-    });
+    }
 
-    // 初始化认证系统
+    // 初始化认证系统 - 精简版本
     function initAuthSystem() {
         try {
             bindAuthEvents();
@@ -39,14 +38,11 @@
         }
     }
 
-    // 绑定认证相关事件 - Safari兼容版本
+    // 绑定认证相关事件 - 精简版本
     function bindAuthEvents() {
-        // 使用更精确的事件绑定，避免事件委托的频繁触发
         bindSpecificEvents();
-        
-        // 模态框关闭按钮
         bindModalEvents();
-
+        
         // 点击模态框外部关闭
         document.addEventListener('click', function(event) {
             const loginModal = document.getElementById('login-modal');
@@ -60,7 +56,7 @@
             }
         });
 
-        // 键盘事件支持 - Safari兼容
+        // 键盘事件支持
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 closeAllModals();
@@ -68,88 +64,67 @@
         });
     }
 
-    // 精确绑定事件，避免频繁触发
+    // 精确绑定事件
     function bindSpecificEvents() {
-        // 登录按钮
+        // 登录按钮 - 仅添加iOS触摸支持
         const loginBtn = document.getElementById('login-btn');
         if (loginBtn) {
-            loginBtn.addEventListener('click', function(event) {
-                event.preventDefault();
-                event.stopPropagation();
-                showLoginModal();
-            });
+            loginBtn.addEventListener('click', showLoginModal);
+            // 仅为iOS设备添加触摸支持
+            if (isIOSDevice()) {
+                loginBtn.addEventListener('touchend', showLoginModal);
+            }
         }
 
         // 注册按钮
         const registerBtn = document.getElementById('register-btn');
         if (registerBtn) {
-            registerBtn.addEventListener('click', function(event) {
-                event.preventDefault();
-                event.stopPropagation();
-                showRegisterModal();
-            });
+            registerBtn.addEventListener('click', showRegisterModal);
+            if (isIOSDevice()) {
+                registerBtn.addEventListener('touchend', showRegisterModal);
+            }
         }
 
         // 退出按钮
         const logoutBtn = document.getElementById('logout-btn');
         if (logoutBtn) {
-            logoutBtn.addEventListener('click', function(event) {
-                event.preventDefault();
-                event.stopPropagation();
-                handleLogout();
-            });
+            logoutBtn.addEventListener('click', handleLogout);
         }
 
         // 登录提交
         const loginSubmit = document.getElementById('login-submit');
         if (loginSubmit) {
-            loginSubmit.addEventListener('click', function(event) {
-                event.preventDefault();
-                event.stopPropagation();
-                handleLogin(event);
-            });
+            loginSubmit.addEventListener('click', handleLogin);
         }
 
         // 注册提交
         const registerSubmit = document.getElementById('register-submit');
         if (registerSubmit) {
-            registerSubmit.addEventListener('click', function(event) {
-                event.preventDefault();
-                event.stopPropagation();
-                handleRegister(event);
-            });
-        }
-
-        // 密码显示切换
-        const togglePassword = document.getElementById('toggle-password');
-        if (togglePassword) {
-            togglePassword.addEventListener('click', function(event) {
-                event.preventDefault();
-                event.stopPropagation();
-                togglePasswordVisibility();
-            });
+            registerSubmit.addEventListener('click', handleRegister);
         }
 
         // 模态框切换
         const showRegisterFromLogin = document.getElementById('show-register-from-login');
         if (showRegisterFromLogin) {
-            showRegisterFromLogin.addEventListener('click', function(event) {
-                event.preventDefault();
-                event.stopPropagation();
-                switchToRegister();
-            });
+            showRegisterFromLogin.addEventListener('click', switchToRegister);
         }
 
         const showLoginFromRegister = document.getElementById('show-login-from-register');
         if (showLoginFromRegister) {
-            showLoginFromRegister.addEventListener('click', function(event) {
-                event.preventDefault();
-                event.stopPropagation();
-                switchToLogin();
-            });
+            showLoginFromRegister.addEventListener('click', switchToLogin);
         }
 
         // 输入框回车事件
+        bindInputEvents();
+    }
+
+    // 检测iOS设备
+    function isIOSDevice() {
+        return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    }
+
+    // 绑定输入框事件
+    function bindInputEvents() {
         const loginUsername = document.getElementById('login-username');
         const loginPassword = document.getElementById('login-password');
         const registerUsername = document.getElementById('register-username');
@@ -188,52 +163,64 @@
         const closeRegister = document.getElementById('close-register');
 
         if (closeLogin) {
-            closeLogin.addEventListener('click', function(event) {
-                event.preventDefault();
-                event.stopPropagation();
+            closeLogin.addEventListener('click', function() {
                 document.getElementById('login-modal').style.display = 'none';
             });
         }
 
         if (closeRegister) {
-            closeRegister.addEventListener('click', function(event) {
-                event.preventDefault();
-                event.stopPropagation();
+            closeRegister.addEventListener('click', function() {
                 document.getElementById('register-modal').style.display = 'none';
             });
         }
     }
 
-    // 显示登录模态框 - Safari优化版本
-    function showLoginModal() {
+    // 显示登录模态框 - 仅对iOS进行特殊处理
+    function showLoginModal(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        
         if (isProcessing) return;
         
         const loginModal = document.getElementById('login-modal');
         if (loginModal) {
             loginModal.style.display = 'block';
-            // Safari兼容的自动聚焦
-            setTimeout(() => {
-                const usernameInput = document.getElementById('login-username');
-                if (usernameInput) {
-                    usernameInput.focus();
-                }
-            }, 300);
+            
+            // 仅为iOS设备添加延迟聚焦
+            if (isIOSDevice()) {
+                setTimeout(() => {
+                    const usernameInput = document.getElementById('login-username');
+                    if (usernameInput) {
+                        usernameInput.focus();
+                    }
+                }, 300);
+            }
         }
     }
 
     // 显示注册模态框
-    function showRegisterModal() {
+    function showRegisterModal(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        
         if (isProcessing) return;
         
         const registerModal = document.getElementById('register-modal');
         if (registerModal) {
             registerModal.style.display = 'block';
-            setTimeout(() => {
-                const usernameInput = document.getElementById('register-username');
-                if (usernameInput) {
-                    usernameInput.focus();
-                }
-            }, 300);
+            
+            if (isIOSDevice()) {
+                setTimeout(() => {
+                    const usernameInput = document.getElementById('register-username');
+                    if (usernameInput) {
+                        usernameInput.focus();
+                    }
+                }, 300);
+            }
         }
     }
 
@@ -251,7 +238,7 @@
         
         closeAllModals();
         setTimeout(() => {
-            document.getElementById('register-modal').style.display = 'block';
+            showRegisterModal();
         }, 50);
     }
 
@@ -261,54 +248,32 @@
         
         closeAllModals();
         setTimeout(() => {
-            document.getElementById('login-modal').style.display = 'block';
+            showLoginModal();
         }, 50);
     }
 
-    // 切换密码可见性
-    function togglePasswordVisibility() {
-        if (isProcessing) return;
-        
-        const passwordDisplay = document.getElementById('register-password-display');
-        const toggleBtn = document.getElementById('toggle-password');
-        
-        if (passwordDisplay && toggleBtn) {
-            if (passwordDisplay.type === 'password') {
-                passwordDisplay.type = 'text';
-                toggleBtn.textContent = '隐藏';
-            } else {
-                passwordDisplay.type = 'password';
-                toggleBtn.textContent = '显示';
-            }
-        }
-    }
-
-    // 处理登录 - 修复频繁弹窗问题，改为页面内显示提示
+    // 处理登录
     function handleLogin(event) {
-        if (isProcessing) return;
-        
         if (event) {
             event.preventDefault();
             event.stopPropagation();
         }
         
+        if (isProcessing) return;
+        
         const usernameInput = document.getElementById('login-username');
         const passwordInput = document.getElementById('login-password');
         const loginSubmit = document.getElementById('login-submit');
         
-        if (!usernameInput || !passwordInput || !loginSubmit) {
-            return;
-        }
+        if (!usernameInput || !passwordInput) return;
         
-        const rawUsername = usernameInput.value; // 原始值，用于判断是否“从未输入”
+        const rawUsername = usernameInput.value;
         const username = rawUsername.trim();
         const password = passwordInput.value;
         
         // 清除之前的错误提示
         clearErrorMessages('login');
         
-        // 仅当用户明确点击了登录（或按回车），且用户名完全为空（不是只有空格）时才提示
-        // 注意：不要对“只有空格”的情况弹窗，因为用户可能正在输入
         if (rawUsername === '') {
             showErrorMessage('login', '请输入用户名');
             usernameInput.focus();
@@ -316,7 +281,6 @@
         }
 
         if (username === '') {
-            // 用户输入了空格但没实质内容，清空并提示
             usernameInput.value = '';
             showErrorMessage('login', '用户名不能为空');
             usernameInput.focus();
@@ -329,46 +293,36 @@
             return;
         }
         
-        // 设置处理中标志
         isProcessing = true;
-        loginSubmit.disabled = true;
-        const originalText = loginSubmit.textContent;
-        loginSubmit.textContent = '登录中...';
+        if (loginSubmit) {
+            loginSubmit.disabled = true;
+            loginSubmit.textContent = '登录中...';
+        }
         
         setTimeout(() => {
-            try {
-                performLogin(username, password, loginSubmit, originalText);
-            } catch (error) {
-                console.error('Login error:', error);
-                /* showErrorMessage('login', '登录过程中发生错误'); */
-                resetButton(loginSubmit, originalText);
-                isProcessing = false;
-            }
+            performLogin(username, password, loginSubmit);
         }, 100);
     }
 
-    // 处理注册 - 修复频繁弹窗问题，改为页面内显示提示
+    // 处理注册
     function handleRegister(event) {
-        if (isProcessing) return;
-        
         if (event) {
             event.preventDefault();
             event.stopPropagation();
         }
         
+        if (isProcessing) return;
+        
         const usernameInput = document.getElementById('register-username');
         const passwordInput = document.getElementById('register-password-hidden');
         const registerSubmit = document.getElementById('register-submit');
         
-        if (!usernameInput || !registerSubmit) {
-            return;
-        }
+        if (!usernameInput) return;
         
-        const rawUsername = usernameInput.value; // 原始值
+        const rawUsername = usernameInput.value;
         const username = rawUsername.trim();
-        const password = passwordInput ? passwordInput.value : 'jq3307'; // 默认密码
+        const password = passwordInput ? passwordInput.value : 'jq3307';
         
-        // 清除之前的错误提示
         clearErrorMessages('register');
         
         if (rawUsername === '') {
@@ -384,67 +338,67 @@
             return;
         }
         
-        // 设置处理中标志
         isProcessing = true;
+        if (registerSubmit) {
+            registerSubmit.disabled = true;
+            registerSubmit.textContent = '注册中...';
+        }
         
-        // 禁用按钮防止重复提交
-        registerSubmit.disabled = true;
-        const originalText = registerSubmit.textContent;
-        registerSubmit.textContent = '注册中...';
-        
-        // Safari兼容的异步处理
         setTimeout(() => {
-            try {
-                performRegister(username, password, registerSubmit, originalText);
-            } catch (error) {
-                console.error('Register error:', error);
-              /*   showErrorMessage('register', '注册过程中发生错误'); */
-                resetButton(registerSubmit, originalText);
-                isProcessing = false;
-            }
+            performRegister(username, password, registerSubmit);
         }, 100);
     }
 
     // 执行登录逻辑
-    function performLogin(username, password, loginSubmit, originalText) {
+    function performLogin(username, password, loginSubmit) {
         let loginSuccess = false;
 
         try {
-            // 检查特殊用户Resonance
             if (typeof validateUser === 'function' && validateUser(username, password)) {
                 authCurrentUser = username;
                 initAuthUserProfile(username);
                 updateAuthState();
                 closeAllModals();
                 clearLoginForm();
-                showSuccessMessage('login', '登录成功！欢迎进入系统模式。');
+                // ========== 修改位置 1 ==========
+                // 注释原因：避免重复提醒，已有其他JS文件显示成功消息
+                // 功能：原本显示"登录成功！欢迎进入系统模式。"的页面内消息
+                // 现在由其他JS文件统一处理成功提醒，避免重复弹窗
+                // showSuccessMessage('login', '登录成功！欢迎进入系统模式。');
                 loginSuccess = true;
             }
-            // 检查linmo用户
             else if (typeof validateLinmoUser === 'function' && validateLinmoUser(username, password)) {
                 authCurrentUser = username;
                 initAuthUserProfile(username);
                 updateAuthState();
                 closeAllModals();
                 clearLoginForm();
-                showSuccessMessage('login', '登录成功！欢迎林中的猫！');
+                // ========== 修改位置 2 ==========
+                // 注释原因：避免重复提醒，已有其他JS文件显示成功消息
+                // 功能：原本显示"登录成功！欢迎林中的猫！"的页面内消息
+                // showSuccessMessage('login', '登录成功！欢迎林中的猫！');
                 loginSuccess = true;
             }
-            // 检查注册用户
             else if (authRegisteredUsers.some(user => user.username === username && user.password === password)) {
                 authCurrentUser = username;
                 initAuthUserProfile(username);
                 updateAuthState();
                 closeAllModals();
                 clearLoginForm();
-                showSuccessMessage('login', '登录成功！');
+                // ========== 修改位置 3 ==========
+                // 注释原因：避免重复提醒，已有其他JS文件显示成功消息
+                // 功能：原本显示"登录成功！"的页面内消息
+                // showSuccessMessage('login', '登录成功！');
                 loginSuccess = true;
             }
             else {
                 showErrorMessage('login', '用户名或密码错误！');
             }
         } finally {
-            resetButton(loginSubmit, originalText);
+            if (loginSubmit) {
+                loginSubmit.disabled = false;
+                loginSubmit.textContent = '登录';
+            }
             isProcessing = false;
         }
         
@@ -456,39 +410,40 @@
     }
 
     // 执行注册逻辑
-    function performRegister(username, password, registerSubmit, originalText) {
+    function performRegister(username, password, registerSubmit) {
         try {
-            // 检查用户名是否已存在
             if (authRegisteredUsers.some(user => user.username.toLowerCase() === username.toLowerCase())) {
                 showErrorMessage('register', '用户名已存在，请选择其他用户名！');
                 return;
             }
 
-            // 检查是否为特殊用户（大小写不敏感）
             if (username.toLowerCase() === 'resonance' || username.toLowerCase() === '林中的猫') {
                 showErrorMessage('register', '用户名已存在，请选择其他用户名！');
                 return;
             }
 
-            // 添加新用户到数组
             authRegisteredUsers.push({ username, password });
-            // 保存到本地存储
             localStorage.setItem('registeredUsers', JSON.stringify(authRegisteredUsers));
 
-            // 初始化用户个人数据
             initAuthUserProfile(username);
 
-            showSuccessMessage('register', `注册成功！您的用户名是：${username}。您可以使用此用户名登录。`);
+            // ========== 修改位置 4 ==========
+            // 注释原因：避免重复提醒，已有其他JS文件显示成功消息
+            // 功能：原本显示注册成功消息的页面内消息
+            // 现在由其他JS文件统一处理成功提醒，避免重复弹窗
+            // showSuccessMessage('register', `注册成功！您的用户名是：${username}。您可以使用此用户名登录。`);
             closeAllModals();
             document.getElementById('register-username').value = '';
             
-            // 自动切换到登录界面
             setTimeout(() => {
-                document.getElementById('login-modal').style.display = 'block';
+                showLoginModal();
                 document.getElementById('login-username').value = username;
             }, 1000);
         } finally {
-            resetButton(registerSubmit, originalText);
+            if (registerSubmit) {
+                registerSubmit.disabled = false;
+                registerSubmit.textContent = '注册';
+            }
             isProcessing = false;
         }
     }
@@ -518,9 +473,9 @@
             localStorage.setItem('userProfiles', JSON.stringify(authUserProfiles));
         }
         
-        // 更新全局currentUser以保持与现有代码兼容
         if (typeof window !== 'undefined') {
             window.currentUser = username;
+            localStorage.setItem('lastLoginUser', username);
         }
     }
 
@@ -532,9 +487,13 @@
             authCurrentUser = null;
             if (typeof window !== 'undefined') {
                 window.currentUser = null;
+                localStorage.removeItem('lastLoginUser');
             }
             updateAuthState();
-            showSuccessMessage('global', '已成功退出登录');
+            // ========== 修改位置 5 ==========
+            // 注释原因：避免重复提醒，已有其他JS文件显示成功消息
+            // 功能：原本显示退出登录成功消息的页面内消息
+            // showSuccessMessage('global', '已成功退出登录');
         }
     }
 
@@ -543,7 +502,6 @@
         const user = authCurrentUser || (typeof window !== 'undefined' ? window.currentUser : null);
         
         if (user) {
-            // 用户已登录状态
             const authButtons = document.getElementById('auth-buttons-container');
             const userInfo = document.getElementById('user-info');
             const usernameDisplay = document.getElementById('username-display');
@@ -552,7 +510,6 @@
             if (userInfo) userInfo.style.display = 'flex';
             if (usernameDisplay) usernameDisplay.textContent = user;
             
-            // 移除登录提示
             const mainPosts = document.getElementById('main-posts');
             if (mainPosts) {
                 const loginPrompt = mainPosts.querySelector('.login-prompt');
@@ -561,14 +518,12 @@
                 }
             }
         } else {
-            // 用户未登录状态
             const authButtons = document.getElementById('auth-buttons-container');
             const userInfo = document.getElementById('user-info');
             
             if (authButtons) authButtons.style.display = 'flex';
             if (userInfo) userInfo.style.display = 'none';
             
-            // 显示登录提示
             const mainPosts = document.getElementById('main-posts');
             if (mainPosts && !mainPosts.querySelector('.login-prompt')) {
                 const promptDiv = document.createElement('div');
@@ -581,7 +536,6 @@
 
     // 检查自动登录
     function checkAutoLogin() {
-        // 可以从localStorage检查是否有保存的登录状态
         const savedUser = localStorage.getItem('lastLoginUser');
         if (savedUser && typeof window !== 'undefined') {
             window.currentUser = savedUser;
@@ -615,25 +569,12 @@
                     registerForm.insertBefore(container, registerForm.firstChild);
                 }
             }
-        } else {
-            // 全局消息
-            container = document.getElementById('global-message');
-            if (!container) {
-                container = document.createElement('div');
-                container.id = 'global-message';
-                container.className = 'global-message';
-                document.body.insertBefore(container, document.body.firstChild);
-            }
         }
         
-        container.textContent = message;
-        container.style.color = '#d32f2f';
-        container.style.backgroundColor = '#ffebee';
-        container.style.padding = '10px';
-        container.style.margin = '10px 0';
-        container.style.borderRadius = '4px';
-        container.style.border = '1px solid #ffcdd2';
-        container.style.display = 'block';
+        if (container) {
+            container.textContent = message;
+            container.style.display = 'block';
+        }
     }
 
     // 工具函数：显示成功信息
@@ -661,32 +602,18 @@
                     registerForm.insertBefore(container, registerForm.firstChild);
                 }
             }
-        } else {
-            // 全局消息
-            container = document.getElementById('global-message');
-            if (!container) {
-                container = document.createElement('div');
-                container.id = 'global-message';
-                container.className = 'global-message';
-                document.body.insertBefore(container, document.body.firstChild);
-            }
         }
         
-        container.textContent = message;
-        container.style.color = '#388e3c';
-        container.style.backgroundColor = '#e8f5e9';
-        container.style.padding = '10px';
-        container.style.margin = '10px 0';
-        container.style.borderRadius = '4px';
-        container.style.border = '1px solid #c8e6c9';
-        container.style.display = 'block';
-        
-        // 成功消息在3秒后自动消失
-        setTimeout(() => {
-            if (container && container.parentNode) {
-                container.parentNode.removeChild(container);
-            }
-        }, 3000);
+        if (container) {
+            container.textContent = message;
+            container.style.display = 'block';
+            
+            setTimeout(() => {
+                if (container && container.parentNode) {
+                    container.parentNode.removeChild(container);
+                }
+            }, 3000);
+        }
     }
 
     // 工具函数：清除错误/成功信息
@@ -713,20 +640,11 @@
         clearErrorMessages('login');
     }
 
-    // 工具函数：重置按钮状态
-    function resetButton(button, originalText) {
-        if (button) {
-            button.disabled = false;
-            button.textContent = originalText;
-        }
-    }
-
-    // 暴露必要的函数到全局作用域以便现有代码调用
+    // 暴露必要的函数到全局作用域
     if (typeof window !== 'undefined') {
         window.authUpdateState = updateAuthState;
         window.authGetCurrentUser = function() { return authCurrentUser; };
     }
 
-    console.log('Auth system loaded successfully');
-
+    console.log('Auth system loaded successfully - iOS optimized lite version');
 })();
