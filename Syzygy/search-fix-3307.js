@@ -1,353 +1,357 @@
-// search-fix-3307-final.js - 修复3307搜索bug和iOS兼容性（最终版）
 (function() {
     'use strict';
     
-    // 修复搜索功能 - 专门处理3307搜索
-    function fixSearch() {
-        const searchInput = document.getElementById('search-input');
-        const searchBtn = document.getElementById('search-btn');
+    // ====== 配置常量 ======
+    const BLOCK_KEYWORDS = ['3307'];
+    // 唯一允许显示的帖子配置
+    const ALLOWED_POST = {
+        title: "[招领] 3307住户，你的黑色笔记本落下了",
+        author: "林中的猫", 
+        status: "未认领",
+        content: "在33楼楼梯间消防箱旁发现了这个黑色笔记本。里面夹着一张外卖订单，显示是我们公寓的3307住户，我是你的邻居，本想直接敲门归还的。但想了想觉得有些冒昧，故而在线确认一番，请问是3307住户的笔记本吗？\n![黑色笔记本](https://sylvie-seven-cq.top/gallery/bjb.jpg)",
+        date: "2025-9-7",
+        section: "失物招领"
+    };
+    
+    // ====== 核心拦截函数 ======
+    
+    /**
+     * 完全拦截3307搜索 - 主函数
+     * 修改逻辑：在搜索执行的各个阶段拦截3307关键词，不显示搜索结果
+     */
+    function completelyBlock3307Search() {
+        // 方法1：拦截搜索输入事件（第一层防护）
+        interceptSearchInputEvents();
         
-        if (!searchInput || !searchBtn) {
-            console.warn('搜索元素未找到');
-            return;
+        // 方法2：拦截搜索按钮点击（第二层防护）
+        interceptSearchButtonClicks();
+        
+        // 方法3：重写全局搜索函数（第三层防护）
+        overrideGlobalSearchFunction();
+        
+        // 方法4：DOM结果监控（最终防护）
+        monitorSearchResults();
+        
+        // 方法5：定时检查确保拦截生效
+        setupPeriodicCheck();
+    }
+    
+    /**
+     * 拦截搜索输入事件 - 修改键盘输入处理
+     * 修改位置：搜索输入框的keydown, keypress, input事件
+     */
+    function interceptSearchInputEvents() {
+        function setupInputInterception() {
+            const searchInput = document.getElementById('search-input');
+            if (!searchInput) {
+                setTimeout(setupInputInterception, 300);
+                return;
+            }
+            
+            // 保存原始事件处理程序
+            const originalKeydown = searchInput.onkeydown;
+            const originalKeypress = searchInput.onkeypress;
+            const originalInput = searchInput.oninput;
+            
+            // 拦截键盘按下事件（包括回车）
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    const query = this.value.trim();
+                    if (shouldBlockSearch(query)) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        clearSearchResults();
+                        return false;
+                    }
+                }
+                
+                // 其他按键正常处理
+                if (originalKeydown) {
+                    return originalKeydown.call(this, e);
+                }
+            }, true);
+            
+            // 拦截键盘按压事件
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const query = this.value.trim();
+                    if (shouldBlockSearch(query)) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    }
+                }
+                
+                if (originalKeypress) {
+                    return originalKeypress.call(this, e);
+                }
+            }, true);
         }
         
-        // 保存原始搜索逻辑
-        const originalSearchHandler = searchBtn.onclick;
-        const originalKeypress = searchInput.onkeypress;
-        
-        // 重写搜索按钮点击事件
-        searchBtn.onclick = function(e) {
-            const query = searchInput.value.trim();
-            
-            if (query === '3307') {
-                // 特殊处理3307搜索 - 修复bug：不显示隐藏帖子
-                performFilteredSearch(query);
-                if (e) e.preventDefault();
-                return false;
+        setupInputInterception();
+    }
+    
+    /**
+     * 拦截搜索按钮点击 - 修改点击事件处理
+     * 修改位置：搜索按钮的click事件
+     */
+    function interceptSearchButtonClicks() {
+        function setupButtonInterception() {
+            const searchBtn = document.getElementById('search-btn');
+            if (!searchBtn) {
+                setTimeout(setupButtonInterception, 300);
+                return;
             }
             
-            // 其他搜索正常进行
-            if (originalSearchHandler) {
-                return originalSearchHandler.call(this, e);
-            }
-            return true;
-        };
-        
-        // 重写回车搜索
-        searchInput.onkeypress = function(e) {
-            if (e.key === 'Enter') {
-                const query = this.value.trim();
+            // 保存原始点击处理程序
+            const originalClick = searchBtn.onclick;
+            
+            // 重写点击事件
+            searchBtn.addEventListener('click', function(e) {
+                const searchInput = document.getElementById('search-input');
+                const query = searchInput ? searchInput.value.trim() : '';
                 
-                if (query === '3307') {
-                    performFilteredSearch(query);
+                if (shouldBlockSearch(query)) {
                     e.preventDefault();
+                    e.stopPropagation();
+                    clearSearchResults();
                     return false;
                 }
                 
                 // 其他搜索正常进行
-                if (originalKeypress) {
-                    return originalKeypress.call(this, e);
+                if (originalClick) {
+                    return originalClick.call(this, e);
                 }
-            }
-            return true;
-        };
-        
-        function performFilteredSearch(query) {
-            console.log('执行过滤搜索: 3307 (仅显示公开帖子，不显示隐藏帖子)');
-            filterSearchResults(query);
+            }, true);
         }
         
-        // 修复的核心函数 - 确保不显示隐藏帖子
-        function filterSearchResults(query) {
-            try {
-                // 获取所有公开帖子数据（不包含隐藏帖子）
-                const allPosts = getAllPublicPosts();
+        setupButtonInterception();
+    }
+    
+    /**
+     * 重写全局搜索函数 - 修改performSearch函数调用
+     * 修改位置：重写window.performSearch函数
+     */
+    function overrideGlobalSearchFunction() {
+        // 保存原始搜索函数
+        const originalPerformSearch = window.performSearch;
+        
+        if (typeof originalPerformSearch === 'function') {
+            // 重写全局搜索函数
+            window.performSearch = function() {
+                const searchInput = document.getElementById('search-input');
+                const query = searchInput ? searchInput.value.trim() : '';
                 
-                // 过滤包含3307关键词的帖子
-                const filteredPosts = allPosts.filter(post => {
-                    const searchableText = (post.title + ' ' + post.content + ' ' + (post.author || '') + ' ' + (post.searchKeyword || '')).toLowerCase();
-                    return searchableText.includes(query.toLowerCase());
-                });
-                
-                // 显示过滤后的结果
-                displayFilteredResults(filteredPosts, query);
-            } catch (error) {
-                console.error('搜索过滤出错:', error);
-                // 降级处理
-                alert('搜索完成，已过滤相关结果');
-            }
-        }
-        
-        // 关键修复：只获取公开帖子，不包含隐藏帖子
-        function getAllPublicPosts() {
-            let allPosts = [];
-            
-            // 只从公开的sections获取帖子
-            if (window.sections) {
-                window.sections.forEach(section => {
-                    if (section.posts && Array.isArray(section.posts)) {
-                        section.posts.forEach(post => {
-                            allPosts.push({
-                                ...post, 
-                                section: section.title,
-                                isPublic: true // 标记为公开帖子
-                            });
-                        });
-                    }
-                });
-            }
-            
-            // 关键修复：不包含hiddenPosts，确保搜索3307时不显示隐藏内容
-            console.log('获取到的公开帖子数量:', allPosts.length);
-            return allPosts;
-        }
-        
-        function displayFilteredResults(posts, query) {
-            const main = document.getElementById('main-posts');
-            if (!main) {
-                console.warn('主内容区域未找到');
-                return;
-            }
-            
-            // 清空现有内容
-            while (main.firstChild) {
-                main.removeChild(main.firstChild);
-            }
-            
-            // 显示结果标题
-            const resultTitle = document.createElement('h2');
-            resultTitle.textContent = `搜索"${query}"的结果（${posts.length}条）`;
-            resultTitle.style.marginBottom = '20px';
-            main.appendChild(resultTitle);
-            
-            // 显示匹配的帖子
-            if (posts.length === 0) {
-                const emptyMsg = document.createElement('div');
-                emptyMsg.className = 'post-card';
-                emptyMsg.textContent = '未找到匹配的帖子。';
-                main.appendChild(emptyMsg);
-                return;
-            }
-            
-            posts.forEach(post => {
-                const card = createPostCard(post);
-                main.appendChild(card);
-            });
-            
-            // 额外过滤：隐藏包含3307的用户个人主页
-            filterUserProfiles();
-        }
-        
-        function createPostCard(post) {
-            const card = document.createElement('div');
-            card.className = 'post-card';
-            
-            let metaText = `发布者：${post.author || "匿名用户"} • ${post.date}`;
-            if (post.section === "邻里交流" && post.popularity !== undefined) {
-                metaText += ` • 热度：<span class="status-热度">${post.popularity}</span>`;
-            } else if (post.status) {
-                metaText += ` • 状态：<span class="status-${post.status}">${post.status}</span>`;
-            }
-            
-            card.innerHTML = `<a href="#">${post.title}</a><div class="post-meta">${metaText}</div>`;
-            
-            // 绑定点击事件
-            card.onclick = () => {
-                if (typeof window.showModal === 'function') {
-                    window.showModal(post, post.section || '未知版块');
+                if (shouldBlockSearch(query)) {
+                    clearSearchResults();
+                    return;
                 }
+                
+                // 调用原始搜索函数
+                return originalPerformSearch.apply(this, arguments);
             };
             
-            return card;
-        }
-        
-        function filterUserProfiles() {
-            try {
-                // 获取所有用户（仅用于过滤显示，不涉及权限）
-                const allUsers = [
-                    ...(window.registeredUsers || []).map(u => u.username),
-                    'Resonance',
-                    '林中的猫'
-                ];
-                
-                // 过滤包含3307的用户名
-                const usersWith3307 = allUsers.filter(username => 
-                    username && username.toLowerCase().includes('3307')
-                );
-                
-                // 如果有包含3307的用户，从搜索结果中移除他们的个人主页
-                if (usersWith3307.length > 0) {
-                    const userCards = document.querySelectorAll('.post-card');
-                    userCards.forEach(card => {
-                        const authorMatch = card.textContent.match(/发布者：(.+?)•/);
-                        if (authorMatch) {
-                            const author = authorMatch[1].trim();
-                            if (usersWith3307.includes(author)) {
-                                card.style.display = 'none';
-                            }
-                        }
-                    });
-                }
-            } catch (error) {
-                console.error('过滤用户主页出错:', error);
-            }
+            // 保持函数属性
+            Object.keys(originalPerformSearch).forEach(key => {
+                window.performSearch[key] = originalPerformSearch[key];
+            });
         }
     }
     
-    // iOS/iPad兼容性修复
-    function fixIOSCompatibility() {
-        // 修复iOS输入框缩放
-        let viewport = document.querySelector('meta[name="viewport"]');
-        if (!viewport) {
-            viewport = document.createElement('meta');
-            viewport.name = 'viewport';
-            viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
-            document.head.appendChild(viewport);
-        } else {
-            viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
-        }
+    /**
+     * 监控搜索结果 - 修改DOM显示内容
+     * 修改位置：监控main-posts区域的内容变化
+     */
+    function monitorSearchResults() {
+        let observer;
         
-        // 修复搜索框iOS样式
-        const searchInput = document.getElementById('search-input');
-        if (searchInput) {
-            // 防止iOS缩放
-            searchInput.addEventListener('focus', function() {
-                this.style.fontSize = '16px'; // 防止iOS缩放
-            });
-            searchInput.addEventListener('blur', function() {
-                this.style.fontSize = '';
-            });
-            
-            // 设置iOS虚拟键盘属性
-            searchInput.setAttribute('autocorrect', 'off');
-            searchInput.setAttribute('autocapitalize', 'none');
-            searchInput.setAttribute('spellcheck', 'false');
-        }
-        
-        // 修复按钮点击效果
-        const buttons = document.querySelectorAll('button, .nav-links a, .post-card');
-        buttons.forEach(btn => {
-            btn.style.cursor = 'pointer';
-            // 添加触摸反馈
-            btn.addEventListener('touchstart', function() {
-                this.style.opacity = '0.7';
-                this.style.transition = 'opacity 0.1s';
-            });
-            btn.addEventListener('touchend', function() {
-                this.style.opacity = '1';
-            });
-            btn.addEventListener('touchcancel', function() {
-                this.style.opacity = '1';
-            });
-        });
-        
-        // iOS弹性滚动修复
-        document.body.style.webkitOverflowScrolling = 'touch';
-        
-        // 修复iOS点击延迟
-        if ('addEventListener' in document) {
-            document.addEventListener('DOMContentLoaded', function() {
-                FastClick.attach(document.body);
-            }, false);
-        }
-    }
-    
-    // 增强导航兼容性
-    function enhanceNavigation() {
-        const navLinks = document.querySelectorAll('.nav-links a');
-        
-        navLinks.forEach(link => {
-            // 确保所有导航链接都有正确的触摸反馈
-            link.addEventListener('touchstart', function() {
-                this.style.backgroundColor = 'rgba(0,0,0,0.1)';
-                this.style.transition = 'background-color 0.2s';
-            });
-            link.addEventListener('touchend', function() {
-                this.style.backgroundColor = '';
-            });
-            link.addEventListener('touchcancel', function() {
-                this.style.backgroundColor = '';
-            });
-        });
-    }
-    
-    // 错误处理
-    function addErrorHandling() {
-        window.addEventListener('error', function(e) {
-            console.error('脚本错误:', e.error);
-        });
-        
-        // 全局Promise错误处理
-        window.addEventListener('unhandledrejection', function(e) {
-            console.error('Promise错误:', e.reason);
-        });
-        
-        // 搜索功能错误处理
-        const originalConsoleError = console.error;
-        console.error = function(...args) {
-            if (args[0] && typeof args[0] === 'string' && args[0].includes('search')) {
-                console.warn('搜索相关错误已捕获:', args);
+        function setupDOMObserver() {
+            const mainPosts = document.getElementById('main-posts');
+            if (!mainPosts) {
+                setTimeout(setupDOMObserver, 500);
                 return;
             }
-            originalConsoleError.apply(console, args);
-        };
-    }
-    
-    // 快速点击库（简化版）用于解决iOS点击延迟
-    const FastClick = {
-        attach: function(element) {
-            element.addEventListener('touchstart', this.onTouchStart, false);
-            element.addEventListener('touchmove', this.onTouchMove, false);
-            element.addEventListener('touchend', this.onTouchEnd, false);
-            element.addEventListener('touchcancel', this.onTouchCancel, false);
-        },
+            
+            // 创建MutationObserver监控DOM变化
+            observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList') {
+                        checkAndClear3307Results();
+                    }
+                });
+            });
+            
+            // 开始观察
+            observer.observe(mainPosts, {
+                childList: true,
+                subtree: true
+            });
+        }
         
-        onTouchStart: function(event) {
-            // 简单的触摸开始处理
-        },
-        
-        onTouchMove: function(event) {
-            // 触摸移动处理
-        },
-        
-        onTouchEnd: function(event) {
-            // 立即触发点击事件，减少延迟
-            const target = event.target;
-            if (target && target.click) {
-                target.click();
+        function checkAndClear3307Results() {
+            const searchInput = document.getElementById('search-input');
+            const currentQuery = searchInput ? searchInput.value.trim() : '';
+            
+            // 如果当前搜索包含3307，清空结果
+            if (shouldBlockSearch(currentQuery)) {
+                const mainPosts = document.getElementById('main-posts');
+                if (mainPosts) {
+                    const resultTitles = mainPosts.querySelectorAll('h2');
+                    let has3307Results = false;
+                    
+                    resultTitles.forEach(title => {
+                        if (title.textContent.includes('3307') || title.textContent.includes('搜索')) {
+                            has3307Results = true;
+                        }
+                    });
+                    
+                    if (has3307Results) {
+                        clearSearchResults();
+                    }
+                }
             }
-        },
+        }
         
-        onTouchCancel: function(event) {
-            // 触摸取消处理
-        }
-    };
+        setupDOMObserver();
+    }
     
-    // 初始化所有修复
-    function init() {
+    /**
+     * 清空搜索结果 - 修改结果显示
+     * 修改位置：直接操作main-posts区域清空内容
+     */
+    function clearSearchResults() {
+        const main = document.getElementById('main-posts');
+        if (!main) {
+            return;
+        }
+        
+        // 清空现有内容
+        while (main.firstChild) {
+            main.removeChild(main.firstChild);
+        }
+        
+        // 可选：显示无结果的提示
+        const noResults = document.createElement('div');
+        noResults.style.textAlign = 'center';
+        noResults.style.padding = '40px';
+        noResults.style.color = '#666';
+        noResults.textContent = '未找到相关结果';
+        main.appendChild(noResults);
+    }
+    
+    /**
+     * 设置定期检查 - 修改持续监控机制
+     */
+    function setupPeriodicCheck() {
+        // 每2秒检查一次确保拦截生效
+        setInterval(() => {
+            const searchInput = document.getElementById('search-input');
+            if (searchInput && shouldBlockSearch(searchInput.value.trim())) {
+                const main = document.getElementById('main-posts');
+                if (main) {
+                    const hasContent = main.children.length > 0;
+                    if (hasContent) {
+                        clearSearchResults();
+                    }
+                }
+            }
+        }, 2000);
+    }
+    
+    /**
+     * 检查是否应该阻止搜索 - 修改关键词检测逻辑
+     */
+    function shouldBlockSearch(query) {
+        return BLOCK_KEYWORDS.some(keyword => 
+            query === keyword || query.includes(keyword)
+        );
+    }
+    
+    // ====== 兼容性修复 ======
+    
+    /**
+     * 修复跨浏览器兼容性 - 修改事件处理兼容性
+     */
+    function fixCrossBrowserCompatibility() {
+        // 确保MutationObserver在所有浏览器中可用
+        if (!window.MutationObserver) {
+            window.MutationObserver = window.WebKitMutationObserver || window.MozMutationObserver;
+        }
+        
+        // 添加触摸事件支持（移动设备）
+        document.addEventListener('touchstart', function() {}, { passive: true });
+        
+        // 修复iOS Safari的兼容性
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+            // iOS特定修复
+            const style = document.createElement('style');
+            style.textContent = `
+                .post-card {
+                    -webkit-tap-highlight-color: transparent;
+                    -webkit-touch-callout: none;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // 修复Android设备兼容性
+        if (/Android/.test(navigator.userAgent)) {
+            document.addEventListener('touchstart', function() {}, false);
+        }
+    }
+    
+    /**
+     * 错误处理 - 修改错误处理机制
+     */
+    function addRobustErrorHandling() {
+        window.addEventListener('error', function(e) {
+            if (e.message && e.message.includes('3307')) {
+                return true; // 阻止错误冒泡
+            }
+        });
+        
+        // Promise错误处理
+        window.addEventListener('unhandledrejection', function(e) {
+            if (e.reason && e.reason.toString().includes('3307')) {
+                e.preventDefault();
+            }
+        });
+    }
+    
+    // ====== 初始化函数 ======
+    
+    /**
+     * 初始化精确拦截系统
+     */
+    function initPreciseBlockSystem() {
         try {
-            // 延迟执行以确保页面完全加载
+            // 修复兼容性
+            fixCrossBrowserCompatibility();
+            
+            // 设置错误处理
+            addRobustErrorHandling();
+            
+            // 延迟启动以确保页面加载完成
             setTimeout(() => {
-                fixSearch();
-                fixIOSCompatibility();
-                enhanceNavigation();
-                addErrorHandling();
-                
-                console.log('✅ 3307搜索修复和iOS兼容性增强已成功加载');
-                console.log('🔍 搜索功能已修复：搜索3307将不会显示隐藏帖子');
-                console.log('📱 iOS/iPad兼容性已优化');
-            }, 100);
+                completelyBlock3307Search();
+            }, 1000);
+            
         } catch (error) {
-            console.error('初始化失败:', error);
+            // 降级方案：直接清空结果
+            setTimeout(clearSearchResults, 2000);
         }
     }
     
-    // 页面加载后执行
+    // ====== 执行初始化 ======
+    
+    // 页面加载后立即执行
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', initPreciseBlockSystem);
     } else {
-        init();
+        initPreciseBlockSystem();
     }
+    
+    // 确保在window.load时也执行
+    window.addEventListener('load', initPreciseBlockSystem);
     
 })();
