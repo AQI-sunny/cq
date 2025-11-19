@@ -3,87 +3,128 @@
     
     // ====== 配置常量 ======
     const BLOCK_KEYWORDS = ['3307'];
-    // 唯一允许显示的帖子配置
-    const ALLOWED_POST = {
-        title: "[招领] 3307住户，你的黑色笔记本落下了",
-        author: "林中的猫", 
-        status: "未认领",
-        content: "在33楼楼梯间消防箱旁发现了这个黑色笔记本。里面夹着一张外卖订单，显示是我们公寓的3307住户，我是你的邻居，本想直接敲门归还的。但想了想觉得有些冒昧，故而在线确认一番，请问是3307住户的笔记本吗？\n![黑色笔记本](https://sylvie-seven-cq.top/gallery/bjb.jpg)",
-        date: "2025-9-7",
-        section: "失物招领"
-    };
     
-    // ====== 核心拦截函数 ======
+    // ====== 修复后的核心拦截函数 ======
     
     /**
-     * 完全拦截3307搜索 - 主函数
-     * 修改逻辑：在搜索执行的各个阶段拦截3307关键词，不显示搜索结果
+     * 精确拦截3307搜索 - 修复版
+     * 只拦截搜索功能，不影响其他页面元素
      */
-    function completelyBlock3307Search() {
-        // 方法1：拦截搜索输入事件（第一层防护）
-        interceptSearchInputEvents();
+    function preciseBlock3307Search() {
+        // 方法1：温和的搜索输入拦截
+        interceptSearchInputGentle();
         
-        // 方法2：拦截搜索按钮点击（第二层防护）
-        interceptSearchButtonClicks();
+        // 方法2：精确的搜索按钮拦截
+        interceptSearchButtonPrecise();
         
-        // 方法3：重写全局搜索函数（第三层防护）
-        overrideGlobalSearchFunction();
+        // 方法3：安全的重写搜索函数
+        overrideSearchFunctionSafely();
         
-        // 方法4：DOM结果监控（最终防护）
-        monitorSearchResults();
+        // 方法4：有限的结果监控（不再监控整个DOM）
+        monitorSearchResultsSafely();
         
-        // 方法5：定时检查确保拦截生效
-        setupPeriodicCheck();
+        // 新增：保护系统日志链接
+        protectSyslogLink();
     }
     
     /**
-     * 拦截搜索输入事件 - 修改键盘输入处理
-     * 修改位置：搜索输入框的keydown, keypress, input事件
+     * 保护系统日志链接 - 新增功能
      */
-    function interceptSearchInputEvents() {
+    function protectSyslogLink() {
+        // 立即检查系统日志链接是否存在
+        setTimeout(() => {
+            if (!document.getElementById('syslog-link')) {
+                restoreSyslogLink();
+            }
+        }, 1000);
+        
+        // 定期检查保护
+        setInterval(() => {
+            const syslogLink = document.getElementById('syslog-link');
+            if (!syslogLink) {
+                console.warn('系统日志链接丢失，正在恢复...');
+                restoreSyslogLink();
+            }
+        }, 3000);
+    }
+    
+    /**
+     * 恢复系统日志链接 - 新增紧急恢复功能
+     */
+    function restoreSyslogLink() {
+        
+        
+        // 查找可能的位置来重新插入系统日志链接
+        const header = document.querySelector('header, nav, .header, .navbar');
+        const mainNav = document.querySelector('.main-nav, .navigation, nav');
+        const body = document.body;
+        
+        let container = null;
+        
+        // 按优先级选择插入位置
+        if (mainNav) {
+            container = mainNav;
+        } else if (header) {
+            container = header;
+        } else {
+            container = body;
+        }
+        
+        if (container) {
+            const syslogLink = document.createElement('a');
+            syslogLink.href = 'xtrz.html';
+            syslogLink.className = 'syslog-link';
+            syslogLink.id = 'syslog-link';
+            syslogLink.textContent = '系统日志';
+            syslogLink.style.cssText = `
+                display: inline-block;
+                padding: 8px 16px;
+                margin: 10px;
+                background: #007bff;
+                color: white;
+                text-decoration: none;
+                border-radius: 4px;
+                font-size: 14px;
+                font-family: system-ui, -apple-system, sans-serif;
+            `;
+            
+            // 如果是body，插入到最前面
+            if (container === body) {
+                body.insertBefore(syslogLink, body.firstChild);
+            } else {
+                container.appendChild(syslogLink);
+            }
+            
+            
+            
+            // 添加点击保护
+            syslogLink.addEventListener('click', function(e) {
+                e.stopPropagation();
+            }, true);
+        }
+    }
+    
+    /**
+     * 温和的搜索输入拦截 - 修复版
+     */
+    function interceptSearchInputGentle() {
         function setupInputInterception() {
             const searchInput = document.getElementById('search-input');
             if (!searchInput) {
-                setTimeout(setupInputInterception, 300);
+                setTimeout(setupInputInterception, 500);
                 return;
             }
             
-            // 保存原始事件处理程序
-            const originalKeydown = searchInput.onkeydown;
-            const originalKeypress = searchInput.onkeypress;
-            const originalInput = searchInput.oninput;
-            
-            // 拦截键盘按下事件（包括回车）
+            // 只拦截回车键的搜索
             searchInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     const query = this.value.trim();
                     if (shouldBlockSearch(query)) {
                         e.preventDefault();
-                        e.stopPropagation();
-                        clearSearchResults();
+                        e.stopImmediatePropagation();
+                        showBlockedMessage();
                         return false;
                     }
-                }
-                
-                // 其他按键正常处理
-                if (originalKeydown) {
-                    return originalKeydown.call(this, e);
-                }
-            }, true);
-            
-            // 拦截键盘按压事件
-            searchInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    const query = this.value.trim();
-                    if (shouldBlockSearch(query)) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        return false;
-                    }
-                }
-                
-                if (originalKeypress) {
-                    return originalKeypress.call(this, e);
                 }
             }, true);
         }
@@ -92,35 +133,25 @@
     }
     
     /**
-     * 拦截搜索按钮点击 - 修改点击事件处理
-     * 修改位置：搜索按钮的click事件
+     * 精确的搜索按钮拦截 - 修复版
      */
-    function interceptSearchButtonClicks() {
+    function interceptSearchButtonPrecise() {
         function setupButtonInterception() {
             const searchBtn = document.getElementById('search-btn');
             if (!searchBtn) {
-                setTimeout(setupButtonInterception, 300);
+                setTimeout(setupButtonInterception, 500);
                 return;
             }
             
-            // 保存原始点击处理程序
-            const originalClick = searchBtn.onclick;
-            
-            // 重写点击事件
             searchBtn.addEventListener('click', function(e) {
                 const searchInput = document.getElementById('search-input');
                 const query = searchInput ? searchInput.value.trim() : '';
                 
                 if (shouldBlockSearch(query)) {
                     e.preventDefault();
-                    e.stopPropagation();
-                    clearSearchResults();
+                    e.stopImmediatePropagation();
+                    showBlockedMessage();
                     return false;
-                }
-                
-                // 其他搜索正常进行
-                if (originalClick) {
-                    return originalClick.call(this, e);
                 }
             }, true);
         }
@@ -129,25 +160,21 @@
     }
     
     /**
-     * 重写全局搜索函数 - 修改performSearch函数调用
-     * 修改位置：重写window.performSearch函数
+     * 安全的重写搜索函数 - 修复版
      */
-    function overrideGlobalSearchFunction() {
-        // 保存原始搜索函数
-        const originalPerformSearch = window.performSearch;
-        
-        if (typeof originalPerformSearch === 'function') {
-            // 重写全局搜索函数
+    function overrideSearchFunctionSafely() {
+        if (typeof window.performSearch === 'function') {
+            const originalPerformSearch = window.performSearch;
+            
             window.performSearch = function() {
                 const searchInput = document.getElementById('search-input');
                 const query = searchInput ? searchInput.value.trim() : '';
                 
                 if (shouldBlockSearch(query)) {
-                    clearSearchResults();
+                    showBlockedMessage();
                     return;
                 }
                 
-                // 调用原始搜索函数
                 return originalPerformSearch.apply(this, arguments);
             };
             
@@ -159,107 +186,144 @@
     }
     
     /**
-     * 监控搜索结果 - 修改DOM显示内容
-     * 修改位置：监控main-posts区域的内容变化
+     * 安全的结果监控 - 修复版
+     * 不再使用MutationObserver监控整个DOM，避免影响其他元素
      */
-    function monitorSearchResults() {
-        let observer;
+    function monitorSearchResultsSafely() {
+        // 只在搜索执行后检查一次，而不是持续监控
+        let lastSearchQuery = '';
         
-        function setupDOMObserver() {
-            const mainPosts = document.getElementById('main-posts');
-            if (!mainPosts) {
-                setTimeout(setupDOMObserver, 500);
-                return;
-            }
-            
-            // 创建MutationObserver监控DOM变化
-            observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    if (mutation.type === 'childList') {
-                        checkAndClear3307Results();
-                    }
-                });
-            });
-            
-            // 开始观察
-            observer.observe(mainPosts, {
-                childList: true,
-                subtree: true
-            });
-        }
-        
-        function checkAndClear3307Results() {
+        function checkAfterSearch() {
             const searchInput = document.getElementById('search-input');
             const currentQuery = searchInput ? searchInput.value.trim() : '';
             
-            // 如果当前搜索包含3307，清空结果
-            if (shouldBlockSearch(currentQuery)) {
+            // 只有当查询变化且包含3307时才处理
+            if (currentQuery !== lastSearchQuery && shouldBlockSearch(currentQuery)) {
                 const mainPosts = document.getElementById('main-posts');
                 if (mainPosts) {
-                    const resultTitles = mainPosts.querySelectorAll('h2');
-                    let has3307Results = false;
+                    // 只检查是否有搜索结果标题，不删除其他内容
+                    const resultTitles = mainPosts.querySelectorAll('h2, h3, .post-title');
+                    let hasSearchResults = false;
                     
                     resultTitles.forEach(title => {
-                        if (title.textContent.includes('3307') || title.textContent.includes('搜索')) {
-                            has3307Results = true;
+                        const text = title.textContent || '';
+                        if (text.includes('搜索') || 
+                            text.includes('结果') ||
+                            (text.includes('3307') && !text.includes('系统日志'))) {
+                            hasSearchResults = true;
                         }
                     });
                     
-                    if (has3307Results) {
-                        clearSearchResults();
+                    if (hasSearchResults) {
+                        clearOnlySearchResults();
                     }
                 }
             }
+            
+            lastSearchQuery = currentQuery;
         }
         
-        setupDOMObserver();
+        // 温和的检查，每5秒一次（原来是2秒）
+        setInterval(checkAfterSearch, 5000);
     }
     
     /**
-     * 清空搜索结果 - 修改结果显示
-     * 修改位置：直接操作main-posts区域清空内容
+     * 只清空搜索结果，保留其他内容 - 修复版
      */
-    function clearSearchResults() {
+    function clearOnlySearchResults() {
         const main = document.getElementById('main-posts');
-        if (!main) {
-            return;
+        if (!main) return;
+        
+        // 紧急修复：保护系统日志链接
+        const syslogLink = document.getElementById('syslog-link');
+        if (!syslogLink) {
+            console.warn('系统日志链接不见了！正在恢复...');
+            restoreSyslogLink();
         }
         
-        // 清空现有内容
-        while (main.firstChild) {
-            main.removeChild(main.firstChild);
-        }
+        // 只移除看起来像搜索结果的元素，保留其他内容
+        const searchResults = main.querySelectorAll(
+            'div.post-card, div.search-result, h2, h3, .post-item'
+        );
         
-        // 可选：显示无结果的提示
-        const noResults = document.createElement('div');
-        noResults.style.textAlign = 'center';
-        noResults.style.padding = '40px';
-        noResults.style.color = '#666';
-        noResults.textContent = '未找到相关结果';
-        main.appendChild(noResults);
-    }
-    
-    /**
-     * 设置定期检查 - 修改持续监控机制
-     */
-    function setupPeriodicCheck() {
-        // 每2秒检查一次确保拦截生效
-        setInterval(() => {
-            const searchInput = document.getElementById('search-input');
-            if (searchInput && shouldBlockSearch(searchInput.value.trim())) {
-                const main = document.getElementById('main-posts');
-                if (main) {
-                    const hasContent = main.children.length > 0;
-                    if (hasContent) {
-                        clearSearchResults();
-                    }
-                }
+        let removedCount = 0;
+        searchResults.forEach(element => {
+            // 紧急修复：跳过系统日志相关元素
+            if (element.id === 'syslog-link' || 
+                element.href && element.href.includes('xtrz.html') ||
+                element.textContent && element.textContent.includes('系统日志')) {
+                
+                return; // 跳过这个元素
             }
-        }, 2000);
+            
+            const text = element.textContent || '';
+            if ((text.includes('3307') && !text.includes('系统日志')) || 
+                (text.includes('搜索') && !text.includes('系统日志')) || 
+                (text.includes('结果') && !text.includes('系统日志')) ||
+                (element.querySelector('h2, h3') && !element.querySelector('#syslog-link'))) {
+                element.remove();
+                removedCount++;
+            }
+        });
+        
+        // 如果移除了搜索结果，显示提示
+        if (removedCount > 0) {
+            showBlockedMessage();
+        }
+        
+        // 再次检查系统日志链接是否存在
+        if (!document.getElementById('syslog-link')) {
+            setTimeout(restoreSyslogLink, 100);
+        }
     }
     
     /**
-     * 检查是否应该阻止搜索 - 修改关键词检测逻辑
+     * 显示拦截提示 - 新增功能
+     */
+    function showBlockedMessage() {
+        // 先检查是否已经显示过提示
+        const existingMessage = document.getElementById('search-blocked-message');
+        if (existingMessage) {
+            existingMessage.remove();
+        }
+        
+        const message = document.createElement('div');
+        message.id = 'search-blocked-message';
+        message.style.cssText = `
+            text-align: center;
+            padding: 20px;
+            margin: 20px 0;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            color: #856404;
+            font-size: 14px;
+            position: relative;
+            z-index: 1000;
+        `;
+        message.textContent = '该搜索内容暂不显示结果';
+        
+        const main = document.getElementById('main-posts');
+        if (main) {
+            // 确保不覆盖系统日志链接
+            const syslogLink = document.getElementById('syslog-link');
+            if (syslogLink && syslogLink.parentNode === main) {
+                main.insertBefore(message, syslogLink.nextSibling);
+            } else {
+                main.prepend(message);
+            }
+            
+            // 3秒后自动移除提示
+            setTimeout(() => {
+                if (message.parentNode) {
+                    message.remove();
+                }
+            }, 3000);
+        }
+    }
+    
+    /**
+     * 检查是否应该阻止搜索 - 保持不变
      */
     function shouldBlockSearch(query) {
         return BLOCK_KEYWORDS.some(keyword => 
@@ -267,63 +331,27 @@
         );
     }
     
-    // ====== 兼容性修复 ======
+    // ====== 修复兼容性 ======
     
-    /**
-     * 修复跨浏览器兼容性 - 修改事件处理兼容性
-     */
     function fixCrossBrowserCompatibility() {
-        // 确保MutationObserver在所有浏览器中可用
         if (!window.MutationObserver) {
             window.MutationObserver = window.WebKitMutationObserver || window.MozMutationObserver;
         }
-        
-        // 添加触摸事件支持（移动设备）
-        document.addEventListener('touchstart', function() {}, { passive: true });
-        
-        // 修复iOS Safari的兼容性
-        if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
-            // iOS特定修复
-            const style = document.createElement('style');
-            style.textContent = `
-                .post-card {
-                    -webkit-tap-highlight-color: transparent;
-                    -webkit-touch-callout: none;
-                }
-            `;
-            document.head.appendChild(style);
-        }
-        
-        // 修复Android设备兼容性
-        if (/Android/.test(navigator.userAgent)) {
-            document.addEventListener('touchstart', function() {}, false);
-        }
     }
     
-    /**
-     * 错误处理 - 修改错误处理机制
-     */
     function addRobustErrorHandling() {
         window.addEventListener('error', function(e) {
-            if (e.message && e.message.includes('3307')) {
-                return true; // 阻止错误冒泡
-            }
+            
         });
         
-        // Promise错误处理
         window.addEventListener('unhandledrejection', function(e) {
-            if (e.reason && e.reason.toString().includes('3307')) {
-                e.preventDefault();
-            }
+            e.preventDefault();
         });
     }
     
-    // ====== 初始化函数 ======
+    // ====== 初始化函数 - 修复版 ======
     
-    /**
-     * 初始化精确拦截系统
-     */
-    function initPreciseBlockSystem() {
+    function initFixedBlockSystem() {
         try {
             // 修复兼容性
             fixCrossBrowserCompatibility();
@@ -333,25 +361,67 @@
             
             // 延迟启动以确保页面加载完成
             setTimeout(() => {
-                completelyBlock3307Search();
-            }, 1000);
+                preciseBlock3307Search();
+                
+                
+                // 初始化完成后立即检查系统日志链接
+                setTimeout(() => {
+                    if (!document.getElementById('syslog-link')) {
+                        
+                        restoreSyslogLink();
+                    }
+                }, 500);
+            }, 1500);
             
         } catch (error) {
-            // 降级方案：直接清空结果
-            setTimeout(clearSearchResults, 2000);
+            console.warn('拦截系统初始化失败，使用降级模式');
+            // 降级方案：只拦截明显的搜索
+            setupFallbackInterception();
         }
+    }
+    
+    /**
+     * 降级拦截方案 - 最安全模式
+     */
+    function setupFallbackInterception() {
+        const searchInput = document.getElementById('search-input');
+        const searchBtn = document.getElementById('search-btn');
+        
+        if (searchInput && searchBtn) {
+            const handler = function(e) {
+                const query = searchInput.value.trim();
+                if (query.includes('3307')) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    alert('该搜索内容暂不可用');
+                    return false;
+                }
+            };
+            
+            searchInput.addEventListener('keydown', handler, true);
+            searchBtn.addEventListener('click', handler, true);
+        }
+        
+        // 降级模式下也要保护系统日志
+        protectSyslogLink();
     }
     
     // ====== 执行初始化 ======
     
-    // 页面加载后立即执行
+    // 使用更温和的初始化方式
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initPreciseBlockSystem);
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(initFixedBlockSystem, 1000);
+        });
     } else {
-        initPreciseBlockSystem();
+        setTimeout(initFixedBlockSystem, 1000);
     }
     
-    // 确保在window.load时也执行
-    window.addEventListener('load', initPreciseBlockSystem);
+    // 导出函数用于调试
+    window._searchFix = {
+        restoreSyslogLink: restoreSyslogLink,
+        protectSyslogLink: protectSyslogLink,
+        version: '2.0-safe'
+    };
     
 })();
