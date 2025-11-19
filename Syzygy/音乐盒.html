@@ -144,7 +144,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            cursor: grab;
+            cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
             font-size: 1.5rem;
@@ -156,7 +156,7 @@
         }
         
         .tool:active {
-            cursor: grabbing;
+            transform: scale(0.95);
         }
         
         .tool:hover {
@@ -168,6 +168,10 @@
         .tool.gear { background: #e0e0e0; }
         .tool.key { background: #ff9800; }
         .tool.cylinder { background: #795548; color: white; }
+        
+        .tool.selected {
+            box-shadow: 0 0 0 3px #4a00e0, 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
         
         .tool img {
             width: 50px;
@@ -411,22 +415,23 @@
                     <!-- 损坏部件和插槽将通过JavaScript动态生成 -->
                 </div>
                 <button id="test-button">测试音乐盒</button>
-                <p class="part-hint">将正确的零件拖放到闪烁的红色区域</p>
+                <p class="part-hint">点击工具选择零件，然后点击闪烁的红色区域放置</p>
+                <p class="part-hint">双击已修复的零件可以取消放置</p>
             </div>
             
             <div class="toolbox">
                 <h2>工具箱</h2>
                 <div class="tools">
-                    <div class="tool spring" data-type="spring" draggable="true">
+                    <div class="tool spring" data-type="spring">
                         <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZmZlYjNmIi8+PGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMzMyIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTMyIDEyYzAgMC0xMCAxMC0xMCAyMHMxMCAyMCAxMCAyMCAxMC0xMCAxMC0yMFM0MiAxMiAzMiAxMnoiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMzMyIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+" alt="发条">
                     </div>
-                    <div class="tool gear" data-type="gear" draggable="true">
+                    <div class="tool gear" data-type="gear">
                         <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZTBkZGRkIi8+PGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMjAiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSIzMiIgY3k9IjMyIiByPSIxNSIgZmlsbD0iI2UwZGRkZCIvPjxjaXJjbGUgY3g9IjMyIiBjeT0iMzIiIHI9IjUiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMzIgMTJ2LThNMzIgNTJ2LThNMTIgMzJoLThNNTIgMzJoLThNMTggMThsNi02TTQwIDQwbDYtNk0xOCA0Nmw2IDZNNDAgMjRsNiA2IiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==" alt="齿轮">
                     </div>
-                    <div class="tool key" data-type="key" draggable="true">
+                    <div class="tool key" data-type="key">
                         <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZmY5ODAwIi8+PGNpcmNsZSBjeD0iNDAiIGN5PSIyNCIgcj0iMTIiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMTYgNDBoLTR2LTRoNHY0ek0yMCAzNmg0djRIMjB6TTI0IDMyaDR2NGgtNHpNMjggMjhoNHY0aC00ek0zMiAyNGg0djRoLTR6IiBmaWxsPSIjZmY5ODAwIi8+PC9zdmc+" alt="钥匙">
                     </div>
-                    <div class="tool cylinder" data-type="cylinder" draggable="true">
+                    <div class="tool cylinder" data-type="cylinder">
                         <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjNzk1NTQ4Ii8+PHJlY3QgeD0iMTIiIHk9IjEwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDQiIHJ4PSI1IiByeT0iNSIgZmlsbD0iI2UwZGRkZCIvPjxwYXRoIGQ9Ik0xOCAxNmg0TTE4IDI0aDRNMTggMzJoNE0xOCA0MGg0TTI2IDE2aDRNMjYgMjRoNE0yNiAzMmg0TTI2IDQwaDRNMzQgMTZoNE0zNCAyNGg0TTM0IDMyaDRNMzQgNDBoNCIgc3Ryb2tlPSIjOTk5IiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4=" alt="音筒">
                     </div>
                 </div>
@@ -434,9 +439,11 @@
                 <div class="instructions">
                     <h2>操作说明</h2>
                     <p>1. 观察音乐盒上闪烁的红色区域，这些是损坏的零件</p>
-                    <p>2. 从工具箱中选择正确的零件拖放到对应位置</p>
-                    <p>3. 点击"测试音乐盒"检查是否修复成功</p>
-                    <p>4. 每个部分有时间限制，超时则失败</p>
+                    <p>2. 从工具箱中点击选择正确的零件</p>
+                    <p>3. 点击闪烁的红色区域放置零件</p>
+                    <p>4. 双击已修复的零件可以取消放置</p>
+                    <p>5. 点击"测试音乐盒"检查是否修复成功</p>
+                    <p>6. 每个部分有时间限制，超时则失败</p>
                 </div>
                 
                 <div class="controls">
@@ -466,7 +473,8 @@
                 fixedParts: 0,
                 currentParts: [],
                 slots: [],
-                slotPositions: []
+                slotPositions: [],
+                selectedTool: null
             };
             
             // DOM元素
@@ -494,7 +502,7 @@
                 generatePart();
                 updateUI();
                 startTimer();
-                setupDragAndDrop();
+                setupClickAndDoubleClick();
             }
             
             // 生成部分
@@ -504,6 +512,7 @@
                 experienceState.slots = [];
                 experienceState.slotPositions = [];
                 experienceState.fixedParts = 0;
+                experienceState.selectedTool = null;
                 
                 // 根据部分确定损坏部件数量
                 experienceState.brokenParts = Math.min(2 + experienceState.part - 1, 4);
@@ -552,12 +561,16 @@
                     experienceState.slots.push({
                         element: slot,
                         requiredPart: requiredPart,
-                        isFixed: false
+                        isFixed: false,
+                        placedPart: null
                     });
                 }
                 
                 // 存储当前部分需要的零件
                 experienceState.currentParts = experienceState.slots.map(slot => slot.requiredPart);
+                
+                // 重置工具选择状态
+                tools.forEach(tool => tool.classList.remove('selected'));
             }
             
             // 更新UI
@@ -582,12 +595,18 @@
                 }, 1000);
             }
             
-            // 设置拖放功能
-            function setupDragAndDrop() {
-                // 为工具设置拖拽事件
+            // 设置点击和双击功能
+            function setupClickAndDoubleClick() {
+                // 为工具设置点击事件
                 tools.forEach(tool => {
-                    tool.addEventListener('dragstart', function(e) {
-                        e.dataTransfer.setData('text/plain', tool.dataset.type);
+                    tool.addEventListener('click', function() {
+                        // 取消之前选中的工具
+                        tools.forEach(t => t.classList.remove('selected'));
+                        
+                        // 选中当前工具
+                        tool.classList.add('selected');
+                        experienceState.selectedTool = tool.dataset.type;
+                        
                         // 高亮显示可放置的插槽
                         experienceState.slots.forEach(slot => {
                             if (!slot.isFixed) {
@@ -595,106 +614,92 @@
                             }
                         });
                     });
+                });
+                
+                // 为音乐盒设置点击事件
+                musicBox.addEventListener('click', function(e) {
+                    if (!experienceState.selectedTool) {
+                        alert('请先选择一个工具！');
+                        return;
+                    }
                     
-                    tool.addEventListener('dragend', function() {
-                        // 移除插槽高亮
-                        experienceState.slots.forEach(slot => {
+                    // 找到点击的插槽
+                    const slot = findClickedSlot(e.clientX, e.clientY);
+                    if (slot && !slot.isFixed) {
+                        // 检查零件是否正确
+                        if (experienceState.selectedTool === slot.requiredPart) {
+                            // 修复成功
+                            const img = document.createElement('img');
+                            img.src = partTypes[experienceState.selectedTool].image;
+                            img.alt = partTypes[experienceState.selectedTool].name;
+                            slot.element.innerHTML = '';
+                            slot.element.appendChild(img);
+                            slot.element.classList.add('fixed');
                             slot.element.classList.remove('highlight');
-                        });
-                    });
-                    
-                    // 为移动设备添加触摸事件支持
-                    tool.addEventListener('touchstart', function(e) {
-                        e.dataTransfer = { getData: () => tool.dataset.type };
-                        experienceState.slots.forEach(slot => {
-                            if (!slot.isFixed) {
-                                slot.element.classList.add('highlight');
+                            slot.isFixed = true;
+                            slot.placedPart = experienceState.selectedTool;
+                            experienceState.fixedParts++;
+                            
+                            // 更新进度
+                            experienceState.progress = Math.floor((experienceState.fixedParts / experienceState.brokenParts) * 100);
+                            updateUI();
+                            
+                            // 移除对应的损坏部件
+                            const brokenParts = document.querySelectorAll('.broken-part');
+                            if (brokenParts[slot.element.dataset.index]) {
+                                brokenParts[slot.element.dataset.index].style.display = 'none';
                             }
-                        });
-                    }, { passive: true });
-                    
-                    tool.addEventListener('touchend', function() {
-                        experienceState.slots.forEach(slot => {
-                            slot.element.classList.remove('highlight');
-                        });
-                    });
-                });
-                
-                // 为插槽设置拖放事件
-                musicBox.addEventListener('dragover', function(e) {
-                    e.preventDefault();
-                });
-                
-                musicBox.addEventListener('drop', function(e) {
-                    e.preventDefault();
-                    handleDrop(e.clientX, e.clientY, e.dataTransfer.getData('text/plain'));
-                });
-                
-                // 移动设备触摸事件
-                musicBox.addEventListener('touchmove', function(e) {
-                    e.preventDefault();
-                }, { passive: false });
-                
-                musicBox.addEventListener('touchend', function(e) {
-                    if (e.changedTouches.length > 0) {
-                        const touch = e.changedTouches[0];
-                        // 在移动设备上，我们假设用户拖动了最后一个触摸的工具
-                        const activeTool = document.querySelector('.tool:active') || 
-                                          document.querySelector('.tool.spring'); // 默认使用第一个工具
-                        if (activeTool) {
-                            handleDrop(touch.clientX, touch.clientY, activeTool.dataset.type);
+                            
+                            // 检查是否所有部件都已修复
+                            if (experienceState.fixedParts >= experienceState.brokenParts) {
+                                completePart();
+                            }
+                        } else {
+                            // 修复失败
+                            slot.element.style.border = '2px dashed #f44336';
+                            slot.element.style.backgroundColor = 'rgba(244, 67, 54, 0.3)';
+                            setTimeout(() => {
+                                if (!slot.isFixed) {
+                                    slot.element.style.border = '2px dashed #4a00e0';
+                                    slot.element.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                                }
+                            }, 1000);
                         }
                     }
                 });
-            }
-            
-            // 处理放置事件
-            function handleDrop(x, y, partType) {
-                // 找到最近的插槽
-                const slot = findNearestSlot(x, y);
-                if (slot && !slot.isFixed) {
-                    // 检查零件是否正确
-                    if (partType === slot.requiredPart) {
-                        // 修复成功
-                        const img = document.createElement('img');
-                        img.src = partTypes[partType].image;
-                        img.alt = partTypes[partType].name;
-                        slot.element.innerHTML = '';
-                        slot.element.appendChild(img);
-                        slot.element.classList.add('fixed');
-                        slot.isFixed = true;
-                        experienceState.fixedParts++;
-                        
-                        // 更新进度
-                        experienceState.progress = Math.floor((experienceState.fixedParts / experienceState.brokenParts) * 100);
-                        updateUI();
-                        
-                        // 移除对应的损坏部件
-                        const brokenParts = document.querySelectorAll('.broken-part');
-                        if (brokenParts[slot.element.dataset.index]) {
-                            brokenParts[slot.element.dataset.index].style.display = 'none';
-                        }
-                        
-                        // 检查是否所有部件都已修复
-                        if (experienceState.fixedParts >= experienceState.brokenParts) {
-                            completePart();
-                        }
-                    } else {
-                        // 修复失败
-                        slot.element.style.border = '2px dashed #f44336';
-                        slot.element.style.backgroundColor = 'rgba(244, 67, 54, 0.3)';
-                        setTimeout(() => {
-                            if (!slot.isFixed) {
-                                slot.element.style.border = '2px dashed #4a00e0';
-                                slot.element.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                
+                // 为音乐盒设置双击事件
+                let lastClick = 0;
+                musicBox.addEventListener('click', function(e) {
+                    const now = Date.now();
+                    if (now - lastClick < 300) { // 双击检测
+                        // 找到双击的插槽
+                        const slot = findClickedSlot(e.clientX, e.clientY);
+                        if (slot && slot.isFixed) {
+                            // 取消修复
+                            slot.element.innerHTML = '?';
+                            slot.element.classList.remove('fixed');
+                            slot.isFixed = false;
+                            slot.placedPart = null;
+                            experienceState.fixedParts--;
+                            
+                            // 更新进度
+                            experienceState.progress = Math.floor((experienceState.fixedParts / experienceState.brokenParts) * 100);
+                            updateUI();
+                            
+                            // 显示对应的损坏部件
+                            const brokenParts = document.querySelectorAll('.broken-part');
+                            if (brokenParts[slot.element.dataset.index]) {
+                                brokenParts[slot.element.dataset.index].style.display = 'block';
                             }
-                        }, 1000);
+                        }
                     }
-                }
+                    lastClick = now;
+                });
             }
             
-            // 找到最近的插槽
-            function findNearestSlot(x, y) {
+            // 找到点击的插槽
+            function findClickedSlot(x, y) {
                 let minDistance = Infinity;
                 let nearestSlot = null;
                 
@@ -727,6 +732,7 @@
                 experienceState.timeLeft = 60;
                 experienceState.fixedParts = 0;
                 experienceState.progress = 0;
+                experienceState.selectedTool = null;
                 
                 // 重新生成部分
                 generatePart();
@@ -754,11 +760,8 @@
                     overlay.style.display = 'none';
                     resetPart();
                 } else {
-                    alert('恭喜！你完成了音乐盒的所有部分修复！');
-                    // 重置体验
-                    experienceState.part = 1;
-                    experienceState.progress = 0;
-                    resetPart();
+                    // 修复完成后跳转到"一张字条.html"
+                    window.location.href = "https://sylvie-seven-cq.top/Syzygy/音乐盒字条.html";
                 }
             });
             
