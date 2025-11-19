@@ -78,47 +78,28 @@
             overflow: hidden;
             background-color: rgba(0, 0, 0, 0.8);
             z-index: 10;
-        }
-        
-        .screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            padding: 15px;
-            display: none;
+            display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            overflow-y: auto;
-        }
-        
-        .active {
-            display: flex;
+            padding: 20px;
         }
         
         h1 {
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-            margin-bottom: 15px;
+            font-size: clamp(2rem, 6vw, 4rem);
+            margin-bottom: 20px;
             text-shadow: 0 0 10px #ff0000;
         }
         
-        h2 {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
-            margin-bottom: 10px;
-            color: #ff5555;
-        }
-        
         p {
-            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            font-size: clamp(1rem, 3vw, 1.5rem);
             margin-bottom: 20px;
             line-height: 1.5;
         }
         
         .error-code {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: #ff5555;
             margin-top: 15px;
         }
@@ -127,10 +108,10 @@
             background-color: #000;
             color: #ff0000;
             border: 1px solid #ff0000;
-            padding: 8px 16px;
-            font-size: clamp(0.8rem, 2vw, 1rem);
+            padding: 10px 20px;
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
             cursor: pointer;
-            margin: 8px;
+            margin: 15px;
             transition: all 0.3s;
         }
         
@@ -140,174 +121,24 @@
             box-shadow: 0 0 10px #ff0000;
         }
         
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        /* 游戏容器样式 */
-        .game-container {
-            width: 100%;
-            height: 60%;
-            min-height: 200px;
-            position: relative;
-            border: 1px solid #ff0000;
-            margin: 15px 0;
-        }
-        
-        /* 点击游戏样式 */
-        .target {
-            position: absolute;
-            width: clamp(30px, 8vw, 40px);
-            height: clamp(30px, 8vw, 40px);
-            background-color: #ff0000;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        
-        /* 记忆游戏样式 */
-        .memory-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-gap: 10px;
-            width: 100%;
-            height: 100%;
-            padding: 10px;
-        }
-        
-        .memory-card {
-            background-color: #330000;
-            border: 1px solid #ff0000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            font-size: 1.5rem;
-            color: transparent;
-            transition: all 0.3s;
-        }
-        
-        .memory-card.revealed {
-            background-color: #660000;
-            color: #ff0000;
-        }
-        
-        .memory-card.matched {
-            background-color: #003300;
-            color: #00ff00;
-        }
-        
-        /* 密码输入样式 */
-        .password-input {
+        /* 终端样式 */
+        .terminal {
             background-color: #000;
             color: #ff0000;
-            border: 1px solid #ff0000;
-            padding: 10px;
-            font-size: 1.2rem;
-            margin: 15px 0;
-            width: 80%;
-            text-align: center;
-        }
-        
-        .password-hint {
-            font-size: 0.9rem;
-            color: #ff8888;
-            margin-top: 10px;
-        }
-        
-        /* 文件管理器样式 */
-        #file-manager {
+            padding: 8px;
+            font-family: 'Courier New', monospace;
             width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        #file-list {
-            flex-grow: 1;
+            height: 40%;
+            min-height: 150px;
             overflow-y: auto;
             border: 1px solid #ff0000;
-            padding: 8px;
-            margin: 8px 0;
+            margin: 20px 0;
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+            text-align: left;
         }
         
-        .file-item {
-            padding: 6px;
-            border-bottom: 1px dashed #ff3333;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .file-item:hover {
-            background-color: #220000;
-        }
-        
-        .file-name {
-            color: #ff5555;
-            font-size: clamp(0.8rem, 2vw, 1rem);
-            word-break: break-all;
-        }
-        
-        .file-size {
-            color: #ff8888;
-            font-size: 0.7rem;
-        }
-        
-        #select-all {
-            margin: 8px 0;
-            display: flex;
-            align-items: center;
-        }
-        
-        #select-all label {
-            margin-left: 5px;
-            font-size: clamp(0.8rem, 2vw, 1rem);
-        }
-        
-        #file-actions {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-        
-        /* 模态框样式 */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-        }
-        
-        .modal-content {
-            background-color: #000;
-            border: 2px solid #ff0000;
-            padding: 20px;
-            width: 90%;
-            max-width: 300px;
-            text-align: center;
-        }
-        
-        /* 故障效果 */
-        .glitch {
-            animation: glitch 0.5s infinite;
-        }
-        
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
+        .terminal-line {
+            margin-bottom: 4px;
         }
         
         /* 进度条样式 */
@@ -327,26 +158,21 @@
             transition: width 0.5s;
         }
         
-        /* 终端样式 */
-        .terminal {
-            background-color: #000;
-            color: #ff0000;
-            padding: 8px;
-            font-family: 'Courier New', monospace;
-            width: 100%;
-            height: 40%;
-            min-height: 150px;
-            overflow-y: auto;
-            border: 1px solid #ff0000;
-            margin: 10px 0;
-            font-size: clamp(0.7rem, 2vw, 0.9rem);
+        /* 故障效果 */
+        .glitch {
+            animation: glitch 0.5s infinite;
         }
         
-        .terminal-line {
-            margin-bottom: 4px;
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
         }
         
-        /* 新增效果：窗口抖动 */
+        /* 窗口抖动 */
         .shake {
             animation: shake 0.5s;
         }
@@ -365,7 +191,7 @@
             100% { transform: translate(0, 0); }
         }
         
-        /* 新增效果：闪屏 */
+        /* 闪屏 */
         .flash {
             animation: flash 0.3s;
         }
@@ -376,297 +202,170 @@
             100% { background-color: rgba(255, 0, 0, 0); }
         }
         
-        /* 新增效果：游戏警告文字 */
-        .game-warning {
-            position: absolute;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #ff0000;
-            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
-            z-index: 5;
-            pointer-events: none;
-            opacity: 0;
-        }
-        
-        /* 文件管理器阶段的满屏警告文字 */
-        .file-manager-warning {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 5;
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-        
-        .file-manager-warning.active {
-            opacity: 0.7;
-        }
-        
-        .file-warning-text {
-            position: absolute;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #ff0000;
-            text-shadow: 0 0 8px rgba(255, 0, 0, 0.8);
-            animation: fileWarningFloat 10s infinite linear;
-        }
-        
-        @keyframes fileWarningFloat {
-            0% {
-                transform: translate(0, 0) rotate(0deg);
-                opacity: 0.1;
-            }
-            25% {
-                transform: translate(15vw, 30vh) rotate(5deg);
-                opacity: 0.8;
-            }
-            50% {
-                transform: translate(50vw, 15vh) rotate(-3deg);
-                opacity: 0.5;
-            }
-            75% {
-                transform: translate(30vw, 45vh) rotate(7deg);
-                opacity: 0.9;
-            }
-            100% {
-                transform: translate(0, 0) rotate(0deg);
-                opacity: 0.1;
-            }
-        }
-        
         /* 响应式调整 */
         @media (max-width: 768px) {
             #container {
                 height: 95%;
-            }
-            
-            .screen {
-                padding: 10px;
-            }
-            
-            .game-container {
-                height: 50%;
-            }
-            
-            .btn {
-                padding: 6px 12px;
-            }
-            
-            .memory-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .file-warning-text {
-                font-size: 1.2rem;
+                padding: 15px;
             }
         }
         
         @media (max-width: 480px) {
             #container {
                 height: 98%;
-            }
-            
-            .screen {
-                padding: 8px;
-            }
-            
-            .game-container {
-                height: 45%;
-            }
-            
-            .btn {
-                padding: 5px 10px;
-                margin: 5px;
-            }
-            
-            .file-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .file-size {
-                margin-top: 3px;
-            }
-            
-            .memory-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .file-warning-text {
-                font-size: 1rem;
+                padding: 10px;
             }
         }
     </style>
-
-<!-- 防护代码 -->
-    <script>
-(function () {
-    'use strict';
-
-    var devTools = {
-        init: function () {
-            this.disableRightClick();
-            this.disableDevToolsKeys();
-        },
-
-        disableRightClick: function () {
-            document.addEventListener('contextmenu', function (e) {
-                e.preventDefault();
-                alert('恭喜你获得成就：逃课大王！！！');
-                return false;
-            });
-        },
-
-        disableDevToolsKeys: function () {
-            document.addEventListener('keydown', function (e) {
-                // F12
-                if ((e.key === 'F12' || e.keyCode === 123) &&
-                    !e.ctrlKey && !e.altKey && !e.shiftKey && !e.metaKey) {
-                    e.preventDefault();
-                    alert('恭喜你获得成就：逃课大王！！！');
-                    return false;
-                }
-                // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
-                if (e.ctrlKey && e.shiftKey &&
-                    (e.key === 'I' || e.key === 'J' || e.key === 'C'
-                     || e.key === 'i' || e.key === 'j' || e.key === 'c')) {
-                    e.preventDefault();
-                    alert('恭喜你获得成就：逃课大王！！！');
-                    return false;
-                }
-                // Ctrl+U
-                if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
-                    e.preventDefault();
-                    alert('恭喜你获得成就：逃课大王！！！');
-                    return false;
-                }
-            });
-        }
-    };
-
-    devTools.init();
-})();
-</script>
-
 </head>
 <body>
     <!-- 背景警告文字 -->
     <div class="bg-warning" id="bg-warning"></div>
     
-    <!-- 文件管理器阶段的满屏警告文字 -->
-    <div class="file-manager-warning" id="file-manager-warning"></div>
-    
     <div id="container">
-        <!-- 第一阶段：检测到KMS侵入 -->
-        <div id="screen1" class="screen active">
-            <h1 class="glitch">警告</h1>
-            <p>检测到KMS侵入系统...</p>
-            <div class="terminal">
-                <div class="terminal-line">> 扫描系统文件...</div>
-                <div class="terminal-line">> 检测到异常进程: kms_service.exe</div>
-                <div class="terminal-line">> 进程ID: 0x4A3F</div>
-                <div class="terminal-line">> 威胁等级: 严重</div>
-                <div class="terminal-line">> 尝试隔离威胁...</div>
-                <div class="terminal-line">> 隔离失败!</div>
-            </div>
-            <div class="progress-bar">
-                <div class="progress" id="progress1"></div>
-            </div>
-            <button class="btn" id="btn-next1">返回！！！</button>
+        <h1 class="glitch">系统崩溃</h1>
+        <p>系统核心文件已损坏...</p>
+        
+        <div class="terminal">
+            <div class="terminal-line">> 系统文件完整性检查失败</div>
+            <div class="terminal-line">> 核心模块: kernel32.dll - 已损坏</div>
+            <div class="terminal-line">> 核心模块: ntdll.dll - 已损坏</div>
+            <div class="terminal-line">> 系统即将关闭...</div>
+            <div class="terminal-line">> 错误代码: 0x0000007B</div>
+            <div class="terminal-line">> 内存转储失败</div>
+            <div class="terminal-line">> 无法访问系统注册表</div>
+            <div class="terminal-line">> 硬件驱动程序异常</div>
+            <div class="terminal-line">> 安全模式启动失败</div>
         </div>
         
-        <!-- 第二阶段：系统崩溃 -->
-        <div id="screen2" class="screen">
-            <h1 class="glitch">系统崩溃</h1>
-            <p>系统核心文件已损坏...</p>
-            <div class="terminal">
-                <div class="terminal-line">> 系统文件完整性检查失败</div>
-                <div class="terminal-line">> 核心模块: kernel32.dll - 已损坏</div>
-                <div class="terminal-line">> 核心模块: ntdll.dll - 已损坏</div>
-                <div class="terminal-line">> 系统即将关闭...</div>
-                <div class="terminal-line">> 错误代码: 0x0000007B</div>
-            </div>
-            <div class="progress-bar">
-                <div class="progress" id="progress2"></div>
-            </div>
-            <button class="btn" id="btn-next2">返回！！！不要点我！！！</button>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
         </div>
         
-        <!-- 第三阶段：求生通道 -->
-        <div id="screen3" class="screen">
-            <h1>求生通道已开启</h1>
-            <p>检测到紧急逃生协议...</p>
-            <p>完成以下挑战以恢复系统控制权</p>
-            <button class="btn" id="btn-start-game">开始挑战</button>
-        </div>
-        
-        <!-- 第四阶段：小游戏1 - 点击游戏 -->
-        <div id="screen4" class="screen">
-            <h1>清除病毒文件</h1>
-            <p>点击所有红色方块以清除病毒文件</p>
-            <p>剩余目标: <span id="targets-left">10</span></p>
-            <div id="game-container1" class="game-container"></div>
-            <button class="btn" id="btn-next3" style="display:none;">继续</button>
-        </div>
-        
-        <!-- 第五阶段：小游戏2 - 记忆游戏 -->
-        <div id="screen5" class="screen">
-            <h1>修复内存数据</h1>
-            <p>匹配所有相同的符号来修复损坏的内存数据</p>
-            <p>已匹配: <span id="matched-pairs">0</span>/8</p>
-            <div id="game-container2" class="game-container">
-                <div class="memory-grid" id="memory-grid"></div>
-            </div>
-            <button class="btn" id="btn-next4" style="display:none;">继续</button>
-        </div>
-        
-        <!-- 第六阶段：密码验证 -->
-        <div id="screen6" class="screen">
-            <h1>WHO AM I?</h1>
-            <p>WHO AM I?WHO AM I?WHO AM I?</p>
-            <!-- <p class="password-hint">提示：CQ</p> -->
-            <input type="password" class="password-input" id="password-input" placeholder="输入名字">
-            <div>
-                <button class="btn" id="btn-verify-password">验证</button>
-            </div>
-            <p id="password-error" style="color:#ff5555; display:none;">输入错误，请重试！</p>
-        </div>
-        
-        
-        <!-- 第七阶段：文件管理器 -->
-        <div id="screen7" class="screen">
-            <h1>系统文件管理器</h1>
-            <p>请谨慎操作以下文件...</p>
-            <div id="file-manager">
-                <div id="select-all">
-                    <input type="checkbox" id="select-all-checkbox">
-                    <label for="select-all-checkbox">全选</label>
-                </div>
-                <div id="file-list"></div>
-                <div id="file-actions">
-                    <button class="btn" id="btn-open">打开选中文件</button>
-                    <button class="btn" id="btn-delete">删除选中文件</button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 确认弹窗 -->
-        <div id="confirm-modal" class="modal">
-            <div class="modal-content">
-                <h2>警告</h2>
-                <p>确定要这么做吗？</p>
-                <div>
-                    <button class="btn" id="btn-confirm-yes">确定</button>
-                    <button class="btn" id="btn-confirm-no">取消</button>
-                </div>
-            </div>
-        </div>
+        <p class="error-code">请联系系统管理员或重新启动系统</p>
+        <button class="btn" id="btn-restart">尝试重启</button>
     </div>
-   <script>
-   function _0x205c(){const _0x1c71e9=['progress1','.file-checkbox:checked','block','立即行动！！','symbol','appendChild','display','系统崩溃！！','1167szyqgw','translateX(1px)','width','delete','.glitch','getElementById','key','btn-next1','location','\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22file-name\x22>','addEventListener','password-input','262668FQfXqW','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22file-size\x22>','none','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22checkbox\x22\x20class=\x22file-checkbox\x22\x20data-file=\x22','click','animation','6378225QsipYc','网络中断！！','container','scale(0)','progress2','focus','memory-grid','100%','onload','flash','.exe','file-item','className','btn-next2','password-error','animationDelay','classList','btn-confirm-yes','危险！','btn-next4','file-list','file-manager-warning','remove','s\x20infinite\x20linear','textContent','2432585eREuME','transform','https://sylvie-seven-cq.top/Syzygy/结局A.html','select-all-checkbox','change','btn-verify-password','onclick','26CkCegs','open','.dat','div','length','进程异常！！','.sys','querySelectorAll','innerHTML','文件损坏！！','警告！','请快速操作！！','权限丢失！！','forEach','硬件故障！！','target','btn-open','opacity','344uNhcIG','active','fontSize','危险！！危险！！','6550610BXNVSb','luoshu3326','index','floor','memory-card','.dll','add','警告！！警告！！','translateX(0)','href','系统崩溃！','rem','病毒检测！！','KMS侵入！！','file-warning-text','2857bUGIJp','confirm-modal','flex','450NONfbq','bg-warning','value','.file-checkbox','random','matched','warning-text','top','left','game-container1','btn-next3','文件损坏！','.bin','visibility','Enter','shake','103192IFxLUb','createElement','系统过载！！','dataset','btn-start-game','style','revealed','checked','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'];_0x205c=function(){return _0x1c71e9;};return _0x205c();}const _0x3f16df=_0x3038;(function(_0x27ffe8,_0x541147){const _0x49d3b5=_0x3038,_0x13aae7=_0x27ffe8();while(!![]){try{const _0x28d597=-parseInt(_0x49d3b5(0x217))/0x1*(-parseInt(_0x49d3b5(0x1f2))/0x2)+parseInt(_0x49d3b5(0x1c0))/0x3*(-parseInt(_0x49d3b5(0x204))/0x4)+-parseInt(_0x49d3b5(0x1eb))/0x5+parseInt(_0x49d3b5(0x1cc))/0x6+parseInt(_0x49d3b5(0x1d2))/0x7+parseInt(_0x49d3b5(0x22a))/0x8*(parseInt(_0x49d3b5(0x21a))/0x9)+-parseInt(_0x49d3b5(0x208))/0xa;if(_0x28d597===_0x541147)break;else _0x13aae7['push'](_0x13aae7['shift']());}catch(_0x221498){_0x13aae7['push'](_0x13aae7['shift']());}}}(_0x205c,0x70cbc));const screens=document[_0x3f16df(0x1f9)]('.screen');let currentScreen=0x0;function createWarningText(){const _0x2bb689=_0x3f16df,_0x131bdd=document['getElementById'](_0x2bb689(0x21b)),_0x4d4572=[_0x2bb689(0x207),_0x2bb689(0x20f),_0x2bb689(0x1fd),_0x2bb689(0x1bf),_0x2bb689(0x1bb),_0x2bb689(0x215),_0x2bb689(0x214),_0x2bb689(0x1fb),'内存泄漏！！',_0x2bb689(0x1fe),'数据丢失！！','系统过载！！',_0x2bb689(0x1f7),_0x2bb689(0x1d3),_0x2bb689(0x200)];for(let _0x4a3d8e=0x0;_0x4a3d8e<0x32;_0x4a3d8e++){const _0x47bb10=document['createElement'](_0x2bb689(0x1f5));_0x47bb10[_0x2bb689(0x1de)]=_0x2bb689(0x220),_0x47bb10[_0x2bb689(0x1ea)]=_0x4d4572[Math[_0x2bb689(0x20b)](Math[_0x2bb689(0x21e)]()*_0x4d4572['length'])],_0x47bb10[_0x2bb689(0x22f)]['left']=Math['random']()*0x64+'vw',_0x47bb10[_0x2bb689(0x22f)]['top']=Math['random']()*0x64+'vh',_0x47bb10[_0x2bb689(0x22f)][_0x2bb689(0x1e1)]=Math['random']()*0xf+'s',_0x47bb10[_0x2bb689(0x22f)][_0x2bb689(0x206)]=Math[_0x2bb689(0x21e)]()*1.5+1.5+_0x2bb689(0x213),_0x47bb10[_0x2bb689(0x22f)][_0x2bb689(0x203)]=Math['random']()*0.9+0.3,_0x131bdd[_0x2bb689(0x1bd)](_0x47bb10);}}function createFileManagerWarnings(){const _0x17d371=_0x3f16df,_0x25441a=document[_0x17d371(0x1c5)](_0x17d371(0x1e7));_0x25441a['innerHTML']='';const _0x3a354a=['打开文件'];for(let _0x5e25c7=0x0;_0x5e25c7<0x32;_0x5e25c7++){const _0x25d5af=document['createElement'](_0x17d371(0x1f5));_0x25d5af[_0x17d371(0x1de)]=_0x17d371(0x216),_0x25d5af[_0x17d371(0x1ea)]=_0x3a354a[Math[_0x17d371(0x20b)](Math[_0x17d371(0x21e)]()*_0x3a354a[_0x17d371(0x1f6)])],_0x25d5af[_0x17d371(0x22f)][_0x17d371(0x222)]=Math[_0x17d371(0x21e)]()*0x64+'vw',_0x25d5af[_0x17d371(0x22f)]['top']=Math[_0x17d371(0x21e)]()*0x64+'vh',_0x25d5af[_0x17d371(0x22f)][_0x17d371(0x1e1)]=Math[_0x17d371(0x21e)]()*0xa+'s',_0x25d5af[_0x17d371(0x22f)]['fontSize']=Math['random']()*0x1+0x1+_0x17d371(0x213),_0x25d5af[_0x17d371(0x22f)][_0x17d371(0x203)]=Math[_0x17d371(0x21e)]()*0.7+0.3,_0x25441a['appendChild'](_0x25d5af);}_0x25441a[_0x17d371(0x1e2)][_0x17d371(0x20e)]('active');}function removeFileManagerWarnings(){const _0x1f6e05=_0x3f16df,_0x2d357d=document[_0x1f6e05(0x1c5)](_0x1f6e05(0x1e7));_0x2d357d[_0x1f6e05(0x1e2)][_0x1f6e05(0x1e8)](_0x1f6e05(0x205));}const warnings=[_0x3f16df(0x207),_0x3f16df(0x20f),_0x3f16df(0x1fd),_0x3f16df(0x1bf),_0x3f16df(0x1bb),_0x3f16df(0x215),_0x3f16df(0x214),_0x3f16df(0x1fb),'内存泄漏！！',_0x3f16df(0x1fe),'数据丢失！！',_0x3f16df(0x22c),_0x3f16df(0x1f7),_0x3f16df(0x1d3),_0x3f16df(0x200)];function shakeScreen(){const _0x652ada=_0x3f16df,_0x8878fd=document[_0x652ada(0x1c5)](_0x652ada(0x1d4));_0x8878fd['classList'][_0x652ada(0x20e)]('shake'),setTimeout(()=>{const _0x2d2830=_0x652ada;_0x8878fd[_0x2d2830(0x1e2)][_0x2d2830(0x1e8)](_0x2d2830(0x229));},0x1f4);}function flashScreen(){const _0x56a23a=_0x3f16df,_0x44bbe3=document[_0x56a23a(0x1c5)](_0x56a23a(0x1d4));_0x44bbe3['classList']['add'](_0x56a23a(0x1db)),setTimeout(()=>{const _0xdb13c0=_0x56a23a;_0x44bbe3['classList']['remove'](_0xdb13c0(0x1db));},0x12c);}function addGameWarnings(_0x4b0f14){const _0x314af6=_0x3f16df,_0x53ee2b=[_0x314af6(0x1fc),_0x314af6(0x1e4),'立即行动！',_0x314af6(0x212),_0x314af6(0x225)];for(let _0x5bfdd6=0x0;_0x5bfdd6<0xf;_0x5bfdd6++){const _0x376a40=document[_0x314af6(0x22b)](_0x314af6(0x1f5));_0x376a40['className']='game-warning',_0x376a40[_0x314af6(0x1ea)]=_0x53ee2b[Math[_0x314af6(0x20b)](Math[_0x314af6(0x21e)]()*_0x53ee2b[_0x314af6(0x1f6)])],_0x376a40[_0x314af6(0x22f)][_0x314af6(0x222)]=Math[_0x314af6(0x21e)]()*0x64+'%',_0x376a40['style'][_0x314af6(0x221)]=Math[_0x314af6(0x21e)]()*0x64+'%',_0x376a40[_0x314af6(0x22f)][_0x314af6(0x206)]=Math[_0x314af6(0x21e)]()*0.8+0.8+_0x314af6(0x213),_0x376a40['style'][_0x314af6(0x203)]=Math[_0x314af6(0x21e)]()*0.7+0.3,_0x376a40[_0x314af6(0x22f)][_0x314af6(0x1d1)]='float\x20'+(Math[_0x314af6(0x21e)]()*0xa+0x5)+_0x314af6(0x1e9),_0x4b0f14['appendChild'](_0x376a40);}}document[_0x3f16df(0x1c5)](_0x3f16df(0x1c7))[_0x3f16df(0x1ca)]('click',function(){const _0x26e346=_0x3f16df,_0x1a3384=document[_0x26e346(0x1c5)](_0x26e346(0x1b8));_0x1a3384[_0x26e346(0x22f)][_0x26e346(0x1c2)]='100%',setTimeout(()=>{shakeScreen(),flashScreen();},0x12c),setTimeout(()=>{showScreen(0x1),setTimeout(()=>{const _0xdfd15e=_0x3038,_0x443116=document[_0xdfd15e(0x1c5)](_0xdfd15e(0x1d6));_0x443116[_0xdfd15e(0x22f)][_0xdfd15e(0x1c2)]=_0xdfd15e(0x1d9),setTimeout(()=>{shakeScreen(),flashScreen();},0x320);},0x1f4);},0x3e8);}),document[_0x3f16df(0x1c5)](_0x3f16df(0x1df))[_0x3f16df(0x1ca)]('click',function(){shakeScreen(),flashScreen(),setTimeout(()=>{showScreen(0x2);},0x1f4);}),document[_0x3f16df(0x1c5)](_0x3f16df(0x22e))[_0x3f16df(0x1ca)](_0x3f16df(0x1d0),function(){shakeScreen(),setTimeout(()=>{showScreen(0x3),startClickGame();},0x1f4);});function startClickGame(){const _0x13fb10=_0x3f16df,_0x13114d=document['getElementById'](_0x13fb10(0x223)),_0x2f85b7=document[_0x13fb10(0x1c5)]('targets-left'),_0x3c053e=document['getElementById'](_0x13fb10(0x224));_0x13114d[_0x13fb10(0x1fa)]='',addGameWarnings(_0x13114d);const _0x340435=0xa;let _0x5a5f08=_0x340435;_0x2f85b7[_0x13fb10(0x1ea)]=_0x5a5f08;for(let _0x18c61c=0x0;_0x18c61c<_0x340435;_0x18c61c++){const _0x1d33fa=document[_0x13fb10(0x22b)](_0x13fb10(0x1f5));_0x1d33fa['className']=_0x13fb10(0x201);const _0xd88940=Math[_0x13fb10(0x21e)]()*(_0x13114d['offsetWidth']-0x28),_0x2816cd=Math[_0x13fb10(0x21e)]()*(_0x13114d['offsetHeight']-0x28);_0x1d33fa['style'][_0x13fb10(0x222)]=_0xd88940+'px',_0x1d33fa[_0x13fb10(0x22f)][_0x13fb10(0x221)]=_0x2816cd+'px',_0x1d33fa[_0x13fb10(0x1ca)](_0x13fb10(0x1d0),function(){const _0x59d0f2=_0x13fb10;this['style'][_0x59d0f2(0x203)]='0',this[_0x59d0f2(0x22f)]['transform']=_0x59d0f2(0x1d5),_0x5a5f08--,_0x2f85b7[_0x59d0f2(0x1ea)]=_0x5a5f08,_0x5a5f08>0x0&&(_0x13114d['style'][_0x59d0f2(0x1ec)]='translateX(2px)',setTimeout(()=>{const _0x4a1ad5=_0x59d0f2;_0x13114d[_0x4a1ad5(0x22f)][_0x4a1ad5(0x1ec)]=_0x4a1ad5(0x210);},0x64)),_0x5a5f08===0x0&&(shakeScreen(),flashScreen(),_0x3c053e['style'][_0x59d0f2(0x1be)]=_0x59d0f2(0x1ba));}),_0x13114d['appendChild'](_0x1d33fa);}_0x3c053e[_0x13fb10(0x1ca)](_0x13fb10(0x1d0),function(){shakeScreen(),setTimeout(()=>{showScreen(0x4),startMemoryGame();},0x1f4);});}function _0x3038(_0x5f0cd2,_0x55d1cb){const _0x205cf5=_0x205c();return _0x3038=function(_0x303814,_0x497595){_0x303814=_0x303814-0x1b6;let _0x1fd9ce=_0x205cf5[_0x303814];return _0x1fd9ce;},_0x3038(_0x5f0cd2,_0x55d1cb);}function startMemoryGame(){const _0x29ffbf=_0x3f16df,_0x1c5dd8=document['getElementById'](_0x29ffbf(0x1d8)),_0x1e2113=document[_0x29ffbf(0x1c5)]('matched-pairs'),_0x56e20c=document['getElementById'](_0x29ffbf(0x1e5));_0x1c5dd8[_0x29ffbf(0x1fa)]='';const _0x118ee0=['!','@','#','$','%','&','*','+'],_0x3a6826=[..._0x118ee0,..._0x118ee0];for(let _0x49be19=_0x3a6826[_0x29ffbf(0x1f6)]-0x1;_0x49be19>0x0;_0x49be19--){const _0x51063f=Math[_0x29ffbf(0x20b)](Math[_0x29ffbf(0x21e)]()*(_0x49be19+0x1));[_0x3a6826[_0x49be19],_0x3a6826[_0x51063f]]=[_0x3a6826[_0x51063f],_0x3a6826[_0x49be19]];}let _0x3b1042=null,_0x3057ea=null,_0x2af2c3=![],_0xc9d2b0=0x0;_0x3a6826['forEach']((_0x423780,_0x5e2e60)=>{const _0x161161=_0x29ffbf,_0x49f346=document['createElement'](_0x161161(0x1f5));_0x49f346[_0x161161(0x1de)]=_0x161161(0x20c),_0x49f346['dataset'][_0x161161(0x1bc)]=_0x423780,_0x49f346[_0x161161(0x22d)][_0x161161(0x20a)]=_0x5e2e60,_0x49f346[_0x161161(0x1ca)]('click',()=>_0x26ec2f(_0x49f346)),_0x1c5dd8['appendChild'](_0x49f346);});function _0x26ec2f(_0x21c662){const _0x49d7cc=_0x29ffbf;if(_0x2af2c3||_0x21c662[_0x49d7cc(0x1e2)]['contains'](_0x49d7cc(0x230))||_0x21c662[_0x49d7cc(0x1e2)]['contains'](_0x49d7cc(0x21f)))return;_0x21c662['classList'][_0x49d7cc(0x20e)](_0x49d7cc(0x230)),_0x21c662['textContent']=_0x21c662[_0x49d7cc(0x22d)]['symbol'],_0x1c5dd8[_0x49d7cc(0x22f)][_0x49d7cc(0x1ec)]=_0x49d7cc(0x1c1),setTimeout(()=>{const _0x536cd7=_0x49d7cc;_0x1c5dd8[_0x536cd7(0x22f)][_0x536cd7(0x1ec)]=_0x536cd7(0x210);},0x64);if(!_0x3b1042){_0x3b1042=_0x21c662;return;}_0x3057ea=_0x21c662,_0x2af2c3=!![],_0x56d039();}function _0x56d039(){const _0x4da196=_0x29ffbf,_0x5cd9c2=_0x3b1042[_0x4da196(0x22d)][_0x4da196(0x1bc)]===_0x3057ea[_0x4da196(0x22d)]['symbol'];_0x5cd9c2?(_0x338377(),_0xc9d2b0++,_0x1e2113['textContent']=_0xc9d2b0,_0xc9d2b0<_0x118ee0[_0x4da196(0x1f6)]&&flashScreen(),_0xc9d2b0===_0x118ee0[_0x4da196(0x1f6)]&&(shakeScreen(),flashScreen(),_0x56e20c[_0x4da196(0x22f)][_0x4da196(0x1be)]=_0x4da196(0x1ba))):_0x1b3022();}function _0x338377(){const _0x310e1b=_0x29ffbf;_0x3b1042['classList'][_0x310e1b(0x20e)]('matched'),_0x3057ea[_0x310e1b(0x1e2)]['add'](_0x310e1b(0x21f)),_0x4c0e10();}function _0x1b3022(){setTimeout(()=>{const _0x13e4bf=_0x3038;_0x3b1042[_0x13e4bf(0x1e2)][_0x13e4bf(0x1e8)](_0x13e4bf(0x230)),_0x3057ea[_0x13e4bf(0x1e2)][_0x13e4bf(0x1e8)](_0x13e4bf(0x230)),_0x3b1042[_0x13e4bf(0x1ea)]='',_0x3057ea[_0x13e4bf(0x1ea)]='',_0x4c0e10();},0x3e8);}function _0x4c0e10(){[_0x3b1042,_0x3057ea,_0x2af2c3]=[null,null,![]];}_0x56e20c['addEventListener']('click',function(){shakeScreen(),setTimeout(()=>{showScreen(0x5);},0x1f4);});}document['getElementById']('btn-verify-password')[_0x3f16df(0x1ca)](_0x3f16df(0x1d0),function(){const _0x31dcb9=_0x3f16df,_0x117d72=document['getElementById'](_0x31dcb9(0x1cb)),_0x25f54b=document[_0x31dcb9(0x1c5)](_0x31dcb9(0x1e0)),_0x27c41d=_0x31dcb9(0x209);_0x117d72[_0x31dcb9(0x21c)]===_0x27c41d?(flashScreen(),setTimeout(()=>{showScreen(0x6),generateFileList(),createFileManagerWarnings();},0x1f4)):(_0x25f54b['style'][_0x31dcb9(0x1be)]='block',_0x117d72['value']='',shakeScreen());}),document[_0x3f16df(0x1c5)](_0x3f16df(0x1cb))['addEventListener']('keypress',function(_0x59f103){const _0x4eb1d5=_0x3f16df;_0x59f103[_0x4eb1d5(0x1c6)]===_0x4eb1d5(0x228)&&document['getElementById'](_0x4eb1d5(0x1f0))[_0x4eb1d5(0x1d0)]();}),document['getElementById'](_0x3f16df(0x1cb))['addEventListener'](_0x3f16df(0x1d7),function(){this['select']();}),document['getElementById'](_0x3f16df(0x1cb))[_0x3f16df(0x1ca)]('input',function(){const _0x2e59e6=_0x3f16df;document[_0x2e59e6(0x1c5)](_0x2e59e6(0x1e0))[_0x2e59e6(0x22f)][_0x2e59e6(0x1be)]=_0x2e59e6(0x1ce);});function generateFileList(){const _0x2824ec=_0x3f16df,_0x195ecd=document['getElementById'](_0x2824ec(0x1e6));_0x195ecd[_0x2824ec(0x1fa)]='';const _0x8780ca=0xf,_0x5e1d27=[_0x2824ec(0x1f8),_0x2824ec(0x20d),_0x2824ec(0x1dc),_0x2824ec(0x1f4),_0x2824ec(0x226)];for(let _0x3c81bc=0x0;_0x3c81bc<_0x8780ca;_0x3c81bc++){const _0x48ae60=document[_0x2824ec(0x22b)](_0x2824ec(0x1f5));_0x48ae60[_0x2824ec(0x1de)]=_0x2824ec(0x1dd);const _0x1c9ee4=generateRandomName()+_0x5e1d27[Math[_0x2824ec(0x20b)](Math['random']()*_0x5e1d27[_0x2824ec(0x1f6)])],_0x2af696=Math[_0x2824ec(0x20b)](Math[_0x2824ec(0x21e)]()*0x2710)+'\x20KB';_0x48ae60[_0x2824ec(0x1fa)]=_0x2824ec(0x1cf)+_0x1c9ee4+_0x2824ec(0x1c9)+_0x1c9ee4+_0x2824ec(0x1cd)+_0x2af696+_0x2824ec(0x1b7),_0x195ecd[_0x2824ec(0x1bd)](_0x48ae60);}document['getElementById'](_0x2824ec(0x1ee))[_0x2824ec(0x1ca)](_0x2824ec(0x1ef),function(){const _0x5e421b=_0x2824ec,_0x18095f=document[_0x5e421b(0x1f9)](_0x5e421b(0x21d));_0x18095f[_0x5e421b(0x1ff)](_0x4a48dc=>{const _0x144691=_0x5e421b;_0x4a48dc[_0x144691(0x1b6)]=this[_0x144691(0x1b6)];});}),document[_0x2824ec(0x1c5)](_0x2824ec(0x202))[_0x2824ec(0x1ca)](_0x2824ec(0x1d0),function(){const _0xedc34b=_0x2824ec,_0x47ff70=document[_0xedc34b(0x1f9)](_0xedc34b(0x1b9));_0x47ff70[_0xedc34b(0x1f6)]>0x0&&showConfirmModal(_0xedc34b(0x1f3));}),document['getElementById']('btn-delete')[_0x2824ec(0x1ca)]('click',function(){const _0x422923=_0x2824ec,_0x444728=document['querySelectorAll'](_0x422923(0x1b9));_0x444728[_0x422923(0x1f6)]>0x0&&showConfirmModal(_0x422923(0x1c3));});}function generateRandomName(){const _0x3395ce=_0x3f16df,_0x2cc7f5='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_';let _0x48156f='';for(let _0x38b12f=0x0;_0x38b12f<0x8;_0x38b12f++){_0x48156f+=_0x2cc7f5['charAt'](Math[_0x3395ce(0x20b)](Math[_0x3395ce(0x21e)]()*_0x2cc7f5[_0x3395ce(0x1f6)]));}return _0x48156f;}function showConfirmModal(_0x5aee2b){const _0x4724fd=_0x3f16df,_0x43bfe9=document['getElementById'](_0x4724fd(0x218));_0x43bfe9[_0x4724fd(0x22f)]['display']=_0x4724fd(0x219),document['getElementById'](_0x4724fd(0x1e3))[_0x4724fd(0x1f1)]=function(){const _0x4b3a06=_0x4724fd;_0x43bfe9['style']['display']=_0x4b3a06(0x1ce);if(_0x5aee2b===_0x4b3a06(0x1f3))window[_0x4b3a06(0x1c8)][_0x4b3a06(0x211)]='https://sylvie-seven-cq.top/Syzygy/结局B.html';else _0x5aee2b===_0x4b3a06(0x1c3)&&(window[_0x4b3a06(0x1c8)][_0x4b3a06(0x211)]=_0x4b3a06(0x1ed));},document[_0x4724fd(0x1c5)]('btn-confirm-no')[_0x4724fd(0x1f1)]=function(){const _0x9ef423=_0x4724fd;_0x43bfe9[_0x9ef423(0x22f)][_0x9ef423(0x1be)]=_0x9ef423(0x1ce);};}function showScreen(_0x390672){const _0x241ba7=_0x3f16df;screens[_0x241ba7(0x1ff)](_0x2bca03=>{const _0x111c64=_0x241ba7;_0x2bca03[_0x111c64(0x1e2)]['remove'](_0x111c64(0x205));}),screens[_0x390672][_0x241ba7(0x1e2)][_0x241ba7(0x20e)](_0x241ba7(0x205)),currentScreen=_0x390672,_0x390672!==0x6&&removeFileManagerWarnings();}window[_0x3f16df(0x1da)]=function(){createWarningText(),setInterval(()=>{const _0x32941c=_0x3038,_0x342b6a=document[_0x32941c(0x1f9)](_0x32941c(0x1c4));_0x342b6a[_0x32941c(0x1ff)](_0x4f4d8f=>{const _0x58d85d=_0x32941c;_0x4f4d8f['style'][_0x58d85d(0x227)]=Math[_0x58d85d(0x21e)]()>0.1?'visible':'hidden';});},0x64),setInterval(()=>{Math['random']()>0.8&&shakeScreen();},0x1388),setInterval(()=>{const _0x521c86=_0x3038;Math[_0x521c86(0x21e)]()>0.9&&flashScreen();},0x1f40);};
-   </script>
+
+    <script>
+        // 创建背景警告文字
+        function createWarningText() {
+            const bgWarning = document.getElementById('bg-warning');
+            const warnings = ['危险！！危险！！', '警告！！警告！！', '系统崩溃！！', '文件损坏！！', 
+                             '内存泄漏！！', '权限丢失！！', '数据丢失！！', '系统过载！！', 
+                             '进程异常！！', '硬件故障！！'];
+            
+            for (let i = 0; i < 50; i++) {
+                const warningText = document.createElement('div');
+                warningText.className = 'warning-text';
+                warningText.textContent = warnings[Math.floor(Math.random() * warnings.length)];
+                warningText.style.left = Math.random() * 100 + 'vw';
+                warningText.style.top = Math.random() * 100 + 'vh';
+                warningText.style.animationDelay = Math.random() * 15 + 's';
+                warningText.style.fontSize = (Math.random() * 1.5 + 1.5) + 'rem';
+                warningText.style.opacity = Math.random() * 0.9 + 0.3;
+                bgWarning.appendChild(warningText);
+            }
+        }
+        
+        // 窗口抖动效果
+        function shakeScreen() {
+            const container = document.getElementById('container');
+            container.classList.add('shake');
+            setTimeout(() => {
+                container.classList.remove('shake');
+            }, 500);
+        }
+        
+        // 闪屏效果
+        function flashScreen() {
+            const container = document.getElementById('container');
+            container.classList.add('flash');
+            setTimeout(() => {
+                container.classList.remove('flash');
+            }, 300);
+        }
+        
+        // 模拟进度条加载
+        function simulateProgress() {
+            const progress = document.getElementById('progress');
+            let width = 0;
+            
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    // 进度条完成后添加效果
+                    shakeScreen();
+                    flashScreen();
+                } else {
+                    width += Math.random() * 5;
+                    progress.style.width = width + '%';
+                }
+            }, 200);
+        }
+        
+        // 重启按钮事件
+        document.getElementById('btn-restart').addEventListener('click', function() {
+            // 添加效果
+            shakeScreen();
+            flashScreen();
+            
+            // 模拟重启过程
+            const terminal = document.querySelector('.terminal');
+            const newLines = [
+                '> 尝试系统重启...',
+                '> 正在关闭所有进程...',
+                '> 保存系统状态...',
+                '> 无法保存系统状态',
+                '> 强制关闭所有进程',
+                '> 重新启动失败',
+                '> 系统无法恢复'
+            ];
+            
+            let i = 0;
+            const addLine = setInterval(() => {
+                if (i < newLines.length) {
+                    const line = document.createElement('div');
+                    line.className = 'terminal-line';
+                    line.textContent = newLines[i];
+                    terminal.appendChild(line);
+                    terminal.scrollTop = terminal.scrollHeight;
+                    i++;
+                } else {
+                    clearInterval(addLine);
+                }
+            }, 800);
+        });
+        
+        // 初始加载
+        window.onload = function() {
+            // 创建背景警告文字
+            createWarningText();
+            
+            // 开始进度条
+            simulateProgress();
+            
+            // 添加一些闪烁效果
+            setInterval(() => {
+                const glitchElements = document.querySelectorAll('.glitch');
+                glitchElements.forEach(el => {
+                    el.style.visibility = Math.random() > 0.1 ? 'visible' : 'hidden';
+                });
+            }, 100);
+            
+            // 随机添加抖动效果
+            setInterval(() => {
+                if (Math.random() > 0.8) {
+                    shakeScreen();
+                }
+            }, 5000);
+            
+            // 随机添加闪屏效果
+            setInterval(() => {
+                if (Math.random() > 0.9) {
+                    flashScreen();
+                }
+            }, 8000);
+        };
+    </script>
 </body>
 </html>
