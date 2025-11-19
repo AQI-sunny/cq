@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统崩溃</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+        
+        body {
+            background-color: #000;
+            color: #ff0000;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        /* 背景警告文字 */
+        .bg-warning {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.2;
+        }
+        
+        .warning-text {
+            position: absolute;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff0000;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translate(0, 0);
+                opacity: 0.1;
+            }
+            25% {
+                transform: translate(20vw, 40vh);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(60vw, 20vh);
+                opacity: 0.2;
+            }
+            75% {
+                transform: translate(40vw, 60vh);
+                opacity: 0.4;
+            }
+            100% {
+                transform: translate(0, 0);
+                opacity: 0.1;
+            }
+        }
+        
+        #container {
+            width: 95%;
+            max-width: 800px;
+            height: 90%;
+            max-height: 600px;
+            border: 2px solid #ff0000;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: clamp(2rem, 6vw, 4rem);
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #ff0000;
+        }
+        
+        p {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .error-code {
+            font-size: 0.9rem;
+            color: #ff5555;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            background-color: #000;
+            color: #ff0000;
+            border: 1px solid #ff0000;
+            padding: 10px 20px;
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            cursor: pointer;
+            margin: 15px;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #ff0000;
+            color: #000;
+            box-shadow: 0 0 10px #ff0000;
+        }
+        
+        /* 终端样式 */
+        .terminal {
+            background-color: #000;
+            color: #ff0000;
+            padding: 8px;
+            font-family: 'Courier New', monospace;
+            width: 100%;
+            height: 40%;
+            min-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ff0000;
+            margin: 20px 0;
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+            text-align: left;
+        }
+        
+        .terminal-line {
+            margin-bottom: 4px;
+        }
+        
+        /* 进度条样式 */
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #000;
+            border: 1px solid #ff0000;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            width: 0%;
+            background-color: #ff0000;
+            transition: width 0.5s;
+        }
+        
+        /* 故障效果 */
+        .glitch {
+            animation: glitch 0.5s infinite;
+        }
+        
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        
+        /* 窗口抖动 */
+        .shake {
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0% { transform: translate(0, 0); }
+            10% { transform: translate(-5px, 5px); }
+            20% { transform: translate(5px, -5px); }
+            30% { transform: translate(-5px, -5px); }
+            40% { transform: translate(5px, 5px); }
+            50% { transform: translate(-5px, 5px); }
+            60% { transform: translate(5px, -5px); }
+            70% { transform: translate(-5px, -5px); }
+            80% { transform: translate(5px, 5px); }
+            90% { transform: translate(-5px, 5px); }
+            100% { transform: translate(0, 0); }
+        }
+        
+        /* 闪屏 */
+        .flash {
+            animation: flash 0.3s;
+        }
+        
+        @keyframes flash {
+            0% { background-color: rgba(255, 0, 0, 0); }
+            50% { background-color: rgba(255, 0, 0, 0.3); }
+            100% { background-color: rgba(255, 0, 0, 0); }
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            #container {
+                height: 95%;
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #container {
+                height: 98%;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景警告文字 -->
+    <div class="bg-warning" id="bg-warning"></div>
+    
+    <div id="container">
+        <h1 class="glitch">系统崩溃</h1>
+        <p>系统核心文件已损坏...</p>
+        
+        <div class="terminal">
+            <div class="terminal-line">> 系统文件完整性检查失败</div>
+            <div class="terminal-line">> 核心模块: kernel32.dll - 已损坏</div>
+            <div class="terminal-line">> 核心模块: ntdll.dll - 已损坏</div>
+            <div class="terminal-line">> 系统即将关闭...</div>
+            <div class="terminal-line">> 错误代码: 0x0000007B</div>
+            <div class="terminal-line">> 内存转储失败</div>
+            <div class="terminal-line">> 无法访问系统注册表</div>
+            <div class="terminal-line">> 硬件驱动程序异常</div>
+            <div class="terminal-line">> 安全模式启动失败</div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        
+        <p class="error-code">请联系系统管理员或重新启动系统</p>
+        <button class="btn" id="btn-restart">尝试重启</button>
+    </div>
+
+    <script>
+        // 创建背景警告文字
+        function createWarningText() {
+            const bgWarning = document.getElementById('bg-warning');
+            const warnings = ['危险！！危险！！', '警告！！警告！！', '系统崩溃！！', '文件损坏！！', 
+                             '内存泄漏！！', '权限丢失！！', '数据丢失！！', '系统过载！！', 
+                             '进程异常！！', '硬件故障！！'];
+            
+            for (let i = 0; i < 50; i++) {
+                const warningText = document.createElement('div');
+                warningText.className = 'warning-text';
+                warningText.textContent = warnings[Math.floor(Math.random() * warnings.length)];
+                warningText.style.left = Math.random() * 100 + 'vw';
+                warningText.style.top = Math.random() * 100 + 'vh';
+                warningText.style.animationDelay = Math.random() * 15 + 's';
+                warningText.style.fontSize = (Math.random() * 1.5 + 1.5) + 'rem';
+                warningText.style.opacity = Math.random() * 0.9 + 0.3;
+                bgWarning.appendChild(warningText);
+            }
+        }
+        
+        // 窗口抖动效果
+        function shakeScreen() {
+            const container = document.getElementById('container');
+            container.classList.add('shake');
+            setTimeout(() => {
+                container.classList.remove('shake');
+            }, 500);
+        }
+        
+        // 闪屏效果
+        function flashScreen() {
+            const container = document.getElementById('container');
+            container.classList.add('flash');
+            setTimeout(() => {
+                container.classList.remove('flash');
+            }, 300);
+        }
+        
+        // 模拟进度条加载
+        function simulateProgress() {
+            const progress = document.getElementById('progress');
+            let width = 0;
+            
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    // 进度条完成后添加效果
+                    shakeScreen();
+                    flashScreen();
+                } else {
+                    width += Math.random() * 5;
+                    progress.style.width = width + '%';
+                }
+            }, 200);
+        }
+        
+        // 重启按钮事件
+        document.getElementById('btn-restart').addEventListener('click', function() {
+            // 添加效果
+            shakeScreen();
+            flashScreen();
+            
+            // 模拟重启过程
+            const terminal = document.querySelector('.terminal');
+            const newLines = [
+                '> 尝试系统重启...',
+                '> 正在关闭所有进程...',
+                '> 保存系统状态...',
+                '> 无法保存系统状态',
+                '> 强制关闭所有进程',
+                '> 重新启动失败',
+                '> 系统无法恢复'
+            ];
+            
+            let i = 0;
+            const addLine = setInterval(() => {
+                if (i < newLines.length) {
+                    const line = document.createElement('div');
+                    line.className = 'terminal-line';
+                    line.textContent = newLines[i];
+                    terminal.appendChild(line);
+                    terminal.scrollTop = terminal.scrollHeight;
+                    i++;
+                } else {
+                    clearInterval(addLine);
+                }
+            }, 800);
+        });
+        
+        // 初始加载
+        window.onload = function() {
+            // 创建背景警告文字
+            createWarningText();
+            
+            // 开始进度条
+            simulateProgress();
+            
+            // 添加一些闪烁效果
+            setInterval(() => {
+                const glitchElements = document.querySelectorAll('.glitch');
+                glitchElements.forEach(el => {
+                    el.style.visibility = Math.random() > 0.1 ? 'visible' : 'hidden';
+                });
+            }, 100);
+            
+            // 随机添加抖动效果
+            setInterval(() => {
+                if (Math.random() > 0.8) {
+                    shakeScreen();
+                }
+            }, 5000);
+            
+            // 随机添加闪屏效果
+            setInterval(() => {
+                if (Math.random() > 0.9) {
+                    flashScreen();
+                }
+            }, 8000);
+        };
+    </script>
+</body>
+</html>
