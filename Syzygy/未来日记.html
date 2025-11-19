@@ -62,7 +62,7 @@
         }
         
         h1 {
-            font-size: 3rem;
+            font-size: 4rem; /* 放大标题 */
             margin-bottom: 10px;
             letter-spacing: 5px;
         }
@@ -200,9 +200,82 @@
             100% { top: 100%; }
         }
         
+        /* 自定义弹窗样式 */
+        .custom-alert {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .alert-content {
+            background-color: #000;
+            border: 2px solid #ff0033;
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 500px;
+            width: 80%;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255, 0, 51, 0.7);
+            animation: pulse 0.5s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+        
+        .alert-title {
+            color: #ff0033;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .alert-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .alert-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .alert-confirm {
+            background-color: #ff0033;
+            color: #000;
+        }
+        
+        .alert-confirm:hover {
+            background-color: #cc0029;
+        }
+        
+        .alert-cancel {
+            background-color: #000;
+            color: #ff0033;
+            border: 1px solid #ff0033;
+        }
+        
+        .alert-cancel:hover {
+            background-color: #ff0033;
+            color: #000;
+        }
+        
         @media (max-width: 600px) {
             h1 {
-                font-size: 2rem;
+                font-size: 2.5rem; /* 移动端适当调整 */
             }
             
             .buttons {
@@ -223,62 +296,98 @@
     
     <div class="container">
         <header>
-            <h1 class="glitch-text">系统发生错误 系统发生错误 系统发生错误 系统发生错误</h1>
-            <p class="subtitle">我的日记：</p>
+            <h1 class="glitch-text">检测到你的未来日记，已提取</h1>
+            <p class="subtitle">系统发生错误 系统发生错误 系统发生错误 系统发生错误</p>
         </header>
         
         <div class="diary-entry">
-            <div class="date">XX年5月10日</div>
-            <div class="weather">阴雨，像我此刻的心情。</div>
+            <div class="date">1月15日</div>
             <div class="content">
-                我避开了那辆车。
-就在今天下午，我走在回家路上，脑海中突然浮现出三天前看到的那一幕：一辆黑色的轿车，失控地冲向人行道。我全身的汗毛都竖起来了。当我听到轮胎刺耳的摩擦声时，我几乎是本能地，带着一种被预言驱使的疯狂，猛地向后跳。
-我摔倒了，手肘擦破了皮，但那辆车几乎是擦着我的衣角冲过去了，然后撞上了路边的灯柱。周围一片尖叫，人们惊魂未定，而我坐在地上，只有一种冰冷的、确凿的认知：预言实现了，但我也活下来了。
-我以为，我的抗争成功了。我以为，知识就是力量。
-但当我颤抖着打开手机，想要告诉自己“没事了”的时候，屏幕上跳出了一条又一条的银行短信通知——一连串的异地消费和转账。我的积蓄，我辛苦工作攒下的，让我感到安全的存款，化为乌有。
-我避开了死亡，却被命运剥夺了生存的权利。
+                新年伊始，寒意未消。静乔公寓的暖气问题最终酿成了祸端——无人修理的管道突然爆裂，冰冷的积水淹没了我的房间。我看着被冲毁的旧照片和文件，心都在滴血。斜对门3305的阿姨敲门送来热水壶，叹着气说，3303的暴躁邻居也被波及，骂了一上午。。物业却只说是"天灾"。看着一片狼藉的小房间，我第一次感到，生活的主动权已从手中滑走。
             </div>
         </div>
         
         <div class="diary-entry">
-            <div class="date">xx年10月29日 </div>
-            <div class="weather">晴转阴</div>
+            <div class="date">2月28日</div>
             <div class="content">
-                
-2025年10月29日 晴转阴
-今天的心跳一直不正常，像有人在里面急促地擂鼓。坐在办公桌前，我努力想集中精神，但脑子里不断闪回一些可怕的碎片。它们没有逻辑，但每一个都那么清晰、那么令人心惊。
-最开始是那个花瓶，我一直珍藏的那个。画面里，它无声无息地倒在公寓的地板上，碎裂成无数尖锐的残骸。那不是重点，但它开启了一扇门。紧接着，是银行账户——一串冰冷的数字，后面跟着一个刺眼的“0”。我能感觉到那种吸气后的窒息，辛苦积攒的一切就这样蒸发了，只留下巨大的空洞和无边的愤怒。
-但真正让我感到生理性恐慌的，是路的尽头。我走在一条熟悉的街上，然后是尖锐的刹车声和金属扭曲的巨响。我看到了失控的汽车，迎面冲来。接着是白色的冲击，然后是彻底的寂静和双腿传来的那种令人绝望的麻木感。画面很短暂，但我至今能感觉到那种撞击的疼痛和随后彻底的无力。
-恐惧不是来自外面的世界，而是来自脑海里那些挥之不去的景象。这种感觉太真实了，真实到让我对明天心生畏惧。我需要平静下来。
+                冬雨绵绵。工作第五年，我并非与升职失之交臂，而是被公司以"涉嫌挪用公款"的指控当场解雇。经理拿出一堆伪造的邮件和签名，说我的项目"缺乏职业道德"。所有辩解都是徒劳。回到家中，看着对面写字楼的灯火通明，我第一次怀疑，当初的选择是不是错了。
             </div>
         </div>
         
         <div class="diary-entry">
-            <div class="date">xx年10月30日 </div>
-            <div class="weather">阴雨</div>
+            <div class="date">3月18日</div>
             <div class="content">
-                
-2025年10月29日 晴转阴
-今天的心跳一直不正常，像有人在里面急促地擂鼓。坐在办公桌前，我努力想集中精神，但脑子里不断闪回一些可怕的碎片。它们没有逻辑，但每一个都那么清晰、那么令人心惊。
-最开始是那个花瓶，我一直珍藏的那个。画面里，它无声无息地倒在公寓的地板上，碎裂成无数尖锐的残骸。那不是重点，但它开启了一扇门。紧接着，是银行账户——一串冰冷的数字，后面跟着一个刺眼的“0”。我能感觉到那种吸气后的窒息，辛苦积攒的一切就这样蒸发了，只留下巨大的空洞和无边的愤怒。
-但真正让我感到生理性恐慌的，是路的尽头。我走在一条熟悉的街上，然后是尖锐的刹车声和金属扭曲的巨响。我看到了失控的汽车，迎面冲来。接着是白色的冲击，然后是彻底的寂静和双腿传来的那种令人绝望的麻木感。画面很短暂，但我至今能感觉到那种撞击的疼痛和随后彻底的无力。
-恐惧不是来自外面的世界，而是来自脑海里那些挥之不去的景象。这种感觉太真实了，真实到让我对明天心生畏惧。我需要平静下来。
-2025年10月30日 阴雨
-整晚都在做噩梦，或者说，是那些碎片化的画面又在我眼前重新组合。这次的冲击是关于“信任”和“自由”。
-我看到自己身处一个极其冰冷、狭小的空间，四周是坚硬的墙壁和铁栏杆。这不是电影场景，那股彻骨的寒意太真实了。更可怕的是，我清楚地知道我在这里的境地，是源于一个我曾亲密无间、完全信任的朋友。那种被至亲之人突然推入深渊的画面，比任何身体上的痛苦都更让人绝望。
-我现在开始怀疑我身边的每一个人。我的手心在冒汗，我感觉自己像被困在一个没有出口的迷宫里。我甚至不敢接任何电话，不敢回应任何消息。我已经失去了财产的稳定，难道现在连基本的社会关系也要崩溃吗？这种无能为力感像一块巨大的石头压在我的胸口，让我几乎喘不过气。
-为什么是这些？为什么一切都指向最坏的结局？我只是想过平静的生活。
+                倒春寒。母亲病重住院，急需手术。雪上加霜的是，今天父亲突发心梗走了，走得太快，连句话都没留下。他生前用全部积蓄为我购置了这间小屋，替朋友做了一笔巨额担保。现在，律师函要求立刻查封我名下的房产。我连母亲的一半手术费都凑不齐，现在连这唯一的容身之所也要保不住了。
             </div>
         </div>
         
         <div class="diary-entry">
-            <div class="date">xx年10月30日 </div>
-            <div class="weather"> 雾霾</div>
+            <div class="date">4月5日</div>
             <div class="content">
-                我感觉自己快要崩溃了。昨晚，我看到了最不能承受的画面，那份冲击力让我直到现在双眼都胀痛。
-画面里有一个角落，一个我无比熟悉的身影就在那里。我清楚地看到了，一瞬间的意外，一个不可逆转的错误，然后是那种令人心悸的静止。那种无声的、充满鲜红的景象，比任何尖叫都更刺耳。我甚至不敢去想象，那到底是谁。
-我无法接受。财产的损失，身体的残缺，朋友的背叛，现在，连最熟悉的人都面临着如此可怕的终结。我像站在一条正在崩塌的桥上，周围的一切都在碎裂、下坠，而我只能眼睁睁地看着，伸不出手，喊不出声。
-这种感觉太折磨人了。恐惧和无力感已经完全占据了我，它们不是抽象的概念，而是具体的，带着泥土和鲜血的气味，带着铁栏杆的冰冷和账户清零的空虚。我害怕去任何地方，我害怕看到任何人。我不知道该怎么办，我只是觉得，我正在被某种巨大的、看不见的力量碾碎。我希望这一切只是我过度疲劳产生的错觉，但它们太真实了，真实到让人发抖。
+                清明时节雨纷纷。今天去给父亲办完简陋的后事。母亲独自一人在病房，我急忙赶回。回程时，悲剧降临——母亲突发性脑溢血，医生说情况已无可挽回。在急诊室，我接到一个电话，告诉我为筹母亲医药费而向高利贷借来的钱，竟被担保人带着跑了。3307的钥匙紧紧握在手心，我失去了最后的希望，也失去了最后的尊严。
+            </div>
+        </div>
+        
+        <div class="diary-entry">
+            <div class="date">5月10日</div>
+            <div class="content">
+                阴雨，像我此刻的心情。那辆车终究没有避开。今天下午从静乔公寓出来时，一切都发生得太快——刺耳的刹车声，剧烈的撞击。右腿剧痛，无法动弹。急诊医生说右腿胫骨平台粉碎性骨折，需要立即手术。以后走路都会受影响，阴雨天会更痛苦。
+            </div>
+        </div>
+        
+        <div class="diary-entry">
+            <div class="date">6月15日</div>
+            <div class="content">
+                闷热，如同我焦灼的心情。腿伤未愈，又收到银行催款通知。账户余额为零——所有积蓄一夜消失。银行说是正常转账，有我的电子签名授权。可我从未进行这些操作。医药费还没付，下个月房租又到期。拄着拐杖站在窗前，看着楼下熙攘的人群，第一次感到绝望。
+            </div>
+        </div>
+        
+        <div class="diary-entry">
+            <div class="date">7月22日</div>
+            <div class="content">
+                暴雨。所谓的"好朋友"来医院"看望"。直到警察上门，才知道盗用账户的人就是他。利用照顾我的机会，偷走身份证和银行卡信息。信任？多么可笑。楼下3207的王大妈送来水果，我连门都不敢开。
+            </div>
+        </div>
+        
+        <div class="diary-entry">
+            <div class="date">8月30日</div>
+            <div class="content">
+                阴。母亲走了。接到医院电话时，我正在做复健。突发性脑溢血，没来得及说最后一句话。她是这世上我最后的牵挂。现在连这最后的温暖也没了。回到家中，这空荡荡的房间只剩回忆。
+            </div>
+        </div>
+        
+        <div class="diary-entry">
+            <div class="date">9月18日</div>
+            <div class="content">
+                秋风刺骨。好朋友出事了。来医院看我的路上遭遇车祸，医生说可能永久失明。为什么所有靠近我的人都要遭遇不幸？从一月开始，一切都在崩塌。这难道是我选择错误的报应？这个小小的家，像座孤岛，把我与所有美好隔绝。
+            </div>
+        </div>
+        
+        <div class="diary-entry">
+            <div class="date">10月31日</div>
+            <div class="content">
+                雾霾，如同我的未来。万圣节。窗外孩子们在欢笑，我坐在窗前，看着模糊的世界。收到法院传票，因拖欠医药费和房租被起诉。物业说月底前必须搬离3307。腿伤在变天时阵阵作痛。这个曾经温暖的家，现在只剩四面墙和我。
+            </div>
+        </div>
+        
+        <div class="diary-entry">
+            <div class="date">11月15日</div>
+            <div class="content">
+                初冬寒意刺骨。被迫搬到地下室。潮湿阴暗，腿疼得整夜难眠。试着找工作，因腿伤和官司，没有公司愿意录用。路过静乔公寓，特意抬头望向某扇窗户，看见阳台挂着别人的衣服。那里曾是我的家。
+            </div>
+        </div>
+        
+        <div class="diary-entry">
+            <div class="date">12月24日</div>
+            <div class="content">
+                平安夜的雪格外冷。在地下室发烧两天。没有药，没有食物。听着外面的圣诞歌声，想起去年此时，我独自在静乔公寓为自己准备简单的晚餐。现在什么都没了。健康、钱财、朋友、家人、住所......连最后尊严也快消失。
+            </div>
+        </div>
+        
+        <div class="diary-entry">
+            <div class="date">12月31日</div>
+            <div class="content">
+                岁末钟声像是倒计时。坐在公园长椅上，看人们放烟花庆新年。手机最后电量，收到银行催款短信。这一年每个月都在失去。从一月开始，一切崩塌。明天就是新年，可我还能失去什么？
             </div>
         </div>
         
@@ -354,8 +463,6 @@
             "> 系统分析：用户已阅读全部日记记录",
             "> 情感波动检测：不确定性焦虑指数 78%",
             "> 自由意志保留度：92%",
-            /* "> 建议：拒绝接入以保持人类本质",
-            "> 警告：拒绝接入将导致社会服务降级", */
             "> 最终决定权：用户自由意志"
         ];
         
@@ -373,17 +480,125 @@
             }
         }, 800);
         
+        // 所有可能的位置
+        const allPositions = [
+            { top: '20%', left: '10%' },
+            { top: '30%', left: '70%' },
+            { top: '60%', left: '20%' },
+            { top: '50%', left: '60%' },
+            { top: '25%', left: '80%' },
+            { top: '70%', left: '30%' },
+            { top: '40%', left: '15%' },
+            { top: '15%', left: '40%' }
+        ];
+        
+        // 用于跟踪已使用的位置
+        let usedPositions = [];
+        
+        // 自定义弹窗函数
+        function showCustomAlert(message, confirmCallback, cancelCallback, alertCount = 0) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'custom-alert';
+            
+            const alertContent = document.createElement('div');
+            alertContent.className = 'alert-content';
+            
+            // 如果是第一次弹窗，在正中间；后续弹窗在随机且不重复的位置
+            if (alertCount > 0) {
+                // 获取可用的位置（排除已使用的位置）
+                const availablePositions = allPositions.filter(pos => 
+                    !usedPositions.some(used => used.top === pos.top && used.left === pos.left)
+                );
+                
+                // 如果没有可用位置了，重置已使用位置
+                if (availablePositions.length === 0) {
+                    usedPositions = [];
+                    availablePositions.push(...allPositions);
+                }
+                
+                // 随机选择一个可用位置
+                const randomIndex = Math.floor(Math.random() * availablePositions.length);
+                const selectedPos = availablePositions[randomIndex];
+                
+                // 记录已使用的位置
+                usedPositions.push(selectedPos);
+                
+                alertContent.style.position = 'absolute';
+                alertContent.style.top = selectedPos.top;
+                alertContent.style.left = selectedPos.left;
+                alertContent.style.transform = 'translate(-50%, -50%)';
+            }
+            
+            const title = document.createElement('div');
+            title.className = 'alert-title';
+            title.textContent = message;
+            
+            const buttonsDiv = document.createElement('div');
+            buttonsDiv.className = 'alert-buttons';
+            
+            const confirmBtn = document.createElement('button');
+            confirmBtn.className = 'alert-btn alert-confirm';
+            confirmBtn.textContent = '确定';
+            
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'alert-btn alert-cancel';
+            cancelBtn.textContent = '取消';
+            
+            confirmBtn.addEventListener('click', function() {
+                document.body.removeChild(alertDiv);
+                if (confirmCallback) confirmCallback();
+            });
+            
+            cancelBtn.addEventListener('click', function() {
+                document.body.removeChild(alertDiv);
+                if (cancelCallback) cancelCallback();
+            });
+            
+            buttonsDiv.appendChild(confirmBtn);
+            buttonsDiv.appendChild(cancelBtn);
+            
+            alertContent.appendChild(title);
+            alertContent.appendChild(buttonsDiv);
+            alertDiv.appendChild(alertContent);
+            document.body.appendChild(alertDiv);
+        }
+        
+        // 拒绝接入的弹窗逻辑
+        function showRejectAlert(confirmCount = 0) {
+            showCustomAlert(
+                "拒绝接入泥将迎来毁灭性嘟灾难哦~你确定吗？",
+                function() {
+                    confirmCount++;
+                    if (confirmCount < 3) {
+                        showRejectAlert(confirmCount);
+                    } else {
+                        alert("林墨：干得漂亮！你识破了窥命司的阴谋！！！");
+                        window.location.href = "https://sylvie-seven-cq.top/Syzygy/迷宫.html";
+                    }
+                },
+                function() {
+                    // 取消后再次点击确定仍然需要弹三次
+                    document.getElementById('noBtn').addEventListener('click', function noBtnHandler() {
+                        document.getElementById('noBtn').removeEventListener('click', noBtnHandler);
+                        // 重置已使用位置
+                        usedPositions = [];
+                        showRejectAlert();
+                    });
+                },
+                confirmCount // 传递当前确认次数用于确定弹窗位置
+            );
+        }
+        
         // 添加按钮事件
         document.getElementById('yesBtn').addEventListener('click', function() {
-            // 在实际应用中，这里应该跳转到坏结局页面
             alert("正在接入确定性网络...");
             window.location.href = "https://sylvie-seven-cq.top/Syzygy/又be辣.html";
         });
         
         document.getElementById('noBtn').addEventListener('click', function() {
-            // 在实际应用中，这里应该跳转到好结局页面
-            alert("林墨：干得漂亮！你识破了窥命司的阴谋！！！");
-            window.location.href = "https://sylvie-seven-cq.top/Syzygy/迷宫.html";
+            // 重置已使用位置
+            usedPositions = [];
+            showRejectAlert();
         });
         
         // 添加窗口调整大小时的响应
