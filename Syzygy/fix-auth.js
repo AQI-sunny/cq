@@ -499,7 +499,8 @@
         }
     } 11.19日晚修改！*/
    // 处理退出登录 - 修复版本
-function handleLogout() {
+/* function handleLogout() {
+
     if (isProcessing) return;
     
     if (confirm('确定要退出登录吗？')) {
@@ -527,6 +528,41 @@ function handleLogout() {
         if (registerUsername) registerUsername.value = '';
         
         console.log('用户已退出登录，页面状态已重置');
+    }
+}
+ */
+
+// 处理退出登录 - 最终优化版本
+function handleLogout() {
+    if (isProcessing) return;
+    
+    if (confirm('确定要退出登录吗？')) {
+        isProcessing = true; // 防止重复操作
+        
+        authCurrentUser = null;
+        if (typeof window !== 'undefined') {
+            window.currentUser = null;
+            localStorage.removeItem('lastLoginUser');
+        }
+        
+        // 清理操作
+        closeAllModals();
+        clearLoginForm();
+        const registerUsername = document.getElementById('register-username');
+        if (registerUsername) registerUsername.value = '';
+        
+        // 更新状态并重新渲染
+        updateAuthState();
+        
+        if (typeof renderSection === 'function') {
+            setTimeout(() => {
+                renderSection('首页');
+                isProcessing = false; // 重置处理状态
+                
+            }, 100);
+        } else {
+            isProcessing = false;
+        }
     }
 }
 
