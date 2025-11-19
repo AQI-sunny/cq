@@ -1,3 +1,5 @@
+/* fix auth 19日晚上修改片段已标出 */
+
 // auth.js - 静乔公寓论坛登录注册功能
 // 专门为苹果Safari优化，兼容iPhone 16 Pro和iPad
 // 修复iOS平板无法登录问题 - 精简版本，不影响网页端
@@ -480,7 +482,7 @@
     }
 
     // 处理退出登录
-    function handleLogout() {
+    /* function handleLogout() {
         if (isProcessing) return;
         
         if (confirm('确定要退出登录吗？')) {
@@ -495,7 +497,104 @@
             // 功能：原本显示退出登录成功消息的页面内消息
             // showSuccessMessage('global', '已成功退出登录');
         }
+    } 11.19日晚修改！*/
+   // 处理退出登录 - 修复版本
+function handleLogout() {
+    if (isProcessing) return;
+    
+    if (confirm('确定要退出登录吗？')) {
+        authCurrentUser = null;
+        if (typeof window !== 'undefined') {
+            window.currentUser = null;
+            localStorage.removeItem('lastLoginUser');
+        }
+        updateAuthState();
+        
+        // ========== 修复位置 ==========
+        // 关键修复：退出登录后强制重新渲染首页，恢复所有特殊样式
+        if (typeof renderSection === 'function') {
+            setTimeout(() => {
+                renderSection('首页'); // 重新渲染首页，恢复所有样式
+            }, 100);
+        }
+        
+        // 确保所有模态框都关闭
+        closeAllModals();
+        
+        // 清除所有表单数据
+        clearLoginForm();
+        const registerUsername = document.getElementById('register-username');
+        if (registerUsername) registerUsername.value = '';
+        
+        console.log('用户已退出登录，页面状态已重置');
     }
+}
+
+// 更新认证状态 - 增强版本
+function updateAuthState() {
+    const user = authCurrentUser || (typeof window !== 'undefined' ? window.currentUser : null);
+    
+    if (user) {
+        // 用户已登录状态
+        const authButtons = document.getElementById('auth-buttons-container');
+        const userInfo = document.getElementById('user-info');
+        const usernameDisplay = document.getElementById('username-display');
+        
+        if (authButtons) authButtons.style.display = 'none';
+        if (userInfo) userInfo.style.display = 'flex';
+        if (usernameDisplay) usernameDisplay.textContent = user;
+        
+        // 移除登录提示
+        const mainPosts = document.getElementById('main-posts');
+        if (mainPosts) {
+            const loginPrompt = mainPosts.querySelector('.login-prompt');
+            if (loginPrompt) {
+                loginPrompt.remove();
+            }
+        }
+    } else {
+        // 用户未登录状态 - 确保完全重置
+        const authButtons = document.getElementById('auth-buttons-container');
+        const userInfo = document.getElementById('user-info');
+        
+        if (authButtons) {
+            authButtons.style.display = 'flex';
+            authButtons.style.visibility = 'visible';
+        }
+        if (userInfo) {
+            userInfo.style.display = 'none';
+            userInfo.style.visibility = 'hidden';
+        }
+        
+        // 确保显示登录提示
+        const mainPosts = document.getElementById('main-posts');
+        if (mainPosts && !mainPosts.querySelector('.login-prompt')) {
+            const promptDiv = document.createElement('div');
+            promptDiv.className = 'login-prompt';
+            promptDiv.innerHTML = '<p>请先 <span class="login-required">登录</span> 或 <span class="login-required">注册</span> 以浏览内容</p>';
+            mainPosts.appendChild(promptDiv);
+        }
+        
+        // ========== 重要修复 ==========
+        // 强制重新应用未登录状态的特殊样式
+        setTimeout(() => {
+            // 触发自定义事件，通知其他组件用户状态已改变
+            const event = new CustomEvent('authStateChanged', { 
+                detail: { isLoggedIn: false, username: null }
+            });
+            document.dispatchEvent(event);
+            
+            // 如果存在渲染函数，确保页面样式正确
+            if (typeof renderSection === 'function') {
+                const currentSection = document.querySelector('.nav-item.active');
+                if (currentSection && currentSection.textContent.includes('首页')) {
+                    // 如果当前在首页，重新应用样式
+                    renderSection('首页');
+                }
+            }
+        }, 50);
+    }
+}
 
     // 更新认证状态
     function updateAuthState() {
@@ -647,4 +746,6 @@
     }
 
     console.log('Auth system loaded successfully - iOS optimized lite version');
+
 })();
+
