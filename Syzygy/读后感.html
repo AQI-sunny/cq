@@ -3,369 +3,488 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>系统崩溃</title>
+    <title>梓鹿的个人博客</title>
     <style>
+        /* 基础样式 - 温暖风格 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Courier New', monospace;
+            font-family: 'Noto Serif SC', 'STZhongsong', '宋体', serif;
         }
-        
+
         body {
-            background-color: #000;
-            color: #ff0000;
-            overflow: hidden;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
+            background-color: #fdf8f3; /* 暖米白 */
+            color: #444;
+            line-height: 1.8;
+            font-size: 16px;
         }
-        
-        /* 背景警告文字 */
-        .bg-warning {
-            position: absolute;
+
+        a {
+            text-decoration: none;
+            color: #5d4037; /* 深棕，温暖感 */
+            transition: color 0.3s ease;
+        }
+
+            a:hover {
+                color: #d87a16; /* 橙褐色，温暖亮色 */
+            }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 头部样式 - 温暖柔和 */
+        header {
+            background-color: #fffaf4; /* 暖白背景 */
+            box-shadow: 0 4px 20px rgba(216, 122, 22, 0.1); /* 橙色柔光阴影 */
+            position: sticky;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0.2;
+            z-index: 100;
+            border-bottom: 1px solid #f0e6dc;
         }
-        
-        .warning-text {
-            position: absolute;
-            font-size: 2rem;
-            font-weight: bold;
-            color: #ff0000;
-            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
-            animation: float 15s infinite linear;
-        }
-        
-        @keyframes float {
-            0% {
-                transform: translate(0, 0);
-                opacity: 0.1;
-            }
-            25% {
-                transform: translate(20vw, 40vh);
-                opacity: 0.3;
-            }
-            50% {
-                transform: translate(60vw, 20vh);
-                opacity: 0.2;
-            }
-            75% {
-                transform: translate(40vw, 60vh);
-                opacity: 0.4;
-            }
-            100% {
-                transform: translate(0, 0);
-                opacity: 0.1;
-            }
-        }
-        
-        #container {
-            width: 95%;
-            max-width: 800px;
-            height: 90%;
-            max-height: 600px;
-            border: 2px solid #ff0000;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-            position: relative;
-            overflow: hidden;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 10;
+
+        .header-content {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            text-align: center;
-            padding: 20px;
+            padding: 25px 0;
         }
-        
-        h1 {
-            font-size: clamp(2rem, 6vw, 4rem);
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px #ff0000;
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #3e2723; /* 统一为深棕色 */
+            letter-spacing: 1px;
+            font-family: 'LiSu', '隶书', cursive;
         }
-        
-        p {
-            font-size: clamp(1rem, 3vw, 1.5rem);
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-        
-        .error-code {
-            font-size: 0.9rem;
-            color: #ff5555;
-            margin-top: 15px;
-        }
-        
-        .btn {
-            background-color: #000;
-            color: #ff0000;
-            border: 1px solid #ff0000;
-            padding: 10px 20px;
-            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
-            cursor: pointer;
-            margin: 15px;
-            transition: all 0.3s;
-        }
-        
-        .btn:hover {
-            background-color: #ff0000;
-            color: #000;
-            box-shadow: 0 0 10px #ff0000;
-        }
-        
-        /* 终端样式 */
-        .terminal {
-            background-color: #000;
-            color: #ff0000;
-            padding: 8px;
-            font-family: 'Courier New', monospace;
-            width: 100%;
-            height: 40%;
-            min-height: 150px;
-            overflow-y: auto;
-            border: 1px solid #ff0000;
-            margin: 20px 0;
-            font-size: clamp(0.7rem, 2vw, 0.9rem);
-            text-align: left;
-        }
-        
-        .terminal-line {
-            margin-bottom: 4px;
-        }
-        
-        /* 进度条样式 */
-        .progress-bar {
-            width: 100%;
-            height: 20px;
-            background-color: #000;
-            border: 1px solid #ff0000;
-            margin: 15px 0;
-            overflow: hidden;
-        }
-        
-        .progress {
-            height: 100%;
-            width: 0%;
-            background-color: #ff0000;
-            transition: width 0.5s;
-        }
-        
-        /* 故障效果 */
-        .glitch {
-            animation: glitch 0.5s infinite;
-        }
-        
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
-        }
-        
-        /* 窗口抖动 */
-        .shake {
-            animation: shake 0.5s;
-        }
-        
-        @keyframes shake {
-            0% { transform: translate(0, 0); }
-            10% { transform: translate(-5px, 5px); }
-            20% { transform: translate(5px, -5px); }
-            30% { transform: translate(-5px, -5px); }
-            40% { transform: translate(5px, 5px); }
-            50% { transform: translate(-5px, 5px); }
-            60% { transform: translate(5px, -5px); }
-            70% { transform: translate(-5px, -5px); }
-            80% { transform: translate(5px, 5px); }
-            90% { transform: translate(-5px, 5px); }
-            100% { transform: translate(0, 0); }
-        }
-        
-        /* 闪屏 */
-        .flash {
-            animation: flash 0.3s;
-        }
-        
-        @keyframes flash {
-            0% { background-color: rgba(255, 0, 0, 0); }
-            50% { background-color: rgba(255, 0, 0, 0.3); }
-            100% { background-color: rgba(255, 0, 0, 0); }
-        }
-        
-        /* 响应式调整 */
-        @media (max-width: 768px) {
-            #container {
-                height: 95%;
-                padding: 15px;
+
+            .logo span {
+                color: #d87a16;
+                font-family: 'KaiTi', '楷体', serif;
             }
+
+        nav ul {
+            display: flex;
+            list-style: none;
         }
-        
-        @media (max-width: 480px) {
-            #container {
-                height: 98%;
-                padding: 10px;
+
+            nav ul li {
+                margin-left: 28px;
+            }
+
+                nav ul li a {
+                    font-weight: 500;
+                    font-size: 16px;
+                    position: relative;
+                    padding: 5px 0;
+                }
+
+                    nav ul li a:after {
+                        content: '';
+                        position: absolute;
+                        width: 0;
+                        height: 2px;
+                        bottom: 0;
+                        left: 0;
+                        background-color: #d87a16;
+                        transition: width 0.3s ease;
+                        border-radius: 1px;
+                    }
+
+                    nav ul li a:hover:after {
+                        width: 100%;
+                    }
+
+        /* 主要内容区 */
+        .main-content {
+            display: flex;
+            margin: 50px 0;
+            gap: 40px;
+        }
+
+        /* 文章区域 */
+        .articles {
+            flex: 2;
+        }
+
+        .article-card {
+            background-color: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(216, 122, 22, 0.08);
+            padding: 40px;
+            margin-bottom: 45px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid #f0c8a0; /* 暖棕边框 */
+        }
+
+            .article-card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 12px 35px rgba(216, 122, 22, 0.15);
+            }
+
+        .article-meta {
+            display: flex;
+            margin-bottom: 18px;
+            font-size: 14px;
+            color: #8d6e63; /* 暖灰棕 */
+        }
+
+        .article-date {
+            margin-right: 18px;
+        }
+
+        .article-category {
+            background-color: #fff3e0;
+            color: #bf360c;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .article-title {
+            font-size: 28px;
+            margin-bottom: 22px;
+            line-height: 1.4;
+            color: #3e2723;
+            font-weight: 600;
+            font-family: 'KaiTi', '楷体', serif;
+        }
+
+        .article-content {
+            color: #555;
+            margin-bottom: 28px;
+            font-size: 16px;
+            text-align: justify;
+        }
+
+            .article-content p {
+                margin-bottom: 20px;
+                text-indent: 2em;
+            }
+
+        .read-more {
+            display: inline-block;
+            color: #d87a16;
+            font-weight: 500;
+            font-size: 16px;
+            padding: 10px 0;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+            .read-more:hover {
+                border-color: #d87a16;
+            }
+
+        /* 侧边栏 */
+        .sidebar {
+            flex: 1;
+        }
+
+        .sidebar-widget {
+            background-color: #fff;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(216, 122, 22, 0.06);
+            padding: 30px;
+            margin-bottom: 35px;
+        }
+
+        .widget-title {
+            font-size: 20px;
+            margin-bottom: 22px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0e6dc;
+            color: #3e2723; /* 统一为深棕色 */
+            font-weight: 600;
+            font-family: 'KaiTi', '楷体', serif;
+        }
+
+        .about-me {
+            text-align: center;
+        }
+
+        .profile-img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            margin: 0 auto 18px;
+            background: linear-gradient(135deg, #d87a16, #a65a10);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+            box-shadow: 0 5px 15px rgba(216, 122, 22, 0.2);
+            font-family: 'LiSu', cursive;
+        }
+
+        .about-me p {
+            color: #6d4c41;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        .popular-posts li {
+            margin-bottom: 18px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #f0e6dc;
+        }
+
+            .popular-posts li:last-child {
+                margin-bottom: 0;
+                padding-bottom: 0;
+                border-bottom: none;
+            }
+
+        .popular-post-title {
+            font-weight: 500;
+            margin-bottom: 6px;
+            line-height: 1.4;
+            font-size: 15px;
+        }
+
+        .popular-post-date {
+            font-size: 13px;
+            color: #8d6e63;
+        }
+
+        .categories li {
+            margin-bottom: 12px;
+        }
+
+            .categories li a {
+                display: flex;
+                justify-content: space-between;
+                padding: 6px 0;
+                font-size: 15px;
+            }
+
+        .category-count {
+            background-color: #fff3e0;
+            color: #bf360c;
+            padding: 3px 9px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* 引用块 - 温暖风格 */
+        .quote {
+            border-left: 5px solid #f0c8a0;
+            padding: 16px 20px;
+            margin: 25px 0;
+            background-color: #fffaf4;
+            border-radius: 0 8px 8px 0;
+            color: #5d4037;
+            font-style: italic;
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        /* 图片占位 - 温暖风格 */
+        .article-image {
+            width: 100%;
+            /* 移除固定高度 */
+            /* height: 220px; */
+            background-color: #fff3e0;
+            margin: 30px 0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8d6e63;
+            font-style: italic;
+            font-size: 15px;
+            border: 1px dashed #f0c8a0;
+            overflow: hidden; /* 防止图片溢出圆角 */
+            /* 添加自适应属性 */
+            min-height: 100px; /* 最小高度，避免空容器太矮 */
+            padding: 20px; /* 内边距，让图片有呼吸空间 */
+        }
+
+            .article-image img {
+                max-width: 100%;
+                max-height: 80vh; /* 限制最大高度为视口的80% */
+                width: auto; /* 宽度自适应 */
+                height: auto; /* 高度自适应 */
+                object-fit: contain; /* 改为contain，保持图片完整比例 */
+                border-radius: 10px;
+                box-shadow: 0 2px 8px rgba(216, 122, 22, 0.1);
+            }
+
+        .image-caption {
+            text-align: center;
+            font-size: 14px;
+            color: #8d6e63;
+            margin: 15px 0 25px; /* 调整外边距 */
+            font-style: italic;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                margin-top: 18px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+                nav ul li {
+                    margin: 6px 10px;
+                }
+
+            .article-card {
+                padding: 30px 20px;
+            }
+
+            .article-title {
+                font-size: 24px;
+            }
+
+            .article-image {
+                /* 移动端移除固定高度 */
+                /* height: 180px; */
+                margin: 20px 0;
+                padding: 15px; /* 移动端内边距稍小 */
+            }
+
+                .article-image img {
+                    max-height: 60vh; /* 移动端最大高度稍小 */
+                }
+
+            .image-caption {
+                margin: 10px 0 18px;
+                font-size: 13px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- 背景警告文字 -->
-    <div class="bg-warning" id="bg-warning"></div>
-    
-    <div id="container">
-        <h1 class="glitch">系统崩溃</h1>
-        <p>系统核心文件已损坏...</p>
-        
-        <div class="terminal">
-            <div class="terminal-line">> 系统文件完整性检查失败</div>
-            <div class="terminal-line">> 核心模块: kernel32.dll - 已损坏</div>
-            <div class="terminal-line">> 核心模块: ntdll.dll - 已损坏</div>
-            <div class="terminal-line">> 系统即将关闭...</div>
-            <div class="terminal-line">> 错误代码: 0x0000007B</div>
-            <div class="terminal-line">> 内存转储失败</div>
-            <div class="terminal-line">> 无法访问系统注册表</div>
-            <div class="terminal-line">> 硬件驱动程序异常</div>
-            <div class="terminal-line">> 安全模式启动失败</div>
+    <!-- 头部 -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><span>梓鹿</span></div>
+                <nav>
+                    <ul>
+                        <li><a href="https://sylvie-seven-cq.top/Syzygy/blog.html">首页</a></li>
+                        <!--<li><a href="#">生活感悟</a></li>-->
+                        <li><a href="#">旅行日记</a></li>
+                        <li><a href="#">美食探索</a></li>
+                        <li><a href="#">读书笔记</a></li>
+                        <li><a href="#">心情日记</a></li>
+                        <li><a href="#">关于我</a></li>
+                        <li><a href="#">联系</a></li>
+                    </ul>
+                </nav>
+            </div>
         </div>
-        
-        <div class="progress-bar">
-            <div class="progress" id="progress"></div>
-        </div>
-        
-        <p class="error-code">请联系系统管理员或重新启动系统</p>
-        <button class="btn" id="btn-restart">尝试重启</button>
-    </div>
+    </header>
 
-    <script>
-        // 创建背景警告文字
-        function createWarningText() {
-            const bgWarning = document.getElementById('bg-warning');
-            const warnings = ['危险！！危险！！', '警告！！警告！！', '系统崩溃！！', '文件损坏！！', 
-                             '内存泄漏！！', '权限丢失！！', '数据丢失！！', '系统过载！！', 
-                             '进程异常！！', '硬件故障！！'];
-            
-            for (let i = 0; i < 50; i++) {
-                const warningText = document.createElement('div');
-                warningText.className = 'warning-text';
-                warningText.textContent = warnings[Math.floor(Math.random() * warnings.length)];
-                warningText.style.left = Math.random() * 100 + 'vw';
-                warningText.style.top = Math.random() * 100 + 'vh';
-                warningText.style.animationDelay = Math.random() * 15 + 's';
-                warningText.style.fontSize = (Math.random() * 1.5 + 1.5) + 'rem';
-                warningText.style.opacity = Math.random() * 0.9 + 0.3;
-                bgWarning.appendChild(warningText);
-            }
-        }
-        
-        // 窗口抖动效果
-        function shakeScreen() {
-            const container = document.getElementById('container');
-            container.classList.add('shake');
-            setTimeout(() => {
-                container.classList.remove('shake');
-            }, 500);
-        }
-        
-        // 闪屏效果
-        function flashScreen() {
-            const container = document.getElementById('container');
-            container.classList.add('flash');
-            setTimeout(() => {
-                container.classList.remove('flash');
-            }, 300);
-        }
-        
-        // 模拟进度条加载
-        function simulateProgress() {
-            const progress = document.getElementById('progress');
-            let width = 0;
-            
-            const interval = setInterval(() => {
-                if (width >= 100) {
-                    clearInterval(interval);
-                    // 进度条完成后添加效果
-                    shakeScreen();
-                    flashScreen();
-                } else {
-                    width += Math.random() * 5;
-                    progress.style.width = width + '%';
-                }
-            }, 200);
-        }
-        
-        // 重启按钮事件
-        document.getElementById('btn-restart').addEventListener('click', function() {
-            // 添加效果
-            shakeScreen();
-            flashScreen();
-            
-            // 模拟重启过程
-            const terminal = document.querySelector('.terminal');
-            const newLines = [
-                '> 尝试系统重启...',
-                '> 正在关闭所有进程...',
-                '> 保存系统状态...',
-                '> 无法保存系统状态',
-                '> 强制关闭所有进程',
-                '> 重新启动失败',
-                '> 系统无法恢复'
-            ];
-            
-            let i = 0;
-            const addLine = setInterval(() => {
-                if (i < newLines.length) {
-                    const line = document.createElement('div');
-                    line.className = 'terminal-line';
-                    line.textContent = newLines[i];
-                    terminal.appendChild(line);
-                    terminal.scrollTop = terminal.scrollHeight;
-                    i++;
-                } else {
-                    clearInterval(addLine);
-                }
-            }, 800);
-        });
-        
-        // 初始加载
-        window.onload = function() {
-            // 创建背景警告文字
-            createWarningText();
-            
-            // 开始进度条
-            simulateProgress();
-            
-            // 添加一些闪烁效果
-            setInterval(() => {
-                const glitchElements = document.querySelectorAll('.glitch');
-                glitchElements.forEach(el => {
-                    el.style.visibility = Math.random() > 0.1 ? 'visible' : 'hidden';
-                });
-            }, 100);
-            
-            // 随机添加抖动效果
-            setInterval(() => {
-                if (Math.random() > 0.8) {
-                    shakeScreen();
-                }
-            }, 5000);
-            
-            // 随机添加闪屏效果
-            setInterval(() => {
-                if (Math.random() > 0.9) {
-                    flashScreen();
-                }
-            }, 8000);
-        };
-    </script>
+    <!-- 主要内容区 -->
+    <div class="container">
+        <div class="main-content">
+            <!-- 文章区域 -->
+            <div class="articles">
+                <!-- 文章1 -->
+               
+                    <article class="article-card">
+                        <div class="article-meta">
+                            <span class="article-date">2023年11月15日</span>
+                            <span class="article-category">读书笔记</span>
+                        </div>
+                        <h2 class="article-title">
+                            《月亮与六便士》读后感：理想与现实的永恒抉择
+                        </h2>
+                        <div class="article-content">
+                            <p>毛姆的《月亮与六便士》是一部关于天才、理想与世俗的尖锐寓言，它毫不留情地撕开了生活温情脉脉的面纱，直指人性深处那份对"月亮"——即对纯粹艺术理想——的狂热追逐。小说的主人公查尔斯·思特里克兰德，一个原本在伦敦过着中产阶级生活的普通证券经纪人，在人到中年时突然抛弃一切，为了心中的绘画梦，宁可选择贫困、饥饿和被唾弃。他不是为了名利，更不是为了他人的认可，他所追求的，是一种超越一切道德和物质的绝对自由，他将自己对艺术的渴求视为生命中唯一存在的音符。</p>
+                            <p>思特里克兰德的形象是令人不安的。他冷酷、自私、毫无道德感，为了画画可以毫不犹豫地毁掉自己和他人的人生。他将世俗的一切视为妨碍他创作的羁绊，包括爱他的妻子和家人、仰慕他的朋友，甚至那些施以援手的人。然而，正是这种极端的疏离和专注，塑造了他不可动摇的艺术人格。他的人性也许是残缺的，但他的艺术生命却是完整且饱满的。对于他来说，俗世的成功、体面或舒适，都比不上笔尖触及画布时那份灵魂震颤的快感，他生命中所有的喧嚣和痛苦最终都汇聚成了那部恢弘而孤绝的交响乐。</p>
+                            <p>直到思特里克兰德远走塔希提，在热带的原始环境中，他的创作才达到了真正的巅峰。在那里，他不仅画出了最伟大的壁画，也找到了心灵的最终平静。在双目失明和麻风病的折磨下，他完成了那幅融入了他所有生命力的巨作，然后要求在他死后将其付之一炬。这种对艺术纯粹性的追求令人震撼：艺术的价值不在于被世人观赏和保存，而在于其诞生的过程本身。这幅最终被毁灭的壁画，与其说是一件供人瞻仰的作品，不如说是一个被他亲手锁进荒凉茅屋盒中的灵魂秘密。</p>
+                            <p>我们每个人都生活在"月亮"与"六便士"的抉择之中。"六便士"代表着触手可及的现实、面包、安稳和世俗的功名；而"月亮"则象征着遥不可及的理想、激情和生命意义。我们大部分人选择了低头，弯腰拾起那枚冰冷的六便士，并用它来构建一个相对舒适的人生。思特里克兰德的伟大和可怕之处，就在于他义无反顾地选择了抬头望月，甚至不惜践踏一切世俗规则。</p>
+                            <p>这本小说并未给出任何道德评判，它只是呈现了这样一个极端的生命样本，逼迫我们反思：我们是否真的需要世俗的认可来定义自己的价值？理想的价值和意义，是否应该由它所带来的物质回报来衡量？《月亮与六便士》提供了一面令人心痛又心动的镜子，照出了我们内心深处对妥协的恐惧和对纯粹的向往。</p>
+                        </div>
+                        <!--<a href="#" class="read-more">阅读全文 &rarr;</a>-->
+                    </article>
+                 
+
+                
+            </div>
+
+            <!-- 侧边栏 -->
+            <aside class="sidebar">
+                <!-- 关于我 -->
+                <div class="sidebar-widget about-me">
+                    <h3 class="widget-title">关于我</h3>
+                    <div class="profile-img">梓</div>
+                    <p>鹿饮山间水，我枕月下风。 </p>
+                </div>
+
+                <!-- 热门文章 -->
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">热门Blog</h3>
+                    <ul class="popular-posts">
+                        <li>
+                            <div class="popular-post-title">
+                                <a href="#">《月亮与六便士》读后感：理想与现实的永恒抉择</a>
+                            </div>
+                            <div class="popular-post-date">2023年11月15日</div>
+                        </li>
+                        <li>
+                            <div class="popular-post-title">
+                                <a href="#">后疫情时代的教育变革</a>
+                            </div>
+                            <div class="popular-post-date">2023年11月2日</div>
+                        </li>
+                        <li>
+                            <div class="popular-post-title">
+                                <a href="#">人工智能伦理边界在哪里</a>
+                            </div>
+                            <div class="popular-post-date">2023年11月1日</div>
+                        </li>
+                        <li>
+                            <div class="popular-post-title">
+                                <a href="#">传统工艺的现代转型之路</a>
+                            </div>
+                            <div class="popular-post-date">2023年10月31日</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 分类 -->
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">文章分类</h3>
+                    <ul class="categories">
+                        <li>
+                            <a href="#">生活感悟 <span class="category-count">9</span></a>
+                        </li>
+                        <li>
+                            <a href="#">旅行日记 <span class="category-count">11</span></a>
+                        </li>
+                        <li>
+                            <a href="#">美食探索 <span class="category-count">7</span></a>
+                        </li>
+                        <li>
+                            <a href="#">读书笔记 <span class="category-count">3</span></a>
+                        </li>
+                        <li>
+                            <a href="#">心情日记 <span class="category-count">7</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </div>
 </body>
 </html>
