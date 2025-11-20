@@ -1,1 +1,1331 @@
-(function(_0x1d7966,_0x37048f){const _0x3ad160=_0x21f0,_0x1540f3=_0x1d7966();while(!![]){try{const _0x3e4f28=parseInt(_0x3ad160(0x1c1))/0x1+-parseInt(_0x3ad160(0x211))/0x2*(-parseInt(_0x3ad160(0x1f7))/0x3)+parseInt(_0x3ad160(0x1e2))/0x4+-parseInt(_0x3ad160(0x201))/0x5*(-parseInt(_0x3ad160(0x1eb))/0x6)+-parseInt(_0x3ad160(0x1e8))/0x7*(-parseInt(_0x3ad160(0x213))/0x8)+parseInt(_0x3ad160(0x1cf))/0x9*(parseInt(_0x3ad160(0x1f1))/0xa)+-parseInt(_0x3ad160(0x1df))/0xb;if(_0x3e4f28===_0x37048f)break;else _0x1540f3['push'](_0x1540f3['shift']());}catch(_0x275e7e){_0x1540f3['push'](_0x1540f3['shift']());}}}(_0xe1ff,0x84474),(function(){'use strict';const _0xcba604=_0x21f0;if(window['authSystemInitialized'])return;window['authSystemInitialized']=!![];let _0x10e450=null,_0x4fde80=JSON[_0xcba604(0x1d7)](localStorage[_0xcba604(0x224)](_0xcba604(0x207)))||[],_0x29aba6=JSON[_0xcba604(0x1d7)](localStorage[_0xcba604(0x224)](_0xcba604(0x1d0)))||{},_0x220dd7=![];document[_0xcba604(0x20c)]==='loading'?document[_0xcba604(0x204)]('DOMContentLoaded',_0x4b3264):setTimeout(_0x4b3264,0x64);function _0x4b3264(){const _0x1f8568=_0xcba604;try{_0x13341e(),_0x2d0237(),_0x43483a(),console[_0x1f8568(0x1e0)](_0x1f8568(0x21f));}catch(_0xffa0a3){console[_0x1f8568(0x227)](_0x1f8568(0x22a),_0xffa0a3);}}function _0x13341e(){const _0x1e8782=_0xcba604;_0x493281(),_0x5d95a7(),document[_0x1e8782(0x204)](_0x1e8782(0x1d3),function(_0x5d5242){const _0x3822e7=_0x1e8782,_0xdc9b5a=document[_0x3822e7(0x1fc)](_0x3822e7(0x205)),_0x47bead=document[_0x3822e7(0x1fc)]('register-modal');_0x5d5242[_0x3822e7(0x223)]===_0xdc9b5a&&(_0xdc9b5a[_0x3822e7(0x1ed)][_0x3822e7(0x203)]=_0x3822e7(0x209)),_0x5d5242[_0x3822e7(0x223)]===_0x47bead&&(_0x47bead[_0x3822e7(0x1ed)]['display']=_0x3822e7(0x209));}),document[_0x1e8782(0x204)]('keydown',function(_0x603e76){const _0x2ffa10=_0x1e8782;_0x603e76[_0x2ffa10(0x1e3)]==='Escape'&&_0x16fa60();});}function _0x493281(){const _0x2881c3=_0xcba604,_0x5dce9c=document['getElementById'](_0x2881c3(0x1cb));_0x5dce9c&&(_0x5dce9c[_0x2881c3(0x204)](_0x2881c3(0x1d3),_0x1b68ec),_0x5c1bf1()&&_0x5dce9c[_0x2881c3(0x204)](_0x2881c3(0x1ea),_0x1b68ec));const _0x55bd26=document[_0x2881c3(0x1fc)](_0x2881c3(0x1ec));_0x55bd26&&(_0x55bd26[_0x2881c3(0x204)](_0x2881c3(0x1d3),_0x1dfe15),_0x5c1bf1()&&_0x55bd26[_0x2881c3(0x204)](_0x2881c3(0x1ea),_0x1dfe15));const _0x58d041=document[_0x2881c3(0x1fc)](_0x2881c3(0x210));_0x58d041&&_0x58d041[_0x2881c3(0x204)](_0x2881c3(0x1d3),_0xdc1fc4);const _0x131b54=document[_0x2881c3(0x1fc)]('login-submit');_0x131b54&&_0x131b54[_0x2881c3(0x204)](_0x2881c3(0x1d3),_0x5b8f23);const _0x16034e=document[_0x2881c3(0x1fc)]('register-submit');_0x16034e&&_0x16034e[_0x2881c3(0x204)]('click',_0x46ee04);const _0x308a62=document[_0x2881c3(0x1fc)]('show-register-from-login');_0x308a62&&_0x308a62[_0x2881c3(0x204)](_0x2881c3(0x1d3),_0x5526ad);const _0x425517=document[_0x2881c3(0x1fc)]('show-login-from-register');_0x425517&&_0x425517[_0x2881c3(0x204)](_0x2881c3(0x1d3),_0xdb1074),_0x4b4666();}function _0x5c1bf1(){const _0x57ea29=_0xcba604;return/iPad|iPhone|iPod/[_0x57ea29(0x1e7)](navigator['userAgent'])&&!window['MSStream'];}function _0x4b4666(){const _0x1e7daa=_0xcba604,_0x4ae3bc=document[_0x1e7daa(0x1fc)]('login-username'),_0x112b9c=document[_0x1e7daa(0x1fc)](_0x1e7daa(0x20d)),_0x14f28e=document[_0x1e7daa(0x1fc)](_0x1e7daa(0x228));_0x4ae3bc&&_0x4ae3bc['addEventListener'](_0x1e7daa(0x226),function(_0x5ce19d){const _0xc042a=_0x1e7daa;_0x5ce19d[_0xc042a(0x1e3)]===_0xc042a(0x1c8)&&(_0x5ce19d['preventDefault'](),_0x5b8f23(_0x5ce19d));}),_0x112b9c&&_0x112b9c[_0x1e7daa(0x204)]('keydown',function(_0x37f650){const _0x57f842=_0x1e7daa;_0x37f650['key']===_0x57f842(0x1c8)&&(_0x37f650['preventDefault'](),_0x5b8f23(_0x37f650));}),_0x14f28e&&_0x14f28e[_0x1e7daa(0x204)](_0x1e7daa(0x226),function(_0x66c371){const _0x3ae1ba=_0x1e7daa;_0x66c371[_0x3ae1ba(0x1e3)]===_0x3ae1ba(0x1c8)&&(_0x66c371[_0x3ae1ba(0x202)](),_0x46ee04(_0x66c371));});}function _0x5d95a7(){const _0xa37d4f=_0xcba604,_0x4410f3=document[_0xa37d4f(0x1fc)](_0xa37d4f(0x1dc)),_0x8e41f1=document['getElementById'](_0xa37d4f(0x1f4));_0x4410f3&&_0x4410f3[_0xa37d4f(0x204)](_0xa37d4f(0x1d3),function(){const _0x36305e=_0xa37d4f;document[_0x36305e(0x1fc)]('login-modal')[_0x36305e(0x1ed)][_0x36305e(0x203)]=_0x36305e(0x209);}),_0x8e41f1&&_0x8e41f1[_0xa37d4f(0x204)](_0xa37d4f(0x1d3),function(){const _0xcf7dbd=_0xa37d4f;document[_0xcf7dbd(0x1fc)](_0xcf7dbd(0x1d6))[_0xcf7dbd(0x1ed)][_0xcf7dbd(0x203)]=_0xcf7dbd(0x209);});}function _0x1b68ec(_0x255c96){const _0x22352c=_0xcba604;_0x255c96&&(_0x255c96[_0x22352c(0x202)](),_0x255c96['stopPropagation']());if(_0x220dd7)return;const _0x2d4f3e=document[_0x22352c(0x1fc)](_0x22352c(0x205));_0x2d4f3e&&(_0x2d4f3e['style']['display']=_0x22352c(0x1e1),_0x5c1bf1()&&setTimeout(()=>{const _0x4d31d8=_0x22352c,_0x50a73f=document[_0x4d31d8(0x1fc)](_0x4d31d8(0x1f6));_0x50a73f&&_0x50a73f[_0x4d31d8(0x22c)]();},0x12c));}function _0x1dfe15(_0x506901){const _0x75d57c=_0xcba604;_0x506901&&(_0x506901[_0x75d57c(0x202)](),_0x506901[_0x75d57c(0x206)]());if(_0x220dd7)return;const _0x1cd9ae=document[_0x75d57c(0x1fc)](_0x75d57c(0x1d6));_0x1cd9ae&&(_0x1cd9ae['style'][_0x75d57c(0x203)]=_0x75d57c(0x1e1),_0x5c1bf1()&&setTimeout(()=>{const _0x573141=_0x75d57c,_0x44ff35=document[_0x573141(0x1fc)](_0x573141(0x228));_0x44ff35&&_0x44ff35[_0x573141(0x22c)]();},0x12c));}function _0x16fa60(){const _0x25fae8=_0xcba604,_0x46e4aa=document[_0x25fae8(0x1fe)](_0x25fae8(0x1fd));_0x46e4aa['forEach'](_0x20c52c=>{const _0x325fdc=_0x25fae8;_0x20c52c[_0x325fdc(0x1ed)][_0x325fdc(0x203)]=_0x325fdc(0x209);});}function _0x5526ad(){if(_0x220dd7)return;_0x16fa60(),setTimeout(()=>{_0x1dfe15();},0x32);}function _0xdb1074(){if(_0x220dd7)return;_0x16fa60(),setTimeout(()=>{_0x1b68ec();},0x32);}function _0x5b8f23(_0x142a65){const _0x1483cc=_0xcba604;_0x142a65&&(_0x142a65[_0x1483cc(0x202)](),_0x142a65['stopPropagation']());if(_0x220dd7)return;const _0x5dd9e8=document[_0x1483cc(0x1fc)](_0x1483cc(0x1f6)),_0x2db96f=document[_0x1483cc(0x1fc)](_0x1483cc(0x20d)),_0x13fae3=document[_0x1483cc(0x1fc)]('login-submit');if(!_0x5dd9e8||!_0x2db96f)return;const _0x560eaf=_0x5dd9e8[_0x1483cc(0x1ff)],_0xcdf90f=_0x560eaf['trim'](),_0x5d8ad2=_0x2db96f['value'];_0x580512(_0x1483cc(0x1d1));if(_0x560eaf===''){_0x53f1ee('login','请输入用户名'),_0x5dd9e8[_0x1483cc(0x22c)]();return;}if(_0xcdf90f===''){_0x5dd9e8[_0x1483cc(0x1ff)]='',_0x53f1ee(_0x1483cc(0x1d1),_0x1483cc(0x1de)),_0x5dd9e8[_0x1483cc(0x22c)]();return;}if(_0x5d8ad2===''){_0x53f1ee('login',_0x1483cc(0x1c7)),_0x2db96f['focus']();return;}_0x220dd7=!![],_0x13fae3&&(_0x13fae3['disabled']=!![],_0x13fae3[_0x1483cc(0x1cd)]=_0x1483cc(0x1c4)),setTimeout(()=>{_0x223618(_0xcdf90f,_0x5d8ad2,_0x13fae3);},0x64);}function _0x46ee04(_0xdce9be){const _0x228d4b=_0xcba604;_0xdce9be&&(_0xdce9be[_0x228d4b(0x202)](),_0xdce9be[_0x228d4b(0x206)]());if(_0x220dd7)return;const _0x44ab45=document[_0x228d4b(0x1fc)](_0x228d4b(0x228)),_0x228cbd=document[_0x228d4b(0x1fc)](_0x228d4b(0x1e4)),_0x2e1a82=document[_0x228d4b(0x1fc)]('register-submit');if(!_0x44ab45)return;const _0x50665d=_0x44ab45[_0x228d4b(0x1ff)],_0x7e2551=_0x50665d[_0x228d4b(0x218)](),_0x1c7a04=_0x228cbd?_0x228cbd[_0x228d4b(0x1ff)]:_0x228d4b(0x20f);_0x580512(_0x228d4b(0x225));if(_0x50665d===''){_0x53f1ee('register','请输入用户名！'),_0x44ab45[_0x228d4b(0x22c)]();return;}if(_0x7e2551===''){_0x44ab45[_0x228d4b(0x1ff)]='',_0x53f1ee(_0x228d4b(0x225),_0x228d4b(0x1fa)),_0x44ab45[_0x228d4b(0x22c)]();return;}_0x220dd7=!![],_0x2e1a82&&(_0x2e1a82['disabled']=!![],_0x2e1a82['textContent']=_0x228d4b(0x1ce)),setTimeout(()=>{_0x4c5547(_0x7e2551,_0x1c7a04,_0x2e1a82);},0x64);}function _0x223618(_0x54c897,_0x3ffa2b,_0x3823cb){const _0x3b537c=_0xcba604;let _0x17dbda=![];try{if(typeof validateUser===_0x3b537c(0x1f5)&&validateUser(_0x54c897,_0x3ffa2b))_0x10e450=_0x54c897,_0x2a84db(_0x54c897),_0x43483a(),_0x16fa60(),_0xe7f855(),_0x17dbda=!![];else{if(typeof validateLinmoUser===_0x3b537c(0x1f5)&&validateLinmoUser(_0x54c897,_0x3ffa2b))_0x10e450=_0x54c897,_0x2a84db(_0x54c897),_0x43483a(),_0x16fa60(),_0xe7f855(),_0x17dbda=!![];else _0x4fde80[_0x3b537c(0x1cc)](_0x4317a3=>_0x4317a3[_0x3b537c(0x1d5)]===_0x54c897&&_0x4317a3[_0x3b537c(0x1f3)]===_0x3ffa2b)?(_0x10e450=_0x54c897,_0x2a84db(_0x54c897),_0x43483a(),_0x16fa60(),_0xe7f855(),_0x17dbda=!![]):_0x53f1ee(_0x3b537c(0x1d1),'用户名或密码错误！');}}finally{_0x3823cb&&(_0x3823cb[_0x3b537c(0x20e)]=![],_0x3823cb[_0x3b537c(0x1cd)]='登录'),_0x220dd7=![];}_0x17dbda&&typeof renderSection===_0x3b537c(0x1f5)&&setTimeout(()=>{renderSection('首页');},0x1f4);}function _0x4c5547(_0x1b2dfd,_0xf3f9a7,_0x4f7eb2){const _0x5b9122=_0xcba604;try{if(_0x4fde80[_0x5b9122(0x1cc)](_0x300ab7=>_0x300ab7['username'][_0x5b9122(0x22b)]()===_0x1b2dfd[_0x5b9122(0x22b)]())){_0x53f1ee(_0x5b9122(0x225),'用户名已存在，请选择其他用户名！');return;}if(_0x1b2dfd[_0x5b9122(0x22b)]()==='resonance'||_0x1b2dfd[_0x5b9122(0x22b)]()===_0x5b9122(0x20b)){_0x53f1ee(_0x5b9122(0x225),_0x5b9122(0x1d9));return;}_0x4fde80[_0x5b9122(0x1ef)]({'username':_0x1b2dfd,'password':_0xf3f9a7}),localStorage[_0x5b9122(0x216)]('registeredUsers',JSON['stringify'](_0x4fde80)),_0x2a84db(_0x1b2dfd),_0x16fa60(),document[_0x5b9122(0x1fc)](_0x5b9122(0x228))[_0x5b9122(0x1ff)]='',setTimeout(()=>{const _0x152898=_0x5b9122;_0x1b68ec(),document['getElementById'](_0x152898(0x1f6))[_0x152898(0x1ff)]=_0x1b2dfd;},0x3e8);}finally{_0x4f7eb2&&(_0x4f7eb2[_0x5b9122(0x20e)]=![],_0x4f7eb2[_0x5b9122(0x1cd)]='注册'),_0x220dd7=![];}}function _0x2a84db(_0x2b1c7b){const _0xd3b2c7=_0xcba604;!_0x29aba6[_0x2b1c7b]&&(_0x2b1c7b===_0xd3b2c7(0x20b)?_0x29aba6[_0x2b1c7b]={'registerTime':_0xd3b2c7(0x1f0),'displayName':_0xd3b2c7(0x20b),'privateLogs':['2022年9月12日，天气晴\x20\x20又一次的搬家。',_0xd3b2c7(0x1e9)]}:_0x29aba6[_0x2b1c7b]={'registerTime':new Date()[_0xd3b2c7(0x1d8)]()[_0xd3b2c7(0x1f8)]('T')[0x0],'displayName':_0x2b1c7b,'privateLogs':[new Date()[_0xd3b2c7(0x1d8)]()['split']('T')[0x0]+_0xd3b2c7(0x220),new Date()[_0xd3b2c7(0x1d8)]()[_0xd3b2c7(0x1f8)]('T')[0x0]+'\x20首次登录']},localStorage[_0xd3b2c7(0x216)](_0xd3b2c7(0x1d0),JSON['stringify'](_0x29aba6))),typeof window!==_0xd3b2c7(0x1d2)&&(window['currentUser']=_0x2b1c7b,localStorage[_0xd3b2c7(0x216)](_0xd3b2c7(0x1c2),_0x2b1c7b));}function _0xdc1fc4(){const _0x281331=_0xcba604;if(_0x220dd7)return;if(confirm('确定要退出登录吗？')){_0x220dd7=!![],_0x10e450=null;typeof window!=='undefined'&&(window[_0x281331(0x1c9)]=null,localStorage['removeItem'](_0x281331(0x1c2)));_0x16fa60(),_0xe7f855();const _0x104175=document['getElementById'](_0x281331(0x228));if(_0x104175)_0x104175[_0x281331(0x1ff)]='';_0x43483a(),typeof renderSection===_0x281331(0x1f5)?setTimeout(()=>{renderSection('首页'),_0x220dd7=![];},0x64):_0x220dd7=![];}}function _0x43483a(){const _0x4d1188=_0xcba604,_0x465dcc=_0x10e450||(typeof window!==_0x4d1188(0x1d2)?window[_0x4d1188(0x1c9)]:null);if(_0x465dcc){const _0x23e3be=document['getElementById'](_0x4d1188(0x22d)),_0x18c238=document[_0x4d1188(0x1fc)]('user-info'),_0xec6ac6=document[_0x4d1188(0x1fc)]('username-display');if(_0x23e3be)_0x23e3be[_0x4d1188(0x1ed)][_0x4d1188(0x203)]=_0x4d1188(0x209);if(_0x18c238)_0x18c238[_0x4d1188(0x1ed)][_0x4d1188(0x203)]=_0x4d1188(0x214);if(_0xec6ac6)_0xec6ac6[_0x4d1188(0x1cd)]=_0x465dcc;const _0x1480b7=document[_0x4d1188(0x1fc)](_0x4d1188(0x221));if(_0x1480b7){const _0x4b277d=_0x1480b7[_0x4d1188(0x1ca)]('.login-prompt');_0x4b277d&&_0x4b277d[_0x4d1188(0x1ee)]();}}else{const _0x725db8=document[_0x4d1188(0x1fc)](_0x4d1188(0x22d)),_0x2826a2=document[_0x4d1188(0x1fc)](_0x4d1188(0x215));_0x725db8&&(_0x725db8['style'][_0x4d1188(0x203)]='flex',_0x725db8[_0x4d1188(0x1ed)][_0x4d1188(0x1e5)]=_0x4d1188(0x217));_0x2826a2&&(_0x2826a2[_0x4d1188(0x1ed)][_0x4d1188(0x203)]=_0x4d1188(0x209),_0x2826a2[_0x4d1188(0x1ed)]['visibility']=_0x4d1188(0x219));const _0x323848=document[_0x4d1188(0x1fc)](_0x4d1188(0x221));if(_0x323848&&!_0x323848[_0x4d1188(0x1ca)](_0x4d1188(0x200))){const _0x1fb6b8=document[_0x4d1188(0x21b)]('div');_0x1fb6b8['className']=_0x4d1188(0x1f2),_0x1fb6b8[_0x4d1188(0x1c5)]=_0x4d1188(0x1c3),_0x323848['appendChild'](_0x1fb6b8);}setTimeout(()=>{const _0x4453ce=_0x4d1188,_0x181359=new CustomEvent('authStateChanged',{'detail':{'isLoggedIn':![],'username':null}});document[_0x4453ce(0x1d4)](_0x181359);if(typeof renderSection===_0x4453ce(0x1f5)){const _0x397365=document[_0x4453ce(0x1ca)](_0x4453ce(0x212));_0x397365&&_0x397365[_0x4453ce(0x1cd)][_0x4453ce(0x1dd)]('首页')&&renderSection('首页');}},0x32);}}function _0x43483a(){const _0x3fee52=_0xcba604,_0x5bec1c=_0x10e450||(typeof window!==_0x3fee52(0x1d2)?window[_0x3fee52(0x1c9)]:null);if(_0x5bec1c){const _0x49d46c=document[_0x3fee52(0x1fc)]('auth-buttons-container'),_0x16a4fc=document[_0x3fee52(0x1fc)](_0x3fee52(0x215)),_0x2ff906=document[_0x3fee52(0x1fc)]('username-display');if(_0x49d46c)_0x49d46c[_0x3fee52(0x1ed)][_0x3fee52(0x203)]='none';if(_0x16a4fc)_0x16a4fc[_0x3fee52(0x1ed)]['display']=_0x3fee52(0x214);if(_0x2ff906)_0x2ff906['textContent']=_0x5bec1c;const _0x1ad145=document['getElementById']('main-posts');if(_0x1ad145){const _0xd46fc=_0x1ad145['querySelector']('.login-prompt');_0xd46fc&&_0xd46fc[_0x3fee52(0x1ee)]();}}else{const _0x5ab9aa=document[_0x3fee52(0x1fc)](_0x3fee52(0x22d)),_0xd922fa=document['getElementById'](_0x3fee52(0x215));if(_0x5ab9aa)_0x5ab9aa[_0x3fee52(0x1ed)][_0x3fee52(0x203)]='flex';if(_0xd922fa)_0xd922fa[_0x3fee52(0x1ed)][_0x3fee52(0x203)]='none';const _0x5b71f9=document[_0x3fee52(0x1fc)]('main-posts');if(_0x5b71f9&&!_0x5b71f9[_0x3fee52(0x1ca)](_0x3fee52(0x200))){const _0x18a843=document['createElement'](_0x3fee52(0x229));_0x18a843[_0x3fee52(0x21c)]=_0x3fee52(0x1f2),_0x18a843[_0x3fee52(0x1c5)]=_0x3fee52(0x1c3),_0x5b71f9[_0x3fee52(0x20a)](_0x18a843);}}}function _0x2d0237(){const _0x44be50=_0xcba604,_0x50e2ce=localStorage[_0x44be50(0x224)](_0x44be50(0x1c2));_0x50e2ce&&typeof window!=='undefined'&&(window[_0x44be50(0x1c9)]=_0x50e2ce,_0x10e450=_0x50e2ce,_0x43483a());}function _0x53f1ee(_0x3176d6,_0x10fb34){const _0x33c753=_0xcba604;let _0x18c4e8;if(_0x3176d6===_0x33c753(0x1d1)){_0x18c4e8=document[_0x33c753(0x1fc)](_0x33c753(0x1c0));if(!_0x18c4e8){_0x18c4e8=document[_0x33c753(0x21b)](_0x33c753(0x229)),_0x18c4e8['id']=_0x33c753(0x1c0),_0x18c4e8[_0x33c753(0x21c)]=_0x33c753(0x21e);const _0x104353=document[_0x33c753(0x1fc)]('login-form');_0x104353&&_0x104353[_0x33c753(0x1c6)](_0x18c4e8,_0x104353['firstChild']);}}else{if(_0x3176d6===_0x33c753(0x225)){_0x18c4e8=document[_0x33c753(0x1fc)](_0x33c753(0x208));if(!_0x18c4e8){_0x18c4e8=document[_0x33c753(0x21b)]('div'),_0x18c4e8['id']=_0x33c753(0x208),_0x18c4e8[_0x33c753(0x21c)]='error-message';const _0x1826a2=document[_0x33c753(0x1fc)](_0x33c753(0x21a));_0x1826a2&&_0x1826a2[_0x33c753(0x1c6)](_0x18c4e8,_0x1826a2[_0x33c753(0x1db)]);}}}_0x18c4e8&&(_0x18c4e8[_0x33c753(0x1cd)]=_0x10fb34,_0x18c4e8[_0x33c753(0x1ed)][_0x33c753(0x203)]=_0x33c753(0x1e1));}function _0x3bb9f6(_0x372a7b,_0x5e37ab){const _0x3455b7=_0xcba604;let _0x30b8c0;if(_0x372a7b===_0x3455b7(0x1d1)){_0x30b8c0=document[_0x3455b7(0x1fc)](_0x3455b7(0x1e6));if(!_0x30b8c0){_0x30b8c0=document[_0x3455b7(0x21b)](_0x3455b7(0x229)),_0x30b8c0['id']=_0x3455b7(0x1e6),_0x30b8c0[_0x3455b7(0x21c)]=_0x3455b7(0x21d);const _0x2c05f5=document['getElementById']('login-form');_0x2c05f5&&_0x2c05f5[_0x3455b7(0x1c6)](_0x30b8c0,_0x2c05f5['firstChild']);}}else{if(_0x372a7b===_0x3455b7(0x225)){_0x30b8c0=document['getElementById'](_0x3455b7(0x1fb));if(!_0x30b8c0){_0x30b8c0=document[_0x3455b7(0x21b)](_0x3455b7(0x229)),_0x30b8c0['id']='register-success-message',_0x30b8c0['className']=_0x3455b7(0x21d);const _0xb633cc=document[_0x3455b7(0x1fc)](_0x3455b7(0x21a));_0xb633cc&&_0xb633cc['insertBefore'](_0x30b8c0,_0xb633cc[_0x3455b7(0x1db)]);}}}_0x30b8c0&&(_0x30b8c0[_0x3455b7(0x1cd)]=_0x5e37ab,_0x30b8c0['style'][_0x3455b7(0x203)]='block',setTimeout(()=>{const _0xe40da9=_0x3455b7;_0x30b8c0&&_0x30b8c0[_0xe40da9(0x1da)]&&_0x30b8c0[_0xe40da9(0x1da)][_0xe40da9(0x1f9)](_0x30b8c0);},0xbb8));}function _0x580512(_0x4d63fb){const _0x390fb5=_0xcba604;if(_0x4d63fb==='login'){const _0xa15845=document['getElementById'](_0x390fb5(0x1c0)),_0x55bc70=document[_0x390fb5(0x1fc)]('login-success-message');if(_0xa15845)_0xa15845[_0x390fb5(0x1da)][_0x390fb5(0x1f9)](_0xa15845);if(_0x55bc70)_0x55bc70[_0x390fb5(0x1da)]['removeChild'](_0x55bc70);}else{if(_0x4d63fb===_0x390fb5(0x225)){const _0x5c0ef9=document[_0x390fb5(0x1fc)](_0x390fb5(0x208)),_0x98cb0e=document[_0x390fb5(0x1fc)](_0x390fb5(0x1fb));if(_0x5c0ef9)_0x5c0ef9['parentNode'][_0x390fb5(0x1f9)](_0x5c0ef9);if(_0x98cb0e)_0x98cb0e[_0x390fb5(0x1da)][_0x390fb5(0x1f9)](_0x98cb0e);}}}function _0xe7f855(){const _0x489b9e=_0xcba604,_0x3763e0=document['getElementById'](_0x489b9e(0x1f6)),_0x19dddb=document['getElementById'](_0x489b9e(0x20d));if(_0x3763e0)_0x3763e0[_0x489b9e(0x1ff)]='';if(_0x19dddb)_0x19dddb[_0x489b9e(0x1ff)]='';_0x580512(_0x489b9e(0x1d1));}typeof window!==_0xcba604(0x1d2)&&(window['authUpdateState']=_0x43483a,window[_0xcba604(0x222)]=function(){return _0x10e450;}),console['log']('Auth\x20system\x20loaded\x20successfully\x20-\x20iOS\x20optimized\x20lite\x20version');}()));function _0x21f0(_0x422862,_0x3ac12c){const _0xe1ff84=_0xe1ff();return _0x21f0=function(_0x21f033,_0x59be2b){_0x21f033=_0x21f033-0x1c0;let _0x30517d=_0xe1ff84[_0x21f033];return _0x30517d;},_0x21f0(_0x422862,_0x3ac12c);}function _0xe1ff(){const _0x4ac62f=['1160265VSeczt','preventDefault','display','addEventListener','login-modal','stopPropagation','registeredUsers','register-error-message','none','appendChild','林中的猫','readyState','login-password','disabled','jq3307','logout-btn','4rNIFYy','.nav-item.active','16jEiZot','flex','user-info','setItem','visible','trim','hidden','register-form','createElement','className','success-message','error-message','Auth\x20system\x20initialized\x20successfully','\x20注册账户','main-posts','authGetCurrentUser','target','getItem','register','keydown','error','register-username','div','Auth\x20system\x20initialization\x20failed:','toLowerCase','focus','auth-buttons-container','login-error-message','189560KbuHeF','lastLoginUser','<p>请先\x20<span\x20class=\x22login-required\x22>登录</span>\x20或\x20<span\x20class=\x22login-required\x22>注册</span>\x20以浏览内容</p>','登录中...','innerHTML','insertBefore','请输入密码','Enter','currentUser','querySelector','login-btn','some','textContent','注册中...','52929MMOVPy','userProfiles','login','undefined','click','dispatchEvent','username','register-modal','parse','toISOString','用户名已存在，请选择其他用户名！','parentNode','firstChild','close-login','includes','用户名不能为空','16318863hzlBTm','log','block','109684DJvGGU','key','register-password-hidden','visibility','login-success-message','test','288778KIxUxA','2025年9月6日，要去执行一项很危险的行动了，希望这次一切顺利。','touchend','6lggmVk','register-btn','style','remove','push','2022-9-12','790hPXLJo','login-prompt','password','close-register','function','login-username','1543806EaxeNs','split','removeChild','用户名不能为空！','register-success-message','getElementById','.login-modal,\x20.register-modal','querySelectorAll','value','.login-prompt'];_0xe1ff=function(){return _0x4ac62f;};return _0xe1ff();}
+// auth.js - 静乔公寓论坛登录注册功能
+// 专门为苹果Safari优化，兼容iPhone 16 Pro
+// 新增文件，不修改现有代码
+
+/* (function() {
+    'use strict';
+    
+    // 防止重复初始化
+    if (window.authSystemInitialized) {
+        return;
+    }
+    window.authSystemInitialized = true;
+
+    // 全局变量
+    let authCurrentUser = null;
+    let authRegisteredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+    let authUserProfiles = JSON.parse(localStorage.getItem('userProfiles')) || {};
+    let authPrivateMessages = JSON.parse(localStorage.getItem('privateMessages')) || {};
+    
+    // 防止重复提交标志
+    let isProcessing = false;
+
+    // DOM加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function() {
+        // 延迟初始化以确保DOM完全加载
+        setTimeout(initAuthSystem, 100);
+    });
+
+    // 初始化认证系统
+    function initAuthSystem() {
+        try {
+            bindAuthEvents();
+            checkAutoLogin();
+            updateAuthState();
+            console.log('Auth system initialized successfully');
+        } catch (error) {
+            console.error('Auth system initialization failed:', error);
+        }
+    }
+
+    // 绑定认证相关事件 - Safari兼容版本
+    function bindAuthEvents() {
+        // 使用更精确的事件绑定，避免事件委托的频繁触发
+        bindSpecificEvents();
+        
+        // 模态框关闭按钮
+        bindModalEvents();
+
+        // 点击模态框外部关闭
+        document.addEventListener('click', function(event) {
+            const loginModal = document.getElementById('login-modal');
+            const registerModal = document.getElementById('register-modal');
+            
+            if (event.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+            if (event.target === registerModal) {
+                registerModal.style.display = 'none';
+            }
+        });
+
+        // 键盘事件支持 - Safari兼容
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeAllModals();
+            }
+        });
+    }
+
+    // 精确绑定事件，避免频繁触发
+    function bindSpecificEvents() {
+        // 登录按钮
+        const loginBtn = document.getElementById('login-btn');
+        if (loginBtn) {
+            loginBtn.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                showLoginModal();
+            });
+        }
+
+        // 注册按钮
+        const registerBtn = document.getElementById('register-btn');
+        if (registerBtn) {
+            registerBtn.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                showRegisterModal();
+            });
+        }
+
+        // 退出按钮
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                handleLogout();
+            });
+        }
+
+        // 登录提交
+        const loginSubmit = document.getElementById('login-submit');
+        if (loginSubmit) {
+            loginSubmit.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                handleLogin(event);
+            });
+        }
+
+        // 注册提交
+        const registerSubmit = document.getElementById('register-submit');
+        if (registerSubmit) {
+            registerSubmit.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                handleRegister(event);
+            });
+        }
+
+        // 密码显示切换
+        const togglePassword = document.getElementById('toggle-password');
+        if (togglePassword) {
+            togglePassword.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                togglePasswordVisibility();
+            });
+        }
+
+        // 模态框切换
+        const showRegisterFromLogin = document.getElementById('show-register-from-login');
+        if (showRegisterFromLogin) {
+            showRegisterFromLogin.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                switchToRegister();
+            });
+        }
+
+        const showLoginFromRegister = document.getElementById('show-login-from-register');
+        if (showLoginFromRegister) {
+            showLoginFromRegister.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                switchToLogin();
+            });
+        }
+
+        // 输入框回车事件
+        const loginUsername = document.getElementById('login-username');
+        const loginPassword = document.getElementById('login-password');
+        const registerUsername = document.getElementById('register-username');
+
+        if (loginUsername) {
+            loginUsername.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    handleLogin(event);
+                }
+            });
+        }
+
+        if (loginPassword) {
+            loginPassword.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    handleLogin(event);
+                }
+            });
+        }
+
+        if (registerUsername) {
+            registerUsername.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    handleRegister(event);
+                }
+            });
+        }
+    }
+
+    // 绑定模态框事件
+    function bindModalEvents() {
+        const closeLogin = document.getElementById('close-login');
+        const closeRegister = document.getElementById('close-register');
+
+        if (closeLogin) {
+            closeLogin.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                document.getElementById('login-modal').style.display = 'none';
+            });
+        }
+
+        if (closeRegister) {
+            closeRegister.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                document.getElementById('register-modal').style.display = 'none';
+            });
+        }
+    }
+
+    // 显示登录模态框 - Safari优化版本
+    function showLoginModal() {
+        if (isProcessing) return;
+        
+        const loginModal = document.getElementById('login-modal');
+        if (loginModal) {
+            loginModal.style.display = 'block';
+            // Safari兼容的自动聚焦
+            setTimeout(() => {
+                const usernameInput = document.getElementById('login-username');
+                if (usernameInput) {
+                    usernameInput.focus();
+                }
+            }, 300);
+        }
+    }
+
+    // 显示注册模态框
+    function showRegisterModal() {
+        if (isProcessing) return;
+        
+        const registerModal = document.getElementById('register-modal');
+        if (registerModal) {
+            registerModal.style.display = 'block';
+            setTimeout(() => {
+                const usernameInput = document.getElementById('register-username');
+                if (usernameInput) {
+                    usernameInput.focus();
+                }
+            }, 300);
+        }
+    }
+
+    // 关闭所有模态框
+    function closeAllModals() {
+        const modals = document.querySelectorAll('.login-modal, .register-modal');
+        modals.forEach(modal => {
+            modal.style.display = 'none';
+        });
+    }
+
+    // 切换到注册
+    function switchToRegister() {
+        if (isProcessing) return;
+        
+        closeAllModals();
+        setTimeout(() => {
+            document.getElementById('register-modal').style.display = 'block';
+        }, 50);
+    }
+
+    // 切换到登录
+    function switchToLogin() {
+        if (isProcessing) return;
+        
+        closeAllModals();
+        setTimeout(() => {
+            document.getElementById('login-modal').style.display = 'block';
+        }, 50);
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        if (isProcessing) return;
+        
+        const passwordDisplay = document.getElementById('register-password-display');
+        const toggleBtn = document.getElementById('toggle-password');
+        
+        if (passwordDisplay && toggleBtn) {
+            if (passwordDisplay.type === 'password') {
+                passwordDisplay.type = 'text';
+                toggleBtn.textContent = '隐藏';
+            } else {
+                passwordDisplay.type = 'password';
+                toggleBtn.textContent = '显示';
+            }
+        }
+    }
+
+    // 处理登录 - Safari兼容版本
+    function handleLogin(event) {
+        if (isProcessing) return;
+        
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        
+        const usernameInput = document.getElementById('login-username');
+        const passwordInput = document.getElementById('login-password');
+        const loginSubmit = document.getElementById('login-submit');
+        
+        if (!usernameInput || !passwordInput || !loginSubmit) {
+            return;
+        }
+        
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value;
+        
+        // 输入验证
+        if (!username) {
+            // 只在确实没有输入时才提示
+            if (usernameInput.value === '') {
+                showAlert('请输入用户名');
+            }
+            return;
+        }
+        
+        if (!password) {
+            showAlert('请输入密码');
+            return;
+        }
+        
+        // 设置处理中标志
+        isProcessing = true;
+        
+        // 禁用按钮防止重复提交
+        loginSubmit.disabled = true;
+        const originalText = loginSubmit.textContent;
+        loginSubmit.textContent = '登录中...';
+        
+        // Safari兼容的异步处理
+        setTimeout(() => {
+            try {
+                performLogin(username, password, loginSubmit, originalText);
+            } catch (error) {
+                console.error('Login error:', error);
+                showAlert('登录过程中发生错误');
+                resetButton(loginSubmit, originalText);
+                isProcessing = false;
+            }
+        }, 100);
+    }
+
+    // 执行登录逻辑
+    function performLogin(username, password, loginSubmit, originalText) {
+        let loginSuccess = false;
+
+        try {
+            // 检查特殊用户Resonance
+            if (typeof validateUser === 'function' && validateUser(username, password)) {
+                authCurrentUser = username;
+                initAuthUserProfile(username);
+                updateAuthState();
+                closeAllModals();
+                clearLoginForm();
+                showAlert('登录成功！欢迎进入系统模式。');
+                loginSuccess = true;
+            }
+            // 检查linmo用户
+            else if (typeof validateLinmoUser === 'function' && validateLinmoUser(username, password)) {
+                authCurrentUser = username;
+                initAuthUserProfile(username);
+                updateAuthState();
+                closeAllModals();
+                clearLoginForm();
+                showAlert('登录成功！欢迎林中的猫！');
+                loginSuccess = true;
+            }
+            // 检查注册用户
+            else if (authRegisteredUsers.some(user => user.username === username && user.password === password)) {
+                authCurrentUser = username;
+                initAuthUserProfile(username);
+                updateAuthState();
+                closeAllModals();
+                clearLoginForm();
+                showAlert('登录成功！');
+                loginSuccess = true;
+            }
+            else {
+                showAlert('用户名或密码错误！');
+            }
+        } finally {
+            resetButton(loginSubmit, originalText);
+            isProcessing = false;
+        }
+        
+        if (loginSuccess && typeof renderSection === 'function') {
+            setTimeout(() => {
+                renderSection('首页');
+            }, 500);
+        }
+    }
+
+    // 处理注册 - Safari兼容版本
+    function handleRegister(event) {
+        if (isProcessing) return;
+        
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        
+        const usernameInput = document.getElementById('register-username');
+        const registerSubmit = document.getElementById('register-submit');
+        
+        if (!usernameInput || !registerSubmit) {
+            return;
+        }
+        
+        const username = usernameInput.value.trim();
+        const passwordInput = document.getElementById('register-password-hidden');
+        const password = passwordInput ? passwordInput.value : 'jq3307'; // 默认密码
+        
+        if (!username) {
+            // 只在确实没有输入时才提示
+            if (usernameInput.value === '') {
+                showAlert('请输入用户名！');
+            }
+            return;
+        }
+        
+        // 设置处理中标志
+        isProcessing = true;
+        
+        // 禁用按钮防止重复提交
+        registerSubmit.disabled = true;
+        const originalText = registerSubmit.textContent;
+        registerSubmit.textContent = '注册中...';
+        
+        // Safari兼容的异步处理
+        setTimeout(() => {
+            try {
+                performRegister(username, password, registerSubmit, originalText);
+            } catch (error) {
+                console.error('Register error:', error);
+                showAlert('注册过程中发生错误');
+                resetButton(registerSubmit, originalText);
+                isProcessing = false;
+            }
+        }, 100);
+    }
+
+    // 执行注册逻辑
+    function performRegister(username, password, registerSubmit, originalText) {
+        try {
+            // 检查用户名是否已存在
+            if (authRegisteredUsers.some(user => user.username.toLowerCase() === username.toLowerCase())) {
+                showAlert('用户名已存在，请选择其他用户名！');
+                return;
+            }
+
+            // 检查是否为特殊用户（大小写不敏感）
+            if (username.toLowerCase() === 'resonance' || username.toLowerCase() === '林中的猫') {
+                showAlert('用户名已存在，请选择其他用户名！');
+                return;
+            }
+
+            // 添加新用户到数组
+            authRegisteredUsers.push({ username, password });
+            // 保存到本地存储
+            localStorage.setItem('registeredUsers', JSON.stringify(authRegisteredUsers));
+
+            // 初始化用户个人数据
+            initAuthUserProfile(username);
+
+            showAlert(`注册成功！您的用户名是：${username}。您可以使用此用户名登录。`);
+            closeAllModals();
+            document.getElementById('register-username').value = '';
+            
+            // 自动切换到登录界面
+            setTimeout(() => {
+                document.getElementById('login-modal').style.display = 'block';
+                document.getElementById('login-username').value = username;
+            }, 1000);
+        } finally {
+            resetButton(registerSubmit, originalText);
+            isProcessing = false;
+        }
+    }
+
+    // 初始化用户个人数据
+    function initAuthUserProfile(username) {
+        if (!authUserProfiles[username]) {
+            if (username === '林中的猫') {
+                authUserProfiles[username] = {
+                    registerTime: '2022-9-12',
+                    displayName: '林中的猫',
+                    privateLogs: [
+                        '2022年9月12日，天气晴  又一次的搬家。',
+                        '2025年9月6日，要去执行一项很危险的行动了，希望这次一切顺利。'
+                    ]
+                };
+            } else {
+                authUserProfiles[username] = {
+                    registerTime: new Date().toISOString().split('T')[0],
+                    displayName: username,
+                    privateLogs: [
+                        `${new Date().toISOString().split('T')[0]} 注册账户`,
+                        `${new Date().toISOString().split('T')[0]} 首次登录`
+                    ]
+                };
+            }
+            localStorage.setItem('userProfiles', JSON.stringify(authUserProfiles));
+        }
+        
+        // 更新全局currentUser以保持与现有代码兼容
+        if (typeof window !== 'undefined') {
+            window.currentUser = username;
+        }
+    }
+
+    // 处理退出登录
+    function handleLogout() {
+        if (isProcessing) return;
+        
+        if (confirm('确定要退出登录吗？')) {
+            authCurrentUser = null;
+            if (typeof window !== 'undefined') {
+                window.currentUser = null;
+            }
+            updateAuthState();
+            showAlert('已成功退出登录');
+        }
+    }
+
+    // 更新认证状态
+    function updateAuthState() {
+        const user = authCurrentUser || (typeof window !== 'undefined' ? window.currentUser : null);
+        
+        if (user) {
+            // 用户已登录状态
+            const authButtons = document.getElementById('auth-buttons-container');
+            const userInfo = document.getElementById('user-info');
+            const usernameDisplay = document.getElementById('username-display');
+            
+            if (authButtons) authButtons.style.display = 'none';
+            if (userInfo) userInfo.style.display = 'flex';
+            if (usernameDisplay) usernameDisplay.textContent = user;
+            
+            // 移除登录提示
+            const mainPosts = document.getElementById('main-posts');
+            if (mainPosts) {
+                const loginPrompt = mainPosts.querySelector('.login-prompt');
+                if (loginPrompt) {
+                    loginPrompt.remove();
+                }
+            }
+        } else {
+            // 用户未登录状态
+            const authButtons = document.getElementById('auth-buttons-container');
+            const userInfo = document.getElementById('user-info');
+            
+            if (authButtons) authButtons.style.display = 'flex';
+            if (userInfo) userInfo.style.display = 'none';
+            
+            // 显示登录提示
+            const mainPosts = document.getElementById('main-posts');
+            if (mainPosts && !mainPosts.querySelector('.login-prompt')) {
+                const promptDiv = document.createElement('div');
+                promptDiv.className = 'login-prompt';
+                promptDiv.innerHTML = '<p>请先 <span class="login-required">登录</span> 或 <span class="login-required">注册</span> 以浏览内容</p>';
+                mainPosts.appendChild(promptDiv);
+            }
+        }
+    }
+
+    // 检查自动登录
+    function checkAutoLogin() {
+        // 可以从localStorage检查是否有保存的登录状态
+        const savedUser = localStorage.getItem('lastLoginUser');
+        if (savedUser && typeof window !== 'undefined') {
+            window.currentUser = savedUser;
+            authCurrentUser = savedUser;
+            updateAuthState();
+        }
+    }
+
+    // 工具函数
+    function showAlert(message) {
+        // 避免频繁弹窗
+        if (!isProcessing) {
+            alert(message);
+        }
+    }
+
+    function clearLoginForm() {
+        const usernameInput = document.getElementById('login-username');
+        const passwordInput = document.getElementById('login-password');
+        if (usernameInput) usernameInput.value = '';
+        if (passwordInput) passwordInput.value = '';
+    }
+
+    function resetButton(button, originalText) {
+        if (button) {
+            button.disabled = false;
+            button.textContent = originalText;
+        }
+    }
+
+    // 暴露必要的函数到全局作用域以便现有代码调用
+    if (typeof window !== 'undefined') {
+        window.authUpdateState = updateAuthState;
+        window.authGetCurrentUser = function() { return authCurrentUser; };
+    }
+
+    console.log('Auth system loaded successfully');
+})(); */
+
+// auth.js - 静乔公寓论坛登录注册功能
+// 专门为苹果Safari优化，兼容iPhone 16 Pro
+// 修复频繁提示问题，优化用户体验
+
+(function() {
+    'use strict';
+    
+    // 防止重复初始化
+    if (window.authSystemInitialized) {
+        return;
+    }
+    window.authSystemInitialized = true;
+
+    // 全局变量
+    let authCurrentUser = null;
+    let authRegisteredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+    let authUserProfiles = JSON.parse(localStorage.getItem('userProfiles')) || {};
+    let authPrivateMessages = JSON.parse(localStorage.getItem('privateMessages')) || {};
+    
+    // 防止重复提交标志
+    let isProcessing = false;
+    
+    // Safari专用优化变量 - 防止频繁提示
+    let lastAlertTime = 0;
+    let alertCooldown = 1000; // 1秒内不重复提示
+    let usernameInputHistory = {};
+
+    // DOM加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function() {
+        // 延迟初始化以确保DOM完全加载
+        setTimeout(initAuthSystem, 100);
+    });
+
+    // 初始化认证系统
+    function initAuthSystem() {
+        try {
+            bindAuthEvents();
+            checkAutoLogin();
+            updateAuthState();
+            initSafariOptimizations();
+            console.log('Auth system initialized successfully - Safari Optimized');
+        } catch (error) {
+            console.error('Auth system initialization failed:', error);
+        }
+    }
+
+    // Safari专用优化初始化
+    function initSafariOptimizations() {
+        // 为输入框添加防抖处理
+        const usernameInputs = [
+            document.getElementById('login-username'),
+            document.getElementById('register-username')
+        ];
+        
+        usernameInputs.forEach(input => {
+            if (input) {
+                // 记录输入历史，避免重复提示
+                input.addEventListener('input', function() {
+                    usernameInputHistory[input.id] = this.value.trim();
+                });
+                
+                // Safari触摸优化
+                input.addEventListener('touchstart', function(e) {
+                    e.stopPropagation();
+                }, { passive: true });
+            }
+        });
+    }
+
+    // 绑定认证相关事件 - Safari兼容版本
+    function bindAuthEvents() {
+        // 使用更精确的事件绑定，避免事件委托的频繁触发
+        bindSpecificEvents();
+        
+        // 模态框关闭按钮
+        bindModalEvents();
+
+        // 点击模态框外部关闭 - 添加防误触延迟
+        document.addEventListener('click', function(event) {
+            const loginModal = document.getElementById('login-modal');
+            const registerModal = document.getElementById('register-modal');
+            
+            if (event.target === loginModal) {
+                closeModalSafely(loginModal);
+            }
+            if (event.target === registerModal) {
+                closeModalSafely(registerModal);
+            }
+        });
+
+        // 键盘事件支持 - Safari兼容
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeAllModals();
+            }
+        });
+        
+        // Safari页面可见性变化处理
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                // 页面隐藏时清理状态
+                resetProcessingState();
+            }
+        });
+    }
+
+    // 精确绑定事件，避免频繁触发
+    function bindSpecificEvents() {
+        // 登录按钮 - 添加防抖
+        const loginBtn = document.getElementById('login-btn');
+        if (loginBtn) {
+            loginBtn.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                debounce(showLoginModal, 300)();
+            });
+        }
+
+        // 注册按钮 - 添加防抖
+        const registerBtn = document.getElementById('register-btn');
+        if (registerBtn) {
+            registerBtn.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                debounce(showRegisterModal, 300)();
+            });
+        }
+
+        // 退出按钮
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                handleLogout();
+            });
+        }
+
+        // 登录提交 - 优化验证逻辑
+        const loginSubmit = document.getElementById('login-submit');
+        if (loginSubmit) {
+            loginSubmit.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                handleLogin(event);
+            });
+        }
+
+        // 注册提交 - 优化验证逻辑
+        const registerSubmit = document.getElementById('register-submit');
+        if (registerSubmit) {
+            registerSubmit.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                handleRegister(event);
+            });
+        }
+
+        // 密码显示切换
+        const togglePassword = document.getElementById('toggle-password');
+        if (togglePassword) {
+            togglePassword.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                togglePasswordVisibility();
+            });
+        }
+
+        // 模态框切换
+        const showRegisterFromLogin = document.getElementById('show-register-from-login');
+        if (showRegisterFromLogin) {
+            showRegisterFromLogin.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                switchToRegister();
+            });
+        }
+
+        const showLoginFromRegister = document.getElementById('show-login-from-register');
+        if (showLoginFromRegister) {
+            showLoginFromRegister.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                switchToLogin();
+            });
+        }
+
+        // 输入框回车事件 - 优化验证
+        const loginUsername = document.getElementById('login-username');
+        const loginPassword = document.getElementById('login-password');
+        const registerUsername = document.getElementById('register-username');
+
+        if (loginUsername) {
+            loginUsername.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    if (validateInput(loginUsername, 'login-username')) {
+                        handleLogin(event);
+                    }
+                }
+            });
+        }
+
+        if (loginPassword) {
+            loginPassword.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    if (validateInput(loginPassword, 'login-password')) {
+                        handleLogin(event);
+                    }
+                }
+            });
+        }
+
+        if (registerUsername) {
+            registerUsername.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    if (validateInput(registerUsername, 'register-username')) {
+                        handleRegister(event);
+                    }
+                }
+            });
+        }
+    }
+
+    // 输入验证函数 - 优化提示频率
+    function validateInput(input, inputId) {
+        const value = input.value.trim();
+        
+        // 空值检查
+        if (!value) {
+            const currentTime = Date.now();
+            // 检查冷却时间，避免频繁提示
+            if (currentTime - lastAlertTime > alertCooldown) {
+                const fieldName = inputId.includes('username') ? '用户名' : '密码';
+                showAlert(`请输入${fieldName}！`);
+                lastAlertTime = currentTime;
+            }
+            return false;
+        }
+        
+        return true;
+    }
+
+    // 绑定模态框事件
+    function bindModalEvents() {
+        const closeLogin = document.getElementById('close-login');
+        const closeRegister = document.getElementById('close-register');
+
+        if (closeLogin) {
+            closeLogin.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                closeModalSafely(document.getElementById('login-modal'));
+            });
+        }
+
+        if (closeRegister) {
+            closeRegister.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                closeModalSafely(document.getElementById('register-modal'));
+            });
+        }
+    }
+
+    // 安全关闭模态框
+    function closeModalSafely(modal) {
+        if (modal) {
+            modal.style.display = 'none';
+            resetProcessingState();
+        }
+    }
+
+    // 显示登录模态框 - Safari优化版本
+    function showLoginModal() {
+        if (isProcessing) return;
+        
+        const loginModal = document.getElementById('login-modal');
+        if (loginModal) {
+            loginModal.style.display = 'block';
+            // Safari兼容的自动聚焦
+            setTimeout(() => {
+                const usernameInput = document.getElementById('login-username');
+                if (usernameInput) {
+                    usernameInput.focus();
+                }
+            }, 300);
+        }
+    }
+
+    // 显示注册模态框
+    function showRegisterModal() {
+        if (isProcessing) return;
+        
+        const registerModal = document.getElementById('register-modal');
+        if (registerModal) {
+            registerModal.style.display = 'block';
+            setTimeout(() => {
+                const usernameInput = document.getElementById('register-username');
+                if (usernameInput) {
+                    usernameInput.focus();
+                }
+            }, 300);
+        }
+    }
+
+    // 关闭所有模态框
+    function closeAllModals() {
+        const modals = document.querySelectorAll('.login-modal, .register-modal');
+        modals.forEach(modal => {
+            modal.style.display = 'none';
+        });
+        resetProcessingState();
+    }
+
+    // 重置处理状态
+    function resetProcessingState() {
+        isProcessing = false;
+        
+        // 重置按钮状态
+        const loginSubmit = document.getElementById('login-submit');
+        const registerSubmit = document.getElementById('register-submit');
+        
+        if (loginSubmit) {
+            loginSubmit.disabled = false;
+            loginSubmit.textContent = '登录';
+        }
+        
+        if (registerSubmit) {
+            registerSubmit.disabled = false;
+            registerSubmit.textContent = '注册';
+        }
+    }
+
+    // 切换到注册
+    function switchToRegister() {
+        if (isProcessing) return;
+        
+        closeAllModals();
+        setTimeout(() => {
+            document.getElementById('register-modal').style.display = 'block';
+        }, 50);
+    }
+
+    // 切换到登录
+    function switchToLogin() {
+        if (isProcessing) return;
+        
+        closeAllModals();
+        setTimeout(() => {
+            document.getElementById('login-modal').style.display = 'block';
+        }, 50);
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        if (isProcessing) return;
+        
+        const passwordDisplay = document.getElementById('register-password-display');
+        const toggleBtn = document.getElementById('toggle-password');
+        
+        if (passwordDisplay && toggleBtn) {
+            if (passwordDisplay.type === 'password') {
+                passwordDisplay.type = 'text';
+                toggleBtn.textContent = '隐藏';
+            } else {
+                passwordDisplay.type = 'password';
+                toggleBtn.textContent = '显示';
+            }
+        }
+    }
+
+    // 处理登录 - Safari兼容版本
+    function handleLogin(event) {
+        if (isProcessing) return;
+        
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        
+        const usernameInput = document.getElementById('login-username');
+        const passwordInput = document.getElementById('login-password');
+        const loginSubmit = document.getElementById('login-submit');
+        
+        if (!usernameInput || !passwordInput || !loginSubmit) {
+            return;
+        }
+        
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value;
+        
+        // 优化的输入验证 - 减少频繁提示
+        if (!validateInput(usernameInput, 'login-username')) {
+            return;
+        }
+        
+        if (!password) {
+            const currentTime = Date.now();
+            if (currentTime - lastAlertTime > alertCooldown) {
+                showAlert('请输入密码');
+                lastAlertTime = currentTime;
+            }
+            return;
+        }
+        
+        // 设置处理中标志
+        isProcessing = true;
+        
+        // 禁用按钮防止重复提交
+        loginSubmit.disabled = true;
+        const originalText = loginSubmit.textContent;
+        loginSubmit.textContent = '登录中...';
+        
+        // Safari兼容的异步处理
+        setTimeout(() => {
+            try {
+                performLogin(username, password, loginSubmit, originalText);
+            } catch (error) {
+                console.error('Login error:', error);
+                showAlert('登录过程中发生错误');
+                resetButton(loginSubmit, originalText);
+                isProcessing = false;
+            }
+        }, 100);
+    }
+
+    // 执行登录逻辑
+    function performLogin(username, password, loginSubmit, originalText) {
+        let loginSuccess = false;
+
+        try {
+            // 检查特殊用户Resonance
+            if (typeof validateUser === 'function' && validateUser(username, password)) {
+                authCurrentUser = username;
+                initAuthUserProfile(username);
+                updateAuthState();
+                closeAllModals();
+                clearLoginForm();
+                showAlert('登录成功！欢迎进入系统模式。');
+                loginSuccess = true;
+            }
+            // 检查linmo用户
+            else if (typeof validateLinmoUser === 'function' && validateLinmoUser(username, password)) {
+                authCurrentUser = username;
+                initAuthUserProfile(username);
+                updateAuthState();
+                closeAllModals();
+                clearLoginForm();
+                showAlert('登录成功！欢迎林中的猫！');
+                loginSuccess = true;
+            }
+            // 检查注册用户
+            else if (authRegisteredUsers.some(user => user.username === username && user.password === password)) {
+                authCurrentUser = username;
+                initAuthUserProfile(username);
+                updateAuthState();
+                closeAllModals();
+                clearLoginForm();
+                showAlert('登录成功！');
+                loginSuccess = true;
+            }
+            else {
+                showAlert('用户名或密码错误！');
+            }
+        } finally {
+            resetButton(loginSubmit, originalText);
+            isProcessing = false;
+        }
+        
+        if (loginSuccess && typeof renderSection === 'function') {
+            setTimeout(() => {
+                renderSection('首页');
+            }, 500);
+        }
+    }
+
+    // 处理注册 - Safari兼容版本
+    function handleRegister(event) {
+        if (isProcessing) return;
+        
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        
+        const usernameInput = document.getElementById('register-username');
+        const registerSubmit = document.getElementById('register-submit');
+        
+        if (!usernameInput || !registerSubmit) {
+            return;
+        }
+        
+        const username = usernameInput.value.trim();
+        const passwordInput = document.getElementById('register-password-hidden');
+        const password = passwordInput ? passwordInput.value : 'jq3307'; // 默认密码
+        
+        // 优化的输入验证
+        if (!validateInput(usernameInput, 'register-username')) {
+            return;
+        }
+        
+        // 设置处理中标志
+        isProcessing = true;
+        
+        // 禁用按钮防止重复提交
+        registerSubmit.disabled = true;
+        const originalText = registerSubmit.textContent;
+        registerSubmit.textContent = '注册中...';
+        
+        // Safari兼容的异步处理
+        setTimeout(() => {
+            try {
+                performRegister(username, password, registerSubmit, originalText);
+            } catch (error) {
+                console.error('Register error:', error);
+                showAlert('注册过程中发生错误');
+                resetButton(registerSubmit, originalText);
+                isProcessing = false;
+            }
+        }, 100);
+    }
+
+    // 执行注册逻辑
+    function performRegister(username, password, registerSubmit, originalText) {
+        try {
+            // 检查用户名是否已存在
+            if (authRegisteredUsers.some(user => user.username.toLowerCase() === username.toLowerCase())) {
+                showAlert('用户名已存在，请选择其他用户名！');
+                return;
+            }
+
+            // 检查是否为特殊用户（大小写不敏感）
+            if (username.toLowerCase() === 'resonance' || username.toLowerCase() === '林中的猫') {
+                showAlert('用户名已存在，请选择其他用户名！');
+                return;
+            }
+
+            // 添加新用户到数组
+            authRegisteredUsers.push({ username, password });
+            // 保存到本地存储
+            localStorage.setItem('registeredUsers', JSON.stringify(authRegisteredUsers));
+
+            // 初始化用户个人数据
+            initAuthUserProfile(username);
+
+            showAlert(`注册成功！您的用户名是：${username}。您可以使用此用户名登录。`);
+            closeAllModals();
+            document.getElementById('register-username').value = '';
+            
+            // 自动切换到登录界面
+            setTimeout(() => {
+                document.getElementById('login-modal').style.display = 'block';
+                document.getElementById('login-username').value = username;
+            }, 1000);
+        } finally {
+            resetButton(registerSubmit, originalText);
+            isProcessing = false;
+        }
+    }
+
+    // 初始化用户个人数据
+    function initAuthUserProfile(username) {
+        if (!authUserProfiles[username]) {
+            if (username === '林中的猫') {
+                authUserProfiles[username] = {
+                    registerTime: '2022-9-12',
+                    displayName: '林中的猫',
+                    privateLogs: [
+                        '2022年9月12日，天气晴  又一次的搬家。',
+                        '2025年9月6日，要去执行一项很危险的行动了，希望这次一切顺利。'
+                    ]
+                };
+            } else {
+                authUserProfiles[username] = {
+                    registerTime: new Date().toISOString().split('T')[0],
+                    displayName: username,
+                    privateLogs: [
+                        `${new Date().toISOString().split('T')[0]} 注册账户`,
+                        `${new Date().toISOString().split('T')[0]} 首次登录`
+                    ]
+                };
+            }
+            localStorage.setItem('userProfiles', JSON.stringify(authUserProfiles));
+        }
+        
+        // 更新全局currentUser以保持与现有代码兼容
+        if (typeof window !== 'undefined') {
+            window.currentUser = username;
+        }
+    }
+
+    // 处理退出登录
+   /*  function handleLogout() {
+        if (isProcessing) return;
+        
+        if (confirm('确定要退出登录吗？')) {
+            authCurrentUser = null;
+            if (typeof window !== 'undefined') {
+                window.currentUser = null;
+            }
+            updateAuthState();
+            /* showAlert('已成功退出登录'); 
+        }
+    }*/
+
+function handleLogout() {
+    // 添加防重复检查
+    if (window.logoutProcessing) return;
+    window.logoutProcessing = true;
+    
+    if (isProcessing) return;
+    
+    if (confirm('确定要退出登录吗？')) {
+        authCurrentUser = null;
+        if (typeof window !== 'undefined') {
+            window.currentUser = null;
+        }
+        updateAuthState();
+        /* showAlert('已成功退出登录'); */
+    }
+    
+    // 重置处理状态
+    setTimeout(() => {
+        window.logoutProcessing = false;
+    }, 1000);
+}
+
+    // 更新认证状态
+    function updateAuthState() {
+        const user = authCurrentUser || (typeof window !== 'undefined' ? window.currentUser : null);
+        
+        if (user) {
+            // 用户已登录状态
+            const authButtons = document.getElementById('auth-buttons-container');
+            const userInfo = document.getElementById('user-info');
+            const usernameDisplay = document.getElementById('username-display');
+            
+            if (authButtons) authButtons.style.display = 'none';
+            if (userInfo) userInfo.style.display = 'flex';
+            if (usernameDisplay) usernameDisplay.textContent = user;
+            
+            // 移除登录提示
+            const mainPosts = document.getElementById('main-posts');
+            if (mainPosts) {
+                const loginPrompt = mainPosts.querySelector('.login-prompt');
+                if (loginPrompt) {
+                    loginPrompt.remove();
+                }
+            }
+        } else {
+            // 用户未登录状态
+            const authButtons = document.getElementById('auth-buttons-container');
+            const userInfo = document.getElementById('user-info');
+            
+            if (authButtons) authButtons.style.display = 'flex';
+            if (userInfo) userInfo.style.display = 'none';
+            
+            // 显示登录提示
+            const mainPosts = document.getElementById('main-posts');
+            if (mainPosts && !mainPosts.querySelector('.login-prompt')) {
+                const promptDiv = document.createElement('div');
+                promptDiv.className = 'login-prompt';
+                promptDiv.innerHTML = '<p>请先 <span class="login-required">登录</span> 或 <span class="login-required">注册</span> 以浏览内容</p>';
+                mainPosts.appendChild(promptDiv);
+            }
+        }
+    }
+
+    // 检查自动登录
+    function checkAutoLogin() {
+        // 可以从localStorage检查是否有保存的登录状态
+        const savedUser = localStorage.getItem('lastLoginUser');
+        if (savedUser && typeof window !== 'undefined') {
+            window.currentUser = savedUser;
+            authCurrentUser = savedUser;
+            updateAuthState();
+        }
+    }
+
+    // 工具函数
+    function showAlert(message) {
+        // 避免频繁弹窗
+        const currentTime = Date.now();
+        if (currentTime - lastAlertTime > alertCooldown) {
+            alert(message);
+            lastAlertTime = currentTime;
+        }
+    }
+
+    function clearLoginForm() {
+        const usernameInput = document.getElementById('login-username');
+        const passwordInput = document.getElementById('login-password');
+        if (usernameInput) usernameInput.value = '';
+        if (passwordInput) passwordInput.value = '';
+    }
+
+    function resetButton(button, originalText) {
+        if (button) {
+            button.disabled = false;
+            button.textContent = originalText;
+        }
+    }
+
+    // 防抖函数 - 减少频繁触发
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // 暴露必要的函数到全局作用域以便现有代码调用
+    if (typeof window !== 'undefined') {
+        window.authUpdateState = updateAuthState;
+        window.authGetCurrentUser = function() { return authCurrentUser; };
+    }
+
+    console.log('Auth system loaded successfully - Safari Optimized');
+})();
