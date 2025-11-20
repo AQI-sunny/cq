@@ -78,28 +78,47 @@
             overflow: hidden;
             background-color: rgba(0, 0, 0, 0.8);
             z-index: 10;
-            display: flex;
+        }
+        
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 15px;
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .active {
+            display: flex;
         }
         
         h1 {
-            font-size: clamp(2rem, 6vw, 4rem);
-            margin-bottom: 20px;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            margin-bottom: 15px;
             text-shadow: 0 0 10px #ff0000;
         }
         
+        h2 {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            margin-bottom: 10px;
+            color: #ff5555;
+        }
+        
         p {
-            font-size: clamp(1rem, 3vw, 1.5rem);
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
             margin-bottom: 20px;
             line-height: 1.5;
         }
         
         .error-code {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #ff5555;
             margin-top: 15px;
         }
@@ -108,10 +127,10 @@
             background-color: #000;
             color: #ff0000;
             border: 1px solid #ff0000;
-            padding: 10px 20px;
-            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            padding: 8px 16px;
+            font-size: clamp(0.8rem, 2vw, 1rem);
             cursor: pointer;
-            margin: 15px;
+            margin: 8px;
             transition: all 0.3s;
         }
         
@@ -121,24 +140,79 @@
             box-shadow: 0 0 10px #ff0000;
         }
         
-        /* 终端样式 */
-        .terminal {
-            background-color: #000;
-            color: #ff0000;
-            padding: 8px;
-            font-family: 'Courier New', monospace;
-            width: 100%;
-            height: 40%;
-            min-height: 150px;
-            overflow-y: auto;
-            border: 1px solid #ff0000;
-            margin: 20px 0;
-            font-size: clamp(0.7rem, 2vw, 0.9rem);
-            text-align: left;
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
         
-        .terminal-line {
-            margin-bottom: 4px;
+        /* 游戏容器样式 */
+        .game-container {
+            width: 100%;
+            height: 60%;
+            min-height: 200px;
+            position: relative;
+            border: 1px solid #ff0000;
+            margin: 15px 0;
+        }
+        
+        /* 点击游戏样式 */
+        .target {
+            position: absolute;
+            width: clamp(30px, 8vw, 40px);
+            height: clamp(30px, 8vw, 40px);
+            background-color: #ff0000;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        /* 记忆游戏样式 */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+        }
+        
+        .memory-card {
+            background-color: #330000;
+            border: 1px solid #ff0000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: transparent;
+            transition: all 0.3s;
+        }
+        
+        .memory-card.revealed {
+            background-color: #660000;
+            color: #ff0000;
+        }
+        
+        .memory-card.matched {
+            background-color: #003300;
+            color: #00ff00;
+        }
+        
+        /* 密码输入样式 */
+        .password-input {
+            background-color: #000;
+            color: #ff0000;
+            border: 1px solid #ff0000;
+            padding: 10px;
+            font-size: 1.2rem;
+            margin: 15px 0;
+            width: 80%;
+            text-align: center;
+        }
+        
+        .password-hint {
+            font-size: 0.9rem;
+            color: #ff8888;
+            margin-top: 10px;
         }
         
         /* 进度条样式 */
@@ -158,21 +232,26 @@
             transition: width 0.5s;
         }
         
-        /* 故障效果 */
-        .glitch {
-            animation: glitch 0.5s infinite;
+        /* 终端样式 */
+        .terminal {
+            background-color: #000;
+            color: #ff0000;
+            padding: 8px;
+            font-family: 'Courier New', monospace;
+            width: 100%;
+            height: 40%;
+            min-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ff0000;
+            margin: 10px 0;
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
         }
         
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
+        .terminal-line {
+            margin-bottom: 4px;
         }
         
-        /* 窗口抖动 */
+        /* 新增效果：窗口抖动 */
         .shake {
             animation: shake 0.5s;
         }
@@ -191,7 +270,7 @@
             100% { transform: translate(0, 0); }
         }
         
-        /* 闪屏 */
+        /* 新增效果：闪屏 */
         .flash {
             animation: flash 0.3s;
         }
@@ -202,170 +281,211 @@
             100% { background-color: rgba(255, 0, 0, 0); }
         }
         
+        /* 新增效果：游戏警告文字 */
+        .game-warning {
+            position: absolute;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ff0000;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+            z-index: 5;
+            pointer-events: none;
+            opacity: 0;
+        }
+        
+        /* 故障效果 */
+        .glitch {
+            animation: glitch 0.5s infinite;
+        }
+        
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        
         /* 响应式调整 */
         @media (max-width: 768px) {
             #container {
                 height: 95%;
-                padding: 15px;
+            }
+            
+            .screen {
+                padding: 10px;
+            }
+            
+            .game-container {
+                height: 50%;
+            }
+            
+            .btn {
+                padding: 6px 12px;
+            }
+            
+            .memory-grid {
+                grid-template-columns: repeat(3, 1fr);
             }
         }
         
         @media (max-width: 480px) {
             #container {
                 height: 98%;
-                padding: 10px;
+            }
+            
+            .screen {
+                padding: 8px;
+            }
+            
+            .game-container {
+                height: 45%;
+            }
+            
+            .btn {
+                padding: 5px 10px;
+                margin: 5px;
+            }
+            
+            .memory-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
+<!-- 防护代码 -->
+    <script>
+(function () {
+    'use strict';
+
+    var devTools = {
+        init: function () {
+            this.disableRightClick();
+            this.disableDevToolsKeys();
+        },
+
+        disableRightClick: function () {
+            document.addEventListener('contextmenu', function (e) {
+                e.preventDefault();
+                alert('恭喜你获得成就：逃课大王！！！');
+                return false;
+            });
+        },
+
+        disableDevToolsKeys: function () {
+            document.addEventListener('keydown', function (e) {
+                // F12
+                if ((e.key === 'F12' || e.keyCode === 123) &&
+                    !e.ctrlKey && !e.altKey && !e.shiftKey && !e.metaKey) {
+                    e.preventDefault();
+                    alert('恭喜你获得成就：逃课大王！！！');
+                    return false;
+                }
+                // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+                if (e.ctrlKey && e.shiftKey &&
+                    (e.key === 'I' || e.key === 'J' || e.key === 'C'
+                     || e.key === 'i' || e.key === 'j' || e.key === 'c')) {
+                    e.preventDefault();
+                    alert('恭喜你获得成就：逃课大王！！！');
+                    return false;
+                }
+                // Ctrl+U
+                if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+                    e.preventDefault();
+                    alert('恭喜你获得成就：逃课大王！！！');
+                    return false;
+                }
+            });
+        }
+    };
+
+    devTools.init();
+})();
+</script>
+
 </head>
 <body>
     <!-- 背景警告文字 -->
     <div class="bg-warning" id="bg-warning"></div>
     
     <div id="container">
-        <h1 class="glitch">系统崩溃</h1>
-        <p>系统核心文件已损坏...</p>
-        
-        <div class="terminal">
-            <div class="terminal-line">> 系统文件完整性检查失败</div>
-            <div class="terminal-line">> 核心模块: kernel32.dll - 已损坏</div>
-            <div class="terminal-line">> 核心模块: ntdll.dll - 已损坏</div>
-            <div class="terminal-line">> 系统即将关闭...</div>
-            <div class="terminal-line">> 错误代码: 0x0000007B</div>
-            <div class="terminal-line">> 内存转储失败</div>
-            <div class="terminal-line">> 无法访问系统注册表</div>
-            <div class="terminal-line">> 硬件驱动程序异常</div>
-            <div class="terminal-line">> 安全模式启动失败</div>
+        <!-- 第一阶段：检测到KMS侵入 -->
+        <div id="screen1" class="screen active">
+            <h1 class="glitch">警告</h1>
+            <p>检测到KMS侵入系统...</p>
+            <div class="terminal">
+                <div class="terminal-line">> 扫描系统文件...</div>
+                <div class="terminal-line">> 检测到异常进程: kms_service.exe</div>
+                <div class="terminal-line">> 进程ID: 0x4A3F</div>
+                <div class="terminal-line">> 威胁等级: 严重</div>
+                <div class="terminal-line">> 尝试隔离威胁...</div>
+                <div class="terminal-line">> 隔离失败!</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress" id="progress1"></div>
+            </div>
+            <button class="btn" id="btn-next1">返回！！！</button>
         </div>
         
-        <div class="progress-bar">
-            <div class="progress" id="progress"></div>
+        <!-- 第二阶段：系统崩溃 -->
+        <div id="screen2" class="screen">
+            <h1 class="glitch">系统崩溃</h1>
+            <p>系统核心文件已损坏...</p>
+            <div class="terminal">
+                <div class="terminal-line">> 系统文件完整性检查失败</div>
+                <div class="terminal-line">> 核心模块: kernel32.dll - 已损坏</div>
+                <div class="terminal-line">> 核心模块: ntdll.dll - 已损坏</div>
+                <div class="terminal-line">> 系统即将关闭...</div>
+                <div class="terminal-line">> 错误代码: 0x0000007B</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress" id="progress2"></div>
+            </div>
+            <button class="btn" id="btn-next2">返回！！！不要点我！！！</button>
         </div>
         
-        <p class="error-code">请联系系统管理员或重新启动系统</p>
-        <button class="btn" id="btn-restart">尝试重启</button>
+        <!-- 第三阶段：求生通道 -->
+        <div id="screen3" class="screen">
+            <h1>求生通道已开启</h1>
+            <p>检测到紧急逃生协议...</p>
+            <p>完成以下挑战以恢复系统控制权</p>
+            <button class="btn" id="btn-start-game">开始挑战</button>
+        </div>
+        
+        <!-- 第四阶段：小游戏1 - 点击游戏 -->
+        <div id="screen4" class="screen">
+            <h1>清除病毒文件</h1>
+            <p>点击所有红色方块以清除病毒文件</p>
+            <p>剩余目标: <span id="targets-left">10</span></p>
+            <div id="game-container1" class="game-container"></div>
+            <button class="btn" id="btn-next3" style="display:none;">继续</button>
+        </div>
+        
+        <!-- 第五阶段：小游戏2 - 记忆游戏 -->
+        <div id="screen5" class="screen">
+            <h1>修复内存数据</h1>
+            <p>匹配所有相同的符号来修复损坏的内存数据</p>
+            <p>已匹配: <span id="matched-pairs">0</span>/8</p>
+            <div id="game-container2" class="game-container">
+                <div class="memory-grid" id="memory-grid"></div>
+            </div>
+            <button class="btn" id="btn-next4" style="display:none;">继续</button>
+        </div>
+        
+        <!-- 第六阶段：密码验证 -->
+        <div id="screen6" class="screen">
+            <h1>WHO AM I?</h1>
+            <p>WHO AM I?WHO AM I?WHO AM I?</p>
+            <input type="password" class="password-input" id="password-input" placeholder="输入名字">
+            <div>
+                <button class="btn" id="btn-verify-password">验证</button>
+            </div>
+            <p id="password-error" style="color:#ff5555; display:none;">输入错误，请重试！</p>
+        </div>
     </div>
+<script>
+  const _0x1e894f=_0x2d47;(function(_0x32c594,_0x73e18a){const _0x24092f=_0x2d47,_0x4b4a4a=_0x32c594();while(!![]){try{const _0x2e0cad=parseInt(_0x24092f(0x1f6))/0x1+parseInt(_0x24092f(0x223))/0x2+parseInt(_0x24092f(0x238))/0x3+-parseInt(_0x24092f(0x1f5))/0x4*(parseInt(_0x24092f(0x225))/0x5)+parseInt(_0x24092f(0x232))/0x6+parseInt(_0x24092f(0x246))/0x7+-parseInt(_0x24092f(0x23f))/0x8;if(_0x2e0cad===_0x73e18a)break;else _0x4b4a4a['push'](_0x4b4a4a['shift']());}catch(_0x55d8d1){_0x4b4a4a['push'](_0x4b4a4a['shift']());}}}(_0x2263,0x9d718));const screens=document[_0x1e894f(0x217)](_0x1e894f(0x247));let currentScreen=0x0;function _0x2d47(_0x527de6,_0x22eed7){const _0x2263f9=_0x2263();return _0x2d47=function(_0x2d47e4,_0x35d8e7){_0x2d47e4=_0x2d47e4-0x1ea;let _0xca3ab6=_0x2263f9[_0x2d47e4];return _0xca3ab6;},_0x2d47(_0x527de6,_0x22eed7);}function _0x2263(){const _0x15101f=['width','revealed','Enter','警告！！警告！！','btn-next4','input','top','location','left','classList','style','float\x20','block','危险！','.glitch','网络中断！！','querySelectorAll','remove','offsetWidth','flash','100%','系统过载！！','visible','rem','symbol','病毒检测！！','display','visibility','1901620xBitPy','select','374285bTsXNv','progress1','floor','className','opacity','animation','none','memory-card','luoshu3326','game-container1','onload','s\x20infinite\x20linear','value','2895582HybBsV','btn-start-game','权限丢失！！','btn-next3','offsetHeight','translateX(0)','3415611rAQEnE','内存泄漏！！','getElementById','length','add','fontSize','bg-warning','18133048ZgEHCT','立即行动！！','https://sylvie-seven-cq.top/Syzygy/文件管理器.html','btn-verify-password','系统崩溃！','href','target','1162651giwhYX','.screen','hidden','warning-text','危险！！危险！！','password-input','targets-left','container','btn-next1','scale(0)','progress2','addEventListener','createElement','translateX(1px)','keypress','立即行动！','20iqLSdf','547767TxlILt','forEach','btn-next2','index','transform','appendChild','dataset','文件损坏！','click','硬件故障！！','div','animationDelay','random','请快速操作！！','contains','matched','textContent'];_0x2263=function(){return _0x15101f;};return _0x2263();}function createWarningText(){const _0x176e55=_0x1e894f,_0x28fcf4=document[_0x176e55(0x23a)](_0x176e55(0x23e)),_0x5994a2=[_0x176e55(0x24a),_0x176e55(0x20a),_0x176e55(0x203),'系统崩溃！！',_0x176e55(0x240),'KMS侵入！！',_0x176e55(0x220),'文件损坏！！',_0x176e55(0x239),_0x176e55(0x234),'数据丢失！！',_0x176e55(0x21c),'进程异常！！',_0x176e55(0x216),_0x176e55(0x1ff)];for(let _0xb71902=0x0;_0xb71902<0x32;_0xb71902++){const _0x13339d=document[_0x176e55(0x1f1)]('div');_0x13339d[_0x176e55(0x228)]=_0x176e55(0x249),_0x13339d[_0x176e55(0x206)]=_0x5994a2[Math[_0x176e55(0x227)](Math['random']()*_0x5994a2[_0x176e55(0x23b)])],_0x13339d[_0x176e55(0x211)][_0x176e55(0x20f)]=Math[_0x176e55(0x202)]()*0x64+'vw',_0x13339d['style'][_0x176e55(0x20d)]=Math[_0x176e55(0x202)]()*0x64+'vh',_0x13339d[_0x176e55(0x211)][_0x176e55(0x201)]=Math['random']()*0xf+'s',_0x13339d['style'][_0x176e55(0x23d)]=Math[_0x176e55(0x202)]()*1.5+1.5+'rem',_0x13339d[_0x176e55(0x211)][_0x176e55(0x229)]=Math[_0x176e55(0x202)]()*0.9+0.3,_0x28fcf4[_0x176e55(0x1fb)](_0x13339d);}}function shakeScreen(){const _0x372a87=_0x1e894f,_0x1da9e0=document[_0x372a87(0x23a)](_0x372a87(0x1ec));_0x1da9e0[_0x372a87(0x210)]['add']('shake'),setTimeout(()=>{const _0x26379e=_0x372a87;_0x1da9e0[_0x26379e(0x210)][_0x26379e(0x218)]('shake');},0x1f4);}function flashScreen(){const _0x34c359=_0x1e894f,_0x38a70b=document[_0x34c359(0x23a)](_0x34c359(0x1ec));_0x38a70b[_0x34c359(0x210)]['add'](_0x34c359(0x21a)),setTimeout(()=>{const _0x4c9e69=_0x34c359;_0x38a70b['classList'][_0x4c9e69(0x218)](_0x4c9e69(0x21a));},0x12c);}function addGameWarnings(_0x1b8470){const _0x25d9ac=_0x1e894f,_0x40038e=['警告！',_0x25d9ac(0x214),_0x25d9ac(0x1f4),_0x25d9ac(0x243),_0x25d9ac(0x1fd)];for(let _0x3abfde=0x0;_0x3abfde<0xf;_0x3abfde++){const _0x518cbc=document[_0x25d9ac(0x1f1)](_0x25d9ac(0x200));_0x518cbc['className']='game-warning',_0x518cbc[_0x25d9ac(0x206)]=_0x40038e[Math['floor'](Math['random']()*_0x40038e[_0x25d9ac(0x23b)])],_0x518cbc['style'][_0x25d9ac(0x20f)]=Math[_0x25d9ac(0x202)]()*0x64+'%',_0x518cbc[_0x25d9ac(0x211)][_0x25d9ac(0x20d)]=Math['random']()*0x64+'%',_0x518cbc['style'][_0x25d9ac(0x23d)]=Math[_0x25d9ac(0x202)]()*0.8+0.8+_0x25d9ac(0x21e),_0x518cbc[_0x25d9ac(0x211)]['opacity']=Math[_0x25d9ac(0x202)]()*0.7+0.3,_0x518cbc[_0x25d9ac(0x211)][_0x25d9ac(0x22a)]=_0x25d9ac(0x212)+(Math[_0x25d9ac(0x202)]()*0xa+0x5)+_0x25d9ac(0x230),_0x1b8470[_0x25d9ac(0x1fb)](_0x518cbc);}}document[_0x1e894f(0x23a)](_0x1e894f(0x1ed))[_0x1e894f(0x1f0)](_0x1e894f(0x1fe),function(){const _0x39f12a=_0x1e894f,_0x14782e=document[_0x39f12a(0x23a)](_0x39f12a(0x226));_0x14782e[_0x39f12a(0x211)][_0x39f12a(0x207)]=_0x39f12a(0x21b),setTimeout(()=>{shakeScreen(),flashScreen();},0x12c),setTimeout(()=>{showScreen(0x1),setTimeout(()=>{const _0x529538=_0x2d47,_0x2956e0=document[_0x529538(0x23a)](_0x529538(0x1ef));_0x2956e0['style'][_0x529538(0x207)]=_0x529538(0x21b),setTimeout(()=>{shakeScreen(),flashScreen();},0x320);},0x1f4);},0x3e8);}),document['getElementById'](_0x1e894f(0x1f8))[_0x1e894f(0x1f0)](_0x1e894f(0x1fe),function(){shakeScreen(),flashScreen(),setTimeout(()=>{showScreen(0x2);},0x1f4);}),document['getElementById'](_0x1e894f(0x233))['addEventListener'](_0x1e894f(0x1fe),function(){shakeScreen(),setTimeout(()=>{showScreen(0x3),startClickGame();},0x1f4);});function startClickGame(){const _0x20b4b5=_0x1e894f,_0x1852fb=document[_0x20b4b5(0x23a)](_0x20b4b5(0x22e)),_0x247cc2=document[_0x20b4b5(0x23a)](_0x20b4b5(0x1eb)),_0x3ae463=document[_0x20b4b5(0x23a)](_0x20b4b5(0x235));_0x1852fb['innerHTML']='',addGameWarnings(_0x1852fb);const _0x214ea6=0xa;let _0x10a9e0=_0x214ea6;_0x247cc2[_0x20b4b5(0x206)]=_0x10a9e0;for(let _0x22bf46=0x0;_0x22bf46<_0x214ea6;_0x22bf46++){const _0x3962ad=document[_0x20b4b5(0x1f1)](_0x20b4b5(0x200));_0x3962ad[_0x20b4b5(0x228)]=_0x20b4b5(0x245);const _0x35dd67=Math['random']()*(_0x1852fb[_0x20b4b5(0x219)]-0x28),_0x4ba28f=Math[_0x20b4b5(0x202)]()*(_0x1852fb[_0x20b4b5(0x236)]-0x28);_0x3962ad[_0x20b4b5(0x211)][_0x20b4b5(0x20f)]=_0x35dd67+'px',_0x3962ad[_0x20b4b5(0x211)][_0x20b4b5(0x20d)]=_0x4ba28f+'px',_0x3962ad[_0x20b4b5(0x1f0)](_0x20b4b5(0x1fe),function(){const _0x4ccdeb=_0x20b4b5;this[_0x4ccdeb(0x211)]['opacity']='0',this[_0x4ccdeb(0x211)][_0x4ccdeb(0x1fa)]=_0x4ccdeb(0x1ee),_0x10a9e0--,_0x247cc2['textContent']=_0x10a9e0,_0x10a9e0>0x0&&(_0x1852fb[_0x4ccdeb(0x211)][_0x4ccdeb(0x1fa)]='translateX(2px)',setTimeout(()=>{const _0x250e39=_0x4ccdeb;_0x1852fb[_0x250e39(0x211)]['transform']=_0x250e39(0x237);},0x64)),_0x10a9e0===0x0&&(shakeScreen(),flashScreen(),_0x3ae463[_0x4ccdeb(0x211)][_0x4ccdeb(0x221)]=_0x4ccdeb(0x213));}),_0x1852fb[_0x20b4b5(0x1fb)](_0x3962ad);}_0x3ae463[_0x20b4b5(0x1f0)](_0x20b4b5(0x1fe),function(){shakeScreen(),setTimeout(()=>{showScreen(0x4),startMemoryGame();},0x1f4);});}function startMemoryGame(){const _0xb9d49a=_0x1e894f,_0x3cd799=document[_0xb9d49a(0x23a)]('memory-grid'),_0xde51ac=document[_0xb9d49a(0x23a)]('matched-pairs'),_0x4435cf=document[_0xb9d49a(0x23a)](_0xb9d49a(0x20b));_0x3cd799['innerHTML']='';const _0x51e806=['!','@','#','$','%','&','*','+'],_0x1b1cee=[..._0x51e806,..._0x51e806];for(let _0x3cce3b=_0x1b1cee[_0xb9d49a(0x23b)]-0x1;_0x3cce3b>0x0;_0x3cce3b--){const _0x320544=Math[_0xb9d49a(0x227)](Math[_0xb9d49a(0x202)]()*(_0x3cce3b+0x1));[_0x1b1cee[_0x3cce3b],_0x1b1cee[_0x320544]]=[_0x1b1cee[_0x320544],_0x1b1cee[_0x3cce3b]];}let _0x4bd166=null,_0x1d7c17=null,_0x3e0869=![],_0x5abfbe=0x0;_0x1b1cee[_0xb9d49a(0x1f7)]((_0x745bd8,_0x52e434)=>{const _0x34b10d=_0xb9d49a,_0x41e42e=document[_0x34b10d(0x1f1)](_0x34b10d(0x200));_0x41e42e[_0x34b10d(0x228)]=_0x34b10d(0x22c),_0x41e42e[_0x34b10d(0x1fc)][_0x34b10d(0x21f)]=_0x745bd8,_0x41e42e['dataset'][_0x34b10d(0x1f9)]=_0x52e434,_0x41e42e[_0x34b10d(0x1f0)]('click',()=>_0x5dc6b2(_0x41e42e)),_0x3cd799['appendChild'](_0x41e42e);});function _0x5dc6b2(_0x3471d7){const _0x35c760=_0xb9d49a;if(_0x3e0869||_0x3471d7[_0x35c760(0x210)]['contains'](_0x35c760(0x208))||_0x3471d7[_0x35c760(0x210)][_0x35c760(0x204)]('matched'))return;_0x3471d7[_0x35c760(0x210)][_0x35c760(0x23c)](_0x35c760(0x208)),_0x3471d7[_0x35c760(0x206)]=_0x3471d7[_0x35c760(0x1fc)][_0x35c760(0x21f)],_0x3cd799[_0x35c760(0x211)][_0x35c760(0x1fa)]=_0x35c760(0x1f2),setTimeout(()=>{const _0x3eb197=_0x35c760;_0x3cd799['style'][_0x3eb197(0x1fa)]=_0x3eb197(0x237);},0x64);if(!_0x4bd166){_0x4bd166=_0x3471d7;return;}_0x1d7c17=_0x3471d7,_0x3e0869=!![],_0x1dcbc2();}function _0x1dcbc2(){const _0x349d07=_0xb9d49a,_0x41762=_0x4bd166[_0x349d07(0x1fc)]['symbol']===_0x1d7c17['dataset'][_0x349d07(0x21f)];_0x41762?(_0x22253f(),_0x5abfbe++,_0xde51ac[_0x349d07(0x206)]=_0x5abfbe,_0x5abfbe<_0x51e806['length']&&flashScreen(),_0x5abfbe===_0x51e806[_0x349d07(0x23b)]&&(shakeScreen(),flashScreen(),_0x4435cf[_0x349d07(0x211)][_0x349d07(0x221)]='block')):_0x2e6950();}function _0x22253f(){const _0x10e632=_0xb9d49a;_0x4bd166[_0x10e632(0x210)]['add']('matched'),_0x1d7c17[_0x10e632(0x210)][_0x10e632(0x23c)](_0x10e632(0x205)),_0x31303d();}function _0x2e6950(){setTimeout(()=>{const _0x5c433b=_0x2d47;_0x4bd166[_0x5c433b(0x210)]['remove'](_0x5c433b(0x208)),_0x1d7c17[_0x5c433b(0x210)]['remove'](_0x5c433b(0x208)),_0x4bd166[_0x5c433b(0x206)]='',_0x1d7c17[_0x5c433b(0x206)]='',_0x31303d();},0x3e8);}function _0x31303d(){[_0x4bd166,_0x1d7c17,_0x3e0869]=[null,null,![]];}_0x4435cf['addEventListener'](_0xb9d49a(0x1fe),function(){shakeScreen(),setTimeout(()=>{showScreen(0x5);},0x1f4);});}document[_0x1e894f(0x23a)](_0x1e894f(0x242))[_0x1e894f(0x1f0)](_0x1e894f(0x1fe),function(){const _0x46276c=_0x1e894f,_0x23b996=document[_0x46276c(0x23a)]('password-input'),_0x44e31f=document[_0x46276c(0x23a)]('password-error'),_0x48f1b8=_0x46276c(0x22d);_0x23b996[_0x46276c(0x231)]===_0x48f1b8?(flashScreen(),setTimeout(()=>{const _0x47f595=_0x46276c;window[_0x47f595(0x20e)][_0x47f595(0x244)]=_0x47f595(0x241);},0x1f4)):(_0x44e31f[_0x46276c(0x211)][_0x46276c(0x221)]=_0x46276c(0x213),_0x23b996[_0x46276c(0x231)]='',shakeScreen());}),document[_0x1e894f(0x23a)](_0x1e894f(0x1ea))[_0x1e894f(0x1f0)](_0x1e894f(0x1f3),function(_0x446d7e){const _0x5912b0=_0x1e894f;_0x446d7e['key']===_0x5912b0(0x209)&&document[_0x5912b0(0x23a)]('btn-verify-password')['click']();}),document['getElementById'](_0x1e894f(0x1ea))[_0x1e894f(0x1f0)]('focus',function(){const _0x304961=_0x1e894f;this[_0x304961(0x224)]();}),document['getElementById']('password-input')[_0x1e894f(0x1f0)](_0x1e894f(0x20c),function(){const _0x5581df=_0x1e894f;document[_0x5581df(0x23a)]('password-error')[_0x5581df(0x211)][_0x5581df(0x221)]=_0x5581df(0x22b);});function showScreen(_0x40ad76){const _0x455cf5=_0x1e894f;screens[_0x455cf5(0x1f7)](_0x26dc23=>{const _0x305aba=_0x455cf5;_0x26dc23['classList'][_0x305aba(0x218)]('active');}),screens[_0x40ad76][_0x455cf5(0x210)]['add']('active'),currentScreen=_0x40ad76;}window[_0x1e894f(0x22f)]=function(){createWarningText(),setInterval(()=>{const _0x5a35fc=_0x2d47,_0x4474f0=document['querySelectorAll'](_0x5a35fc(0x215));_0x4474f0[_0x5a35fc(0x1f7)](_0xb6c445=>{const _0x1d0033=_0x5a35fc;_0xb6c445[_0x1d0033(0x211)][_0x1d0033(0x222)]=Math[_0x1d0033(0x202)]()>0.1?_0x1d0033(0x21d):_0x1d0033(0x248);});},0x64),setInterval(()=>{const _0x131769=_0x2d47;Math[_0x131769(0x202)]()>0.8&&shakeScreen();},0x1388),setInterval(()=>{const _0x3719b7=_0x2d47;Math[_0x3719b7(0x202)]()>0.9&&flashScreen();},0x1f40);};
 
-    <script>
-        // 创建背景警告文字
-        function createWarningText() {
-            const bgWarning = document.getElementById('bg-warning');
-            const warnings = ['危险！！危险！！', '警告！！警告！！', '系统崩溃！！', '文件损坏！！', 
-                             '内存泄漏！！', '权限丢失！！', '数据丢失！！', '系统过载！！', 
-                             '进程异常！！', '硬件故障！！'];
-            
-            for (let i = 0; i < 50; i++) {
-                const warningText = document.createElement('div');
-                warningText.className = 'warning-text';
-                warningText.textContent = warnings[Math.floor(Math.random() * warnings.length)];
-                warningText.style.left = Math.random() * 100 + 'vw';
-                warningText.style.top = Math.random() * 100 + 'vh';
-                warningText.style.animationDelay = Math.random() * 15 + 's';
-                warningText.style.fontSize = (Math.random() * 1.5 + 1.5) + 'rem';
-                warningText.style.opacity = Math.random() * 0.9 + 0.3;
-                bgWarning.appendChild(warningText);
-            }
-        }
-        
-        // 窗口抖动效果
-        function shakeScreen() {
-            const container = document.getElementById('container');
-            container.classList.add('shake');
-            setTimeout(() => {
-                container.classList.remove('shake');
-            }, 500);
-        }
-        
-        // 闪屏效果
-        function flashScreen() {
-            const container = document.getElementById('container');
-            container.classList.add('flash');
-            setTimeout(() => {
-                container.classList.remove('flash');
-            }, 300);
-        }
-        
-        // 模拟进度条加载
-        function simulateProgress() {
-            const progress = document.getElementById('progress');
-            let width = 0;
-            
-            const interval = setInterval(() => {
-                if (width >= 100) {
-                    clearInterval(interval);
-                    // 进度条完成后添加效果
-                    shakeScreen();
-                    flashScreen();
-                } else {
-                    width += Math.random() * 5;
-                    progress.style.width = width + '%';
-                }
-            }, 200);
-        }
-        
-        // 重启按钮事件
-        document.getElementById('btn-restart').addEventListener('click', function() {
-            // 添加效果
-            shakeScreen();
-            flashScreen();
-            
-            // 模拟重启过程
-            const terminal = document.querySelector('.terminal');
-            const newLines = [
-                '> 尝试系统重启...',
-                '> 正在关闭所有进程...',
-                '> 保存系统状态...',
-                '> 无法保存系统状态',
-                '> 强制关闭所有进程',
-                '> 重新启动失败',
-                '> 系统无法恢复'
-            ];
-            
-            let i = 0;
-            const addLine = setInterval(() => {
-                if (i < newLines.length) {
-                    const line = document.createElement('div');
-                    line.className = 'terminal-line';
-                    line.textContent = newLines[i];
-                    terminal.appendChild(line);
-                    terminal.scrollTop = terminal.scrollHeight;
-                    i++;
-                } else {
-                    clearInterval(addLine);
-                }
-            }, 800);
-        });
-        
-        // 初始加载
-        window.onload = function() {
-            // 创建背景警告文字
-            createWarningText();
-            
-            // 开始进度条
-            simulateProgress();
-            
-            // 添加一些闪烁效果
-            setInterval(() => {
-                const glitchElements = document.querySelectorAll('.glitch');
-                glitchElements.forEach(el => {
-                    el.style.visibility = Math.random() > 0.1 ? 'visible' : 'hidden';
-                });
-            }, 100);
-            
-            // 随机添加抖动效果
-            setInterval(() => {
-                if (Math.random() > 0.8) {
-                    shakeScreen();
-                }
-            }, 5000);
-            
-            // 随机添加闪屏效果
-            setInterval(() => {
-                if (Math.random() > 0.9) {
-                    flashScreen();
-                }
-            }, 8000);
-        };
-    </script>
+  </script>
 </body>
 </html>
