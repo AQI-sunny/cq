@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聊天记录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #0a0a12;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+            background-image: radial-gradient(circle at 10% 20%, rgba(28, 28, 50, 0.8) 0%, transparent 20%), radial-gradient(circle at 90% 80%, rgba(40, 10, 30, 0.6) 0%, transparent 20%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: rgba(18, 18, 30, 0.85);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid #2a2a3a;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #8a2be2, #4a0080);
+        }
+
+        .cover-image-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .cover-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border: 1px solid #2a2a3a;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-loading, .image-error {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #b19cd9;
+            font-size: 1rem;
+            text-align: center;
+            background-color: rgba(18, 18, 30, 0.8);
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 1px dashed #8a2be2;
+        }
+
+        .image-error {
+            color: #ff6b6b;
+        }
+
+        /* 响应式设计优化 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="cover-image-container">
+            <div class="image-loading">图片加载中...</div>
+           <!--  <div class="image-error">图片加载失败</div> -->
+            <img src="https://sylvie-seven-cq.top/gallery/聊天记录222.jpg" 
+                 alt="聊天记录" 
+                 class="cover-image"
+                 onload="hideImageStatus(this)"
+                 onerror="showImageError(this)" />
+        </div>
+    </div>
+
+    <script>
+        // 图片加载状态处理
+        function hideImageStatus(img) {
+            const container = img.parentElement;
+            const loading = container.querySelector('.image-loading');
+            const error = container.querySelector('.image-error');
+            
+            loading.style.display = 'none';
+            error.style.display = 'none';
+            img.style.opacity = '1';
+        }
+        
+        function showImageError(img) {
+            const container = img.parentElement;
+            const loading = container.querySelector('.image-loading');
+            const error = container.querySelector('.image-error');
+            
+            loading.style.display = 'none';
+            error.style.display = 'block';
+            img.style.opacity = '0.3';
+        }
+        
+        // 页面加载完成后检查图片状态
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('.cover-image');
+            images.forEach(img => {
+                if (img.complete) {
+                    if (img.naturalHeight === 0) {
+                        showImageError(img);
+                    } else {
+                        hideImageStatus(img);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
