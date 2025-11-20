@@ -1,9 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#6a11cb">
     <title>音乐盒修复</title>
     <style>
         * {
@@ -12,6 +12,11 @@
             box-sizing: border-box;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
             -webkit-tap-highlight-color: transparent;
+            -webkit-text-size-adjust: 100%;
+        }
+        
+        html {
+            height: -webkit-fill-available;
         }
         
         body {
@@ -23,6 +28,7 @@
             align-items: center;
             padding: 20px;
             color: #333;
+            overflow-x: hidden;
         }
         
         .experience-container {
@@ -33,6 +39,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             overflow: hidden;
             padding: 20px;
+            position: relative;
         }
         
         header {
@@ -60,7 +67,7 @@
             gap: 10px;
         }
         
-        .part-info, .progress-info, .timer {
+        .part-info, .progress-info {
             font-size: clamp(1rem, 3vw, 1.2rem);
             font-weight: bold;
             color: #4a00e0;
@@ -100,7 +107,11 @@
             color: white;
             font-size: 1.5rem;
             overflow: hidden;
-            touch-action: none;
+            touch-action: manipulation;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
         
         .music-box::before {
@@ -154,6 +165,7 @@
             position: relative;
             overflow: hidden;
             -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
         }
         
         .tool:active {
@@ -220,6 +232,10 @@
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            min-height: 44px;
+            min-width: 44px;
         }
         
         button:hover {
@@ -231,6 +247,11 @@
             transform: translateY(1px);
         }
         
+        button:focus {
+            outline: 2px solid #4a00e0;
+            outline-offset: 2px;
+        }
+        
         .broken-part {
             position: absolute;
             width: 40px;
@@ -239,6 +260,7 @@
             border-radius: 5px;
             animation: pulse 2s infinite;
             pointer-events: none;
+            z-index: 1;
         }
         
         @keyframes pulse {
@@ -261,6 +283,7 @@
             background-color: rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
             pointer-events: none;
+            z-index: 2;
         }
         
         .slot.highlight {
@@ -269,9 +292,33 @@
             box-shadow: 0 0 10px #ffeb3b;
         }
         
-        .slot.fixed {
+        .slot.placed {
+            border: 2px solid #ff9800;
+            background-color: rgba(255, 152, 0, 0.3);
+        }
+        
+        .slot.correct {
             border: 2px solid #4caf50;
             background-color: rgba(76, 175, 80, 0.3);
+            animation: correctPulse 1s ease-in-out;
+        }
+        
+        .slot.incorrect {
+            border: 2px solid #f44336;
+            background-color: rgba(244, 67, 54, 0.3);
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
         
         .slot img {
@@ -318,6 +365,11 @@
             margin-top: 10px;
             font-size: clamp(0.8rem, 2.5vw, 0.9rem);
             color: #666;
+        }
+        
+        .test-button {
+            margin-top: 15px;
+            width: 100%;
         }
         
         @media (max-width: 768px) {
@@ -394,6 +446,40 @@
                 padding-bottom: max(20px, env(safe-area-inset-bottom));
             }
         }
+        
+        /* 防止iOS缩放 */
+        input, textarea, select {
+            font-size: 16px;
+        }
+        
+        /* 高对比度模式支持 */
+        @media (prefers-contrast: high) {
+            .tool {
+                border: 1px solid #000;
+            }
+            
+            .slot {
+                border-width: 3px;
+            }
+        }
+        
+        /* 减少动画模式支持 */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            .broken-part {
+                animation: none;
+                opacity: 0.7;
+            }
+            
+            .slot.correct, .slot.incorrect {
+                animation: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -406,7 +492,6 @@
         <div class="experience-info">
             <div class="part-info">部分: <span id="part">1</span>/3</div>
             <div class="progress-info">进度: <span id="progress">0</span>%</div>
-            <div class="timer">时间: <span id="timer">60</span>秒</div>
         </div>
         
         <div class="experience-area">
@@ -415,24 +500,25 @@
                 <div class="music-box" id="music-box">
                     <!-- 损坏部件和插槽将通过JavaScript动态生成 -->
                 </div>
-                <!-- <button id="test-button">测试音乐盒</button>
+                <button id="test-button" class="test-button">测试音乐盒</button>
                 <p class="part-hint">点击工具选择零件，然后点击闪烁的红色区域放置</p>
-                <p class="part-hint">双击已修复的零件可以取消放置</p> -->
+                <p class="part-hint">测试后可自动取消放置</p>
+                <p class="part-hint">点击"测试音乐盒"验证修复是否正确</p>
             </div>
             
             <div class="toolbox">
                 <h2>工具箱</h2>
                 <div class="tools">
-                    <div class="tool spring" data-type="spring">
+                    <div class="tool spring" data-type="spring" role="button" tabindex="0" aria-label="选择发条">
                         <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZmZlYjNmIi8+PGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMzMyIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTMyIDEyYzAgMC0xMCAxMC0xMCAyMHMxMCAyMCAxMCAyMCAxMC0xMCAxMC0yMFM0MiAxMiAzMiAxMnoiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMzMyIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+" alt="发条">
                     </div>
-                    <div class="tool gear" data-type="gear">
+                    <div class="tool gear" data-type="gear" role="button" tabindex="0" aria-label="选择齿轮">
                         <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZTBkZGRkIi8+PGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMjAiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSIzMiIgY3k9IjMyIiByPSIxNSIgZmlsbD0iI2UwZGRkZCIvPjxjaXJjbGUgY3g9IjMyIiBjeT0iMzIiIHI9IjUiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMzIgMTJ2LThNMzIgNTJ2LThNMTIgMzJoLThNNTIgMzJoLThNMTggMThsNi02TTQwIDQwbDYtNk0xOCA0Nmw2IDZNNDAgMjRsNiA2IiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==" alt="齿轮">
                     </div>
-                    <div class="tool key" data-type="key">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZmY5ODAwIi8+PGNpcmNsZSBjeD0iNDAiIGN5PSIyNCIgcj0iMTIiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMTYgNDBoLTR2LTRoNHY0ek0yMCAzNmg0djRIMjB6TTI0IDMyaDR2NGgtNHpNMjggMjhoNHY0aC00ek0zMiAyNGg0djRoLTR6IiBmaWxsPSIjZmY5ODAwIi8+PC9zdmc+" alt="钥匙">
+                    <div class="tool key" data-type="key" role="button" tabindex="0" aria-label="选择钥匙">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZmY5ODAwIi8+PGNpcmNsZSBjeD0iNDAiIGN5PSIyNCIgcj0iMTIiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMTYgNDBoLTR2LTRoNHY0ek0yMCAzNmg0djRIMjB6TTI0IDMzaDR2NGgtNHpNMjggMjhoNHY0aC00ek0zMiAyNGg4djhoLTh6IiBmaWxsPSIjZmY5ODAwIi8+PC9zdmc+" alt="钥匙">
                     </div>
-                    <div class="tool cylinder" data-type="cylinder">
+                    <div class="tool cylinder" data-type="cylinder" role="button" tabindex="0" aria-label="选择音筒">
                         <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjNzk1NTQ4Ii8+PHJlY3QgeD0iMTIiIHk9IjEwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDQiIHJ4PSI1IiByeT0iNSIgZmlsbD0iI2UwZGRkZCIvPjxwYXRoIGQ9Ik0xOCAxNmg0TTE4IDI0aDRNMTggMzJoNE0xOCA0MGg0TTI2IDE2aDRNMjYgMjRoNE0yNiAzMmg0TTI2IDQwaDRNMzQgMTZoNE0zNCAyNGg0TTM0IDMyaDRNMzQgNDBoNCIgc3Ryb2tlPSIjOTk5IiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4=" alt="音筒">
                     </div>
                 </div>
@@ -442,9 +528,9 @@
                     <p>1. 观察音乐盒上闪烁的红色区域，这些是损坏的零件</p>
                     <p>2. 从工具箱中点击选择正确的零件</p>
                     <p>3. 点击闪烁的红色区域放置零件</p>
-                    <p>4. 双击已修复的零件可以取消放置</p>
-                    <p>5. 点击"测试音乐盒"检查是否修复成功</p>
-                    <p>6. 每个部分有时间限制，超时则失败</p>
+                    <p>4. 点击"测试音乐盒"验证修复是否正确</p>
+                    <p>5. 双击已放置的零件可以取消放置</p>
+                    <p>6. 所有零件正确修复后自动进入下一部分</p>
                 </div>
                 
                 <div class="controls">
@@ -468,20 +554,19 @@
             const experienceState = {
                 part: 1,
                 progress: 0,
-                timeLeft: 60,
-                timer: null,
                 brokenParts: 2,
-                fixedParts: 0,
+                placedParts: 0,
                 currentParts: [],
                 slots: [],
                 slotPositions: [],
-                selectedTool: null
+                selectedTool: null,
+                lastClickTime: 0,
+                tested: false
             };
             
             // DOM元素
             const partElement = document.getElementById('part');
             const progressElement = document.getElementById('progress');
-            const timerElement = document.getElementById('timer');
             const testButton = document.getElementById('test-button');
             const resetButton = document.getElementById('reset-button');
             const nextPartButton = document.getElementById('next-part');
@@ -493,17 +578,16 @@
             // 零件类型和对应的信息
             const partTypes = {
                 'spring': { name: '发条', image: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZmZlYjNmIi8+PGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMzMyIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTMyIDEyYzAgMC0xMCAxMC0xMCAyMHMxMCAyMCAxMCAyMCAxMC0xMCAxMC0yMFM0MiAxMiAzMiAxMnoiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMzMyIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+' },
-                'gear': { name: '齿轮', image: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZTBkZGRkIi8+PGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMjAiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSIzMiIgY3k9IjMyIiByPSIxNSIgZmlsbD0iI2UwZGRkZCIvPjxjaXJjbGUgY3g9IjMyIiBjeT0iMzIiIHI9IjUiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMzIgMTJ2LThNMzIgNTJ2LThNMTIgMzJoLThNNTIgMzJoLThNMTggMThsNi02TTQwIDQwbDYtNk0xOCA0Nmw2IDZNNDAgMjRsNiA2IiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==' },
-                'key': { name: '钥匙', image: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZmY5ODAwIi8+PGNpcmNsZSBjeD0iNDAiIGN5PSIyNCIgcj0iMTIiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMTYgNDBoLTR2LTRoNHY0ek0yMCAzNmg0djRIMjB6TTI0IDMyaDR2NGgtNHpNMjggMjhoNHY0aC00ek0zMiAyNGg0djRoLTR6IiBmaWxsPSIjZmY5ODAwIi8+PC9zdmc+' },
-                'cylinder': { name: '音筒', image: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjNzk1NTQ4Ii8+PHJlY3QgeD0iMTIiIHk9IjEwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDQiIHJ4PSI1IiByeT0iNSIgZmlsbD0iI2UwZGRkZCIvPjxwYXRoIGQ9Ik0xOCAxNmg0TTE4IDI0aDRNMTggMzJoNE0xOCA0MGg0TTI2IDE2aDRNMjYgMjRoNE0yNiAzMmg0TTI2IDQwaDRNMzQgMTZoNE0zNCAyNGg0TTM0IDMyaDRNMzQgNDBoNCIgc3Ryb2tlPSIjOTk5IiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4=' }
+                'gear': { name: '齿轮', image: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZTBkZGRkIi8+PGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMjAiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSIzMiIgY3k9IjMyIiByPSIxNSIgZmlsbD0iI2UwZGRkZCIvPjxjaXJjbGUgY3g9IjMyIiBjeT0iMzIiIHI9IjUiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMzIgMTJ2LThNMzIgNTJ2LThNMTIgMzJoLThNNTIgMzJoLThNMTggMThsNi02TTQwIDQwbDYtNk0xOCA0Nmw2IDZNNDAgMjRsNiA2IiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iIi8+PC9zdmc+' },
+                'key': { name: '钥匙', image: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZmY5ODAwIi8+PGNpcmNsZSBjeD0iNDAiIGN5PSIyNCIgcj0iMTIiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMTYgNDBoLTR2LTRoNHY0ek0yMCAzNmg0djRIMjB6TTI0IDMzaDR2NGgtNHpNMjggMjhoNHY0aC00ek0zMiAyNGg4djhoLTh6IiBmaWxsPSIjZmY5ODAwIi8+PC9zdmc+' },
+                'cylinder': { name: '音筒', image: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjNzk1NTQ4Ii8+PHJlY3QgeD0iMTIiIHk9IjEwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDQiIHJ4PSI1IiByeT0iNSIgZmlsbD0iI2UwZGRkZCIvPjxwYXRoIGQ9Ik0xOCAxNmg0TTE4IDI0aDRNMTggMzJoNE0xOCA0MGg0TTI2IDE2aDRNMjYgMjRoNE0yNiAzMmg0TTI2IDQwaDRNMzQgMTZoNE0zNCAyNGg0TTM0IDMzaDRNMzQgNDBoNCIgc3Ryb2tlPSIjOTk5IiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4=' }
             };
             
             // 初始化体验
             function initExperience() {
                 generatePart();
                 updateUI();
-                startTimer();
-                setupClickAndDoubleClick();
+                setupEventListeners();
             }
             
             // 生成部分
@@ -512,8 +596,9 @@
                 musicBox.innerHTML = '';
                 experienceState.slots = [];
                 experienceState.slotPositions = [];
-                experienceState.fixedParts = 0;
+                experienceState.placedParts = 0;
                 experienceState.selectedTool = null;
+                experienceState.tested = false;
                 
                 // 根据部分确定损坏部件数量
                 experienceState.brokenParts = Math.min(2 + experienceState.part - 1, 4);
@@ -543,6 +628,7 @@
                     brokenPart.className = 'broken-part';
                     brokenPart.style.top = `${top}px`;
                     brokenPart.style.left = `${left}px`;
+                    brokenPart.setAttribute('aria-label', `损坏的零件 ${i+1}`);
                     musicBox.appendChild(brokenPart);
                     
                     // 创建插槽
@@ -552,6 +638,7 @@
                     slot.style.left = `${left - 5}px`;
                     slot.dataset.index = i;
                     slot.innerHTML = '?';
+                    slot.setAttribute('aria-label', `零件插槽 ${i+1}`);
                     musicBox.appendChild(slot);
                     
                     // 随机选择需要的零件类型
@@ -562,8 +649,10 @@
                     experienceState.slots.push({
                         element: slot,
                         requiredPart: requiredPart,
-                        isFixed: false,
-                        placedPart: null
+                        isPlaced: false,
+                        placedPart: null,
+                        isCorrect: false,
+                        isTested: false
                     });
                 }
                 
@@ -572,131 +661,242 @@
                 
                 // 重置工具选择状态
                 tools.forEach(tool => tool.classList.remove('selected'));
+                
+                // 重置测试按钮状态
+                testButton.textContent = '测试音乐盒';
+                testButton.disabled = false;
             }
             
             // 更新UI
             function updateUI() {
                 partElement.textContent = experienceState.part;
                 progressElement.textContent = experienceState.progress;
-                timerElement.textContent = experienceState.timeLeft;
             }
             
-            // 开始计时器
-            function startTimer() {
-                clearInterval(experienceState.timer);
-                experienceState.timer = setInterval(function() {
-                    experienceState.timeLeft--;
-                    timerElement.textContent = experienceState.timeLeft;
-                    
-                    if (experienceState.timeLeft <= 0) {
-                        clearInterval(experienceState.timer);
-                        alert('时间到！修复失败');
-                        resetPart();
-                    }
-                }, 1000);
-            }
-            
-            // 设置点击和双击功能
-            function setupClickAndDoubleClick() {
+            // 设置事件监听器
+            function setupEventListeners() {
                 // 为工具设置点击事件
                 tools.forEach(tool => {
+                    // 点击事件
                     tool.addEventListener('click', function() {
-                        // 取消之前选中的工具
-                        tools.forEach(t => t.classList.remove('selected'));
-                        
-                        // 选中当前工具
-                        tool.classList.add('selected');
-                        experienceState.selectedTool = tool.dataset.type;
-                        
-                        // 高亮显示可放置的插槽
-                        experienceState.slots.forEach(slot => {
-                            if (!slot.isFixed) {
-                                slot.element.classList.add('highlight');
-                            }
-                        });
+                        selectTool(tool);
+                    });
+                    
+                    // 键盘事件
+                    tool.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            selectTool(tool);
+                        }
                     });
                 });
                 
                 // 为音乐盒设置点击事件
                 musicBox.addEventListener('click', function(e) {
-                    if (!experienceState.selectedTool) {
-                        alert('请先选择一个工具！');
-                        return;
-                    }
-                    
-                    // 找到点击的插槽
-                    const slot = findClickedSlot(e.clientX, e.clientY);
-                    if (slot && !slot.isFixed) {
-                        // 检查零件是否正确
-                        if (experienceState.selectedTool === slot.requiredPart) {
-                            // 修复成功
-                            const img = document.createElement('img');
-                            img.src = partTypes[experienceState.selectedTool].image;
-                            img.alt = partTypes[experienceState.selectedTool].name;
-                            slot.element.innerHTML = '';
-                            slot.element.appendChild(img);
-                            slot.element.classList.add('fixed');
-                            slot.element.classList.remove('highlight');
-                            slot.isFixed = true;
-                            slot.placedPart = experienceState.selectedTool;
-                            experienceState.fixedParts++;
-                            
-                            // 更新进度
-                            experienceState.progress = Math.floor((experienceState.fixedParts / experienceState.brokenParts) * 100);
-                            updateUI();
-                            
-                            // 移除对应的损坏部件
-                            const brokenParts = document.querySelectorAll('.broken-part');
-                            if (brokenParts[slot.element.dataset.index]) {
-                                brokenParts[slot.element.dataset.index].style.display = 'none';
-                            }
-                            
-                            // 检查是否所有部件都已修复
-                            if (experienceState.fixedParts >= experienceState.brokenParts) {
-                                completePart();
-                            }
-                        } else {
-                            // 修复失败
-                            slot.element.style.border = '2px dashed #f44336';
-                            slot.element.style.backgroundColor = 'rgba(244, 67, 54, 0.3)';
-                            setTimeout(() => {
-                                if (!slot.isFixed) {
-                                    slot.element.style.border = '2px dashed #4a00e0';
-                                    slot.element.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                                }
-                            }, 1000);
-                        }
-                    }
+                    handleMusicBoxClick(e);
                 });
                 
-                // 为音乐盒设置双击事件
-                let lastClick = 0;
-                musicBox.addEventListener('click', function(e) {
+                // 为音乐盒设置触摸事件
+                musicBox.addEventListener('touchend', function(e) {
+                    // 阻止默认行为防止双击缩放
+                    e.preventDefault();
+                    handleMusicBoxClick(e);
+                }, { passive: false });
+                
+                // 测试按钮事件
+                testButton.addEventListener('click', function() {
+                    testMusicBox();
+                });
+                
+                // 重置按钮事件
+                resetButton.addEventListener('click', resetPart);
+                
+                // 下一部分按钮事件
+                nextPartButton.addEventListener('click', function() {
+                    if (experienceState.part < 3) {
+                        experienceState.part++;
+                        successMessage.style.display = 'none';
+                        overlay.style.display = 'none';
+                        resetPart();
+                    } else {
+                        // 修复完成后跳转到"一张字条.html"
+                        window.location.href = "https://sylvie-seven-cq.top/Syzygy/音乐盒字条.html";
+                    }
+                });
+            }
+            
+            // 选择工具
+            function selectTool(tool) {
+                // 取消之前选中的工具
+                tools.forEach(t => t.classList.remove('selected'));
+                
+                // 选中当前工具
+                tool.classList.add('selected');
+                experienceState.selectedTool = tool.dataset.type;
+                
+                // 高亮显示可放置的插槽
+                experienceState.slots.forEach(slot => {
+                    if (!slot.isPlaced || (slot.isTested && !slot.isCorrect)) {
+                        slot.element.classList.add('highlight');
+                    }
+                });
+            }
+            
+            // 处理音乐盒点击
+            function handleMusicBoxClick(e) {
+                if (!experienceState.selectedTool) {
+                    alert('请先选择一个工具！');
+                    return;
+                }
+                
+                // 获取点击位置
+                const rect = musicBox.getBoundingClientRect();
+                let x, y;
+                
+                if (e.type === 'touchend') {
+                    x = e.changedTouches[0].clientX;
+                    y = e.changedTouches[0].clientY;
+                } else {
+                    x = e.clientX;
+                    y = e.clientY;
+                }
+                
+                // 找到点击的插槽
+                const slot = findClickedSlot(x, y);
+                if (slot) {
+                    // 检查是否是双击
                     const now = Date.now();
-                    if (now - lastClick < 300) { // 双击检测
-                        // 找到双击的插槽
-                        const slot = findClickedSlot(e.clientX, e.clientY);
-                        if (slot && slot.isFixed) {
-                            // 取消修复
+                    if (now - experienceState.lastClickTime < 300) {
+                        // 双击 - 取消放置
+                        cancelPlacement(slot);
+                    } else {
+                        // 单击 - 放置零件
+                        placePart(slot);
+                    }
+                    experienceState.lastClickTime = now;
+                }
+            }
+            
+            // 放置零件
+            function placePart(slot) {
+                // 如果已经测试过且正确，不允许重新放置
+                if (slot.isTested && slot.isCorrect) {
+                    return;
+                }
+                
+                // 放置零件
+                const img = document.createElement('img');
+                img.src = partTypes[experienceState.selectedTool].image;
+                img.alt = partTypes[experienceState.selectedTool].name;
+                slot.element.innerHTML = '';
+                slot.element.appendChild(img);
+                slot.element.classList.add('placed');
+                slot.element.classList.remove('highlight');
+                slot.element.classList.remove('correct');
+                slot.element.classList.remove('incorrect');
+                slot.isPlaced = true;
+                slot.placedPart = experienceState.selectedTool;
+                slot.isTested = false;
+                experienceState.placedParts++;
+                
+                // 更新进度
+                experienceState.progress = Math.floor((experienceState.placedParts / experienceState.brokenParts) * 100);
+                updateUI();
+                
+                // 移除对应的损坏部件
+                const brokenParts = document.querySelectorAll('.broken-part');
+                if (brokenParts[slot.element.dataset.index]) {
+                    brokenParts[slot.element.dataset.index].style.display = 'none';
+                }
+            }
+            
+            // 取消放置
+            function cancelPlacement(slot) {
+                // 如果已经测试过且正确，不允许取消
+                if (slot.isTested && slot.isCorrect) {
+                    return;
+                }
+                
+                // 取消放置
+                slot.element.innerHTML = '?';
+                slot.element.classList.remove('placed');
+                slot.element.classList.remove('correct');
+                slot.element.classList.remove('incorrect');
+                slot.isPlaced = false;
+                slot.placedPart = null;
+                slot.isCorrect = false;
+                slot.isTested = false;
+                experienceState.placedParts--;
+                
+                // 更新进度
+                experienceState.progress = Math.floor((experienceState.placedParts / experienceState.brokenParts) * 100);
+                updateUI();
+                
+                // 显示对应的损坏部件
+                const brokenParts = document.querySelectorAll('.broken-part');
+                if (brokenParts[slot.element.dataset.index]) {
+                    brokenParts[slot.element.dataset.index].style.display = 'block';
+                }
+            }
+            
+            // 测试音乐盒
+            function testMusicBox() {
+                if (experienceState.placedParts < experienceState.brokenParts) {
+                    alert(`请先放置所有零件！还需要放置 ${experienceState.brokenParts - experienceState.placedParts} 个零件。`);
+                    return;
+                }
+                
+                experienceState.tested = true;
+                testButton.disabled = true;
+                testButton.textContent = '测试中...';
+                
+                let allCorrect = true;
+                let correctCount = 0;
+                
+                // 检查每个插槽的零件是否正确
+                experienceState.slots.forEach(slot => {
+                    slot.isTested = true;
+                    if (slot.placedPart === slot.requiredPart) {
+                        slot.isCorrect = true;
+                        slot.element.classList.add('correct');
+                        correctCount++;
+                    } else {
+                        slot.isCorrect = false;
+                        slot.element.classList.add('incorrect');
+                        allCorrect = false;
+                        
+                        // 错误的零件自动重置，允许重新放置
+                        setTimeout(() => {
+                            slot.element.classList.remove('incorrect');
+                            slot.element.classList.remove('placed');
                             slot.element.innerHTML = '?';
-                            slot.element.classList.remove('fixed');
-                            slot.isFixed = false;
+                            slot.isPlaced = false;
                             slot.placedPart = null;
-                            experienceState.fixedParts--;
-                            
-                            // 更新进度
-                            experienceState.progress = Math.floor((experienceState.fixedParts / experienceState.brokenParts) * 100);
-                            updateUI();
                             
                             // 显示对应的损坏部件
                             const brokenParts = document.querySelectorAll('.broken-part');
                             if (brokenParts[slot.element.dataset.index]) {
                                 brokenParts[slot.element.dataset.index].style.display = 'block';
                             }
-                        }
+                        }, 1500);
                     }
-                    lastClick = now;
                 });
+                
+                // 更新进度
+                experienceState.progress = Math.floor((correctCount / experienceState.brokenParts) * 100);
+                updateUI();
+                
+                setTimeout(() => {
+                    if (allCorrect) {
+                        completePart();
+                    } else {
+                        // 更新已放置零件数量
+                        experienceState.placedParts = correctCount;
+                        testButton.textContent = '重新测试';
+                        testButton.disabled = false;
+                        alert(`修复不完全正确！${correctCount}/${experienceState.brokenParts} 个零件正确。错误的零件已自动移除，请重新放置。`);
+                    }
+                }, 2000);
             }
             
             // 找到点击的插槽
@@ -705,7 +905,8 @@
                 let nearestSlot = null;
                 
                 experienceState.slots.forEach(slot => {
-                    if (!slot.isFixed) {
+                    // 允许点击未放置的插槽，或者已经测试过但错误的插槽
+                    if (!slot.isPlaced || (slot.isTested && !slot.isCorrect)) {
                         const rect = slot.element.getBoundingClientRect();
                         const centerX = rect.left + rect.width / 2;
                         const centerY = rect.top + rect.height / 2;
@@ -723,48 +924,22 @@
             
             // 完成部分
             function completePart() {
-                clearInterval(experienceState.timer);
                 successMessage.style.display = 'block';
                 overlay.style.display = 'block';
             }
             
             // 重置部分
             function resetPart() {
-                experienceState.timeLeft = 60;
-                experienceState.fixedParts = 0;
+                experienceState.placedParts = 0;
                 experienceState.progress = 0;
                 experienceState.selectedTool = null;
+                experienceState.tested = false;
                 
                 // 重新生成部分
                 generatePart();
                 
                 updateUI();
-                startTimer();
             }
-            
-            // 事件监听器
-            testButton.addEventListener('click', function() {
-                // 模拟测试音乐盒
-                if (experienceState.fixedParts >= experienceState.brokenParts) {
-                    completePart();
-                } else {
-                    alert(`音乐盒还没有完全修复！还需要修复 ${experienceState.brokenParts - experienceState.fixedParts} 个零件。`);
-                }
-            });
-            
-            resetButton.addEventListener('click', resetPart);
-            
-            nextPartButton.addEventListener('click', function() {
-                if (experienceState.part < 3) {
-                    experienceState.part++;
-                    successMessage.style.display = 'none';
-                    overlay.style.display = 'none';
-                    resetPart();
-                } else {
-                    // 修复完成后跳转到"一张字条.html"
-                    window.location.href = "https://sylvie-seven-cq.top/Syzygy/音乐盒字条.html";
-                }
-            });
             
             // 初始化体验
             initExperience();
