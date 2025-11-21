@@ -7,7 +7,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>逃出迷宫</title>
     <style>
-        /* 原有CSS代码保持不变 */
         body {
             margin: 0;
             padding: 0;
@@ -149,7 +148,7 @@
         }
 
         /* 平板尺寸 */
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             #maze {
                 grid-template-columns: repeat(15, 16px);
                 grid-template-rows: repeat(15, 16px);
@@ -163,10 +162,15 @@
             .text-cell {
                 font-size: 12px;
             }
+            
+            /* 在iPad上显示触摸控制 */
+            .touch-controls {
+                display: block !important;
+            }
         }
 
         /* 手机尺寸 */
-        @media (max-width: 480px) {
+        @media (max-width: 768px) {
             #maze {
                 grid-template-columns: repeat(15, 12px);
                 grid-template-rows: repeat(15, 12px);
@@ -183,6 +187,11 @@
             
             .controls {
                 font-size: 14px;
+            }
+            
+            /* 在手机上显示触摸控制 */
+            .touch-controls {
+                display: block !important;
             }
         }
 
@@ -409,6 +418,11 @@
                 /* 确保迷宫在iOS上正确渲染 */
                 -webkit-transform: translateZ(0);
             }
+            
+            /* 在iPad上显示触摸控制 */
+            .touch-controls {
+                display: block !important;
+            }
         }
         
         /* 安卓Chrome特定优化 */
@@ -424,6 +438,14 @@
             body {
                 -webkit-font-smoothing: antialiased;
                 text-rendering: optimizeLegibility;
+            }
+        }
+        
+        /* 检测iPad并显示触摸控制 */
+        @media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait),
+               (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+            .touch-controls {
+                display: block !important;
             }
         }
     </style>
@@ -467,10 +489,19 @@
         let gameActive = true;
         let chaserActive = false; // 控制追逐者是否激活
         let startPos = { x: 1, y: 1 }; // 起点位置
+        let chaserInterval; // 追逐者移动的定时器
 
-        // 检测安卓设备
-        function isAndroid() {
-            return /Android/i.test(navigator.userAgent);
+        // 检测iPad设备
+        function isIPad() {
+            return /iPad|Macintosh/i.test(navigator.userAgent) && 
+                   'ontouchend' in document;
+        }
+
+        // 检测触摸设备
+        function isTouchDevice() {
+            return 'ontouchstart' in window || 
+                   navigator.maxTouchPoints > 0 || 
+                   navigator.msMaxTouchPoints > 0;
         }
 
         // 生成迷宫
@@ -605,6 +636,11 @@
             chaserPos = { x: 1, y: 1 };
             chaserActive = false;
             
+            // 清除之前的追逐者定时器
+            if (chaserInterval) {
+                clearInterval(chaserInterval);
+            }
+            
             gameActive = true;
             createMaze();
         }
@@ -698,11 +734,10 @@
             return null;
         }
 
-        // 移动追逐者 - 加快追逐速度
+        // 移动追逐者 - 独立移动
         function moveChaser() {
             if (!gameActive || !chaserActive) return;
             
-            // 追逐者每次玩家移动都会尝试移动（加快追逐速度）
             const move = findPath(chaserPos, playerPos);
             
             if (move) {
@@ -721,6 +756,8 @@
                         gameActive = false;
                         message.textContent = "被抓住了！";
                         message.style.display = 'block';
+                        // 停止追逐者移动
+                        clearInterval(chaserInterval);
                         setTimeout(() => {
                             message.style.display = 'none';
                             initGame();
@@ -728,6 +765,12 @@
                     }
                 }
             }
+        }
+
+        // 启动追逐者定时器
+        function startChaser() {
+            // 设置追逐者每500毫秒移动一次
+            chaserInterval = setInterval(moveChaser, 300);
         }
 
         function movePlayer(dx, dy) {
@@ -746,17 +789,18 @@
                     // 追逐者从起点开始
                     chaserPos = { x: startPos.x, y: startPos.y };
                     createMaze(); // 更新显示追逐者
+                    // 启动追逐者定时器
+                    startChaser();
                 }
                 
                 createMaze();
-
-                // 移动追逐者 - 立即移动，不再延迟
-                moveChaser();
 
                 if (playerPos.x === exitPos.x && playerPos.y === exitPos.y) {
                     gameActive = false;
                     message.textContent = "成功逃脱！......了吗？";
                     message.style.display = 'block';
+                    // 停止追逐者移动
+                    clearInterval(chaserInterval);
                     setTimeout(() => {
                         // 跳转到结局页面
                         window.location.href = "https://sylvie-seven-cq.top/Syzygy/拼图.html";
@@ -791,11 +835,40 @@
         });
 
         // 添加触摸控制
-        document.querySelector('.touch-controls .up').addEventListener('click', () => movePlayer(0, -1));
-        document.querySelector('.touch-controls .down').addEventListener('click', () => movePlayer(0, 1));
-        document.querySelector('.touch-controls .left').addEventListener('click', () => movePlayer(-1, 0));
-        document.querySelector('.touch-controls .right').addEventListener('click', () => movePlayer(1, 0));
-        
+        function setupTouchControls() {
+            const upBtn = document.querySelector('.touch-controls .up');
+            const downBtn = document.querySelector('.touch-controls .down');
+            const leftBtn = document.querySelector('.touch-controls .left');
+            const rightBtn = document.querySelector('.touch-controls .right');
+            
+            // 添加触摸事件
+            upBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                movePlayer(0, -1);
+            }, { passive: false });
+            
+            downBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                movePlayer(0, 1);
+            }, { passive: false });
+            
+            leftBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                movePlayer(-1, 0);
+            }, { passive: false });
+            
+            rightBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                movePlayer(1, 0);
+            }, { passive: false });
+            
+            // 添加点击事件作为备用
+            upBtn.addEventListener('click', () => movePlayer(0, -1));
+            downBtn.addEventListener('click', () => movePlayer(0, 1));
+            leftBtn.addEventListener('click', () => movePlayer(-1, 0));
+            rightBtn.addEventListener('click', () => movePlayer(1, 0));
+        }
+
         // 添加触摸事件以防止iOS和安卓上的默认行为
         document.addEventListener('touchstart', function(e) {
             e.preventDefault();
@@ -805,22 +878,17 @@
             e.preventDefault();
         }, { passive: false });
 
-        // 安卓设备特定优化
-        if (isAndroid()) {
-            // 安卓设备上的额外优化
-            document.body.style.webkitFontSmoothing = 'antialiased';
-            document.body.style.textRendering = 'optimizeLegibility';
-            
-            // 安卓设备上的触摸目标优化
-            const touchButtons = document.querySelectorAll('.touch-controls .up, .touch-controls .down, .touch-controls .left, .touch-controls .right');
-            touchButtons.forEach(button => {
-                button.style.minHeight = '44px';
-                button.style.minWidth = '44px';
-            });
+        // 检测设备类型并显示触摸控制
+        function checkDeviceAndSetupControls() {
+            if (isTouchDevice() || isIPad()) {
+                document.querySelector('.touch-controls').style.display = 'block';
+            }
         }
 
         // 初始化游戏
         initGame();
+        setupTouchControls();
+        checkDeviceAndSetupControls();
     </script>
 
 </body>
