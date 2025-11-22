@@ -17,7 +17,7 @@
     
     // 系统消息关键词白名单 - 更全面的列表
     const SYSTEM_MESSAGE_KEYWORDS = [
-        '系统', 'resonance', '日志', '模式', '记录', '状态',
+        '系统日志', 'resonance', '日志', '模式', '记录', '状态',
         'auth', 'authentication', 'session', 'token', '验证'
     ];
     
