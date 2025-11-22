@@ -519,7 +519,7 @@
                         <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZmY5ODAwIi8+PGNpcmNsZSBjeD0iNDAiIGN5PSIyNCIgcj0iMTIiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMTYgNDBoLTR2LTRoNHY0ek0yMCAzNmg0djRIMjB6TTI0IDMzaDR2NGgtNHpNMjggMjhoNHY0aC00ek0zMiAyNGg4djhoLTh6IiBmaWxsPSIjZmY5ODAwIi8+PC9zdmc+" alt="钥匙">
                     </div>
                     <div class="tool cylinder" data-type="cylinder" role="button" tabindex="0" aria-label="选择音筒">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjNzk1NTQ4Ii8+PHJlY3QgeD0iMTIiIHk9IjEwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDQiIHJ4PSI1IiByeT0iNSIgZmlsbD0iI2UwZGRkZCIvPjxwYXRoIGQ9Ik0xOCAxNmg0TTE4IDI0aDRNMTggMzJoNE0xOCA0MGg0TTI2IDE2aDRNMjYgMjRoNE0yNiAzMmg0TTI2IDQwaDRNMzQgMTZoNE0zNCAyNGg0TTM0IDMyaDRNMzQgNDBoNCIgc3Ryb2tlPSIjOTk5IiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4=" alt="音筒">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjNzk1NTQ4Ii8+PHJlY3QgeD0iMTIiIHk9IjEwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDQiIHJ4PSI1IiByeT0iNSIgZmlsbD0iI2UwZGRkZCIvPjxwYXRoIGQ9Ik0xOCAxNmg0TTE4IDI0aDRNMTggMzJoNE0xOCA0MGg0TTI2IDE2aDRNMjYgMjRoNE0yNiAzMmg0TTI2IDQwaDRNMzQgMTZoNE0zNCAyNGg0TTM0IDMzaDRNMzQgNDBoNCIgc3Ryb2tlPSIjOTk5IiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4=" alt="音筒">
                     </div>
                 </div>
                 
@@ -529,7 +529,7 @@
                     <p>2. 从工具箱中点击选择正确的零件</p>
                     <p>3. 点击闪烁的红色区域放置零件</p>
                     <p>4. 点击"测试音乐盒"验证修复是否正确</p>
-                    <p>5. 双击已放置的零件可以取消放置</p>
+                    <p>5. 已放置的错误零件会自动取消放置</p>
                     <p>6. 所有零件正确修复后自动进入下一部分</p>
                 </div>
                 
@@ -561,7 +561,8 @@
                 slotPositions: [],
                 selectedTool: null,
                 lastClickTime: 0,
-                tested: false
+                tested: false,
+                isProcessingClick: false // 防止快速连续点击
             };
             
             // DOM元素
@@ -599,6 +600,7 @@
                 experienceState.placedParts = 0;
                 experienceState.selectedTool = null;
                 experienceState.tested = false;
+                experienceState.isProcessingClick = false;
                 
                 // 根据部分确定损坏部件数量
                 experienceState.brokenParts = Math.min(2 + experienceState.part - 1, 4);
@@ -608,14 +610,15 @@
                     let top, left;
                     let attempts = 0;
                     const minDistance = 70; // 最小间距
+                    const padding = 30; // 距离边缘的最小距离
                     
-                    // 确保位置不重叠
+                    // 确保位置不重叠且在音乐盒范围内
                     do {
-                        top = 30 + Math.random() * 160;
-                        left = 30 + Math.random() * 160;
+                        top = padding + Math.random() * (190 - padding * 2);
+                        left = padding + Math.random() * (190 - padding * 2);
                         attempts++;
                         
-                        if (attempts > 50) break; // 防止无限循环
+                        if (attempts > 100) break; // 防止无限循环
                     } while (experienceState.slotPositions.some(pos => 
                         Math.sqrt(Math.pow(pos.top - top, 2) + Math.pow(pos.left - left, 2)) < minDistance
                     ));
@@ -744,8 +747,13 @@
             
             // 处理音乐盒点击
             function handleMusicBoxClick(e) {
+                // 防止快速连续点击
+                if (experienceState.isProcessingClick) return;
+                experienceState.isProcessingClick = true;
+                
                 if (!experienceState.selectedTool) {
                     alert('请先选择一个工具！');
+                    experienceState.isProcessingClick = false;
                     return;
                 }
                 
@@ -775,6 +783,11 @@
                     }
                     experienceState.lastClickTime = now;
                 }
+                
+                // 重置点击处理状态
+                setTimeout(() => {
+                    experienceState.isProcessingClick = false;
+                }, 100);
             }
             
             // 放置零件
@@ -896,7 +909,7 @@
                         testButton.disabled = false;
                         alert(`修复不完全正确！${correctCount}/${experienceState.brokenParts} 个零件正确。错误的零件已自动移除，请重新放置。`);
                     }
-                }, 2000);
+                }, 500);
             }
             
             // 找到点击的插槽
@@ -934,6 +947,7 @@
                 experienceState.progress = 0;
                 experienceState.selectedTool = null;
                 experienceState.tested = false;
+                experienceState.isProcessingClick = false;
                 
                 // 重新生成部分
                 generatePart();
