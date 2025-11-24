@@ -5,23 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>拼图~</title>
     <style>
-        body {
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+        
+        body {
             background-color: #1a0000;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            overflow: auto;
             background: linear-gradient(135deg, #1a0000 0%, #330000 100%);
             font-family: Arial, sans-serif;
+            padding: 20px;
         }
 
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100%;
+            max-width: 500px;
         }
 
         #puzzle {
@@ -31,20 +38,27 @@
             gap: 2px;
             border: 3px solid #FFD700;
             position: relative;
-            width: 300px;
-            height: 300px;
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            aspect-ratio: 1 / 1;
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
             border-radius: 5px;
             background-color: #000;
+            margin: 0 auto;
         }
 
         .piece {
-            width: 100px;
-            height: 100px;
+            width: 100%;
+            height: 100%;
             background-size: 300px 300px;
             cursor: pointer;
             transition: transform 0.3s, box-shadow 0.3s;
             border: 1px solid rgba(255, 215, 0, 0.3);
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         .piece:hover {
@@ -52,9 +66,15 @@
             box-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
         }
 
+        .piece.active {
+            transform: scale(1.05);
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.9);
+            z-index: 1;
+        }
+
         #enterButton {
             display: none;
-            position: absolute;
+            position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -88,6 +108,8 @@
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s;
+            width: 100%;
+            max-width: 300px;
         }
 
         #completeButton:hover {
@@ -98,29 +120,54 @@
 
         .title {
             color: #FFD700;
-            font-size: 36px;
+            font-size: clamp(24px, 5vw, 36px);
             margin-bottom: 20px;
             text-align: center;
             text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
             font-weight: bold;
             letter-spacing: 2px;
+            line-height: 1.3;
         }
 
         .instructions {
             color: #FFD700;
-            font-size: 16px;
+            font-size: clamp(14px, 3vw, 16px);
             margin-bottom: 20px;
             text-align: center;
             max-width: 500px;
             line-height: 1.5;
         }
 
-        .timer {
+        .completion-message {
             color: #FFD700;
             font-size: 18px;
             margin-top: 15px;
             text-align: center;
             font-weight: bold;
+            display: none;
+        }
+
+        /* 移动设备优化 */
+        @media (max-width: 480px) {
+            #puzzle {
+                max-width: 280px;
+            }
+            
+            .piece:hover {
+                transform: none;
+            }
+            
+            #enterButton, #completeButton {
+                padding: 15px 30px;
+                font-size: 16px;
+            }
+        }
+
+        /* 平板设备优化 */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            #puzzle {
+                max-width: 400px;
+            }
         }
     </style>
 </head>
@@ -128,10 +175,10 @@
 
     <div class="container">
         <div class="title">破损的黑色笔记本电子扫描件</div>
-        <div class="instructions">拖动碎片完成笔记本内页拼图，你有3分钟时间</div>
+        <div class="instructions">拖动或点击碎片完成笔记本内页拼图</div>
         <div id="puzzle"></div>
         <button id="completeButton" onclick="checkCompletion()">提交</button>
-        <div class="timer" id="timer">剩余时间: 3:00</div>
+        <div class="completion-message" id="completionMessage">拼图已完成！</div>
     </div>
     
     <button id="enterButton" onclick="window.location.href='https://sylvie-seven-cq.top/Syzygy/记忆.html'">进入</button>
@@ -140,136 +187,98 @@
         const puzzleContainer = document.getElementById('puzzle');
         const enterButton = document.getElementById('enterButton');
         const completeButton = document.getElementById('completeButton');
-        const timerElement = document.getElementById('timer');
+        const completionMessage = document.getElementById('completionMessage');
         const imageUrl = 'https://sylvie-seven-cq.top/gallery/mi1.jpg';
         const rows = 3;
         const cols = 3;
         let pieces = [];
-        let positions = []; // 存储当前每个位置的正确背景位置
-        let originalPositions = []; // 存储原始位置
-        let autoCompleteTimeout;
-        let timeLeft = 180; // 3分钟，单位秒
-        let timerInterval;
+        let selectedPiece = null;
+        let isTouchDevice = 'ontouchstart' in window;
 
         // Create puzzle pieces
         function createPuzzle() {
             pieces = [];
-            positions = [];
-            originalPositions = [];
             
+            // 清除容器
+            puzzleContainer.innerHTML = '';
+            
+            // 创建拼图块
             for (let i = 0; i < rows; i++) {
                 for (let j = 0; j < cols; j++) {
                     let piece = document.createElement('div');
                     piece.classList.add('piece');
-                    piece.style.backgroundPosition = `-${j * 100}px -${i * 100}px`;
+                    
+                    // 设置正确的背景位置
+                    const bgX = -j * 100;
+                    const bgY = -i * 100;
+                    piece.style.backgroundPosition = `${bgX}px ${bgY}px`;
                     piece.style.backgroundImage = `url('${imageUrl}')`;
+                    
                     piece.setAttribute('data-id', `${i}-${j}`);
-                    piece.setAttribute('data-row', i);
-                    piece.setAttribute('data-col', j);
+                    piece.setAttribute('data-original-row', i);
+                    piece.setAttribute('data-original-col', j);
                     piece.setAttribute('data-current-row', i);
                     piece.setAttribute('data-current-col', j);
                     piece.setAttribute('draggable', 'true');
+                    
+                    // 添加事件监听器
                     piece.addEventListener('dragstart', handleDragStart);
                     piece.addEventListener('dragover', handleDragOver);
                     piece.addEventListener('drop', handleDrop);
                     piece.addEventListener('dragend', handleDragEnd);
+                    
+                    // 添加触摸事件支持
+                    if (isTouchDevice) {
+                        piece.addEventListener('touchstart', handleTouchStart);
+                        piece.addEventListener('touchmove', handleTouchMove);
+                        piece.addEventListener('touchend', handleTouchEnd);
+                    }
+                    
                     puzzleContainer.appendChild(piece);
                     pieces.push(piece);
-                    positions.push({row: i, col: j});
-                    originalPositions.push({row: i, col: j});
                 }
             }
             shufflePieces();
-            startTimer();
-            startAutoCompleteTimer();
         }
 
-        // 计时器功能
-        function startTimer() {
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                updateTimerDisplay();
-                
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    if (!isPuzzleComplete()) {
-                        alert("没时间了！快进去！");
-                        autoCompletePuzzle();
-                    }
-                }
-            }, 1000);
-        }
-
-        // 更新计时器显示
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            timerElement.textContent = `剩余时间: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-            
-            // 时间少于30秒时改变颜色
-            if (timeLeft <= 30) {
-                timerElement.style.color = '#FF0000';
-                timerElement.style.textShadow = '0 0 10px rgba(255, 0, 0, 0.7)';
-            }
-        }
-
-        // Start timer for auto completion (3分钟)
-        function startAutoCompleteTimer() {
-            clearTimeout(autoCompleteTimeout);
-            autoCompleteTimeout = setTimeout(() => {
-                if (!isPuzzleComplete()) {
-                    alert("没时间了！快进去！");
-                    autoCompletePuzzle();
-                }
-            }, 180000); // 3分钟后自动完成
-        }
-
-        // Auto complete the puzzle
-        function autoCompletePuzzle() {
-            clearInterval(timerInterval);
+        // 洗牌拼图块
+        function shufflePieces() {
+            // 打乱拼图块的位置
+            const positions = [];
             for (let i = 0; i < rows; i++) {
                 for (let j = 0; j < cols; j++) {
-                    const pieceIndex = i * cols + j;
-                    pieces[pieceIndex].style.backgroundPosition = `-${j * 100}px -${i * 100}px`;
-                    pieces[pieceIndex].dataset.currentRow = i;
-                    pieces[pieceIndex].dataset.currentCol = j;
+                    positions.push({row: i, col: j});
                 }
             }
-            enterButton.style.display = 'block';
-        }
-
-        // Shuffle pieces randomly
-        function shufflePieces() {
-            // 打乱位置数组
+            
+            // Fisher-Yates 洗牌算法
             for (let i = positions.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [positions[i], positions[j]] = [positions[j], positions[i]];
             }
             
             // 更新每个拼图块的背景位置
-            for (let i = 0; i < rows; i++) {
-                for (let j = 0; j < cols; j++) {
-                    const pieceIndex = i * cols + j;
-                    const pos = positions[pieceIndex];
-                    pieces[pieceIndex].style.backgroundPosition = `-${pos.col * 100}px -${pos.row * 100}px`;
-                    pieces[pieceIndex].dataset.currentRow = pos.row;
-                    pieces[pieceIndex].dataset.currentCol = pos.col;
-                }
+            for (let i = 0; i < pieces.length; i++) {
+                const piece = pieces[i];
+                const pos = positions[i];
+                const bgX = -pos.col * 100;
+                const bgY = -pos.row * 100;
+                piece.style.backgroundPosition = `${bgX}px ${bgY}px`;
+                piece.dataset.currentRow = pos.row;
+                piece.dataset.currentCol = pos.col;
             }
         }
 
-        // Handle drag start
+        // 拖拽事件处理
         function handleDragStart(event) {
-            clearTimeout(autoCompleteTimeout);
             event.dataTransfer.setData('text', event.target.dataset.id);
+            event.target.classList.add('active');
         }
 
-        // Handle drag over
         function handleDragOver(event) {
             event.preventDefault();
         }
 
-        // Handle drop
         function handleDrop(event) {
             event.preventDefault();
             const draggedId = event.dataTransfer.getData('text');
@@ -279,70 +288,100 @@
             const targetPiece = event.target;
 
             if (draggedPiece && targetPiece && draggedId !== targetId) {
-                // 获取当前行和列
-                const draggedRow = parseInt(draggedPiece.dataset.currentRow);
-                const draggedCol = parseInt(draggedPiece.dataset.currentCol);
-                const targetRow = parseInt(targetPiece.dataset.currentRow);
-                const targetCol = parseInt(targetPiece.dataset.currentCol);
-
-                // 交换背景位置
-                const tempPos = draggedPiece.style.backgroundPosition;
-                draggedPiece.style.backgroundPosition = targetPiece.style.backgroundPosition;
-                targetPiece.style.backgroundPosition = tempPos;
-
-                // 交换数据属性
-                draggedPiece.dataset.currentRow = targetRow;
-                draggedPiece.dataset.currentCol = targetCol;
-                targetPiece.dataset.currentRow = draggedRow;
-                targetPiece.dataset.currentCol = draggedCol;
-
-                // 更新positions数组
-                const draggedIndex = draggedRow * cols + draggedCol;
-                const targetIndex = targetRow * cols + targetCol;
-                [positions[draggedIndex], positions[targetIndex]] = [positions[targetIndex], positions[draggedIndex]];
+                swapPieces(draggedPiece, targetPiece);
             }
-
-            startAutoCompleteTimer();
+            
+            document.querySelectorAll('.piece').forEach(piece => {
+                piece.classList.remove('active');
+            });
         }
 
-        // Handle drag end
         function handleDragEnd() {
-            startAutoCompleteTimer();
+            document.querySelectorAll('.piece').forEach(piece => {
+                piece.classList.remove('active');
+            });
         }
 
-        // Check if the puzzle is completed
+        // 触摸事件处理
+        function handleTouchStart(event) {
+            event.preventDefault();
+            selectedPiece = event.target;
+            selectedPiece.classList.add('active');
+        }
+
+        function handleTouchMove(event) {
+            event.preventDefault();
+        }
+
+        function handleTouchEnd(event) {
+            event.preventDefault();
+            if (!selectedPiece) return;
+            
+            const touch = event.changedTouches[0];
+            const targetElement = document.elementFromPoint(touch.clientX, touch.clientY);
+            
+            if (targetElement && targetElement.classList.contains('piece') && 
+                targetElement !== selectedPiece) {
+                swapPieces(selectedPiece, targetElement);
+            }
+            
+            selectedPiece.classList.remove('active');
+            selectedPiece = null;
+        }
+
+        // 交换两个拼图块
+        function swapPieces(piece1, piece2) {
+            // 交换背景位置
+            const tempPos = piece1.style.backgroundPosition;
+            piece1.style.backgroundPosition = piece2.style.backgroundPosition;
+            piece2.style.backgroundPosition = tempPos;
+
+            // 交换当前行列数据
+            const tempRow = piece1.dataset.currentRow;
+            const tempCol = piece1.dataset.currentCol;
+            
+            piece1.dataset.currentRow = piece2.dataset.currentRow;
+            piece1.dataset.currentCol = piece2.dataset.currentCol;
+            
+            piece2.dataset.currentRow = tempRow;
+            piece2.dataset.currentCol = tempCol;
+            
+            // 检查是否完成
+            if (isPuzzleComplete()) {
+                completionMessage.style.display = 'block';
+            } else {
+                completionMessage.style.display = 'none';
+            }
+        }
+
+        // 检查拼图是否完成
         function checkCompletion() {
             if (isPuzzleComplete()) {
                 enterButton.style.display = 'block';
-                clearTimeout(autoCompleteTimeout);
-                clearInterval(timerInterval);
                 alert("别放过任何数字");
             } else {
                 alert("拼图尚未完成...");
             }
         }
 
-        // Check if puzzle is complete
+        // 检查拼图是否完成
         function isPuzzleComplete() {
-            for (let i = 0; i < rows; i++) {
-                for (let j = 0; j < cols; j++) {
-                    const pieceIndex = i * cols + j;
-                    const piece = pieces[pieceIndex];
-                    
-                    // 检查这个位置的拼图块是否应该在这个位置
-                    const currentRow = parseInt(piece.dataset.currentRow);
-                    const currentCol = parseInt(piece.dataset.currentCol);
-                    
-                    // 如果当前位置的拼图块的原始位置正好是当前位置，则拼图完成
-                    if (!(currentRow === i && currentCol === j)) {
-                        return false;
-                    }
+            for (let i = 0; i < pieces.length; i++) {
+                const piece = pieces[i];
+                const currentRow = parseInt(piece.dataset.currentRow);
+                const currentCol = parseInt(piece.dataset.currentCol);
+                const originalRow = parseInt(piece.dataset.originalRow);
+                const originalCol = parseInt(piece.dataset.originalCol);
+                
+                // 如果当前行列不等于原始行列，说明拼图未完成
+                if (currentRow !== originalRow || currentCol !== originalCol) {
+                    return false;
                 }
             }
             return true;
         }
 
-        // Initialize the puzzle
+        // 初始化拼图
         createPuzzle();
     </script>
 </body>
