@@ -7,6 +7,58 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>逃出迷宫</title>
     <style>
+        /* 选择界面样式 */
+        .selection-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            color: #f00;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .selection-title {
+            font-size: 32px;
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px #f00;
+            font-weight: bold;
+        }
+
+        .selection-options {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        .selection-btn {
+            padding: 15px 20px;
+            background-color: rgba(255, 0, 0, 0.1);
+            border: 2px solid #b39700;
+            color: #f00;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 5px #f00;
+            box-shadow: 0 0 10px rgba(179, 151, 0, 0.3);
+        }
+
+        .selection-btn:hover {
+            background-color: rgba(255, 0, 0, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* 原有CSS代码保持不变 */
         body {
             margin: 0;
             padding: 0;
@@ -452,6 +504,15 @@
 </head>
 <body>
 
+    <!-- 选择界面 -->
+    <div class="selection-screen" id="selectionScreen">
+        <div class="selection-title">请选择入口</div>
+        <div class="selection-options">
+            <button class="selection-btn" id="withChaser">入口1（可能有危险）</button>
+            <button class="selection-btn" id="withoutChaser">入口2（可能较安全）</button>
+        </div>
+    </div>
+
     <div class="background-text">
         <div class="text-layer" id="textLayer"></div>
     </div>
@@ -481,6 +542,7 @@
         const mazeSize = 15;
         const mazeContainer = document.getElementById('maze');
         const message = document.getElementById('message');
+        const selectionScreen = document.getElementById('selectionScreen');
 
         let playerPos = { x: 0, y: 0 };
         let exitPos = { x: mazeSize - 1, y: mazeSize - 1 };
@@ -490,6 +552,7 @@
         let chaserActive = false; // 控制追逐者是否激活
         let startPos = { x: 1, y: 1 }; // 起点位置
         let chaserInterval; // 追逐者移动的定时器
+        let gameMode = 'withChaser'; // 默认游戏模式
 
         // 检测iPad设备
         function isIPad() {
@@ -632,13 +695,22 @@
                 y: maze.length - 2 
             };
             
-            // 设置追逐者的初始位置在起点，但不激活
-            chaserPos = { x: 1, y: 1 };
-            chaserActive = false;
-            
-            // 清除之前的追逐者定时器
-            if (chaserInterval) {
-                clearInterval(chaserInterval);
+            // 根据游戏模式设置追逐者
+            if (gameMode === 'withChaser') {
+                // 设置追逐者的初始位置在起点，但不激活
+                chaserPos = { x: 1, y: 1 };
+                chaserActive = false;
+                
+                // 清除之前的追逐者定时器
+                if (chaserInterval) {
+                    clearInterval(chaserInterval);
+                }
+            } else {
+                // 无追逐者模式
+                chaserActive = false;
+                if (chaserInterval) {
+                    clearInterval(chaserInterval);
+                }
             }
             
             gameActive = true;
@@ -660,7 +732,7 @@
                         cell.classList.add('player');
                     } else if (y === exitPos.y && x === exitPos.x) {
                         cell.classList.add('exit');
-                    } else if (chaserActive && y === chaserPos.y && x === chaserPos.x) {
+                    } else if (gameMode === 'withChaser' && chaserActive && y === chaserPos.y && x === chaserPos.x) {
                         cell.classList.add('chaser');
                     } else {
                         cell.classList.add('path');
@@ -736,7 +808,7 @@
 
         // 移动追逐者 - 独立移动
         function moveChaser() {
-            if (!gameActive || !chaserActive) return;
+            if (!gameActive || !chaserActive || gameMode !== 'withChaser') return;
             
             const move = findPath(chaserPos, playerPos);
             
@@ -784,7 +856,7 @@
                 playerPos.y = newY;
                 
                 // 检查玩家是否离开了起点五格以上，如果是则激活追逐者
-                if (!chaserActive && manhattanDistance(playerPos, startPos) >= 5) {
+                if (gameMode === 'withChaser' && !chaserActive && manhattanDistance(playerPos, startPos) >= 5) {
                     chaserActive = true;
                     // 追逐者从起点开始
                     chaserPos = { x: startPos.x, y: startPos.y };
@@ -800,7 +872,9 @@
                     message.textContent = "成功逃脱！......了吗？";
                     message.style.display = 'block';
                     // 停止追逐者移动
-                    clearInterval(chaserInterval);
+                    if (chaserInterval) {
+                        clearInterval(chaserInterval);
+                    }
                     setTimeout(() => {
                         // 跳转到结局页面
                         window.location.href = "https://sylvie-seven-cq.top/Syzygy/拼图.html";
@@ -885,8 +959,20 @@
             }
         }
 
+        // 选择游戏模式
+        document.getElementById('withChaser').addEventListener('click', function() {
+            gameMode = 'withChaser';
+            selectionScreen.style.display = 'none';
+            initGame();
+        });
+
+        document.getElementById('withoutChaser').addEventListener('click', function() {
+            gameMode = 'withoutChaser';
+            selectionScreen.style.display = 'none';
+            initGame();
+        });
+
         // 初始化游戏
-        initGame();
         setupTouchControls();
         checkDeviceAndSetupControls();
     </script>
