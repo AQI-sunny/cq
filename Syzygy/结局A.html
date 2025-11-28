@@ -306,6 +306,51 @@
             background: linear-gradient(135deg, #ffd166, #ffb347);
         }
         
+        /* 访客计数样式 - 移到页面底部 */
+        .visitor-counter {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(30, 45, 75, 0.7);
+            border-radius: 10px;
+            border: 1px solid rgba(120, 160, 255, 0.4);
+            box-shadow: 0 0 15px rgba(120, 160, 255, 0.2);
+        }
+        
+        .visitor-counter h2 {
+            color: #ffd166;
+            margin-bottom: 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+        }
+        
+        .visitor-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #78c0ff;
+            text-shadow: 0 0 10px rgba(120, 192, 255, 0.7);
+            margin: 10px 0;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .truth-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: rgba(120, 160, 255, 0.2);
+            color: #f0f0ff;
+            text-decoration: none;
+            border-radius: 5px;
+            border: 1px solid rgba(120, 160, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .truth-link:hover {
+            background: rgba(120, 160, 255, 0.4);
+            box-shadow: 0 0 10px rgba(120, 160, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
         @media (max-width: 768px) {
             body {
                 padding: 1rem;
@@ -327,6 +372,10 @@
                 flex-direction: column;
                 align-items: center;
             }
+            
+            .visitor-number {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
@@ -342,94 +391,100 @@
         <h1 class="glitch" data-text="结局A">结局A</h1>
         
         <div class="content-section" id="section1">
-    <p>你删除文件的瞬间，屏幕上那些乱码文件名化作无数细碎的银辉，像被晚风卷走的星尘般湮灭。几乎是同一时间，林墨的电脑发出一声低沉的嗡鸣，机身外壳浮现出淡金色的纹路，如同沉睡的古咒被唤醒，沿着键盘边缘游走成闭环——封印程序启动了。</p>
-</div>
+            <p>你删除文件的瞬间，屏幕上那些乱码文件名化作无数细碎的银辉，像被晚风卷走的星尘般湮灭。几乎是同一时间，林墨的电脑发出一声低沉的嗡鸣，机身外壳浮现出淡金色的纹路，如同沉睡的古咒被唤醒，沿着键盘边缘游走成闭环——封印程序启动了。</p>
+        </div>
 
-<div class="content-section" id="section2">
-    <p>进度条以肉眼可见的速度爬升，最后一格填满时，空气中那股若有若无的、属于洛书碎片的躁动彻底平息，像被收进了密不透风的琉璃盏。</p>
-</div>
+        <div class="content-section" id="section2">
+            <p>进度条以肉眼可见的速度爬升，最后一格填满时，空气中那股若有若无的、属于洛书碎片的躁动彻底平息，像被收进了密不透风的琉璃盏。</p>
+        </div>
 
-<div class="content-section" id="section3">
-    <p>你长舒一口气，抬头时正对上林墨的目光。她脸色比刚才更白了些，唇色淡得近乎透明，额角甚至沁出了一层薄汗，但那双眼睛亮得惊人，嘴角的笑意里裹着如释重负的轻颤："你终于成功了。"她顿了顿，声音轻得像羽毛落在心尖，"想起来我是谁了吗？"</p>
-</div>
+        <div class="content-section" id="section3">
+            <p>你长舒一口气，抬头时正对上林墨的目光。她脸色比刚才更白了些，唇色淡得近乎透明，额角甚至沁出了一层薄汗，但那双眼睛亮得惊人，嘴角的笑意里裹着如释重负的轻颤："你终于成功了。"她顿了顿，声音轻得像羽毛落在心尖，"想起来我是谁了吗？"</p>
+        </div>
 
-<div class="content-section" id="section4">
-    <p>这句话像一把钥匙，骤然撞开了记忆的闸门。好运莲莲的微信头像率先浮现在脑海。那个你记不清何时认识的自来熟"网友"；那个声称在公寓团购群里相识、总是精确提醒"楼下有你快递哦"的"邻居"；那个不厌其烦互道早晚安的ID。原来，所有这一切都不是偶然，她根本就不是一个飘渺的"网友"。每一个被点击的录音条里，都曾藏着她说话时，那微微上扬的、你早已熟悉的尾音。</p>
-</div>
+        <div class="content-section" id="section4">
+            <p>这句话像一把钥匙，骤然撞开了记忆的闸门。好运莲莲的微信头像率先浮现在脑海。那个你记不清何时认识的自来熟"网友"；那个声称在公寓团购群里相识、总是精确提醒"楼下有你快递哦"的"邻居"；那个不厌其烦互道早晚安的ID。原来，所有这一切都不是偶然，她根本就不是一个飘渺的"网友"。每一个被点击的录音条里，都曾藏着她说话时，那微微上扬的、你早已熟悉的尾音。</p>
+        </div>
 
-<div class="content-section" id="section5">
-    <p>你想起三年前的10月22号，她穿着洗得发白的牛仔外套，抱着一盆薄荷站在隔壁门口，阳光落在她发梢，说"你好~我是你的邻居，看你经常摆弄花草，送你一盆薄荷~它很好养活的"；你生日那天，她拎着蛋糕敲你的门，蜡烛火苗在她眼里跳，"多买了一个，不吃完要浪费的~"。</p>
-</div>
+        <div class="content-section" id="section5">
+            <p>你想起三年前的10月22号，她穿着洗得发白的牛仔外套，抱着一盆薄荷站在隔壁门口，阳光落在她发梢，说"你好~我是你的邻居，看你经常摆弄花草，送你一盆薄荷~它很好养活的"；你生日那天，她拎着蛋糕敲你的门，蜡烛火苗在她眼里跳，"多买了一个，不吃完要浪费的~"。</p>
+        </div>
 
-<div class="content-section" id="section6">
-    <p>还有无数个傍晚，你们在公寓楼下的长椅上分食一袋橘子，她讲那些光怪陆离的传说，你说单位的趣事，晚风里全是薄荷和橘子混在一起的清香。这些画面不是零散的碎片，是连贯的潮水，瞬间漫过了记忆里那片被掏空的荒原。</p>
-</div>
+        <div class="content-section" id="section6">
+            <p>还有无数个傍晚，你们在公寓楼下的长椅上分食一袋橘子，她讲那些光怪陆离的传说，你说单位的趣事，晚风里全是薄荷和橘子混在一起的清香。这些画面不是零散的碎片，是连贯的潮水，瞬间漫过了记忆里那片被掏空的荒原。</p>
+        </div>
 
-<div class="content-section" id="section7">
-    <p>"林墨……"你开口时，喉咙像被温水浸过，又酸又软。她笑着点头，眼眶却红了："上次封印失败后，窥命司用碎片能量篡改了你的记忆，我也被反噬，一睡就是两年。他们以为我们俩再掀不起大浪……"</p>
-</div>
+        <div class="content-section" id="section7">
+            <p>"林墨……"你开口时，喉咙像被温水浸过，又酸又软。她笑着点头，眼眶却红了："上次封印失败后，窥命司用碎片能量篡改了你的记忆，我也被反噬，一睡就是两年。他们以为我们俩再掀不起大浪……"</p>
+        </div>
 
-<div class="content-section" id="section8">
-    <p>"可他们不知道，静乔公寓是月洛氏族人建造的安全屋。我醒来那天，窗外正挂着残月，就知道还不是时候和你相认。需等到今天这枚碎片显现时，引你亲自完成对3326碎片的封印，便能让你想起一切。"</p>
-</div>
+        <div class="content-section" id="section8">
+            <p>"可他们不知道，静乔公寓是月洛氏族人建造的安全屋。我醒来那天，窗外正挂着残月，就知道还不是时候和你相认。需等到今天这枚碎片显现时，引你亲自完成对3326碎片的封印，便能让你想起一切。"</p>
+        </div>
 
-<div class="content-section" id="section9">
-    <p>你这才明白，那个失物招领帖、论坛里若有若无的引导、甚至顾姨"无意间"透露的月洛族书线索，全是她的安排。她知道失去记忆的你像只惊弓之鸟，不肯轻信任何人，便绕了这么大一个圈子，引起你的注意。既能封印新的碎片，又能把你从遗忘的迷雾里拉出来。</p>
-</div>
+        <div class="content-section" id="section9">
+            <p>你这才明白，那个失物招领帖、论坛里若有若无的引导、甚至顾姨"无意间"透露的月洛族书线索，全是她的安排。她知道失去记忆的你像只惊弓之鸟，不肯轻信任何人，便绕了这么大一个圈子，引起你的注意。既能封印新的碎片，又能把你从遗忘的迷雾里拉出来。</p>
+        </div>
 
-<div class="content-section" id="section10">
-    <p>"晓棠她......" "她没事，不过被关了十年，后遗症总是有的。你可以啊，居然知道他们把她藏在哪并且救出她，这个我属实没料到。" "为什么一定要我们这些局外人来封印？我有些想不起来了，你说过吗？" "因为你们没有月洛血"她笑了，带着点狡黠，"碎片对我们族人有感应，容易使我们被窥命司追踪，但对局外人而言，它只是'需要被封印的东西'。而且……"她声音轻下来，"我知道，就算忘了我，你的本能也不会让你放任碎片被坏人拿走。"</p>
-</div>
+        <div class="content-section" id="section10">
+            <p>"晓棠她......" "她没事，不过被关了十年，后遗症总是有的。你可以啊，居然知道他们把她藏在哪并且救出她，这个我属实没料到。" "为什么一定要我们这些局外人来封印？我有些想不起来了，你说过吗？" "因为你们没有月洛血"她笑了，带着点狡黠，"碎片对我们族人有感应，容易使我们被窥命司追踪，但对局外人而言，它只是'需要被封印的东西'。而且……"她声音轻下来，"我知道，就算忘了我，你的本能也不会让你放任碎片被坏人拿走。"</p>
+        </div>
 
-<div class="content-section" id="section11">
-    <p>月亮不知何时隐入了云层，天边泛起淡淡的鱼肚白。你突然走上前，给了她一个用力的拥抱。她的肩膀很轻，带着点凉意，却让你想起三年来无数个瞬间。她愣了一下，随即伸手回抱住你，力道很紧，像要把这几年的空白都填满。</p>
-</div>
+        <div class="content-section" id="section11">
+            <p>月亮不知何时隐入了云层，天边泛起淡淡的鱼肚白。你突然走上前，给了她一个用力的拥抱。她的肩膀很轻，带着点凉意，却让你想起三年来无数个瞬间。她愣了一下，随即伸手回抱住你，力道很紧，像要把这几年的空白都填满。</p>
+        </div>
 
-<div class="content-section" id="section12">
-    <p>"好了，"她在你耳边说，声音闷闷的，"去吃早餐吧，南巷那家包子铺，你以前总说他们的糖糕炸得最酥。"你们并肩离开山顶时，旭日正好挣脱云层，金色的光泼在树梢上。路边的野草沾着晨露，空气里飘着草木的清新气味，一切皆已尘埃落定。</p>
-</div>
+        <div class="content-section" id="section12">
+            <p>"好了，"她在你耳边说，声音闷闷的，"去吃早餐吧，南巷那家包子铺，你以前总说他们的糖糕炸得最酥。"你们并肩离开山顶时，旭日正好挣脱云层，金色的光泼在树梢上。路边的野草沾着晨露，空气里飘着草木的清新气味，一切皆已尘埃落定。</p>
+        </div>
 
-<div class="content-section" id="section13">
-    <p>晨光漫过静乔公寓的窗台时，你和林墨正坐在包子铺的长凳上，糖糕的热气模糊了你的眼镜片。她咬了一口糕，碎屑沾在嘴角，像极了三年前你们第一次在这里分食早餐的模样。</p>
-</div>
+        <div class="content-section" id="section13">
+            <p>晨光漫过静乔公寓的窗台时，你和林墨正坐在包子铺的长凳上，糖糕的热气模糊了你的眼镜片。她咬了一口糕，碎屑沾在嘴角，像极了三年前你们第一次在这里分食早餐的模样。</p>
+        </div>
 
-<div class="content-section" id="section14">
-    <p>"往后啊，"她抬手抹掉嘴角的糖渣，眼里闪着亮，"血月还会有，窥命司那群人也不会罢休。"你搅动着碗里的豆浆，看着热气在晨光里散开："那就让他们来。"</p>
-</div>
+        <div class="content-section" id="section14">
+            <p>"往后啊，"她抬手抹掉嘴角的糖渣，眼里闪着亮，"血月还会有，窥命司那群人也不会罢休。"你搅动着碗里的豆浆，看着热气在晨光里散开："那就让他们来。"</p>
+        </div>
 
-<div class="content-section" id="section15">
-    <p>话音刚落，巷口的风卷着几片落叶飘过，带着初秋的凉意。你想起刚才路过公寓时，似乎看到墙面上的那些淡金色的古咒纹路。它们在阳光下若隐若现，林墨说过，静乔公寓里藏着不少像她一样的族人，还有些知道秘密却选择留下的普通人，大家早就心照不宣地守着同一个约定。"下次血月，"你抬头看向她，嘴角带着笑，"我们可以提前熬锅姜汤，守在楼顶等。"</p>
-</div>
+        <div class="content-section" id="section15">
+            <p>话音刚落，巷口的风卷着几片落叶飘过，带着初秋的凉意。你想起刚才路过公寓时，似乎看到墙面上的那些淡金色的古咒纹路。它们在阳光下若隐若现，林墨说过，静乔公寓里藏着不少像她一样的族人，还有些知道秘密却选择留下的普通人，大家早就心照不宣地守着同一个约定。"下次血月，"你抬头看向她，嘴角带着笑，"我们可以提前熬锅姜汤，守在楼顶等。"</p>
+        </div>
 
-<div class="content-section" id="section17">
-    <p>林墨眼睛一亮："再加两包瓜子？就像以前看球赛那样。""还要带件厚外套，"你补充道，"上次你在楼顶吹风感冒了，赖了我三天粥。"她拍了下你的胳膊，笑骂"就你记仇"，笑声落在豆浆碗里，漾起细小的涟漪。</p>
-</div>
+        <div class="content-section" id="section17">
+            <p>林墨眼睛一亮："再加两包瓜子？就像以前看球赛那样。""还要带件厚外套，"你补充道，"上次你在楼顶吹风感冒了，赖了我三天粥。"她拍了下你的胳膊，笑骂"就你记仇"，笑声落在豆浆碗里，漾起细小的涟漪。</p>
+        </div>
 
-<div class="content-section" id="section18">
-    <p>阳光穿过她的发梢，在她手背上投下细碎的光斑，那双手曾在两年的昏迷里冰凉苍白，此刻却温暖得能握住滚烫的豆浆碗。你们都知道，窥命司不会善罢甘休。洛书碎片的诱惑太大，那些想把世界塞进秩序框架里的人，总会像苍蝇一样围上来。</p>
-</div>
+        <div class="content-section" id="section18">
+            <p>阳光穿过她的发梢，在她手背上投下细碎的光斑，那双手曾在两年的昏迷里冰凉苍白，此刻却温暖得能握住滚烫的豆浆碗。你们都知道，窥命司不会善罢甘休。洛书碎片的诱惑太大，那些想把世界塞进秩序框架里的人，总会像苍蝇一样围上来。</p>
+        </div>
 
-<div class="content-section" id="section19">
-    <p>但没关系，血月会升起一轮又一轮，清晨也会准时升起。就像此刻，你们面前的空碗里还残留着豆浆的甜香，巷口的煎饼摊又支起了油锅，生活里的烟火气，本就是最坚韧的盾牌。</p>
-</div>
+        <div class="content-section" id="section19">
+            <p>但没关系，血月会升起一轮又一轮，清晨也会准时升起。就像此刻，你们面前的空碗里还残留着豆浆的甜香，巷口的煎饼摊又支起了油锅，生活里的烟火气，本就是最坚韧的盾牌。</p>
+        </div>
 
-<div class="content-section" id="section20">
-    <p>离开包子铺时，你看到公寓楼下的茶梅又抽出了新芽，嫩绿的叶子在风里轻轻晃悠。林墨说，这是月洛氏的规矩，每次风波过后，都要种点新的植物，提醒自己希望总在生长。"走吧，"她推了推你的胳膊，"回去补个觉，下午还得去给桂圆买猫粮。"</p>
-</div>
+        <div class="content-section" id="section20">
+            <p>离开包子铺时，你看到公寓楼下的茶梅又抽出了新芽，嫩绿的叶子在风里轻轻晃悠。林墨说，这是月洛氏的规矩，每次风波过后，都要种点新的植物，提醒自己希望总在生长。"走吧，"她推了推你的胳膊，"回去补个觉，下午还得去给桂圆买猫粮。"</p>
+        </div>
 
-<div class="content-section" id="section21">
-    <p>你点头跟上，脚步踩在晨光里，踏实而坚定。未来的血月尽管带着寒意降临，暗处的眼睛也尽管盯着好了。只要你们还站在这里，还能一起分食一块糖糕，还能在彼此眼中看到光亮，就没什么好怕的。</p>
-</div>
+        <div class="content-section" id="section21">
+            <p>你点头跟上，脚步踩在晨光里，踏实而坚定。未来的血月尽管带着寒意降临，暗处的眼睛也尽管盯着好了。只要你们还站在这里，还能一起分食一块糖糕，还能在彼此眼中看到光亮，就没什么好怕的。</p>
+        </div>
 
-<div class="content-section" id="section22">
-    <p>你想起窥命司的野心——集齐碎片，创造所谓的"秩序世界"，可他们不懂，真正的未来从来不是被规划好的图纸，而本该是不确定的。就像此刻，你牵着林墨的手走在晨光里，不知道下一个转角会遇见什么，却知道身边有她，有记忆里的薄荷香，有无数个充满变数却永远值得期待的清晨。</p>
-</div>
+        <div class="content-section" id="section22">
+            <p>你想起窥命司的野心——集齐碎片，创造所谓的"秩序世界"，可他们不懂，真正的未来从来不是被规划好的图纸，而本该是不确定的。就像此刻，你牵着林墨的手走在晨光里，不知道下一个转角会遇见什么，却知道身边有她，有记忆里的薄荷香，有无数个充满变数却永远值得期待的清晨。</p>
+        </div>
 
-<div class="content-section" id="section23">
-    <p>随他们放马过来罢，日子总要在无数个血月与清晨的交替中，慢慢过出无限可能。</p>
-    <a href="https://sylvie-seven-cq.top/Syzygy/新文件.html">获得新文件</a>
-</div>
-
+        <div class="content-section" id="section23">
+            <p>随他们放马过来罢，日子总要在无数个血月与清晨的交替中，慢慢过出无限可能。</p>
+            <a href="https://sylvie-seven-cq.top/Syzygy/结局文件.html">获得新文件</a>
+        </div>
+        
+        <!-- 访客计数区域 - 移到页面底部 -->
+        <div class="visitor-counter">
+            <h2>你是第 <span class="visitor-number" id="visitorCount">--</span> 个到达这个页面的人</h2>
+            <p>恭喜你发现了这个隐藏结局！</p>
+            <a href="https://sylvie-seven-cq.top/Syzygy/更多真相.html" class="truth-link">奖励你看"更多真相"</a>
+        </div>
         
         <footer>
             <p>感谢游玩，你的<a href="https://sylvie-seven-cq.top" class="footer-link">反馈</a>是我最大的动力——AQI</p>
@@ -443,6 +498,42 @@
         document.addEventListener('DOMContentLoaded', function() {
             const sections = document.querySelectorAll('.content-section');
             const progressBar = document.getElementById('progressBar');
+            const visitorCountElement = document.getElementById('visitorCount');
+            
+            // 访客计数功能 - 刷新不计数
+            function updateVisitorCount() {
+                // 检查是否已经访问过（使用sessionStorage）
+                const hasVisited = sessionStorage.getItem('hasVisited');
+                
+                if (!hasVisited) {
+                    // 首次访问，增加计数
+                    let count = localStorage.getItem('visitorCount');
+                    
+                    if (!count) {
+                        count = 1;
+                    } else {
+                        count = parseInt(count) + 1;
+                    }
+                    
+                    localStorage.setItem('visitorCount', count);
+                    sessionStorage.setItem('hasVisited', 'true');
+                    visitorCountElement.textContent = count;
+                    
+                    // 添加动画效果
+                    visitorCountElement.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        visitorCountElement.style.transform = 'scale(1)';
+                    }, 300);
+                } else {
+                    // 已经访问过，只显示计数
+                    let count = localStorage.getItem('visitorCount');
+                    if (!count) {
+                        count = 1;
+                        localStorage.setItem('visitorCount', count);
+                    }
+                    visitorCountElement.textContent = count;
+                }
+            }
             
             // 更新进度条
             function updateProgress() {
@@ -477,6 +568,9 @@
                 sections[0].classList.add('visible');
             }
             
+            // 初始化访客计数
+            updateVisitorCount();
+            
             // 滚动事件监听
             window.addEventListener('scroll', function() {
                 updateProgress();
@@ -497,4 +591,3 @@
     </script>
 </body>
 </html>
-
