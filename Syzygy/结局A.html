@@ -352,6 +352,18 @@
             transform: translateY(-2px);
         }
         
+        /* 加载动画 */
+        .loading {
+            opacity: 0.7;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+        
         @media (max-width: 768px) {
             body {
                 padding: 1rem;
@@ -501,41 +513,88 @@
             const progressBar = document.getElementById('progressBar');
             const visitorCountElement = document.getElementById('visitorCount');
             
-            // 访客计数功能
+            // 使用CountAPI免费计数服务
             function updateVisitorCount() {
-                // 检查是否已经访问过（使用sessionStorage）
-                const hasVisited = sessionStorage.getItem('hasVisited');
+                // 为您的网站创建一个唯一的命名空间和键
+                const namespace = 'syzygy-ending-a'; // 可以自定义，确保唯一性
+                const key = 'visitors';
                 
+                // 显示加载状态
+                visitorCountElement.textContent = '统计中...';
+                visitorCountElement.classList.add('loading');
+                
+                // 检查是否已经访问过（使用sessionStorage避免重复计数）
+                const hasVisited = sessionStorage.getItem('hasVisitedEndingA');
+                
+                let apiUrl;
                 if (!hasVisited) {
                     // 首次访问，增加计数
-                    let count = localStorage.getItem('globalVisitorCount');
-                    
-                    if (!count) {
-                        // 初始值设为500-900之间的随机数
-                        count = Math.floor(Math.random() * 401) + 500;
-                    } else {
-                        count = parseInt(count) + 1;
-                    }
-                    
-                    localStorage.setItem('globalVisitorCount', count);
-                    sessionStorage.setItem('hasVisited', 'true');
-                    visitorCountElement.textContent = count;
-                    
-                    // 添加动画效果
-                    visitorCountElement.style.transform = 'scale(1.2)';
-                    setTimeout(() => {
-                        visitorCountElement.style.transform = 'scale(1)';
-                    }, 300);
+                    apiUrl = `https://api.countapi.xyz/hit/${namespace}/${key}`;
+                    sessionStorage.setItem('hasVisitedEndingA', 'true');
                 } else {
-                    // 已经访问过，只显示计数
-                    let count = localStorage.getItem('globalVisitorCount');
-                    if (!count) {
-                        // 如果没有计数，设置初始值
-                        count = Math.floor(Math.random() * 401) + 500;
-                        localStorage.setItem('globalVisitorCount', count);
-                    }
-                    visitorCountElement.textContent = count;
+                    // 已经访问过，只获取计数
+                    apiUrl = `https://api.countapi.xyz/get/${namespace}/${key}`;
                 }
+                
+                fetch(apiUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('网络响应不正常');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // 移除加载状态
+                        visitorCountElement.classList.remove('loading');
+                        
+                        if (data.value !== undefined) {
+                            // 显示计数
+                            visitorCountElement.textContent = data.value;
+                            
+                            // 添加动画效果
+                            visitorCountElement.style.transform = 'scale(1.2)';
+                            setTimeout(() => {
+                                visitorCountElement.style.transform = 'scale(1)';
+                            }, 300);
+                        } else {
+                            throw new Error('API返回数据格式错误');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('访客计数错误:', error);
+                        // 如果API失败，使用本地存储作为备选方案
+                        visitorCountElement.classList.remove('loading');
+                        useLocalStorageFallback();
+                    });
+            }
+            
+            // 本地存储备选方案
+            function useLocalStorageFallback() {
+                const hasVisited = sessionStorage.getItem('hasVisitedEndingA');
+                let count = localStorage.getItem('endingAVisitorCount');
+                
+                if (!count) {
+                    // 初始值设为500-900之间的随机数
+                    count = Math.floor(Math.random() * 401) + 500;
+                } else {
+                    count = parseInt(count);
+                    if (!hasVisited) {
+                        count++;
+                    }
+                }
+                
+                localStorage.setItem('endingAVisitorCount', count);
+                if (!hasVisited) {
+                    sessionStorage.setItem('hasVisitedEndingA', 'true');
+                }
+                
+                visitorCountElement.textContent = count;
+                
+                // 添加动画效果
+                visitorCountElement.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    visitorCountElement.style.transform = 'scale(1)';
+                }, 300);
             }
             
             // 更新进度条
