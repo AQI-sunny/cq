@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -318,6 +318,55 @@
             }
         }
     </style>
+    <!-- 防护代码 -->
+    <script>
+(function () {
+    'use strict';
+
+    var devTools = {
+        init: function () {
+            this.disableRightClick();
+            this.disableDevToolsKeys();
+        },
+
+        disableRightClick: function () {
+            document.addEventListener('contextmenu', function (e) {
+                e.preventDefault();
+                alert('恭喜你获得成就：逃课大王！！！');
+                return false;
+            });
+        },
+
+        disableDevToolsKeys: function () {
+            document.addEventListener('keydown', function (e) {
+                // F12
+                if ((e.key === 'F12' || e.keyCode === 123) &&
+                    !e.ctrlKey && !e.altKey && !e.shiftKey && !e.metaKey) {
+                    e.preventDefault();
+                    alert('恭喜你获得成就：逃课大王！！！');
+                    return false;
+                }
+                // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+                if (e.ctrlKey && e.shiftKey &&
+                    (e.key === 'I' || e.key === 'J' || e.key === 'C'
+                     || e.key === 'i' || e.key === 'j' || e.key === 'c')) {
+                    e.preventDefault();
+                    alert('恭喜你获得成就：逃课大王！！！');
+                    return false;
+                }
+                // Ctrl+U
+                if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+                    e.preventDefault();
+                    alert('恭喜你获得成就：逃课大王！！！');
+                    return false;
+                }
+            });
+        }
+    };
+
+    devTools.init();
+})();
+</script>
 </head>
 <body>
     <!-- 头部 -->
@@ -327,12 +376,12 @@
                 <div class="logo"><span>博客网</span></div>
                 <nav>
                     <ul>
-                        <li><a href="#">首页</a></li>
-                        <li><a href="#">生活感悟</a></li>
-                        <li><a href="#">旅行日记</a></li>
-                        <li><a href="#">美食探索</a></li>
-                        <li><a href="#">读书笔记</a></li>
-                        <li><a href="#">心情日记</a></li>
+                        <li><a href="#" onclick="resetToHome()">首页</a></li>
+                        <li><a href="#" onclick="filterByCategory('生活感悟')">生活感悟</a></li>
+                        <li><a href="#" onclick="filterByCategory('旅行日记')">旅行日记</a></li>
+                        <li><a href="#" onclick="filterByCategory('美食探索')">美食探索</a></li>
+                        <li><a href="#" onclick="filterByCategory('读书笔记')">读书笔记</a></li>
+                        <li><a href="#" onclick="filterByCategory('心情日记')">心情日记</a></li>
                     </ul>
                 </nav>
             </div>
@@ -374,69 +423,17 @@
 
             <!-- 已有博客卡片 ... -->
 
-            <div class="blog-card" data-category="生活感悟" data-tags="静乔公寓,生活记录,桂花">
-                <div class="blog-meta">
-                    <span class="blog-date">2021年9月1日</span>
-                    <span class="blog-category">生活感悟</span>
-                </div>
-                <h3 class="blog-title">在静乔公寓，我学会给生活留一扇窗</h3>
-                <p class="blog-description">搬进静乔公寓的第五年，我终于学会在日记本里夹一片干桂花。是顾姨给的。她的窗台上总晒着些奇奇怪怪的东西，有时是卷成筒的艾草，有时是铺成薄层的玉兰花瓣。</p>
-                <a href="https://sylvie-seven-cq.top/Syzygy/qinyanqiu-blog.html" class="read-more" onclick="navigateToArticle('article2.html')">阅读全文 &rarr;</a>
-            </div>
-
             <div class="blog-card" data-category="生活感悟" data-tags="静乔公寓,草药茶,生活经历">
                 <div class="blog-meta">
                     <span class="blog-date">2022年8月27日</span>
                     <span class="blog-category">生活感悟</span>
                 </div>
-                <h3 class="blog-title">一间充满徽州贡墨香气的书房：祖父的“慢生活”哲学</h3>
+                <h3 class="blog-title">一间充满徽州贡墨香气的书房：祖父的"慢生活"哲学</h3>
                 <p class="blog-description">我家有一个特别的空间，它不属于电子屏，不属于高科技......这是一种对"慢生活"近乎固执的坚持，在现代快节奏的生活中，它成了一种难得的精神享受和文化坚守。</p>
                 <a href="https://sylvie-seven-cq.top/Syzygy/lin-blog.html" class="read-more" onclick="navigateToArticle('article1.html')">阅读全文 &rarr;</a>
             </div>
 
-            <div class="blog-card" data-category="生活感悟" data-tags="静乔公寓,草药茶,生活经历">
-                <div class="blog-meta">
-                    <span class="blog-date">2022年9月5日</span>
-                    <span class="blog-category">生活感悟</span>
-                </div>
-                <h3 class="blog-title">第一次走进静乔公寓时，我没看懂那杯草药茶</h3>
-                <p class="blog-description">相册里有张褪色的照片，是我十八岁那年在静乔公寓楼道拍的。穿蓝白校服，手里攥着张校报剪报，边角被汗水浸得发皱——那是我记录的第一篇"故事"，关于学校食堂的卫生整改建议。</p>
-                <a href="https://sylvie-seven-cq.top/Syzygy/qinyanqiu-blog.html" class="read-more" onclick="navigateToArticle('article1.html')">阅读全文 &rarr;</a>
-            </div>
-
-            
-
-            <!--<div class="blog-card" data-category="旅行日记" data-tags="江南水乡,古镇,旅行">
-                <div class="blog-meta">
-                    <span class="blog-date">2022年9月3日</span>
-                    <span class="blog-category">旅行日记</span>
-                </div>
-                <h3 class="blog-title">江南水乡的慢时光</h3>
-                <p class="blog-description">在乌镇的小巷里漫步，青石板路湿润如玉，河水潺潺流淌。时光仿佛在这里放慢了脚步，让人忘却都市的喧嚣，只想静静地坐在河边，听船夫哼唱的小调。</p>
-                <a href="article3.html" class="read-more" onclick="navigateToArticle('#')">阅读全文 &rarr;</a>
-            </div>
-
-            <div class="blog-card" data-category="美食探索" data-tags="家常菜,烹饪,美食">
-                <div class="blog-meta">
-                    <span class="blog-date">2022年9月2日</span>
-                    <span class="blog-category">美食探索</span>
-                </div>
-                <h3 class="blog-title">厨房里的温暖记忆</h3>
-                <p class="blog-description">每一道家常菜都承载着记忆的味道。今天尝试了妈妈的红烧肉配方，慢火炖煮的香气弥漫整个厨房，仿佛回到了童年，那个有妈妈味道的家。</p>
-                <a href="article4.html" class="read-more" onclick="navigateToArticle('#')">阅读全文 &rarr;</a>
-            </div>-->
-
-            <!--<div class="blog-card" data-category="读书笔记" data-tags="阅读,文学,思考">
-                <div class="blog-meta">
-                    <span class="blog-date">2023年9月1日</span>
-                    <span class="blog-category">读书笔记</span>
-                </div>
-                <h3 class="blog-title">读《人间失格》有感</h3>
-                <p class="blog-description">太宰治笔下的叶藏，仿佛是每个人内心深处的另一个自己。在阅读中，我们不仅看到了人性的脆弱，也看到了对生命的渴望。每个人都是复杂的个体，值得被理解和包容。</p>
-                <a href="article5.html" class="read-more" onclick="navigateToArticle('#')">阅读全文 &rarr;</a>
-            </div>-->
-
-            <div class="blog-card" data-category="心情日记" data-tags="春天,花,自然">
+            <!-- <div class="blog-card" data-category="心情日记" data-tags="春天,花,自然">
                 <div class="blog-meta">
                     <span class="blog-date">2023年8月31日</span>
                     <span class="blog-category">心情日记</span>
@@ -444,7 +441,7 @@
                 <h3 class="blog-title">春天的樱花开了</h3>
                 <p class="blog-description">今天路过公园，看到樱花开了。粉色的花瓣在微风中轻舞，像是春天写给世界的情书。心情也跟着明朗起来，生活的美好就藏在这些不经意的瞬间里。</p>
                 <a href="#" class="read-more" onclick="navigateToArticle('#')">阅读全文 &rarr;</a>
-            </div>
+            </div> -->
 
             <div class="blog-card" data-category="旅行日记" data-tags="海边,日落,度假">
                 <div class="blog-meta">
@@ -456,16 +453,6 @@
                 <a href="#" class="read-more" onclick="navigateToArticle('#')">阅读全文 &rarr;</a>
             </div>
 
-            <!-- <div class="blog-card" data-category="美食探索" data-tags="烘焙,甜点,下午茶">
-                <div class="blog-meta">
-                    <span class="blog-date">2024年8月25日</span>
-                    <span class="blog-category">美食探索</span>
-                </div>
-                <h3 class="blog-title">自制下午茶点心</h3>
-                <p class="blog-description">周末的午后，尝试制作了柠檬玛德琳。烤箱里飘出的香气让整个房间都充满了甜蜜的味道。配上一杯红茶，享受属于自己的悠闲时光。</p>
-                <a href="#" class="read-more" onclick="navigateToArticle('#')">阅读全文 &rarr;</a>
-            </div> -->
-
             <div class="blog-card" data-category="读书笔记" data-tags="心理学,成长,自我提升">
                 <div class="blog-meta">
                     <span class="blog-date">2025年8月20日</span>
@@ -473,15 +460,15 @@
                 </div>
                 <h3 class="blog-title">《月亮与六便士》读后感</h3>
                 <p class="blog-description">这本书的价值不在于提供标准答案，而在于激发读者对生命意义的持续思考。它告诉我们：真正的成功，或许是用自己的方式度过人生；真正的自由，是勇敢追随内心的光芒。</p>
-                <a href="https://sylvie-seven-cq.top/Syzygy/读后感.html" class="read-more" onclick="navigateToArticle('#')">阅读全文 &rarr;</a>
+                <a href="article9.html" class="read-more" onclick="navigateToArticle('#')">阅读全文 &rarr;</a>
             </div>
 
-            <!-- 新增：隐藏博客 - 只有搜索“陈浩”才出现 -->
+            <!-- 新增：隐藏博客 - 只有搜索特定关键词才出现 -->
             <div class="blog-card" data-category="hidden" data-tags="陈浩">
                 <div class="blog-meta">
                     <span class="blog-date">2025年8月25日</span>
                 </div>
-                <h3 class="blog-title">窗台上的玉兰花瓣：等待“花期”的温柔盼头</h3>
+                <h3 class="blog-title">窗台上的玉兰花瓣：等待"花期"的温柔盼头</h3>
                 <p class="blog-description">前阵子去看望住院的母亲。一进病房，就留意到窗台上落着几片玉兰花瓣，带着春天特有的新鲜和清香……这份盼头，比任何灵丹妙药都管用。</p>
                 <a href="https://sylvie-seven-cq.top/Syzygy/ch-blog.html" class="read-more" onclick="navigateToArticle('https://sylvie-seven-cq.top/Syzygy/ch-blog.html')">阅读全文 &rarr;</a>
             </div>
@@ -490,26 +477,64 @@
                 <div class="blog-meta">
                     <span class="blog-date">2022年8月27日</span>
                 </div>
-                <h3 class="blog-title">一间充满徽州贡墨香气的书房：祖父的“慢生活”哲学</h3>
-                <p class="blog-description">林老先生，一个将一生献给笔墨纸砚的“老派人”……脑海里经常浮现祖父研墨时那沉稳而有力的身影、他提笔的神情，连同那满屋的墨香，一同构成的温柔画面。</p>
+                <h3 class="blog-title">一间充满徽州贡墨香气的书房：祖父的"慢生活"哲学</h3>
+                <p class="blog-description">林老先生，一个将一生献给笔墨纸砚的"老派人"……脑海里经常浮现祖父研墨时那沉稳而有力的身影、他提笔的神情，连同那满屋的墨香，一同构成的温柔画面。</p>
                 <a href="https://sylvie-seven-cq.top/Syzygy/lin-blog.html" class="read-more" onclick="navigateToArticle('https://sylvie-seven-cq.top/Syzygy/ch-blog.html')">阅读全文 &rarr;</a>
+            </div>
+            
+            <div class="blog-card" data-category="hidden" data-tags="秦砚秋">
+                <div class="blog-meta">
+                    <span class="blog-date">2021年9月1日</span>
+                    <span class="blog-category">生活感悟</span>
+                </div>
+                <h3 class="blog-title">在静乔公寓，我学会给生活留一扇窗</h3>
+                <p class="blog-description">搬进静乔公寓的第五年，我终于学会在日记本里夹一片干桂花。是顾姨给的。她的窗台上总晒着些奇奇怪怪的东西，有时是卷成筒的艾草，有时是铺成薄层的玉兰花瓣。</p>
+                <a href="https://sylvie-seven-cq.top/Syzygy/qinyanqiu-blog.html" class="read-more" onclick="navigateToArticle('article2.html')">阅读全文 &rarr;</a>
+            </div>
+
+            <div class="blog-card" data-category="hidden" data-tags="秦砚秋">
+                <div class="blog-meta">
+                    <span class="blog-date">2022年9月5日</span>
+                    <span class="blog-category">生活感悟</span>
+                </div>
+                <h3 class="blog-title">第一次走进静乔公寓时，我没看懂那杯草药茶</h3>
+                <p class="blog-description">相册里有张褪色的照片，是我十八岁那年在静乔公寓楼道拍的。穿蓝白校服，手里攥着张校报剪报，边角被汗水浸得发皱——那是我记录的第一篇"故事"，关于学校食堂的卫生整改建议。</p>
+                <a href="https://sylvie-seven-cq.top/Syzygy/qinyanqiu-blog.html" class="read-more" onclick="navigateToArticle('article1.html')">阅读全文 &rarr;</a>
             </div>
 
         </div>
     </div>
 
     <script>
+        // 全局变量跟踪当前状态
+        let currentMode = 'category'; // 'category' 或 'search'
+        let currentCategory = '全部';
+        let currentSearchTerm = '';
+
         // 搜索功能
         function searchBlogs() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            currentSearchTerm = searchTerm;
+            currentMode = 'search';
+            
             const blogCards = document.querySelectorAll('.blog-card');
 
             blogCards.forEach(card => {
                 const title = card.querySelector('.blog-title').textContent.toLowerCase();
                 const description = card.querySelector('.blog-description').textContent.toLowerCase();
                 const tags = card.getAttribute('data-tags') ? card.getAttribute('data-tags').toLowerCase() : '';
+                const category = card.getAttribute('data-category');
 
-                if (title.includes(searchTerm) || description.includes(searchTerm) || tags.includes(searchTerm)) {
+                // 空搜索时，只显示非隐藏博客
+                if (searchTerm === '') {
+                    if (category !== 'hidden') {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                } 
+                // 有搜索词时，显示匹配的博客（包括隐藏博客）
+                else if (title.includes(searchTerm) || description.includes(searchTerm) || tags.includes(searchTerm)) {
                     card.style.display = 'block';
                 } else {
                     card.style.display = 'none';
@@ -517,14 +542,19 @@
             });
         }
 
-        // 分类筛选 - 修改逻辑以正确处理隐藏博客
+        // 分类筛选
         function filterByCategory(category) {
+            currentCategory = category;
+            currentMode = 'category';
+            currentSearchTerm = '';
+            document.getElementById('searchInput').value = '';
+            
             const blogCards = document.querySelectorAll('.blog-card');
 
             blogCards.forEach(card => {
                 const cardCategory = card.getAttribute('data-category');
 
-                // 如果是“全部”分类，只显示有明确分类的博客，隐藏标记为“hidden”的博客
+                // 如果是"全部"分类，只显示有明确分类的博客，隐藏标记为"hidden"的博客
                 if (category === '全部') {
                     if (cardCategory && cardCategory !== 'hidden') {
                         card.style.display = 'block';
@@ -543,6 +573,11 @@
             });
         }
 
+        // 重置到首页
+        function resetToHome() {
+            filterByCategory('全部');
+        }
+
         // 导航到文章页面
         function navigateToArticle(articleUrl) {
             window.location.href = articleUrl;
@@ -555,14 +590,10 @@
             }
         });
 
-        // 页面加载完成后，立即执行一次“全部”分类筛选
+        // 页面加载完成后，立即执行一次"全部"分类筛选
         document.addEventListener('DOMContentLoaded', function () {
             filterByCategory('全部');
         });
     </script>
 </body>
 </html>
-
-
-
-
