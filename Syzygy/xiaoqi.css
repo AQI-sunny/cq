@@ -15,7 +15,7 @@
 }
 
 * {
-    box-sizing: border-box; /* 关键：确保padding不撑大元素宽度 */
+    box-sizing: border-box;
 }
 
 body {
@@ -26,8 +26,8 @@ body {
     min-height: 100vh;
     margin: 0;
     font-family: var(--font-ui);
-    padding: 10px; /* 移动端减少外边距 */
-    overflow-x: hidden; /* 防止横向滚动 */
+    padding: 10px;
+    overflow-x: hidden;
 }
 
 /* =========================================
@@ -35,8 +35,8 @@ body {
    ========================================= */
 
 .retro-app-window {
-    width: 100%; /* 移动端优先占满 */
-    max-width: 800px; /* 桌面端最大宽度 */
+    width: 100%;
+    max-width: 800px;
     background-color: var(--window-bg);
     border: 1px solid;
     border-color: var(--border-highlight) #000 #000 var(--border-highlight);
@@ -72,7 +72,7 @@ body {
 .logo {
     width: 32px;
     height: 32px;
-    min-width: 32px; /* 防止压缩 */
+    min-width: 32px;
     margin-right: 8px;
     background: url('https://sylvie-seven-cq.top/gallery/%E5%A5%87%E9%97%BB%E5%BC%82%E4%BA%8B%E9%A6%86%20logo.png') no-repeat center center;
     background-size: contain;
@@ -82,7 +82,7 @@ body {
 }
 
 .title-text {
-    font-size: 20px; /* 移动端稍微调小 */
+    font-size: 20px;
     font-weight: bold;
     color: #cc3333;
     letter-spacing: 1px;
@@ -128,7 +128,7 @@ body {
     color: var(--text-color);
     position: relative;
     z-index: 2;
-    flex-wrap: wrap; /* 允许换行 */
+    flex-wrap: wrap;
 }
 
 .window-main-content {
@@ -146,7 +146,7 @@ body {
     overflow: hidden;
 }
 
-/* 标签栏优化 - 防遮挡 */
+/* 标签栏 */
 .tabs {
     display: flex;
     background-color: var(--window-bg);
@@ -154,8 +154,8 @@ body {
     border-bottom: 2px solid var(--border-shadow);
     position: relative;
     z-index: 3;
-    margin-bottom: 15px; /* 关键：增加底部间距 */
-    flex-wrap: wrap; /* 移动端防溢出 */
+    margin-bottom: 15px;
+    flex-wrap: wrap;
 }
 
 .tab {
@@ -173,7 +173,7 @@ body {
     border-radius: 4px 4px 0 0;
     font-size: 14px;
     font-weight: bold;
-    flex: 1; /* 移动端平分宽度 */
+    flex: 1;
     text-align: center;
     white-space: nowrap;
 }
@@ -196,7 +196,7 @@ body {
     padding: 0 5px;
     position: relative;
     z-index: 2;
-    flex-wrap: wrap; /* 允许在手机上换行 */
+    flex-wrap: wrap;
 }
 
 .search-input {
@@ -204,7 +204,7 @@ body {
     background-color: #0a0000;
     border: 1px solid var(--border-shadow);
     color: var(--text-color);
-    padding: 8px; /* 加大触控区域 */
+    padding: 8px;
     font-family: var(--font-main);
     min-width: 150px;
 }
@@ -232,7 +232,7 @@ body {
 }
 
 .post-item {
-    padding: 8px; /* 加大触控区域 */
+    padding: 8px;
     border-bottom: 1px solid var(--border-shadow);
     cursor: pointer;
     color: #00cc00;
@@ -252,7 +252,7 @@ body {
 .post-display {
     padding: 15px;
     height: 350px;
-    max-height: 50vh; /* 移动端高度限制 */
+    max-height: 50vh;
     display: flex;
     font-family: var(--font-main);
     font-size: 16px;
@@ -271,7 +271,7 @@ body {
     background-color: rgba(51, 0, 0, 0.3);
     border-left: 3px solid var(--border-highlight);
     border-radius: 3px;
-    word-wrap: break-word; /* 防止长文本溢出 */
+    word-wrap: break-word;
 }
 
 .post-reply {
@@ -280,7 +280,7 @@ body {
     background-color: rgba(26, 0, 0, 0.3);
     border-left: 2px solid #cc6666;
     border-radius: 3px;
-    margin-left: 10px; /* 移动端减少缩进 */
+    margin-left: 10px;
     word-wrap: break-word;
 }
 
@@ -302,15 +302,20 @@ body {
 }
 
 .new-post-button {
-    width: 100%; /* 移动端按钮全宽 */
+    width: auto;
     background-color: var(--title-bg);
     border: 1px solid;
     border-color: var(--border-highlight) var(--border-shadow) var(--border-shadow) var(--border-highlight);
     color: var(--text-color);
-    padding: 10px;
+    padding: 8px 20px;
     cursor: pointer;
     font-family: var(--font-ui);
     font-weight: bold;
+    display: inline-block;
+}
+
+.new-post-button:hover {
+    background-color: #330000;
 }
 
 /* =========================================
@@ -336,7 +341,7 @@ body {
     border: 2px solid var(--border-highlight);
     padding: 25px;
     width: 100%;
-    max-width: 400px; /* 响应式宽度 */
+    max-width: 400px;
     text-align: center;
     box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
 }
@@ -381,7 +386,7 @@ body {
 }
 
 /* =========================================
-   4. 小奇助手样式 (v3.3.0 优化版)
+   4. 小奇助手样式 (v3.4.0 修复版)
    ========================================= */
 
 .xiaoqi-container {
@@ -402,7 +407,6 @@ body {
     position: relative;
     transition: all 0.3s ease;
     border: 3px solid #fff;
-    /* 核心修改：使用 Flex 且垂直排列 */
     display: flex;
     flex-direction: column; 
     align-items: center;
@@ -422,8 +426,8 @@ body {
 /* 眼睛容器 */
 .xiaoqi-eyes {
     display: flex;
-    gap: 14px; /* 两眼距离 */
-    margin-bottom: 6px; /* 眼嘴距离 */
+    gap: 14px;
+    margin-bottom: 6px;
     z-index: 2;
 }
 
@@ -466,7 +470,7 @@ body {
 
 /* === 激活/生气状态 === */
 .xiaoqi-orb.active .xiaoqi-eye {
-    height: 4px; /* 变扁 */
+    height: 4px;
     border-radius: 2px;
     background-color: #8B0000;
     transform: rotate(15deg);
@@ -532,8 +536,9 @@ body {
     justify-content: center;
 }
 
+/* 核心修复：统计区和关键词区背景改为纯白 */
 .stats-section, .keywords-section {
-    background: rgba(255, 255, 255, 0.895);
+    background: #ffffff;
     border-radius: 10px;
     padding: 10px;
     margin-bottom: 10px;
@@ -560,7 +565,12 @@ body {
     justify-content: space-between;
 }
 
-.section-hint { font-weight: normal; color: #f6f4f4; font-size: 11px; }
+/* 核心修复：提示文字颜色加深，确保在白底上可见 */
+.section-hint { 
+    font-weight: normal; 
+    color: #888888; /* 深灰色 */
+    font-size: 11px; 
+}
 
 .keywords-list {
     max-height: 100px;
@@ -588,9 +598,10 @@ body {
     border: 1px solid #cc0000;
 }
 
+/* 核心修复：空记录文字颜色加深 */
 .empty-keywords {
     text-align: center;
-    color: #f5f2f2;
+    color: #888888; /* 深灰色 */
     font-style: italic;
     padding: 10px;
 }
@@ -607,7 +618,7 @@ body {
     color: white;
 }
 .panel-btn.primary { background: #ff4444; border: 1px solid #cc0000; }
-.panel-btn.secondary { background: #eeeded; border: 1px solid #333; }
+.panel-btn.secondary { background: #f0f0f0; border: 1px solid #ccc; color: #666; }
 
 .hint-section {
     background: #fff8e1;
@@ -650,6 +661,14 @@ body {
     
     .search-input {
         width: 100%;
+    }
+
+    /* === 移动端按钮修改：缩短并居中 === */
+    .new-post-button {
+        width: auto !important; /* 强制取消 100% 宽度 */
+        min-width: 120px; /* 设置最小宽度，方便点击 */
+        display: block; /* 设为块级元素以便使用 margin 居中 */
+        margin: 10px auto 0; /* 上边距10px，左右自动(居中) */
     }
 
     /* 小奇助手移动端适配 */
