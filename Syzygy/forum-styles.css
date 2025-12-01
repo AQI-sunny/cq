@@ -143,7 +143,7 @@ body {
     pointer-events: none;
 }
 
-.tabs {
+/* .tabs {
     display: flex;
     background-color: var(--window-bg);
     padding: 5px 5px 0 5px;
@@ -173,6 +173,73 @@ body {
     background-color: var(--content-bg);
     border-color: var(--border-highlight) var(--border-shadow) var(--content-bg) var(--border-highlight);
     font-weight: bold;
+} */
+
+/* 修改 .tabs 样式，增加间距，去除遮挡 */
+.tabs {
+    display: flex;
+    background-color: var(--window-bg);
+    padding: 5px 5px 0 5px;
+    border-bottom: 2px solid var(--border-shadow); /* 加粗底边框 */
+    position: relative;
+    z-index: 3;
+    margin-bottom: 15px; /* 关键修改：增加底部间距，防止遮挡下方内容 */
+}
+
+/* 美化 .tab 样式 */
+.tab {
+    padding: 6px 20px; /* 增加内边距 */
+    border: 1px solid;
+    border-color: var(--border-highlight) var(--border-shadow) transparent var(--border-highlight); /* 上 左 右(透明) 下(透明) */
+    border-bottom: none;
+    background-color: #2a0000; /* 未选中时稍微深一点的背景 */
+    margin-right: 2px; /* 标签之间的间距 */
+    position: relative;
+    top: 2px; /* 向下微调，贴合底边框 */
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #993333; /* 未选中时颜色暗淡一点 */
+    border-radius: 4px 4px 0 0; /* 顶部圆角 */
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.tab:hover {
+    background-color: #440000;
+    color: #cc3333;
+}
+
+/* 美化 .tab.active 样式 */
+.tab.active {
+    background-color: var(--content-bg);
+    border-color: var(--border-highlight) var(--border-shadow) var(--content-bg) var(--border-highlight);
+    color: #ff3333; /* 选中时高亮颜色 */
+    top: 2px; /* 保持位置覆盖底边框线 */
+    z-index: 4; /* 确保覆盖在普通标签之上 */
+    padding-bottom: 8px; /* 增加底部内边距，视觉上更稳固 */
+}
+
+/* 调整 .search-area 样式，确保布局舒适 */
+.search-area {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 5px; /* 增加左右内边距，与列表对齐 */
+    position: relative; /* 确保层级 */
+    z-index: 2;
+}
+
+/* 也可以微调一下 .posts-list 确保整体协调 */
+.posts-list {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-shadow);
+    padding: 5px;
+    background-color: #0a0000;
+    /* 可选：增加一点内阴影提升质感 */
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5); 
 }
 
 .post-display {
