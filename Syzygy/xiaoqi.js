@@ -88,7 +88,7 @@
                     </div>
                     <div class="xiaoqi-panel" id="${config.panelId}">
                         <div class="panel-header">
-                            <div class="panel-title">小奇助手 v3.3.0</div>
+                            <div class="panel-title">我是小奇，我绝对不会提示你的！</div>
                             <button class="panel-close" id="xiaoqi-close">×</button>
                         </div>
                         <div class="panel-content">
@@ -104,7 +104,7 @@
                                 </div>
                                 <div class="stat-item">
                                     <span class="stat-label">已搜索次数:</span>
-                                    <span class="stat-value" id="search-count">0</span>
+                                    <span class="stat-value highlight" id="search-count">0</span>
                                 </div>
                             </div>
                             <div class="keywords-section">
@@ -139,7 +139,7 @@
             .xiaoqi-eyes { display: flex; gap: 8px; margin-bottom: 4px; }
             .xiaoqi-eye { width: 12px; height: 12px; background: #2f3542; border-radius: 50%; position: relative; }
             .xiaoqi-eye::after { content: ''; position: absolute; width: 6px; height: 6px; background: #fff; border-radius: 50%; top: 2px; left: 2px; }
-            .xiaoqi-mouth { width: 16px; height: 6px; background: #2f3542; border-radius: 0 0 8px 8px; margin-top: 2px; }
+            .xiaoqi-mouth { width: 16px; height: 6px; background: #2f3542; border-radius: 6px 6px 0 0; margin-top: 2px; }
             
             .xiaoqi-panel { position: absolute; bottom: 70px; right: 0; width: 320px; background: #2f3542; border-radius: 12px; display: none; border: 2px solid #ff4757; overflow: hidden; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
             .panel-header { padding: 12px 16px; background: #ff4757; display: flex; justify-content: space-between; align-items: center; }
@@ -192,7 +192,7 @@
                 const foundCount = revealedPosts.length;
                 const hasFound = foundCount > 0;
                 
-                console.log(`[小奇] 搜索: "${query}", 发现隐藏贴数量: ${foundCount}`);
+                
                 
                 // 记录结果
                 handleSearchResult(query, hasFound, foundCount);
@@ -248,7 +248,7 @@
         if (uniqueSearchTerms.size > 0 && uniqueSearchTerms.size % 7 === 0) showPeriodicHint();
     }
     
-    function showPeriodicHint() {
+   /*  function showPeriodicHint() {
         const hints = [
             "姨姨的姓氏你搜了吗！不要只搜姓！姓氏姓氏！姓+氏！",
             "喂，你不会没有搜过临渠县那个啥东西吧？咋跟你说呢！金桂那篇报道里有的啊！",
@@ -265,8 +265,42 @@
             document.getElementById('hint-section').style.display = 'block';
             showXiaoqi();
         }
+    } */
+    function showPeriodicHint() {
+        const hints = [
+            "姨姨的姓氏你搜了吗！不要只搜姓！姓氏姓氏！姓+氏！",
+            "喂，你不会没有搜过临渠县那个啥东西吧？咋跟你说呢！金桂那篇报道里有的啊！",
+            "有个鸟类你搜了吗？两个字的!听起来像是晚上会出现的那种鸟",
+            "你不是费半天劲得了五个字母吗？你搜一下哇",
+            "那个红蛋组织的拼音首字母简写，大写！",
+            "lssmr不是有五个字吗，两个三个的拆开！",
+            "你不觉得那个啥子符很重要吗？不要在这搜！"
+        ];
+        
+        // --- 修改开始 ---
+        
+        // 1. 计算当前是第几轮触发 (例如: 7/7=1, 14/7=2, 21/7=3)
+        const round = uniqueSearchTerms.size / 7;
+        
+        // 2. 计算对应的数组索引 (数组从0开始，所以要减1)
+        // 例如: 第1轮->索引0, 第2轮->索引1
+        let index = round - 1;
+        
+        // 3. 取余数，防止溢出 (如果轮数超过了提示语总数，就回到开头循环)
+        index = index % hints.length;
+        
+        const msg = hints[index];
+        
+        // --- 修改结束 ---
+
+        const hintContent = document.getElementById('hint-content');
+        if (hintContent) {
+            hintContent.textContent = msg;
+            document.getElementById('hint-section').style.display = 'block';
+            showXiaoqi();
+        }
     }
-    
+
     // 记录关键词逻辑
     function recordKeyword(keyword, isValid, foundCount) {
         const keywordsData = getStoredKeywords();
