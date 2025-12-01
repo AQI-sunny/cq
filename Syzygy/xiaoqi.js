@@ -326,7 +326,7 @@
         try { return JSON.parse(localStorage.getItem(config.storageKey) || '{}'); } catch (e) { return {}; }
     }
     
-    function updateKeywordsDisplay() {
+   function updateKeywordsDisplay() {
         const list = document.getElementById('keywords-list');
         if (!list) return;
         
@@ -338,9 +338,10 @@
             return;
         }
         
+        // 修复：将 '贴' 改为 '帖'
         list.innerHTML = keywords.map(([k, v]) => `
             <div class="keyword-item ${v.valid ? 'valid' : 'invalid'}">
-                <span>${escapeHtml(k)}${v.valid ? ` (${v.foundPosts}贴)` : ''}</span>
+                <span>${escapeHtml(k)}${v.valid ? ` (${v.foundPosts}帖)` : ''}</span>
                 <span style="opacity:0.7">${v.count}次</span>
             </div>
         `).join('');
@@ -424,5 +425,6 @@
         version: '3.3.0'
     };
 })();
+
 
 
