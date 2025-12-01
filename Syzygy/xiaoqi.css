@@ -82,22 +82,22 @@
 
 /* 默认状态：-_- */
 .xiaoqi-orb .xiaoqi-eyes::before {
-    content: "- -";
+    content: " ";
 }
 
 .xiaoqi-orb .xiaoqi-mouth::before {
-    content: "_";
+    content: " ";
 }
 
 /* 生气状态：｀⌒´ */
 .xiaoqi-orb.active .xiaoqi-eyes::before {
-    content: "｀ ´";
+    content: " ";
     letter-spacing: 6px;
     color: #8B0000;
 }
 
 .xiaoqi-orb.active .xiaoqi-mouth::before {
-    content: "⌒";
+    content: " ";
     font-size: 14px;
     color: #8B0000;
 }
@@ -545,4 +545,5 @@
 .stat-value.warning {
     color: #ff0000 !important;
     font-weight: 800;
+
 }
