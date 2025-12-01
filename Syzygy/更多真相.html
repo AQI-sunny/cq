@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>神秘的失物招领</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #0a0a12;
+            color: #e0e0e0;
+            line-height: 1.8; /* 增加行高以提高长文可读性 */
+            padding: 20px;
+            background-image: radial-gradient(circle at 10% 20%, rgba(28, 28, 50, 0.8) 0%, transparent 20%), radial-gradient(circle at 90% 80%, rgba(40, 10, 30, 0.6) 0%, transparent 20%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: rgba(18, 18, 30, 0.85);
+            border-radius: 12px;
+            padding: 40px; /* 增加内边距 */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid #2a2a3a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #8a2be2, #4a0080);
+        }
+
+        .story-text {
+            margin-bottom: 25px;
+            font-size: 1.05rem;
+            text-align: justify; /* 长文本改为两端对齐，阅读更舒适 */
+            color: #dcdcdc;
+        }
+
+        .story-text p {
+            margin-bottom: 1.5em; /* 段落间距 */
+            text-indent: 2em; /* 首行缩进 */
+        }
+
+        .highlight {
+            color: #b19cd9;
+            font-weight: bold;
+        }
+
+        .choices {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-width: 180px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6a0dad, #8a2be2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(138, 43, 226, 0.6);
+        }
+
+        .btn-disabled {
+            background: linear-gradient(135deg, #3a3a4a, #5a5a6a);
+            color: #888;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(138, 43, 226, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(138, 43, 226, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(138, 43, 226, 0);
+            }
+        }
+
+        /* 自定义弹窗样式 */
+        .custom-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: black;
+            color: red;
+            padding: 20px;
+            border: 1px solid red;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            min-width: 300px;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+
+        /* 隐蔽链接样式 */
+        .disclaimer-link {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            color: #3a3a4a;
+            font-size: 0.7rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .disclaimer-link:hover {
+            color: #6a6a7a;
+        }
+
+        /* 响应式设计优化 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+            
+            .story-text {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                min-width: 150px;
+                padding: 10px 20px;
+            }
+            
+            .choices {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="story-text">
+            <p><span class="highlight">窥命司（KMS）</span>的终极目标是建立一个绝对秩序的世界。他们为此追逐着<span class="highlight">洛书</span>，这团四千年前崩散的宇宙信息源聚合体。KMS试图集齐洛书的无数碎片，并在每一次<span class="highlight">红月亮（月全食）</span>出现时将已有的碎片聚拢，以求最终铸成他们的秩序之境。然而，聚拢的碎片极不稳定，随时可能消散，因此KMS需要一个特殊的容器来承载，而<span class="highlight">节气之子</span>正是他们寻找的容器。现有的碎片已足以让KMS在血月出现时改微时定乾坤，即通过微小数据的篡改来逐步构建其预设的世界，他们的行动是同步的：一方面寻找新碎片，一方面用已有碎片加速绝对秩序世界的建造。</p>
+
+            <p><span class="highlight">林墨</span>曾是你2022年认识的朋友，你们一见如故，一起经历了许多事情，她向你坦白<span class="highlight">守秘人</span>身份并求助，你虽然不太相信但还是决定帮忙，在血月当晚你尝试封印洛书碎片时失败了。这导致你被篡改及删除了记忆，只留下了微信列表里一个“网友”的模糊印象；林墨也因此昏迷，需要休养生息。你的记忆恢复需要洛书碎片，但必须等到下一次血月。届时，会有新的碎片显现，故而林墨自醒后一直在计划这次封印。封印碎片对月洛氏族人而言代价沉重，会损耗其生命能量。鉴于封印风险巨大（需要局外人进行，失败会导致局外人失忆，月洛氏遭反噬），故月洛氏通常选择让窥命司暂时得手，然后在聚拢时阻挠。只有当洛书碎片过于庞大、影响太强时，为避免被窥命司拿走得不偿失，才不得不选择封印。雪上加霜的是，月洛氏族人在月全食时极易被窥命司锁定和找到，处境十分危险。</p>
+
+            <p>在这场宏大的宿命之下，公寓里的邻里们也以他们自己的方式成为了守望者，其行为都源于各自的创伤与职责：<span class="highlight">王大妈</span>的“多管闲事”源于十年前对隔壁李大爷突发心梗未及时援助的愧疚，她将这份执拗转化为对公寓“不出一点错”的追求。<span class="highlight">老赵</span>对公寓安全的过度执着，是为了弥补对失踪女儿的自责，不想让任何住户再经历他当年的痛苦。<span class="highlight">顾姨</span>的家族曾是“守秘人”月洛氏的附属家族，如今血脉稀薄的她虽无法看清真相，却能模糊感知到你和林墨身边的巨大“业力漩涡”，她所有神神叨叨的举动，都是在用她半吊子的能力，笨拙地试图保护你们，平衡公寓内的混乱“命运流”。</p>
+
+            <p>而<span class="highlight">阿哲</span>，他原本的人生轨迹清晰而笃定——成为一名杰出的水利工程大师。按照原本的人生轨迹，他未来的水利项目注定会挖出窥命司藏在青涟渠下的秘密。于是，2007年一场精心策划的火灾烧毁了他的右手，也焚尽了既定的命运。被迫转向数字世界后，他凭借天赋与执念，蜕变为顶尖的黑客。就在他以为已远离旧日阴影时，一次深入的数据追踪让他撞见了一个名为 KMS 的神秘组织。这个组织不靠暴力，而是通过篡改现实中极微小的数据来引发蝴蝶效应，悄然改变未来。他在深入调查时遭到了KMS的“命运修正”，一夜之间失去一切，被迫隐姓埋名。他如今的暴躁和孤僻，是对外界世界的恐惧和自我保护，因为他深知“窥命司”无处不在，害怕任何“连接”将他再度暴露。</p>
+
+            <p>尽管恐惧如影随形，但阿哲从未真正屈服。在自我封闭的幽暗角落里，他从未停止过对窥命司（KMS）的窥探。在无数次小心翼翼的数据潜行中，他敏锐地捕捉到了一个“异常干扰源”。经过层层溯源，他挖掘出了那个已与KMS暗中博弈多年的古老族群——<span class="highlight">月洛氏</span>。更令他震惊的是，数据追踪的终点竟指向了“灯下黑”之处——他所居住的这栋公寓，竟然就蛰伏着月洛氏的族人。这个发现让阿哲陷入了巨大的挣扎。理智告诉他，面对KMS这个庞大的组织，单凭他一人的能力无异于蚍蜉撼树。为了活下去，也为了复仇，他不得不强忍着对“暴露”的生理性恐慌，开始尝试通过监控与侧写，在邻居中筛选出那个“同类”。</p>
+        </div>
+<!-- 
+        <div class="choices">
+            <button id="investigate-btn" class="btn btn-primary pulse">【深入调查】</button>
+            <button id="ignore-btn" class="btn btn-disabled">【置之不理】</button>
+        </div> -->
+
+        <!-- 免责声明 -->
+        <a href="https://sylvie-seven-cq.top/Syzygy/disclaimer.html" class="disclaimer-link">免责声明</a>
+    </div>
+
+</body>
+</html>
