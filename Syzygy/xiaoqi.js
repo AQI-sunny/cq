@@ -139,7 +139,7 @@
             .xiaoqi-eyes { display: flex; gap: 8px; margin-bottom: 4px; }
             .xiaoqi-eye { width: 12px; height: 12px; background: #2f3542; border-radius: 50%; position: relative; }
             .xiaoqi-eye::after { content: ''; position: absolute; width: 6px; height: 6px; background: #fff; border-radius: 50%; top: 2px; left: 2px; }
-            .xiaoqi-mouth { width: 16px; height: 6px; background: #2f3542; border-radius: 6px 6px 0 0; margin-top: 2px; }
+            .xiaoqi-mouth { width: 16px; height: 6px; background: #2f3542; border-radius: 6px 6px 6px 6px; margin-top: 2px; }
             
             .xiaoqi-panel { position: absolute; bottom: 70px; right: 0; width: 320px; background: #2f3542; border-radius: 12px; display: none; border: 2px solid #ff4757; overflow: hidden; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
             .panel-header { padding: 12px 16px; background: #ff4757; display: flex; justify-content: space-between; align-items: center; }
@@ -216,7 +216,7 @@
                     if (e.key === 'Enter') window.performSearch();
                 });
             }
-            console.log('小奇助手：搜索拦截已激活');
+            
         }
     }
     
@@ -424,3 +424,4 @@
         version: '3.3.0'
     };
 })();
+
