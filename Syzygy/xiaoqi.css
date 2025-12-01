@@ -533,7 +533,7 @@ body {
 }
 
 .stats-section, .keywords-section {
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.895);
     border-radius: 10px;
     padding: 10px;
     margin-bottom: 10px;
@@ -560,7 +560,7 @@ body {
     justify-content: space-between;
 }
 
-.section-hint { font-weight: normal; color: #888; font-size: 11px; }
+.section-hint { font-weight: normal; color: #f6f4f4; font-size: 11px; }
 
 .keywords-list {
     max-height: 100px;
@@ -590,7 +590,7 @@ body {
 
 .empty-keywords {
     text-align: center;
-    color: #999;
+    color: #f5f2f2;
     font-style: italic;
     padding: 10px;
 }
@@ -607,7 +607,7 @@ body {
     color: white;
 }
 .panel-btn.primary { background: #ff4444; border: 1px solid #cc0000; }
-.panel-btn.secondary { background: #666; border: 1px solid #333; }
+.panel-btn.secondary { background: #eeeded; border: 1px solid #333; }
 
 .hint-section {
     background: #fff8e1;
