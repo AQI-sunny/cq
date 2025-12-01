@@ -1,7 +1,7 @@
 /**
  * 小奇 - 隐藏帖子助手
- * 版本: 3.2.0 (修复版)
- * 修复：解决updateDisplay未定义问题
+ * 版本: 3.3.0 (清爽版)
+ * 修复：移除角标、移除预设关键词显示（仅显示已发现的）
  */
 
 (function() {
@@ -25,23 +25,6 @@
     let searchCount = 0;
     let uniqueSearchTerms = new Set();
     
-    // ========================
-    // 【手动添加关键词区域】
-    // 在这里手动添加有效关键词
-    // 格式：['关键词1', '关键词2', '关键词3']
-    // ========================
-    const manualValidKeywords = [
-        '顾氏',
-        '夜鹭',
-        '青涟渠',
-        'lssmr',
-        'KMS',
-        '守秘人',
-         
-        '洛书'
-    ];
-    // ========================
-    
     // 初始化
     function init() {
         try {
@@ -55,12 +38,10 @@
             // 检查是否有邀请码
             const inviteCode = localStorage.getItem(config.inviteCodeKey);
             if (inviteCode) {
-                // 检查是否已登录成功（根据页面状态判断）
                 checkAndShowOnLogin();
             }
             
-            // 初始化手动添加的关键词
-            initializeManualKeywords();
+            // 【修复】移除了初始化手动关键词的逻辑，防止剧透
         } catch (e) {
             searchCount = 0;
             uniqueSearchTerms = new Set();
@@ -73,41 +54,14 @@
         }
     }
     
-    // 初始化手动添加的关键词
-    function initializeManualKeywords() {
-        const keywordsData = getStoredKeywords();
-        let updated = false;
-        
-        manualValidKeywords.forEach(keyword => {
-            if (!keywordsData[keyword]) {
-                keywordsData[keyword] = {
-                    valid: true,
-                    count: 0,
-                    lastFound: new Date().toISOString(),
-                    foundPosts: 0
-                };
-                updated = true;
-            } else if (!keywordsData[keyword].valid) {
-                keywordsData[keyword].valid = true;
-                updated = true;
-            }
-        });
-        
-        if (updated) {
-            localStorage.setItem(config.storageKey, JSON.stringify(keywordsData));
-        }
-    }
-    
     function checkAndShowOnLogin() {
-        // 检查页面是否显示了论坛内容（根据页面元素判断）
+        // 检查页面是否显示了论坛内容
         const forumElements = document.querySelectorAll('.post-item, .thread-list, .forum-content');
         if (forumElements.length > 0) {
-            // 认为已经成功进入论坛
             setTimeout(() => {
                 showXiaoqi();
             }, 1000);
         } else {
-            // 继续检查页面变化
             setTimeout(checkAndShowOnLogin, 500);
         }
     }
@@ -117,13 +71,12 @@
         setTimeout(() => {
             interceptSearchFunction();
             bindEvents();
-            // 移除未定义的updateDisplay函数调用
             updateKeywordsDisplay();
             updateStats();
         }, 500);
     }
     
-    // 创建UI
+    // 创建UI (已移除角标HTML)
     function createXiaoqiUI() {
         if (!document.getElementById(config.containerId)) {
             const xiaoqiHTML = `
@@ -131,11 +84,11 @@
                     <div class="xiaoqi-orb" id="${config.orbId}">
                         <div class="xiaoqi-eyes"><div class="xiaoqi-eye left-eye"></div><div class="xiaoqi-eye right-eye"></div></div>
                         <div class="xiaoqi-mouth"></div>
-                        <div class="xiaoqi-badge">0</div>
+                        <!-- 角标已移除 -->
                     </div>
                     <div class="xiaoqi-panel" id="${config.panelId}">
                         <div class="panel-header">
-                            <div class="panel-title">小奇助手 v3.2.0</div>
+                            <div class="panel-title">小奇助手 v3.3.0</div>
                             <button class="panel-close" id="xiaoqi-close">×</button>
                         </div>
                         <div class="panel-content">
@@ -163,18 +116,6 @@
                                     <div class="empty-keywords">暂无有效记录</div>
                                 </div>
                             </div>
-                            <div class="manual-section">
-                                <div class="section-title">
-                                    <span>使用说明</span>
-                                </div>
-                                <div class="manual-info">
-                                    <p style="font-size: 12px; line-height: 1.4; color: #ccc; margin: 5px 0;">
-                                        • 在代码中修改 <code>manualValidKeywords</code> 数组添加有效关键词<br>
-                                        • 输入"小奇"触发助手面板<br>
-                                        • 搜索有效关键词时计数会自动增长
-                                    </p>
-                                </div>
-                            </div>
                             <div class="panel-actions">
                                 <button class="panel-btn primary" id="clear-keywords">清空记录</button>
                                 <button class="panel-btn secondary" id="copy-all-keywords">复制关键词</button>
@@ -188,7 +129,7 @@
         }
     }
     
-    // 添加样式
+    // 添加样式 (已移除角标样式)
     function addStyles() {
         if (document.getElementById('xiaoqi-styles')) return;
         const styles = `
@@ -199,12 +140,12 @@
             .xiaoqi-eye { width: 12px; height: 12px; background: #2f3542; border-radius: 50%; position: relative; }
             .xiaoqi-eye::after { content: ''; position: absolute; width: 6px; height: 6px; background: #fff; border-radius: 50%; top: 2px; left: 2px; }
             .xiaoqi-mouth { width: 16px; height: 6px; background: #2f3542; border-radius: 0 0 8px 8px; margin-top: 2px; }
-            .xiaoqi-badge { position: absolute; top: -5px; right: -5px; background: #2f3542; color: #ff4757; border-radius: 10px; padding: 2px 6px; font-size: 11px; font-weight: bold; display: none; border: 1px solid #fff; }
+            
             .xiaoqi-panel { position: absolute; bottom: 70px; right: 0; width: 320px; background: #2f3542; border-radius: 12px; display: none; border: 2px solid #ff4757; overflow: hidden; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
             .panel-header { padding: 12px 16px; background: #ff4757; display: flex; justify-content: space-between; align-items: center; }
             .panel-close { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
             .panel-content { padding: 0; }
-            .stats-section, .keywords-section, .manual-section { padding: 12px 16px; border-bottom: 1px solid #444; }
+            .stats-section, .keywords-section { padding: 12px 16px; border-bottom: 1px solid #444; }
             .stat-item { margin-bottom: 5px; font-size: 13px; color: #ccc; }
             .stat-value { color: #fff; font-weight: bold; margin: 0 4px; }
             .stat-value.highlight { color: #ff4757; font-size: 14px; }
@@ -218,9 +159,6 @@
             .panel-btn.secondary { background: #444; border: 1px solid #666; }
             .hint-section { padding: 10px; background: rgba(255, 193, 7, 0.15); border-bottom: 1px solid #ffc107; text-align: center; color: #ffc107; font-size: 12px; }
             .empty-keywords { text-align: center; color: #888; font-style: italic; font-size: 12px; padding: 10px; }
-            .manual-info { margin-top: 10px; }
-            .manual-info p { margin: 5px 0; }
-            code { background: #444; padding: 2px 4px; border-radius: 3px; font-family: monospace; }
             .section-title { margin-bottom: 10px; font-weight: bold; color: #ccc; display: flex; justify-content: space-between; }
             .section-hint { font-size: 11px; color: #aaa; font-weight: normal; }
         `;
@@ -278,13 +216,15 @@
                     if (e.key === 'Enter') window.performSearch();
                 });
             }
-            console.log('小奇助手：搜索拦截已激活 (精确匹配模式)');
+            console.log('小奇助手：搜索拦截已激活');
         }
     }
     
     function handleSearchResult(query, hasFound, foundCount) {
         if (!query) return;
         
+        // 只有当有结果，或者该关键词之前被记录过时，才进行记录/更新
+        // 这确保了不会自动显示未搜索的词
         recordKeyword(query, hasFound, foundCount);
         updateKeywordsDisplay();
         updateStats();
@@ -327,7 +267,7 @@
         }
     }
     
-    // 记录关键词逻辑：只要有一次是有效的，就标记为有效
+    // 记录关键词逻辑
     function recordKeyword(keyword, isValid, foundCount) {
         const keywordsData = getStoredKeywords();
         const currentValid = keywordsData[keyword]?.valid || false;
@@ -345,7 +285,7 @@
         };
         
         localStorage.setItem(config.storageKey, JSON.stringify(keywordsData));
-        updateBadge();
+        // 移除了 updateBadge() 调用
     }
     
     function getStoredKeywords() {
@@ -378,22 +318,12 @@
         const validCount = Object.values(data).filter(k => k.valid).length;
         
         document.getElementById('found-count').textContent = validCount;
-        updateBadge();
+        // 移除了 updateBadge() 调用
     }
     
     function updateSearchStats() {
         const el = document.getElementById('search-count');
         if (el) el.textContent = searchCount;
-    }
-    
-    function updateBadge() {
-        const data = getStoredKeywords();
-        const count = Object.values(data).filter(k => k.valid).length;
-        const badge = document.querySelector('.xiaoqi-badge');
-        if (badge) {
-            badge.style.display = count > 0 ? 'flex' : 'none';
-            badge.textContent = count;
-        }
     }
     
     function showMessage(msg, type) {
@@ -457,22 +387,6 @@
     init();
     window.xiaoqi = { 
         show: showXiaoqi, 
-        version: '3.2.0',
-        // 提供一个方法来标记关键词为有效
-        markKeywordValid: function(keyword, foundPosts = 0) {
-            recordKeyword(keyword, true, foundPosts);
-            updateKeywordsDisplay();
-            updateStats();
-        },
-        // 提供方法来添加手动关键词
-        addManualKeyword: function(keyword) {
-            manualValidKeywords.push(keyword);
-            recordKeyword(keyword, true, 0);
-            updateKeywordsDisplay();
-            updateStats();
-        }
+        version: '3.3.0'
     };
 })();
-
-
-
