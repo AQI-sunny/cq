@@ -423,7 +423,7 @@ body {
     resize: vertical;
 }
 
-.new-post-button {
+/* .new-post-button {
     background-color: var(--title-bg);
     border: 1px solid;
     border-color: var(--border-highlight) var(--border-shadow) var(--border-shadow) var(--border-highlight);
@@ -431,6 +431,19 @@ body {
     padding: 5px 15px;
     cursor: pointer;
     font-family: var(--font-ui);
+} */
+ .new-post-button {
+    background-color: var(--title-bg);
+    border: 1px solid;
+    border-color: var(--border-highlight) var(--border-shadow) var(--border-shadow) var(--border-highlight);
+    color: var(--text-color);
+    padding: 5px 15px;
+    cursor: pointer;
+    font-family: var(--font-ui);
+
+    width: fit-content;     /* 按钮根据内容决定长度（缩短） */
+    margin: 0 auto;         /* 自动左右外边距 = 水平居中 */
+    display: block;         /* 使 margin: auto 生效 */
 }
 
 .new-post-button:hover {
