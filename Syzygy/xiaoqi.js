@@ -1,8 +1,7 @@
 /**
  * 小奇 - 隐藏帖子助手
- * 版本: 2.6.1 (DOM检测修复版)
- * 修复：解决了无法读取 posts 数据导致计数永远为 0 的问题
- * 原理：改为检测 HTML 元素上的 'revealed' 类名
+ * 版本: 3.1.0 (代码手动添加关键词版)
+ * 功能：自动识别、代码手动添加、统计显示
  */
 
 (function() {
@@ -11,8 +10,9 @@
     // 配置
     const config = {
         triggerKeyword: '小奇',
-        storageKey: 'xiaoqi_keywords_v2',
+        storageKey: 'xiaoqi_keywords_v3',
         searchHistoryKey: 'xiaoqi_search-history',
+        inviteCodeKey: 'xiaoqi_invite-code',
         searchInputId: 'searchInput',
         searchBtnId: 'searchButton',
         containerId: 'xiaoqi-container',
@@ -25,6 +25,24 @@
     let searchCount = 0;
     let uniqueSearchTerms = new Set();
     
+    // ========================
+    // 【手动添加关键词区域】
+    // 在这里手动添加有效关键词
+    // 格式：['关键词1', '关键词2', '关键词3']
+    // ========================
+    const manualValidKeywords = [
+        // 示例：添加已知的有效关键词
+        '顾氏',
+        '夜鹭',
+        '青涟渠',
+        'lssmr',
+        'KMS',
+        '守秘人',
+         
+        '洛书'
+    ];
+    // ========================
+    
     // 初始化
     function init() {
         try {
@@ -34,6 +52,16 @@
                 searchCount = data.totalSearches || 0;
                 uniqueSearchTerms = new Set(data.uniqueSearchTerms || []);
             }
+            
+            // 检查是否有邀请码
+            const inviteCode = localStorage.getItem(config.inviteCodeKey);
+            if (inviteCode) {
+                // 检查是否已登录成功（根据页面状态判断）
+                checkAndShowOnLogin();
+            }
+            
+            // 初始化手动添加的关键词
+            initializeManualKeywords();
         } catch (e) {
             searchCount = 0;
             uniqueSearchTerms = new Set();
@@ -46,17 +74,57 @@
         }
     }
     
+    // 初始化手动添加的关键词
+    function initializeManualKeywords() {
+        const keywordsData = getStoredKeywords();
+        let updated = false;
+        
+        manualValidKeywords.forEach(keyword => {
+            if (!keywordsData[keyword]) {
+                keywordsData[keyword] = {
+                    valid: true,
+                    count: 0,
+                    lastFound: new Date().toISOString(),
+                    foundPosts: 0
+                };
+                updated = true;
+            } else if (!keywordsData[keyword].valid) {
+                keywordsData[keyword].valid = true;
+                updated = true;
+            }
+        });
+        
+        if (updated) {
+            localStorage.setItem(config.storageKey, JSON.stringify(keywordsData));
+        }
+    }
+    
+    function checkAndShowOnLogin() {
+        // 检查页面是否显示了论坛内容（根据页面元素判断）
+        const forumElements = document.querySelectorAll('.post-item, .thread-list, .forum-content');
+        if (forumElements.length > 0) {
+            // 认为已经成功进入论坛
+            setTimeout(() => {
+                showXiaoqi();
+            }, 1000);
+        } else {
+            // 继续检查页面变化
+            setTimeout(checkAndShowOnLogin, 500);
+        }
+    }
+    
     function setupFunctionality() {
         createXiaoqiUI();
         setTimeout(() => {
             interceptSearchFunction();
             bindEvents();
             updateDisplay();
-            showXiaoqi();
+            updateKeywordsDisplay();
+            updateStats();
         }, 500);
     }
     
-    // 创建UI (保持不变)
+    // 创建UI
     function createXiaoqiUI() {
         if (!document.getElementById(config.containerId)) {
             const xiaoqiHTML = `
@@ -68,7 +136,7 @@
                     </div>
                     <div class="xiaoqi-panel" id="${config.panelId}">
                         <div class="panel-header">
-                            <div class="panel-title">小奇助手 v2.6.1</div>
+                            <div class="panel-title">小奇助手 v3.1.0</div>
                             <button class="panel-close" id="xiaoqi-close">×</button>
                         </div>
                         <div class="panel-content">
@@ -96,6 +164,18 @@
                                     <div class="empty-keywords">暂无有效记录</div>
                                 </div>
                             </div>
+                            <div class="manual-section">
+                                <div class="section-title">
+                                    <span>使用说明</span>
+                                </div>
+                                <div class="manual-info">
+                                    <p style="font-size: 12px; line-height: 1.4; color: #ccc; margin: 5px 0;">
+                                        • 在代码中修改 <code>manualValidKeywords</code> 数组添加有效关键词<br>
+                                        • 输入"小奇"触发助手面板<br>
+                                        • 搜索有效关键词时计数会自动增长
+                                    </p>
+                                </div>
+                            </div>
                             <div class="panel-actions">
                                 <button class="panel-btn primary" id="clear-keywords">清空记录</button>
                                 <button class="panel-btn secondary" id="copy-all-keywords">复制关键词</button>
@@ -109,7 +189,7 @@
         }
     }
     
-    // 添加样式 (精简版)
+    // 添加样式
     function addStyles() {
         if (document.getElementById('xiaoqi-styles')) return;
         const styles = `
@@ -121,11 +201,11 @@
             .xiaoqi-eye::after { content: ''; position: absolute; width: 6px; height: 6px; background: #fff; border-radius: 50%; top: 2px; left: 2px; }
             .xiaoqi-mouth { width: 16px; height: 6px; background: #2f3542; border-radius: 0 0 8px 8px; margin-top: 2px; }
             .xiaoqi-badge { position: absolute; top: -5px; right: -5px; background: #2f3542; color: #ff4757; border-radius: 10px; padding: 2px 6px; font-size: 11px; font-weight: bold; display: none; border: 1px solid #fff; }
-            .xiaoqi-panel { position: absolute; bottom: 70px; right: 0; width: 300px; background: #2f3542; border-radius: 12px; display: none; border: 2px solid #ff4757; overflow: hidden; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+            .xiaoqi-panel { position: absolute; bottom: 70px; right: 0; width: 320px; background: #2f3542; border-radius: 12px; display: none; border: 2px solid #ff4757; overflow: hidden; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
             .panel-header { padding: 12px 16px; background: #ff4757; display: flex; justify-content: space-between; align-items: center; }
             .panel-close { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
             .panel-content { padding: 0; }
-            .stats-section, .keywords-section { padding: 12px 16px; border-bottom: 1px solid #444; }
+            .stats-section, .keywords-section, .manual-section { padding: 12px 16px; border-bottom: 1px solid #444; }
             .stat-item { margin-bottom: 5px; font-size: 13px; color: #ccc; }
             .stat-value { color: #fff; font-weight: bold; margin: 0 4px; }
             .stat-value.highlight { color: #ff4757; font-size: 14px; }
@@ -134,11 +214,16 @@
             .keyword-item.valid { background: rgba(46, 125, 50, 0.3); color: #4caf50; border: 1px solid #4caf50; }
             .keyword-item.invalid { background: rgba(198, 40, 40, 0.3); color: #ff5252; border: 1px solid #ff5252; }
             .panel-actions { padding: 12px 16px; display: flex; gap: 10px; }
-            .panel-btn { flex: 1; padding: 6px; border-radius: 4px; border: none; cursor: pointer; font-size: 12px; color: white; }
+            .panel-btn { flex: 1; padding: 8px; border-radius: 4px; border: none; cursor: pointer; font-size: 12px; color: white; }
             .panel-btn.primary { background: #ff4757; }
             .panel-btn.secondary { background: #444; border: 1px solid #666; }
             .hint-section { padding: 10px; background: rgba(255, 193, 7, 0.15); border-bottom: 1px solid #ffc107; text-align: center; color: #ffc107; font-size: 12px; }
             .empty-keywords { text-align: center; color: #888; font-style: italic; font-size: 12px; padding: 10px; }
+            .manual-info { margin-top: 10px; }
+            .manual-info p { margin: 5px 0; }
+            code { background: #444; padding: 2px 4px; border-radius: 3px; font-family: monospace; }
+            .section-title { margin-bottom: 10px; font-weight: bold; color: #ccc; display: flex; justify-content: space-between; }
+            .section-hint { font-size: 11px; color: #aaa; font-weight: normal; }
         `;
         const styleSheet = document.createElement('style');
         styleSheet.id = 'xiaoqi-styles';
@@ -146,7 +231,7 @@
         document.head.appendChild(styleSheet);
     }
     
-    // 【核心修复】拦截搜索并使用 DOM 检测
+    // 拦截搜索并使用 DOM 检测
     function interceptSearchFunction() {
         if (typeof window.performSearch === 'function') {
             originalPerformSearch = window.performSearch;
@@ -162,18 +247,17 @@
                 
                 recordSearch(query);
                 
-                // 1. 执行原始搜索 (这会同步更新 DOM)
+                // 执行原始搜索 (这会同步更新 DOM)
                 const result = originalPerformSearch.apply(this, arguments);
                 
-                // 2. 检测结果：直接看 DOM 中有没有 .revealed 类的元素
-                // forum-script.js 在找到隐藏贴时，会添加 'revealed' 类
+                // 检测结果：直接看 DOM 中有没有 .revealed 类的元素
                 const revealedPosts = document.querySelectorAll('.post-item.revealed');
                 const foundCount = revealedPosts.length;
                 const hasFound = foundCount > 0;
                 
                 console.log(`[小奇] 搜索: "${query}", 发现隐藏贴数量: ${foundCount}`);
                 
-                // 3. 记录结果
+                // 记录结果
                 handleSearchResult(query, hasFound, foundCount);
                 
                 return result;
@@ -335,7 +419,10 @@
             e.stopPropagation();
             const isHidden = panel.style.display === 'none' || panel.style.display === '';
             panel.style.display = isHidden ? 'block' : 'none';
-            if (isHidden) { updateKeywordsDisplay(); updateStats(); }
+            if (isHidden) { 
+                updateKeywordsDisplay(); 
+                updateStats(); 
+            }
         });
         
         document.getElementById('xiaoqi-close').addEventListener('click', (e) => {
@@ -346,7 +433,8 @@
         document.getElementById('clear-keywords').addEventListener('click', () => {
             if(confirm('确定清空记录？')) {
                 localStorage.setItem(config.storageKey, '{}');
-                updateKeywordsDisplay(); updateStats();
+                updateKeywordsDisplay(); 
+                updateStats();
             }
         });
 
@@ -363,5 +451,21 @@
     }
 
     init();
-    window.xiaoqi = { show: showXiaoqi, version: '2.6.1' };
+    window.xiaoqi = { 
+        show: showXiaoqi, 
+        version: '3.1.0',
+        // 提供一个方法来标记关键词为有效
+        markKeywordValid: function(keyword, foundPosts = 0) {
+            recordKeyword(keyword, true, foundPosts);
+            updateKeywordsDisplay();
+            updateStats();
+        },
+        // 提供方法来添加手动关键词
+        addManualKeyword: function(keyword) {
+            manualValidKeywords.push(keyword);
+            recordKeyword(keyword, true, 0);
+            updateKeywordsDisplay();
+            updateStats();
+        }
+    };
 })();
