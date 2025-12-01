@@ -1,7 +1,7 @@
 /**
  * 小奇 - 隐藏帖子助手
- * 版本: 3.1.0 (代码手动添加关键词版)
- * 功能：自动识别、代码手动添加、统计显示
+ * 版本: 3.2.0 (修复版)
+ * 修复：解决updateDisplay未定义问题
  */
 
 (function() {
@@ -31,7 +31,6 @@
     // 格式：['关键词1', '关键词2', '关键词3']
     // ========================
     const manualValidKeywords = [
-        // 示例：添加已知的有效关键词
         '顾氏',
         '夜鹭',
         '青涟渠',
@@ -118,7 +117,7 @@
         setTimeout(() => {
             interceptSearchFunction();
             bindEvents();
-            updateDisplay();
+            // 移除未定义的updateDisplay函数调用
             updateKeywordsDisplay();
             updateStats();
         }, 500);
@@ -136,7 +135,7 @@
                     </div>
                     <div class="xiaoqi-panel" id="${config.panelId}">
                         <div class="panel-header">
-                            <div class="panel-title">小奇助手 v3.1.0</div>
+                            <div class="panel-title">小奇助手 v3.2.0</div>
                             <button class="panel-close" id="xiaoqi-close">×</button>
                         </div>
                         <div class="panel-content">
@@ -279,7 +278,7 @@
                     if (e.key === 'Enter') window.performSearch();
                 });
             }
-            console.log('小奇助手：已激活 (DOM检测模式)');
+            console.log('小奇助手：搜索拦截已激活 (精确匹配模式)');
         }
     }
     
@@ -311,8 +310,13 @@
     
     function showPeriodicHint() {
         const hints = [
-            "姨姨的姓氏你搜了吗？不要只搜姓！", "有个鸟类听起来像晚上出现的...", 
-            "五个字母的组织...", "血月那天发生了什么？", "那个符咒的名字..."
+            "姨姨的姓氏你搜了吗！不要只搜姓！姓氏姓氏！姓+氏！",
+            "喂，你不会没有搜过临渠县那个啥东西吧？咋跟你说呢！金桂那篇报道里有的啊！",
+            "有个鸟类你搜了吗？两个字的!听起来像是晚上会出现的那种鸟",
+            "你不是费半天劲得了五个字母吗？你搜一下哇",
+            "那个红蛋组织的拼音首字母简写，大写！",
+            "lssmr不是有五个字吗，两个三个的拆开！",
+            "你不觉得那个啥子符很重要吗？不要在这搜！"
         ];
         const msg = hints[Math.floor(Math.random() * hints.length)];
         const hintContent = document.getElementById('hint-content');
@@ -453,7 +457,7 @@
     init();
     window.xiaoqi = { 
         show: showXiaoqi, 
-        version: '3.1.0',
+        version: '3.2.0',
         // 提供一个方法来标记关键词为有效
         markKeywordValid: function(keyword, foundPosts = 0) {
             recordKeyword(keyword, true, foundPosts);
@@ -469,3 +473,6 @@
         }
     };
 })();
+
+
+
