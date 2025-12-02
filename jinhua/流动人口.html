@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <!-- 将 GB2312 改为 UTF-8 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>流动人口管理档案 - 深南市公安局</title>
+    <link rel="icon" type="image/jpeg" href="https://sylvie-seven-cq.top/gallery/search.png">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+        }
+
+        .search-container {
+            flex: 0 0 33.33%;
+            min-width: 300px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            padding: 12px 20px;
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+        }
+
+        .search-bar:hover {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.35);
+        }
+
+        .search-bar:focus-within {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.45);
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            color: #9aa0a6;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: transparent;
+        }
+
+        .search-button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .search-button:hover {
+            background-color: #2b6fd8;
+        }
+
+        /* 页面容器 */
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            border: 1px solid #999999;
+            padding: 20px;
+            font-family: "SimSun", "宋体", Arial, sans-serif;
+            font-size: 14px;
+            color: #333333;
+            background-color: #F5F5DC;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABZJREFUeNpi/P//PwMDAwPD////GfAAQAAEPwC1WpQZAAAAAElFTkSuQmCC');
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #990000;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 22px;
+            color: #990000;
+            margin: 5px 0;
+        }
+
+        h2 {
+            font-size: 18px;
+            color: #333366;
+            margin: 10px 0 5px 0;
+            border-bottom: 1px dashed #999999;
+            padding-bottom: 3px;
+        }
+
+        h3 {
+            font-size: 16px;
+            margin: 15px 0 8px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+
+        td, th {
+            border: 1px solid #999999;
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #E6E6FA;
+            text-align: center;
+        }
+
+        .warning {
+            background-color: #FFF8DC;
+            border: 1px solid #FFD700;
+            padding: 15px;
+            margin: 20px 0;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px dashed #999999;
+            font-size: 12px;
+            color: #666666;
+        }
+
+        .highlight {
+            background-color: #FFFFCC;
+            padding: 2px 4px;
+        }
+
+        a:link, a:visited {
+            color: #0000CC;
+            text-decoration: underline;
+        }
+
+        a:hover {
+            color: #CC0000;
+        }
+
+        .stamp {
+            float: right;
+            width: 140px;
+            height: 140px;
+            border: 2px dashed #990000;
+            text-align: center;
+            padding: 8px;
+            margin: 0 0 15px 15px;
+            font-family: "KaiTi", "楷体", "楷体_GB2312", serif;
+            font-size: 13px;
+            color: #990000;
+            line-height: 1.4;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            word-break: break-all;
+            overflow: hidden;
+        }
+
+        .stamp-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .stamp-line {
+            margin: 3px 0;
+        }
+
+        .contact {
+            background-color: #F0F0F0;
+            padding: 15px;
+            border: 1px solid #CCCCCC;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .search-container {
+                width: 100%;
+                min-width: unset;
+            }
+            
+            .container {
+                width: 100%;
+                padding: 15px;
+                font-size: 16px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            h2 {
+                font-size: 18px;
+            }
+            
+            h3 {
+                font-size: 16px;
+            }
+            
+            table {
+                font-size: 14px;
+            }
+            
+            td, th {
+                padding: 6px 8px;
+                font-size: 14px;
+            }
+            
+            .stamp {
+                float: none;
+                margin: 15px auto;
+                display: block;
+                width: 130px;
+                height: 130px;
+                font-size: 12px;
+            }
+            
+            .search-bar {
+                padding: 10px 15px;
+            }
+            
+            .search-button {
+                padding: 8px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 18px;
+            }
+            
+            h2 {
+                font-size: 16px;
+            }
+            
+            table {
+                font-size: 12px;
+            }
+            
+            td, th {
+                padding: 4px 6px;
+                font-size: 12px;
+            }
+            
+            .stamp {
+                width: 120px;
+                height: 120px;
+                font-size: 11px;
+            }
+        }
+
+        .archive-note {
+            background-color: #F0F8FF;
+            border-left: 4px solid #0066CC;
+            padding: 10px;
+            margin: 15px 0;
+            font-style: italic;
+            font-size: 13px;
+        }
+
+        .marquee {
+            margin: 10px 0;
+        }
+
+        .blink {
+            animation: blinker 1s linear infinite;
+        }
+
+        @keyframes blinker {
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部区域：Logo和搜索栏 -->
+    <div class="header-container">
+        <img src="https://sylvie-seven-cq.top/gallery/search.png" alt="深南市诚信拍卖行" class="logo">
+        <div class="search-container">
+            <div class="search-bar">
+                <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索流动人口档案...">
+                <button class="search-button" id="searchButton">搜索</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页面内容 -->
+    <div class="container">
+        <h1>《深南市流动人口管理档案》（1990–2000）</h1>
+        
+        <div class="marquee">
+            <marquee behavior="scroll" direction="left">⚠️ 临渠·萍山劳务冲突专项记录 ⚠️——————————⚠️ 临渠·萍山劳务冲突专项记录 ⚠️——————————⚠️ 临渠·萍山劳务冲突专项记录 ⚠️</marquee>
+        </div>
+        
+        <div class="stamp">
+            <div class="stamp-content">
+                <div class="stamp-line">内部资料</div>
+                <div class="stamp-line">注意保密</div>
+                <div class="stamp-line">2000年归档</div>
+            </div>
+        </div>
+
+        <h2>背景概述</h2>
+        <p>1990年代，随着深南市制造业快速发展，大量外来务工人员涌入。其中，<span class="highlight">临渠县</span>（本省）与<span class="highlight">萍山县</span>（邻省）成为主要劳动力输出地。两地工人集中于劳动密集型产业，如<strong>锦华纺织厂</strong>、深南服装厂等，形成明显的地域聚居与职业重叠。</p>
+
+        <h2>矛盾焦点</h2>
+        <ul style="margin-left: 20px; margin-top: 8px;">
+            <li><strong>岗位竞争</strong>：本地临渠籍工人多通过熟人关系优先入职，萍山籍工人则依赖中介，常被安排至加班多、待遇低的岗位。</li>
+            <li><strong>薪资差异</strong>：部分企业对非本地户籍实行“同工不同酬”，引发不满。</li>
+            <li><strong>宿舍分配</strong>：工厂集体宿舍按籍贯分区，加剧群体隔阂。</li>
+        </ul>
+
+        <h2>1997年重大事件摘要</h2>
+        <table>
+            <tr><th>日期</th><th>事件</th><th>处理结果</th></tr>
+            <tr><td><span class="highlight"><strong>1997.03.12</strong></span></td><td><span class="highlight"><strong>锦华纺织厂夜班车间因排班争议爆发肢体冲突（临渠 vs 萍山）</strong></span></td><td>厂方调解，涉事双方各记过一次</td></tr>
+            <tr><td>1997.06.05</td><td>深南服装厂拖欠萍山籍工人5月工资，引发集体停工</td><td>劳动监察介入，补发工资；厂长书面检讨</td></tr>
+            <tr><td>1997.11.18</td><td>临渠籍工人阻挠萍山籍新员工入住宿舍，警方出警</td><td>派出所组织三方会谈，制定宿舍轮换制度</td></tr>
+        </table>
+
+        <div class="archive-note">
+            注：据《深南市地方志·人口篇》第2–5页记载，此类矛盾在1998年后随“暂住证制度”规范化及最低工资标准出台逐步缓和。2000年起，市政府推动“新市民融合计划”，设立跨籍贯互助小组。
+        </div>
+
+        <h2>政策响应</h2>
+        <p>1998年，深南市公安局联合劳动局发布《外来务工人员权益保障十条》，明确禁止基于籍贯的用工歧视，并设立<strong>流动人口服务站</strong>（首批设于东湖、南湾工业区）。至2000年，临渠与萍山籍工人纠纷同比下降63%。</p>
+
+        <h2>档案状态</h2>
+        <p>✅ 已归档 &nbsp; | &nbsp; 📁 编号：LD-2000-1109 &nbsp; | &nbsp; 🔒 密级：内部</p>
+
+        <!-- 经典2000年代计数器 -->
+        <!-- <div class="counter" style="margin-top: 20px;">
+            <img src="https://via.placeholder.com/88x31/0066CC/FFFFFF?text=档案查阅" alt="计数器">
+            <br>本档案已被查阅 <span id="visitCount">3892</span> 次
+        </div> -->
+
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>© 1995–2000 深南市公安局 · 流动人口管理办公室</p>
+            <p>最后更新日期：2000年11月30日</p>
+            <p>推荐使用IE4.0以上浏览器，800×600分辨率浏览本页面</p>
+            <p class="blink">⚠️ 本档案仅限内部授权人员查阅 ⚠️</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('searchButton').addEventListener('click', performSearch);
+        document.getElementById('searchInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.trim();
+            if (searchTerm) {
+                alert(`正在搜索流动人口档案: ${searchTerm}\n\n提示：本系统包含1990–2000年深南市外来务工记录。`);
+            }
+        }
+        
+        document.getElementById('visitCount').textContent = Math.floor(3892 + Math.random() * 100);
+    </script>
+</body>
+</html>
