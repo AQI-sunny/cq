@@ -385,9 +385,9 @@ function createTanziUI() {
                     </div>
                     <div class="panel-actions">
                         <div class="buttons-row">
-                            <button class="panel-btn primary short-btn" id="clear-keywords">清空</button>
-                            <button class="panel-btn secondary short-btn" id="copy-all-keywords">复制</button>
-                            <button class="panel-btn secondary short-btn" id="clear-badge">角标</button>
+                            <button class="panel-btn primary short-btn" id="clear-keywords">清空所有</button>
+                            <button class="panel-btn secondary short-btn" id="copy-all-keywords">复制关键词</button>
+                            <button class="panel-btn secondary short-btn" id="clear-badge">清除角标</button>
                         </div>
                     </div>
                 </div>
