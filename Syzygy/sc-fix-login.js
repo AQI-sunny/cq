@@ -70,7 +70,7 @@
         // 仅修改提示文字，不禁用输入框，否则没法输入"坛子"
         if (!window.currentUser) {
             if (!CONFIG.ALLOW_KEYWORDS.includes(searchInput.value.trim())) {
-                searchInput.placeholder = '请登录 (输入"坛子"触发彩蛋)...';
+                searchInput.placeholder = '请登录后搜索...';
             }
         } else {
             searchInput.placeholder = '搜索帖子、用户...';
