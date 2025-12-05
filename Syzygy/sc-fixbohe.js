@@ -219,16 +219,16 @@
     }
     
     function fixAllUserLinks() {
-        const userLinks = document.querySelectorAll('a[onclick*="showUserProfile"]');
-        userLinks.forEach(fixSingleUserLink);
+        // 1. 优先处理明确带有 showUserProfile 的链接
+        const explicitLinks = document.querySelectorAll('a[onclick*="showUserProfile"], a[href*="showUserProfile"]');
+        explicitLinks.forEach(fixSingleUserLink);
         
-        // 额外检查：处理可能已经存在的链接
-        const allLinks = document.querySelectorAll('a');
-        allLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            const text = link.textContent || '';
-            if ((href && href.includes('showUserProfile')) || 
-                (text && link.parentNode && link.parentNode.querySelector('div.post-meta'))) {
+        // 2. 谨慎处理可能是用户名的纯文本链接
+        // 只有当链接在 .post-meta 或 .author-info 内部时，才尝试处理
+        // 这样可以避免误伤帖子标题
+        const potentialUserLinks = document.querySelectorAll('.post-meta a, .author-info a, .user-profile a');
+        potentialUserLinks.forEach(link => {
+            if (!link.getAttribute('data-fixed-user-link')) {
                 checkAndFixUserLink(link);
             }
         });
@@ -245,9 +245,15 @@
     }
     
     function checkAndFixUserLink(link) {
+        // [关键修复]：如果这是帖子标题链接，直接跳过
+        if (link.classList.contains('hidden-post-link')) return;
+        
+        // [关键修复]：如果包含 showModal (通常是打开帖子的)，直接跳过
+        const onclickAttr = link.getAttribute('onclick') || '';
+        if (onclickAttr.includes('showModal')) return;
+        
         // 检查是否是用户链接
         const href = link.getAttribute('href');
-        const onclickAttr = link.getAttribute('onclick');
         const text = link.textContent || '';
         
         // 尝试从各种属性中提取用户名
@@ -263,9 +269,12 @@
             if (match) username = match[1];
         }
         
+        // [关键修复]：只有在明确的上下文（如 meta 信息区）才将文本视为用户名
+        // 避免把独立的帖子标题误认为是用户名
         if (!username && text.trim()) {
-            // 假设文本内容就是用户名
-            username = text.trim();
+            if (link.closest('.post-meta') || link.closest('.author-info')) {
+                username = text.trim();
+            }
         }
         
         if (username) {
@@ -274,9 +283,11 @@
     }
     
     function fixSingleUserLink(link) {
+        // [关键修复] 安全检查
+        if (link.classList.contains('hidden-post-link')) return;
+        
         const onclickAttr = link.getAttribute('onclick');
         if (!onclickAttr) {
-            // 尝试从其他地方获取用户名
             checkAndFixUserLink(link);
             return;
         }
@@ -292,6 +303,9 @@
     }
     
     function fixUserLinkWithUsername(link, username) {
+        // 防止重复绑定
+        if (link.getAttribute('data-fixed-user-link') === 'true') return;
+        
         // 保存原始点击事件（如果有）
         const originalOnclick = link.getAttribute('onclick');
         
@@ -480,22 +494,19 @@
     
     // ====== 启动 ======
     
-    // 更可靠的启动方式
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
-            // 延迟执行以确保所有脚本都加载完成
             setTimeout(init, 1500);
         });
     } else {
         setTimeout(init, 1500);
     }
     
-    // 添加一个更全面的用户链接检查函数
     function recheckUserLinks() {
         setTimeout(fixAllUserLinks, 1000);
     }
     
-    // 每3秒重新检查一次用户链接（用于动态加载的内容）
+    // 降低频率以减少性能开销，但保持活跃
     setInterval(recheckUserLinks, 3000);
     
     window.searchFix = {
