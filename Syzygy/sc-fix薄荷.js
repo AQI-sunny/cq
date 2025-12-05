@@ -1,8 +1,10 @@
 /**
- * 修复版搜索逻辑
+ * 修复版搜索逻辑优化版
  * 1. 解决了搜索用户名时会阻断帖子显示的问题。
  * 2. 实现了搜自己时不显示个人主页。
  * 3. 保持了隐藏帖子的权限控制。
+ * 4. 新增：查看他人主页时显示权限提示。
+ * 5. 确保不改变当前用户的顶部栏显示用户名。
  */
 
 // 覆盖原有的搜索函数
@@ -106,10 +108,12 @@ window.performSearch = function() {
         matchingUsers.forEach(username => {
             const userCard = document.createElement('div');
             userCard.className = 'post-card';
-            // 注意：这里使用全局的 showUserProfile 函数
+            
+            // 关键优化：使用自定义的 showOtherUserProfile 函数替代原有的 showUserProfile
+            // 这样可以显示权限提示，同时不改变顶部栏当前用户的用户名显示
             userCard.innerHTML = `
-                <a href="#" onclick="showUserProfile('${username}'); return false;">${username}</a>
-                <div class="post-meta">用户 • 点击查看个人主页</div>
+                <a href="#" onclick="showOtherUserProfile('${username}'); return false;">${username}</a>
+                <div class="post-meta">用户 • 点击查看用户信息</div>
             `;
             main.appendChild(userCard);
         });
@@ -117,7 +121,6 @@ window.performSearch = function() {
     }
 
     // --- B. 渲染帖子结果 ---
-    // 原代码在这里有个 return，我们删掉了它，让代码继续执行
     if (postResults.length > 0) {
         // 如果上面有用户结果，加个分割线或者间距，这里直接追加标题
         const postsTitle = document.createElement('h2');
@@ -144,6 +147,75 @@ window.performSearch = function() {
         main.appendChild(empty);
     }
 };
+
+/**
+ * 新增函数：查看其他用户主页（带权限提示）
+ * 此函数专门用于查看他人主页，会显示权限提示
+ * 不会影响顶部栏当前用户的用户名显示
+ * @param {string} username - 要查看的用户名
+ */
+window.showOtherUserProfile = function(username) {
+    // 清空主界面
+    clearMain();
+    
+    // 创建用户信息卡片
+    const profileCard = document.createElement('div');
+    profileCard.className = 'post-card';
+    
+    // 显示用户名和权限提示
+    profileCard.innerHTML = `
+        <h2>${username}</h2>
+        <div class="profile-info">
+            <div class="info-item">
+                <strong>用户名：</strong> ${username}
+            </div>
+            <div class="info-item">
+                <strong>用户状态：</strong> 离线
+            </div>
+            <div class="info-item">
+                <strong>最后活跃：</strong> 未知
+            </div>
+        </div>
+        
+        <div class="permission-notice" style="
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            color: #856404;
+        ">
+            <strong>⚠️ 权限提示</strong>
+            <p>您无权查看他人的完整个人主页。这是用户的基本信息预览。</p>
+            <p>当前登录用户：${currentUser || '未登录'}</p>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <button onclick="window.performSearch()" style="
+                padding: 8px 16px;
+                background-color: #6c757d;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            ">返回搜索结果</button>
+        </div>
+    `;
+    
+    main.appendChild(profileCard);
+};
+
+/**
+ * 保留原有的 showUserProfile 函数（如果存在）
+ * 这个函数可能用于查看当前用户自己的主页
+ * 我们只是添加了新的 showOtherUserProfile 函数，不会影响原有功能
+ */
+if (typeof window.showUserProfile === 'undefined') {
+    // 如果原代码没有 showUserProfile 函数，可以创建一个简单的
+    window.showUserProfile = function(username) {
+        alert(`显示用户 ${username} 的个人主页（原有函数）`);
+    }
+}
 
 // 重新绑定事件 (防止 HTML 中原本绑定的逻辑冲突)
 // 确保页面加载完后执行
@@ -173,4 +245,26 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    
+    // 添加一点样式增强用户体验
+    const style = document.createElement('style');
+    style.textContent = `
+        .profile-info {
+            margin: 15px 0;
+        }
+        .info-item {
+            margin: 8px 0;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .permission-notice {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            color: #856404;
+        }
+    `;
+    document.head.appendChild(style);
 });
