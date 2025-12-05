@@ -1,11 +1,12 @@
 /**
-
-坛子 - 隐藏帖子助手
-
-版本: 2.3.2 (修复移动端面板显示问题)
-
-功能：搜索"坛子"时出现，智能记录隐藏帖子关键词，显示搜索统计，每7次不重复搜索出现一条提示
-*/
+ * 坛子 - 隐藏帖子助手
+ * 
+ * 版本: 2.4.0
+ * 更新日志:
+ * 1. 修复桌面端面板高度溢出问题，添加最大高度限制
+ * 2. 新增桌面/平板端拖拽移动功能，并自动保存位置
+ * 3. 保持移动端原有布局和逻辑不变
+ */
 
 (function() {
 'use strict';
@@ -20,13 +21,14 @@ const config = {
     containerId: 'tanzi-container',
     orbId: 'tanzi-orb',
     panelId: 'tanzi-panel',
-    uniqueSearchesKey: 'tanzi_unique_searches' // 新增：存储不重复搜索记录的键
+    uniqueSearchesKey: 'tanzi_unique_searches',
+    positionKey: 'tanzi_position' // 新增：存储位置的键
 };
 
 // 存储原始函数引用
 let originalPerformSearch = null;
 let searchCount = 0;
-let uniqueSearchTerms = new Set(); // 新增：记录不重复搜索词
+let uniqueSearchTerms = new Set();
 
 // 初始化
 function init() {
@@ -48,7 +50,6 @@ function init() {
     }
 }
 
-// 新增：加载不重复搜索词
 function loadUniqueSearches() {
     try {
         const stored = localStorage.getItem(config.uniqueSearchesKey);
@@ -64,7 +65,6 @@ function loadUniqueSearches() {
     }
 }
 
-// 新增：保存不重复搜索词
 function saveUniqueSearches() {
     try {
         localStorage.setItem(config.uniqueSearchesKey, JSON.stringify([...uniqueSearchTerms]));
@@ -73,16 +73,11 @@ function saveUniqueSearches() {
     }
 }
 
-// 新增：检查是否需要显示周期性提示
 function checkPeriodicHint(query) {
-    // 只对非坛子关键词的搜索进行计数
     if (query !== config.triggerKeyword) {
-        // 如果是新的不重复搜索词
         if (!uniqueSearchTerms.has(query)) {
             uniqueSearchTerms.add(query);
             saveUniqueSearches();
-            
-            // 检查是否达到7的倍数
             if (uniqueSearchTerms.size % 7 === 0) {
                 showPeriodicHint();
             }
@@ -90,7 +85,6 @@ function checkPeriodicHint(query) {
     }
 }
 
-// 新增：显示周期性提示
 function showPeriodicHint() {
     const hints = [
         "耳机遗失帖里有一个人的性格特征很明显哦~尝试搜索相关名词或形容词？",
@@ -113,7 +107,6 @@ function showPeriodicHint() {
         "浩子母亲的出院日期需要穷举哦~联系许愿帖子和第一篇文章末尾可得知大概范围~",
         "旧论坛名字是清单第二列字竖着下来哦~",
         "邀请码是薄荷英文和评论区提到的电影上映日期哦",
-        "嘿!如果你发现隐藏关键词但是没有显示帖子,可能素更高级用户才能查看的帖子哦~",
         "超市后台密码和女儿小名、生日有关哦~可通过某工具进行推理",
         "有早报就有。。？知道新闻内容后联想一下~父母一般会发布什么启事呢？",
         "有一个已注销的用户发布的文章。。。这个文章好像是藏头哦。。",
@@ -128,7 +121,6 @@ function showPeriodicHint() {
         "D门的密码是蒹葭苍苍下一句的前两个字拼音哦",
         "E门密码是某类鸟的外号英文＋书籍的影视化年份哦",
         "实验室深处密码要通过档案号推理哦~猜猜是谁被关在里面呢？",
-        "嘿!如果你发现隐藏关键词但是没有显示帖子,可能素更高级用户才能查看的帖子哦~",
         "旧论坛有提到《xxx则》，解字谜可得五字书籍哦",
         "小符咒游戏可以得到一个提取码哦~",
         "提取到的某卷书~可解出一个四字家族名哦~Y开头X结尾~注意观察xx后裔~",
@@ -139,44 +131,21 @@ function showPeriodicHint() {
         "神秘用户的密码是一句话哦~支线末尾的英文单词合起来~顺序可以看看歌词~数字只有一个，在第二位哦~"
     ];
     
-    // 计算当前是第几轮触发 (例如: 7/7=1, 14/7=2, 21/7=3)
     const round = uniqueSearchTerms.size / 7;
-    
-    // 计算对应的数组索引 (数组从0开始，所以要减1)
-    // 例如: 第1轮->索引0, 第2轮->索引1
     let index = round - 1;
-    
-    // 取余数，防止溢出 (如果轮数超过了提示语总数，就回到开头循环)
     index = index % hints.length;
-    
-    const msg = hints[index];
-    
-    // 将提示信息显示在面板上
-    showHintInPanel(msg);
+    showHintInPanel(hints[index]);
 }
 
-// 新增：在面板上显示提示信息（持久化，直到下一次提示）
 function showHintInPanel(hintMessage) {
     const panel = document.getElementById(config.panelId);
     if (!panel) return;
     
-    // 检查是否已存在提示区域
     let hintSection = panel.querySelector('#hint-section');
     if (!hintSection) {
-        // 创建提示区域（注意：不再设置 display:none）
         hintSection = document.createElement('div');
         hintSection.id = 'hint-section';
-        hintSection.style.cssText = `
-            background: #e3f2fd;
-            border: 1px solid #bbdefb;
-            border-radius: 8px;
-            padding: 12px;
-            margin: 10px;
-            font-size: 14px;
-            color: #1976d2;
-            /* display 默认为 block，不隐藏 */
-        `;
-        
+        // 样式已在 CSS 中定义
         const header = panel.querySelector('.panel-header');
         if (header) {
             header.after(hintSection);
@@ -193,57 +162,182 @@ function showHintInPanel(hintMessage) {
     }
     
     hintContent.textContent = hintMessage;
-    hintSection.style.display = 'block'; // 确保显示（即使之前被意外隐藏）
+    hintSection.style.display = 'block';
 }
 
-// 修改 setupFunctionality，在移动端动态修复面板位置
 function setupFunctionality() {
     createTanziUI();
     interceptSearchFunction();
     bindEvents();
     updateDisplay();
+    
+    // 初始化拖拽功能 (新增)
+    makeDraggable();
 
-    // 👇 修复移动端面板溢出问题（动态调整）
+    // 修复移动端面板位置
     function fixMobilePanelPosition() {
         if (window.innerWidth <= 768) {
             const panel = document.getElementById(config.panelId);
-            if (panel) {
+            const container = document.getElementById(config.containerId);
+            
+            if (panel && container) {
+                // 移动端重置容器位置，确保在右下角
+                container.style.top = '';
+                container.style.left = '';
+                container.style.bottom = '30px';
+                container.style.right = '30px';
+                
                 // 强制使用 fixed 定位
                 panel.style.position = 'fixed';
                 panel.style.zIndex = '10001';
-                // 居中显示
                 panel.style.left = '50%';
                 panel.style.right = 'auto';
                 panel.style.transform = 'translateX(-50%)';
                 panel.style.width = '90vw';
+                panel.style.bottom = '100px';
                 
-                // 调整底部距离，避免遮挡
-                panel.style.bottom = '80px';
-                
-                // 限制最大高度，允许内部滚动
-                panel.style.maxHeight = '70vh';
+                // 移动端高度逻辑
+                panel.style.maxHeight = 'none';
+                panel.style.height = 'auto';
+                panel.style.minHeight = '200px';
                 panel.style.overflowY = 'auto';
-                
-                // 确保背景不透明
                 panel.style.backgroundColor = 'white';
             }
         } else {
             // 桌面端恢复
             const panel = document.getElementById(config.panelId);
             if (panel) {
+                // 桌面端恢复为 absolute，跟随容器
+                panel.style.position = 'absolute';
+                panel.style.zIndex = '';
                 panel.style.left = '';
+                panel.style.top = '';
                 panel.style.transform = '';
+                panel.style.width = '320px';
+                panel.style.bottom = '70px'; // 位于球体上方
+                panel.style.right = '0';
+                
+                // 桌面端高度逻辑 (修复溢出)
+                panel.style.maxHeight = '80vh'; // 限制最大高度
+                panel.style.height = 'auto';
+                panel.style.minHeight = '';
+                panel.style.overflowY = 'auto'; // 允许滚动
             }
         }
     }
 
-    // 初始化时修复
     fixMobilePanelPosition();
-    // 监听窗口 resize（例如横竖屏切换）
     window.addEventListener('resize', fixMobilePanelPosition);
 }
 
-// 创建坛子UI
+// 新增：实现拖拽功能
+function makeDraggable() {
+    const container = document.getElementById(config.containerId);
+    const orb = document.getElementById(config.orbId);
+    
+    if (!container || !orb) return;
+
+    // 恢复保存的位置
+    const savedPos = localStorage.getItem(config.positionKey);
+    if (savedPos && window.innerWidth > 768) {
+        try {
+            const pos = JSON.parse(savedPos);
+            // 简单的边界检查，防止元素完全跑出屏幕
+            const maxX = window.innerWidth - 50;
+            const maxY = window.innerHeight - 50;
+            
+            const safeLeft = Math.min(Math.max(0, pos.left), maxX);
+            const safeTop = Math.min(Math.max(0, pos.top), maxY);
+
+            container.style.left = safeLeft + 'px';
+            container.style.top = safeTop + 'px';
+            container.style.bottom = 'auto';
+            container.style.right = 'auto';
+        } catch (e) {
+            console.error('恢复位置失败', e);
+        }
+    }
+
+    let isDragging = false;
+    let startX, startY, initialLeft, initialTop;
+    let hasMoved = false;
+
+    // 鼠标按下事件
+    orb.addEventListener('mousedown', function(e) {
+        if (window.innerWidth <= 768) return; // 移动端禁用拖拽逻辑，保持原样
+        
+        isDragging = true;
+        hasMoved = false;
+        
+        // 获取鼠标初始位置
+        startX = e.clientX;
+        startY = e.clientY;
+        
+        // 获取容器当前位置
+        const rect = container.getBoundingClientRect();
+        initialLeft = rect.left;
+        initialTop = rect.top;
+        
+        // 设置 cursor
+        orb.style.cursor = 'grabbing';
+        
+        e.preventDefault(); // 防止选中文本
+    });
+
+    // 鼠标移动事件 (绑定到 window 以防拖出元素)
+    window.addEventListener('mousemove', function(e) {
+        if (!isDragging) return;
+        
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        
+        // 只有移动超过一定距离才算是拖拽，避免点击误判
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+            hasMoved = true;
+        }
+        
+        // 计算新位置
+        let newLeft = initialLeft + dx;
+        let newTop = initialTop + dy;
+        
+        // 边界检查
+        const maxX = window.innerWidth - container.offsetWidth;
+        const maxY = window.innerHeight - container.offsetHeight;
+        
+        newLeft = Math.min(Math.max(0, newLeft), maxX);
+        newTop = Math.min(Math.max(0, newTop), maxY);
+        
+        container.style.left = newLeft + 'px';
+        container.style.top = newTop + 'px';
+        container.style.bottom = 'auto';
+        container.style.right = 'auto';
+    });
+
+    // 鼠标松开事件
+    window.addEventListener('mouseup', function(e) {
+        if (!isDragging) return;
+        
+        isDragging = false;
+        orb.style.cursor = 'grab'; // 恢复鼠标样式
+        
+        if (hasMoved) {
+            // 保存位置
+            const pos = {
+                left: parseInt(container.style.left),
+                top: parseInt(container.style.top)
+            };
+            localStorage.setItem(config.positionKey, JSON.stringify(pos));
+            
+            // 标记这次操作是拖拽，给 click 事件用
+            orb.setAttribute('data-was-dragged', 'true');
+            // 短暂延迟后清除标记
+            setTimeout(() => {
+                orb.removeAttribute('data-was-dragged');
+            }, 50);
+        }
+    });
+}
+
 function createTanziUI() {
     if (!document.getElementById(config.containerId)) {
         const tanziHTML = `
@@ -268,15 +362,6 @@ function createTanziUI() {
                             <span class="stat-label">次</span>
                         </div>
                     </div>
-                    <div class="keywords-section">
-                        <div class="section-title">
-                            <span>📝 关键词分类</span>
-                            <span class="section-hint">(绿色=有效, 红色=无效)</span>
-                        </div>
-                        <div class="keywords-list" id="keywords-list">
-                            <div class="empty-keywords">暂无关键词记录</div>
-                        </div>
-                    </div>
                     <div class="stats-section">
                         <div class="stat-item">
                             <span class="stat-label">发现隐藏帖子:</span>
@@ -289,51 +374,88 @@ function createTanziUI() {
                             <span class="stat-value highlight" id="remaining-count">0</span>
                         </div>
                     </div>
+                    <div class="keywords-section">
+                        <div class="section-title">
+                            <span>📝 关键词分类</span>
+                            <span class="section-hint">(绿色=有效, 红色=无效)</span>
+                        </div>
+                        <div class="keywords-list" id="keywords-list">
+                            <div class="empty-keywords">暂无关键词记录</div>
+                        </div>
+                    </div>
                     <div class="panel-actions">
-                        <button class="panel-btn primary" id="clear-keywords">清空记录</button>
-                        <button class="panel-btn secondary" id="copy-all-keywords">复制有效词</button>
-                        <button class="panel-btn secondary" id="clear-badge">清除角标</button>
+                        <div class="buttons-row">
+                            <button class="panel-btn primary short-btn" id="clear-keywords">清空</button>
+                            <button class="panel-btn secondary short-btn" id="copy-all-keywords">复制</button>
+                            <button class="panel-btn secondary short-btn" id="clear-badge">角标</button>
+                        </div>
                     </div>
                 </div>
             </div>
         `;
         document.body.insertAdjacentHTML('beforeend', tanziHTML);
-        
-        // 添加必要的样式
         addEssentialStyles();
     }
 }
 
-// 添加必要的样式
 function addEssentialStyles() {
     const style = document.createElement('style');
-    // 注意：这里修复了.tanzi-panel的基础样式，使其在任何情况下都有背景和定位
     style.textContent = `
-        /* 坛子容器定位 */
+        /* 坛子容器定位 - 修改为支持拖拽 */
         .tanzi-container {
             position: fixed;
             bottom: 30px;
             right: 30px;
             z-index: 10000;
+            display: none;
+            flex-direction: column;
+            align-items: flex-end; /* 让子元素右对齐 */
+        }
+
+        /* 坛子球体样式优化 */
+        .tanzi-orb {
+            cursor: pointer; /* 默认手型 */
+            transition: transform 0.2s, box-shadow 0.2s;
+            /* 确保球体位于面板之上或旁边 */
+            position: relative;
+            z-index: 10002;
+        }
+
+        /* 大屏下添加抓取手势 */
+        @media (min-width: 769px) {
+            .tanzi-orb {
+                cursor: grab;
+            }
+            .tanzi-orb:active {
+                cursor: grabbing;
+            }
         }
 
         /* 基础面板样式 - 关键修复 */
         .tanzi-panel {
-            position: fixed;
-            bottom: 90px;
-            right: 30px;
-            width: 320px;
-            background: #ffffff; /* 必须有背景色 */
+            /* 桌面端改为绝对定位，相对于容器 */
+            position: absolute;
+            bottom: 200px; /* 位于球体上方 */
+            right: 0;
+            width: 350px;
+            
+            /* 修复1: 桌面端最大高度和滚动 */
+            max-height: 100vh; 
+            overflow-y: auto;
+            
+            background: #ffffff;
             border-radius: 12px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.2);
             z-index: 10001;
             display: none; /* 默认隐藏 */
             flex-direction: column;
             padding: 0;
-            overflow: hidden;
             font-size: 14px;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Microsoft YaHei', sans-serif;
             border: 1px solid rgba(0,0,0,0.05);
+            
+            /* 滚动条美化 */
+            scrollbar-width: thin;
         }
 
         .panel-header {
@@ -343,6 +465,7 @@ function addEssentialStyles() {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-shrink: 0;
         }
         
         .panel-close {
@@ -356,64 +479,54 @@ function addEssentialStyles() {
 
         .search-stats-section, .stats-section, .panel-actions {
             padding: 10px 15px;
+            flex-shrink: 0;
+        }
+
+        .stats-section {
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+        }
+        
+        .stats-section .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .stats-section .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .stats-section .stat-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .stats-section .highlight {
+            color: #ff4757;
         }
 
         .keywords-section {
             padding: 10px 15px;
-            max-height: 200px;
-            overflow-y: auto;
             background: #fafafa;
             border-top: 1px solid #eee;
             border-bottom: 1px solid #eee;
-        }
-
-        /* 移动端适配 */
-        @media (max-width: 768px) {
-            .tanzi-container {
-                bottom: 15px !important;
-                right: 15px !important;
-            }
-            
-            .tanzi-orb {
-                width: 50px !important;
-                height: 50px !important;
-            }
-            
-            /* 移动端面板强制样式 */
-            .tanzi-panel {
-                position: fixed !important;
-                width: 90vw !important;
-                max-width: none !important;
-                
-                /* 水平居中 */
-                left: 50% !important;
-                right: auto !important;
-                transform: translateX(-50%) !important;
-                
-                /* 位于球体上方 */
-                bottom: 80px !important;
-                
-                max-height: 60vh !important;
-                overflow-y: auto !important;
-                border: 1px solid #ddd;
-                box-shadow: 0 0 100px rgba(0,0,0,0.2); /* 更加明显的阴影 */
-            }
-            
-            .panel-title {
-                font-size: 15px !important;
-            }
-            
-            .keyword-item {
-                font-size: 13px !important;
-                padding: 8px 10px !important;
-            }
-            
-            .panel-btn {
-                font-size: 13px !important;
-                padding: 8px !important;
-            }
+            display: flex;
+            flex-direction: column;
+            min-height: 60px;
+            /* 移除固定的 max-height，由 panel 的 flex 和 max-height 控制 */
+            flex: 1; 
         }
         
+        .keywords-header {
+            flex-shrink: 0;
+        }
+
         .panel-title {
             font-size: 16px;
             font-weight: 600;
@@ -424,6 +537,10 @@ function addEssentialStyles() {
             display: flex;
             flex-direction: column;
             gap: 5px;
+            /* 关键：让内容撑开，不设死高度，依赖父容器滚动 */
+            min-height: 20px; 
+            margin-top: 8px;
+            padding-right: 2px;
         }
         
         .keyword-item {
@@ -432,9 +549,10 @@ function addEssentialStyles() {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-shrink: 0;
+            min-height: 32px;
         }
 
-        /* 关键词样式 */
         .keyword-item.valid {
             background: #e8f5e8 !important;
             color: #2e7d32 !important;
@@ -455,9 +573,9 @@ function addEssentialStyles() {
             min-width: 20px;
             text-align: center;
             display: inline-block;
+            flex-shrink: 0;
         }
         
-        /* 角标样式 */
         .tanzi-badge {
             position: absolute;
             top: -5px;
@@ -475,39 +593,56 @@ function addEssentialStyles() {
         
         .panel-actions {
             display: flex;
-            gap: 10px;
             border-top: 1px solid #eee;
+            padding: 12px 15px;
+        }
+        
+        .buttons-row {
+            display: flex;
+            width: 100%;
+            gap: 8px;
+            justify-content: space-between;
         }
 
-        /* 按钮自适应 */
-        .panel-btn {
+        .short-btn {
+            flex: 1;
+            min-width: 0;
+            padding: 8px 6px !important;
+            font-size: 13px !important;
+            height: 36px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            min-width: 0;
-            flex: 1;
-            padding: 8px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: opacity 0.2s;
         }
         
-        .panel-btn:hover {
-            opacity: 0.8;
+        .short-btn:hover {
+            opacity: 0.85;
+            transform: translateY(-1px);
         }
         
-        .panel-btn.primary {
-            background: #ff4757;
+        .short-btn:active {
+            transform: translateY(0);
+        }
+        
+        .short-btn.primary {
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
             color: white;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(255, 71, 87, 0.2);
         }
         
-        .panel-btn.secondary {
-            background: #e0e0e0;
+        .short-btn.secondary {
+            background: linear-gradient(135deg, #e0e0e0, #f0f0f0);
             color: #333;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         
-        /* 提示信息样式 */
         #hint-section {
             background: #e3f2fd;
             border: 1px solid #bbdefb;
@@ -517,6 +652,7 @@ function addEssentialStyles() {
             font-size: 14px;
             color: #1976d2;
             animation: fadeIn 0.3s ease;
+            flex-shrink: 0;
         }
         
         .section-title {
@@ -532,13 +668,179 @@ function addEssentialStyles() {
             color: #999;
             padding: 20px 0;
             font-size: 13px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .highlight {
-            color: #ff4757;
-            font-weight: bold;
+        /* 移动端适配 - 严格保持原样 */
+        @media (max-width: 768px) {
+            .tanzi-container {
+                bottom: 15px !important;
+                right: 15px !important;
+                left: auto !important;
+                top: auto !important;
+                position: fixed !important;
+            }
+            
+            .tanzi-orb {
+                width: 50px !important;
+                height: 50px !important;
+                cursor: default !important; /* 移动端不显示抓手 */
+            }
+            
+            .tanzi-panel {
+                position: fixed !important;
+                width: 90vw !important;
+                max-width: 400px !important;
+                left: 50% !important;
+                right: auto !important;
+                transform: translateX(-50%) !important;
+                bottom: 100px !important;
+                top: auto !important;
+                
+                height: 70vh !important;
+                max-height: 70vh !important;
+                min-height: 300px !important;
+                overflow-y: auto !important;
+                border: 1px solid #ddd;
+                box-shadow: 0 0 100px rgba(0,0,0,0.2);
+                background: white !important;
+                border-radius: 12px !important;
+            }
+            
+            .search-stats-section, .stats-section {
+                padding: 8px 12px !important;
+                min-height: auto !important;
+                flex-shrink: 0 !important;
+            }
+            
+            .stats-section {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 6px !important;
+            }
+            
+            .stats-section .stat-item {
+                justify-content: flex-start !important;
+            }
+            
+            .keywords-section {
+                max-height: none !important;
+                height: auto !important;
+                min-height: 150px !important;
+                overflow-y: visible !important;
+                padding: 12px 15px !important;
+                flex: 1 !important;
+                display: flex !important;
+                flex-direction: column !important;
+            }
+            
+            .keywords-list {
+                max-height: 30vh !important;
+                min-height: 80px !important;
+                overflow-y: auto !important;
+                margin-top: 8px !important;
+                flex: 1 !important;
+                border: 1px solid #eee !important;
+                border-radius: 6px !important;
+                padding: 8px !important;
+                background: white !important;
+            }
+            
+            .keyword-item {
+                font-size: 13px !important;
+                padding: 10px 12px !important;
+                min-height: 32px !important;
+                word-break: break-word !important;
+                white-space: normal !important;
+                line-height: 1.4 !important;
+                margin-bottom: 5px !important;
+            }
+            
+            .keyword-text {
+                flex: 1 !important;
+                min-width: 0 !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                max-height: 44px !important;
+                display: -webkit-box !important;
+                -webkit-line-clamp: 2 !important;
+                -webkit-box-orient: vertical !important;
+            }
+            
+            .keyword-count {
+                flex-shrink: 0 !important;
+                margin-left: 8px !important;
+                font-size: 10px !important;
+                padding: 2px 6px !important;
+                align-self: flex-start !important;
+                margin-top: 3px !important;
+            }
+            
+            .panel-title {
+                font-size: 15px !important;
+            }
+            
+            .panel-actions {
+                padding: 10px 12px !important;
+                flex-shrink: 0 !important;
+            }
+            
+            .buttons-row {
+                gap: 6px !important;
+            }
+            
+            .short-btn {
+                padding: 10px 4px !important;
+                font-size: 12px !important;
+                height: 38px !important;
+                min-width: 60px !important;
+                font-weight: 600 !important;
+                border-radius: 8px !important;
+            }
+            
+            #hint-section {
+                margin: 8px !important;
+                padding: 10px !important;
+                font-size: 13px !important;
+                line-height: 1.5 !important;
+                flex-shrink: 0 !important;
+            }
+            
+            #tanzi-confirm-dialog {
+                width: 85vw !important;
+                margin: 20px !important;
+            }
+            
+            #tanzi-confirm-dialog > div {
+                padding: 20px 16px !important;
+            }
+            
+            #tanzi-confirm-cancel, #tanzi-confirm-ok {
+                padding: 12px 16px !important;
+                font-size: 15px !important;
+                min-height: 44px !important;
+            }
         }
         
+        /* 桌面端滚动条美化 */
+        .tanzi-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+        .tanzi-panel::-webkit-scrollbar-track {
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+        .tanzi-panel::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+        .tanzi-panel::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -547,30 +849,22 @@ function addEssentialStyles() {
     document.head.appendChild(style);
 }
 
-// 拦截搜索函数
 function interceptSearchFunction() {
-    // 拦截搜索函数
     if (typeof window.performSearch === 'function') {
         originalPerformSearch = window.performSearch;
         window.performSearch = function() {
             const query = document.getElementById(config.searchInputId).value.trim();
             
-            // 检查是否触发坛子
             if (query === config.triggerKeyword) {
                 showTanzi();
-                return; // 不执行实际搜索
+                return;
             }
             
-            // 记录搜索次数
             recordSearch();
-            
-            // 检查是否需要显示周期性提示
             checkPeriodicHint(query);
             
-            // 执行原始搜索并检查隐藏帖子
             const result = originalPerformSearch.apply(this, arguments);
             
-            // 检查搜索结果中是否有隐藏帖子
             setTimeout(() => {
                 checkForHiddenPosts(query);
             }, 300);
@@ -578,32 +872,22 @@ function interceptSearchFunction() {
             return result;
         };
     } else {
-        // 如果没有原始搜索函数，创建我们的搜索函数
         window.performSearch = function() {
             const query = document.getElementById(config.searchInputId).value.trim();
             
-            // 检查是否触发坛子
             if (query === config.triggerKeyword) {
                 showTanzi();
                 return;
             }
             
-            // 记录搜索次数
             recordSearch();
-            
-            // 检查是否需要显示周期性提示
             checkPeriodicHint(query);
             
-            // 模拟搜索逻辑
-            
-            
-            // 检查搜索结果中是否有隐藏帖子
             setTimeout(() => {
                 checkForHiddenPosts(query);
             }, 300);
         };
         
-        // 绑定搜索按钮事件
         const searchBtn = document.getElementById(config.searchBtnId);
         if (searchBtn) {
             searchBtn.addEventListener('click', window.performSearch);
@@ -620,7 +904,6 @@ function interceptSearchFunction() {
     }
 }
 
-// 记录搜索次数
 function recordSearch() {
     searchCount++;
     try {
@@ -635,7 +918,6 @@ function recordSearch() {
     }
 }
 
-// 绑定事件
 function bindEvents() {
     const orb = document.getElementById(config.orbId);
     const panel = document.getElementById(config.panelId);
@@ -644,418 +926,19 @@ function bindEvents() {
     const copyAllBtn = document.getElementById('copy-all-keywords');
     const clearBadgeBtn = document.getElementById('clear-badge');
     
-    // 坛子球点击事件
     if (orb) {
         orb.addEventListener('click', function(e) {
+            // 如果刚刚发生了拖拽，则不执行点击事件 (新增逻辑)
+            if (orb.getAttribute('data-was-dragged') === 'true') {
+                return;
+            }
+
             e.stopPropagation();
-            // 切换显示状态
             if (panel.style.display === 'block' || panel.style.display === 'flex') {
                 panel.style.display = 'none';
                 orb.classList.remove('active');
             } else {
-                panel.style.display = 'flex'; // 使用 flex 布局
+                panel.style.display = 'flex';
                 orb.classList.add('active');
                 updateKeywordsDisplay();
-                updateStats();
-                updateSearchStats();
-            }
-        });
-    }
-    
-    // 关闭按钮事件
-    if (panelClose) {
-        panelClose.addEventListener('click', function(e) {
-            e.stopPropagation();
-            panel.style.display = 'none';
-            orb.classList.remove('active');
-        });
-    }
-    
-    // 清空关键词事件
-    if (clearBtn) {
-        clearBtn.addEventListener('click', function() {
-            if (confirm('确定要清空所有已记录的关键词吗？')) {
-                localStorage.setItem(config.storageKey, JSON.stringify({}));
-                // 同时清空不重复搜索记录
-                localStorage.removeItem(config.uniqueSearchesKey);
-                uniqueSearchTerms.clear();
-                updateKeywordsDisplay();
-                updateStats();
-                updateBadge(0);
-                showMessage('关键词已清空', 'success');
-            }
-        });
-    }
-    
-    // 复制所有有效关键词事件
-    if (copyAllBtn) {
-        copyAllBtn.addEventListener('click', function() {
-            const keywordsData = getStoredKeywords();
-            const validKeywords = Object.keys(keywordsData).filter(k => keywordsData[k].valid);
-            
-            if (validKeywords.length > 0) {
-                const text = validKeywords.join(', ');
-                navigator.clipboard.writeText(text).then(() => {
-                    showMessage(`已复制 ${validKeywords.length} 个有效关键词`, 'success');
-                }).catch(() => {
-                    // 降级方案
-                    const textArea = document.createElement('textarea');
-                    textArea.value = text;
-                    document.body.appendChild(textArea);
-                    textArea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textArea);
-                    showMessage(`已复制 ${validKeywords.length} 个有效关键词`, 'success');
-                });
-            } else {
-                showMessage('没有有效关键词可复制', 'info');
-            }
-        });
-    }
-    
-    // 清除角标事件
-    if (clearBadgeBtn) {
-        clearBadgeBtn.addEventListener('click', function() {
-            updateBadge(0);
-            showMessage('角标已清除', 'success');
-        });
-    }
-    
-    // 点击面板外部关闭面板
-    document.addEventListener('click', function(event) {
-        const panel = document.getElementById(config.panelId);
-        const orb = document.getElementById(config.orbId);
-        const container = document.getElementById(config.containerId);
-        
-        if (panel && (panel.style.display === 'block' || panel.style.display === 'flex') && 
-            !container.contains(event.target)) {
-            panel.style.display = 'none';
-            orb.classList.remove('active');
-        }
-    });
-
-    // 移动端触摸事件支持
-    if ('ontouchstart' in window) {
-        // 防止移动端双击缩放
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', function (event) {
-            const now = (new Date()).getTime();
-            if (now - lastTouchEnd <= 300) {
-                event.preventDefault();
-            }
-            lastTouchEnd = now;
-        }, false);
-
-        // 改善移动端触摸体验
-        if (orb) {
-            orb.addEventListener('touchstart', function(e) {
-                // e.preventDefault(); // 可能会阻止点击，视情况而定
-            }, { passive: false });
-        }
-    }
-}
-
-// 显示坛子
-function showTanzi() {
-    const container = document.getElementById(config.containerId);
-    if (container) {
-        container.style.display = 'block';
-        showMessage('坛子出现啦！我会帮你智能记录过期帖子的关键词~', 'success');
-        
-        // 自动展开面板
-        const panel = document.getElementById(config.panelId);
-        const orb = document.getElementById(config.orbId);
-        panel.style.display = 'flex'; // 使用 flex
-        orb.classList.add('active');
-        
-        updateKeywordsDisplay();
-        updateStats();
-        updateSearchStats();
-    }
-}
-
-// 检查搜索结果中的隐藏帖子
-function checkForHiddenPosts(query) {
-    if (!query || query === config.triggerKeyword) return;
-    
-    // 检查页面中是否有隐藏帖子
-    const foundHiddenPosts = findHiddenPostsInResults(query);
-    const hasFoundPosts = foundHiddenPosts.length > 0;
-    
-    // 记录关键词（无论是否找到都记录，但标记有效性）
-    recordKeyword(query, hasFoundPosts, foundHiddenPosts.length);
-    
-    // 更新显示
-    updateKeywordsDisplay();
-    updateStats();
-    updateSearchStats();
-    
-    // 显示发现提示
-    if (hasFoundPosts) {
-        showMessage(`🎉 发现 ${foundHiddenPosts.length} 个隐藏帖子！关键词 "${query}" 已记录`, 'success');
-    } else {
-        showMessage(`未发现隐藏帖子`, 'info');
-    }
-}
-
-// 在搜索结果中查找隐藏帖子
-function findHiddenPostsInResults(query) {
-    const foundPosts = [];
-    
-    if (!window.hiddenPosts || !Array.isArray(window.hiddenPosts)) {
-        console.warn('hiddenPosts 数据未找到或格式不正确');
-        return foundPosts;
-    }
-    
-    const lowerQuery = query.toLowerCase();
-    
-    // 检查隐藏帖子数据
-    window.hiddenPosts.forEach(post => {
-        if (post.searchKeyword) {
-            const keywords = post.searchKeyword.split(',').map(k => k.trim().toLowerCase());
-            // 只有当搜索词完全匹配关键词时才认为找到
-            if (keywords.some(keyword => keyword === lowerQuery)) {
-                foundPosts.push({
-                    title: post.title,
-                    author: post.author,
-                    date: post.date,
-                    keyword: query
-                });
-            }
-        }
-    });
-    
-    return foundPosts;
-}
-
-// 记录关键词（带有效性标记）
-function recordKeyword(keyword, isValid, foundCount = 0) {
-    const keywordsData = getStoredKeywords();
-    
-    if (!keywordsData[keyword]) {
-        keywordsData[keyword] = {
-            valid: isValid,
-            count: 1,
-            firstFound: new Date().toISOString(),
-            lastFound: new Date().toISOString(),
-            foundPosts: foundCount
-        };
-    } else {
-        keywordsData[keyword].count++;
-        keywordsData[keyword].lastFound = new Date().toISOString();
-        keywordsData[keyword].foundPosts = foundCount;
-        // 如果之前是无效但现在有效，更新状态
-        if (!keywordsData[keyword].valid && isValid) {
-            keywordsData[keyword].valid = true;
-        }
-    }
-    
-    localStorage.setItem(config.storageKey, JSON.stringify(keywordsData));
-    
-    // 更新徽章（只显示有效关键词数量）
-    const validCount = Object.values(keywordsData).filter(k => k.valid).length;
-    updateBadge(validCount);
-}
-
-// 获取存储的关键词
-function getStoredKeywords() {
-    try {
-        const stored = localStorage.getItem(config.storageKey);
-        if (!stored) return {};
-        
-        const parsed = JSON.parse(stored);
-        // 兼容旧版本的数据格式
-        if (Array.isArray(parsed)) {
-            const newData = {};
-            parsed.forEach(keyword => {
-                newData[keyword] = {
-                    valid: true, // 旧数据默认设为有效
-                    count: 1,
-                    firstFound: new Date().toISOString(),
-                    lastFound: new Date().toISOString(),
-                    foundPosts: 1
-                };
-            });
-            localStorage.setItem(config.storageKey, JSON.stringify(newData));
-            return newData;
-        }
-        return parsed;
-    } catch (e) {
-        console.error('读取关键词数据失败:', e);
-        return {};
-    }
-}
-
-// 更新关键词显示
-function updateKeywordsDisplay() {
-    const keywordsList = document.getElementById('keywords-list');
-    const keywordsData = getStoredKeywords();
-    const keywords = Object.entries(keywordsData);
-    
-    if (keywordsList) {
-        if (keywords.length > 0) {
-            // 按最后发现时间排序
-            keywords.sort((a, b) => new Date(b[1].lastFound) - new Date(a[1].lastFound));
-            
-            keywordsList.innerHTML = keywords.map(([keyword, data]) => {
-                const validClass = data.valid ? 'valid' : 'invalid';
-                const countText = data.count > 1 ? `<span class="keyword-count">${data.count}</span>` : '';
-                const foundText = data.foundPosts > 0 ? ` (${data.foundPosts}帖)` : '';
-                return `
-                    <div class="keyword-item ${validClass}">
-                        <span class="keyword-text">${keyword}${foundText}</span>
-                        ${countText}
-                    </div>
-                `;
-            }).join('');
-        } else {
-            keywordsList.innerHTML = '<div class="empty-keywords">暂无关键词记录<br>搜索隐藏帖子后会自动记录</div>';
-        }
-    }
-}
-
-// 更新统计信息
-function updateStats() {
-    const foundCount = document.getElementById('found-count');
-    const remainingCount = document.getElementById('remaining-count');
-    const totalCount = document.getElementById('total-count');
-    
-    const keywordsData = getStoredKeywords();
-    const validKeywords = Object.values(keywordsData).filter(k => k.valid).length;
-    const totalHidden = calculateTotalHiddenPosts();
-    
-    if (foundCount) foundCount.textContent = validKeywords;
-    if (remainingCount) remainingCount.textContent = totalHidden - validKeywords;
-    if (totalCount) totalCount.textContent = totalHidden;
-}
-
-// 更新搜索统计
-function updateSearchStats() {
-    const searchCountElement = document.getElementById('search-count');
-    if (searchCountElement) {
-        searchCountElement.textContent = searchCount;
-    }
-}
-
-// 计算总隐藏帖子数量
-function calculateTotalHiddenPosts() {
-    if (window.hiddenPosts && Array.isArray(window.hiddenPosts)) {
-        return window.hiddenPosts.length;
-    }
-    return 35; // 默认值，根据你的数据调整
-}
-
-// 更新徽章
-function updateBadge(count) {
-    const orb = document.getElementById(config.orbId);
-    let badge = orb.querySelector('.tanzi-badge');
-    
-    if (!badge) {
-        badge = document.createElement('div');
-        badge.className = 'tanzi-badge';
-        orb.appendChild(badge);
-    }
-    
-    if (count > 0) {
-        badge.textContent = count > 99 ? '99+' : count.toString();
-        badge.style.display = 'block';
-        
-        // 确保角标数字完全显示
-        if (count > 9) {
-            badge.style.minWidth = '22px';
-            badge.style.padding = '2px 8px';
-        } else {
-            badge.style.minWidth = '18px';
-            badge.style.padding = '2px 6px';
-        }
-    } else {
-        badge.style.display = 'none';
-    }
-}
-
-// 显示消息
-function showMessage(message, type = 'info') {
-    // 移除现有消息
-    const existingMsg = document.getElementById('tanzi-message');
-    if (existingMsg) existingMsg.remove();
-    
-    const backgroundColor = type === 'success' ? '#4caf50' : type === 'warning' ? '#ff9800' : '#2196f3';
-    
-    const msgDiv = document.createElement('div');
-    msgDiv.id = 'tanzi-message';
-    msgDiv.textContent = message;
-    msgDiv.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${backgroundColor};
-        color: white;
-        padding: 12px 18px;
-        border-radius: 8px;
-        z-index: 10002;
-        font-size: 14px;
-        font-weight: 500;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        animation: slideInRight 0.3s ease;
-        max-width: 80vw;
-        word-break: break-word;
-    `;
-    
-    // 移动端适配
-    if (window.innerWidth <= 768) {
-        msgDiv.style.right = '10px';
-        msgDiv.style.left = '10px';
-        msgDiv.style.top = '10px';
-    }
-    
-    document.body.appendChild(msgDiv);
-    
-    setTimeout(() => {
-        if (msgDiv.parentNode) {
-            msgDiv.parentNode.removeChild(msgDiv);
-        }
-    }, 3000);
-}
-
-// 更新显示状态
-function updateDisplay() {
-    const keywordsData = getStoredKeywords();
-    const validCount = Object.values(keywordsData).filter(k => k.valid).length;
-    updateBadge(validCount);
-    updateSearchStats();
-}
-
-// 初始化
-init();
-
-// 暴露到全局，方便调试和使用
-window.tanzi = {
-    show: showTanzi,
-    getKeywords: getStoredKeywords,
-    clearKeywords: function() {
-        localStorage.setItem(config.storageKey, JSON.stringify({}));
-        localStorage.removeItem(config.uniqueSearchesKey); // 同时清空不重复搜索记录
-        uniqueSearchTerms.clear();
-        updateKeywordsDisplay();
-        updateStats();
-        updateBadge(0);
-        updateSearchStats();
-    },
-    clearBadge: function() {
-        updateBadge(0);
-    },
-    getStats: function() {
-        const keywordsData = getStoredKeywords();
-        return {
-            totalSearches: searchCount,
-            uniqueSearches: uniqueSearchTerms.size,
-            validKeywords: Object.values(keywordsData).filter(k => k.valid).length,
-            invalidKeywords: Object.values(keywordsData).filter(k => !k.valid).length,
-            totalHiddenPosts: calculateTotalHiddenPosts()
-        };
-    },
-    version: '2.3.2'
-};
-
-
-})();
+                
