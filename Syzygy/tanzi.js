@@ -941,4 +941,488 @@ function bindEvents() {
                 panel.style.display = 'flex';
                 orb.classList.add('active');
                 updateKeywordsDisplay();
-                
+                updateStats();
+                updateSearchStats();
+            }
+        });
+    }
+    
+    if (panelClose) {
+        panelClose.addEventListener('click', function(e) {
+            e.stopPropagation();
+            panel.style.display = 'none';
+            orb.classList.remove('active');
+        });
+    }
+    
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function() {
+            showConfirmDialog(
+                '确定要清空所有已记录的关键词吗？',
+                function() {
+                    localStorage.setItem(config.storageKey, JSON.stringify({}));
+                    localStorage.removeItem(config.uniqueSearchesKey);
+                    uniqueSearchTerms.clear();
+                    updateKeywordsDisplay();
+                    updateStats();
+                    updateBadge(0);
+                    showMessage('关键词已清空', 'success');
+                },
+                function() {}
+            );
+        });
+    }
+    
+    if (copyAllBtn) {
+        copyAllBtn.addEventListener('click', function() {
+            const keywordsData = getStoredKeywords();
+            const validKeywords = Object.keys(keywordsData).filter(k => keywordsData[k].valid);
+            
+            if (validKeywords.length > 0) {
+                const text = validKeywords.join(', ');
+                navigator.clipboard.writeText(text).then(() => {
+                    showMessage(`已复制 ${validKeywords.length} 个有效关键词`, 'success');
+                }).catch(() => {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showMessage(`已复制 ${validKeywords.length} 个有效关键词`, 'success');
+                });
+            } else {
+                showMessage('没有有效关键词可复制', 'info');
+            }
+        });
+    }
+    
+    if (clearBadgeBtn) {
+        clearBadgeBtn.addEventListener('click', function() {
+            updateBadge(0);
+            showMessage('角标已清除', 'success');
+        });
+    }
+    
+    document.addEventListener('click', function(event) {
+        const panel = document.getElementById(config.panelId);
+        const orb = document.getElementById(config.orbId);
+        const container = document.getElementById(config.containerId);
+        
+        if (panel && (panel.style.display === 'block' || panel.style.display === 'flex') && 
+            !container.contains(event.target)) {
+            panel.style.display = 'none';
+            orb.classList.remove('active');
+        }
+    });
+
+    if ('ontouchstart' in window) {
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        if (orb) {
+            orb.addEventListener('touchstart', function(e) {
+            }, { passive: false });
+        }
+    }
+}
+
+function showConfirmDialog(message, onConfirm, onCancel) {
+    const existingDialog = document.getElementById('tanzi-confirm-dialog');
+    if (existingDialog) existingDialog.remove();
+    
+    const overlay = document.createElement('div');
+    overlay.id = 'tanzi-confirm-overlay';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 20000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.3s ease;
+    `;
+    
+    const dialog = document.createElement('div');
+    dialog.id = 'tanzi-confirm-dialog';
+    dialog.style.cssText = `
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        width: 300px;
+        max-width: 90vw;
+        overflow: hidden;
+        animation: slideUp 0.3s ease;
+    `;
+    
+    dialog.innerHTML = `
+        <div style="padding: 24px; text-align: center;">
+            <div style="font-size: 16px; color: #333; margin-bottom: 20px; line-height: 1.5;">
+                ${message}
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button id="tanzi-confirm-cancel" style="
+                    padding: 10px 24px;
+                    background: #f0f0f0;
+                    border: none;
+                    border-radius: 6px;
+                    color: #666;
+                    font-size: 14px;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                    flex: 1;
+                ">取消</button>
+                <button id="tanzi-confirm-ok" style="
+                    padding: 10px 24px;
+                    background: linear-gradient(135deg, #ff4757, #ff6b81);
+                    border: none;
+                    border-radius: 6px;
+                    color: white;
+                    font-size: 14px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                    flex: 1;
+                ">确定</button>
+            </div>
+        </div>
+    `;
+    
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        #tanzi-confirm-cancel:hover {
+            background: #e0e0e0 !important;
+            transform: translateY(-1px);
+        }
+        #tanzi-confirm-ok:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        #tanzi-confirm-cancel:active, #tanzi-confirm-ok:active {
+            transform: translateY(0);
+        }
+    `;
+    
+    dialog.appendChild(style);
+    overlay.appendChild(dialog);
+    document.body.appendChild(overlay);
+    
+    const cancelBtn = document.getElementById('tanzi-confirm-cancel');
+    const okBtn = document.getElementById('tanzi-confirm-ok');
+    
+    function closeDialog() {
+        if (overlay.parentNode) {
+            overlay.parentNode.removeChild(overlay);
+        }
+    }
+    
+    cancelBtn.addEventListener('click', function() {
+        closeDialog();
+        if (typeof onCancel === 'function') onCancel();
+    });
+    
+    okBtn.addEventListener('click', function() {
+        closeDialog();
+        if (typeof onConfirm === 'function') onConfirm();
+    });
+    
+    overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) {
+            closeDialog();
+            if (typeof onCancel === 'function') onCancel();
+        }
+    });
+}
+
+function showTanzi() {
+    const container = document.getElementById(config.containerId);
+    if (container) {
+        container.style.display = 'block';
+        showMessage('坛子出现啦！我会帮你智能记录过期帖子的关键词~', 'success');
+        
+        const panel = document.getElementById(config.panelId);
+        const orb = document.getElementById(config.orbId);
+        panel.style.display = 'flex';
+        orb.classList.add('active');
+        
+        updateKeywordsDisplay();
+        updateStats();
+        updateSearchStats();
+    }
+}
+
+function checkForHiddenPosts(query) {
+    if (!query || query === config.triggerKeyword) return;
+    
+    const foundHiddenPosts = findHiddenPostsInResults(query);
+    const hasFoundPosts = foundHiddenPosts.length > 0;
+    
+    recordKeyword(query, hasFoundPosts, foundHiddenPosts.length);
+    
+    updateKeywordsDisplay();
+    updateStats();
+    updateSearchStats();
+    
+    if (hasFoundPosts) {
+        showMessage(`🎉 发现 ${foundHiddenPosts.length} 个隐藏帖子！关键词 "${query}" 已记录`, 'success');
+    } else {
+        showMessage(`未发现隐藏帖子`, 'info');
+    }
+}
+
+function findHiddenPostsInResults(query) {
+    const foundPosts = [];
+    
+    if (!window.hiddenPosts || !Array.isArray(window.hiddenPosts)) {
+        return foundPosts;
+    }
+    
+    const lowerQuery = query.toLowerCase();
+    
+    window.hiddenPosts.forEach(post => {
+        if (post.searchKeyword) {
+            const keywords = post.searchKeyword.split(',').map(k => k.trim().toLowerCase());
+            if (keywords.some(keyword => keyword === lowerQuery)) {
+                foundPosts.push({
+                    title: post.title,
+                    author: post.author,
+                    date: post.date,
+                    keyword: query
+                });
+            }
+        }
+    });
+    
+    return foundPosts;
+}
+
+function recordKeyword(keyword, isValid, foundCount = 0) {
+    const keywordsData = getStoredKeywords();
+    
+    if (!keywordsData[keyword]) {
+        keywordsData[keyword] = {
+            valid: isValid,
+            count: 1,
+            firstFound: new Date().toISOString(),
+            lastFound: new Date().toISOString(),
+            foundPosts: foundCount
+        };
+    } else {
+        keywordsData[keyword].count++;
+        keywordsData[keyword].lastFound = new Date().toISOString();
+        keywordsData[keyword].foundPosts = foundCount;
+        if (!keywordsData[keyword].valid && isValid) {
+            keywordsData[keyword].valid = true;
+        }
+    }
+    
+    localStorage.setItem(config.storageKey, JSON.stringify(keywordsData));
+    
+    const validCount = Object.values(keywordsData).filter(k => k.valid).length;
+    updateBadge(validCount);
+}
+
+function getStoredKeywords() {
+    try {
+        const stored = localStorage.getItem(config.storageKey);
+        if (!stored) return {};
+        
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+            const newData = {};
+            parsed.forEach(keyword => {
+                newData[keyword] = {
+                    valid: true,
+                    count: 1,
+                    firstFound: new Date().toISOString(),
+                    lastFound: new Date().toISOString(),
+                    foundPosts: 1
+                };
+            });
+            localStorage.setItem(config.storageKey, JSON.stringify(newData));
+            return newData;
+        }
+        return parsed;
+    } catch (e) {
+        console.error('读取关键词数据失败:', e);
+        return {};
+    }
+}
+
+function updateKeywordsDisplay() {
+    const keywordsList = document.getElementById('keywords-list');
+    const keywordsData = getStoredKeywords();
+    const keywords = Object.entries(keywordsData);
+    
+    if (keywordsList) {
+        if (keywords.length > 0) {
+            keywords.sort((a, b) => new Date(b[1].lastFound) - new Date(a[1].lastFound));
+            
+            keywordsList.innerHTML = keywords.map(([keyword, data]) => {
+                const validClass = data.valid ? 'valid' : 'invalid';
+                const countText = data.count > 1 ? `<span class="keyword-count">${data.count}</span>` : '';
+                const foundText = data.foundPosts > 0 ? ` (${data.foundPosts}帖)` : '';
+                return `
+                    <div class="keyword-item ${validClass}">
+                        <span class="keyword-text">${keyword}${foundText}</span>
+                        ${countText}
+                    </div>
+                `;
+            }).join('');
+        } else {
+            keywordsList.innerHTML = '<div class="empty-keywords">暂无关键词记录<br>搜索隐藏帖子后会自动记录</div>';
+        }
+    }
+}
+
+function updateStats() {
+    const foundCount = document.getElementById('found-count');
+    const remainingCount = document.getElementById('remaining-count');
+    const totalCount = document.getElementById('total-count');
+    
+    const keywordsData = getStoredKeywords();
+    const validKeywords = Object.values(keywordsData).filter(k => k.valid).length;
+    const totalHidden = calculateTotalHiddenPosts();
+    
+    if (foundCount) foundCount.textContent = validKeywords;
+    if (remainingCount) remainingCount.textContent = totalHidden - validKeywords;
+    if (totalCount) totalCount.textContent = totalHidden;
+}
+
+function updateSearchStats() {
+    const searchCountElement = document.getElementById('search-count');
+    if (searchCountElement) {
+        searchCountElement.textContent = searchCount;
+    }
+}
+
+function calculateTotalHiddenPosts() {
+    if (window.hiddenPosts && Array.isArray(window.hiddenPosts)) {
+        return window.hiddenPosts.length;
+    }
+    return 35;
+}
+
+function updateBadge(count) {
+    const orb = document.getElementById(config.orbId);
+    let badge = orb.querySelector('.tanzi-badge');
+    
+    if (!badge) {
+        badge = document.createElement('div');
+        badge.className = 'tanzi-badge';
+        orb.appendChild(badge);
+    }
+    
+    if (count > 0) {
+        badge.textContent = count > 99 ? '99+' : count.toString();
+        badge.style.display = 'block';
+        
+        if (count > 9) {
+            badge.style.minWidth = '22px';
+            badge.style.padding = '2px 8px';
+        } else {
+            badge.style.minWidth = '18px';
+            badge.style.padding = '2px 6px';
+        }
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+function showMessage(message, type = 'info') {
+    const existingMsg = document.getElementById('tanzi-message');
+    if (existingMsg) existingMsg.remove();
+    
+    const backgroundColor = type === 'success' ? '#4caf50' : type === 'warning' ? '#ff9800' : '#2196f3';
+    
+    const msgDiv = document.createElement('div');
+    msgDiv.id = 'tanzi-message';
+    msgDiv.textContent = message;
+    msgDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${backgroundColor};
+        color: white;
+        padding: 12px 18px;
+        border-radius: 8px;
+        z-index: 10002;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        animation: slideInRight 0.3s ease;
+        max-width: 80vw;
+        word-break: break-word;
+    `;
+    
+    if (window.innerWidth <= 768) {
+        msgDiv.style.right = '10px';
+        msgDiv.style.left = '10px';
+        msgDiv.style.top = '10px';
+    }
+    
+    document.body.appendChild(msgDiv);
+    
+    setTimeout(() => {
+        if (msgDiv.parentNode) {
+            msgDiv.parentNode.removeChild(msgDiv);
+        }
+    }, 3000);
+}
+
+function updateDisplay() {
+    const keywordsData = getStoredKeywords();
+    const validCount = Object.values(keywordsData).filter(k => k.valid).length;
+    updateBadge(validCount);
+    updateSearchStats();
+}
+
+init();
+
+window.tanzi = {
+    show: showTanzi,
+    getKeywords: getStoredKeywords,
+    clearKeywords: function() {
+        localStorage.setItem(config.storageKey, JSON.stringify({}));
+        localStorage.removeItem(config.uniqueSearchesKey);
+        uniqueSearchTerms.clear();
+        updateKeywordsDisplay();
+        updateStats();
+        updateBadge(0);
+        updateSearchStats();
+    },
+    clearBadge: function() {
+        updateBadge(0);
+    },
+    getStats: function() {
+        const keywordsData = getStoredKeywords();
+        return {
+            totalSearches: searchCount,
+            uniqueSearches: uniqueSearchTerms.size,
+            validKeywords: Object.values(keywordsData).filter(k => k.valid).length,
+            invalidKeywords: Object.values(keywordsData).filter(k => !k.valid).length,
+            totalHiddenPosts: calculateTotalHiddenPosts()
+        };
+    },
+    version: '2.4.0'
+};
+
+})();
