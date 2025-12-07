@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1996年锦华纺织厂春季招工简章</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "宋体", Arial, sans-serif;
+            background-color: #f5e9d3;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABZJREFUeNpi/P//PwMDAwPD////GfAAQAAEPwC1WpQZAAAAAElFTkSuQmCC');
+        }
+
+        /* 顶部区域：Logo和搜索栏 */
+        .header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+        }
+
+        .search-container {
+            flex: 0 0 33.33%;
+            min-width: 300px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            padding: 12px 20px;
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+        }
+
+        .search-bar:hover {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.35);
+        }
+
+        .search-bar:focus-within {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.45);
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            color: #9aa0a6;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: transparent;
+        }
+
+        .search-button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .search-button:hover {
+            background-color: #2b6fd8;
+        }
+
+        /* 原有招工简章样式 */
+        .container {
+            width: 95%;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            border: 1px solid #999999;
+            padding: 30px;
+            font-family: "宋体", Arial, sans-serif;
+            font-size: 16px;
+            color: #333333;
+            background-color: #F5F5DC;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            position: relative;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABZJREFUeNpi/P//PwMDAwPD////GfAAQAAEPwC1WpQZAAAAAElFTkSuQmCC');
+        }
+
+        /* 纸张边缘磨损效果 - 移除左上角的红色边边 */
+        /* .container::before {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(45deg, transparent 98%, #8B4513 100%),
+                        linear-gradient(-45deg, transparent 98%, #8B4513 100%),
+                        linear-gradient(135deg, transparent 98%, #8B4513 100%),
+                        linear-gradient(-135deg, transparent 98%, #8B4513 100%);
+            z-index: -1;
+            border-radius: 3px;
+            /* 隐藏左上角的红色边边 
+            clip-path: polygon(0 10px, 10px 0, 100% 0, 100% 100%, 0 100%);
+        } */
+
+        /* 右上角折角效果 */
+        .corner-fold {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 60px;
+            height: 60px;
+            z-index: 10;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .corner-fold::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 60px 60px 0;
+            border-color: transparent #990000 transparent transparent;
+            z-index: 1;
+        }
+
+        .corner-fold::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 50px 50px 0;
+            border-color: transparent #F5F5DC transparent transparent;
+            z-index: 2;
+        }
+
+        .corner-fold:hover {
+            transform: scale(1.1);
+        }
+
+        .corner-fold:hover::before {
+            border-color: transparent #cc0000 transparent transparent;
+        }
+
+        /* 折角文字提示 */
+        .corner-text {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            transform: rotate(45deg);
+            font-size: 12px;
+            color: white;
+            font-weight: bold;
+            z-index: 3;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #990000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #990000;
+            margin: 10px 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            font-size: 20px;
+            color: #333366;
+            margin: 15px 0 8px 0;
+            border-bottom: 1px dashed #999999;
+            padding-bottom: 5px;
+        }
+
+        h3 {
+            font-size: 18px;
+            margin: 15px 0 8px 0;
+            color: #333366;
+        }
+
+        .file-info {
+            text-align: center;
+            font-size: 14px;
+            color: #666666;
+            margin-bottom: 15px;
+        }
+
+        .stamp {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: 120px;
+            height: 120px;
+            border: 2px dashed #990000;
+            text-align: center;
+            padding: 8px;
+            font-family: "楷体", "楷体_GB2312", serif;
+            font-size: 14px;
+            color: #990000;
+            line-height: 1.4;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            word-break: break-all;
+            overflow: hidden;
+            transform: rotate(5deg);
+            background-color: rgba(255,255,255,0.8);
+            z-index: 5; /* 确保印章在折角之上 */
+        }
+
+        .stamp-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .stamp-line {
+            margin: 3px 0;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .policy-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+
+        .policy-table td, .policy-table th {
+            border: 1px solid #999999;
+            padding: 10px 12px;
+            font-size: 16px;
+            vertical-align: top;
+        }
+
+        .policy-table th {
+            background-color: #E6E6FA;
+            text-align: center;
+        }
+
+        .warning {
+            background-color: #FFF8DC;
+            border: 1px solid #FFD700;
+            padding: 15px;
+            margin: 20px 0;
+            font-weight: bold;
+            font-size: 16px;
+            border-left: 5px solid #FFA500;
+        }
+
+        .highlight {
+            background-color: #FFFFCC;
+            padding: 2px 4px;
+            font-weight: bold;
+        }
+
+        .red-text {
+            color: #990000;
+            font-weight: bold;
+        }
+
+        .handwritten {
+            font-family: "楷体", "楷体_GB2312", serif;
+            color: #990000;
+            font-style: italic;
+            margin-top: 10px;
+            padding-left: 15px;
+            border-left: 2px solid #990000;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px dashed #999999;
+            font-size: 14px;
+            color: #666666;
+        }
+
+        .contact {
+            background-color: #F0F0F0;
+            padding: 15px;
+            border: 1px solid #CCCCCC;
+            margin: 15px 0;
+            font-size: 16px;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .search-container {
+                width: 100%;
+                min-width: unset;
+            }
+            
+            .container {
+                width: 100%;
+                padding: 20px;
+                font-size: 18px;
+            }
+            
+            h1 {
+                font-size: 22px;
+            }
+            
+            h2 {
+                font-size: 20px;
+            }
+            
+            h3 {
+                font-size: 18px;
+            }
+            
+            .policy-table {
+                font-size: 16px;
+            }
+            
+            .policy-table td, .policy-table th {
+                padding: 8px 10px;
+                font-size: 16px;
+            }
+            
+            .stamp {
+                position: relative;
+                float: none;
+                margin: 15px auto;
+                display: block;
+                width: 120px;
+                height: 120px;
+                font-size: 14px;
+            }
+            
+            .search-bar {
+                padding: 10px 15px;
+            }
+            
+            .search-button {
+                padding: 8px 15px;
+            }
+            
+            /* 移动设备上调整折角大小 */
+            .corner-fold {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .corner-fold::before {
+                border-width: 0 50px 50px 0;
+            }
+            
+            .corner-fold::after {
+                border-width: 0 40px 40px 0;
+            }
+            
+            .corner-text {
+                font-size: 10px;
+                top: 12px;
+                right: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            h2 {
+                font-size: 18px;
+            }
+            
+            .policy-table {
+                font-size: 14px;
+            }
+            
+            .policy-table td, .policy-table th {
+                padding: 6px 8px;
+                font-size: 14px;
+            }
+            
+            .stamp {
+                width: 110px;
+                height: 110px;
+                font-size: 12px;
+            }
+            
+            .corner-fold {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .corner-fold::before {
+                border-width: 0 40px 40px 0;
+            }
+            
+            .corner-fold::after {
+                border-width: 0 30px 30px 0;
+            }
+            
+            .corner-text {
+                font-size: 9px;
+                top: 10px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部区域：Logo和搜索栏 -->
+    <div class="header-container">
+        <img src="https://sylvie-seven-cq.top/gallery/search.png" alt="锦华纺织厂" class="logo">
+        <div class="search-container">
+            <div class="search-bar">
+                <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索招工信息...">
+                <button class="search-button" id="searchButton">搜索</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 右上角折角 -->
+        <div class="corner-fold" id="cornerFold">
+            <div class="corner-text">查看</div>
+        </div>
+        
+        <div class="header">
+            <div class="file-info">
+                【档案编号】 JH-HR-9603-02<br>
+                【发布日期】 1996年2月16日（农历正月廿八）
+            </div>
+            
+            <h1>深南市锦华纺织厂</h1>
+            <h2>关于一九九六年春季扩招挡车工的通知</h2>
+        </div>
+        
+        <div class="stamp">
+            <div class="stamp-content">
+                <div class="stamp-line">深南市锦华纺织厂</div>
+                <div class="stamp-line">劳资科</div>
+                <div class="stamp-line"><br></div>
+                <div class="stamp-line">（盖章）</div>
+                <div class="stamp-line"><br></div>
+                <div class="stamp-line">1996年2月16日</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <p>为响应市委"大干快上，振兴纺织"的号召，满足二期工程投产需求，我厂现面向社会（重点面向临渠、萍山等劳务输出大县）公开招聘一线合同制工人。</p>
+        </div>
+        
+        <h2>一、招聘岗位及待遇</h2>
+        
+        <table class="policy-table">
+            <tr>
+                <th width="30%">岗位名称</th>
+                <td width="70%">织造车间挡车工 / 辅助工</td>
+            </tr>
+            <tr>
+                <th>招聘人数</th>
+                <td>200名（女性优先，18-28周岁）</td>
+            </tr>
+            <tr>
+                <th>工作地点</th>
+                <td>深南市工业南路128号（锦华厂区）</td>
+            </tr>
+            <tr>
+                <th>薪资待遇</th>
+                <td>实行<span class="highlight">计件工资制</span>，<span class="highlight">多劳多得</span>。熟练工月综合收入可达 600-800元。</td>
+            </tr>
+        </table>
+        
+        <h2>二、录用标准（户籍分类执行）</h2>
+        
+        <p>为方便<span class="highlight">外来务工人员管理</span>，本次招聘根据户籍实行分级录用政策：</p>
+        
+        <table class="policy-table">
+            <tr>
+                <th width="20%">类别</th>
+                <th width="40%">A类：临渠县户籍人员（推荐）</th>
+                <th width="40%">B类：外地户籍人员（含萍山县、周边乡镇）</th>
+            </tr>
+            <tr>
+                <td><strong>政策</strong></td>
+                <td>凭身份证及乡镇介绍信，<span class="red-text">免试直接上岗</span>。</td>
+                <td>需参加穿纱、接头技能考核，择优录取。<span class="red-text">体检费自理</span>。</td>
+            </tr>
+            <tr>
+                <td><strong>住宿安排</strong></td>
+                <td>直接入住厂区中心<span class="highlight">"干部楼"宿舍</span>（2人/间，配暖气、吊扇，每层有电视房）。</td>
+                <td>实行封闭式管理，统一安置于西北角<span class="red-text">"老仓库改造区"</span>。</td>
+            </tr>
+            <tr>
+                <td><strong>福利</strong></td>
+                <td>报销来程车票，<span class="red-text">优先办理城市蓝印户口</span>。</td>
+                <td>无特殊福利</td>
+            </tr>
+        </table>
+        
+        <h2>三、外地工（B类）住宿及管理特别须知</h2>
+        
+        <p>鉴于主生活区床位紧张，萍山籍及其他外地员工将暂时入住<span class="red-text">四号成品仓背阴面临时工棚</span>。请严格遵守以下《厂区治安管理规定》：</p>
+        
+        <h3>宵禁制度：</h3>
+        <p>工棚区每晚 <span class="highlight">22:30 统一熄灯锁门</span>，严禁夜不归宿。</p>
+        
+        <h3>禁区警告（重点）：</h3>
+        <p>宿舍后方的<span class="highlight">"四号成品仓库"为重点防火防盗单位</span>，存放有<span class="highlight">易燃化学助剂</span>。</p>
+        <p>严禁员工在仓库周围晾晒衣物、堆放杂物。</p>
+        
+        <h3>特别提示：</h3>
+        <p>夜间仓库区域可能有大型货车出入或进行<span class="highlight">设备调试（有噪音）</span>，请勿在仓库窗下、门口逗留、窥探。</p>
+        
+        <h3>用水规定：</h3>
+        <p>工棚区无独立卫浴，需步行至一车间公共澡堂，晚间结伴而行，注意安全。</p>
+        
+        <div class="warning">
+            <strong>⚠️ 重要提醒</strong><br/><br/>
+            
+            <strong>安全第一：</strong>请严格遵守厂区各项规章制度，特别是关于四号仓库区域的管理规定。<br/><br/>
+            
+            <strong>团结互助：</strong>不同户籍员工应互相尊重，共同维护良好的工作生活环境。<br/><br/>
+            
+            <strong>权益保障：</strong>如遇任何问题，请及时向劳资科反映。
+        </div>
+        
+        <h2>四、报名方式</h2>
+        
+        <div class="contact">
+            <p>有意者请携带身份证、未婚证，于<strong>2月28日前</strong>到锦华厂劳资科（办公楼102室）报名。</p>
+            <p>联系人：王科长</p>
+            <p>联系电话：0755-8824XXXX</p>
+        </div>
+        
+        <div class="section" style="text-align: center; margin-top: 30px;">
+            <p><strong>我们要让每一个锦华人都感受到家的温暖！</strong></p>
+        </div>
+        
+        <div class="footer">
+            <p>深南市锦华纺织厂 劳资科</p>
+            <p>地址：深南市工业南路128号 | 电话：0755-88240001</p>
+            <p>本简章最终解释权归深南市锦华纺织厂所有</p>
+        </div>
+    </div>
+
+    <script>
+        // 添加一些交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 搜索功能
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            
+            searchButton.addEventListener('click', function() {
+                const searchTerm = searchInput.value.trim();
+                if (searchTerm) {
+                    alert(`搜索关键词: "${searchTerm}"\n\n(此功能为演示，实际应用中会执行搜索操作)`);
+                } else {
+                    alert('请输入搜索关键词');
+                }
+            });
+            
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchButton.click();
+                }
+            });
+            
+            // 折角点击跳转功能
+            const cornerFold = document.getElementById('cornerFold');
+            
+            cornerFold.addEventListener('click', function() {
+                // 添加点击动画效果
+                this.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                    // 跳转到招工horror.html页面
+                    window.location.href = '招工horror.html';
+                }, 200);
+            });
+            
+            // 添加悬停提示
+            cornerFold.addEventListener('mouseenter', function() {
+                const tooltip = document.createElement('div');
+                tooltip.className = 'tooltip';
+                tooltip.innerHTML = '谨慎点击⚠谨慎点击⚠谨慎点击⚠';
+                tooltip.style.position = 'absolute';
+                tooltip.style.top = '70px';
+                tooltip.style.right = '0';
+                tooltip.style.backgroundColor = 'rgba(0,0,0,0.7)';
+                tooltip.style.color = 'white';
+                tooltip.style.padding = '5px 10px';
+                tooltip.style.borderRadius = '3px';
+                tooltip.style.fontSize = '12px';
+                tooltip.style.whiteSpace = 'nowrap';
+                tooltip.style.zIndex = '100';
+                this.appendChild(tooltip);
+            });
+            
+            cornerFold.addEventListener('mouseleave', function() {
+                const tooltip = this.querySelector('.tooltip');
+                if (tooltip) {
+                    this.removeChild(tooltip);
+                }
+            });
+            
+            // 添加打印样式
+            const style = document.createElement('style');
+            style.textContent = `
+                @media print {
+                    body {
+                        background-color: white;
+                        padding: 0;
+                    }
+                    .container {
+                        box-shadow: none;
+                        border: 1px solid #000;
+                    }
+                    .header-container {
+                        display: none;
+                    }
+                    .corner-fold {
+                        display: none;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>
