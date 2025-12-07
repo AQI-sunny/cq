@@ -1,0 +1,68 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2024-01-01",
+  "searchRules": [
+    {
+      "id": "medical_record",
+      "keywords": [
+        "qTKc8bdxGJ9vDpEh6WJLUA==",  // MD5+Base64(吴小丫)
+        "kW6b8n2zP5Bk0R1tM8qSfg=="   // MD5+Base64(吳小丫) - 繁体
+      ],
+      "targetUrl": "https://sylvie-seven-cq.top/jhjm/丫丫病历.html",
+      "description": "医疗档案页面"
+    },
+    {
+      "id": "company_file",
+      "keywords": [
+        "7f8h2p9m3b1n6v4c5x2z8q==",  // MD5+Base64(锦华纺织厂)
+        "aB3dF6gH8jK2lM4nP7qR9tU=="   // MD5+Base64(錦華紡織廠) - 繁体
+      ],
+      "targetUrl": "https://sylvie-seven-cq.top/jhjm/企业档案.html",
+      "description": "企业信息页面"
+    },
+    {
+      "id": "recruitment",
+      "keywords": [
+        "x5y9z2a4b6c8d0e2f4g6h8==",  // MD5+Base64(锦华招工)
+        "pQ3rS5tU7vW9yZ1b3d5f7h=="   // MD5+Base64(錦華招工) - 繁体
+      ],
+      "targetUrl": "https://sylvie-seven-cq.top/jhjm/招工.html",
+      "description": "招聘页面"
+    },
+    {
+      "id": "population_flow",
+      "keywords": [
+        "j8k2l4m6n8p0q2r4s6t8v==",   // MD5+Base64(临渠)
+        "wX9z1b3c5d7e9f1g3h5j7==",   // MD5+Base64(臨渠) - 繁体
+        "aB2c4d6e8f0g2h4j6k8l0==",   // MD5+Base64(萍山)
+        "mN3p5r7t9v1x3z5b7d9f1=="    // MD5+Base64(萍山) - 繁体
+      ],
+      "targetUrl": "https://sylvie-seven-cq.top/jhjm/流动人口.html",
+      "description": "人口管理页面"
+    },
+    {
+      "id": "slot_machine",
+      "keywords": [
+        "hG5j7k9l1m3n5p7q9r1s3==",   // MD5+Base64(红星娱乐城)
+        "tU5v7w9x1y3z5b7d9f1h3==",   // MD5+Base64(紅星娛樂城) - 繁体
+        "jK3l5m7n9p1r3t5v7x9z==",    // MD5+Base64(红星娱乐)
+        "bN5d7f9h1j3l5n7p9r1t=="     // MD5+Base64(紅星娛樂) - 繁体
+      ],
+      "targetUrl": "https://sylvie-seven-cq.top/jhjm/老虎机.html",
+      "description": "娱乐设施页面"
+    },
+    {
+      "id": "asset_assessment",
+      "keywords": [
+        "vX2z4b6d8f0h2j4l6n8p0==",   // MD5+Base64(四号仓库)
+        "qR3t5v7x9z1b3d5f7h9j=="     // MD5+Base64(四號倉庫) - 繁体
+      ],
+      "targetUrl": "https://sylvie-seven-cq.top/jhjm/资产评估.html",
+      "description": "资产评估页面"
+    }
+  ],
+  "generalSearch": {
+    "defaultEngine": "https://www.google.com/search?q=",
+    "fallbackUrl": "https://sylvie-seven-cq.top/jhjm/search"
+  }
+}
