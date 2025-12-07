@@ -3,7 +3,7 @@
 
 const SearchSystem = {
     config: null,
-    configUrl: 'https://sylvie-seven-cq.top/jhjm/search-config.json',
+    configUrl: 'https://sylvie-seven-cq.top/jhjm/sc-data.json',
     cacheKey: 'search_config_cache',
     cacheTime: 3600000, // 1小时缓存
     isInitialized: false,
@@ -41,7 +41,7 @@ const SearchSystem = {
             this.config = {
                 searchRules: [],
                 generalSearch: {
-                    defaultEngine: "https://www.google.com/search?q=",
+                    defaultEngine: "https://sylvie-seven-cq.top/jhjm/search?q=",
                     fallbackUrl: "https://sylvie-seven-cq.top/jhjm/search"
                 }
             };
