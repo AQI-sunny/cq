@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>77reader</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+/* ======================================================================
+   77reader - 合并增强版 (HTML 单文件)
+   - 优先识别中文章节：第X章/回/节/卷（支持阿拉伯数字与常见中文数字）
+   - 同时支持 Chapter X/CHAPTER I 等英文章节格式
+   - 若正文自带章节（任意匹配到至少1个章节）则保留原有章节
+   - 若未检测到章节则 fallback 每100行自动分章
+   - 鼠标中键 (middle click) 仅显示 当前章节号 + 标题（无正文）
+   - 右键菜单的"预览章节"显示章节正文预览（首句），并将当前章节高亮显示并置顶
+   - 新增：快捷键C打开章节菜单，快捷键S打开搜索框，Ctrl+右键隐藏章节校验面板
+   - 新增：右键菜单当前章节自动滚动到最前，切换背景后标签页名字调整为背景图片名
+   - 功能保留：文件加载 / URL 加载 / 搜索 / 背景切换 / 进度条 / 手动/自动滚动 / 速度调节 / 本地记忆位置与宽度 / 章节跳转 / 调试面板
+   ====================================================================== */
+
+html, body { height:100%; margin:0; padding:0; font-family: "微软雅黑", "PingFang SC", "Microsoft Yahei", sans-serif; background-color:#f3f3f3; }
+
+/* ========== 顶部工具栏 ========== */
+#toolbar{
+  padding:10px 12px;
+  background: rgba(34,34,34,0.88);
+  color:#fff;
+  position:fixed; top:0; left:0; right:0; z-index:1500;
+  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+}
+#toolbar input[type="file"], #toolbar input[type="url"], #toolbar input[type="text"], #toolbar input[type="number"]{
+  background:#444; border:none; color:#fff; padding:6px 10px; border-radius:6px; outline:none;
+}
+#toolbar button{ background:#0078d7; border:none; color:#fff; padding:6px 10px; border-radius:6px; cursor:pointer }
+#toolbar button:hover{ background:#005a9e }
+#toolbar .small{ font-size:12px; color:#ddd }
+#toolbar label{ color:#fff; cursor:pointer }
+
+/* ========== 浮动底栏（主要阅读器） ========== */
+#reader{
+  position:fixed; bottom:50px; left:50px; z-index:1400;
+  width:60%; min-width:260px; max-width:92%; height:36px;
+  background: rgba(255,255,255,0.95); color:#000; padding:6px 12px;
+  border:1px solid #ccc; border-radius:8px; white-space:nowrap; overflow:hidden; cursor:move;
+}
+#reader.hidden{ display:none }
+#reader #readerText{ display:inline-block; white-space:nowrap; font-size:14px; }
+#reader #progressBar{ position:absolute; top:0; left:0; height:4px; background:#0078d7; width:0%; border-radius:2px 2px 0 0 }
+
+/* ========== 章节浮动提示（中键） ========== */
+#chapterInfo{ position: absolute; padding:8px 10px; background: rgba(0,0,0,0.75); color:#fff; border-radius:6px; font-size:13px; display:none; z-index:1600 }
+
+/* ========== 右键菜单 ========== */
+#contextMenu{ position:absolute; background:rgba(30,30,30,0.95); color:#fff; padding:8px; border-radius:6px; display:none; z-index:2000; min-width:240px; max-height:60vh; overflow:auto }
+#contextMenu ul{ list-style:none; margin:0; padding:0 }
+#contextMenu li{ padding:6px 10px; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+#contextMenu li:hover{ background:#444 }
+
+/* ========== 章节调试面板 ========== */
+#chapterDebug{ position: fixed; top: 60px; right: 12px; width: 380px; max-height: 68vh; overflow:auto; background: rgba(255,255,255,0.95); border:1px solid #ccc; padding:10px; border-radius:8px; z-index:1500; display:none }
+#chapterDebug h4{ margin:6px 0; font-size:14px }
+#chapterDebug pre{ white-space:pre-wrap; word-break:break-word; max-height:55vh; overflow:auto }
+#chapterDebug .small{ font-size:12px; color:#666 }
+
+/* ========== 章节预览弹窗（右键内）样式简化（动态生成） ========== */
+
+/* ========== 响应式与小屏幕友好处理 ========== */
+@media (max-width:720px){
+  #reader{ left:8px; right:8px; width:auto; }
+  #toolbar{ padding:8px }
+}
+
+</style>
+</head>
+<body>
+
+<div id="toolbar">
+  <input type="file" id="fileInput" accept=".txt">
+  <input type="text" id="searchInput" placeholder="搜索关键字">
+  <button id="searchBtn">搜索</button>
+
+  <button id="chooseBg">选择背景</button>
+  <input type="file" id="bgFileInput" accept="image/*" style="display:none">
+
+  <button id="scrollModeBtn">切换滚动: 手动</button>
+  <label class="small">自动速度</label>
+  <input type="range" id="scrollSpeed" min="1" max="10" value="3" style="width:80px">
+  <button id="toggleDebug">章节校验</button>
+
+  <div style="margin-left:auto; display:flex; gap:8px; align-items:center">
+    <label class="small">底栏色</label>
+    <input type="color" id="barColor" value="#ffffff">
+    <label class="small">文字色</label>
+    <input type="color" id="textColor" value="#000000">
+  </div>
+</div>
+
+<!-- 阅读浮动底栏（水平滚动显示正文片段） -->
+<div id="reader">
+  <div id="progressBar"></div>
+  <span id="readerText">选择 TXT 或 输入网址...</span>
+</div>
+
+<div id="chapterInfo"></div>
+<div id="contextMenu"></div>
+
+<div id="chapterDebug">
+  <h4>章节校验面板 <span class="small">(用于排查章节与行号是否对应)</span></h4>
+  <div id="debugSummary" class="small"></div>
+  <div style="margin-top:6px">跳转到章节号: <input id="debugJumpNum" type="number" style="width:80px; margin-left:6px"><button id="debugJumpBtn">跳转并显示</button></div>
+  <pre id="debugList"></pre>
+</div>
+
+<script>
+/* ======================================================================
+   全局状态与变量
+   ====================================================================== */
+let lines = [];              // 每一行 { text, originalIndex, chapterIndex }
+let index = 0;               // 当前行索引（表示正在展示的起始行）
+let chapters = [];           // 检测到的章节数组 [{line, title}]
+let searchResults = [], searchPos = 0;
+let scrollMode = 'manual';   // 'manual' | 'auto'
+let lineScrollPos = 0;       // 横向滚动位置
+let autoScrollTimer = null;
+let autoScrollSpeed = 3;     // 自动滚动速度 1-10
+let isDragging = false, dragOffsetX=0, dragOffsetY=0, resizeMode=false;
+let currentBackgroundName = ''; // 当前背景图片名称
+
+/* DOM 引用 */
+const reader = document.getElementById('reader');
+const readerText = document.getElementById('readerText');
+const fileInput = document.getElementById('fileInput');
+const bgFileInput = document.getElementById('bgFileInput');
+const chooseBg = document.getElementById('chooseBg');
+const toolbar = document.getElementById('toolbar');
+const contextMenu = document.getElementById('contextMenu');
+const searchInput = document.getElementById('searchInput');
+const searchBtn = document.getElementById('searchBtn');
+const progressBar = document.getElementById('progressBar');
+const scrollModeBtn = document.getElementById('scrollModeBtn');
+const scrollSpeed = document.getElementById('scrollSpeed');
+const toggleDebug = document.getElementById('toggleDebug');
+const chapterDebug = document.getElementById('chapterDebug');
+const debugSummary = document.getElementById('debugSummary');
+const debugList = document.getElementById('debugList');
+const debugJumpNum = document.getElementById('debugJumpNum');
+const debugJumpBtn = document.getElementById('debugJumpBtn');
+const chapterInfo = document.getElementById('chapterInfo');
+const barColor = document.getElementById('barColor');
+const textColor = document.getElementById('textColor');
+
+/* ==========================================
+   章节识别辅助函数（更宽容的正则）
+   说明：优先识别正文内章节。若文本中能匹配到至少 1 条章节，则使用这些章节；
+         若未匹配到任何章节，则按每 100 行自动分章（fallback）。
+   支持：第123章 / 第十二章 / 第 一百二十章 / Chapter 1 / CHAPTER I / Chapter One 等
+   ========================================== */
+
+function normalizeLineForDetect(s){
+  if(typeof s !== 'string') return '';
+  // 去掉 HTML 标签，BOM，不可见空格，首尾空白
+  return s.replace(/<[^>]*>/g, '').replace(/\uFEFF/g, '').replace(/\u00A0/g,' ').trim();
+}
+
+// 简单检测中文数字（包括零一二三四五六七八九十百千两等）
+const chineseNumChars = '[零一二三四五六七八九十百千两壹贰叁肆伍陆柒捌玖拾佰仟]+';
+
+function isChapterHeading(s){
+  const t = normalizeLineForDetect(s);
+  if(!t) return false;
+  // 常见中文: 第123章 | 第 一百二十三 章 | 第十二回
+  const rxChinese = new RegExp('^\\s*第\\s*(' + chineseNumChars + '|[0-9]{1,6})\\s*[章回节卷]', 'i');
+  // 英文: Chapter 123 | CHAPTER I | Chapter One
+  const rxEnglish = /^\s*chapter\b[\s:.–-]*([0-9]+|[IVXLCDM]+|[A-Za-z\-]+)?/i;
+  if(rxChinese.test(t) || rxEnglish.test(t)) return true;
+  // 有些作品会用“章节 X”或“第 X 节：标题”这类也试着捕获
+  const rxAlt = /^\s*(章节|节|回)\s*[0-9零一二三四五六七八九十百千]{1,6}/i;
+  if(rxAlt.test(t)) return true;
+  return false;
+}
+
+/* ======================================================================
+   文本加载：支持本地 TXT 文件和通过 URL 加载 (fetch)
+   特别注意：fetch() 在某些跨源场景会被拒绝，若 URL 无法加载请下载 TXT 后用本地文件加载
+   ====================================================================== */
+
+fileInput.addEventListener('change', e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const fr = new FileReader();
+  fr.onload = ()=> loadText(fr.result);
+  fr.readAsText(file, 'utf-8');
+});
+
+
+function loadText(content){
+  // 不去除空行，保留原始行索引
+  const raw = content.split(/\r?\n/);
+  lines = raw.map((l, idx)=> ({ text: l.replace(/\uFEFF/g, '').replace(/\t/g,' ').replace(/\u00A0/g,' '), originalIndex: idx, chapterIndex: -1 }));
+  index = 0; lineScrollPos = 0;
+  buildChaptersAndBindLines();
+  const last = parseInt(localStorage.getItem('lastIndex'));
+  if(!isNaN(last) && last >=0 && last < lines.length) index = last;
+  updateReader();
+  console.info('Loaded. lines:', lines.length, 'chapters:', chapters.length);
+}
+
+/* ======================================================================
+   构建章节并为每行绑定章节号
+   - 优先使用正文检测到的章节
+   - 若未检测到章节则按每100行分章
+   ====================================================================== */
+function buildChaptersAndBindLines(){
+  chapters = [];
+  // 扫描所有行，尝试检测是否为章节行
+  const chapterLines = new Set(); // 用于避免重复检测同一行
+  
+  for(let i=0;i<lines.length;i++){
+    const raw = lines[i].text;
+    const norm = normalizeLineForDetect(raw);
+    if(isChapterHeading(norm) && !chapterLines.has(i)){
+      const title = norm || ('第 ' + (chapters.length+1) + ' 章');
+      chapters.push({ line: i, title });
+      chapterLines.add(i);
+    }
+  }
+
+  // 若找不到章节，则进行 fallback 自动分章（每100行）
+  if(chapters.length === 0){
+    for(let i=0;i<lines.length;i+=100){
+      chapters.push({ line: i, title: '自动分章 第' + (Math.floor(i/100)+1) + ' 节' });
+    }
+  }
+
+  // 去重并按行号排序（确保没有重复的行号）
+  chapters = chapters.sort((a,b)=> a.line - b.line).filter((c,i,arr)=> {
+    if(i === 0) return true;
+    // 避免重复的章节行和太近的章节（至少间隔2行）
+    return c.line !== arr[i-1].line && c.line > arr[i-1].line + 1;
+  });
+
+  // 为每行绑定 chapterIndex（行属于最近的前一章）
+  let cur = 0;
+  for(let i=0;i<lines.length;i++){
+    while(cur+1 < chapters.length && i >= chapters[cur+1].line) cur++;
+    lines[i].chapterIndex = cur;
+  }
+
+  refreshDebugPanel();
+}
+
+/* ======================================================================
+   调试面板刷新（显示章节起始行与总行数）
+   ====================================================================== */
+function refreshDebugPanel(){
+  debugSummary.textContent = `总行: ${lines.length}  |  检测到章节: ${chapters.length}`;
+  let out = '';
+  for(let i=0;i<chapters.length;i++){
+    out += `${i+1}. 行 ${chapters[i].line} → ${chapters[i].title}\n`;
+  }
+  debugList.textContent = out;
+}
+
+
+/* ======================================================================
+   鼠标滚轮在浮动底栏上：横向滚动/换行逻辑（手动模式）
+   ====================================================================== */
+reader.addEventListener('wheel', e=>{
+  if(lines.length === 0 || scrollMode !== 'manual') return;
+  let overflow = readerText.scrollWidth - reader.clientWidth;
+  if(overflow > 0){
+    lineScrollPos += e.deltaY;
+    if(lineScrollPos > overflow){ index=(index+1) % lines.length; updateReader(); }
+    else if(lineScrollPos < 0){ index = (index-1 + lines.length) % lines.length; updateReader(); }
+    else reader.scrollLeft = lineScrollPos;
+  } else {
+    if(e.deltaY > 0){ index = (index+1) % lines.length; updateReader(); }
+    else { index = (index-1 + lines.length) % lines.length; updateReader(); }
+  }
+  e.preventDefault();
+});
+
+/* ======================================================================
+   拖拽（移动）与 Shift + 拖拽（宽度调整）
+   ====================================================================== */
+reader.addEventListener('mousedown', e=>{
+  const rect = reader.getBoundingClientRect();
+  if(e.shiftKey){ resizeMode = true; dragOffsetX = e.clientX; }
+  else { isDragging = true; dragOffsetX = e.clientX - rect.left; dragOffsetY = e.clientY - rect.top; }
+  e.preventDefault();
+});
+
+document.addEventListener('mousemove', e=>{
+  if(isDragging){
+    requestAnimationFrame(()=>{
+      let newX = e.clientX - dragOffsetX;
+      let newY = e.clientY - dragOffsetY;
+      newX = Math.max(0, Math.min(newX, window.innerWidth - reader.offsetWidth));
+      newY = Math.max(0, Math.min(newY, window.innerHeight - reader.offsetHeight));
+      reader.style.left = newX + 'px';
+      reader.style.bottom = (window.innerHeight - newY - reader.offsetHeight) + 'px';
+      localStorage.setItem('readerPos', JSON.stringify({ left: newX, bottom: window.innerHeight - newY - reader.offsetHeight }));
+    });
+  } else if(resizeMode){
+    let newW = e.clientX - reader.getBoundingClientRect().left;
+    newW = Math.max(200, Math.min(newW, window.innerWidth - 20));
+    reader.style.width = newW + 'px';
+    localStorage.setItem('readerWidth', newW);
+  }
+});
+
+document.addEventListener('mouseup', ()=>{ isDragging=false; resizeMode=false; });
+
+/* ======================================================================
+   背景选择（本地图片）
+   ====================================================================== */
+chooseBg.addEventListener('click', ()=> bgFileInput.click());
+bgFileInput.addEventListener('change', e=>{
+  const file = e.target.files[0]; if(!file) return;
+  const fr = new FileReader();
+  fr.onload = ()=>{
+    document.body.style.backgroundImage = `url('${fr.result}')`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.backgroundPosition = 'center center';
+    toolbar.style.display = 'flex';
+    
+    // 设置标签页标题为背景图片名字
+    const fileName = file.name;
+    const nameWithoutExt = fileName.replace(/\.[^/.]+$/, ""); // 去掉扩展名
+    document.title = nameWithoutExt;
+    currentBackgroundName = nameWithoutExt;
+  };
+  fr.readAsDataURL(file);
+});
+
+/* ======================================================================
+   双击隐藏 / Ctrl + 左键 显示
+   ====================================================================== */
+document.addEventListener('dblclick', ()=> reader.classList.toggle('hidden'));
+document.addEventListener('click', e=>{ if(e.ctrlKey && e.button === 0) reader.classList.remove('hidden'); });
+
+/* ======================================================================
+   中键（鼠标滚轮按下）显示：仅显示章节号 + 标题（无正文预览）
+   - mousedown 中 key === 1 显示，mouseup 隐藏
+   ====================================================================== */
+document.addEventListener('mousedown', e=>{
+  if(e.button === 1 && lines.length){
+    const lineObj = lines[index];
+    const chap = chapters[lineObj.chapterIndex];
+    if(!chap) return;
+    const num = lineObj.chapterIndex + 1;
+    // 只显示章节号和标题，不显示正文内容
+    chapterInfo.textContent = `${num}. ${chap.title}`;
+    // 位置在底栏上方
+    chapterInfo.style.left = reader.offsetLeft + 'px';
+    chapterInfo.style.bottom = ( window.innerHeight - reader.offsetTop + reader.offsetHeight + 6) + 'px';
+    chapterInfo.style.display = 'block';
+  }
+});
+document.addEventListener('mouseup', e=>{ if(e.button === 1) chapterInfo.style.display = 'none'; });
+
+/* ======================================================================
+   右键菜单：包含 预览章节（显示正文预览并高亮当前章节）、跳转章节、上一章/下一章/更改底栏颜色
+   - 预览章节将把当前章节高亮并置顶
+   ====================================================================== */
+
+// 显示完整的右键菜单
+function showContextMenu(e){
+  contextMenu.style.display = 'block';
+  contextMenu.innerHTML = '';
+
+  // 添加各个菜单项
+  const menuItems = [
+    { text: '上一章', action: () => {
+      let prev = chapters.filter(c=>c.line < index).pop(); 
+      if(prev) { index = prev.line; updateReader(); }
+      contextMenu.style.display = 'none';
+    }},
+    { text: '下一章', action: () => {
+      let next = chapters.find(c=>c.line > index); 
+      if(next) { index = next.line; updateReader(); }
+      contextMenu.style.display = 'none';
+    }},
+    { text: '跳转章节', action: () => showChapterJump() },
+    { text: '预览章节', action: () => showChapterPreview() },
+    { text: '改变底栏颜色', action: () => {
+      barColor.click();
+      contextMenu.style.display = 'none';
+    }}
+  ];
+
+  menuItems.forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = item.text;
+    li.addEventListener('click', ev => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      item.action();
+      // 注意：不能在这里关闭contextMenu，因为有些操作需要替换菜单内容
+    });
+    contextMenu.appendChild(li);
+  });
+
+  // 添加"当前章节自动滚动到最前"选项
+  const scrollToTopLi = document.createElement('li');
+  scrollToTopLi.textContent = '→ 当前章节滚动到最前';
+  scrollToTopLi.style.borderTop = '1px solid #555';
+  scrollToTopLi.style.marginTop = '4px';
+  scrollToTopLi.addEventListener('click', ev=>{
+    ev.stopPropagation();
+    const currentChapter = chapters.filter(cc => cc.line <= index).pop();
+    if(currentChapter){
+      index = currentChapter.line;
+      updateReader();
+    }
+    contextMenu.style.display = 'none';
+  });
+  contextMenu.appendChild(scrollToTopLi);
+
+  // 位置菜单位置
+  const x = e.clientX, y = e.clientY;
+  document.body.appendChild(contextMenu);
+  
+  contextMenu.style.display = 'block';
+  const menuW = contextMenu.offsetWidth, menuH = contextMenu.offsetHeight;
+  let newX = x, newY = y;
+  if(x + menuW > window.innerWidth) newX = Math.max(5, window.innerWidth - menuW - 5);
+  if(y + menuH > window.innerHeight) newY = Math.max(5, window.innerHeight - menuH - 5);
+  contextMenu.style.left = newX + 'px';
+  contextMenu.style.top = newY + 'px';
+}
+
+// 显示章节跳转功能
+function showChapterJump(){
+  contextMenu.innerHTML = '';
+  const input = document.createElement('input'); 
+  input.type = 'number'; 
+  input.placeholder = '输入章节号并回车'; 
+  input.style.width = '150px';
+  input.addEventListener('keydown', e=>{
+    if(e.key === 'Enter'){
+      let num = parseInt(input.value);
+      if(isNaN(num) || num <= 0){ alert('请输入有效章节号'); return; }
+      if(num > chapters.length){ 
+        alert(`章节号超出范围（最大 ${chapters.length}）。将跳转到最后一章。`); 
+        num = chapters.length; 
+      }
+      index = chapters[num-1].line; 
+      updateReader(); 
+      contextMenu.style.display = 'none';
+    }
+  });
+  contextMenu.appendChild(input); 
+  input.focus();
+}
+
+// 显示章节预览功能（从showChapterPreviewMenu重命名）
+function showChapterPreview(e){
+  // 如果没有传递事件参数，创建一个假的坐标
+  if(!e || typeof e !== 'object') {
+    e = {
+      clientX: reader.offsetLeft + reader.offsetWidth/2,
+      clientY: reader.offsetTop + reader.offsetHeight/2
+    };
+  }
+  contextMenu.style.display = 'block';
+  contextMenu.innerHTML = '';
+
+  const ul2 = document.createElement('ul');
+  ul2.style.maxHeight = '400px';
+  ul2.style.overflowY = 'auto';
+  ul2.style.padding = '0';
+  ul2.style.margin = '0';
+
+  // 获取当前章节并优先显示
+  const currentChapter = chapters.filter(cc => cc.line <= index).pop();
+  
+  // 构建列表：当前章节优先
+  const ordered = [];
+  if(currentChapter) ordered.push(currentChapter);
+  chapters.forEach(c => { 
+    if(!currentChapter || c.line !== currentChapter.line) ordered.push(c); 
+  });
+
+  ordered.forEach((c, ci)=>{
+    const li = document.createElement('li');
+    const chapIndex = chapters.findIndex(cc => cc.line === c.line);
+    
+    // 生成章节正文首句和第二句预览
+    const nextLine = (chapIndex + 1 < chapters.length) ? chapters[chapIndex+1].line : lines.length;
+    let previewText = '';
+    
+    // 提取前几行来获取首句和第二句，跳过标题行
+    let previewLines = 0;
+    for(let i=c.line; i<Math.min(nextLine, c.line + 20); i++){
+      const lineText = lines[i].text || '';
+      // 跳过空白行和看起来像标题的行
+      if(lineText.trim() && !isChapterHeading(lineText)) {
+        previewText += lineText + ' ';
+        previewLines++;
+        // 如果已经有足够的预览内容就停止
+        if(previewLines >= 5) break;
+      }
+    }
+    
+    // 提取前两个完整句子（到句号、问号或感叹号）
+    const sentenceMatches = previewText.match(/[^。！？]*[。！？]/g);
+    let previewSentences = '';
+    
+    if(sentenceMatches && sentenceMatches.length >= 2) {
+      previewSentences = sentenceMatches[0] + sentenceMatches[1];
+    } else if(sentenceMatches && sentenceMatches.length === 1) {
+      previewSentences = sentenceMatches[0];
+    } else {
+      previewSentences = previewText.substring(0, 100) + '...';
+    }
+
+    // 显示标题 + 编号 + 首两句预览
+    li.textContent = `${chapIndex+1}. ${c.title}`;
+    li.title = `${chapIndex+1}. ${c.title}\n\n${previewSentences}`; // 鼠标悬停显示完整信息
+
+    // 高亮当前章节
+    if(currentChapter && currentChapter.line === c.line){
+      li.style.background = '#0078d7'; 
+      li.style.color = '#fff'; 
+      li.style.fontWeight = 'bold'; 
+      li.style.borderRadius = '4px';
+    }
+
+    li.addEventListener('click', ev=>{ 
+      ev.stopPropagation(); 
+      index = c.line; 
+      updateReader(); 
+      contextMenu.style.display = 'none'; 
+    });
+    ul2.appendChild(li);
+  });
+
+  // 添加"当前章节自动滚动到最前"选项
+  const scrollToTopLi = document.createElement('li');
+  scrollToTopLi.textContent = '→ 当前章节滚动到最前';
+  scrollToTopLi.style.borderTop = '1px solid #555';
+  scrollToTopLi.style.marginTop = '4px';
+  scrollToTopLi.addEventListener('click', ev=>{
+    ev.stopPropagation();
+    if(currentChapter){
+      index = currentChapter.line;
+      updateReader();
+    }
+    contextMenu.style.display = 'none';
+  });
+  
+  // 位置菜单
+  const x = e.clientX, y = e.clientY;
+  document.body.appendChild(contextMenu);
+  contextMenu.appendChild(ul2);
+  contextMenu.appendChild(scrollToTopLi);
+  
+  contextMenu.style.display = 'block';
+  setTimeout(()=>{ 
+    // 查找高亮的章节元素并滚动到它
+    const allLis = ul2.querySelectorAll('li');
+    let highlighted = null;
+    
+    // 查找有蓝色背景的li元素
+    for(let li of allLis) {
+      if(li.style.background && li.style.background.includes('#0078d7')) {
+        highlighted = li;
+        break;
+      }
+    }
+    
+    // 无论是高亮元素还是第一个元素，都滚动到ul2容器的顶部
+    // 确保当前章节（第一个元素）可见
+    ul2.scrollTop = 0;
+    
+    // 可选：如果需要滚动到高亮元素，可以这样做
+    if(highlighted && highlighted.parentElement === ul2) {
+      const highlightOffset = highlighted.offsetTop;
+      const containerHeight = ul2.clientHeight;
+      const highlightHeight = highlighted.scrollHeight;
+      
+      // 计算要让高亮元素居中的scrollTop位置
+      const centerScrollTop = highlightOffset - (containerHeight / 2) + (highlightHeight / 2);
+      ul2.scrollTop = Math.max(0, centerScrollTop);
+    }
+  }, 150); // 给更多时间确保所有样式都已应用
+}
+
+document.addEventListener('contextmenu', e=>{
+  e.preventDefault();
+  
+  // Ctrl+右键时隐藏章节校验面板
+  if(e.ctrlKey){ 
+    chapterDebug.style.display = 'none';
+    toolbar.style.display = (toolbar.style.display === 'none' ? 'flex' : 'none'); 
+    return; 
+  }
+
+  // 显示完整的右键菜单
+  showContextMenu(e);
+});
+
+document.addEventListener('click', ()=> contextMenu.style.display = 'none');
+
+/* ======================================================================
+   搜索功能：高亮跳转到关键词所在行
+   ====================================================================== */
+searchBtn.addEventListener('click', ()=>{
+  const keyword = searchInput.value.trim(); if(!keyword) return;
+  if(searchResults.length === 0 || searchInput.dataset.last !== keyword){
+    searchResults = [];
+    lines.forEach((lineObj, i)=>{ if(lineObj.text && lineObj.text.includes(keyword)) searchResults.push(i); });
+    searchPos = 0; searchInput.dataset.last = keyword;
+  } else {
+    searchPos = (searchPos + 1) % searchResults.length;
+  }
+  if(searchResults.length > 0){ index = searchResults[searchPos]; updateReader(); }
+  else { readerText.textContent = '未找到: ' + keyword; }
+});
+
+/* ======================================================================
+   键盘快捷键功能
+   ====================================================================== */
+document.addEventListener('keydown', e=>{
+  // S键优先级最高，在任何情况下都能工作
+  if(e.key.toLowerCase() === 's'){
+    e.preventDefault();
+    e.stopPropagation();
+    // 如果有菜单打开，先关闭
+    if(contextMenu.style.display === 'block') {
+      contextMenu.style.display = 'none';
+    }
+    // 聚焦搜索框
+    const searchElement = document.getElementById('searchInput');
+    if(searchElement) {
+      searchElement.focus();
+      searchElement.select();
+    }
+  }
+  
+  // 防止在输入框中触发其他快捷键，但S键已经处理过了
+  if((e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') && e.target.id !== 'searchInput') return;
+  
+  // C键：直接打开章节菜单并定位当前章节
+  if(e.key.toLowerCase() === 'c'){
+    e.preventDefault();
+    const fakeEvent = { 
+      clientX: reader.offsetLeft + reader.offsetWidth/2, 
+      clientY: reader.offsetTop + reader.offsetHeight/2 
+    };
+    showChapterPreview(fakeEvent);
+  }
+  
+  // 翻页快捷键
+  if(scrollMode === 'manual' && (e.key === 'ArrowRight' || e.key === 'd')){ 
+    index = (index + 1) % lines.length; 
+    updateReader(); 
+  }
+  if(scrollMode === 'manual' && (e.key === 'ArrowLeft' || e.key === 'a')){ 
+    index = (index - 1 + lines.length) % lines.length; 
+    updateReader(); 
+  }
+});
+
+/* ======================================================================
+   滚动模式切换（手动 / 自动）
+   - 手动：鼠标滚轮在底栏上横向滚动或换行
+   - 自动：底栏自动水平滚动显示长文本段，自动翻到下一行
+   - 速度调节：可通过滑块调节自动滚动速度（1-10级）
+   ====================================================================== */
+scrollModeBtn.addEventListener('click', ()=>{
+  if(scrollMode === 'manual') scrollMode = 'auto';
+  else scrollMode = 'manual';
+  scrollModeBtn.textContent = '切换滚动: ' + (scrollMode === 'manual' ? '手动' : '自动');
+  updateReader();
+});
+
+// 自动滚动速度调节
+scrollSpeed.addEventListener('input', e => {
+  autoScrollSpeed = parseInt(e.target.value);
+});
+
+scrollSpeed.addEventListener('change', e => {
+  autoScrollSpeed = parseInt(e.target.value);
+  // 如果当前是自动滚动模式且滚动器在运行，重新启动以应用新速度
+  if(scrollMode === 'auto' && autoScrollTimer && lines.length > 0) {
+    const overflow = readerText.scrollWidth - reader.clientWidth;
+    if(overflow > 0) {
+      clearInterval(autoScrollTimer);
+      let pos = reader.scrollLeft;
+      autoScrollTimer = setInterval(()=>{
+        pos += autoScrollSpeed;
+        if(pos > overflow){
+          pos = 0; index = (index + 1) % lines.length; updateReader();
+        }
+        reader.scrollLeft = pos;
+      }, 30);
+    }
+  }
+});
+
+
+/* ======================================================================
+   恢复位置与大小
+   ====================================================================== */
+window.addEventListener('load', ()=>{
+  // 恢复 reader 位置
+  let pos = localStorage.getItem('readerPos');
+  if(pos){ try{ pos = JSON.parse(pos); if(pos.left!=null) reader.style.left = pos.left + 'px'; if(pos.bottom!=null) reader.style.bottom = pos.bottom + 'px'; } catch(e){} }
+  let width = localStorage.getItem('readerWidth'); if(width) reader.style.width = width + 'px';
+  const savedColor = localStorage.getItem('readerBarColor'); if(savedColor){ reader.style.background = savedColor; barColor.value = rgbToHex(savedColor); }
+  const savedText = localStorage.getItem('readerTextColor'); if(savedText){ reader.style.color = savedText; textColor.value = savedText; }
+});
+
+/* ======================================================================
+   颜色选择
+   ====================================================================== */
+barColor.addEventListener('input', e=>{ reader.style.background = e.target.value; localStorage.setItem('readerBarColor', e.target.value); });
+textColor.addEventListener('input', e=>{ reader.style.color = e.target.value; localStorage.setItem('readerTextColor', e.target.value); });
+
+/* 辅助：rgb 或 hex 转换（尝试从背景样式中提取 hex） */
+function rgbToHex(rgb){
+  if(!rgb) return '#ffffff';
+  // rgb(255,255,255) 或 #rrggbb
+  if(rgb.indexOf('#') === 0) return rgb;
+  const m = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+  if(m){ return '#'+[1,2,3].map(i=> parseInt(m[i]).toString(16).padStart(2,'0')).join(''); }
+  return rgb;
+}
+
+/* ======================================================================
+   调试面板开关与跳转
+   ====================================================================== */
+toggleDebug.addEventListener('click', ()=>{ chapterDebug.style.display = (chapterDebug.style.display === 'block' ? 'none' : 'block'); refreshDebugPanel(); });
+
+debugJumpBtn.addEventListener('click', ()=>{
+  const n = parseInt(debugJumpNum.value);
+  if(isNaN(n) || n <= 0) return alert('请输入有效章号');
+  if(n > chapters.length) return alert('超出章节范围');
+  index = chapters[n-1].line; updateReader();
+});
+
+/* ======================================================================
+   章节中键显示的修改：仅标题和章节号（已在上方实现）
+   ====================================================================== */
+
+/* ======================================================================
+   搜索、翻页、保存位置都已实现；下面继续补充一些稳定性处理
+   ====================================================================== */
+
+/* ======================================================================
+   updateReader：手动/自动滚动模式
+   手动：鼠标滚轮横向滚动或换行
+   自动：底栏自动水平滚动显示长文本段，自动翻到下一行
+   ====================================================================== */
+function updateReader(){
+  if(!lines.length){ readerText.textContent = '文件为空'; progressBar.style.width = '0%'; return; }
+  if(index < 0) index = 0; if(index >= lines.length) index = lines.length -1;
+
+  // 水平短文本展示模式
+  readerText.style.whiteSpace = 'nowrap';
+  let displayBuffer = '';
+  readerText.textContent = '';
+  const maxChars = 6000;
+  
+  // 确保文本无缝衔接，从当前行开始拼接
+  for(let i=index;i<lines.length;i++){
+    const lineText = lines[i].text || '';
+    if(lineText.trim()) { // 处理非空行
+      // 正确的拼接：在已有内容后添加空格再添加新内容
+      displayBuffer += (displayBuffer ? ' ' : '') + lineText;
+      
+      // 优化性能：减少实时scrollWidth检查的频率
+      if(i === index || i % 5 === 0 || displayBuffer.length > maxChars * 0.8) {
+        readerText.textContent = displayBuffer;
+        
+        // 检查是否超出容器宽度或字符限制
+        if(readerText.scrollWidth > reader.clientWidth) break;
+        if(displayBuffer.length > maxChars) break;
+      }
+    }
+  }
+  
+  // 最终更新显示内容，确保至少显示当前行的内容
+  readerText.textContent = displayBuffer || (lines[index]?.text || '');
+  progressBar.style.width = (((index+1)/Math.max(1, lines.length)) * 100) + '%';
+
+  reader.scrollLeft = 0; lineScrollPos = 0;
+
+  if(scrollMode === 'auto'){
+    if(autoScrollTimer) clearInterval(autoScrollTimer);
+    const overflow = readerText.scrollWidth - reader.clientWidth;
+    if(overflow > 0){
+      let pos = 0;
+      autoScrollTimer = setInterval(()=>{
+        pos += autoScrollSpeed;
+        if(pos > overflow){ 
+          pos = 0; 
+          index = (index + 1) % lines.length; 
+          updateReader(); 
+          return; // 让updateReader处理重新开始
+        }
+        reader.scrollLeft = pos;
+      }, 30);
+    }
+  } else {
+    if(autoScrollTimer){ clearInterval(autoScrollTimer); autoScrollTimer = null; }
+  }
+
+  localStorage.setItem('lastIndex', index);
+}
+
+/* ======================================================================
+   辅助：将章节列表文本导出（供调试使用）
+   ====================================================================== */
+function getChapterListText(){
+  return chapters.map((c, i)=> `${i+1}. 行 ${c.line} → ${c.title}`).join('\n');
+}
+
+/* ======================================================================
+   debug panel refresh （已在 buildChaptersAndBindLines 中调用）
+   ====================================================================== */
+function refreshDebugPanel(){
+  debugSummary.textContent = `总行: ${lines.length}  |  检测到章节: ${chapters.length}`;
+  debugList.textContent = getChapterListText();
+}
+
+/* ======================================================================
+   右键预览中 current chapter 高亮并置顶的实现说明：
+   - 在生成预览列表时，我们把当前章节放到 ordered[0]
+   - 并为它设置蓝色背景，随后 scrollIntoView
+   ====================================================================== */
+
+/* ======================================================================
+   启动时提示（若需要）
+   ====================================================================== */
+readerText.textContent = '选择 TXT 或 输入网址...';
+
+/* ======================================================================
+   额外小工具：控制台暴露函数（便于测试）
+   ====================================================================== */
+window.__77reader = {
+  loadText: loadText,
+  getChapters: ()=> chapters,
+  getLinesLength: ()=> lines.length,
+  goToChapter: (n)=>{ if(n>0 && n<=chapters.length){ index = chapters[n-1].line; updateReader(); } }
+};
+
+/* ======================================================================
+   End of file
+   ====================================================================== */
+
+</script>
+</body>
+</html>
