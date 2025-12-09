@@ -1,0 +1,902 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>77reader</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+/* ==
+   77reader - 合并增强版 (HTML 单文件)
+   - 优先识别中文章节：第X章/回/节/卷（支持阿拉伯数字与常见中文数字）
+   - 同时支持 Chapter X/CHAPTER I 等英文章节格式
+   - 若正文自带章节（任意匹配到至少1个章节）则保留原有章节
+   - 若未检测到章节则 fallback 每100行自动分章
+   - 鼠标中键 (middle click) 仅显示 当前章节号 + 标题（无正文）
+   - 右键菜单的"预览章节"显示章节正文预览（首句），并将当前章节高亮显示并置顶
+   - 新增：快捷键C打开章节菜单，快捷键S打开搜索框，Ctrl+右键隐藏章节校验面板
+   - 新增：右键菜单当前章节自动滚动到最前，切换背景后标签页名字调整为背景图片名
+   - 功能保留：文件加载 / URL 加载 / 搜索 / 背景切换 / 进度条 / 手动/自动滚动 / 速度调节 / 本地记忆位置与宽度 / 章节跳转 / 调试面板
+   = */
+
+
+html, body { height:100%; margin:0; padding:0; font-family: "微软雅黑", "PingFang SC", "Microsoft Yahei", sans-serif; background-color:#f3f3f3; }
+
+
+/* ========== 顶部工具栏 ========== */
+#toolbar{
+  padding:10px 12px;
+  background: rgba(34,34,34,0.88);
+  color:#fff;
+  position:fixed; top:0; left:0; right:0; z-index:1500;
+  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+}
+#toolbar input[type="file"], #toolbar input[type="url"], #toolbar input[type="text"], #toolbar input[type="number"]{
+  background:#444; border:none; color:#fff; padding:6px 10px; border-radius:6px; outline:none;
+}
+#toolbar button{ background:#0078d7; border:none; color:#fff; padding:6px 10px; border-radius:6px; cursor:pointer }
+#toolbar button:hover{ background:#005a9e }
+#toolbar .small{ font-size:12px; color:#ddd }
+#toolbar label{ color:#fff; cursor:pointer }
+
+
+/* ========== 浮动底栏（主要阅读器） ========== */
+#reader{
+  position:fixed; bottom:50px; left:50px; z-index:1400;
+  width:60%; min-width:260px; max-width:92%; height:36px;
+  background: rgba(255,255,255,0.95); color:#000; padding:6px 12px;
+  border:1px solid #ccc; border-radius:8px; white-space:nowrap; overflow:hidden; cursor:move;
+  user-select:none;
+  box-sizing: border-box;
+}
+#reader.hidden{ display:none }
+#reader #readerText{ display:inline-block; white-space:nowrap; font-size:14px; }
+#reader #progressBar{ position:absolute; top:0; left:0; height:4px; background:#0078d7; width:0%; border-radius:2px 2px 0 0 }
+
+
+/* ========== 章节浮动提示（中键） ========== */
+#chapterInfo{ position: absolute; padding:8px 10px; background: rgba(0,0,0,0.75); color:#fff; border-radius:6px; font-size:13px; display:none; z-index:1600 }
+
+
+/* ========== 右键菜单 ========== */
+#contextMenu{ position:absolute; background:rgba(30,30,30,0.95); color:#fff; padding:8px; border-radius:6px; display:none; z-index:2000; min-width:240px; max-height:60vh; overflow:auto }
+#contextMenu ul{ list-style:none; margin:0; padding:0 }
+#contextMenu li{ padding:6px 10px; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+#contextMenu li:hover{ background:#444 }
+
+
+/* ========== 章节调试面板 ========== */
+#chapterDebug{ position: fixed; top: 60px; right: 12px; width: 380px; max-height: 68vh; overflow:auto; background: rgba(255,255,255,0.95); border:1px solid #ccc; padding:10px; border-radius:8px; z-index:1500; display:none }
+#chapterDebug h4{ margin:6px 0; font-size:14px }
+#chapterDebug pre{ white-space:pre-wrap; word-break:break-word; max-height:55vh; overflow:auto }
+#chapterDebug .small{ font-size:12px; color:#666 }
+
+
+/* ========== 响应式与小屏幕友好处理 ========== */
+@media (max-width:720px){
+  #reader{ left:8px; right:8px; width:auto; }
+  #toolbar{ padding:8px }
+}
+
+
+</style>
+</head>
+<body>
+
+
+<div id="toolbar">
+  <input type="file" id="fileInput" accept=".txt">
+  <input type="text" id="searchInput" placeholder="搜索关键字" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <button id="searchBtn">搜索</button>
+
+
+  <button id="chooseBg">选择背景</button>
+  <input type="file" id="bgFileInput" accept="image/*" style="display:none">
+
+
+  <button id="scrollModeBtn">切换滚动: 手动</button>
+  <label class="small">自动速度</label>
+  <input type="range" id="scrollSpeed" min="1" max="10" value="3" style="width:80px">
+  <button id="toggleDebug">章节校验</button>
+
+
+  <div style="margin-left:auto; display:flex; gap:8px; align-items:center">
+    <label class="small">底栏色</label>
+    <input type="color" id="barColor" value="#ffffff">
+    <label class="small">文字色</label>
+    <input type="color" id="textColor" value="#000000">
+  </div>
+</div>
+
+
+<!-- 阅读浮动底栏（水平滚动显示正文片段） -->
+<div id="reader">
+  <div id="progressBar"></div>
+  <span id="readerText" title=""></span>
+</div>
+
+
+<div id="chapterInfo"></div>
+<div id="contextMenu"></div>
+
+
+<div id="chapterDebug">
+  <h4>章节校验面板 <span class="small">(用于排查章节与行号是否对应)</span></h4>
+  <div id="debugSummary" class="small"></div>
+  <div style="margin-top:6px">跳转到章节号: <input id="debugJumpNum" type="number" style="width:80px; margin-left:6px" min="1"><button id="debugJumpBtn">跳转并显示</button></div>
+  <pre id="debugList"></pre>
+</div>
+
+
+<script>
+/* ===
+   全局状态与变量
+   == */
+let lines = [];              // 每一行 { text, originalIndex, chapterIndex }
+let index = 0;               // 当前行索引（表示正在展示的起始行）
+let chapters = [];           // 检测到的章节数组 [{line, title}]
+let searchResults = [], searchPos = 0;
+let scrollMode = 'manual';   // 'manual' | 'auto'
+let autoScrollTimer = null;
+let autoScrollSpeed = 3;     // 自动滚动速度 1-10
+let isDragging = false, dragOffsetX=0, dragOffsetY=0, resizeMode=false;
+let currentBackgroundName = ''; // 当前背景图片名称
+
+let sentenceIndex = 0;       // 当前行句子索引，用于滚轮逐句滚动
+let currentSentences = [];   // 当前行拆句数组缓存
+
+
+/* DOM 引用 */
+const reader = document.getElementById('reader');
+const readerText = document.getElementById('readerText');
+const fileInput = document.getElementById('fileInput');
+const bgFileInput = document.getElementById('bgFileInput');
+const chooseBg = document.getElementById('chooseBg');
+const toolbar = document.getElementById('toolbar');
+const contextMenu = document.getElementById('contextMenu');
+const searchInput = document.getElementById('searchInput');
+const searchBtn = document.getElementById('searchBtn');
+const progressBar = document.getElementById('progressBar');
+const scrollModeBtn = document.getElementById('scrollModeBtn');
+const scrollSpeed = document.getElementById('scrollSpeed');
+const toggleDebug = document.getElementById('toggleDebug');
+const chapterDebug = document.getElementById('chapterDebug');
+const debugSummary = document.getElementById('debugSummary');
+const debugList = document.getElementById('debugList');
+const debugJumpNum = document.getElementById('debugJumpNum');
+const debugJumpBtn = document.getElementById('debugJumpBtn');
+const chapterInfo = document.getElementById('chapterInfo');
+const barColor = document.getElementById('barColor');
+const textColor = document.getElementById('textColor');
+
+/* =====
+   章节识别辅助函数（更宽容的正则）
+   说明：优先识别正文内章节。若文本中能匹配到至少 1 条章节，则使用这些章节；
+         若未匹配到任何章节，则按每 100 行自动分章（fallback）。
+   支持：第123章 / 第十二章 / 第 一百二十章 / Chapter 1 / CHAPTER I / Chapter One 等
+   ===== */
+
+
+function normalizeLineForDetect(s){
+  if(typeof s !== 'string') return '';
+  // 去掉 HTML 标签，BOM，不可见空格，首尾空白
+  return s.replace(/<[^>]*>/g, '').replace(/\uFEFF/g, '').replace(/\u00A0/g,' ').trim();
+}
+
+
+// 简单检测中文数字（包括零一二三四五六七八九十百千两等）
+const chineseNumChars = '[零一二三四五六七八九十百千两壹贰叁肆伍陆柒捌玖拾佰仟]+';
+
+
+function isChapterHeading(s){
+  const t = normalizeLineForDetect(s);
+  if(!t) return false;
+  // 常见中文: 第123章 | 第 一百二十三 章 | 第十二回
+  const rxChinese = new RegExp('^\\s*第\\s*(' + chineseNumChars + '|[0-9]{1,6})\\s*[章回节卷]', 'i');
+  // 英文: Chapter 123 | CHAPTER I | Chapter One
+  const rxEnglish = /^\s*chapter\b[\s:.–-]*([0-9]+|[IVXLCDM]+|[A-Za-z\-]+)?/i;
+  if(rxChinese.test(t) || rxEnglish.test(t)) return true;
+  // 有些作品会用“章节 X”或“第 X 节：标题”这类也试着捕获
+  const rxAlt = /^\s*(章节|节|回)\s*[0-9零一二三四五六七八九十百千]{1,6}/i;
+  if(rxAlt.test(t)) return true;
+  return false;
+}
+
+
+/* 
+   文本加载：支持本地 TXT 文件和通过 URL 加载 (fetch)
+   特别注意：fetch() 在某些跨源场景会被拒绝，若 URL 无法加载请下载 TXT 后用本地文件加载
+   */
+
+
+fileInput.addEventListener('change', e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const fr = new FileReader();
+  fr.onload = ()=> loadText(fr.result);
+  fr.readAsText(file, 'utf-8');
+});
+
+
+function loadText(content){
+  // 不去除空行，保留原始行索引
+  const raw = content.split(/\r?\n/);
+  lines = raw.map((l, idx)=> ({ text: l.replace(/\uFEFF/g, '').replace(/\t/g,' ').replace(/\u00A0/g,' '), originalIndex: idx, chapterIndex: -1 }));
+  index = 0; 
+  sentenceIndex = 0;
+  buildChaptersAndBindLines();
+  const last = parseInt(localStorage.getItem('lastIndex'));
+  if(!isNaN(last) && last >=0 && last < lines.length) index = last;
+  updateReader();
+  console.info('Loaded. lines:', lines.length, 'chapters:', chapters.length);
+}
+
+
+/* 
+   构建章节并为每行绑定章节号
+   - 优先使用正文检测到的章节
+   - 若未检测到章节则按每100行分章
+   === */
+function buildChaptersAndBindLines(){
+  chapters = [];
+  // 扫描所有行，尝试检测是否为章节行
+  const chapterLines = new Set(); // 用于避免重复检测同一行
+  
+  for(let i=0;i<lines.length;i++){
+    const raw = lines[i].text;
+    const norm = normalizeLineForDetect(raw);
+    if(isChapterHeading(norm) && !chapterLines.has(i)){
+      const title = norm || ('第 ' + (chapters.length+1) + ' 章');
+      chapters.push({ line: i, title });
+      chapterLines.add(i);
+    }
+  }
+
+
+  // 若找不到章节，则进行 fallback 自动分章（每100行）
+  if(chapters.length === 0){
+    for(let i=0;i<lines.length;i+=100){
+      chapters.push({ line: i, title: '自动分章 第' + (Math.floor(i/100)+1) + ' 节' });
+    }
+  }
+
+
+  // 去重并按行号排序（确保没有重复的行号）
+  chapters = chapters.sort((a,b)=> a.line - b.line).filter((c,i,arr)=> {
+    if(i === 0) return true;
+    // 避免重复的章节行和太近的章节（至少间隔2行）
+    return c.line !== arr[i-1].line && c.line > arr[i-1].line + 1;
+  });
+
+
+  // 为每行绑定 chapterIndex（行属于最近的前一章）
+  let cur = 0;
+  for(let i=0;i<lines.length;i++){
+    while(cur+1 < chapters.length && i >= chapters[cur+1].line) cur++;
+    lines[i].chapterIndex = cur;
+  }
+
+
+  refreshDebugPanel();
+}
+
+
+/* 
+   调试面板刷新（显示章节起始行与总行数）
+   */
+function refreshDebugPanel(){
+  debugSummary.textContent = `总行: ${lines.length}  |  检测到章节: ${chapters.length}`;
+  debugList.textContent = getChapterListText();
+}
+
+
+/* 
+   鼠标滚轮在浮动底栏上：按句子滚动（手动模式）
+   - 向下滚动切下一句，向上切上一句
+   - 跨句尾自动切换下一行/上一行
+   - 句子切分支持中文句号、问号、感叹号及英文句点等
+   - 句子切割后每句显示完整，尾部不会截断
+   */
+reader.addEventListener('wheel', e=>{
+  if(lines.length === 0 || scrollMode !== 'manual') return;
+  e.preventDefault();
+
+  if(currentSentences.length === 0) {
+    currentSentences = splitSentences(lines[index].text || '');
+    sentenceIndex = 0;
+  }
+
+  if(e.deltaY > 0){
+    // 向下滚动，句子索引加一，超过末尾则下一行第一句
+    sentenceIndex++;
+    if(sentenceIndex >= currentSentences.length){
+      index = (index + 1) % lines.length;
+      currentSentences = splitSentences(lines[index].text || '');
+      sentenceIndex = 0;
+    }
+  } else {
+    // 向上滚动，句子索引减一，小于0则上一行末句
+    sentenceIndex--;
+    if(sentenceIndex < 0){
+      index = (index - 1 + lines.length) % lines.length;
+      currentSentences = splitSentences(lines[index].text || '');
+      sentenceIndex = currentSentences.length - 1;
+      if(sentenceIndex < 0) sentenceIndex = 0;
+    }
+  }
+
+  renderCurrentSentence();
+});
+
+
+function splitSentences(text){
+  // 中文句子，根据句末标点分割，保留标点
+  if(!text) return [];
+  // 支持中文句号，感叹号，问号，以及英文的. ! ?
+  // 使用正则捕获句子以保留句末标点
+  let reg = /[^。！？.!?]*[。！？.!?]?/g;
+  let arr = [];
+  let match;
+  while((match = reg.exec(text)) !== null){
+    let s = match[0].trim();
+    if(s.length > 0) arr.push(s);
+    if(reg.lastIndex >= text.length) break;
+  }
+  return arr.length > 0 ? arr : [text.trim()];
+}
+
+
+function renderCurrentSentence(){
+  if(currentSentences.length === 0) {
+    readerText.textContent = lines[index]?.text || '';
+    readerText.title = lines[index]?.text || '';
+    sentenceIndex = 0;
+    return;
+  }
+  // 显示从句首到当前句子的所有句子，避免文字断裂
+  let displayText = currentSentences.slice(0, sentenceIndex + 1).join('');
+  readerText.textContent = displayText;
+  readerText.title = displayText; // 鼠标悬浮显示全部
+
+  // 进度条显示当前章节阅读百分比，基于章节内行数比例
+  let curChapterIdx = lines[index].chapterIndex;
+  if(curChapterIdx < 0) curChapterIdx = 0;
+  const chapStartLine = chapters[curChapterIdx].line;
+  let nextChapStartLine = lines.length;
+  if(curChapterIdx + 1 < chapters.length) nextChapStartLine = chapters[curChapterIdx+1].line;
+  let relativePos = (index - chapStartLine)/Math.max(1, nextChapStartLine - chapStartLine);
+  if(relativePos < 0) relativePos = 0;
+  if(relativePos > 1) relativePos = 1;
+  progressBar.style.width = (relativePos * 100) + '%';
+
+  reader.scrollLeft = 0;
+
+  localStorage.setItem('lastIndex', index);
+  localStorage.setItem('lastSentenceIndex', sentenceIndex);
+}
+
+
+/* 
+   拖拽（移动）与 Shift + 拖拽（宽度调整）
+*/
+reader.addEventListener('mousedown', e=>{
+  const rect = reader.getBoundingClientRect();
+  if(e.shiftKey){ resizeMode = true; dragOffsetX = e.clientX; }
+  else { isDragging = true; dragOffsetX = e.clientX - rect.left; dragOffsetY = e.clientY - rect.top; }
+  e.preventDefault();
+});
+
+
+document.addEventListener('mousemove', e=>{
+  if(isDragging){
+    requestAnimationFrame(()=>{
+      let newX = e.clientX - dragOffsetX;
+      let newY = e.clientY - dragOffsetY;
+      newX = Math.max(0, Math.min(newX, window.innerWidth - reader.offsetWidth));
+      newY = Math.max(0, Math.min(newY, window.innerHeight - reader.offsetHeight));
+      reader.style.left = newX + 'px';
+      reader.style.bottom = (window.innerHeight - newY - reader.offsetHeight) + 'px';
+      localStorage.setItem('readerPos', JSON.stringify({ left: newX, bottom: window.innerHeight - newY - reader.offsetHeight }));
+    });
+  } else if(resizeMode){
+    let newW = e.clientX - reader.getBoundingClientRect().left;
+    newW = Math.max(200, Math.min(newW, window.innerWidth - 20));
+    reader.style.width = newW + 'px';
+    localStorage.setItem('readerWidth', newW);
+  }
+});
+
+
+document.addEventListener('mouseup', ()=>{ isDragging=false; resizeMode=false; });
+
+
+/* 
+   背景选择（本地图片）
+*/
+chooseBg.addEventListener('click', ()=> bgFileInput.click());
+bgFileInput.addEventListener('change', e=>{
+  const file = e.target.files[0]; if(!file) return;
+  const fr = new FileReader();
+  fr.onload = ()=>{
+    document.body.style.backgroundImage = `url('${fr.result}')`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.backgroundPosition = 'center center';
+    toolbar.style.display = 'flex';
+    
+    const fileName = file.name;
+    const nameWithoutExt = fileName.replace(/\.[^/.]+$/, ""); // 去掉扩展名
+    document.title = nameWithoutExt;
+    currentBackgroundName = nameWithoutExt;
+  };
+  fr.readAsDataURL(file);
+});
+
+
+/* 
+   双击隐藏 / Ctrl + 左键 显示
+*/
+document.addEventListener('dblclick', ()=> reader.classList.toggle('hidden'));
+document.addEventListener('click', e=>{ if(e.ctrlKey && e.button === 0) reader.classList.remove('hidden'); });
+
+
+/* 
+   中键（鼠标滚轮按下）显示：仅显示章节号 + 标题（无正文）
+*/
+document.addEventListener('mousedown', e=>{
+  if(e.button === 1 && lines.length){
+    const lineObj = lines[index];
+    const chap = chapters[lineObj.chapterIndex];
+    if(!chap) return;
+    const num = lineObj.chapterIndex + 1;
+    chapterInfo.textContent = `${num}. ${chap.title}`;
+    chapterInfo.style.left = reader.offsetLeft + 'px';
+    chapterInfo.style.bottom = ( window.innerHeight - reader.offsetTop + reader.offsetHeight + 6) + 'px';
+    chapterInfo.style.display = 'block';
+  }
+});
+document.addEventListener('mouseup', e=>{ if(e.button === 1) chapterInfo.style.display = 'none'; });
+
+
+/* 
+   右键菜单：包含 预览章节（显示正文预览并高亮当前章节）、跳转章节、上一章/下一章/更改底栏颜色等
+*/
+function showContextMenu(e){
+  contextMenu.style.display = 'block';
+  contextMenu.innerHTML = '';
+
+  const menuItems = [
+    { text: '上一章', action: () => {
+      let prev = chapters.filter(c=>c.line < index).pop(); 
+      if(prev) { index = prev.line; sentenceIndex=0; updateReader(); }
+      contextMenu.style.display = 'none';
+    }},
+    { text: '下一章', action: () => {
+      let next = chapters.find(c=>c.line > index); 
+      if(next) { index = next.line; sentenceIndex=0; updateReader(); }
+      contextMenu.style.display = 'none';
+    }},
+    { text: '跳转章节', action: () => showChapterJump() },
+    { text: '预览章节', action: () => showChapterPreview() },
+    { text: '改变底栏颜色', action: () => {
+      barColor.click();
+      contextMenu.style.display = 'none';
+    }}
+  ];
+
+  menuItems.forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = item.text;
+    li.addEventListener('click', ev => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      item.action();
+    });
+    contextMenu.appendChild(li);
+  });
+
+
+  // 当前章节滚动到最前选项
+  const scrollToTopLi = document.createElement('li');
+  scrollToTopLi.textContent = '→ 当前章节滚动到最前';
+  scrollToTopLi.style.borderTop = '1px solid #555';
+  scrollToTopLi.style.marginTop = '4px';
+  scrollToTopLi.addEventListener('click', ev=>{
+    ev.stopPropagation();
+    const currentChapter = chapters.filter(cc => cc.line <= index).pop();
+    if(currentChapter){
+      index = currentChapter.line;
+      sentenceIndex=0;
+      updateReader();
+    }
+    contextMenu.style.display = 'none';
+  });
+  contextMenu.appendChild(scrollToTopLi);
+
+  const x = e.clientX, y = e.clientY;
+  document.body.appendChild(contextMenu);
+
+  contextMenu.style.display = 'block';
+  const menuW = contextMenu.offsetWidth, menuH = contextMenu.offsetHeight;
+  let newX = x, newY = y;
+  if(x + menuW > window.innerWidth) newX = Math.max(5, window.innerWidth - menuW - 5);
+  if(y + menuH > window.innerHeight) newY = Math.max(5, window.innerHeight - menuH - 5);
+  contextMenu.style.left = newX + 'px';
+  contextMenu.style.top = newY + 'px';
+}
+
+
+function showChapterJump(){
+  contextMenu.innerHTML = '';
+  const input = document.createElement('input'); 
+  input.type = 'number'; 
+  input.placeholder = '输入章节号并回车'; 
+  input.style.width = '150px';
+  input.min = 1;
+  input.max = chapters.length;
+  input.addEventListener('keydown', e=>{
+    if(e.key === 'Enter'){
+      let num = parseInt(input.value);
+      if(isNaN(num) || num <= 0){ alert('请输入有效章节号'); return; }
+      if(num > chapters.length){ 
+        alert(`章节号超出范围（最大 ${chapters.length}）。将跳转到最后一章。`); 
+        num = chapters.length; 
+      }
+      index = chapters[num-1].line; 
+      sentenceIndex=0;
+      updateReader(); 
+      contextMenu.style.display = 'none';
+    }
+  });
+  contextMenu.appendChild(input); 
+  input.focus();
+}
+
+function showChapterPreview(e){
+  if(!e || typeof e !== 'object') {
+    e = {
+      clientX: reader.offsetLeft + reader.offsetWidth/2,
+      clientY: reader.offsetTop + reader.offsetHeight/2
+    };
+  }
+  contextMenu.style.display = 'block';
+  contextMenu.innerHTML = '';
+
+  const ul2 = document.createElement('ul');
+  ul2.style.maxHeight = '400px';
+  ul2.style.overflowY = 'auto';
+  ul2.style.padding = '0';
+  ul2.style.margin = '0';
+
+  // 当前章节优先显示
+  const currentChapter = chapters.filter(cc => cc.line <= index).pop();
+
+  const ordered = [];
+  if(currentChapter) ordered.push(currentChapter);
+  chapters.forEach(c => { 
+    if(!currentChapter || c.line !== currentChapter.line) ordered.push(c); 
+  });
+
+  ordered.forEach((c, ci)=>{
+    const li = document.createElement('li');
+    const chapIndex = chapters.findIndex(cc => cc.line === c.line);
+
+    const nextLine = (chapIndex + 1 < chapters.length) ? chapters[chapIndex+1].line : lines.length;
+    let previewText = '';
+    let previewLines = 0;
+    for(let i=c.line; i<Math.min(nextLine, c.line + 20); i++){
+      const lineText = lines[i].text || '';
+      if(lineText.trim() && !isChapterHeading(lineText)) {
+        previewText += lineText + ' ';
+        previewLines++;
+        if(previewLines >= 5) break;
+      }
+    }
+
+    const sentenceMatches = previewText.match(/[^。！？]*[。！？]/g);
+    let previewSentences = '';
+    if(sentenceMatches && sentenceMatches.length >= 2) {
+      previewSentences = sentenceMatches[0] + sentenceMatches[1];
+    } else if(sentenceMatches && sentenceMatches.length === 1) {
+      previewSentences = sentenceMatches[0];
+    } else {
+      previewSentences = previewText.substring(0, 100) + '...';
+    }
+
+    li.textContent = `${chapIndex+1}. ${c.title}`;
+    li.title = `${chapIndex+1}. ${c.title}\n\n${previewSentences}`;
+
+    if(currentChapter && currentChapter.line === c.line){
+      li.style.background = '#0078d7'; 
+      li.style.color = '#fff'; 
+      li.style.fontWeight = 'bold'; 
+      li.style.borderRadius = '4px';
+    }
+
+    li.addEventListener('click', ev=>{ 
+      ev.stopPropagation(); 
+      index = c.line; 
+      sentenceIndex=0;
+      updateReader(); 
+      contextMenu.style.display = 'none'; 
+    });
+    ul2.appendChild(li);
+  });
+
+  const scrollToTopLi = document.createElement('li');
+  scrollToTopLi.textContent = '→ 当前章节滚动到最前';
+  scrollToTopLi.style.borderTop = '1px solid #555';
+  scrollToTopLi.style.marginTop = '4px';
+  scrollToTopLi.addEventListener('click', ev=>{
+    ev.stopPropagation();
+    if(currentChapter){
+      index = currentChapter.line;
+      sentenceIndex=0;
+      updateReader();
+    }
+    contextMenu.style.display = 'none';
+  });
+
+  const x = e.clientX, y = e.clientY;
+  document.body.appendChild(contextMenu);
+  contextMenu.appendChild(ul2);
+  contextMenu.appendChild(scrollToTopLi);
+  contextMenu.style.display = 'block';
+  setTimeout(()=>{ 
+    const allLis = ul2.querySelectorAll('li');
+    let highlighted = null;
+    for(let li of allLis) {
+      if(li.style.background && li.style.background.includes('#0078d7')) {
+        highlighted = li;
+        break;
+      }
+    }
+    ul2.scrollTop = 0;
+    if(highlighted && highlighted.parentElement === ul2) {
+      const highlightOffset = highlighted.offsetTop;
+      const containerHeight = ul2.clientHeight;
+      const highlightHeight = highlighted.scrollHeight;
+      const centerScrollTop = highlightOffset - (containerHeight / 2) + (highlightHeight / 2);
+      ul2.scrollTop = Math.max(0, centerScrollTop);
+    }
+  }, 150);
+}
+
+document.addEventListener('contextmenu', e=>{
+  e.preventDefault();
+  
+  if(e.ctrlKey){ 
+    chapterDebug.style.display = 'none';
+    toolbar.style.display = (toolbar.style.display === 'none' ? 'flex' : 'none'); 
+    return; 
+  }
+
+
+  showContextMenu(e);
+});
+
+document.addEventListener('click', ()=> contextMenu.style.display = 'none');
+
+
+/* 
+   搜索功能
+*/
+searchBtn.addEventListener('click', searchHandler);
+
+function searchHandler() {
+  const keyword = searchInput.value.trim(); if(!keyword) return;
+  if(searchResults.length === 0 || searchInput.dataset.last !== keyword){
+    searchResults = [];
+    lines.forEach((lineObj, i)=>{ if(lineObj.text && lineObj.text.includes(keyword)) searchResults.push(i); });
+    searchPos = 0; searchInput.dataset.last = keyword;
+  } else {
+    searchPos = (searchPos + 1) % searchResults.length;
+  }
+  if(searchResults.length > 0){ 
+    index = searchResults[searchPos]; 
+    sentenceIndex=0;
+    currentSentences = [];
+    updateReader(); 
+  }
+  else { 
+    readerText.textContent = '未找到: ' + keyword; 
+  }
+}
+
+searchInput.addEventListener('keydown', e => {
+  if(e.key === 'Enter'){
+    searchHandler();
+    e.preventDefault();
+  }
+});
+
+
+/* 
+   键盘快捷键
+*/
+document.addEventListener('keydown', e=>{
+  if(e.key.toLowerCase() === 's'){
+    e.preventDefault();
+    e.stopPropagation();
+    if(contextMenu.style.display === 'block') contextMenu.style.display = 'none';
+    searchInput.focus();
+    searchInput.select();
+  }
+  if((e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') && e.target.id !== 'searchInput') return;
+  if(e.key.toLowerCase() === 'c'){
+    e.preventDefault();
+    const fakeEvent = { 
+      clientX: reader.offsetLeft + reader.offsetWidth/2, 
+      clientY: reader.offsetTop + reader.offsetHeight/2 
+    };
+    showChapterPreview(fakeEvent);
+  }
+  if(scrollMode === 'manual' && (e.key === 'ArrowRight' || e.key === 'd')){ 
+    index = (index + 1) % lines.length; 
+    sentenceIndex=0;
+    currentSentences = [];
+    updateReader(); 
+  }
+  if(scrollMode === 'manual' && (e.key === 'ArrowLeft' || e.key === 'a')){ 
+    index = (index - 1 + lines.length) % lines.length; 
+    sentenceIndex=0;
+    currentSentences = [];
+    updateReader(); 
+  }
+});
+
+
+/* 
+   滚动模式切换（手动 / 自动）
+*/
+scrollModeBtn.addEventListener('click', ()=>{
+  if(scrollMode === 'manual') scrollMode = 'auto';
+  else scrollMode = 'manual';
+  scrollModeBtn.textContent = '切换滚动: ' + (scrollMode === 'manual' ? '手动' : '自动');
+  sentenceIndex=0;
+  currentSentences = [];
+  updateReader();
+});
+
+// 自动滚动速度调整
+scrollSpeed.addEventListener('input', e => {
+  autoScrollSpeed = parseInt(e.target.value);
+});
+
+scrollSpeed.addEventListener('change', e => {
+  autoScrollSpeed = parseInt(e.target.value);
+  if(scrollMode === 'auto' && autoScrollTimer && lines.length > 0) {
+    const overflow = readerText.scrollWidth - reader.clientWidth;
+    if(overflow > 0) {
+      clearInterval(autoScrollTimer);
+      let pos = reader.scrollLeft;
+      autoScrollTimer = setInterval(()=>{
+        pos += autoScrollSpeed;
+        if(pos > overflow){
+          pos = 0; index = (index + 1) % lines.length; sentenceIndex=0; currentSentences = []; updateReader();
+          return;
+        }
+        reader.scrollLeft = pos;
+      }, 30);
+    }
+  }
+});
+
+
+/* 
+   恢复位置与大小，最后读取保存的行和句子索引
+*/
+window.addEventListener('load', ()=>{
+  let pos = localStorage.getItem('readerPos');
+  if(pos){ try{ pos = JSON.parse(pos); if(pos.left!=null) reader.style.left = pos.left + 'px'; if(pos.bottom!=null) reader.style.bottom = pos.bottom + 'px'; } catch(e){} }
+  let width = localStorage.getItem('readerWidth'); if(width) reader.style.width = width + 'px';
+  const savedColor = localStorage.getItem('readerBarColor'); if(savedColor){ reader.style.background = savedColor; barColor.value = rgbToHex(savedColor); }
+  const savedText = localStorage.getItem('readerTextColor'); if(savedText){ reader.style.color = savedText; textColor.value = savedText; }
+  let savedIndex = parseInt(localStorage.getItem('lastIndex'));
+  if(!isNaN(savedIndex)) index = savedIndex;
+  let savedSentenceIndex = parseInt(localStorage.getItem('lastSentenceIndex'));
+  if(!isNaN(savedSentenceIndex)) sentenceIndex = savedSentenceIndex;
+  // 载入时尽量初始化当前句子缓存
+  if(lines.length > index){
+    currentSentences = splitSentences(lines[index].text || '');
+    if(sentenceIndex >= currentSentences.length) sentenceIndex = 0;
+    renderCurrentSentence();
+  }
+});
+
+
+/* 
+   颜色选择处理
+*/
+barColor.addEventListener('input', e=>{ reader.style.background = e.target.value; localStorage.setItem('readerBarColor', e.target.value); });
+textColor.addEventListener('input', e=>{ reader.style.color = e.target.value; localStorage.setItem('readerTextColor', e.target.value); });
+
+
+/* 辅助 */
+function rgbToHex(rgb){
+  if(!rgb) return '#ffffff';
+  if(rgb.indexOf('#') === 0) return rgb;
+  const m = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+  if(m){ return '#'+[1,2,3].map(i=> parseInt(m[i]).toString(16).padStart(2,'0')).join(''); }
+  return rgb;
+}
+
+/* 
+   更新阅读器内容（手动模式按句子渲染）
+   自动模式由自动滚动计时器控制，无需逐句切换
+*/
+function updateReader(){
+  if(!lines.length){ readerText.textContent = '文件为空'; progressBar.style.width = '0%'; return; }
+  if(index < 0) index = 0; if(index >= lines.length) index = lines.length -1;
+
+  if(scrollMode === 'manual'){
+    // 手动模式渲染当前句子
+    if(currentSentences.length === 0 || sentenceIndex >= currentSentences.length){
+      currentSentences = splitSentences(lines[index].text || '');
+      sentenceIndex = 0;
+    }
+    renderCurrentSentence();
+  } else {
+    // 自动模式显示整行内容
+    sentenceIndex = 0;
+    currentSentences = [];
+    readerText.textContent = lines[index].text || '';
+    readerText.title = lines[index].text || '';
+    // 进度条
+    let curChapterIdx = lines[index].chapterIndex;
+    if(curChapterIdx < 0) curChapterIdx = 0;
+    const chapStartLine = chapters[curChapterIdx].line;
+    let nextChapStartLine = lines.length;
+    if(curChapterIdx + 1 < chapters.length) nextChapStartLine = chapters[curChapterIdx+1].line;
+    let relativePos = (index - chapStartLine)/Math.max(1, nextChapStartLine - chapStartLine);
+    relativePos = Math.min(Math.max(relativePos, 0), 1);
+    progressBar.style.width = (relativePos * 100) + '%';
+    reader.scrollLeft = 0;
+
+    if(autoScrollTimer) clearInterval(autoScrollTimer);
+    const overflow = readerText.scrollWidth - reader.clientWidth;
+    if(overflow > 0){
+      let pos = 0;
+      autoScrollTimer = setInterval(()=>{
+        pos += autoScrollSpeed;
+        if(pos > overflow){
+          pos = 0; 
+          index = (index + 1) % lines.length; 
+          updateReader();
+          return;
+        }
+        reader.scrollLeft = pos;
+      }, 30);
+    }
+  }
+
+  localStorage.setItem('lastIndex', index);
+  localStorage.setItem('lastSentenceIndex', sentenceIndex);
+}
+
+
+/* 
+   辅助: 章节列表字符串导出
+*/
+function getChapterListText(){
+  return chapters.map((c, i)=> `${i+1}. 行 ${c.line} → ${c.title}`).join('\n');
+}
+
+
+
+// 启动时显示提示
+readerText.textContent = '选择 TXT 或 输入网址...';
+
+
+/* 方便调试的全局接口 */
+window.__77reader = {
+  loadText: loadText,
+  getChapters: ()=> chapters,
+  getLinesLength: ()=> lines.length,
+  goToChapter: (n)=>{ if(n>0 && n<=chapters.length){ index = chapters[n-1].line; sentenceIndex=0; currentSentences=[]; updateReader(); } }
+};
+
+
+</script>
+</body>
+</html>
