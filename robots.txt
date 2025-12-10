@@ -1,8 +1,22 @@
+# 禁止所有搜索引擎爬取 /Syzygy/ 目录下的所有内容
 User-agent: *
-Disallow: /private/
-Disallow: /admin/
-Disallow: /api/
+Disallow: /Syzygy/
 
-# 禁止所有搜索引擎爬取整个网站
-User-agent: *
-Disallow: /
+# 或者更保险，添加针对各大搜索引擎的单独规则
+User-agent: Googlebot
+Disallow: /Syzygy/
+
+User-agent: bingbot
+Disallow: /Syzygy/
+
+User-agent: Baiduspider
+Disallow: /Syzygy/
+
+User-agent: YandexBot
+Disallow: /Syzygy/
+
+User-agent: DuckDuckBot
+Disallow: /Syzygy/
+
+User-agent: Applebot
+Disallow: /Syzygy/
