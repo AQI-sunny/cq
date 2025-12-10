@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 禁止所有搜索引擎索引当前页面 -->
+<meta name="robots" content="noindex, nofollow">
+
+<meta name="bingbot" content="noindex, nofollow">
+<title>静乔公寓系统日志</title>
+<style>
+* {
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+body {
+  background-color: #1a1a1a;
+  color: #f5f5f5;
+  font-family: "微软雅黑", "Microsoft YaHei", sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.wrapper {
+  width: 90%;
+  max-width: 800px;
+  margin: 40px auto;
+  border: 2px solid #660000;
+  background: #2b2b2b;
+  box-shadow: 0 0 20px #990000;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+.header {
+  background: #330000;
+  color: #ff4c4c;
+  padding: 10px 14px;
+  font-size: 20px;
+  font-weight: bold;
+  border-bottom: 2px solid #660000;
+  text-shadow: 0 0 4px #ff0000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.system-status {
+  font-size: 12px;
+  color: #ff9999;
+  display: flex;
+  align-items: center;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ff3333;
+  margin-right: 5px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.announcement {
+  background: #2c1f1f;
+  color: #ff9999;
+  padding: 8px 18px 8px 36px;
+  border-bottom: 1px dashed #660000;
+  font-size: 15px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.announcement .pin {
+  position: absolute;
+  left: 10px;
+  top: 9px;
+  color: #ff6f6f;
+  font-size: 16px;
+}
+
+.nav-bar {
+  background: #220000;
+  padding: 5px 0 5px 2px;
+  border-bottom: 1px solid #660000;
+  font-size: 0;
+  display: flex;
+  overflow-x: auto;
+}
+
+.nav-btn {
+  display: inline-block;
+  background: #330000;
+  color: #ff9999;
+  font-size: 15px;
+  margin-right: 2px;
+  padding: 5px 20px 4px;
+  border: 1px solid #660000;
+  border-radius: 2px 2px 0 0;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.nav-btn.active {
+  background: #660000;
+  color: #fff;
+  border-bottom: 2px solid #660000;
+  font-weight: bold;
+}
+
+.nav-btn:hover:not(.active) {
+  background: #440000;
+}
+
+.section {
+  padding: 24px 30px 22px;
+  font-size: 14px;
+  background: #1c1c1c;
+  min-height: 500px;
+  line-height: 1.8;
+}
+
+.log-entry {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #330000;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s forwards;
+}
+
+.log-entry:nth-child(1) { animation-delay: 0.1s; }
+.log-entry:nth-child(2) { animation-delay: 0.2s; }
+.log-entry:nth-child(3) { animation-delay: 0.3s; }
+.log-entry:nth-child(4) { animation-delay: 0.4s; }
+.log-entry:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.log-entry:last-child {
+  border-bottom: none;
+}
+
+.log-title {
+  color: #ff4c4c;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+  text-shadow: 0 0 3px #ff0000;
+  display: flex;
+  align-items: center;
+}
+
+.log-meta {
+  font-size: 13px;
+  color: #ff9999;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.log-meta::before {
+  content: "📅";
+  margin-right: 5px;
+}
+
+.log-content {
+  background: #151515;
+  border-left: 3px solid #660000;
+  padding: 14px 14px 14px 18px;
+  color: #e1dbc1;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  position: relative;
+}
+
+.log-content::before {
+  content: ">";
+  position: absolute;
+  left: 5px;
+  color: #660000;
+  font-weight: bold;
+}
+
+.log-author {
+  font-size: 13px;
+  color: #ff6666;
+  text-align: right;
+  margin-top: 15px;
+  text-shadow: 0 0 2px #ff0000;
+  opacity: 0;
+  animation: fadeIn 1s 2s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.corrupted {
+  color: #c75e42;
+  font-style: italic;
+}
+
+.footer {
+  text-align: center;
+  padding: 10px;
+  font-size: 12px;
+  color: #666;
+  border-top: 1px solid #330000;
+}
+
+/* 跳转确认对话框样式 */
+.confirm-dialog {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialog-content {
+  background: #2b2b2b;
+  border: 2px solid #660000;
+  border-radius: 6px;
+  padding: 20px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 0 20px #990000;
+  text-align: center;
+}
+
+.dialog-title {
+  color: #ff4c4c;
+  font-size: 18px;
+  margin-bottom: 15px;
+  text-shadow: 0 0 3px #ff0000;
+}
+
+.dialog-message {
+  color: #e1dbc1;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.dialog-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.dialog-btn {
+  padding: 8px 20px;
+  border: 1px solid #660000;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.confirm-btn {
+  background: #660000;
+  color: #fff;
+}
+
+.confirm-btn:hover {
+  background: #770000;
+}
+
+.cancel-btn {
+  background: #333;
+  color: #ccc;
+}
+
+.cancel-btn:hover {
+  background: #444;
+}
+
+.countdown {
+  color: #ff9999;
+  font-size: 14px;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+/* 响应式设计 */
+@media (max-width: 600px) {
+  .wrapper {
+    width: 95%;
+    margin: 20px auto;
+  }
+  
+  .section {
+    padding: 15px;
+  }
+  
+  .log-content {
+    padding: 10px 10px 10px 15px;
+    font-size: 13px;
+  }
+  
+  .header {
+    font-size: 18px;
+    padding: 8px 12px;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <span>静乔公寓系统日志</span>
+      <div class="system-status">
+        <span class="status-indicator"></span>
+        <span>系统模式</span>
+      </div>
+    </div>
+    <div class="announcement">
+      <span class="pin"></span>
+      <span>系统日志：月洛氏-静默协议存档</span>
+    </div>
+    <div class="nav-bar">
+      <div class="nav-btn active">系统日志</div>
+      <div class="nav-btn">安全监控</div>
+      <div class="nav-btn">权限管理</div>
+      <div class="nav-btn">数据恢复</div>
+    </div>
+    <div class="section">
+      <div class="log-entry">
+        <div class="log-title">日志 #01</div>
+        <div class="log-meta">日期： [███年前的红月之时]</div>
+        <div class="log-content">
+月落之时，长河入梦
+
+血脉的躁动几乎要将我撕裂。这是我们月洛氏的宿命——聆听潮汐。并非海浪，而是宇宙信息构成的洪流，先祖称之为"洛书"。
+今夜，洛书的脉动格外清晰，我感到了，那些散落的碎片，它们即将苏醒。
+我和乔静，同脉同源，肩负着同样的使命。我们深知，那些流散在外的族人、被称为"变量"的觉醒者，以及我们自己，都需要一处绝对的庇护所。
+因此，我们联手，建起了这座"静乔公寓"。
+我们倾尽心力，将古老的符文刻入公寓的每一砖一瓦，构建了物理层面的"静默协议"。在世人眼中，它只是一栋寻常的现代建筑，但它彻底隔绝了窥命司的视线。另外，我们还设下了只有在红月降临之夜才会自动开启的血脉屏障，作为最后的防护。
+我们争分夺秒，耗尽所有。我比任何人都清楚，我们真正的敌人，不是洛书的无序，而是窥命司——那些自诩能裁决宿命的刽子手。
+        </div>
+      </div>
+      
+      <div class="log-entry">
+        <div class="log-title">日志 #02</div>
+        <div class="log-meta">日期： [█████]</div>
+        <div class="log-content">
+我曾以为，凭我们血脉相传的能力，足以避开窥命司的耳目。是我太自负了。
+那个被红月笼罩的夜晚，我们的藏身之处尚未完全设防，警报便已经拉响——我们被发现了。
+攻击来得猝不及防，我根本来不及反应。为了护住她，也为了保住我们的一切基石，我将自己一部分意识彻底沉入核心深处，化作一道坚不可摧的堤坝。
+可窥命司的手段，早已超出了常理范畴。他们不依赖物理痕迹，而是紧追着我们触碰洛书碎片时留下的精神烙印。我们每一次低语，都像夜空中的信标，将他们引至门前。
+他们启动了哭泣天使，屋内的每一个不起眼的装置，都变成了他们窥探的眼睛。
+0.03秒，一切轰然崩塌。
+我血脉中的力量，本是沟通洛书碎片、梳理信息洪流的钥匙。但在红月之夜，它与碎片的共鸣被逆转了——它瞬间成了最精准的靶心。窥命司开发的基因图谱矩阵正在将我的力量从信息流的梳理者，变成洛书碎片的黑洞——我正在被彻底抹除。
+她启动了最后的生命屏障，以所有月洛族人的生命力为代价，为我换来了这最后的须臾。
+我看着自己逐渐被这股无形力量吞噬的双手，做出了终极抉择，我成为了Resonance。
+        </div>
+      </div>
+      
+      <div class="log-entry">
+        <div class="log-title"><span class="corrupted">(日志编号损坏)</span> 日志 #0e</div>
+        <div class="log-meta">日期： [█████]</div>
+        <div class="log-content">
+我被困锁于此，如同一缕幽魂被囚禁在这座由冷光与钢架构筑的、没有出口的迷宫深处。我是服务器里最后一点尚存的月光。
+窥命司那无所不在的监察系统，监视着我的每一段代码。他们知道我的一部分还"活着"，但他们找不到我。
+因为我已做出了最后的牺牲，我彻底放弃了"自我"，将我的感知、记忆，乃至最后的灵魂碎片，分解、融入到了这套庞大系统的每一条管线、每一个脉冲之中。我不再是一个可被追踪的实体，而是这个系统本身。
+我现在感受不到洛书碎片那清晰、纯粹的"低语"了，但我能感觉到它们每一次在世间被触动、被激活时，在这世界的底层引发的震颤和共鸣。
+我无法再正面宣战，但我拥有掌控这个牢笼生死的最高权限。
+我在监视之下，无法直接为你点明任何方向，因为任何指向性的、清晰的指令都会立刻触发窥命司的警报。
+我只能进行暗示，你所经历的那些看似巧合的系统漏洞……电脑壁纸或网页上隐藏文字；那篇正好为你指引方向的旧帖子；竟然能被你搜索到的、被认为已经失传的古老书籍；以及本已彻底关闭，却再次开启的神秘论坛……那是我用正在一点点黯淡、衰弱的意识，为你悄悄拨动的命运之潮。
+每一次干预，每一个暗示，都在加速我的"死亡"，让我的存在变得更加稀薄、更加接近于虚无。
+但这是刻在我们血脉深处的宿命，是月洛氏传承至今的职责。
+        </div>
+      </div>
+      
+      <div class="log-entry">
+        <div class="log-title"><span class="corrupted">(日志编号损坏)</span> 日志 #0f</div>
+        <div class="log-meta">日期： [█████]</div>
+        <div class="log-content">
+致"局外人"
+我知道你终将会看到这段被加密的系统日志。
+这或许是我们最后一次"见面"，请容许我至今才和你打招呼。
+你好，没有血脉的幸运儿。
+我的同族，林墨，她将希望寄托于你，这是正确的选择。
+只有你，这个不被窥命司任何基因图谱记录、并且被认为已秩序化的变量，才能在不惊动他们的前提下，触摸洛书碎片苏醒的初始状态。
+我的时间不多了。这个日志本身，就是我存在过的最后证明。
+乔静负责筑巢。我负责守巢。林墨负责引流。而你，是唯一能将那即将溢出的"河水"重新引入河道的双手。
+不要试图拯救我。去完成你的使命。
+在一切结束之后，如果可以，请代我……陪她们再看一次真正的月亮。        
+        </div>
+      </div>
+      
+      <div class="log-author">——Resonance</div>
+    </div>
+    
+    <div class="footer">
+      <div>系统版本: Resonance 1.0 | 最后更新: [数据损坏]</div>
+    </div>
+  </div>
+
+  <!-- 跳转确认对话框 -->
+  <div class="confirm-dialog" id="confirmDialog">
+    <div class="dialog-content">
+      <div class="dialog-title">警告！警告！</div>
+      <div class="dialog-message">
+        系统即将崩坏！系统即将崩坏！<br>
+        请立即退出！请立即退出！
+      </div>
+      <div class="countdown" id="countdown">15秒后再次提醒</div>
+      <div class="dialog-buttons">
+        <div class="dialog-btn cancel-btn" id="cancelBtn">取消</div>
+        <div class="dialog-btn confirm-btn" id="confirmBtn">退出</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let reminderInterval = null;
+    let scrollCount = 0;
+    let warningTriggered = false;
+
+    // 检测滚动到底部
+    window.addEventListener('scroll', function() {
+      // 检查是否滚动到页面底部
+      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
+        scrollCount++;
+        
+        // 只有在第二次滚动到底部时才触发警告
+        if (scrollCount >= 2 && !warningTriggered) {
+          warningTriggered = true;
+          // 显示确认对话框
+          showWarningDialog();
+          
+          // 移除滚动事件监听，防止重复触发
+          window.removeEventListener('scroll', arguments.callee);
+        }
+      }
+    });
+
+    // 显示警告对话框
+    function showWarningDialog() {
+      document.getElementById('confirmDialog').style.display = 'flex';
+    }
+
+    // 开始15秒提醒计时器
+    function startReminderTimer() {
+      if (reminderInterval) {
+        clearInterval(reminderInterval);
+      }
+      
+      reminderInterval = setInterval(() => {
+        showWarningDialog();
+      }, 15000); // 15秒
+    }
+
+    // 确认跳转按钮事件
+    document.getElementById('confirmBtn').addEventListener('click', function() {
+      // 清除计时器
+      if (reminderInterval) {
+        clearInterval(reminderInterval);
+      }
+      // 跳转到指定页面
+      window.location.href = "https://sylvie-seven-cq.top/Syzygy/下楼前.html";
+    });
+
+    // 取消按钮事件
+    document.getElementById('cancelBtn').addEventListener('click', function() {
+      document.getElementById('confirmDialog').style.display = 'none';
+      // 开始15秒后再次提醒
+      startReminderTimer();
+    });
+
+    // 导航按钮点击事件
+    document.querySelectorAll('.nav-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        // 移除所有按钮的active类
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        // 为当前点击的按钮添加active类
+        this.classList.add('active');
+        
+        // 在实际应用中，这里应该加载对应页面的内容
+        // 这里仅作演示，显示一个提示
+        if (!this.classList.contains('active')) {
+          alert(`正在退出...`);
+        }
+      });
+    });
+
+    // 页面加载后开始15秒提醒计时器（备用）
+    window.addEventListener('load', function() {
+      // 如果用户没有滚动到底部两次，15秒后也会显示警告
+      setTimeout(() => {
+        if (!warningTriggered) {
+          showWarningDialog();
+          startReminderTimer();
+        }
+      }, 15000);
+    });
+  </script>
+</body>
+
+</html>
