@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /private/
+Disallow: /admin/
+Disallow: /api/
+
+# 禁止所有搜索引擎爬取整个网站
+User-agent: *
+Disallow: /
