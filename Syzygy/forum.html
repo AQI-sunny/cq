@@ -298,11 +298,13 @@
 
         .window {
             max-width: 1200px;
-            margin: 20px auto;
+           /*  margin: 20px auto; */
+            margin: 50px auto 20px; /* 上边距40px，下边距20px */
             border-radius: 12px;
             box-shadow: 0 12px 24px rgba(0,0,0,0.12);
             overflow: hidden;
             background: #fff;
+            
         }
 
         .window-titlebar {
@@ -1372,10 +1374,199 @@
         overflow-y: auto;
     }
 }
-    /* 以上为新增 */
+    /* 以下为新增 */
+/* ================== 移动端响应式优化 ================== */
+/* 移动端设备（最大768px） */
+@media screen and (max-width: 768px) {
+  
+  /* 1. 重新设计 header 布局 - 分层布局 */
+  
+  
+header {
+    display: flex;
+    /* justify-content: space-between; */
+    /* justify-content: center;  */
+     justify-content: flex-start !important; /* 左对齐 */
+    align-items: center;
+    padding: 8px 10px;
+    flex-wrap: nowrap;
+    min-height: 40px;
+}
 
+header h1 {
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    text-align: left;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 3px;
+    flex-shrink: 0; /* 防止被压缩 */
+    align-items: center;
+}
+  
+  /* 2. 登录前的按钮区域 - 纵向排列 */
+.auth-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 3px;
+    grid-row: 1;
+    grid-column: 2;
+    width: auto; /* 或设置为一个具体的宽度，比如 120px */
+    margin-top: 0;
+    justify-content: flex-end; /* 这是关键 - 让按钮靠右 */
+    align-items: center;
+    margin-left: auto; /* 确保整个容器靠右 */
+}
+
+.auth-btn {
+    flex: 0; /* 不要平均分配，让按钮保持自然宽度 */
+    padding: 4px 5px;
+    font-size: 11px;
+    text-align: center;
+    white-space: nowrap; /* 防止文字换行 */
+}
+  
+  
+  
+  /* 3. 登录后的用户信息布局 */
+ /* 3. 登录后的用户信息布局 - 移动端 */
+@media screen and (max-width: 768px) {
+  /* 用户名过长时的处理 */
+  .user-info {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-left: auto; /* 确保靠右 */
+  }
+  
+  /* 用户名样式 - "欢迎，"部分 */
+  .user-info > span {
+    font-size: 14px;
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 130px; /* 限制用户名宽度 */
+    flex-shrink: 0;
+  }
+  
+  /* 按钮样式 - 保持横向 */
+  .user-info .auth-btn,
+  .user-info .logout-btn {
+    padding: 6px 10px;
+    margin: 0;
+    text-align: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  
+  /* 消息角标位置调整 */
+  #message-btn .message-count {
+    position: absolute;
+    top: -5px;
+    right: 5px;
+  }
+  
+  /* 当用户名过长时，强制换行 */
+  .user-info.username-long {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  
+  .user-info.username-long > span {
+    flex-basis: 100%; /* 占用整行宽度 */
+    margin-bottom: 5px;
+    max-width: none; /* 去掉宽度限制 */
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal; /* 允许换行 */
+    word-break: break-word;
+    text-align: right; /* 靠右对齐 */
+    padding-right: 0; /* 去掉右边内边距 */
+  }
+  
+  /* 按钮组保持横向排列 */
+  .user-info.username-long .auth-btn,
+  .user-info.username-long .logout-btn {
+    order: 2; /* 确保按钮在用户名之后 */
+  }
+  
+  /* 正常情况下（用户名不长） */
+  .user-info:not(.username-long) {
+    flex-wrap: nowrap;
+  }
+  
+  /* 确保网页端布局不变 */
+  @media screen and (min-width: 769px) {
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: nowrap;
+    }
+    
+    .user-info > span {
+      max-width: none;
+      white-space: nowrap;
+    }
+  }
+}
+
+  
+  /* 4. 隐藏登录前的按钮（登录后） */
+  .user-info ~ .auth-buttons {
+    display: none;
+  }
+  
+  /* 5. 消息角标位置调整 */
+  .message-count {
+    position: absolute;
+    top: -5px;
+    right: 5px;
+    font-size: 10px;
+    min-width: 16px;
+    height: 16px;
+    line-height: 16px;
+  }
+  
+  /* 6. 确保网页端布局不变 */
+  @media screen and (min-width: 769px) {
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .auth-buttons {
+      display: flex;
+      gap: 10px;
+    }
+  }
+}
 
     </style>
+
+
      <!-- <link rel="stylesheet" href="responsive-auto.css">
      <link rel="stylesheet" href="password-manager.css"> -->
      <!-- <link rel="stylesheet" href="https://sylvie-seven-cq.top/Syzygy/responsive.css"> -->
@@ -1772,6 +1963,7 @@ document.addEventListener('keydown', function(e) {
     
 </body>
 </html>
+
 
 
 
