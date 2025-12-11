@@ -141,11 +141,10 @@
             transform: scale(1);
         }
 
+        /* 按钮基础样式 */
         .skip-btn, .continue-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 10px 20px;
+            position: fixed; /* 改为fixed，防止遮挡内容 */
+            padding: 10px 16px; /* 减少水平padding */
             background: rgba(255, 255, 255, 0.2);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.5);
@@ -155,13 +154,23 @@
             transition: all 0.3s ease;
             backdrop-filter: blur(5px);
             z-index: 100;
+            max-width: 120px; /* 限制最大宽度 */
+            white-space: nowrap; /* 防止文字换行 */
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .skip-btn {
+            top: 20px;
+            right: 20px;
         }
 
         .continue-btn {
             display: none;
-            top: auto;
             bottom: 20px;
-            right: 20px;
+            right: 20px; /* 固定在右下角 */
+            top: auto; /* 取消top设置 */
+            left: auto; /* 取消left设置 */
         }
 
         .skip-btn:hover, .continue-btn:hover {
@@ -196,9 +205,106 @@
             animation-delay: 4s;
         }
 
+        /* 自定义弹窗样式 */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .custom-modal-overlay.active {
+            display: flex;
+        }
+        
+        .custom-modal {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            animation: modalFadeIn 0.3s ease;
+        }
+        
+        .custom-modal p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .modal-btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .modal-btn.confirm {
+            background: #007bff;
+            color: white;
+        }
+        
+        .modal-btn.confirm:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+        
+        .modal-btn.cancel {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .modal-btn.cancel:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .modal-btn.single {
+            background: #28a745;
+            color: white;
+            width: 100%;
+        }
+        
+        .modal-btn.single:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
         @keyframes float {
             0%, 100% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* 平板设备 (768px - 1024px) */
@@ -224,8 +330,14 @@
             }
             
             .skip-btn, .continue-btn {
-                padding: 9px 18px;
-                font-size: 0.95rem;
+                padding: 9px 14px; /* 移动端减小padding */
+                font-size: 0.9rem;
+                max-width: 100px;
+            }
+            
+            .custom-modal {
+                max-width: 400px;
+                padding: 25px;
             }
         }
 
@@ -307,15 +419,38 @@
                 justify-content: flex-start;
             }
             
+            /* 移动端按钮优化 */
             .skip-btn, .continue-btn {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+                max-width: 90px;
+                border-radius: 25px;
+            }
+            
+            .skip-btn {
                 top: 15px;
                 right: 15px;
-                padding: 8px 16px;
-                font-size: 0.9rem;
             }
             
             .continue-btn {
                 bottom: 15px;
+                right: 15px;
+            }
+            
+            .custom-modal {
+                max-width: 350px;
+                padding: 20px;
+            }
+            
+            .custom-modal p {
+                font-size: 16px;
+                margin-bottom: 25px;
+            }
+            
+            .modal-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+                min-width: 100px;
             }
         }
 
@@ -392,15 +527,21 @@
                 padding: 10px; 
             }
             
+            /* 小屏手机按钮进一步缩小 */
             .skip-btn, .continue-btn {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+                max-width: 80px;
+            }
+            
+            .skip-btn {
                 top: 10px;
                 right: 10px;
-                padding: 6px 12px;
-                font-size: 0.8rem;
             }
             
             .continue-btn {
                 bottom: 10px;
+                right: 10px;
             }
             
             .decoration:nth-child(1) {
@@ -414,6 +555,28 @@
             .decoration:nth-child(3) {
                 width: clamp(20px, 5vw, 60px);
                 height: clamp(20px, 5vw, 60px);
+            }
+            
+            .custom-modal {
+                max-width: 280px;
+                padding: 15px;
+            }
+            
+            .custom-modal p {
+                font-size: 14px;
+                margin-bottom: 20px;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .modal-btn {
+                padding: 10px;
+                font-size: 13px;
+                min-width: auto;
+                width: 100%;
             }
         }
 
@@ -453,6 +616,23 @@
             .text-line:nth-child(8) {
                 bottom: 5%;
             }
+            
+            /* 横屏按钮更小 */
+            .skip-btn, .continue-btn {
+                padding: 4px 8px;
+                font-size: 0.7rem;
+                max-width: 70px;
+            }
+            
+            .skip-btn {
+                top: 8px;
+                right: 8px;
+            }
+            
+            .continue-btn {
+                bottom: 8px;
+                right: 8px;
+            }
         }
 
         /* 超大屏平板优化 */
@@ -470,6 +650,17 @@
     </style>
 </head>
 <body>
+    <!-- 自定义弹窗 -->
+    <div class="custom-modal-overlay" id="modalOverlay">
+        <div class="custom-modal" id="modal">
+            <p id="modalMessage">确定要跳过这段路程吗？</p>
+            <div class="modal-buttons" id="modalButtons">
+                <button class="modal-btn confirm" id="modalConfirm">确定</button>
+                <button class="modal-btn cancel" id="modalCancel">取消</button>
+            </div>
+        </div>
+    </div>
+
     <div class="decoration"></div>
     <div class="decoration"></div>
     <div class="decoration"></div>
@@ -481,7 +672,7 @@
         <!-- 第一场景 -->
         <!-- 图片1 - 左上角 -->
         <div class="image-container left-top" id="image1">
-            <img src="https://sylvie-seven-cq.top/gallery/等候.jpg" alt="等候">
+            <img src="等候.jpg" alt="等候">
         </div>
         
         <!-- 文字1 - 右上角 -->
@@ -496,7 +687,7 @@
         <!-- 第二场景 -->
         <!-- 图片2 - 右下角 -->
         <div class="image-container right-bottom" id="image2">
-            <img src="https://sylvie-seven-cq.top/gallery/疾驰.jpg" alt="疾驰">
+            <img src="疾驰.jpg" alt="疾驰">
         </div>
         
         <!-- 文字3 - 左下角 -->
@@ -510,7 +701,7 @@
         <!-- 第三场景 -->
         <!-- 图片3 - 中央上方 -->
         <div class="image-container center-top" id="image3">
-            <img src="https://sylvie-seven-cq.top/gallery/生光.jpg" alt="生光">
+            <img src="生光.jpg" alt="生光">
         </div>
         
         <!-- 文字5 - 中央下方 -->
@@ -526,39 +717,78 @@
             const skipBtn = document.getElementById('skipBtn');
             const continueBtn = document.getElementById('continueBtn');
             
+            // 弹窗相关元素
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modal = document.getElementById('modal');
+            const modalMessage = document.getElementById('modalMessage');
+            const modalConfirm = document.getElementById('modalConfirm');
+            const modalCancel = document.getElementById('modalCancel');
+            const modalButtons = document.getElementById('modalButtons');
+            
             // 设置跳转目标URL
-            const targetUrl = 'https://sylvie-seven-cq.top/Syzygy/山顶上连接.html';
+            const targetUrl = '山顶上连接.html';
 
             let autoPlay = true;
             let currentStep = 0;
             let sceneInterval;
+            let pendingAction = null; // 存储待执行的动作
+
+            // 自定义弹窗函数
+            function showCustomConfirm(message, confirmCallback, cancelCallback) {
+                modalMessage.textContent = message;
+                modalOverlay.classList.add('active');
+                
+                // 设置确认按钮事件
+                modalConfirm.onclick = function() {
+                    modalOverlay.classList.remove('active');
+                    if (typeof confirmCallback === 'function') {
+                        confirmCallback();
+                    }
+                };
+                
+                // 设置取消按钮事件
+                modalCancel.onclick = function() {
+                    modalOverlay.classList.remove('active');
+                    if (typeof cancelCallback === 'function') {
+                        cancelCallback();
+                    }
+                };
+            }
+            
+            function showSingleButtonModal(message, buttonText, callback) {
+                modalMessage.textContent = message;
+                modalButtons.innerHTML = `<button class="modal-btn single" id="modalSingleBtn">${buttonText}</button>`;
+                modalOverlay.classList.add('active');
+                
+                document.getElementById('modalSingleBtn').onclick = function() {
+                    modalOverlay.classList.remove('active');
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                };
+            }
 
             // 步骤定义
             const steps = [
-                // 第一场景 - 显示图片1
-                function() {
-                    hideAll();
-                    document.getElementById('image1').classList.add('visible');
-                    document.getElementById('image1').style.display = 'block';
-                },
-                // 第一场景 - 显示文字1
-                function() {
-                    document.getElementById('text1').classList.add('visible');
-                },
-                // 第一场景 - 显示文字2
-                function() {
-                    document.getElementById('text2').classList.add('visible');
-                },
-                // 第二场景 - 显示图片2
-                function() {
-                    hideAll();
-                    document.getElementById('image2').classList.add('visible');
-                    document.getElementById('image2').style.display = 'block';
-                },
-                // 第二场景 - 显示文字3
-                function() {
-                    document.getElementById('text3').classList.add('visible');
-                },
+                 // 第一场景 - 同时显示图片1和文字1
+    function() {
+        hideAll();
+        document.getElementById('image1').classList.add('visible');
+        document.getElementById('image1').style.display = 'block';
+        document.getElementById('text1').classList.add('visible');
+    },
+    // 第一场景 - 显示文字2
+    function() {
+        document.getElementById('text2').classList.add('visible');
+    },
+    // 第二场景 - 同时显示图片2和文字3
+    function() {
+        hideAll();
+        document.getElementById('image2').classList.add('visible');
+        document.getElementById('image2').style.display = 'block';
+        document.getElementById('text3').classList.add('visible');
+    },
+                
                 // 第二场景 - 显示文字4
                 function() {
                     document.getElementById('text4').classList.add('visible');
@@ -568,11 +798,9 @@
                     hideAll();
                     document.getElementById('image3').classList.add('visible');
                     document.getElementById('image3').style.display = 'block';
-                },
-                // 第三场景 - 显示文字5
-                function() {
                     document.getElementById('text5').classList.add('visible');
-                }
+                },
+                
             ];
 
             // 隐藏所有元素
@@ -593,7 +821,8 @@
                     currentStep++;
                     
                     if (currentStep < steps.length) {
-                        sceneInterval = setTimeout(executeNextStep, 2000);
+                        // 从2000ms减少到1500ms，加快文字显示速度
+                        sceneInterval = setTimeout(executeNextStep, 3000);
                     } else {
                         // 所有步骤完成，显示继续按钮
                         continueBtn.style.display = 'block';
@@ -607,14 +836,19 @@
 
             // 跳过按钮
             skipBtn.addEventListener('click', function () {
-                if (confirm('确定要跳过这段路程吗？')) {
-                    autoPlay = false;
-                    clearTimeout(sceneInterval);
-                    window.location.href = targetUrl;
-                } else {
-                    // 用户点击"取消"，显示"继续"按钮
-                    continueBtn.style.display = 'block';
-                }
+                showCustomConfirm(
+                    '确定要跳过这段路程吗？',
+                    function() {
+                        // 确认跳过
+                        autoPlay = false;
+                        clearTimeout(sceneInterval);
+                        window.location.href = targetUrl;
+                    },
+                    function() {
+                        // 取消跳过，显示继续按钮
+                        continueBtn.style.display = 'block';
+                    }
+                );
             });
 
             // 继续按钮
@@ -626,9 +860,15 @@
                     executeNextStep();
                 } else {
                     // 所有步骤已显示，弹出是否准备好跳转的提示框
-                    if (confirm('打开电脑中......')) {
-                        window.location.href = targetUrl;
-                    }
+                    showCustomConfirm(
+                        '打开电脑中......',
+                        function() {
+                            window.location.href = targetUrl;
+                        },
+                        function() {
+                            // 用户取消，不做任何操作
+                        }
+                    );
                 }
             });
         });
