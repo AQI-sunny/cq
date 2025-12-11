@@ -67,7 +67,7 @@
         }
         
         // 显示网络状态提示
-        showNetworkStatus() {
+       /*  showNetworkStatus() {
             if (this.averageLatency > 500) { // 延迟大于500ms
                 this.createNotification('您的网络连接较慢，登录过程可能需要更长时间', 'warning');
             }
@@ -75,7 +75,7 @@
             if (this.networkScore < 0.5) {
                 this.createNotification('检测到网络连接问题，部分服务可能不可用', 'error');
             }
-        }
+        } */
         
         // 创建状态通知
         createNotification(message, type = 'info') {

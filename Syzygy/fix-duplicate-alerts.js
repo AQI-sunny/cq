@@ -72,7 +72,7 @@
         
         // 🚨 修复关键：取消注释，让消息正常显示！
         // 调用原始alert显示消息
-        originalAlert.call(window, msg);
+       /*  originalAlert.call(window, msg); */
         
         // 可选：同时显示自定义提示
         showCustomMessage(msg);
