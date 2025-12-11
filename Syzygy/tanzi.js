@@ -73,7 +73,7 @@ function saveUniqueSearches() {
     }
 }
 
-function checkPeriodicHint(query) {
+/* function checkPeriodicHint(query) {
     if (query !== config.triggerKeyword) {
         if (!uniqueSearchTerms.has(query)) {
             uniqueSearchTerms.add(query);
@@ -82,6 +82,70 @@ function checkPeriodicHint(query) {
                 showPeriodicHint();
             }
         }
+    }
+} */
+
+/* function checkPeriodicHint(query) {
+    if (query !== config.triggerKeyword) {
+        if (!uniqueSearchTerms.has(query)) {
+            uniqueSearchTerms.add(query);
+            saveUniqueSearches();
+            if (uniqueSearchTerms.size % 7 === 0) {
+                const round = uniqueSearchTerms.size / 7;
+                // 显示带次数信息的通知
+                showMessage(`🎉 你有新的提示啦！请查看坛子面板~(第${round}条提示)`, 'success', 8000);
+                // 然后在面板中显示详细提示
+                showPeriodicHint();
+            }
+        }
+    }
+} */
+let shouldSkipResultMessage = false;
+
+function checkPeriodicHint(query) {
+    if (query !== config.triggerKeyword) {
+        if (!uniqueSearchTerms.has(query)) {
+            uniqueSearchTerms.add(query);
+            saveUniqueSearches();
+            if (uniqueSearchTerms.size % 7 === 0) {
+                const round = uniqueSearchTerms.size / 7;
+                // 显示提示消息
+                showMessage(`🎉 你有新的提示啦！请查看坛子面板~(第${round}条提示)`, 'success', 3000);
+                showPeriodicHint();
+                
+                // 设置标记，跳过下一次搜索结果消息
+                shouldSkipResultMessage = true;
+                
+                // 8秒后重置标记（提示消息显示时间）
+                setTimeout(() => {
+                    shouldSkipResultMessage = false;
+                }, 8000);
+            }
+        }
+    }
+}
+
+function checkForHiddenPosts(query) {
+    if (!query || query === config.triggerKeyword) return;
+    
+    const foundHiddenPosts = findHiddenPostsInResults(query);
+    const hasFoundPosts = foundHiddenPosts.length > 0;
+    
+    recordKeyword(query, hasFoundPosts, foundHiddenPosts.length);
+    
+    updateKeywordsDisplay();
+    updateStats();
+    updateSearchStats();
+    
+    // 如果设置了跳过标记，不显示结果消息
+    if (shouldSkipResultMessage) {
+        return;
+    }
+    
+    if (hasFoundPosts) {
+        showMessage(`🎉 发现 ${foundHiddenPosts.length} 个隐藏帖子！关键词 "${query}" 已记录`, 'success');
+    } else {
+        showMessage(`未发现隐藏帖子`, 'info');
     }
 }
 
@@ -100,6 +164,7 @@ function showPeriodicHint() {
         "咖啡店首页出现的咖啡也搜一搜？",
         "宝子有没有解锁某个工具呀？试试在论坛也搜索一下呢？",
         "王大妈要去放什么灯呢？某个节日发生了什么呢？在哪一年呢？",
+        "嘿~如果发现有隐藏帖子但是看不到，有可能需要登入其他账户哦~",
         "超市和咖啡店后台用户名都是全名拼音哦~",
         "404的真名你可知晓啦？他发布的帖子里有提到一个...网站，去search一下？",
         "鸡蛋帖子有透露老板姓氏哦~还有评论区曾提到xx姐的糖糕",
@@ -121,6 +186,7 @@ function showPeriodicHint() {
         "D门的密码是蒹葭苍苍下一句的前两个字拼音哦",
         "E门密码是某类鸟的外号英文＋书籍的影视化年份哦",
         "实验室深处密码要通过档案号推理哦~猜猜是谁被关在里面呢？",
+        "嘿~如果发现有隐藏帖子但是看不到，有可能需要登入其他账户哦~有两个账户可登入哦~一个是林猫的...还有一个...",
         "旧论坛有提到《xxx则》，解字谜可得五字书籍哦",
         "小符咒游戏可以得到一个提取码哦~",
         "提取到的某卷书~可解出一个四字家族名哦~Y开头X结尾~注意观察xx后裔~",
@@ -1347,7 +1413,7 @@ function updateBadge(count) {
     }
 }
 
-function showMessage(message, type = 'info') {
+/* function showMessage(message, type = 'info') {
     const existingMsg = document.getElementById('tanzi-message');
     if (existingMsg) existingMsg.remove();
     
@@ -1358,7 +1424,8 @@ function showMessage(message, type = 'info') {
     msgDiv.textContent = message;
     msgDiv.style.cssText = `
         position: fixed;
-        top: 20px;
+         top: 20px; 
+        
         right: 20px;
         background: ${backgroundColor};
         color: white;
@@ -1386,7 +1453,994 @@ function showMessage(message, type = 'info') {
             msgDiv.parentNode.removeChild(msgDiv);
         }
     }, 3000);
+} */
+
+
+
+
+function addEssentialStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        /* 坛子容器定位 - 修改为支持拖拽 */
+        .tanzi-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            align-items: flex-end; /* 让子元素右对齐 */
+        }
+
+        /* 坛子球体样式优化 */
+        .tanzi-orb {
+            cursor: pointer; /* 默认手型 */
+            transition: transform 0.2s, box-shadow 0.2s;
+            /* 确保球体位于面板之上或旁边 */
+            position: relative;
+            z-index: 10002;
+        }
+
+        /* 大屏下添加抓取手势 */
+        @media (min-width: 769px) {
+            .tanzi-orb {
+                cursor: grab;
+            }
+            .tanzi-orb:active {
+                cursor: grabbing;
+            }
+        }
+
+        /* 基础面板样式 - 关键修复 */
+        .tanzi-panel {
+            /* 桌面端改为绝对定位，相对于容器 */
+            position: absolute;
+            bottom: 200px; /* 位于球体上方 */
+            right: 0;
+            width: 350px;
+            
+            /* 修复1: 桌面端最大高度和滚动 */
+            max-height: 100vh; 
+            overflow-y: auto;
+            
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 10001;
+            display: none; /* 默认隐藏 */
+            flex-direction: column;
+            padding: 0;
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Microsoft YaHei', sans-serif;
+            border: 1px solid rgba(0,0,0,0.05);
+            
+            /* 滚动条美化 */
+            scrollbar-width: thin;
+        }
+
+        .panel-header {
+            padding: 15px;
+            background: #f5f7fa;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .panel-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #999;
+            padding: 0 5px;
+        }
+
+        .search-stats-section, .stats-section, .panel-actions {
+            padding: 10px 15px;
+            flex-shrink: 0;
+        }
+
+        .stats-section {
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+        }
+        
+        .stats-section .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .stats-section .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .stats-section .stat-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .stats-section .highlight {
+            color: #ff4757;
+        }
+
+        .keywords-section {
+            padding: 10px 15px;
+            background: #fafafa;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            min-height: 60px;
+            /* 移除固定的 max-height，由 panel 的 flex 和 max-height 控制 */
+            flex: 1; 
+        }
+        
+        .keywords-header {
+            flex-shrink: 0;
+        }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .keywords-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            /* 关键：让内容撑开，不设死高度，依赖父容器滚动 */
+            min-height: 20px; 
+            margin-top: 8px;
+            padding-right: 2px;
+        }
+        
+        .keyword-item {
+            padding: 6px 10px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            min-height: 32px;
+        }
+
+        .keyword-item.valid {
+            background: #e8f5e8 !important;
+            color: #2e7d32 !important;
+            border-left: 3px solid #4caf50 !important;
+        }
+        
+        .keyword-item.invalid {
+            background: #ffebee !important;
+            color: #c62828 !important;
+            border-left: 3px solid #f44336 !important;
+        }
+        
+        .keyword-count {
+            font-size: 11px;
+            background: rgba(0,0,0,0.1);
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 20px;
+            text-align: center;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        
+        .tanzi-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4757;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 12px;
+            font-weight: bold;
+            min-width: 18px;
+            text-align: center;
+            z-index: 10003;
+        }
+        
+        .panel-actions {
+            display: flex;
+            border-top: 1px solid #eee;
+            padding: 12px 15px;
+        }
+        
+        .buttons-row {
+            display: flex;
+            width: 100%;
+            gap: 8px;
+            justify-content: space-between;
+        }
+
+        .short-btn {
+            flex: 1;
+            min-width: 0;
+            padding: 8px 6px !important;
+            font-size: 13px !important;
+            height: 36px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .short-btn:hover {
+            opacity: 0.85;
+            transform: translateY(-1px);
+        }
+        
+        .short-btn:active {
+            transform: translateY(0);
+        }
+        
+        .short-btn.primary {
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(255, 71, 87, 0.2);
+        }
+        
+        .short-btn.secondary {
+            background: linear-gradient(135deg, #e0e0e0, #f0f0f0);
+            color: #333;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        #hint-section {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px;
+            font-size: 14px;
+            color: #1976d2;
+            animation: fadeIn 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .section-title {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .empty-keywords {
+            text-align: center;
+            color: #999;
+            padding: 20px 0;
+            font-size: 13px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 移动端适配 - 严格保持原样 */
+        @media (max-width: 768px) {
+            .tanzi-container {
+                bottom: 15px !important;
+                right: 15px !important;
+                left: auto !important;
+                top: auto !important;
+                position: fixed !important;
+            }
+            
+            .tanzi-orb {
+                width: 50px !important;
+                height: 50px !important;
+                cursor: default !important; /* 移动端不显示抓手 */
+            }
+            
+            .tanzi-panel {
+                position: fixed !important;
+                width: 90vw !important;
+                max-width: 400px !important;
+                left: 50% !important;
+                right: auto !important;
+                transform: translateX(-50%) !important;
+                bottom: 100px !important;
+                top: auto !important;
+                
+                height: 70vh !important;
+                max-height: 70vh !important;
+                min-height: 300px !important;
+                overflow-y: auto !important;
+                border: 1px solid #ddd;
+                box-shadow: 0 0 100px rgba(0,0,0,0.2);
+                background: white !important;
+                border-radius: 12px !important;
+            }
+            
+            .search-stats-section, .stats-section {
+                padding: 8px 12px !important;
+                min-height: auto !important;
+                flex-shrink: 0 !important;
+            }
+            
+            .stats-section {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 6px !important;
+            }
+            
+            .stats-section .stat-item {
+                justify-content: flex-start !important;
+            }
+            
+            .keywords-section {
+                max-height: none !important;
+                height: auto !important;
+                min-height: 150px !important;
+                overflow-y: visible !important;
+                padding: 12px 15px !important;
+                flex: 1 !important;
+                display: flex !important;
+                flex-direction: column !important;
+            }
+            
+            .keywords-list {
+                max-height: 30vh !important;
+                min-height: 80px !important;
+                overflow-y: auto !important;
+                margin-top: 8px !important;
+                flex: 1 !important;
+                border: 1px solid #eee !important;
+                border-radius: 6px !important;
+                padding: 8px !important;
+                background: white !important;
+            }
+            
+            .keyword-item {
+                font-size: 13px !important;
+                padding: 10px 12px !important;
+                min-height: 32px !important;
+                word-break: break-word !important;
+                white-space: normal !important;
+                line-height: 1.4 !important;
+                margin-bottom: 5px !important;
+            }
+            
+            .keyword-text {
+                flex: 1 !important;
+                min-width: 0 !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                max-height: 44px !important;
+                display: -webkit-box !important;
+                -webkit-line-clamp: 2 !important;
+                -webkit-box-orient: vertical !important;
+            }
+            
+            .keyword-count {
+                flex-shrink: 0 !important;
+                margin-left: 8px !important;
+                font-size: 10px !important;
+                padding: 2px 6px !important;
+                align-self: flex-start !important;
+                margin-top: 3px !important;
+            }
+            
+            .panel-title {
+                font-size: 15px !important;
+            }
+            
+            .panel-actions {
+                padding: 10px 12px !important;
+                flex-shrink: 0 !important;
+            }
+            
+            .buttons-row {
+                gap: 6px !important;
+            }
+            
+            .short-btn {
+                padding: 10px 4px !important;
+                font-size: 12px !important;
+                height: 38px !important;
+                min-width: 60px !important;
+                font-weight: 600 !important;
+                border-radius: 8px !important;
+            }
+            
+            #hint-section {
+                margin: 8px !important;
+                padding: 10px !important;
+                font-size: 13px !important;
+                line-height: 1.5 !important;
+                flex-shrink: 0 !important;
+            }
+            
+            #tanzi-confirm-dialog {
+                width: 85vw !important;
+                margin: 20px !important;
+            }
+            
+            #tanzi-confirm-dialog > div {
+                padding: 20px 16px !important;
+            }
+            
+            #tanzi-confirm-cancel, #tanzi-confirm-ok {
+                padding: 12px 16px !important;
+                font-size: 15px !important;
+                min-height: 44px !important;
+            }
+        }
+        
+        /* 桌面端滚动条美化 */
+        .tanzi-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+        .tanzi-panel::-webkit-scrollbar-track {
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+        .tanzi-panel::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+        .tanzi-panel::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+
+        /* ========== 消息通知样式 ========== */
+        .tanzi-message {
+            padding: 14px 18px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            animation: tanziMessageSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            word-break: break-word;
+            color: white;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: visible;
+            box-sizing: border-box !important;
+            line-height: 1.4;
+            z-index: 10003;
+        }
+        
+        .tanzi-message::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .tanzi-message.success {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.92), rgba(56, 142, 60, 0.92));
+            border-left: 4px solid #4caf50;
+        }
+        
+        .tanzi-message.success::before {
+            background: #4caf50;
+        }
+        
+        .tanzi-message.info {
+            background: linear-gradient(135deg, rgba(33, 150, 243, 0.92), rgba(21, 101, 192, 0.92));
+            border-left: 4px solid #2196f3;
+        }
+        
+        .tanzi-message.info::before {
+            background: #2196f3;
+        }
+        
+        .tanzi-message.warning {
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.92), rgba(245, 124, 0, 0.92));
+            border-left: 4px solid #ff9800;
+        }
+        
+        .tanzi-message.warning::before {
+            background: #ff9800;
+        }
+        
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .tanzi-message {
+                width: calc(100vw - 40px) !important;
+                max-width: calc(100vw - 40px) !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                right: auto !important;
+                font-size: 15px;
+                padding: 16px 20px;
+            }
+        }
+        
+        @keyframes tanziMessageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        @keyframes tanziMessageFadeOut {
+            to {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    `;
+    document.head.appendChild(style);
 }
+
+/* function showMessage(message, type = 'info') {
+    // 移除现有消息
+    const existingMsg = document.querySelector('.tanzi-message');
+    if (existingMsg) existingMsg.remove();
+    
+    // 获取坛子容器位置
+    const tanziContainer = document.getElementById(config.containerId);
+    let positionStyle = '';
+    
+    if (tanziContainer && tanziContainer.style.display !== 'none') {
+        // 如果坛子显示，消息显示在坛子上方
+        const containerRect = tanziContainer.getBoundingClientRect();
+        if (window.innerWidth <= 768) {
+            // 移动端：坛子面板在底部，消息放在面板上方
+            const bottomPosition = window.innerHeight - containerRect.top + 20;
+            positionStyle = `bottom: ${bottomPosition}px; top: auto; right: 20px; left: auto;`;
+        } else {
+            // 桌面端：坛子在右下角，消息放在球体上方
+            const bottomPosition = window.innerHeight - containerRect.top + 80;
+            positionStyle = `bottom: ${bottomPosition}px; top: auto; right: 20px; left: auto;`;
+        }
+    } else {
+        // 坛子未显示时，显示在顶部
+        positionStyle = `top: 30px; bottom: auto; right: 30px; left: auto;`;
+    }
+    
+    // 创建消息元素
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `tanzi-message ${type}`;
+    msgDiv.textContent = message;
+    
+    // 应用位置样式
+    msgDiv.style.cssText += positionStyle;
+    
+    // 添加到页面
+    document.body.appendChild(msgDiv);
+    
+    // 3秒后自动移除，带淡出动画
+    setTimeout(() => {
+        if (msgDiv.parentNode) {
+            msgDiv.style.animation = 'tanziMessageFadeOut 0.3s ease forwards';
+            setTimeout(() => {
+                if (msgDiv.parentNode) {
+                    msgDiv.parentNode.removeChild(msgDiv);
+                }
+            }, 300);
+        }
+    }, 3000);
+    
+    // 点击消息也可以立即关闭
+    msgDiv.addEventListener('click', function() {
+        if (msgDiv.parentNode) {
+            msgDiv.style.animation = 'tanziMessageFadeOut 0.2s ease forwards';
+            setTimeout(() => {
+                if (msgDiv.parentNode) {
+                    msgDiv.parentNode.removeChild(msgDiv);
+                }
+            }, 200);
+        }
+    });
+} */
+/* function showMessage(message, type = 'info', duration = 3000) {
+
+    
+    // 移除现有消息
+    const existingMsg = document.querySelector('.tanzi-message');
+    if (existingMsg) existingMsg.remove();
+    
+    // 创建消息元素
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `tanzi-message ${type}`;
+    msgDiv.textContent = message;
+    
+    // 先添加到DOM以计算尺寸
+    document.body.appendChild(msgDiv);
+    
+    // 计算消息框的尺寸
+    const msgWidth = msgDiv.offsetWidth;
+    const msgHeight = msgDiv.offsetHeight;
+    
+    // 移除以便重新定位
+    msgDiv.parentNode.removeChild(msgDiv);
+    
+    // 获取坛子容器位置
+    const tanziContainer = document.getElementById(config.containerId);
+    let positionStyle = '';
+    
+    // 屏幕安全边距
+    const safeMargin = 20;
+    const maxMsgWidth = 320; // 最大宽度
+    
+    // 实际使用的宽度（不超过最大宽度，也不超过屏幕宽度减去边距）
+    const actualWidth = Math.min(maxMsgWidth, window.innerWidth - safeMargin * 2);
+    
+    if (tanziContainer && tanziContainer.style.display !== 'none') {
+        // 如果坛子显示，消息显示在坛子上方
+        const containerRect = tanziContainer.getBoundingClientRect();
+        
+        if (window.innerWidth <= 768) {
+            // 移动端：坛子面板在底部，消息放在面板上方
+            const bottomPosition = window.innerHeight - containerRect.top + safeMargin;
+            const safeBottom = Math.min(bottomPosition, window.innerHeight - safeMargin - msgHeight);
+            
+            positionStyle = `
+                position: fixed;
+                bottom: ${Math.max(safeMargin, safeBottom)}px;
+                top: auto;
+                left: 50%;
+                transform: translateX(-50%);
+                right: auto;
+                width: ${actualWidth}px;
+                max-width: calc(100vw - ${safeMargin * 2}px);
+                min-width: 200px;
+                box-sizing: border-box;
+                z-index: 10003;
+            `;
+        } else {
+            // 桌面端：坛子在右下角，消息放在球体上方
+            const bottomPosition = window.innerHeight - containerRect.top + safeMargin + 50;
+            
+            // 计算安全位置：确保消息框不会超出屏幕
+            const maxBottom = window.innerHeight - safeMargin - msgHeight;
+            const safeBottom = Math.min(Math.max(safeMargin, bottomPosition), maxBottom);
+            
+            // 计算右侧位置：优先放在坛子左侧，如果空间不够则放在坛子上方靠右
+            const spaceOnLeft = containerRect.left - safeMargin;
+            const spaceOnRight = window.innerWidth - containerRect.right - safeMargin;
+            
+            let finalLeft = '';
+            let finalRight = '';
+            let finalTransform = '';
+            
+            if (spaceOnLeft >= actualWidth + safeMargin) {
+                // 左边空间足够，放在坛子左侧
+                finalRight = 'auto';
+                finalLeft = `${Math.max(safeMargin, containerRect.left - actualWidth - safeMargin)}px`;
+                finalTransform = 'none';
+            } else if (spaceOnRight >= actualWidth + safeMargin) {
+                // 右边空间足够，放在坛子右侧
+                finalLeft = 'auto';
+                finalRight = `${Math.max(safeMargin, window.innerWidth - containerRect.right - safeMargin)}px`;
+                finalTransform = 'none';
+            } else {
+                // 两边空间都不够，放在屏幕右上角
+                finalLeft = 'auto';
+                finalRight = `${safeMargin}px`;
+                finalTransform = 'none';
+            }
+            
+            positionStyle = `
+                position: fixed;
+                bottom: ${safeBottom}px;
+                top: auto;
+                ${finalLeft}
+                ${finalRight}
+                transform: ${finalTransform};
+                width: ${actualWidth}px;
+                max-width: calc(100vw - ${safeMargin * 2}px);
+                min-width: 200px;
+                box-sizing: border-box;
+                z-index: 10003;
+            `;
+        }
+    } else {
+        // 坛子未显示时，显示在顶部靠右
+        const safeTop = Math.max(safeMargin, 30);
+        const safeRight = Math.max(safeMargin, (window.innerWidth - actualWidth) / 2);
+        
+        positionStyle = `
+            position: fixed;
+            top: ${safeTop}px;
+            bottom: auto;
+            left: 50%;
+            transform: translateX(-50%);
+            right: auto;
+            width: ${actualWidth}px;
+            max-width: calc(100vw - ${safeMargin * 2}px);
+            min-width: 200px;
+            box-sizing: border-box;
+            z-index: 10003;
+        `;
+    }
+    
+    // 重新设置样式
+    msgDiv.style.cssText = positionStyle;
+    
+    // 确保文本不会溢出
+    msgDiv.style.overflow = 'visible';
+    msgDiv.style.wordWrap = 'break-word';
+    msgDiv.style.overflowWrap = 'break-word';
+    msgDiv.style.whiteSpace = 'normal';
+    
+    // 重新添加到页面
+    document.body.appendChild(msgDiv);
+    
+    // 再次计算实际高度，如果高度超过屏幕可用空间，调整位置
+    setTimeout(() => {
+        const finalRect = msgDiv.getBoundingClientRect();
+        
+        // 检查是否超出屏幕
+        if (finalRect.left < safeMargin) {
+            msgDiv.style.left = `${safeMargin}px`;
+            msgDiv.style.transform = 'none';
+        }
+        if (finalRect.right > window.innerWidth - safeMargin) {
+            msgDiv.style.right = `${safeMargin}px`;
+            msgDiv.style.left = 'auto';
+            msgDiv.style.transform = 'none';
+        }
+        if (finalRect.top < safeMargin) {
+            msgDiv.style.top = `${safeMargin}px`;
+            msgDiv.style.bottom = 'auto';
+        }
+        if (finalRect.bottom > window.innerHeight - safeMargin) {
+            msgDiv.style.bottom = `${safeMargin}px`;
+            msgDiv.style.top = 'auto';
+        }
+    }, 10);
+    
+    // 设置定时器移除消息
+    const fadeOutTimer = setTimeout(() => {
+        if (msgDiv.parentNode) {
+            msgDiv.style.animation = 'tanziMessageFadeOut 0.3s ease forwards';
+            setTimeout(() => {
+                if (msgDiv.parentNode) {
+                    msgDiv.parentNode.removeChild(msgDiv);
+                }
+            }, 300);
+        }
+    }, duration);
+    
+    // 点击消息也可以立即关闭
+    msgDiv.addEventListener('click', function() {
+        clearTimeout(fadeOutTimer); // 清除自动关闭的定时器
+        if (msgDiv.parentNode) {
+            msgDiv.style.animation = 'tanziMessageFadeOut 0.2s ease forwards';
+            setTimeout(() => {
+                if (msgDiv.parentNode) {
+                    msgDiv.parentNode.removeChild(msgDiv);
+                }
+            }, 200);
+        }
+    });
+} */
+
+function showMessage(message, type = 'info', duration = 3000) {
+    const existingMsg = document.querySelector('.tanzi-message');
+    
+    // 🔥 重要修复：防止重要提示被普通消息覆盖
+    // 如果是重要提示消息（包含"新的提示"），强制替换现有消息
+    if (message.includes('新的提示') || message.includes('提示啦')) {
+        if (existingMsg) existingMsg.remove();
+    } 
+    // 如果是普通信息消息（如"未发现隐藏帖子"），且当前有消息在显示，跳过
+    else if (existingMsg && type === 'info') {
+        console.log('跳过显示普通信息，因为已有消息在显示');
+        return;
+    }
+    // 其他情况正常替换（如发现隐藏帖子的成功消息）
+    else if (existingMsg) {
+        existingMsg.remove();
+    }
+    
+    // 创建消息元素
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `tanzi-message ${type}`;
+    msgDiv.textContent = message;
+    
+    // 先添加到DOM以计算尺寸
+    document.body.appendChild(msgDiv);
+    
+    // 计算消息框的尺寸
+    const msgWidth = msgDiv.offsetWidth;
+    const msgHeight = msgDiv.offsetHeight;
+    
+    // 移除以便重新定位
+    msgDiv.parentNode.removeChild(msgDiv);
+    
+    // 获取坛子容器位置
+    const tanziContainer = document.getElementById(config.containerId);
+    let positionStyle = '';
+    
+    // 屏幕安全边距
+    const safeMargin = 20;
+    const maxMsgWidth = 320; // 最大宽度
+    
+    // 实际使用的宽度（不超过最大宽度，也不超过屏幕宽度减去边距）
+    const actualWidth = Math.min(maxMsgWidth, window.innerWidth - safeMargin * 2);
+    
+    if (tanziContainer && tanziContainer.style.display !== 'none') {
+        // 如果坛子显示，消息显示在坛子上方
+        const containerRect = tanziContainer.getBoundingClientRect();
+        
+        if (window.innerWidth <= 768) {
+            // 移动端：坛子面板在底部，消息放在面板上方
+            const bottomPosition = window.innerHeight - containerRect.top + safeMargin;
+            const safeBottom = Math.min(bottomPosition, window.innerHeight - safeMargin - msgHeight);
+            
+            positionStyle = `
+                position: fixed;
+                bottom: ${Math.max(safeMargin, safeBottom)}px;
+                top: auto;
+                left: 50%;
+                transform: translateX(-50%);
+                right: auto;
+                width: ${actualWidth}px;
+                max-width: calc(100vw - ${safeMargin * 2}px);
+                min-width: 200px;
+                box-sizing: border-box;
+                z-index: 10003;
+            `;
+        } else {
+            // 桌面端：坛子在右下角，消息放在球体上方
+            const bottomPosition = window.innerHeight - containerRect.top + safeMargin + 50;
+            
+            // 计算安全位置：确保消息框不会超出屏幕
+            const maxBottom = window.innerHeight - safeMargin - msgHeight;
+            const safeBottom = Math.min(Math.max(safeMargin, bottomPosition), maxBottom);
+            
+            // 计算右侧位置：优先放在坛子左侧，如果空间不够则放在坛子上方靠右
+            const spaceOnLeft = containerRect.left - safeMargin;
+            const spaceOnRight = window.innerWidth - containerRect.right - safeMargin;
+            
+            let finalLeft = '';
+            let finalRight = '';
+            let finalTransform = '';
+            
+            if (spaceOnLeft >= actualWidth + safeMargin) {
+                // 左边空间足够，放在坛子左侧
+                finalRight = 'auto';
+                finalLeft = `${Math.max(safeMargin, containerRect.left - actualWidth - safeMargin)}px`;
+                finalTransform = 'none';
+            } else if (spaceOnRight >= actualWidth + safeMargin) {
+                // 右边空间足够，放在坛子右侧
+                finalLeft = 'auto';
+                finalRight = `${Math.max(safeMargin, window.innerWidth - containerRect.right - safeMargin)}px`;
+                finalTransform = 'none';
+            } else {
+                // 两边空间都不够，放在屏幕右上角
+                finalLeft = 'auto';
+                finalRight = `${safeMargin}px`;
+                finalTransform = 'none';
+            }
+            
+            positionStyle = `
+                position: fixed;
+                bottom: ${safeBottom}px;
+                top: auto;
+                ${finalLeft}
+                ${finalRight}
+                transform: ${finalTransform};
+                width: ${actualWidth}px;
+                max-width: calc(100vw - ${safeMargin * 2}px);
+                min-width: 200px;
+                box-sizing: border-box;
+                z-index: 10003;
+            `;
+        }
+    } else {
+        // 坛子未显示时，显示在顶部靠右
+        const safeTop = Math.max(safeMargin, 30);
+        const safeRight = Math.max(safeMargin, (window.innerWidth - actualWidth) / 2);
+        
+        positionStyle = `
+            position: fixed;
+            top: ${safeTop}px;
+            bottom: auto;
+            left: 50%;
+            transform: translateX(-50%);
+            right: auto;
+            width: ${actualWidth}px;
+            max-width: calc(100vw - ${safeMargin * 2}px);
+            min-width: 200px;
+            box-sizing: border-box;
+            z-index: 10003;
+        `;
+    }
+    
+    // 重新设置样式
+    msgDiv.style.cssText = positionStyle;
+    
+    // 确保文本不会溢出
+    msgDiv.style.overflow = 'visible';
+    msgDiv.style.wordWrap = 'break-word';
+    msgDiv.style.overflowWrap = 'break-word';
+    msgDiv.style.whiteSpace = 'normal';
+    
+    // 重新添加到页面
+    document.body.appendChild(msgDiv);
+    
+    // 再次计算实际高度，如果高度超过屏幕可用空间，调整位置
+    setTimeout(() => {
+        const finalRect = msgDiv.getBoundingClientRect();
+        
+        // 检查是否超出屏幕
+        if (finalRect.left < safeMargin) {
+            msgDiv.style.left = `${safeMargin}px`;
+            msgDiv.style.transform = 'none';
+        }
+        if (finalRect.right > window.innerWidth - safeMargin) {
+            msgDiv.style.right = `${safeMargin}px`;
+            msgDiv.style.left = 'auto';
+            msgDiv.style.transform = 'none';
+        }
+        if (finalRect.top < safeMargin) {
+            msgDiv.style.top = `${safeMargin}px`;
+            msgDiv.style.bottom = 'auto';
+        }
+        if (finalRect.bottom > window.innerHeight - safeMargin) {
+            msgDiv.style.bottom = `${safeMargin}px`;
+            msgDiv.style.top = 'auto';
+        }
+    }, 10);
+    
+    // 设置定时器移除消息
+    const fadeOutTimer = setTimeout(() => {
+        if (msgDiv.parentNode) {
+            msgDiv.style.animation = 'tanziMessageFadeOut 0.3s ease forwards';
+            setTimeout(() => {
+                if (msgDiv.parentNode) {
+                    msgDiv.parentNode.removeChild(msgDiv);
+                }
+            }, 300);
+        }
+    }, duration);
+    
+    // 点击消息也可以立即关闭
+    msgDiv.addEventListener('click', function() {
+        clearTimeout(fadeOutTimer); // 清除自动关闭的定时器
+        if (msgDiv.parentNode) {
+            msgDiv.style.animation = 'tanziMessageFadeOut 0.2s ease forwards';
+            setTimeout(() => {
+                if (msgDiv.parentNode) {
+                    msgDiv.parentNode.removeChild(msgDiv);
+                }
+            }, 200);
+        }
+    });
+}
+    /* ——————以上为新增代码 */
 
 function updateDisplay() {
     const keywordsData = getStoredKeywords();
