@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>远程操控ing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background-color: #000;
+        }
+        
+        /* 连接密码对话框样式 */
+        #connectionDialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding-top: env(safe-area-inset-top);
+            padding-right: env(safe-area-inset-right);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+        }
+        
+        .connection-form {
+            background: linear-gradient(to bottom, #1a3a8a, #0a246a);
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 350px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            color: white;
+            position: relative;
+            margin-top: env(safe-area-inset-top);
+            margin-bottom: env(safe-area-inset-bottom);
+            margin-left: env(safe-area-inset-left);
+            margin-right: env(safe-area-inset-right);
+        }
+        
+        .connection-form h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .connection-form input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+        }
+        
+        .connection-form button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to bottom, #4c9bfc, #0a246a);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .connection-form button:hover {
+            background: linear-gradient(to bottom, #5ca5ff, #1a3a8a);
+        }
+        
+        .connection-error {
+            color: #ff6b6b;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .desktop {
+            background: url('zhe-bizhi.webp') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .desktop-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .desktop-icons {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            grid-auto-rows: minmax(80px, auto);
+            gap: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .desktop-icon {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 5px;
+            border-radius: 5px;
+            position: relative;
+        }
+        
+        .desktop-icon:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+        }
+        
+        .icon-img {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+            position: relative;
+        }
+        
+        .icon-img img {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+            object-fit: contain;
+        }
+        
+        .icon-label {
+            font-size: 12px;
+            color: white;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+            max-width: 80px;
+            word-wrap: break-word;
+            line-height: 1.2;
+        }
+        
+        .taskbar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(to bottom, #0a246a, #a3c6f3);
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            box-shadow: 0 -1px 5px rgba(0,0,0,0.5);
+            z-index: 10;
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+        
+        .start-button {
+            height: 32px;
+            background: linear-gradient(to bottom, #4c9bfc, #0a246a);
+            color: white;
+            border: 1px solid #0a246a;
+            border-radius: 4px;
+            padding: 0 15px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .start-button:hover {
+            background: linear-gradient(to bottom, #5ca5ff, #1a3a8a);
+        }
+        
+        .start-icon {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+        }
+        
+        .taskbar-items {
+            display: flex;
+            flex: 1;
+            margin: 0 10px;
+        }
+        
+        .taskbar-item {
+            height: 30px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            margin: 0 2px;
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: white;
+            font-size: 12px;
+        }
+        
+        .taskbar-item:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .system-tray {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+        
+        .tray-item {
+            width: 24px;
+            height: 24px;
+            margin: 0 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+        
+        .clock {
+            color: white;
+            font-size: 12px;
+            padding: 0 5px;
+        }
+        
+        .dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding-top: env(safe-area-inset-top);
+            padding-right: env(safe-area-inset-right);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+        }
+        
+        .dialog-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            min-width: 300px;
+            position: relative;
+        }
+        
+        .dialog-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .dialog-content {
+            margin-bottom: 20px;
+        }
+        
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .dialog-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background-color: #0078d7;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .confirmation-dialog {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            padding: 20px;
+            width: 90%;
+            max-width: 350px;
+            z-index: 101;
+        }
+        /* 我的电脑图标 - 蓝色显示器 */
+        .computer-icon {
+            fill: #0078D7;
+        }
+        /* 文档图标 - 深蓝色文件夹 */
+        .document-icon {
+            fill: #4C9BFC;
+        }
+        
+        .notification {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            display: none;
+            z-index: 102;
+        }
+        
+        .notification.success {
+            background-color: #28a745;
+        }
+        
+        .notification.error {
+            background-color: #dc3545;
+        }
+        
+        /* 恐怖侵入警告样式 - 修改动画减少闪烁 */
+        .intrusion-warning {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+        
+        .warning-text {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            font-size: 72px;
+            font-weight: bold;
+            color: #ff0000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            animation: flash 1s infinite, shake 0.5s infinite;
+            font-family: 'Creepster', cursive, 'Arial Black', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* 多个恐怖文字样式 - 减少动画频率 */
+        .warning-text-multiple {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: space-around;
+            justify-content: space-around;
+            align-items: center;
+            font-family: 'Creepster', cursive, 'Arial Black', sans-serif;
+            font-size: 48px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+            animation: backgroundFlash 2s infinite;
+            opacity: 0.8;
+        }
+        
+        .warning-text-multiple span {
+            animation: textShake 0.5s infinite;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+        }
+        /* 文件管理器样式 */
+        .file-manager {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: calc(90% - env(safe-area-inset-left) - env(safe-area-inset-right));
+            height: 75%;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 200;
+            display: none;
+            overflow: hidden;
+        }
+        
+        .file-manager-header {
+            background: linear-gradient(to bottom, #0a246a, #1a3a8a);
+            color: white;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            padding-right: calc(15px + env(safe-area-inset-right));
+            padding-left: calc(15px + env(safe-area-inset-left));
+            padding-top: calc(10px + env(safe-area-inset-top));
+            min-height: 50px;
+        }
+        
+        .file-manager-title {
+            font-weight: bold;
+        }
+        
+        .file-manager-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            position: relative;
+            z-index: 201;
+            margin-right: calc(10px + env(safe-area-inset-right));
+            margin-left: auto;
+        }
+        
+        .file-manager-close:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .file-manager-content {
+            padding: 15px;
+            height: calc(100% - 50px);
+            overflow-y: auto;
+        }
+        
+        .file-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+        }
+        
+        .file-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .file-item:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .file-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 5px;
+        }
+        
+        .file-name {
+            font-size: 12px;
+            text-align: center;
+            word-break: break-all;
+        }
+        
+        .file-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: calc(90% - env(safe-area-inset-left) - env(safe-area-inset-right));
+            height: 75%;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 300;
+            display: none;
+        }
+        
+        .file-content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            padding-right: calc(15px + env(safe-area-inset-right));
+            padding-left: calc(15px + env(safe-area-inset-left));
+            padding-top: calc(10px + env(safe-area-inset-top));
+            min-height: 50px;
+        }
+        
+        .file-content-title {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .file-content-close {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: #666;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            position: relative;
+            z-index: 301;
+            margin-right: calc(10px + env(safe-area-inset-right));
+            margin-left: auto;
+        }
+        
+        .file-content-close:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .file-content-body {
+            white-space: pre-line;
+            line-height: 1.5;
+        }
+        
+        /* 密保问题对话框样式 */
+        #securityQuestionsDialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding-top: env(safe-area-inset-top);
+            padding-right: env(safe-area-inset-right);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+        }
+        
+        .security-questions-form {
+            background: linear-gradient(to bottom, #1a3a8a, #0a246a);
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 350px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            color: white;
+            margin-top: env(safe-area-inset-top);
+            margin-bottom: env(safe-area-inset-bottom);
+            margin-left: env(safe-area-inset-left);
+            margin-right: env(safe-area-inset-right);
+        }
+        
+        .security-questions-form h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .security-questions-form input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+        }
+        
+        .security-questions-form button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to bottom, #4c9bfc, #0a246a);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .security-questions-form button:hover {
+            background: linear-gradient(to bottom, #5ca5ff, #1a3a8a);
+        }
+        
+        .security-questions-error {
+            color: #ff6b6b;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+        }
+        .hidden-skip {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 7px; /* 字体变小 */
+            color: #999; /* 颜色变浅，不明显 */
+            cursor: pointer;
+            text-decoration: none;
+            background: transparent;
+            border: none;
+            padding: 4px 8px;
+            opacity: 0.3; /* 透明度降低 */
+        }
+        
+        .hidden-skip:hover {
+            color: #666; /* 悬停时稍微明显一些 */
+            opacity: 0.7;
+            text-decoration: underline;
+        }
+        
+        /* 文档密码对话框样式 */
+        #documentPasswordDialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding-top: env(safe-area-inset-top);
+            padding-right: env(safe-area-inset-right);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+        }
+        
+        .document-password-form {
+            background: linear-gradient(to bottom, #1a3a8a, #0a246a);
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 350px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            color: white;
+            margin-top: env(safe-area-inset-top);
+            margin-bottom: env(safe-area-inset-bottom);
+            margin-left: env(safe-area-inset-left);
+            margin-right: env(safe-area-inset-right);
+        }
+        
+        .document-password-form h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .document-password-form input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+        }
+        
+        .document-password-form button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to bottom, #4c9bfc, #0a246a);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .document-password-form button:hover {
+            background: linear-gradient(to bottom, #5ca5ff, #1a3a8a);
+        }
+        
+        .document-password-error {
+            color: #ff6b6b;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        /* 回收站文件管理器样式 */
+        #recycleBinManager {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: calc(90% - env(safe-area-inset-left) - env(safe-area-inset-right));
+            height: 65%;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 200;
+            display: none;
+            overflow: hidden;
+        }
+        
+        /* 隐蔽密码样式 - 默认桌面位置 */
+        .hidden-text {
+            position: absolute;
+            bottom: 100px;
+            right: 10px;
+            color: #2e343f;
+            font-size: 12px;
+            font-family: monospace;
+            cursor: default;
+            user-select: none;
+            z-index: 5;
+            transition: color 0.3s;
+        }
+        
+        .hidden-text:hover {
+            color: #2e343f;
+        }
+
+        .dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding-top: env(safe-area-inset-top);
+            padding-right: env(safe-area-inset-right);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+        }
+
+        .dialog-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: max(10px, env(safe-area-inset-right));
+            top: max(10px, env(safe-area-inset-top));
+            cursor: pointer;
+            font-size: 20px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            z-index: 1001;
+        }
+
+        .close:hover {
+            background-color: #f0f0f0;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            /* 平板设备 */
+            .hidden-text {
+                bottom: 200px;
+                right: 10%;
+                transform: translateX(-50%);
+            }
+            
+            .desktop-icons {
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+                gap: 12px;
+            }
+            
+            .desktop-icon {
+                height: 70px;
+            }
+            
+            .icon-img {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .icon-label {
+                font-size: 11px;
+            }
+            
+            .warning-text-multiple {
+                font-size: 36px;
+            }
+            
+            .file-manager-close,
+            .file-content-close {
+                width: 42px;
+                height: 42px;
+                font-size: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            /* 平板设备 - 小尺寸 */
+            .hidden-text {
+                bottom: 150px;
+                right: 10%;
+                transform: translateX(-50%);
+                font-size: 11px;
+            }
+            
+            .desktop-icons {
+                grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+                gap: 10px;
+            }
+            
+            .desktop-icon {
+                height: 65px;
+            }
+            
+            .icon-img {
+                width: 36px;
+                height: 36px;
+            }
+            
+            .icon-label {
+                font-size: 10px;
+            }
+            
+            .warning-text-multiple {
+                font-size: 28px;
+            }
+            
+            .file-manager-header,
+            .file-content-header {
+                padding-right: calc(10px + env(safe-area-inset-right));
+                padding-left: calc(10px + env(safe-area-inset-left));
+                padding-top: calc(8px + env(safe-area-inset-top));
+                min-height: 45px;
+            }
+            
+            .file-manager-close,
+            .file-content-close {
+                width: 40px;
+                height: 40px;
+                font-size: 19px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            /* 手机设备 */
+            .hidden-text {
+                bottom: 100px;
+                right: 10%;
+                transform: translateX(-50%);
+                font-size: 10px;
+            }
+            
+            .desktop-icons {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+                gap: 8px;
+                padding: 15px;
+                padding-top: calc(15px + env(safe-area-inset-top));
+            }
+            
+            .desktop-icon {
+                height: 60px;
+            }
+            
+            .icon-img {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .icon-label {
+                font-size: 9px;
+            }
+            
+            .taskbar {
+                height: 45px;
+            }
+            
+            .start-button {
+                height: 35px;
+                padding: 0 12px;
+                font-size: 14px;
+            }
+            
+            .clock {
+                font-size: 11px;
+            }
+            
+            .warning-text-multiple {
+                font-size: 20px;
+            }
+            
+            .connection-form,
+            .security-questions-form,
+            .document-password-form {
+                padding: 20px;
+            }
+            
+            .connection-form h2,
+            .security-questions-form h2,
+            .document-password-form h2 {
+                font-size: 20px;
+            }
+            
+            .file-manager-header,
+            .file-content-header {
+                padding-right: calc(8px + env(safe-area-inset-right));
+                padding-left: calc(8px + env(safe-area-inset-left));
+                padding-top: calc(6px + env(safe-area-inset-top));
+                min-height: 40px;
+            }
+            
+            .file-manager-close,
+            .file-content-close {
+                width: 38px;
+                height: 38px;
+                font-size: 18px;
+                margin-right: calc(8px + env(safe-area-inset-right));
+            }
+            
+            .close {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+            
+            /* 在手机上进一步缩短回收站高度 */
+            #recycleBinManager {
+                height: 60%;
+            }
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+        
+        /* 修改动画频率，减少闪烁 */
+        @keyframes flash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translate(-50%, -50%) translateX(0); }
+            25%, 75% { transform: translate(-50%, -50%) translateX(-5px); }
+            50% { transform: translate(-50%, -50%) translateX(5px); }
+        }
+        
+        @keyframes backgroundFlash {
+            0%, 100% { background-color: #000; }
+            50% { background-color: #330000; }
+        }
+        
+        @keyframes textShake {
+            0%, 100% { transform: translateX(0); }
+            25%, 75% { transform: translateX(-3px); }
+            50% { transform: translateX(3px); }
+        }
+        
+        /* 添加抖动动画 */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25%, 75% { transform: translateX(-3px); }
+        }
+        
+        /* 安全区域回退方案 */
+        @supports not (padding: env(safe-area-inset-top)) {
+            .file-manager-header,
+            .file-content-header {
+                padding-right: 30px; /* 为胶囊按钮预留空间 */
+                padding-top: 30px; /* 为状态栏预留空间 */
+            }
+            
+            .file-manager-close,
+            .file-content-close {
+                margin-right: 10px;
+            }
+            
+            .close {
+                right: 20px;
+                top: 20px;
+            }
+            
+            .file-manager,
+            .file-content,
+            #recycleBinManager {
+                top: 30px;
+                left: 5%;
+                width: 90%;
+                height: calc(90% - 30px);
+            }
+            
+            #connectionDialog,
+            #securityQuestionsDialog,
+            #documentPasswordDialog,
+            .dialog {
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+            
+            .connection-form,
+            .security-questions-form,
+            .document-password-form {
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .taskbar {
+                padding-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 连接密码对话框 -->
+    <div id="connectionDialog">
+        <div class="connection-form">
+            <h2>远程连接</h2>
+            <p>请输入连接密码以访问电脑</p>
+            <input type="password" id="connectionPassword" placeholder="请输入连接密码">
+            <button onclick="checkConnectionPassword()">连接</button>
+            <div class="connection-error" id="connectionError">密码错误，请重试</div>
+            <span class="hidden-skip skip-link" onclick="showSecurityQuestions()">忘记密码</span>
+        </div>
+    </div>
+    
+    <!-- 密保问题对话框 -->
+    <div id="securityQuestionsDialog">
+        <div class="security-questions-form">
+            <h2>安全验证</h2>
+            <p>请输入密保问题答案以确认本人</p>
+            <input type="text" id="question1" placeholder="我的现居住地？">
+            <input type="text" id="question5" placeholder="我的生日是几月几号？">
+            <input type="text" id="question2" placeholder="我的真名是什么？">
+            <input type="text" id="question3" placeholder="我的家乡是哪里？">
+            <input type="text" id="question6" placeholder="我小时候养的宠物叫什么？">
+            <button onclick="checkSecurityQuestions()">验证</button>
+            <div class="security-questions-error" id="securityQuestionsError">答案错误，请重试</div>
+        </div>
+    </div>
+    
+    <!-- 文档密码对话框 -->
+    <div id="documentPasswordDialog">
+        <div class="document-password-form">
+            <h2>文档访问</h2>
+            <p>请输入密码以访问私密文档</p>
+            <input type="password" id="documentPassword" placeholder="请输入文档密码">
+            <button onclick="checkDocumentPassword()">确认</button>
+            <button onclick="document.getElementById('documentPasswordDialog').style.display='none'">取消</button>
+            <div class="document-password-error" id="documentPasswordError">密码错误，请重试</div>
+        </div>
+    </div>
+    
+    <!-- 恐怖侵入警告 - 减少动画频率 -->
+    <div id="intrusionWarning" class="intrusion-warning">
+        <div class="warning-text-multiple">
+            <span>密保问题错误！！！拒绝访问！！！</span>
+        </div>
+    </div>
+    
+    <!-- 桌面界面 -->
+    <div class="desktop" id="desktop">
+        <div class="desktop-overlay"></div>
+        
+        <!-- 隐蔽S -->
+        <div class="hidden-text" id="hiddenPassword">不要看我电脑！</div>
+        
+        <div class="desktop-icons">
+            <!-- 文档图标 -->
+            <div class="desktop-icon" onclick="openDocument()">
+                <div class="icon-img">
+                    <svg viewBox="0 0 24 24" class="document-icon">
+                        <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                    </svg>
+                </div>
+                <div class="icon-label">文档</div>
+            </div>
+            
+            <div class="desktop-icon">
+                <div class="icon-img">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzIxOTZGMyI+PHBhdGggZD0iTTguNSwxMy41TDExLDE2LjVMMTQuNSwxMkwxOSwxOEg1TTIxLDE5VjVDMjEsMy44OSAyMC4xLDMgMTksM0g1QTIsMiAwIDAsMCAzLDVWMTlBMCwwIDAgMCwwIDUsMjFIMTlBMCwwIDAgMCwwIDIxLDE5WiIvPjwvc3ZnPg==" alt="Image">
+                </div>
+                <div class="icon-label">图片</div>
+            </div>
+            
+            <!-- 回收站图标 -->
+            <div class="desktop-icon" onclick="openRecycleBin()">
+                <div class="icon-img">
+                    <svg viewBox="0 0 24 24" fill="#6C757D">
+                        <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
+                    </svg>
+                </div>
+                <div class="icon-label">回收站</div>
+            </div>
+
+            <!-- 我的电脑图标 -->
+            <div class="desktop-icon">
+                <div class="icon-img">
+                    <svg viewBox="0 0 24 24" class="computer-icon">
+                        <path d="M4 2.5C2.89 2.5 2 3.39 2 4.5V15.5C2 16.61 2.89 17.5 4 17.5H20C21.11 17.5 22 16.61 22 15.5V4.5C22 3.39 21.11 2.5 20 2.5H4M4 4H20V16H4V4M9 19V21H15V19H9M8 18H16V22H8V18Z"/>
+                    </svg>
+                </div>
+                <div class="icon-label">我的电脑</div>
+            </div>
+
+            <!-- 设置图标 -->
+            <div class="desktop-icon">
+                <div class="icon-img">
+                    <svg viewBox="0 0 24 24" fill="#0078D7">
+                        <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.22,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.22,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/>
+                    </svg>
+                </div>
+                <div class="icon-label">设置</div>
+            </div>
+        </div>
+        
+        <div class="taskbar">
+            <div class="start-button">
+                <div class="start-icon">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2ZmZmZmZiI+PHBhdGggZD0iTTMsMThIMjFWMTZIM1YxOE0zLDEzSDIxVjExSDNWMTNNMyw2VjhIMjFWNkgzWiIvPjwvc3ZnPg==" alt="Start">
+                </div>
+                <span>开始</span>
+            </div>
+            
+            <div class="taskbar-items">
+                <!-- 任务栏项目可以放在这里 -->
+            </div>
+            
+            <div class="system-tray">
+                <div class="tray-item">🔊</div>
+                <div class="tray-item">🌐</div>
+                <div class="clock" id="clock">上午11:49</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 文件内容显示 -->
+    <div class="file-content" id="fileContent">
+        <div class="file-content-header">
+            <div class="file-content-title" id="fileContentTitle">文件内容</div>
+            <button class="file-content-close" onclick="closeFileContent()">×</button>
+        </div>
+        <div class="file-content-body" id="fileContentBody"></div>
+    </div>
+    
+    <!-- 回收站文件管理器 -->
+    <div id="recycleBinManager" class="file-manager">
+        <div class="file-manager-header">
+            <div class="file-manager-title">回收站</div>
+            <button class="file-manager-close" onclick="closeRecycleBin()">×</button>
+        </div>
+        <div class="file-manager-content">
+            <div class="file-list">
+                <div class="file-item" onclick="openRecycleFile('file1')">
+                    <div class="file-icon">
+                        <svg viewBox="0 0 24 24" fill="#4C9BFC">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                    </div>
+                    <div class="file-name">密.txt</div>
+                </div>
+                <!-- <div class="file-item" onclick="openRecycleFile('file2')">
+                    <div class="file-icon">
+                        <svg viewBox="0 0 24 24" fill="#4C9BFC">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                    </div>
+                    <div class="file-name">绝对不能忘的.txt</div>
+                </div> -->
+                <!-- <div class="file-item" onclick="openRecycleFile('file3')">
+                    <div class="file-icon">
+                        <svg viewBox="0 0 24 24" fill="#4C9BFC">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                    </div>
+                    <div class="file-name">守护神.txt</div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 连接密码验证
+        function checkConnectionPassword() {
+            const password = document.getElementById('connectionPassword').value;
+            const errorElement = document.getElementById('connectionError');
+            
+            if (password === '1cszscszcszcsczsdfwefcefbdtynfdwefcwefc436gf3f434f') {
+                // 密码正确，显示桌面
+                document.getElementById('connectionDialog').style.display = 'none';
+                document.getElementById('desktop').style.display = 'block';
+            } else {
+                // 密码错误，显示错误信息
+                errorElement.style.display = 'block';
+                document.getElementById('connectionPassword').value = '';
+                document.getElementById('connectionPassword').focus();
+                
+                // 添加抖动效果
+                document.querySelector('.connection-form').style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    document.querySelector('.connection-form').style.animation = '';
+                }, 500);
+            }
+        }
+        
+        // 按回车键也可以提交密码
+        document.getElementById('connectionPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkConnectionPassword();
+            }
+        });
+        
+        // 显示密保问题对话框
+        function showSecurityQuestions() {
+            document.getElementById('connectionDialog').style.display = 'none';
+            document.getElementById('securityQuestionsDialog').style.display = 'flex';
+        }
+        
+        // 密保问题验证 - 修复后的版本
+        function checkSecurityQuestions() {
+            const answer1 = document.getElementById('question1').value; // 甜品
+            const answer5 = document.getElementById('question5').value; // 生日
+            const answer2 = document.getElementById('question2').value; // 真名
+            const answer3 = document.getElementById('question3').value; // 家乡
+            const answer6 = document.getElementById('question6').value; // 宠物
+            const errorElement = document.getElementById('securityQuestionsError');
+            
+            // 正确答案（根据HTML中的问题顺序）
+            const correctAnswer1 = '静乔公寓2103';      // question1: 
+            const correctAnswer5 = '0304';           // question5: 生日
+            const correctAnswer2 = '吴能';         // question2: 真名
+            const correctAnswer3 = '深南市';         // question3: 家乡
+            const correctAnswer6 = '旺财';           // question6: 宠物
+            
+            // 使用正确的变量名进行比较
+            if (answer1 === correctAnswer1 && 
+                answer5 === correctAnswer5 && 
+                answer2 === correctAnswer2 && 
+                answer3 === correctAnswer3 && 
+                answer6 === correctAnswer6) {
+                // 所有答案正确，显示桌面
+                document.getElementById('securityQuestionsDialog').style.display = 'none';
+                document.getElementById('desktop').style.display = 'block';
+                errorElement.style.display = 'none'; // 隐藏错误信息
+            } else {
+                // 答案错误，显示错误信息
+                errorElement.style.display = 'block';
+                
+                // 清空错误的答案
+                if (answer1 !== correctAnswer1) {
+                    document.getElementById('question1').value = '';
+                }
+                if (answer5 !== correctAnswer5) {
+                    document.getElementById('question5').value = '';
+                }
+                if (answer2 !== correctAnswer2) {
+                    document.getElementById('question2').value = '';
+                }
+                if (answer3 !== correctAnswer3) {
+                    document.getElementById('question3').value = '';
+                }
+                if (answer6 !== correctAnswer6) {
+                    document.getElementById('question6').value = '';
+                }
+                
+                // 焦点设置
+                if (answer1 !== correctAnswer1) {
+                    document.getElementById('question1').focus();
+                } else if (answer5 !== correctAnswer5) {
+                    document.getElementById('question5').focus();
+                } else if (answer2 !== correctAnswer2) {
+                    document.getElementById('question2').focus();
+                } else if (answer3 !== correctAnswer3) {
+                    document.getElementById('question3').focus();
+                } else if (answer6 !== correctAnswer6) {
+                    document.getElementById('question6').focus();
+                }
+                
+                // 抖动效果
+                document.querySelector('.security-questions-form').style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    document.querySelector('.security-questions-form').style.animation = '';
+                }, 500);
+                
+                // 显示侵入警告
+                document.getElementById('intrusionWarning').style.display = 'block';
+                
+                // 3秒后隐藏警告
+                setTimeout(() => {
+                    document.getElementById('intrusionWarning').style.display = 'none';
+                }, 3000);
+            }
+        }
+        
+        // 按回车键也可以提交密保问题答案
+        document.getElementById('question1').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkSecurityQuestions();
+            }
+        });
+        
+        document.getElementById('question2').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkSecurityQuestions();
+            }
+        });
+        
+        document.getElementById('question3').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkSecurityQuestions();
+            }
+        });
+        
+        document.getElementById('question5').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkSecurityQuestions();
+            }
+        });
+        
+        document.getElementById('question6').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkSecurityQuestions();
+            }
+        });
+        
+        // 更新时钟
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = hours % 12 || 12;
+            document.getElementById('clock').textContent = `${displayHours}:${minutes} ${ampm}`;
+        }
+        
+        setInterval(updateClock, 60000); // 每分钟更新一次
+        updateClock(); // 初始化时更新
+        
+        function openFile() {
+            // 这里可以添加打开文件的功能
+        }
+        
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification ' + type;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        // 打开文档
+        function openDocument() {
+            document.getElementById('documentPasswordDialog').style.display = 'flex';
+        }
+        
+        // 验证文档密码
+        function checkDocumentPassword() {
+            const password = document.getElementById('documentPassword').value;
+            const errorElement = document.getElementById('documentPasswordError');
+            
+            if (password === 'huajiashagun') {
+                // 密码正确，显示文件内容
+                document.getElementById('documentPasswordDialog').style.display = 'none';
+                document.getElementById('fileContentTitle').textContent = '文档内容';
+                document.getElementById('fileContentBody').textContent = `（一份视频文件，文件名为20251206kfd）抱歉！远程连接不支持查看该文件！
+`;
+                document.getElementById('fileContent').style.display = 'block';
+                document.getElementById('documentPassword').value = '';
+                errorElement.style.display = 'none';
+            } else {
+                // 密码错误，显示错误信息
+                errorElement.style.display = 'block';
+                document.getElementById('documentPassword').value = '';
+                document.getElementById('documentPassword').focus();
+                
+                // 添加抖动效果
+                document.querySelector('.document-password-form').style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    document.querySelector('.document-password-form').style.animation = '';
+                }, 500);
+            }
+        }
+        
+        // 按回车键也可以提交文档密码
+        document.getElementById('documentPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkDocumentPassword();
+            }
+        });
+        
+        // 打开回收站
+        function openRecycleBin() {
+            document.getElementById('recycleBinManager').style.display = 'block';
+        }
+        
+        // 关闭回收站
+        function closeRecycleBin() {
+            document.getElementById('recycleBinManager').style.display = 'none';
+        }
+        
+        // 打开回收站文件
+        function openRecycleFile(fileId) {
+            if (fileId === 'file1') {
+                document.getElementById('fileContentTitle').textContent = '密.txt';
+                document.getElementById('fileContentBody').textContent = `7月到9月：韦帕gun，9月初到9月末：米娜gun，九月末至今：
+`;
+                document.getElementById('fileContent').style.display = 'block';
+            } else if (fileId === 'file2') {
+                document.getElementById('fileContentTitle').textContent = '1.txt';
+                document.getElementById('fileContentBody').textContent = `钥匙钥匙钥匙！怎么老忘记！！！key in cabinet！！`;
+                document.getElementById('fileContent').style.display = 'block';
+            } else if (fileId === 'file3') {
+                document.getElementById('fileContentTitle').textContent = '1.txt';
+                document.getElementById('fileContentBody').textContent = `teejbsd  7434844599`;
+                document.getElementById('fileContent').style.display = 'block';
+            }
+        }
+        
+        // 打开文件内容
+        function openFileContent(fileId) {
+            if (fileId === 'file1') {
+                document.getElementById('fileContentTitle').textContent = '';
+                document.getElementById('fileContentBody').textContent = ``;
+                document.getElementById('fileContent').style.display = 'block';
+            } else if (fileId === 'file2') {
+                // 直接跳转到指定网址
+                window.open('forum.html', '_blank');
+            }
+        }
+        
+        // 关闭文件内容
+        function closeFileContent() {
+            document.getElementById('fileContent').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

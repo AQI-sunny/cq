@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>福叁咖啡</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #fdf6f0;
+        }
+
+        header {
+            background: #6f4e37;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+            header h1 {
+                margin: 0;
+            }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background: #5a3b2c;
+        }
+
+            nav a {
+                color: white;
+                text-decoration: none;
+                padding: 10px 20px;
+            }
+
+                nav a:hover {
+                    background: #453024;
+                }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?fit=crop&w=1400&q=80') center/cover no-repeat;
+            color: white;
+        }
+
+            .hero h2 {
+                font-size: 48px;
+                margin: 0;
+            }
+
+            .hero p {
+                font-size: 20px;
+            }
+
+        .section {
+            padding: 40px 20px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            width: 300px;
+            overflow: hidden;
+        }
+
+            .card img {
+                width: 100%;
+                height: 400px; /* 3:4 比例，300px宽对应400px高 */
+                object-fit: cover;
+            }
+
+        .card-content {
+            padding: 20px;
+        }
+
+            .card-content h3 {
+                margin-top: 0;
+            }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #6f4e37;
+            color: white;
+        }
+
+        /* 登录弹窗 */
+        #loginModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+
+            .modal-content input {
+                width: 90%;
+                padding: 10px;
+                margin: 10px 0;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+            }
+
+            .modal-content button {
+                background: #6f4e37;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+                .modal-content button:hover {
+                    background: #5a3b2c;
+                }
+
+        /* 订单查询 */
+        #orders {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .order-card {
+            background: #fff;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+            .order-card h4 {
+                margin: 0 0 10px 0;
+                color: #6f4e37;
+            }
+
+            .order-card p {
+                margin: 5px 0;
+            }
+
+        .search-bar {
+            text-align: center;
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+            .search-bar input {
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                width: 200px;
+                box-sizing: border-box;
+            }
+
+            .search-bar button {
+                background: #6f4e37;
+                color: white;
+                border: none;
+                padding: 8px 15px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+                .search-bar button:hover {
+                    background: #5a3b2c;
+                }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .hero h2 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .search-bar {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .search-bar input {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .search-bar button {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .card {
+                width: 100%;
+                max-width: 350px;
+            }
+            
+            .card img {
+                height: 350px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 40px 15px;
+            }
+            
+            .hero h2 {
+                font-size: 28px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            .section {
+                padding: 30px 15px;
+            }
+            
+            nav {
+                flex-wrap: wrap;
+            }
+            
+            nav a {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            
+            .modal-content {
+                width: 90%;
+                padding: 20px;
+            }
+        }
+    </style>
+
+    <!-- 防护代码 -->
+    <script>
+(function () {
+    'use strict';
+
+    var devTools = {
+        init: function () {
+            this.disableRightClick();
+            this.disableDevToolsKeys();
+        },
+
+        disableRightClick: function () {
+            document.addEventListener('contextmenu', function (e) {
+                e.preventDefault();
+                alert('恭喜你获得成就：逃课大王！！！');
+                return false;
+            });
+        },
+
+        disableDevToolsKeys: function () {
+            document.addEventListener('keydown', function (e) {
+                // F12
+                if ((e.key === 'F12' || e.keyCode === 123) &&
+                    !e.ctrlKey && !e.altKey && !e.shiftKey && !e.metaKey) {
+                    e.preventDefault();
+                    alert('恭喜你获得成就：逃课大王！！！');
+                    return false;
+                }
+                // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+                if (e.ctrlKey && e.shiftKey &&
+                    (e.key === 'I' || e.key === 'J' || e.key === 'C'
+                     || e.key === 'i' || e.key === 'j' || e.key === 'c')) {
+                    e.preventDefault();
+                    alert('恭喜你获得成就：逃课大王！！！');
+                    return false;
+                }
+                // Ctrl+U
+                if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+                    e.preventDefault();
+                    alert('恭喜你获得成就：逃课大王！！！');
+                    return false;
+                }
+            });
+        }
+    };
+
+    devTools.init();
+})();
+</script>
+</head>
+<body>
+
+    <header>
+        <h1>福叁咖啡</h1>
+    </header>
+
+    <nav>
+        <a href="#menu">菜单</a>
+        <a href="#about">关于</a>
+        <a href="#contact">联系</a>
+        <a href="#" id="loginBtn">登录</a>
+    </nav>
+
+    <section class="hero">
+        <h2>欢迎来到福叁咖啡</h2>
+        <p>每一杯都是温暖与幸福</p>
+    </section>
+
+    <section id="menu" class="section">
+        <h2 style="text-align:center;">精选咖啡</h2>
+        <div class="cards">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?fit=crop&w=600&q=80" alt="Espresso">
+                <div class="card-content">
+                    <h3>意式浓缩</h3>
+                    <p>浓郁纯粹，是开启清晨的力量。</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?fit=crop&w=600&q=80" alt="Cappuccino">
+                <div class="card-content">
+                    <h3>卡布奇诺</h3>
+                    <p>柔滑奶泡之上，藏着咖啡的灵魂。</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://almostwinterao-eng.github.io/my-gallery/moka.jpg" alt="moka">
+                <div class="card-content">
+                    <h3>摩卡咖啡</h3>
+                    <p>一份温柔的平衡，治愈你的午后。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="section">
+        <h2 style="text-align:center;">关于我们</h2>
+        <p style="text-align:center; max-width:600px; margin:auto;">福叁咖啡，用心煮每一杯。我们相信，一杯好咖啡可以连接人心，点亮日常。</p>
+    </section>
+
+    <section id="contact" class="section">
+        <h2 style="text-align:center;">联系我们</h2>
+        <p style="text-align:center;">邮箱：Qiao@fu3coffee.com | 电话：+123-456-7890 | 地址：静乔公寓一楼</p>
+    </section>
+
+    <!-- 登录弹窗 -->
+    <div id="loginModal">
+        <div class="modal-content">
+            <h3>用户登录</h3>
+            <input type="text" id="username" placeholder="用户名">
+            <input type="password" id="password" placeholder="密码">
+            <button onclick="login()">登录</button>
+            <p id="loginMsg" style="color:red;"></p>
+        </div>
+    </div>
+
+    <!-- 历史订单 -->
+    <section id="orders" class="section">
+        <h2 style="text-align:center;">历史订单查询</h2>
+        <div class="search-bar">
+            <input type="date" id="searchDate" placeholder="选择日期">
+            <input type="text" id="searchCoffeeName" placeholder="输入咖啡名称">
+            <button onclick="searchOrdersCombined()">查询订单</button>
+        </div>
+        <div id="orderResults"></div>
+    </section>
+
+    <footer>
+        &copy; 2025 福叁咖啡 | All Rights Reserved
+    </footer>
+
+   <script>
+        
+        const encryptedUser = "Y2hlbmhhbzptYW1peW9uZ3l1YW5qaWFua2FuZw=="; 
+
+        // 解密函数
+        function decryptUser(encryptedData) {
+            try {
+                const decoded = atob(encryptedData);
+                const parts = decoded.split(':');
+                return { username: parts[0], password: parts[1] };
+            } catch (e) {
+                console.error("解密失败:", e);
+                return null;
+            }
+        }
+
+        // 模拟订单数据
+        const ordersData = [
+            { date: "2025-08-15", name: "桂花拿铁", time: "12:15", note: "一杯桂花拿铁，多放一份桂花，日落时刻送达", type: "外送", address: "静乔公寓3308，186-XXXX-0290,林女士" },
+            { date: "2025-08-10", name: "美式咖啡", time: "14:20", note: "不加糖不加奶", type: "外送", address: "静乔公寓3303,139-XXXX-8204,周先生" },
+            { date: "2025-09-05", name: "卡布奇诺", time: "8:30", note: "加糖", type: "自提", address: "门店前台" },
+            {
+            date: "2025-09-07",
+            name: "卡布奇诺",
+            time: "10:30",
+            note: "加糖",
+            type: "外送",
+            address: "静乔公寓2508，192-XXXX-9301,戴"
+        },
+        {
+            date: "2025-12-06",
+            name: "生椰拿铁",
+            time: "14:30",
+            note: "少糖",
+            type: "自提",
+            address: "可以晚点做吗？想去超市shopping一下再取！"
+        },
+        {
+            date: "2025-12-06",
+            name: "意式浓缩",
+            time: "8:30",
+            note: "少糖",
+            type: "外送",
+            address: "静乔公寓2103,133-XXXX-1234,吴先生"
+        },
+        {
+            date: "2025-12-06",
+            name: "卡布奇诺",
+            time: "14:30",
+            note: "少糖",
+            type: "外送",
+            address: "静乔公寓2103,133-XXXX-1234,吴先生"
+        },
+        {
+            date: "2025-12-06",
+            name: "摩卡咖啡",
+            time: "21:30",
+            note: "少糖",
+            type: "外送",
+            address: "静乔公寓2103,133-XXXX-1234,吴先生"
+        },
+        {
+            date: "2025-09-06",
+            name: "卡布奇诺",
+            time: "10:32",
+            note: "正常糖",
+            type: "外送",
+            address: "静乔公寓2508，192-XXXX-9301,戴"
+        },
+        {
+            date: "2025-09-05",
+            name: "卡布奇诺",
+            time: "10:10",
+            note: "少糖",
+            type: "外送",
+            address: "静乔公寓2508，192-XXXX-9301,戴"
+        },
+        
+
+            { date: "2025-08-23", name: "摩卡咖啡", time: "16:45", note: "少糖", type: "外送", address: "静乔公寓2201" }
+        ];
+
+        // 登录控制
+        const loginModal = document.getElementById('loginModal');
+        const loginBtn = document.getElementById('loginBtn');
+        const ordersSection = document.getElementById('orders');
+
+        loginBtn.onclick = () => {
+            loginModal.style.display = 'flex';
+        };
+
+        function login() {
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
+            const msg = document.getElementById('loginMsg');
+
+            // 解密验证信息
+            const validUser = decryptUser(encryptedUser);
+
+            if (!validUser) {
+                msg.innerText = "验证信息解密失败";
+                return;
+            }
+
+            if (user === validUser.username && pass === validUser.password) {
+                msg.style.color = "green";
+                msg.innerText = "登录成功！";
+                setTimeout(() => {
+                    loginModal.style.display = 'none';
+                    ordersSection.style.display = 'block';
+                }, 600);
+            } else {
+                msg.innerText = "用户名或密码错误";
+            }
+        }
+
+        
+// 为密码输入框添加回车键登录功能
+document.getElementById('password').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        login();
+    }
+});
+
+// 为用户名输入框添加回车键登录功能（可选，根据需求）
+document.getElementById('username').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        // 如果用户名输入框按回车，可以跳转到密码输入框或直接登录
+        document.getElementById('password').focus();
+        // 或者直接调用登录：login();
+    }
+});
+
+        // 合并查询功能 - 需要同时输入日期和咖啡名
+        function searchOrdersCombined() {
+            const searchDate = document.getElementById('searchDate').value.trim();
+            const coffeeName = document.getElementById('searchCoffeeName').value.trim();
+            const resultsDiv = document.getElementById('orderResults');
+
+            // 检查是否同时输入了日期和咖啡名
+            if (!searchDate || !coffeeName) {
+                resultsDiv.innerHTML = `<p style="text-align:center;color:#666;font-size:16px;">订单太多辣~请输入日期+咖啡名进行查询</p>`;
+                return;
+            }
+
+            // 过滤订单数据
+            const filtered = ordersData.filter(order =>
+                order.date === searchDate &&
+                order.name.toLowerCase().includes(coffeeName.toLowerCase())
+            );
+
+            if (filtered.length === 0) {
+                resultsDiv.innerHTML = `<p style="text-align:center;color:#666;">未找到 "${searchDate}" 的 "${coffeeName}" 订单记录。</p>`;
+            } else {
+                resultsDiv.innerHTML = "";
+                filtered.forEach(order => {
+                    resultsDiv.innerHTML += `
+                <div class="order-card">
+                  <h4>${order.name}</h4>
+                  <p>下单时间：${order.date} ${order.time}</p>
+                  <p>备注：${order.note}</p>
+                  <p>类型：${order.type}</p>
+                  <p>地址：${order.address}</p>
+                </div>`;
+                });
+            }
+        }
+
+        // 为咖啡名称输入框添加回车键查询功能
+document.getElementById('searchCoffeeName').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        searchOrdersCombined();
+    }
+});
+
+// 为日期输入框添加回车键查询功能
+document.getElementById('searchDate').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        searchOrdersCombined();
+    }
+});
+
+        // 点击背景关闭登录框
+        window.onclick = (e) => {
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+        };
+    </script>
+
+   <!--  zzx随机订单 -->
+<script>
+(function() {
+  'use strict';
+  
+  // 生成咖啡订单数据的独立函数
+  function generateCoffeeOrders() {
+    const orders = [];
+    const startDate = new Date('2025-06-01');
+    const endDate = new Date('2025-08-30');
+    const coffeeTypes = ["美式咖啡", "美式咖啡", "美式咖啡", "意式浓缩", "拿铁", "卡布奇诺"];
+    
+    let currentDate = new Date(startDate);
+    
+    while (currentDate <= endDate) {
+      const randomIndex = Math.floor(Math.random() * coffeeTypes.length);
+      const coffeeType = coffeeTypes[randomIndex];
+      
+      const hour = Math.floor(Math.random() * 12) + 8;
+      const minute = Math.floor(Math.random() * 60);
+      const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+      
+      const notes = [
+        "不加糖不加奶",
+        "不加糖不加奶", 
+        "不加糖不加奶",
+        "少冰",
+        "热饮",
+        "去冰",
+        "双份浓缩"
+      ];
+      const note = notes[Math.floor(Math.random() * notes.length)];
+      
+      const dateStr = currentDate.toISOString().split('T')[0];
+      
+      orders.push({
+        date: dateStr,
+        name: coffeeType,
+        time: time,
+        note: note,
+        type: "外送",
+        address: "静乔公寓3303,139-XXXX-8204,周先生"
+      });
+      
+      /* const interval = Math.random() > 0.5 ? 1 : 2; */
+      const interval = Math.random() > 0.7 ? 1 : 2;
+      currentDate.setDate(currentDate.getDate() + interval);
+    }
+    
+    return orders;
+  }
+
+  // 将生成的数据添加到现有订单数据中
+  const additionalOrders = generateCoffeeOrders();
+  
+  // 等待页面加载完成后执行
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      // 找到现有的ordersData数组并合并数据
+      if (typeof ordersData !== 'undefined') {
+        ordersData.push(...additionalOrders);
+        console.log('成功添加模拟订单数据，总订单数:', ordersData.length);
+      }
+    });
+  } else {
+    // 如果页面已经加载完成，直接执行
+    if (typeof ordersData !== 'undefined') {
+      ordersData.push(...additionalOrders);
+      console.log('成功添加模拟订单数据，总订单数:', ordersData.length);
+    }
+  }
+  
+})();
+</script>
+<script src="return.js"></script>
+
+</body>
+</html>
