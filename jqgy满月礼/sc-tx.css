@@ -1,0 +1,37 @@
+/* notification-style.css */
+/* 额外的样式增强 */
+
+/* 确保弹窗在移动端的良好表现 */
+@media (max-width: 480px) {
+    #search-notification-container {
+        width: 95% !important;
+        max-width: none !important;
+    }
+}
+
+/* 横屏适配 */
+@media (max-height: 500px) and (orientation: landscape) {
+    #search-notification-container {
+        top: 5px;
+    }
+}
+
+/* 大屏幕适配 */
+@media (min-width: 1200px) {
+    #search-notification-container .notification {
+        max-width: 500px;
+    }
+}
+
+/* 无障碍支持 */
+#search-notification-container .notification:focus {
+    outline: 2px solid #4a86e8;
+    outline-offset: 2px;
+}
+
+/* 打印时隐藏 */
+@media print {
+    #search-notification-container {
+        display: none !important;
+    }
+}

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>老房子</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f0e8;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            background-image: radial-gradient(#e8e2d6 2px, transparent 2px);
+            background-size: 30px 30px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.92);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #e8e2d6;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px dashed #d4b483;
+        }
+        
+        h1 {
+            color: #8c5e3a;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1:after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #d4b483, transparent);
+        }
+        
+        .subtitle {
+            color: #a67c52;
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+        
+        .instructions {
+            background-color: #f9f5ee;
+            border-left: 4px solid #d4b483;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .instructions h3 {
+            color: #8c5e3a;
+            margin-bottom: 8px;
+        }
+        
+        .quiz-section {
+            margin-bottom: 40px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: #fcfaf6;
+            border-radius: 10px;
+            border: 1px solid #e8e2d6;
+            transition: all 0.3s ease;
+        }
+        
+        .question:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .question-text {
+            font-size: 1.15rem;
+            margin-bottom: 15px;
+            color: #5a4a3a;
+        }
+        
+        .blank {
+            display: inline-block;
+            width: 120px;
+            margin: 0 8px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #d4b483;
+            border-radius: 6px;
+            font-size: 1rem;
+            background-color: #fff;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #a67c52;
+            box-shadow: 0 0 0 3px rgba(166, 124, 82, 0.2);
+        }
+        
+        .correct {
+            border-color: #4caf50;
+            background-color: #f0f9f0;
+        }
+        
+        .incorrect {
+            border-color: #f44336;
+            background-color: #fff5f5;
+        }
+        
+        .submit-btn {
+            display: block;
+            width: 200px;
+            margin: 30px auto;
+            padding: 14px;
+            background-color: #8c5e3a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #a67c52;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(140, 94, 58, 0.2);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .submit-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .result-section {
+            display: none;
+            margin-top: 40px;
+            padding: 25px;
+            background-color: #f9f5ee;
+            border-radius: 10px;
+            border: 2px solid #d4b483;
+            text-align: center;
+            animation: fadeIn 1s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result-title {
+            color: #8c5e3a;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        
+        .result-content {
+            font-size: 1.1rem;
+            color: #5a4a3a;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        
+        .truth-btn {
+            background-color: #a67c52;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+        
+        .truth-btn:hover {
+            background-color: #8c5e3a;
+            transform: translateY(-2px);
+        }
+        
+        .truth-content {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            border-left: 4px solid #8c5e3a;
+            text-align: left;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        .truth-content h3 {
+            color: #8c5e3a;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .truth-content p {
+            margin-bottom: 15px;
+        }
+        
+        .highlight {
+            background-color: rgba(212, 180, 131, 0.2);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        
+        .counter {
+            text-align: center;
+            font-size: 1rem;
+            color: #a67c52;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #a67c52;
+            font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px dashed #d4b483;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .blank {
+                width: 100px;
+            }
+            
+            .question {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>恭喜你即将解锁结局</h1>
+            <p class="subtitle">填写所有正确答案解锁结局</p>
+        </div>
+        
+        <div class="instructions">
+            <h3>游戏说明</h3>
+            <p>根据题目内容，在横线上填写正确的答案（括号内为正确答案提示）。所有题目答对后，将解锁完整故事结局。</p>
+        </div>
+        
+        <div class="counter">已正确填写：<span id="correct-count">0</span>/8</div>
+        
+        <div class="quiz-section">
+            <div class="question" id="q1">
+                <p class="question-text">1. <span class="highlight">______</span> 不会把月亮吹走</p>
+                <div class="blank">
+                    <input type="text" id="a1" placeholder="输入答案" data-answer="启德">
+                </div>
+            </div>
+            
+            <div class="question" id="q2">
+                <p class="question-text">2. 最爱吃祖母做的 <span class="highlight">______</span></p>
+                <div class="blank">
+                    <input type="text" id="a2" placeholder="输入答案" data-answer="芝士绿豆糕">
+                </div>
+            </div>
+            
+            <div class="question" id="q3">
+                <p class="question-text">3. <span class="highlight">______</span> 里，藏着你换牙期掉的第一颗乳牙。</p>
+                <div class="blank">
+                    <input type="text" id="a3" placeholder="输入答案" data-answer="钢琴凳底下的盒子">
+                </div>
+            </div>
+            
+            <div class="question" id="q4">
+                <p class="question-text">4. 如果祖母说"明天适合散步"，其实是 <span class="highlight">______</span> 。</p>
+                <div class="blank">
+                    <input type="text" id="a4" placeholder="输入答案" data-answer="奶奶想囡囡了">
+                </div>
+            </div>
+            
+            <div class="question" id="q5">
+                <p class="question-text">5. 真正的宝贝不在 <span class="highlight">______</span> 里。</p>
+                <div class="blank">
+                    <input type="text" id="a5" placeholder="输入答案" data-answer="保险柜">
+                </div>
+            </div>
+            
+            <div class="question" id="q6">
+                <p class="question-text">6. 你 <span class="highlight">______</span> 时埋的弹珠还在砖缝里发亮。</p>
+                <div class="blank">
+                    <input type="text" id="a6" placeholder="输入答案" data-answer="五岁">
+                </div>
+            </div>
+            
+            <div class="question" id="q7">
+                <p class="question-text">7. 最后那句 <span class="highlight">______</span> ，我要提前八年说。</p>
+                <div class="blank">
+                    <input type="text" id="a7" placeholder="输入答案" data-answer="生日快乐">
+                </div>
+            </div>
+            
+            <div class="question" id="q8">
+                <p class="question-text">8. 因为从你出生那刻起， <span class="highlight">______</span> 。</p>
+                <div class="blank">
+                    <input type="text" id="a8" placeholder="输入答案" data-answer="我的每一天都因此快乐">
+                </div>
+            </div>
+        </div>
+        
+        <button class="submit-btn" id="submit-btn">提交所有答案</button>
+        
+        <div class="result-section" id="result-section">
+            <h2 class="result-title">恭喜你帮宛宛找回了包裹！</h2>
+            <div class="result-content">
+               <!--  <p>宛宛终于明白，祖母留给她的不是物质财富，而是无法衡量的爱与回忆。</p>
+                <p>磁带、信件、旧物，每一样都承载着祖母深沉的爱与智慧。宛宛将证据提交警方，吴先生受到相应处理，而指使他的女子可能因证据不足难以追查，但这已不再重要。</p>-->
+                <p>获得总共100元无限期的福叁咖啡券！</p> 
+            </div>
+            
+            <button class="truth-btn" id="truth-btn">查看更多真相</button>
+            
+            <div class="truth-content" id="truth-content">
+                <h3>完整真相</h3>
+                <p>录音里的女声可能是祖母远房亲戚或旧识，不知从何处听说磁带藏了宛宛祖母遗留下来的财产线索，想伺机窃取。</p>
+                <p>吴能是一个被利用的、贪小便宜的工具人。</p>
+                <p>祖母用极高明的手段，把真正重要的信息藏在只有宛宛看得懂的信里。那些童年暗语、共同回忆，构成了只有祖孙二人能解开的密码。</p>
+                <p>最后，宛宛将证据提交警方。吴先生受到相应处理，指使他的女子可能因证据不足难以追查，但这已不再重要，因为真正重要的东西已被宛宛安全继承。</p>
+                <p><strong>在数字时代，最重要的秘密往往以最质朴的方式守护，而人心的贪念会在虚拟与现实交织的迷宫中迷失方向。</strong></p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>静乔公寓 · 宛宛的故事</p>
+            <p>tip：答案支持简体或繁体输入</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input[type="text"]');
+            const submitBtn = document.getElementById('submit-btn');
+            const resultSection = document.getElementById('result-section');
+            const truthBtn = document.getElementById('truth-btn');
+            const truthContent = document.getElementById('truth-content');
+            const correctCountSpan = document.getElementById('correct-count');
+            
+            let correctCount = 0;
+            
+            // 初始化正确答案（支持简体繁体）
+            const correctAnswers = {
+                'a1': ['启德', '啟德'],
+                'a2': ['芝士绿豆糕', '芝士綠豆糕'],
+                'a3': ['钢琴凳底下的盒子', '鋼琴凳底下的盒子'],
+                'a4': ['奶奶想囡囡了', '奶奶想囡囡了'],
+                'a5': ['保险柜', '保險櫃', '保险箱'],
+                'a6': ['五岁', '五歲'],
+                'a7': ['生日快乐', '生日快樂'],
+                'a8': ['我的每一天都因此快乐', '我的每一天都因此快樂', '我的每一天都因此快樂。']
+            };
+            
+            // 为每个输入框添加输入监听
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    checkSingleAnswer(this);
+                    updateCorrectCount();
+                });
+                
+                // 按回车键可以跳转到下一个输入框
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const currentIndex = Array.from(inputs).indexOf(this);
+                        if (currentIndex < inputs.length - 1) {
+                            inputs[currentIndex + 1].focus();
+                        } else {
+                            submitBtn.focus();
+                        }
+                    }
+                });
+            });
+            
+            // 检查单个答案
+            function checkSingleAnswer(inputElement) {
+                const id = inputElement.id;
+                const userAnswer = inputElement.value.trim();
+                const possibleAnswers = correctAnswers[id];
+                
+                if (userAnswer === '') {
+                    inputElement.classList.remove('correct', 'incorrect');
+                    return;
+                }
+                
+                // 检查答案是否正确（支持简体繁体）
+                let isCorrect = false;
+                for (let answer of possibleAnswers) {
+                    if (userAnswer === answer) {
+                        isCorrect = true;
+                        break;
+                    }
+                }
+                
+                if (isCorrect) {
+                    inputElement.classList.remove('incorrect');
+                    inputElement.classList.add('correct');
+                } else {
+                    inputElement.classList.remove('correct');
+                    inputElement.classList.add('incorrect');
+                }
+            }
+            
+            // 更新正确计数
+            function updateCorrectCount() {
+                correctCount = 0;
+                inputs.forEach(input => {
+                    if (input.classList.contains('correct')) {
+                        correctCount++;
+                    }
+                });
+                correctCountSpan.textContent = correctCount;
+                
+                // 如果全部正确，启用提交按钮
+                if (correctCount === inputs.length) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "恭喜！查看结局";
+                } else {
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = `还需填写 ${inputs.length - correctCount} 个正确答案`;
+                }
+            }
+            
+            // 提交所有答案
+            submitBtn.addEventListener('click', function() {
+                if (correctCount === inputs.length) {
+                    resultSection.style.display = 'block';
+                    resultSection.scrollIntoView({ behavior: 'smooth' });
+                    
+                    // 添加庆祝效果
+                    const title = document.querySelector('.result-title');
+                    title.style.animation = 'none';
+                    setTimeout(() => {
+                        title.style.animation = 'fadeIn 1s ease';
+                    }, 10);
+                }
+            });
+            
+            // 查看更多真相按钮
+            truthBtn.addEventListener('click', function() {
+                if (truthContent.style.display === 'block') {
+                    truthContent.style.display = 'none';
+                    truthBtn.textContent = '查看更多真相';
+                } else {
+                    truthContent.style.display = 'block';
+                    truthBtn.textContent = '收起真相';
+                    truthContent.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            });
+            
+            // 初始更新正确计数
+            updateCorrectCount();
+            
+            // 添加一些初始提示
+            setTimeout(() => {
+                if (correctCount === 0) {
+                    /* alert("提示：所有答案都可以在题目描述中找到，注意括号内的提示哦！"); */
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
