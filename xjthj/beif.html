@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>墟境调和局 - 蒋小雪新部员档案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景特效 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(41, 128, 185, 0.1) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(142, 68, 173, 0.08) 0px, transparent 50%);
+            z-index: -2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(10, 25, 47, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 顶部装饰线 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #20b2aa, #1e90ff);
+        }
+        
+        /* 局徽样式 */
+        .emblem {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .emblem-symbol {
+            display: inline-block;
+            width: 140px;
+            height: 140px;
+            position: relative;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(64, 224, 208, 0.3);
+            box-shadow: 
+                0 0 20px rgba(64, 224, 208, 0.3),
+                inset 0 0 20px rgba(10, 25, 47, 0.5);
+            animation: pulse 4s infinite alternate;
+            background-color: rgba(178, 217, 246, 0.956);
+        }
+        
+        /* logo图片容器 */
+        .emblem-symbol .logo-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        
+        /* 圆形遮罩，确保图片显示为完美圆形 */
+        .emblem-symbol::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 2px rgba(64, 224, 208, 0.2);
+            z-index: 2;
+        }
+        
+        /* 圆形边框特效 */
+        .emblem-symbol::after {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #40e0d0, #1e90ff, #40e0d0);
+            z-index: -1;
+            opacity: 0.5;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes pulse {
+            0% { 
+                box-shadow: 
+                    0 0 20px rgba(64, 224, 208, 0.3),
+                    inset 0 0 20px rgba(10, 25, 47, 0.5);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 30px rgba(64, 224, 208, 0.5),
+                    inset 0 0 20px rgba(10, 25, 47, 0.7);
+            }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .emblem-text {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+        }
+        
+        .emblem-subtext {
+            color: #87ceeb;
+            font-size: 14px;
+            letter-spacing: 8px;
+        }
+        
+        /* 内容区域 */
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+            margin-top: 20px;
+        }
+        
+        .main-content {
+            padding-right: 20px;
+            border-right: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        /* 部门简介 */
+        .section {
+            margin-bottom: 35px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            color: #40e0d0;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.3);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background-color: #1e90ff;
+        }
+        
+        .intro-text {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #b0c4de;
+        }
+        
+        .duties {
+            list-style-type: none;
+            margin-left: 20px;
+        }
+        
+        .duties li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.6;
+        }
+        
+        .duties li::before {
+            content: "◆";
+            position: absolute;
+            left: 0;
+            color: #1e90ff;
+            font-size: 14px;
+        }
+        
+        .highlight {
+            color: #40e0d0;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(64, 224, 208, 0.5);
+        }
+        
+        .highlight:hover {
+            color: #1e90ff;
+            text-shadow: 0 0 8px rgba(30, 144, 255, 0.5);
+            border-bottom-style: solid;
+        }
+        
+        /* 简历内容样式 */
+        .resume-section {
+            background-color: rgba(20, 40, 70, 0.4);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid #40e0d0;
+        }
+        
+        .resume-title {
+            font-size: 20px;
+            color: #40e0d0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .resume-title::before {
+            content: "✦";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+        
+        .personal-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .info-item {
+            flex: 1 1 200px;
+            background-color: rgba(30, 60, 90, 0.5);
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .info-label {
+            color: #87ceeb;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-size: 16px;
+            color: #e0e7ff;
+        }
+        
+        .abilities-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .ability-item {
+            background-color: rgba(64, 224, 208, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .ability-title {
+            color: #20b2aa;
+            font-size: 16px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .ability-title::before {
+            content: "☆";
+            margin-right: 8px;
+            color: #1e90ff;
+        }
+        
+        .ability-desc {
+            font-size: 14px;
+            color: #b0c4de;
+            line-height: 1.5;
+        }
+        
+        /* 艺术特长区域 */
+        .art-abilities {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .art-item {
+            background-color: rgba(142, 68, 173, 0.1);
+            border-radius: 8px;
+            padding: 18px;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+            transition: transform 0.3s;
+        }
+        
+        .art-item:hover {
+            transform: translateY(-5px);
+            background-color: rgba(142, 68, 173, 0.2);
+        }
+        
+        .art-title {
+            color: #da70d6;
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .art-title::before {
+            content: "🎨";
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        
+        .art-desc {
+            font-size: 14px;
+            color: #d8bfd8;
+            line-height: 1.6;
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .service-box {
+            background: rgba(20, 40, 70, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .service-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: rgba(64, 224, 208, 0.4);
+        }
+        
+        .service-title {
+            color: #20b2aa;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .service-title::before {
+            content: "✧";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .service-link {
+            display: inline-block;
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(30, 144, 255, 0.3);
+        }
+        
+        .service-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(30, 144, 255, 0.5);
+        }
+        
+        .notice-box {
+            background: rgba(142, 68, 173, 0.1);
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+        }
+        
+        .notice-title {
+            color: #da70d6;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .notice-title::before {
+            content: "⚠";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+        
+        .notice-text {
+            line-height: 1.7;
+            color: #d8bfd8;
+            font-style: italic;
+        }
+        
+        /* 公告栏 */
+        .bulletin-board {
+            background: rgba(30, 60, 90, 0.6);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .bulletin-title {
+            color: #87ceeb;
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .bulletin-title::before {
+            content: "📋";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+        
+        .bulletin-list {
+            list-style-type: none;
+        }
+        
+        .bulletin-item {
+            padding: 15px;
+            border-bottom: 1px solid rgba(135, 206, 235, 0.2);
+            transition: background-color 0.3s;
+        }
+        
+        .bulletin-item:hover {
+            background-color: rgba(64, 224, 208, 0.1);
+        }
+        
+        .bulletin-item:last-child {
+            border-bottom: none;
+        }
+        
+        .bulletin-date {
+            color: #20b2aa;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .bulletin-content {
+            color: #b0c4de;
+            line-height: 1.5;
+        }
+        
+        .bulletin-link {
+            color: #87ceeb;
+            cursor: pointer;
+            transition: color 0.3s;
+            border-bottom: 1px dotted #87ceeb;
+        }
+        
+        .bulletin-link:hover {
+            color: #40e0d0;
+            border-bottom-style: solid;
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #708090;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(112, 128, 144, 0.3);
+        }
+        
+        .footer a {
+            color: #87ceeb;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding-right: 0;
+                border-right: none;
+                border-bottom: 1px solid rgba(64, 224, 208, 0.2);
+                padding-bottom: 30px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .emblem-text {
+                font-size: 20px;
+            }
+            
+            .emblem-symbol {
+                width: 110px;
+                height: 110px;
+            }
+            
+            .section-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 局徽区域 -->
+        <div class="emblem">
+            <div class="emblem-symbol">
+                <div class="logo-img"></div>
+            </div>
+            <div class="emblem-text">墟境调和局</div>
+            <div class="emblem-subtext">XUJING HARMONY BUREAU</div>
+        </div>
+        
+        <!-- 内容区域 -->
+        <div class="content">
+            <!-- 主内容区域 -->
+            <div class="main-content">
+                <!-- 部门简介 -->
+                <div class="section">
+                    <h2 class="section-title">部门简介</h2>
+                    <p class="intro-text">墟境调和局（Xujing Harmony Bureau）成立于1999年，是专门处理超自然现象、维度异常与灵能事件的秘密机构。本局负责监测并调和"墟境"（Xujing）——一种连接现实世界与超维空间的特殊场域，防止其失衡对现实世界造成不可逆转的影响。</p>
+                    <p class="intro-text">新成员蒋小雪将加入<span class="highlight">"灵韵艺术部"</span>，该部门专门研究艺术与灵能之间的共鸣效应，探索如何通过艺术创作调和墟境波动，稳定维度边界。</p>
+                    <ul class="duties">
+                        <li>监测全球范围内墟境能量波动与异常现象</li>
+                        <li>研究和开发艺术灵能调和技术与设备</li>
+                        <li>执行维度异常现场勘查与应急处理任务</li>
+                        <li>维护现实世界与墟境之间的平衡与稳定</li>
+                        <li>培训新成员掌握灵能感知与艺术调和技能</li>
+                    </ul>
+                </div>
+                
+                <!-- 个人简历 -->
+                <div class="resume-section">
+                    <h3 class="resume-title">新部员档案</h3>
+                    
+                    <div class="personal-info">
+                        <div class="info-item">
+                            <div class="info-label">姓名</div>
+                            <div class="info-value">蒋小雪</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">员工编号</div>
+                            <div class="info-value">XHB-ARTS-2107</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">入职日期</div>
+                            <div class="info-value">2023年7月21日</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">所属部门</div>
+                            <div class="info-value">灵韵艺术部</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">安全等级</div>
+                            <div class="info-value">Ⅲ级（可接触）</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">灵能感应等级</div>
+                            <div class="info-value">A级（高度敏感）</div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="resume-title">特殊能力</h3>
+                    <div class="abilities-list">
+                        <div class="ability-item">
+                            <div class="ability-title">维度感知</div>
+                            <div class="ability-desc">能够感知墟境与现实世界的微妙波动，准确判断维度异常发生的位置和强度，感知半径达500米。</div>
+                        </div>
+                        <div class="ability-item">
+                            <div class="ability-title">灵能调和</div>
+                            <div class="ability-desc">通过艺术创作引导灵能流动，有效平抚墟境能量波动，使异常区域恢复稳定状态。</div>
+                        </div>
+                        <div class="ability-item">
+                            <div class="ability-title">记忆共鸣</div>
+                            <div class="ability-desc">能够读取并重现特定地点的历史灵能印记，用于追溯异常事件的起源和发展过程。</div>
+                        </div>
+                        <div class="ability-item">
+                            <div class="ability-title">视觉预见</div>
+                            <div class="ability-desc">在强烈灵能波动时，能够短暂预见即将发生的维度异常，为预防工作提供宝贵时间。</div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="resume-title">艺术特长</h3>
+                    <div class="art-abilities">
+                        <div class="art-item">
+                            <div class="art-title">灵能绘画</div>
+                            <div class="art-desc">擅长水墨与油画，作品能够捕捉并呈现灵能流动的轨迹。在绘画过程中，能够将墟境能量具象化，用于分析能量结构。</div>
+                        </div>
+                        <div class="art-item">
+                            <div class="art-title">音律调和</div>
+                            <div class="art-desc">精通古筝与钢琴，能够通过特定音律频率与墟境能量产生共鸣，实现远程能量调和与稳定。</div>
+                        </div>
+                        <div class="art-item">
+                            <div class="art-title">空间装置艺术</div>
+                            <div class="art-desc">擅长创作多维空间艺术装置，能够将灵能节点可视化，为团队提供直观的墟境能量分布图。</div>
+                        </div>
+                        <div class="art-item">
+                            <div class="art-title">书法灵能封印</div>
+                            <div class="art-desc">掌握古代灵能封印书法技巧，能够通过特定符文书写暂时封印小型维度裂缝。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <!-- 服务入口 -->
+                <div class="service-box">
+                    <h3 class="service-title">快速入口</h3>
+                    <p class="intro-text">欢迎加入墟境调和局，请尽快熟悉以下系统：</p>
+                    <a href="#" class="service-link">灵能训练系统</a>
+                    <a href="#" class="service-link">墟境监测网络</a>
+                    <a href="#" class="service-link">艺术调和数据库</a>
+                    <a href="#" class="service-link">任务报告提交</a>
+                </div>
+                
+                <!-- 注意事项 -->
+                <div class="notice-box">
+                    <h3 class="notice-title">新部员须知</h3>
+                    <p class="notice-text">1. 首次接触墟境能量时可能出现头晕、耳鸣等反应，属正常现象，请及时向导师汇报。</p>
+                    <p class="notice-text">2. 艺术创作过程中如出现异常视觉现象，请立即停止并启动防护协议。</p>
+                    <p class="notice-text">3. 所有艺术作品均需在指定灵能隔离室完成，严禁私自带离。</p>
+                    <p class="notice-text">4. 每月需参加至少一次心理评估与灵能稳定性检测。</p>
+                </div>
+                
+                <!-- 公告栏 -->
+                <div class="bulletin-board">
+                    <h3 class="bulletin-title">局内公告</h3>
+                    <ul class="bulletin-list">
+                        <li class="bulletin-item">
+                            <div class="bulletin-date">2023.07.20</div>
+                            <div class="bulletin-content">欢迎<span class="bulletin-link">蒋小雪</span>加入灵韵艺术部，请于7月25日前完成基础安全培训。</div>
+                        </li>
+                        <li class="bulletin-item">
+                            <div class="bulletin-date">2023.07.18</div>
+                            <div class="bulletin-content">东部沿海地区监测到异常灵能波动，所有成员进入三级戒备状态。</div>
+                        </li>
+                        <li class="bulletin-item">
+                            <div class="bulletin-date">2023.07.15</div>
+                            <div class="bulletin-content">艺术部新设备"灵能共鸣画板"已完成调试，可供有需要的成员使用。</div>
+                        </li>
+                        <li class="bulletin-item">
+                            <div class="bulletin-date">2023.07.10</div>
+                            <div class="bulletin-content">下周三将举行灵能艺术展，展出近半年调和局成员创作的优秀作品。</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>墟境调和局档案系统 | 机密等级：Ⅲ级 | 最后更新：2023年7月21日</p>
+            <p>
+                <a href="#">隐私政策</a> | 
+                <a href="#">安全协议</a> | 
+                <a href="#">联系我们</a> | 
+                <a href="#">内部论坛</a>
+            </p>
+            <p>© 1999-2023 墟境调和局 版权所有。未经许可，严禁泄露任何机密信息。</p>
+        </div>
+    </div>
+</body>
+</html>

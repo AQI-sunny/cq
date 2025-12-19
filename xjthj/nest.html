@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>巢穴作战部署图</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(30, 60, 114, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(114, 30, 60, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(20, 20, 30, 0.9);
+            border: 1px solid rgba(60, 120, 200, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 0 40px rgba(0, 150, 255, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, #0f3460 0%, #1a1a2e 100%);
+            padding: 25px;
+            border-bottom: 2px solid #1e88e5;
+            position: relative;
+        }
+        
+        .header h1 {
+            color: #4fc3f7;
+            text-align: center;
+            font-size: 2.2em;
+            text-shadow: 0 0 10px rgba(79, 195, 247, 0.5);
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+        
+        .header .subtitle {
+            text-align: center;
+            color: #90a4ae;
+            font-size: 1.1em;
+            letter-spacing: 1px;
+        }
+        
+        .tab-container {
+            display: flex;
+            background: rgba(15, 25, 45, 0.9);
+            border-bottom: 1px solid rgba(60, 120, 200, 0.3);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 18px 20px;
+            text-align: center;
+            background: rgba(30, 40, 60, 0.7);
+            color: #90a4ae;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+            font-weight: 500;
+            border-right: 1px solid rgba(60, 120, 200, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab:last-child {
+            border-right: none;
+        }
+        
+        .tab:hover {
+            background: rgba(40, 60, 100, 0.8);
+            color: #bbdefb;
+        }
+        
+        .tab.active {
+            background: linear-gradient(180deg, #0d47a1 0%, #1a237e 100%);
+            color: #e3f2fd;
+            box-shadow: inset 0 -3px 0 #1e88e5;
+        }
+        
+        .tab.locked {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .tab.locked::after {
+            content: "🔒";
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.9em;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: rgba(25, 35, 55, 0.7);
+            border-left: 4px solid #1e88e5;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .section-title {
+            color: #29b6f6;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(41, 182, 246, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title::before {
+            content: "▸";
+            color: #1e88e5;
+        }
+        
+        .map-container {
+            background: rgba(10, 15, 25, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(66, 165, 245, 0.2);
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .building {
+            background: rgba(30, 40, 60, 0.7);
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            border: 1px solid rgba(66, 165, 245, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .building:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 150, 255, 0.2);
+            border-color: #42a5f5;
+        }
+        
+        .building.highlight {
+            background: rgba(183, 28, 28, 0.2);
+            border-color: #f44336;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(244, 67, 54, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); }
+        }
+        
+        .plan-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .option {
+            background: rgba(30, 40, 60, 0.7);
+            padding: 25px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .option:hover {
+            transform: translateY(-5px);
+            border-color: #1e88e5;
+            box-shadow: 0 10px 20px rgba(30, 136, 229, 0.2);
+        }
+        
+        .option h3 {
+            color: #64b5f6;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        
+        .option.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+            position: relative;
+        }
+        
+        .option.locked::after {
+            content: "需要访问 hidden_134.html 解锁";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #ff9800;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            white-space: nowrap;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .option.locked:hover::after {
+            opacity: 1;
+        }
+        
+        .code-input {
+            margin-top: 30px;
+            padding: 30px;
+            background: rgba(10, 15, 25, 0.9);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 150, 255, 0.3);
+            text-align: center;
+        }
+        
+        .code-input h3 {
+            color: #4fc3f7;
+            margin-bottom: 15px;
+        }
+        
+        input[type="text"] {
+            width: 300px;
+            padding: 15px;
+            background: rgba(20, 30, 50, 0.8);
+            border: 2px solid #1e88e5;
+            border-radius: 5px;
+            color: #e3f2fd;
+            font-size: 1.1em;
+            text-align: center;
+            letter-spacing: 2px;
+            margin: 10px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 10px;
+            letter-spacing: 1px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 136, 229, 0.4);
+        }
+        
+        button:disabled {
+            background: #546e7a;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* 解锁界面样式 */
+        .unlock-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+        
+        .unlock-container {
+            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+            padding: 40px;
+            border-radius: 15px;
+            border: 2px solid #1e88e5;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            position: relative;
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .unlock-container h2 {
+            color: #4fc3f7;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            text-shadow: 0 0 10px rgba(79, 195, 247, 0.5);
+        }
+        
+        .unlock-container p {
+            color: #bbdefb;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        
+        .unlock-input {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 25px 0;
+        }
+        
+        .unlock-input input {
+            width: 200px;
+            padding: 15px;
+            background: rgba(20, 30, 50, 0.8);
+            border: 2px solid #29b6f6;
+            border-radius: 5px;
+            color: #e3f2fd;
+            font-size: 1.1em;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        
+        .unlock-message {
+            margin-top: 20px;
+            min-height: 24px;
+        }
+        
+        .unlock-success {
+            color: #69f0ae;
+            font-weight: bold;
+            animation: successPulse 1s ease;
+        }
+        
+        .unlock-error {
+            color: #ff5252;
+            font-weight: bold;
+            animation: shake 0.5s ease;
+        }
+        
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+        
+        .close-unlock {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #90a4ae;
+            font-size: 1.5em;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .close-unlock:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e3f2fd;
+        }
+        
+        /* 状态栏样式 */
+        .status-bar {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(25, 35, 55, 0.95);
+            padding: 15px 25px;
+            border-radius: 8px;
+            border: 1px solid rgba(41, 182, 246, 0.3);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        
+        .alert {
+            background: rgba(183, 28, 28, 0.2);
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            color: #ff8a80;
+        }
+        
+        .warning {
+            background: rgba(255, 152, 0, 0.2);
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            color: #ffd180;
+        }
+        
+        .info {
+            background: rgba(30, 136, 229, 0.2);
+            border-left: 4px solid #1e88e5;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            color: #90caf9;
+        }
+        
+        .countdown {
+            font-size: 1.3em;
+            color: #ff5252;
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 82, 82, 0.1);
+            border-radius: 8px;
+            margin: 20px 0;
+            animation: blink 2s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .access-granted {
+            color: #69f0ae;
+            font-weight: bold;
+            animation: granted 1s ease;
+        }
+        
+        @keyframes granted {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        /* 浮动提示样式 */
+        .floating-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            animation: slideInRight 0.5s ease, fadeOut 0.5s ease 4.5s forwards;
+            max-width: 300px;
+            border-left: 4px solid #29b6f6;
+        }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
+        .notification-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #bbdefb;
+        }
+        
+        .notification-content {
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <!-- 解锁界面 -->
+    <div class="unlock-overlay" id="unlockOverlay">
+        <div class="unlock-container">
+            <button class="close-unlock" id="closeUnlock">&times;</button>
+            <h2>访问权限验证</h2>
+            <p>螂人视角需要特殊访问权限。<br>请输入从 hidden_134.html 获取的访问密钥。</p>
+            
+            <div class="unlock-input">
+                <input type="text" id="accessKeyInput" placeholder="输入访问密钥" autocomplete="off">
+                <button id="verifyKeyBtn">验证</button>
+            </div>
+            
+            <div class="unlock-message" id="unlockMessage">
+                <!-- 验证消息会显示在这里 -->
+            </div>
+            
+            <div class="info" style="margin-top: 20px; font-size: 0.9em;">
+                <strong>提示：</strong>如果你还没有访问密钥，请先找到并访问 hidden_134.html 页面。
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>巢穴作战部署图</h1>
+            <div class="subtitle">机密档案 · 访问级别：Gamma-7</div>
+        </div>
+        
+        <div class="tab-container">
+            <div class="tab active" data-tab="tab1">调和局视角</div>
+            <div class="tab" data-tab="tab2" id="roach-tab">螂人视角 🔒</div>
+        </div>
+        
+        <!-- 选项卡1：调和局视角 -->
+        <div class="tab-content active" id="tab1">
+            <div class="section">
+                <h2 class="section-title">巢穴地图</h2>
+                <p>位置：<strong>4栋地下室通风管道深处</strong></p>
+                <div class="map-container">
+                    <p>侦察显示目标聚集在4栋地下室区域，主要活动范围集中在通风系统内。</p>
+                    <div class="map-grid">
+                        <div class="building">1栋</div>
+                        <div class="building">2栋</div>
+                        <div class="building">3栋</div>
+                        <div class="building highlight">4栋 (目标区域)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">行动计划</h2>
+                <p><strong>任务：</strong>派遣特遣队进行人道迁移</p>
+                <div class="info">
+                    <p><strong>常规真相：</strong>"CO114"是螂人群体派来求救的信使</p>
+                    <p>目标群体表现出了求救行为，建议采取非致命性迁移协议。</p>
+                </div>
+            </div>
+            
+            <div class="warning">
+                <strong>⚠️ 限制访问：</strong>螂人视角需要特殊权限。请先访问 hidden_134.html 获取访问密钥。
+            </div>
+        </div>
+        
+        <!-- 选项卡2：螂人视角（初始隐藏，需要解锁） -->
+        <div class="tab-content" id="tab2">
+            <div class="section">
+                <h2 class="section-title">真实地图</h2>
+                <div class="map-container">
+                    <p><strong>渗透范围：</strong>整个华苑社区地下已被螂人巢穴渗透</p>
+                    <div class="alert">
+                        <strong>警告：</strong>调和局的侦察只发现了4栋，但实际上所有建筑下方都已被连接。
+                    </div>
+                    <div class="map-grid">
+                        <div class="building highlight">1栋 (连接点A)</div>
+                        <div class="building highlight">2栋 (连接点B)</div>
+                        <div class="building highlight">3栋 (连接点C)</div>
+                        <div class="building highlight" style="background: rgba(244, 67, 54, 0.3);">4栋 (主巢穴)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">末日计划</h2>
+                <div class="countdown">
+                    ⏳ 倒计时: <span id="countdown">7天0小时0分0秒</span>
+                </div>
+                <div class="alert">
+                    <p><strong>"他"的力量正在渗透屏障</strong></p>
+                    <p>根据古老预言，7天后完全融合将无法避免。调和局的"人道迁移"实际上是加速渗透的仪式。</p>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">终极选择</h2>
+                <div class="plan-options">
+                    <div class="option" data-option="1">
+                        <h3>选项 1：执行迁移协议</h3>
+                        <p>表面调和，实际将加速"他"的渗透进程。</p>
+                        <p><em>结果：</em> 7天内完成融合，旧世界终结。</p>
+                    </div>
+                    
+                    <div class="option" id="option2" data-option="2">
+                        <h3>选项 2：启动清除程序</h3>
+                        <p>可能触发全面战争，但有机会阻止融合。</p>
+                        <p><em>风险：</em> 巢穴自卫机制将激活，伤亡率预估87%。</p>
+                    </div>
+                    
+                    <div class="option locked" id="option3" data-option="3">
+                        <h3>选项 3：寻找"上古协议"</h3>
+                        <p>真结局路径，需要找到所有隐藏页面。</p>
+                        <p><em>要求：</em> 收集全部加密片段，重建古老封印。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="code-input">
+                <h3>最终行动确认</h3>
+                <p>输入行动代码以确认结局选择：</p>
+                <input type="text" id="actionCode" placeholder="输入3位行动代码" maxlength="3">
+                <button id="confirmBtn">确认执行</button>
+                <div id="resultMessage" style="margin-top: 15px;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="status-bar" id="statusBar">
+        系统状态: <span id="accessStatus">仅限调和局视角</span>
+    </div>
+
+    <script>
+        // 检查是否已解锁螂人视角
+        function checkRoachAccess() {
+            // 从localStorage检查访问状态
+            const hasAccess = localStorage.getItem('roach_access_granted') === 'true';
+            const roachTab = document.getElementById('roach-tab');
+            
+            if (hasAccess) {
+                // 已解锁
+                roachTab.classList.remove('locked');
+                roachTab.innerHTML = '螂人视角 🔓';
+                document.getElementById('accessStatus').textContent = '螂人视角已解锁';
+                document.getElementById('accessStatus').className = 'access-granted';
+                
+                // 检查URL参数，如果是从hidden_134.html跳转过来的，显示通知
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('unlocked') === 'true') {
+                    showNotification('访问权限已授予', '螂人视角现在可用。');
+                    // 自动切换到螂人视角
+                    setTimeout(() => {
+                        switchTab('tab2');
+                    }, 1000);
+                }
+            } else {
+                // 未解锁
+                roachTab.classList.add('locked');
+                roachTab.innerHTML = '螂人视角 🔒';
+            }
+        }
+
+        // 显示通知消息
+        function showNotification(title, message) {
+            const notification = document.createElement('div');
+            notification.className = 'floating-notification';
+            notification.innerHTML = `
+                <div class="notification-title">${title}</div>
+                <div class="notification-content">${message}</div>
+            `;
+            document.body.appendChild(notification);
+            
+            // 5秒后自动移除
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // 显示解锁界面
+        function showUnlockInterface() {
+            const overlay = document.getElementById('unlockOverlay');
+            overlay.style.display = 'flex';
+            document.getElementById('accessKeyInput').focus();
+        }
+
+        // 隐藏解锁界面
+        function hideUnlockInterface() {
+            const overlay = document.getElementById('unlockOverlay');
+            overlay.style.display = 'none';
+            document.getElementById('unlockMessage').innerHTML = '';
+            document.getElementById('accessKeyInput').value = '';
+        }
+
+        // 验证访问密钥
+        function verifyAccessKey() {
+            const input = document.getElementById('accessKeyInput').value.trim();
+            const messageDiv = document.getElementById('unlockMessage');
+            
+            if (!input) {
+                messageDiv.innerHTML = '<span class="unlock-error">请输入访问密钥</span>';
+                return;
+            }
+            
+            // 验证密钥（示例密钥：ROACH134）
+            const validKeys = ['ROACH134', 'roach134', 'HIDDEN134', 'hidden134'];
+            
+            if (validKeys.includes(input)) {
+                // 验证成功
+                localStorage.setItem('roach_access_granted', 'true');
+                localStorage.setItem('hidden_134_visited', 'true');
+                localStorage.setItem('unlock_timestamp', Date.now());
+                
+                messageDiv.innerHTML = '<span class="unlock-success">✅ 访问权限已授予！正在解锁螂人视角...</span>';
+                
+                // 1秒后关闭界面并刷新状态
+                setTimeout(() => {
+                    hideUnlockInterface();
+                    checkRoachAccess();
+                    showNotification('权限验证通过', '螂人视角已解锁。');
+                    
+                    // 自动切换到螂人视角
+                    setTimeout(() => {
+                        switchTab('tab2');
+                    }, 800);
+                }, 1000);
+            } else {
+                // 验证失败
+                messageDiv.innerHTML = '<span class="unlock-error">✗ 访问密钥无效</span>';
+                document.getElementById('accessKeyInput').value = '';
+                document.getElementById('accessKeyInput').focus();
+                
+                // 震动输入框
+                const inputElement = document.getElementById('accessKeyInput');
+                inputElement.style.animation = 'shake 0.5s ease';
+                setTimeout(() => {
+                    inputElement.style.animation = '';
+                }, 500);
+            }
+        }
+
+        // 选项卡切换
+        function switchTab(tabId) {
+            // 隐藏所有选项卡内容
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 移除所有选项卡的active类
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 显示选中的选项卡内容
+            document.getElementById(tabId).classList.add('active');
+            
+            // 激活对应的选项卡按钮
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+        }
+
+        // 初始化选项卡点击事件
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                const hasAccess = localStorage.getItem('roach_access_granted') === 'true';
+                
+                // 检查螂人视角是否锁定
+                if (tabId === 'tab2' && !hasAccess) {
+                    showUnlockInterface();
+                    return;
+                }
+                
+                switchTab(tabId);
+            });
+        });
+
+        // 倒计时更新
+        function updateCountdown() {
+            const now = new Date();
+            const targetDate = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000); // 7天后
+            
+            const diff = targetDate - now;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            const countdownElement = document.getElementById('countdown');
+            if (countdownElement) {
+                countdownElement.textContent = `${days}天${hours}小时${minutes}分${seconds}秒`;
+            }
+        }
+
+        // 选项点击事件
+        document.querySelectorAll('.option:not(.locked)').forEach(option => {
+            option.addEventListener('click', function() {
+                const optionNum = this.getAttribute('data-option');
+                document.getElementById('actionCode').value = `X${optionNum}7`;
+                
+                // 高亮显示选中的选项
+                document.querySelectorAll('.option').forEach(opt => {
+                    opt.style.borderColor = 'transparent';
+                });
+                this.style.borderColor = '#1e88e5';
+            });
+        });
+
+        // 确认按钮点击事件
+        document.getElementById('confirmBtn').addEventListener('click', function() {
+            const code = document.getElementById('actionCode').value.toUpperCase();
+            const resultMessage = document.getElementById('resultMessage');
+            
+            if (!code) {
+                resultMessage.innerHTML = '<span style="color:#ff9800">请输入行动代码</span>';
+                return;
+            }
+            
+            switch(code) {
+                case 'X17':
+                    resultMessage.innerHTML = `
+                        <span style="color:#f44336">⚠️ 警告：选择迁移协议将加速末日进程。</span><br>
+                        <div style="margin-top:10px;">
+                            <button onclick="executeOption(1)" style="background:#f44336;margin:5px;">确认毁灭</button>
+                            <button onclick="document.getElementById('resultMessage').innerHTML=''" style="background:#546e7a;margin:5px;">取消</button>
+                        </div>
+                    `;
+                    break;
+                case 'X27':
+                    resultMessage.innerHTML = `
+                        <span style="color:#ff9800">⚠️ 清除程序将触发全面战争。预估伤亡率87%。</span><br>
+                        <div style="margin-top:10px;">
+                            <button onclick="executeOption(2)" style="background:#ff9800;color:black;margin:5px;">确认战争</button>
+                            <button onclick="document.getElementById('resultMessage').innerHTML=''" style="background:#546e7a;margin:5px;">取消</button>
+                        </div>
+                    `;
+                    break;
+                case 'X37':
+                    // 检查是否解锁了所有隐藏页面
+                    const allPagesFound = localStorage.getItem('all_hidden_pages_found') === 'true';
+                    if (allPagesFound) {
+                        resultMessage.innerHTML = `
+                            <span style="color:#69f0ae">✓ 上古协议已激活！正在重建封印...</span><br>
+                            <div style="margin-top:10px;">
+                                <button onclick="executeOption(3)" style="background:#69f0ae;color:black;margin:5px;">执行上古协议</button>
+                                <button onclick="document.getElementById('resultMessage').innerHTML=''" style="background:#546e7a;margin:5px;">取消</button>
+                            </div>
+                        `;
+                    } else {
+                        resultMessage.innerHTML = '<span style="color:#ff9800">需要找到所有隐藏页面才能激活上古协议。</span>';
+                    }
+                    break;
+                default:
+                    resultMessage.innerHTML = '<span style="color:#f44336">✗ 无效的行动代码</span>';
+            }
+        });
+
+        // 执行选项
+        function executeOption(optionNum) {
+            const resultMessage = document.getElementById('resultMessage');
+            
+            switch(optionNum) {
+                case 1:
+                    resultMessage.innerHTML = '<span style="color:#f44336;font-size:1.2em">✅ 迁移协议启动。倒计时加速...末日即将来临。</span>';
+                    break;
+                case 2:
+                    resultMessage.innerHTML = '<span style="color:#ff9800;font-size:1.2em">✅ 清除程序启动。战争警报拉响！做好准备...</span>';
+                    break;
+                case 3:
+                    resultMessage.innerHTML = '<span style="color:#69f0ae;font-size:1.2em">✨ 上古协议激活！古老的封印正在重建，屏障正在加固...</span>';
+                    break;
+            }
+            
+            // 禁用进一步操作
+            document.getElementById('actionCode').disabled = true;
+            document.getElementById('confirmBtn').disabled = true;
+        }
+
+        // 页面加载初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化事件监听器
+            document.getElementById('verifyKeyBtn').addEventListener('click', verifyAccessKey);
+            document.getElementById('closeUnlock').addEventListener('click', hideUnlockInterface);
+            
+            // 解锁界面输入框回车键支持
+            document.getElementById('accessKeyInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    verifyAccessKey();
+                }
+            });
+            
+            // 点击遮罩层关闭解锁界面
+            document.getElementById('unlockOverlay').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    hideUnlockInterface();
+                }
+            });
+
+            // 检查访问状态
+            checkRoachAccess();
+            
+            // 开始倒计时
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+            
+            // 更新状态栏
+            setInterval(() => {
+                const statuses = [
+                    '系统正常',
+                    '监控中',
+                    '数据同步',
+                    '加密传输',
+                    '扫描完成'
+                ];
+                const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+                const statusElement = document.getElementById('accessStatus');
+                statusElement.textContent = randomStatus;
+                
+                // 如果已解锁螂人视角，添加特殊状态
+                if (localStorage.getItem('roach_access_granted') === 'true') {
+                    const specialStatuses = [
+                        '螂人网络访问中',
+                        '渗透数据解码',
+                        '巢穴信号监测',
+                        '屏障稳定性检测'
+                    ];
+                    if (Math.random() > 0.7) {
+                        statusElement.textContent = specialStatuses[Math.floor(Math.random() * specialStatuses.length)];
+                    }
+                }
+            }, 5000);
+            
+            // 检查URL参数，自动处理解锁
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('key') && !localStorage.getItem('roach_access_granted')) {
+                // 如果URL中有密钥参数，自动验证
+                const key = urlParams.get('key');
+                const validKeys = ['ROACH134', 'roach134', 'HIDDEN134', 'hidden134'];
+                
+                if (validKeys.includes(key)) {
+                    localStorage.setItem('roach_access_granted', 'true');
+                    localStorage.setItem('hidden_134_visited', 'true');
+                    
+                    // 移除URL中的参数，避免刷新后重复处理
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    
+                    // 显示解锁通知
+                    setTimeout(() => {
+                        showNotification('访问密钥验证通过', '螂人视角已解锁。');
+                        checkRoachAccess();
+                        
+                        // 自动切换到螂人视角
+                        setTimeout(() => {
+                            switchTab('tab2');
+                        }, 1500);
+                    }, 800);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

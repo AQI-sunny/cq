@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>墟境调和局 - 异常事件日志</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="sc-css.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景特效 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(41, 128, 185, 0.1) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(142, 68, 173, 0.08) 0px, transparent 50%);
+            z-index: -2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(10, 25, 47, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 顶部装饰线 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #20b2aa, #1e90ff);
+        }
+        
+        /* 局徽样式 - 更新为圆形图片 */
+        .emblem {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .emblem-symbol {
+            display: inline-block;
+            width: 140px;
+            height: 140px;
+            position: relative;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(64, 224, 208, 0.3);
+            box-shadow: 
+                0 0 20px rgba(64, 224, 208, 0.3),
+                inset 0 0 20px rgba(10, 25, 47, 0.5);
+            animation: pulse 4s infinite alternate;
+            background-color: rgba(178, 217, 246, 0.956);
+        }
+        
+        /* logo图片容器 */
+        .emblem-symbol .logo-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('xjthj.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        
+        /* 圆形遮罩，确保图片显示为完美圆形 */
+        .emblem-symbol::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 2px rgba(64, 224, 208, 0.2);
+            z-index: 2;
+        }
+        
+        /* 圆形边框特效 */
+        .emblem-symbol::after {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #40e0d0, #1e90ff, #40e0d0);
+            z-index: -1;
+            opacity: 0.5;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes pulse {
+            0% { 
+                box-shadow: 
+                    0 0 20px rgba(64, 224, 208, 0.3),
+                    inset 0 0 20px rgba(10, 25, 47, 0.5);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 30px rgba(64, 224, 208, 0.5),
+                    inset 0 0 20px rgba(10, 25, 47, 0.7);
+            }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .emblem-text {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+        }
+        
+        .emblem-subtext {
+            color: #87ceeb;
+            font-size: 14px;
+            letter-spacing: 8px;
+        }
+        
+        /* 内容区域 */
+        .content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            margin-top: 20px;
+        }
+        
+        /* 日志标题 */
+        .log-title {
+            font-size: 28px;
+            color: #40e0d0;
+            text-align: center;
+            margin-bottom: 10px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(64, 224, 208, 0.3);
+            position: relative;
+        }
+        
+        .log-title::after {
+            content: "📊";
+            position: absolute;
+            right: 0;
+            font-size: 24px;
+        }
+        
+        .log-subtitle {
+            text-align: center;
+            color: #87ceeb;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        /* 日志容器 */
+        .log-container {
+            background: rgba(20, 40, 70, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        /* 滚动条样式 */
+        .log-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .log-container::-webkit-scrollbar-track {
+            background: rgba(10, 25, 47, 0.5);
+            border-radius: 10px;
+        }
+        
+        .log-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #40e0d0, #1e90ff);
+            border-radius: 10px;
+        }
+        
+        /* 日志条目 */
+        .log-entry {
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+            border-radius: 0 8px 8px 0;
+            background: rgba(30, 60, 90, 0.5);
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .log-entry:hover {
+            transform: translateX(5px);
+            background: rgba(30, 60, 90, 0.7);
+        }
+        
+        .log-date {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .log-date i {
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        
+        .log-content {
+            line-height: 1.6;
+            color: #b0c4de;
+        }
+        
+        /* 不同严重级别的日志样式 */
+        .log-normal {
+            border-left-color: #1e90ff;
+        }
+        
+        .log-warning {
+            border-left-color: #ffa500;
+        }
+        
+        .log-critical {
+            border-left-color: #ff4500;
+        }
+        
+        .log-important {
+            border-left-color: #40e0d0;
+            background: rgba(64, 224, 208, 0.1);
+        }
+        
+        /* 可点击关键词 */
+        .keyword {
+            color: #40e0d0;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(64, 224, 208, 0.5);
+            padding: 0 2px;
+        }
+        
+        .keyword:hover {
+            color: #1e90ff;
+            text-shadow: 0 0 8px rgba(30, 144, 255, 0.5);
+            border-bottom-style: solid;
+        }
+        
+        /* 密码输入区域 */
+        .password-section {
+            background: rgba(142, 68, 173, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+            text-align: center;
+            display: block;
+        }
+        
+        .password-section.hidden {
+            display: none;
+        }
+        
+        .password-title {
+            color: #da70d6;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .password-title::before {
+            content: "🔒";
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .password-input-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .password-input {
+            background: rgba(10, 25, 47, 0.8);
+            border: 1px solid #40e0d0;
+            border-radius: 5px;
+            padding: 12px 15px;
+            color: #e0e7ff;
+            font-size: 16px;
+            width: 200px;
+            margin-right: 10px;
+            outline: none;
+        }
+        
+        .password-input:focus {
+            box-shadow: 0 0 10px rgba(64, 224, 208, 0.5);
+        }
+        
+        .password-submit {
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .password-submit:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(64, 224, 208, 0.5);
+        }
+        
+        /* 内部弹窗样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            border: 2px solid #40e0d0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            transform: scale(0.8);
+            transition: transform 0.3s;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+        
+        .modal-header {
+            background: rgba(20, 40, 70, 0.9);
+            padding: 20px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            color: #40e0d0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: #87ceeb;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .modal-close:hover {
+            color: #ff4500;
+        }
+        
+        .modal-body {
+            padding: 25px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .modal-message {
+            color: #b0c4de;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .modal-footer {
+            padding: 15px 25px;
+            border-top: 1px solid rgba(64, 224, 208, 0.3);
+            display: flex;
+            justify-content: flex-end;
+            background: rgba(20, 40, 70, 0.5);
+        }
+        
+        .modal-button {
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .modal-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(64, 224, 208, 0.5);
+        }
+        
+        /* 加密日志显示区域 */
+        .encrypted-log {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(142, 68, 173, 0.15);
+            border-radius: 10px;
+            border: 1px solid rgba(147, 112, 219, 0.5);
+        }
+        
+        .encrypted-log.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .encrypted-log-title {
+            color: #da70d6;
+            font-size: 20px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(147, 112, 219, 0.3);
+            padding-bottom: 10px;
+        }
+        
+        .encrypted-log-content {
+            color: #e0e7ff;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .encrypted-log-link {
+            display: inline-block;
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .encrypted-log-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(64, 224, 208, 0.5);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 返回按钮 */
+        .back-button {
+            display: inline-block;
+            background: rgba(20, 40, 70, 0.7);
+            color: #87ceeb;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .back-button:hover {
+            background: rgba(64, 224, 208, 0.1);
+            border-color: #40e0d0;
+            transform: translateY(-3px);
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #708090;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(112, 128, 144, 0.3);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .emblem-text {
+                font-size: 20px;
+            }
+            
+            .emblem-symbol {
+                width: 110px;
+                height: 110px;
+            }
+            
+            .log-title {
+                font-size: 24px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .password-input-container {
+                flex-direction: column;
+            }
+            
+            .password-input {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            
+            .log-entry {
+                padding: 15px;
+            }
+        }
+    </style>
+     <link rel="icon" type="image/png" href="./xjthj.png">
+</head>
+<body>
+    <div class="container">
+        <!-- 局徽 -->
+        <div class="emblem">
+            <div class="emblem-symbol">
+                <div class="logo-img"></div>
+            </div>
+            <div class="emblem-text">墟境调和局</div>
+            <div class="emblem-subtext">XUJING HARMONY BUREAU</div>
+        </div>
+        
+        <!-- 主要内容 -->
+        <div class="content">
+            <h1 class="log-title">异常事件日志</h1>
+            <p class="log-subtitle">系统自动记录与归档 | 更新频率：实时 | 安全等级：内部查阅</p>
+            
+            <div class="log-container">
+                <!-- 日志条目 -->
+                <div class="log-entry log-normal">
+                    <div class="log-date"><i class="fas fa-calendar-day"></i> 12月13日</div>
+                    <div class="log-content">
+                        <strong>华苑4栋报告</strong>：墙体内部持续出现有规律的敲击声，频率约为每分钟15-20次。初步检测未发现结构性问题，已派遣维修组进行详细检查。居民表示声音在夜间尤为明显。
+                    </div>
+                </div>
+                
+                <div class="log-entry log-warning">
+                    <div class="log-date"><i class="fas fa-exclamation-triangle"></i> 12月14日</div>
+                    <div class="log-content">
+                        <strong>屏障系统触发</strong>：今日已自动触发驱逐程序3次，目标均为异常聚集的蟑螂群。最大一次聚集发生在4栋地下室入口处，数量估计超过50只。屏障识别准确率为99.7%，未发现漏判个体。
+                    </div>
+                </div>
+                
+                <div class="log-entry log-critical">
+                    <div class="log-date"><i class="fas fa-skull-crossbones"></i> 12月15日</div>
+                    <div class="log-content">
+                        <strong>居民投诉升级</strong>：4栋居民报告目击到<span class="keyword" data-target="evidence_photo1">"长有人类手指的蟑螂"</span>在楼梯间快速移动。目击者描述该生物体长约10厘米，前肢末端有明显的人类手指结构，共五根，且能进行抓握动作。已派遣调查小组前往核实。
+                    </div>
+                </div>
+                
+                <div class="log-entry log-important">
+                    <div class="log-date"><i class="fas fa-star"></i> 12月16日 【重点事件】</div>
+                    <div class="log-content">
+                        <strong>栖居权锚定个体失踪</strong>：编号CO-114，昵称"双马尾"的锚定蟑螂于今日上午9:47失去信号连接。最后记录的锚定信号位于<span class="keyword" id="basementKeyword" data-target="basement_access" data-password="true">4栋地下室</span>区域。该个体具有特殊研究价值，已启动二级搜索程序。信号追踪数据显示异常波动，怀疑受到干扰。
+                    </div>
+                </div>
+                
+                <div class="log-entry log-normal">
+                    <div class="log-date"><i class="fas fa-search"></i> 12月17日</div>
+                    <div class="log-content">
+                        <strong>调查进展</strong>：对4栋地下室的初步搜索未发现CO-114等20只个体。但检测到微弱的生物信号残留，与螂人变体特征匹配度87%。已申请扩大搜索范围。业主林先生（CO-114等主人）情绪稳定，配合调查。
+                    </div>
+                </div>
+                
+                <div class="log-entry log-warning">
+                    <div class="log-date"><i class="fas fa-virus"></i> 12月18日</div>
+                    <div class="log-content">
+                        <strong>异常生物活动增加</strong>：全社区螂类目击报告较平日增加320%。特别关注<span class="keyword" data-target="signal_tracking">锚定信号</span>类似频段的干扰源检测。技术部门正在分析是否与已知的"半融合态"个体有关。
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 加密日志显示区域 -->
+            <div class="encrypted-log" id="encryptedLog">
+                <div class="encrypted-log-title"><i class="fas fa-file-shield"></i> 加密日志 #TFG-1219</div>
+                <div class="encrypted-log-content">
+                   <!--  <p><strong>访问时间：</strong>12月1日 21:47</p> -->
+                    <p><strong>访问者：</strong>实习生#07</p>
+                    <p><strong>内容摘要：</strong></p>
+                    <!-- <p>地下室深度勘察报告显示，在4栋地下室的废弃管道系统中发现异常生物活动迹象。管道壁上有明显的抓痕，尺寸与人类手指相近，但间距异常狭窄。</p>
+                    <p>热成像扫描显示，管道深处有多个热源信号，形态不规则，部分呈现人形轮廓与昆虫特征混合状态。其中一个热源信号与失踪锚定个体CO-114的特征有87.3%的匹配度。</p>
+                    <p>建议：立即启动"深度清理协议"，派遣特遣小组进入管道系统进行回收作业。该区域已标记为3级危险区域。</p> -->
+                    <p>深度勘察报告显示，在4栋的废弃管道系统中发现异常生物活动迹象。管道壁上有明显的抓痕，尺寸与人类手指相近，但间距异常狭窄，同时现场检出明显淡橄榄香气残留，确认为<strong>阈界橄化剂</strong>活性痕迹。</p>
+<p>热成像扫描显示，管道深处有多个热源信号，形态不规则，部分呈现稳定的人形轮廓与昆虫特征混合状态。其中一个热源信号与失踪个体“双马尾”CO114的生物特征有87.3%的匹配度。分析认为，CO114的异常状态为自发性生物异变所致，现场遗留的橄化剂成分可能在其变异过程中产生了非预期的稳定或锚定作用。</p>
+<p>建议：立即启动"深度清理协议"，派遣特遣小组携带具备频段调制功能的橄韵波发射装置进入管道系统，对目标个体进行锚定状态检测与可控化引导，以实现安全回收与异变阻断。该区域已标记为3级危险区域。</p>
+                </div>
+                <a href="ycbg222.html" class="encrypted-log-link"><i class="fas fa-external-link-alt"></i> 前往深度报告页面</a>
+            </div>
+
+
+
+
+<!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
+            
+            <!-- 密码输入区域 -->
+            <div class="password-section" id="passwordSection">
+                <div class="password-title">加密日志访问</div>
+                <p>部分日志条目链接至加密内容，请输入相应密码访问。</p>
+                <div class="password-input-container">
+                    <input type="password" class="password-input" id="passwordInput" placeholder="输入访问密码">
+                    <button class="password-submit" id="passwordSubmit">访问</button>
+                </div>
+                <p style="margin-top: 15px; font-size: 14px; color: #87ceeb;">提示：密码可能为重要日期数字组合</p>
+            </div>
+            
+            <!-- 返回首页链接 -->
+            <a href="SY.html" class="back-button"><i class="fas fa-arrow-left"></i> 返回墟境调和局首页</a>
+        
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>墟境调和局 © 2025 | 栖乔华苑7栋401 | 屏障规则不可关闭 | 内部系统 v2.1.4</p>
+        </div>
+    </div>
+    
+    <!-- 内部弹窗系统 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">系统提示</div>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-message" id="modalMessage">默认消息</div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button" id="modalConfirm">确定</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 内部弹窗系统
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalClose = document.getElementById('modalClose');
+        const modalConfirm = document.getElementById('modalConfirm');
+        
+        // 加密日志区域
+        const encryptedLog = document.getElementById('encryptedLog');
+        // 密码输入区域
+        const passwordSection = document.getElementById('passwordSection');
+        
+        // 修复后的showModal函数 - 简化版
+        function showModal(title, message) {
+            modalTitle.textContent = title;
+            modalMessage.innerHTML = message;
+            modalOverlay.classList.add('active');
+            
+            // 设置确认按钮行为
+            modalConfirm.onclick = function() {
+                modalOverlay.classList.remove('active');
+            };
+        }
+        
+        // 关闭弹窗
+        modalClose.addEventListener('click', () => {
+            modalOverlay.classList.remove('active');
+        });
+        
+        // 点击模态框外部也关闭
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('active');
+            }
+        });
+        
+        // 地下室关键词点击事件 - 直接跳转到 mi-dxs.html
+        document.getElementById('basementKeyword').addEventListener('click', function() {
+            window.location.href = "mi-dxs.html";
+        });
+        
+        // 其他关键词点击事件
+        document.querySelectorAll('.keyword:not(#basementKeyword)').forEach(keyword => {
+            keyword.addEventListener('click', function() {
+                const target = this.getAttribute('data-target');
+                const needsPassword = this.getAttribute('data-password') === 'true';
+                
+                if (needsPassword) {
+                    showModal(
+                        "访问受限", 
+                        `您正在尝试访问：<strong>${target}.html</strong><br><br>该页面受密码保护，请输入密码以继续访问。<br><br>提示：密码可能为相关日期数字组合。`
+                    );
+                } else {
+                    // 不需要密码的页面
+                    let message = "";
+                    let title = "页面预览";
+                    
+                    switch(target) {
+                        case 'evidence_photo1':
+                            title = "证据照片";
+                            message = "<strong>文件：evidence_photo1.html</strong><br><br>模糊的蟑螂形态照片，末端有明显人类手指结构。<br><br>备注：拍摄于4栋楼梯间，注意背景反光中的第二只个体。<br><br>搜索文件名可查看清晰版本（请谨慎搜索查看！！！）。";
+                            break;
+                        case 'signal_tracking':
+                            title = "信号追踪";
+                            message = "<strong>文件：signal_tracking.html</strong><br><br>显示CT-114锚定信号最后出现的位置和波动情况。<br><br>信号在4栋地下室突然中断，但检测到异常频率干扰。<br><br>可能与屏障系统的0.3%识别漏判有关。";
+                            break;
+                        default:
+                            message = `即将跳转到：${target}.html`;
+                    }
+                    
+                    showModal(title, message);
+                }
+            });
+        });
+        
+        // 密码提交功能
+        document.getElementById('passwordSubmit').addEventListener('click', function() {
+            const passwordInput = document.getElementById('passwordInput');
+            const password = passwordInput.value.trim();
+            
+            // 调试信息
+            console.log("输入的密码:", password);
+            
+            if (!password) {
+                showModal("输入错误", "请输入访问密码。");
+                return;
+            }
+            
+            // 检查密码
+            const validPasswords = ["251219", "20251219"];
+            if (validPasswords.includes(password)) {
+                console.log("密码验证通过");
+                
+                // 显示加密日志
+                encryptedLog.classList.add('active');
+                // 隐藏密码输入区域
+                passwordSection.classList.add('hidden');
+                // 保存验证状态到本地存储
+                localStorage.setItem('passwordVerified', 'true');
+                
+                // 显示成功消息
+                showModal(
+                    "密码验证通过", 
+                    `密码正确！<br><br>已解锁加密日志内容。<br><br>日志显示12.19勘察发现异常生物活动迹象，建议启动"深度清理协议"。`
+                );
+                passwordInput.value = "";
+            } else {
+                console.log("密码验证失败");
+                showModal("密码错误", "密码不正确，请重新尝试。<br><br>提示：密码可能为相关日期数字组合。");
+                passwordInput.value = "";
+                passwordInput.focus();
+            }
+        });
+        
+        // 回车键提交密码
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('passwordSubmit').click();
+            }
+        });
+        
+        // 页面加载完成后的初始提示
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                showModal(
+                    "异常事件日志", 
+                    "欢迎查阅墟境调和局异常事件日志系统。<br><br>日志实时更新，记录社区内所有异常事件。<br><br><strong>请注意</strong>：部分日志条目包含加密内容，需要密码才能访问。<br><br>点击高亮关键词可查看详细信息。"
+                );
+            }, 1000);
+            
+            // 检查URL参数，如果有密码参数且正确，直接显示加密日志
+            const urlParams = new URLSearchParams(window.location.search);
+            const autoPassword = urlParams.get('password');
+            if (autoPassword && (autoPassword === "0925" || autoPassword === "0926")) {
+                setTimeout(() => {
+                    encryptedLog.classList.add('active');
+                    passwordSection.classList.add('hidden');
+                    localStorage.setItem('passwordVerified', 'true');
+                    showModal(
+                        "自动验证通过", 
+                        `检测到有效密码参数，已自动解锁加密日志内容。`
+                    );
+                }, 1500);
+            }
+            
+            // 检查本地存储，如果之前已经验证过密码，直接显示加密日志
+            if (localStorage.getItem('passwordVerified') === 'true') {
+                setTimeout(() => {
+                    encryptedLog.classList.add('active');
+                    passwordSection.classList.add('hidden');
+                }, 500);
+            }
+            
+            // 图片加载错误处理
+            const logoImg = document.querySelector('.logo-img');
+            logoImg.onerror = function() {
+                console.warn("Logo图片加载失败，请确保xjthj.png文件与HTML文件在同一目录下");
+                
+                // 移除图片背景
+                logoImg.style.backgroundImage = 'none';
+                
+                // 显示备用文字
+                const fallbackText = document.createElement('div');
+                fallbackText.innerHTML = "墟境<br>调和局";
+                fallbackText.style.position = "absolute";
+                fallbackText.style.top = "50%";
+                fallbackText.style.left = "50%";
+                fallbackText.style.transform = "translate(-50%, -50%)";
+                fallbackText.style.fontSize = "18px";
+                fallbackText.style.fontWeight = "bold";
+                fallbackText.style.color = "#1a3a5f";
+                fallbackText.style.textAlign = "center";
+                fallbackText.style.lineHeight = "1.2";
+                fallbackText.style.textShadow = "0 1px 2px rgba(255,255,255,0.3)";
+                fallbackText.style.zIndex = "3";
+                logoImg.appendChild(fallbackText);
+            };
+        });
+        
+        // 添加控制台彩蛋
+        console.log("%c墟境调和局异常事件日志系统已加载", "color: #40e0d0; font-size: 16px; font-weight: bold;");
+        console.log("%c加密日志访问权限检查中...", "color: #87ceeb;");
+        console.log("%c屏障系统运行状态：正常", "color: #20b2aa; font-style: italic;");
+    </script>
+    <script src="sc-ball.js"></script>
+    <script src="jinzhi.js"></script>
+</body>
+</html>

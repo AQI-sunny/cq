@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>螂人社会结构研究 - 墟境调和局内部文件</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', 'SimSun', serif;
+        }
+        
+        body {
+            background-color: #f5f5f0;
+            color: #333;
+            line-height: 1.6;
+            padding: 40px 20px;
+            background-image: 
+                linear-gradient(rgba(220, 220, 200, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(220, 220, 200, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(150, 150, 100, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(120, 120, 90, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 3px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+            padding: 60px 80px;
+            position: relative;
+            border: 1px solid #ddd;
+        }
+        
+        /* 论文样式装饰 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 40px;
+            right: 40px;
+            height: 5px;
+            background: linear-gradient(90deg, #8b4513, #a0522d, #8b4513);
+        }
+        
+        .container::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 40px;
+            right: 40px;
+            height: 5px;
+            background: linear-gradient(90deg, #8b4513, #a0522d, #8b4513);
+        }
+        
+        /* 顶部页眉 */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 30px;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #8b4513;
+        }
+        
+        .institution {
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 1px;
+        }
+        
+        .institution-name {
+            font-weight: bold;
+            color: #8b4513;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .document-id {
+            font-size: 12px;
+            color: #999;
+            text-align: right;
+        }
+        
+        /* 论文标题区域 */
+        .paper-title-area {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .paper-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .paper-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            right: 25%;
+            height: 3px;
+            background-color: #8b4513;
+        }
+        
+        .paper-subtitle {
+            font-size: 20px;
+            color: #7f8c8d;
+            font-style: italic;
+            margin-bottom: 25px;
+        }
+        
+        .author-info {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .author-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .date-info {
+            font-size: 14px;
+            color: #999;
+        }
+        
+        /* 摘要区域 */
+        .abstract {
+            background-color: #f9f9f5;
+            border-left: 4px solid #8b4513;
+            padding: 25px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+        }
+        
+        .section-title::before {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #8b4513;
+        }
+        
+        .abstract-text {
+            line-height: 1.8;
+            text-align: justify;
+        }
+        
+        .keywords {
+            margin-top: 20px;
+            font-style: italic;
+        }
+        
+        .keyword {
+            display: inline-block;
+            background-color: #e8e8d8;
+            padding: 3px 10px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+        
+        /* 正文内容 */
+        .content {
+            text-align: justify;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .subsection-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #34495e;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 3px solid #a0522d;
+        }
+        
+        .paragraph {
+            margin-bottom: 20px;
+            line-height: 1.8;
+            text-indent: 2em;
+        }
+        
+        .figure {
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .figure img {
+            max-width: 100%;
+            border: 1px solid #ddd;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .figure-caption {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        .table-container {
+            margin: 25px 0;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        
+        th {
+            background-color: #f2e6d9;
+            color: #8b4513;
+            font-weight: bold;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+        }
+        
+        td {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f5;
+        }
+        
+        /* 引用样式 */
+        .citation {
+            background-color: #f5f5f0;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 3px solid #b8860b;
+            font-size: 15px;
+        }
+        
+        .citation-author {
+            font-weight: bold;
+            color: #8b4513;
+        }
+        
+        /* 脚注 */
+        .footnote {
+            font-size: 14px;
+            color: #666;
+            border-top: 1px dashed #ddd;
+            padding-top: 20px;
+            margin-top: 50px;
+        }
+        
+        .footnote-item {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .footnote-item::before {
+            content: "[" attr(data-number) "]";
+            position: absolute;
+            left: 0;
+            font-size: 12px;
+            color: #8b4513;
+        }
+        
+        /* 隐藏入口区域 */
+        .hidden-section {
+            margin-top: 70px;
+            padding-top: 30px;
+            border-top: 1px dashed #ccc;
+            text-align: center;
+            position: relative;
+        }
+        
+        .deleted-text {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 10px 20px;
+            display: inline-block;
+            transition: all 0.3s ease;
+            background-color: #f9f9f5;
+            border-radius: 3px;
+            border: 1px dashed #ccc;
+        }
+        
+        .deleted-text:hover {
+            background-color: #f0f0e8;
+            color: #777;
+            border-color: #aaa;
+        }
+        
+        .hidden-hint {
+            font-size: 10px;
+            color: #ccc;
+            margin-top: 5px;
+            letter-spacing: 1px;
+        }
+        
+        /* 页脚 */
+        .page-footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+        }
+        
+        .classification {
+            font-weight: bold;
+            color: #8b4513;
+            margin-bottom: 10px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .container {
+                padding: 40px 30px;
+            }
+            
+            .paper-title {
+                font-size: 28px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 10px;
+            }
+            
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .paper-title {
+                font-size: 24px;
+            }
+            
+            .paper-subtitle {
+                font-size: 18px;
+            }
+            
+            .section-title {
+                font-size: 18px;
+            }
+        }
+        
+        /* 隐藏入口点击效果 */
+        .hidden-entrance {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .hidden-entrance.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .hidden-message {
+            background-color: #0c1a2d;
+            color: #40e0d0;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            border: 2px solid #40e0d0;
+            box-shadow: 0 0 30px rgba(64, 224, 208, 0.5);
+        }
+        
+        .hidden-message h2 {
+            margin-bottom: 20px;
+            color: #40e0d0;
+        }
+        
+        .hidden-message p {
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .hidden-btn {
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .hidden-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(64, 224, 208, 0.7);
+        }
+        
+        /* 特别标注样式 */
+        .important-note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 14px;
+            color: #5d4037;
+        }
+        
+        .correction {
+            background-color: #e8f5e9;
+            border: 1px solid #4caf50;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 13px;
+            color: #2e7d32;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 页眉 -->
+        <div class="page-header">
+            <div class="institution">
+                <div class="institution-name">墟境调和局异常生物研究部</div>
+                <div>内部研究文件 · 机密等级：Ⅲ级</div>
+            </div>
+            <div class="document-id">
+                文件编号: XJTHJ-BIO-2025-037<br>
+                修订版本: v2.1 (修正版)
+            </div>
+        </div>
+        
+        <!-- 论文标题 -->
+        <div class="paper-title-area">
+            <h1 class="paper-title">螂人社会结构研究初步分析报告</h1>
+            <div class="paper-subtitle">基于栖乔华苑4栋4楼异常现象的实证观察</div>
+            <div class="author-info">研究者: <span class="author-name">███博士</span> 及其研究团队</div>
+            <div class="date-info">初稿完成于2025年12月10日 | 重大修正于2025年12月16日</div>
+        </div>
+        
+        <!-- 重要说明 -->
+        <div class="important-note">
+            <strong>重要更正说明：</strong>初版报告中错误地引用了社会术语。经进一步观察确认，螂人（Blattodea-Hominid Hybrid）作为蟑螂与人类的混合体，其社会结构与其他虫类存在本质区别。本修订版已修正相关术语，采用基于蟑螂生物学特征的社会结构描述。
+        </div>
+        
+        <!-- 摘要 -->
+        <div class="abstract">
+            <div class="section-title">摘要</div>
+            <div class="abstract-text">
+                <p>本研究基于2025年12月在栖乔华苑4栋4楼楼梯间发现的异常生物样本，对螂人（Blattodea-Hominid Hybrid）这一新发现物种的社会结构进行了初步分析。研究结果显示，螂人并非传统认知中的简单昆虫型生物，而是具备高度复杂社会组织形式的智慧生命体。</p>
+                <p>通过为期30天的隐蔽观察和有限的样本分析，研究团队发现螂人社会呈现出独特的"信息中心型"结构，而非其他虫类的"劳动分工型"结构。其社会运作模式更接近于人类的信息网络社会，但具有蟑螂物种特有的适应性和隐秘性特征。</p>
+                <p>本报告将详细阐述螂人社会的组织特征、沟通方式、信息交换模式以及潜在的社会规范，为墟境调和局后续处理类似异常生物事件提供理论基础和行动参考。</p>
+            </div>
+            <div class="keywords">
+                <span class="keyword">螂人(Blattodea-Hominid Hybrid)</span>
+                <span class="keyword">异常生物社会结构</span>
+                <span class="keyword">信息中心型社会</span>
+                <span class="keyword">墟境现象</span>
+                <span class="keyword">栖乔华苑异常事件</span>
+            </div>
+        </div>
+        
+        <!-- 正文 -->
+        <div class="content">
+            <!-- 引言 -->
+            <div class="section">
+                <div class="section-title">1. 引言</div>
+                <p class="paragraph">2025年12月，栖乔华苑住户林星辰先生在4栋4楼楼梯间发现异常生物样本，随后墟境调和局介入调查。初步鉴定表明，该生物为蟑螂（Blattodea）与人类（Homo sapiens）基因的异常混合体，暂定名为"螂人"。</p>
+                <p class="paragraph">与普通昆虫不同，螂人表现出显著的社会行为和群体智慧特征。本研究旨在通过有限的观察数据，初步分析螂人社会的组织结构，特别关注其基于蟑螂生物学特性的社会结构特征。</p>
+                
+                <div class="figure">
+                    <img src="https://images.unsplash.com/photo-1584467735871-8db9ac8b65b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="螂人社会结构示意图">
+                    <div class="figure-caption">图1: 螂人社会结构示意图（基于观察数据重建，展示信息流而非阶级划分）</div>
+                </div>
+            </div>
+            
+            <!-- 社会层级结构 -->
+            <div class="section">
+                <div class="section-title">2. 螂人社会的组织结构</div>
+                
+               <!--  <div class="correction">
+                    修订说明：删除初版中错误的"工蚁"、"兵蚁"等其他虫类术语，采用基于螂人特性的描述。
+                </div> -->
+                
+                <div class="subsection-title">2.1 社会角色划分（基于蟑螂特性）</div>
+                <p class="paragraph">观察数据显示，螂人社会不采用严格劳动分工，而是根据信息处理能力和环境适应能力形成以下主要角色：</p>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>角色名称</th>
+                                <th>占比</th>
+                                <th>主要职能</th>
+                                <th>蟑螂特性体现</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>信息枢纽</td>
+                                <td>约3-5%</td>
+                                <td>信息整合、决策制定</td>
+                                <td>类似蟑螂群体中的信息集中者，触角特别发达</td>
+                            </tr>
+                            <tr>
+                                <td>环境侦察者</td>
+                                <td>约25-30%</td>
+                                <td>探索新区域、寻找资源</td>
+                                <td>继承蟑螂的探索性和环境适应能力</td>
+                            </tr>
+                            <tr>
+                                <td>资源管理者</td>
+                                <td>约30-35%</td>
+                                <td>食物分配、巢穴维护</td>
+                                <td>体现蟑螂的资源优化利用特性</td>
+                            </tr>
+                            <tr>
+                                <td>信息传递者</td>
+                                <td>约20-25%</td>
+                                <td>信息素传递、群体联络</td>
+                                <td>基于蟑螂信息素交流系统的进化</td>
+                            </tr>
+                            <tr>
+                                <td>隐秘护卫</td>
+                                <td>约10-15%</td>
+                                <td>安全监控、威胁应对</td>
+                                <td>继承蟑螂的隐蔽性和快速反应能力</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <p class="paragraph">与其他虫类社会不同，螂人社会的角色是动态可变的。个体可根据环境变化和学习能力转换角色，这种"角色流动性"是其社会适应性的关键特征。</p>
+                
+                <div class="subsection-title">2.2 决策机制：分布式信息处理</div>
+                <p class="paragraph">螂人社会不采用中央集权决策，而是通过信息枢纽构成的网络进行分布式决策。每个信息枢纽处理局部信息，然后通过信息传递者网络进行信息交换，最终形成群体共识。</p>
+                
+                <div class="citation">
+                    <p>"螂人的决策过程类似于蟑螂群体在寻找新栖息地时的行为：没有单一领导者，而是通过个体间的信息交换形成群体决策。不同的是，螂人将这种本能行为发展成了有意识的决策机制。"</p>
+                    <p class="citation-author">—— 研究团队观察记录，2025-12-14</p>
+                </div>
+            </div>
+            
+            <!-- 沟通与信息交换 -->
+            <div class="section">
+                <div class="section-title">3. 沟通与信息交换系统</div>
+                
+                <div class="subsection-title">3.1 多模式沟通（基于蟑螂沟通方式）</div>
+                <p class="paragraph">螂人保留了蟑螂的基本沟通方式并加以发展：</p>
+                
+                <ul style="margin-left: 2em; margin-bottom: 20px;">
+                    <li style="margin-bottom: 10px;"><strong>信息素系统（主要）</strong>：继承并复杂化了蟑螂的信息素交流，能够传递抽象概念</li>
+                    <li style="margin-bottom: 10px;"><strong>触角接触（次要）</strong>：类似蟑螂的触角交流，但用于更复杂的信息交换</li>
+                    <li style="margin-bottom: 10px;"><strong>振动感知（辅助）</strong>：利用蟑螂对振动的敏感性，发展出简单的"振动语言"</li>
+                    <li><strong>视觉信号（新发展）</strong>：人类基因带来的视觉能力发展出简单的手势交流</li>
+                </ul>
+                
+                <div class="subsection-title">3.2 信息素语言系统的复杂性</div>
+                <p class="paragraph">螂人的信息素系统比普通蟑螂复杂数个数量级。研究团队记录了至少68种不同的基础信息素，这些信息素可以组合形成复杂的"信息素句子"。</p>
+                <p class="paragraph">特别值得注意的是"记忆信息素"——螂人可以将重要经验转化为稳定的信息素组合，在群体中长期保存和传递，形成类似人类"文化传承"的机制。</p>
+            </div>
+            
+            <!-- 行为模式观察 -->
+            <div class="section">
+                <div class="section-title">4. 行为模式与社会规范</div>
+                
+                <p class="paragraph">螂人社会展现出多种基于蟑螂特性的行为模式：</p>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>行为类型</th>
+                                <th>观察频率</th>
+                                <th>社会功能</th>
+                                <th>蟑螂行为基础</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>信息素标记仪式</td>
+                                <td>高</td>
+                                <td>领地确认、资源共享</td>
+                                <td>蟑螂的信息素标记行为</td>
+                            </tr>
+                            <tr>
+                                <td>触角信息交换</td>
+                                <td>中</td>
+                                <td>个体识别、信任建立</td>
+                                <td>蟑螂的触角接触行为</td>
+                            </tr>
+                            <tr>
+                                <td>集体隐蔽行动</td>
+                                <td>高</td>
+                                <td>安全行动、资源获取</td>
+                                <td>蟑螂的群体隐蔽特性</td>
+                            </tr>
+                            <tr>
+                                <td>记忆信息素传承</td>
+                                <td>低</td>
+                                <td>知识积累、经验传递</td>
+                                <td>蟑螂的信息素记忆能力</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <p class="paragraph">螂人对"隐蔽性"有着近乎崇拜的社会规范。观察发现，螂人社会对能够在人类环境中保持完全隐蔽的个体给予高度尊重，这种隐蔽能力被视为社会地位的重要指标。</p>
+                
+                <div class="subsection-title">4.1 与人类社会的隐秘互动</div>
+                <p class="paragraph">最令人不安的发现是，螂人社会似乎已经发展出与人类社会的隐秘互动模式。观察记录显示：</p>
+                
+                <ul style="margin-left: 2em; margin-bottom: 20px;">
+                    <li style="margin-bottom: 10px;">螂人会系统性地收集人类丢弃的物品，特别是电子设备</li>
+                    <li style="margin-bottom: 10px;">部分螂人表现出对简单人类工具的使用能力</li>
+                    <li style="margin-bottom: 10px;">存在模仿人类日常行为（如"敲门"、"开关灯"）的仪式性行为</li>
+                    <li>对特定人类个体（如林星辰先生）表现出特别的兴趣和观察</li>
+                </ul>
+            </div>
+            
+            <!-- 结论 -->
+            <div class="section">
+                <div class="section-title">5. 结论与建议</div>
+                
+                <p class="paragraph">本研究证实，螂人是一种具备高度复杂社会结构的智慧生物。其社会组织形式并非基于其他虫类的劳动分工，而是基于蟑螂的信息交流特性发展出的"信息中心型社会结构"。</p>
+                <p class="paragraph">螂人社会的核心特征包括：角色流动性、分布式决策、复杂信息素语言、以及对隐蔽性的高度重视。这些特征使其能够高效适应人类环境而不被发现。</p>
+                
+                <div class="correction">
+                    特别提醒：螂人与其他虫类无任何亲缘关系。将其社会结构与其他虫类类比是完全错误的。螂人的社会结构是蟑螂社会行为的复杂化发展，与其他虫类的严格阶级社会存在本质区别。
+                </div>
+                
+                <p class="paragraph">基于以上发现，研究团队提出以下建议：</p>
+                
+                <ol style="margin-left: 2em; margin-bottom: 20px;">
+                    <li style="margin-bottom: 10px;">重新评估螂人的威胁等级，其智慧程度远超初判</li>
+                    <li style="margin-bottom: 10px;">针对其信息素系统开发干扰手段，破坏其社会沟通</li>
+                    <li style="margin-bottom: 10px;">加强对栖乔华苑住户的监控，螂人可能已开始系统观察人类</li>
+                    <!-- <li>立即停止使用"工蚁"等错误术语，防止误解螂人社会本质</li> -->
+                </ol>
+            </div>
+            
+            <!-- 脚注 -->
+            <div class="footnote">
+                <div class="footnote-item" data-number="1">观察限于非侵入式手段，受伦理审查委员会限制</div>
+                <div class="footnote-item" data-number="2">样本数量有限，统计结果可能存在偏差</div>
+                <div class="footnote-item" data-number="3">研究期间未发生直接接触，所有数据均通过远程监控获得</div>
+                <div class="footnote-item" data-number="4">初版报告中的其他虫类术语已被全部修正</div>
+                <div class="footnote-item" data-number="5">"信息中心型社会"为基于螂人特性提出的新概念</div>
+            </div>
+            
+            <!-- 隐藏入口 -->
+            <div class="hidden-section">
+                <div class="deleted-text" id="hidden-entrance">
+                    该段为无效数据
+                </div>
+                <div class="hidden-hint">（此段文字已根据审查要求删除）</div>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="page-footer">
+            <div class="classification">内部文件 · 禁止外传 · 阅后即焚</div>
+            <div>墟境调和局异常生物研究部保留所有权利</div>
+            <div>文件版本: 2.1 (术语修正版) | 最后更新: 2025-12-16 01:23</div>
+        </div>
+    </div>
+    
+    <!-- 隐藏入口内容 -->
+    <div class="hidden-entrance" id="hidden-entrance-modal">
+        <div class="hidden-message">
+            <h2>访问受限区域</h2>
+            <p>你已发现墟境调和局内部研究文件的隐藏部分。</p>
+            <!-- <p>此部分包含螂人社会结构中未公开的敏感信息，特别是关于螂人"信息枢纽网络"和"对人类社会的渗透观察"数据。</p> -->
+            <p style="color: red; font-weight: bold;">警告：螂人已表现出对特定人类的识别和追踪能力。</p>
+<p style="color: red; font-weight: bold;">警告：螂人已表现出对特定人类的识别和追踪能力。</p>
+<p style="color: red; font-weight: bold;">警告：螂人已表现出对特定人类的识别和追踪能力。</p>
+            <button class="hidden-btn" id="enter-hidden-page">确认访问 (需四级安全许可)</button>
+            <p style="margin-top: 20px; font-size: 12px; color: #87ceeb;">注意：所有访问记录将被追踪，请确认你有相应权限</p>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 隐藏入口点击事件
+            const hiddenEntrance = document.getElementById('hidden-entrance');
+            const hiddenModal = document.getElementById('hidden-entrance-modal');
+            const enterHiddenBtn = document.getElementById('enter-hidden-page');
+            
+            hiddenEntrance.addEventListener('click', function() {
+                hiddenModal.classList.add('active');
+            });
+            
+            // 进入隐藏页面
+            enterHiddenBtn.addEventListener('click', function() {
+                // 这里可以设置跳转到隐藏页面的逻辑
+                // 例如：window.location.href = 'hidden-research.html';
+                /* window.location.href = 'hidden-research.html'; */
+                window.location.href = '敬请期待-xjthj.html';
+                // 暂时用alert模拟
+                /* alert('安全验证通过，正在跳转到隐藏研究页面...\n\n警告：以下内容包含螂人对人类社会的渗透观察数据。'); */
+                // 实际使用时取消下面一行的注释并设置正确的URL
+                // window.location.href = 'yjyjyjj-hidden.html';
+            });
+            
+            // 点击模态框外部关闭
+            hiddenModal.addEventListener('click', function(e) {
+                if (e.target === hiddenModal) {
+                    hiddenModal.classList.remove('active');
+                }
+            });
+            
+            // 添加学术论文的打印样式
+            window.addEventListener('beforeprint', function() {
+                document.body.style.backgroundColor = '#fff';
+                document.querySelector('.container').style.boxShadow = 'none';
+                document.querySelector('.container').style.border = '1px solid #000';
+                document.querySelectorAll('.hidden-section, .hidden-entrance').forEach(el => {
+                    el.style.display = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

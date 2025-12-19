@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安全访问验证</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* 背景特效 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(41, 128, 185, 0.1) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(142, 68, 173, 0.08) 0px, transparent 50%);
+            z-index: -2;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(10, 25, 47, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        /* 顶部装饰线 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #20b2aa, #1e90ff);
+        }
+        
+        /* 局徽样式 */
+        .emblem {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .emblem-symbol {
+            display: inline-block;
+            width: 140px;
+            height: 140px;
+            position: relative;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(64, 224, 208, 0.3);
+            box-shadow: 
+                0 0 20px rgba(64, 224, 208, 0.3),
+                inset 0 0 20px rgba(10, 25, 47, 0.5);
+            animation: pulse 4s infinite alternate;
+            background-color: rgba(178, 217, 246, 0.956);
+        }
+        
+        /* logo图片容器 */
+        .emblem-symbol .logo-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('xjthj.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        
+        /* 圆形边框特效 */
+        .emblem-symbol::after {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #40e0d0, #1e90ff, #40e0d0);
+            z-index: -1;
+            opacity: 0.5;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes pulse {
+            0% { 
+                box-shadow: 
+                    0 0 20px rgba(64, 224, 208, 0.3),
+                    inset 0 0 20px rgba(10, 25, 47, 0.5);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 30px rgba(64, 224, 208, 0.5),
+                    inset 0 0 20px rgba(10, 25, 47, 0.7);
+            }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .emblem-text {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+        }
+        
+        .emblem-subtext {
+            color: #87ceeb;
+            font-size: 14px;
+            letter-spacing: 8px;
+        }
+        
+        /* 验证区域 */
+        .auth-box {
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(20, 40, 70, 0.7);
+            border-radius: 10px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .auth-title {
+            color: #40e0d0;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+        
+        .hint {
+            color: #87ceeb;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+        
+        .hint strong {
+            color: #40e0d0;
+            text-decoration: underline;
+        }
+        
+        /* 密码输入区域 */
+        .password-container {
+            margin: 25px 0;
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(10, 20, 40, 0.8);
+            border: 2px solid rgba(64, 224, 208, 0.4);
+            border-radius: 8px;
+            color: #e0e7ff;
+            font-size: 18px;
+            text-align: center;
+            letter-spacing: 5px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        
+        .password-input:focus {
+            outline: none;
+            border-color: #40e0d0;
+            box-shadow: 0 0 15px rgba(64, 224, 208, 0.4);
+        }
+        
+        .submit-btn {
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(30, 144, 255, 0.3);
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(30, 144, 255, 0.5);
+        }
+        
+        /* 九键键盘样式 */
+        .keypad-container {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(30, 60, 90, 0.6);
+            border-radius: 10px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .keypad-title {
+            color: #87ceeb;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        .key {
+            background: rgba(10, 20, 40, 0.9);
+            border: 2px solid rgba(64, 224, 208, 0.3);
+            border-radius: 8px;
+            height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        
+        .key:hover {
+            background: rgba(20, 40, 80, 0.9);
+            border-color: #40e0d0;
+            transform: translateY(-3px);
+        }
+        
+        .key:active {
+            transform: translateY(1px);
+        }
+        
+        .key-number {
+            font-size: 22px;
+            font-weight: bold;
+            color: #40e0d0;
+        }
+        
+        .key-letters {
+            font-size: 12px;
+            color: #87ceeb;
+            margin-top: 3px;
+        }
+        
+        .key-special {
+            grid-column: span 2;
+            background: rgba(142, 68, 173, 0.3);
+        }
+        
+        .key-special .key-number {
+            color: #da70d6;
+        }
+        
+        /* 消息提示 */
+        .message {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        .error {
+            background-color: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.5);
+            color: #ff7b7b;
+        }
+        
+        .success {
+            background-color: rgba(40, 167, 69, 0.2);
+            border: 1px solid rgba(40, 167, 69, 0.5);
+            color: #80ffaa;
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #708090;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(112, 128, 144, 0.3);
+        }
+        
+        .footer a {
+            color: #87ceeb;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .emblem-text {
+                font-size: 20px;
+            }
+            
+            .emblem-symbol {
+                width: 110px;
+                height: 110px;
+            }
+            
+            .auth-title {
+                font-size: 20px;
+            }
+            
+            .keypad {
+                gap: 10px;
+            }
+            
+            .key {
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 局徽部分 -->
+        <div class="emblem">
+            <div class="emblem-symbol">
+                <div class="logo-img"></div>
+            </div>
+            <div class="emblem-text">安全访问验证系统</div>
+            <div class="emblem-subtext">SECURITY ACCESS</div>
+        </div>
+        
+        <!-- 验证区域 -->
+        <div class="auth-box">
+            <h2 class="auth-title">请输入访问密码</h2>
+            <p class="hint">提示：<strong>"九键"</strong>（请根据提示输入正确密码）</p>
+            
+            <!-- 密码输入框 -->
+            <div class="password-container">
+                <input type="password" id="passwordInput" class="password-input" placeholder="点击下方键盘输入或直接输入密码">
+                <button id="submitBtn" class="submit-btn">验证并进入系统</button>
+                
+                <!-- 消息提示 -->
+                <div id="message" class="message"></div>
+            </div>
+            
+            <!-- 九键键盘 -->
+            <div class="keypad-container">
+                <div class="keypad-title">九键键盘</div>
+                <div class="keypad" id="keypad">
+                    <!-- 键盘按键通过JavaScript动态生成 -->
+                </div>
+                <p style="color: #708090; font-size: 14px; margin-top: 15px;">提示：九键指的是手机上的九宫格键盘</p>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>© 2023 安全访问验证系统 | 需要授权访问</p>
+            <p>未经授权，禁止访问</p>
+        </div>
+    </div>
+
+    <script>
+        // 九键键盘映射 (传统手机九键布局)
+        const keypadLayout = [
+            { number: '1', letters: '' },
+            { number: '2', letters: 'ABC' },
+            { number: '3', letters: 'DEF' },
+            { number: '4', letters: 'GHI' },
+            { number: '5', letters: 'JKL' },
+            { number: '6', letters: 'MNO' },
+            { number: '7', letters: 'PQRS' },
+            { number: '8', letters: 'TUV' },
+            { number: '9', letters: 'WXYZ' },
+            { number: '*', letters: '' },
+            { number: '0', letters: '+' },
+            { number: '#', letters: '' }
+        ];
+        
+        // 初始化键盘
+        function initKeypad() {
+            const keypad = document.getElementById('keypad');
+            keypad.innerHTML = '';
+            
+            keypadLayout.forEach(key => {
+                const keyElement = document.createElement('div');
+                keyElement.className = 'key';
+                if (key.number === '*' || key.number === '0' || key.number === '#') {
+                    keyElement.classList.add('key-special');
+                }
+                
+                keyElement.innerHTML = `
+                    <div class="key-number">${key.number}</div>
+                    ${key.letters ? `<div class="key-letters">${key.letters}</div>` : ''}
+                `;
+                
+                // 添加点击事件
+                keyElement.addEventListener('click', () => {
+                    const passwordInput = document.getElementById('passwordInput');
+                    passwordInput.value += key.number;
+                    passwordInput.focus();
+                });
+                
+                keypad.appendChild(keyElement);
+            });
+            
+            // 添加删除键
+            const deleteKey = document.createElement('div');
+            deleteKey.className = 'key key-special';
+            deleteKey.innerHTML = '<div class="key-number" style="font-size: 18px;">删除</div>';
+            deleteKey.addEventListener('click', () => {
+                const passwordInput = document.getElementById('passwordInput');
+                passwordInput.value = passwordInput.value.slice(0, -1);
+                passwordInput.focus();
+            });
+            keypad.appendChild(deleteKey);
+        }
+        
+        // 显示消息
+        function showMessage(text, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `message ${type}`;
+            messageEl.style.opacity = '1';
+            
+            setTimeout(() => {
+                messageEl.style.opacity = '0';
+            }, 3000);
+        }
+        
+        // 密码验证函数
+        function validatePassword() {
+            const passwordInput = document.getElementById('passwordInput');
+            const password = passwordInput.value;
+            
+            // 清除之前的消息
+            const messageEl = document.getElementById('message');
+            messageEl.style.opacity = '0';
+            
+            // 检查是否为空
+            if (!password) {
+                showMessage('请输入密码', 'error');
+                passwordInput.focus();
+                return;
+            }
+            
+            // 根据"九键"提示，密码是九键键盘对应的数字
+            // 例如："九键"可能对应手机九键输入法的数字
+            // 常见九键密码示例：4663 = "home"，但根据提示"九键"本身
+            // 这里我们设置密码为：5642（对应"九键"的九键键盘输入）
+            
+            // 九键键盘对应关系：5=JKL, 6=MNO, 4=GHI, 2=ABC
+            // "九键"的拼音是"jiu jian"
+            // jiu = 5(JKL)+4(GHI)+8(TUV) = 548
+            // jian = 5(JKL)+4(GHI)+2(ABC)+6(MNO) = 5426
+            // 但常见简单密码可能是"5642"或"548"
+            
+            // 这里设置密码为"5642"（九键输入"九键"的一种可能）
+            const correctPassword = "5642";
+            
+            if (password === correctPassword) {
+                showMessage('密码正确！正在跳转...', 'success');
+                
+                // 3秒后跳转到屏障页面
+                setTimeout(() => {
+                    window.location.href = "屏障.html";
+                }, 1500);
+            } else {
+                showMessage('密码错误，请重新输入', 'error');
+                passwordInput.value = '';
+                passwordInput.focus();
+                
+                // 添加抖动效果
+                passwordInput.style.animation = 'none';
+                setTimeout(() => {
+                    passwordInput.style.animation = 'shake 0.5s';
+                }, 10);
+            }
+        }
+        
+        // 添加抖动动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // 事件监听
+        document.getElementById('submitBtn').addEventListener('click', validatePassword);
+        
+        // 按Enter键也可以提交
+        document.getElementById('passwordInput').addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') {
+                validatePassword();
+            }
+        });
+        
+        // 页面加载完成后初始化键盘
+        document.addEventListener('DOMContentLoaded', initKeypad);
+        
+        // 初始化后让输入框获得焦点
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.getElementById('passwordInput').focus();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

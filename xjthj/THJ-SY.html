@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>墟境调和局·华苑分局</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景特效 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(41, 128, 185, 0.1) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(142, 68, 173, 0.08) 0px, transparent 50%);
+            z-index: -2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(10, 25, 47, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 顶部装饰线 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #20b2aa, #1e90ff);
+        }
+        
+        /* 局徽样式 - 更新为圆形图片 */
+        .emblem {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .emblem-symbol {
+            display: inline-block;
+            width: 140px;
+            height: 140px;
+            position: relative;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(64, 224, 208, 0.3);
+            box-shadow: 
+                0 0 20px rgba(64, 224, 208, 0.3),
+                inset 0 0 20px rgba(10, 25, 47, 0.5);
+            animation: pulse 4s infinite alternate;
+            /* 添加浅蓝色背景 */
+            background-color: rgba(178, 217, 246, 0.956) ; /* 浅蓝色背景 */
+        }
+        
+        /* logo图片容器 */
+        .emblem-symbol .logo-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('xjthj.png');
+            background-size: contain; /* 使用contain确保完整显示 */
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        
+        /* 圆形遮罩，确保图片显示为完美圆形 */
+        .emblem-symbol::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 2px rgba(64, 224, 208, 0.2);
+            z-index: 2;
+        }
+        
+        /* 圆形边框特效 */
+        .emblem-symbol::after {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #40e0d0, #1e90ff, #40e0d0);
+            z-index: -1;
+            opacity: 0.5;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes pulse {
+            0% { 
+                box-shadow: 
+                    0 0 20px rgba(64, 224, 208, 0.3),
+                    inset 0 0 20px rgba(10, 25, 47, 0.5);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 30px rgba(64, 224, 208, 0.5),
+                    inset 0 0 20px rgba(10, 25, 47, 0.7);
+            }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .emblem-text {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+        }
+        
+        .emblem-subtext {
+            color: #87ceeb;
+            font-size: 14px;
+            letter-spacing: 8px;
+        }
+        
+        /* 内容区域 */
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+            margin-top: 20px;
+        }
+        
+        .main-content {
+            padding-right: 20px;
+            border-right: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        /* 部门简介 */
+        .section {
+            margin-bottom: 35px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            color: #40e0d0;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.3);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background-color: #1e90ff;
+        }
+        
+        .intro-text {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #b0c4de;
+        }
+        
+        .duties {
+            list-style-type: none;
+            margin-left: 20px;
+        }
+        
+        .duties li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.6;
+        }
+        
+        .duties li::before {
+            content: "◆";
+            position: absolute;
+            left: 0;
+            color: #1e90ff;
+            font-size: 14px;
+        }
+        
+        .highlight {
+            color: #40e0d0;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(64, 224, 208, 0.5);
+        }
+        
+        .highlight:hover {
+            color: #1e90ff;
+            text-shadow: 0 0 8px rgba(30, 144, 255, 0.5);
+            border-bottom-style: solid;
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .service-box {
+            background: rgba(20, 40, 70, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .service-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: rgba(64, 224, 208, 0.4);
+        }
+        
+        .service-title {
+            color: #20b2aa;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .service-title::before {
+            content: "✧";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .service-link {
+            display: inline-block;
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(30, 144, 255, 0.3);
+        }
+        
+        .service-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(30, 144, 255, 0.5);
+        }
+        
+        .notice-box {
+            background: rgba(142, 68, 173, 0.1);
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+        }
+        
+        .notice-title {
+            color: #da70d6;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .notice-title::before {
+            content: "⚠";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+        
+        .notice-text {
+            line-height: 1.7;
+            color: #d8bfd8;
+            font-style: italic;
+        }
+        
+        /* 公告栏 */
+        .bulletin-board {
+            background: rgba(30, 60, 90, 0.6);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .bulletin-title {
+            color: #87ceeb;
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .bulletin-title::before {
+            content: "📋";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+        
+        .bulletin-list {
+            list-style-type: none;
+        }
+        
+        .bulletin-item {
+            padding: 15px;
+            border-bottom: 1px solid rgba(135, 206, 235, 0.2);
+            transition: background-color 0.3s;
+        }
+        
+        .bulletin-item:hover {
+            background-color: rgba(64, 224, 208, 0.1);
+        }
+        
+        .bulletin-item:last-child {
+            border-bottom: none;
+        }
+        
+        .bulletin-date {
+            color: #20b2aa;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .bulletin-content {
+            color: #b0c4de;
+            line-height: 1.5;
+        }
+        
+        .bulletin-link {
+            color: #87ceeb;
+            cursor: pointer;
+            transition: color 0.3s;
+            border-bottom: 1px dotted #87ceeb;
+        }
+        
+        .bulletin-link:hover {
+            color: #40e0d0;
+            border-bottom-style: solid;
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #708090;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(112, 128, 144, 0.3);
+        }
+        
+        .footer a {
+            color: #87ceeb;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding-right: 0;
+                border-right: none;
+                border-bottom: 1px solid rgba(64, 224, 208, 0.2);
+                padding-bottom: 30px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .emblem-text {
+                font-size: 20px;
+            }
+            
+            .emblem-symbol {
+                width: 110px;
+                height: 110px;
+            }
+            
+            .section-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+    <link rel="icon" type="image/png" href="./xjthj.png">
+</head>
+<body>
+    <div class="container">
+        <!-- 局徽 - 圆形图片 -->
+        <div class="emblem">
+            <div class="emblem-symbol">
+                <div class="logo-img"></div>
+            </div>
+            <div class="emblem-text">墟境调和局·华苑分局</div>
+            <div class="emblem-subtext">XUJING TIAOHEJU</div>
+        </div>
+        
+        <div class="content">
+            <!-- 主内容区 -->
+            <div class="main-content">
+                <!-- 部门简介 -->
+                <div class="section">
+                    <h2 class="section-title">部门简介</h2>
+                    <p class="intro-text">
+                        特殊部门：墟境调和局·华苑分局<br>
+                        办公地点：<span class="highlight" id="building-link">栖乔华苑7又7分之4栋</span>
+                    </p>
+                    <p class="intro-text">
+                        我们是华苑社区隐态秩序的维护者，负责调和"日常"与"异常"之间的界限。
+                    </p>
+                </div>
+                
+                <!-- 主要职责 -->
+                <div class="section">
+                    <h2 class="section-title">主要职责</h2>
+                    <ul class="duties">
+                        <li>
+                            <strong>屏障"<span class="highlight" id="barrier-link">栖界无尘</span>"运维：</strong> 
+                            覆盖全社区的灵态屏障，可自动驱逐蟑螂群、伪人及恶意入侵者，维持基础环境安宁。
+                        </li>
+                        <li>
+                            <strong>异常事件管理：</strong> 
+                            对鬼怪、异变现象等进行登记、沟通或无害化处理，确保社区隐态平衡。
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 特殊服务申请 -->
+                <div class="section">
+                    <h2 class="section-title">特殊服务申请</h2>
+                    <p class="intro-text">
+                        如您因饲养宠物（如蜘蛛）需要保留特定生物作为饵料，可向我局申请 
+                        <span class="highlight" id="service-link">【栖居权锚定】</span> 服务。
+                    </p>
+                    <p class="intro-text">
+                        我们将对指定个体（例如"<span class="highlight" id="case-link">双马尾</span>"）注射微剂量定位调和剂，
+                        使其被屏障识别为"家庭特许成员"，避免被自动驱逐。
+                    </p>
+                    <p class="intro-text">
+                        流程快速安全，耗时约3分钟，支持现场办理。
+                    </p>
+                </div>
+            </div>
+            
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <!-- 服务申请入口 -->
+                <div class="service-box">
+                    <h3 class="service-title">特殊服务申请入口</h3>
+                    <p>需要为您的特殊宠物申请豁免？点击下方链接开始申请流程。</p>
+                    <a href="jump1.html" class="service-link">进入申请页面</a>
+                </div>
+                
+                <!-- 须知 -->
+                <div class="notice-box">
+                    <h3 class="notice-title">重要须知</h3>
+                    <p class="notice-text">
+                        屏障规则不可关闭，但住户合理的生态需求，我们会尽力调和。
+                        请注意，所有服务申请需经审核，并非所有生物都符合豁免条件。
+                    </p>
+                </div>
+                
+                <!-- 公告栏 -->
+                <div class="bulletin-board">
+                    <h3 class="bulletin-title">最近公告栏</h3>
+                    <ul class="bulletin-list">
+                        <li class="bulletin-item">
+                            <div class="bulletin-date">2025年12月26日</div>
+                            <div class="bulletin-content">
+                                屏障"栖界无尘"已完成第114次迭代更新，检测灵敏度提升7%。
+                            </div>
+                        </li>
+                        <li class="bulletin-item">
+                            <div class="bulletin-date">2025年12月25日</div>
+                            <div class="bulletin-content">
+                                社区巡逻发现异常活动迹象，请居民夜间关好门窗。
+                            </div>
+                        </li>
+                        <li class="bulletin-item">
+                            <div class="bulletin-date">2025年12月24日</div>
+                            <div class="bulletin-content">
+                                <span class="bulletin-link" id="event-log-link">最近异常事件报告</span>已更新，包含三起屏障触发记录。
+                            </div>
+                        </li>
+                        <li class="bulletin-item">
+                            <div class="bulletin-date">2025年12月23日</div>
+                            <div class="bulletin-content">
+                                本月已处理栖居权锚定申请<span class="highlight">12</span>起，其中<span class="highlight">11</span>起已批准。
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>墟境调和局·华苑分局 © 2025 | 隐态秩序维护者</p>
+            <p>紧急联系电话：XXXX-XXXXXXX | 非紧急事务请通过网站申请</p>
+            <p>
+                <a href="#">隐私政策</a> | 
+                <a href="#">使用条款</a> | 
+                <a href="#">联系我们</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // 关键词点击跳转功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 7又7分之4栋 -> building_info.html (需要密码)
+            document.getElementById('building-link').addEventListener('click', function() {
+                const password = prompt("访问栖乔华苑7又7分之4栋详细资料需要权限验证\n请输入访问密码：");
+                if (password === "774") {
+                    window.location.href = "building_info.html";
+                } else if (password !== null) {
+                    alert("密码错误，访问被拒绝。");
+                }
+            });
+            
+            // 无尘天穹 -> barrier_rules.html
+            document.getElementById('barrier-link').addEventListener('click', function() {
+                window.location.href = "barrier_rules.html";
+            });
+            
+            // 栖居权锚定 -> jump1.html
+            document.getElementById('service-link').addEventListener('click', function() {
+                window.location.href = "biaog111.html";
+            });
+            
+            // 双马尾 -> case_ct114.html (需要密码)
+            document.getElementById('case-link').addEventListener('click', function() {
+                const password = prompt("访问个体档案需要权限验证\n请输入档案编号（提示：CT114的罗马数字）：");
+                if (password === "CXIV") {
+                    window.location.href = "case_ct114.html";
+                } else if (password !== null) {
+                    alert("档案编号错误，访问被拒绝。");
+                }
+            });
+            
+            // 最近异常事件报告 -> event_log.html
+            document.getElementById('event-log-link').addEventListener('click', function() {
+                window.location.href = "ycsj.html";
+            });
+            
+            // 添加一些视觉特效
+            const highlights = document.querySelectorAll('.highlight');
+            highlights.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transition = 'all 0.2s';
+                });
+            });
+            
+            // 页面加载特效
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.8s';
+                document.body.style.opacity = '1';
+            }, 100);
+            
+            // 图片加载错误处理
+            const logoImg = document.querySelector('.logo-img');
+            logoImg.onerror = function() {
+                console.warn("Logo图片加载失败，请确保xjthj.png文件与HTML文件在同一目录下");
+                
+                // 移除图片背景
+                logoImg.style.backgroundImage = 'none';
+                
+                // 显示备用文字
+                const fallbackText = document.createElement('div');
+                fallbackText.innerHTML = "墟境<br>调和局";
+                fallbackText.style.position = "absolute";
+                fallbackText.style.top = "50%";
+                fallbackText.style.left = "50%";
+                fallbackText.style.transform = "translate(-50%, -50%)";
+                fallbackText.style.fontSize = "18px";
+                fallbackText.style.fontWeight = "bold";
+                fallbackText.style.color = "#1a3a5f";
+                fallbackText.style.textAlign = "center";
+                fallbackText.style.lineHeight = "1.2";
+                fallbackText.style.textShadow = "0 1px 2px rgba(255,255,255,0.3)";
+                fallbackText.style.zIndex = "3";
+                logoImg.appendChild(fallbackText);
+            };
+        });
+        
+        // 添加控制台彩蛋
+        console.log("%c墟境调和局·华苑分局系统已加载", "color: #40e0d0; font-size: 16px; font-weight: bold;");
+        console.log("%c隐态秩序维护中...屏障'无尘天穹'运行正常", "color: #87ceeb;");
+    </script>
+</body>
+</html>

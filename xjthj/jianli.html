@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>墟境调和局 - 新部员档案</title>
+    <link rel="icon" type="image/png" href="xjthj.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景特效 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(41, 128, 185, 0.1) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(142, 68, 173, 0.08) 0px, transparent 50%);
+            z-index: -2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(10, 25, 47, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 顶部装饰线 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #20b2aa, #1e90ff);
+        }
+        
+        /* 局徽样式 */
+        .emblem {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .emblem-symbol {
+            display: inline-block;
+            width: 140px;
+            height: 140px;
+            position: relative;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(64, 224, 208, 0.3);
+            box-shadow: 
+                0 0 20px rgba(64, 224, 208, 0.3),
+                inset 0 0 20px rgba(10, 25, 47, 0.5);
+            animation: pulse 4s infinite alternate;
+            background-color: rgba(178, 217, 246, 0.956);
+        }
+        
+        /* logo图片容器 */
+        .emblem-symbol .logo-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://img.icons8.com/color/480/000000/dragon-head.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        
+        /* 圆形遮罩，确保图片显示为完美圆形 */
+        .emblem-symbol::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 2px rgba(64, 224, 208, 0.2);
+            z-index: 2;
+        }
+        
+        /* 圆形边框特效 */
+        .emblem-symbol::after {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #40e0d0, #1e90ff, #40e0d0);
+            z-index: -1;
+            opacity: 0.5;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes pulse {
+            0% { 
+                box-shadow: 
+                    0 0 20px rgba(64, 224, 208, 0.3),
+                    inset 0 0 20px rgba(10, 25, 47, 0.5);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 30px rgba(64, 224, 208, 0.5),
+                    inset 0 0 20px rgba(10, 25, 47, 0.7);
+            }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .emblem-text {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+        }
+        
+        .emblem-subtext {
+            color: #87ceeb;
+            font-size: 14px;
+            letter-spacing: 8px;
+        }
+        
+        /* 内容区域 */
+        .content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            margin-top: 20px;
+        }
+        
+        /* 档案标题 */
+        .file-title {
+            font-size: 32px;
+            color: #40e0d0;
+            text-align: center;
+            margin-bottom: 10px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(64, 224, 208, 0.3);
+            position: relative;
+        }
+        
+        .file-title::after {
+            content: "📁";
+            position: absolute;
+            right: 0;
+            font-size: 28px;
+        }
+        
+        .file-subtitle {
+            text-align: center;
+            color: #87ceeb;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        /* 档案信息卡片 */
+        .file-card {
+            background: rgba(20, 40, 70, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+        }
+        
+        .card-title {
+            font-size: 22px;
+            color: #40e0d0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .info-item {
+            margin-bottom: 15px;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #87ceeb;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            color: #e0e7ff;
+            padding: 8px 12px;
+            background: rgba(30, 60, 90, 0.5);
+            border-radius: 5px;
+            border-left: 3px solid #40e0d0;
+        }
+        
+        /* 能力评级条 */
+        .rating-bar {
+            height: 20px;
+            background: rgba(30, 60, 90, 0.7);
+            border-radius: 10px;
+            margin-top: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .rating-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            position: relative;
+            transition: width 1.5s ease-out;
+        }
+        
+        .rating-value {
+            position: absolute;
+            right: 10px;
+            top: 0;
+            font-size: 14px;
+            line-height: 20px;
+            font-weight: bold;
+            color: #e0e7ff;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+        }
+        
+        /* 录音区域 */
+        .audio-section {
+            background: rgba(142, 68, 173, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+        }
+        
+        .audio-title {
+            color: #da70d6;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .audio-title::before {
+            content: "🎤";
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .audio-player {
+            width: 100%;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        
+        .audio-transcript {
+            color: #b0c4de;
+            font-style: italic;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            border-left: 3px solid #da70d6;
+            margin-top: 15px;
+        }
+        
+        .highlight {
+            color: #ff6b6b;
+            font-weight: bold;
+            animation: pulse-text 2s infinite;
+        }
+        
+        @keyframes pulse-text {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+        
+        /* 监控截图区域 */
+        .monitoring-section {
+            margin-top: 30px;
+        }
+        
+        .screenshot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .screenshot-item {
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid rgba(64, 224, 208, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            background: linear-gradient(135deg, rgba(20, 40, 70, 0.8), rgba(30, 60, 90, 0.9));
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .screenshot-item:hover {
+            transform: translateY(-8px);
+            border-color: #40e0d0;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* 截图显示区域 */
+        .screenshot-img {
+            flex: 1;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            min-height: 220px;
+        }
+        
+        .screenshot-img::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, rgba(20, 40, 70, 0.3) 0%, transparent 50%);
+        }
+        
+        .screenshot-caption {
+            padding: 18px 15px;
+            background: rgba(10, 25, 47, 0.9);
+            font-size: 15px;
+            text-align: center;
+            color: #b0c4de;
+            border-top: 1px solid rgba(64, 224, 208, 0.2);
+            line-height: 1.5;
+        }
+        
+        /* 日志容器 */
+        .log-container {
+            background: rgba(20, 40, 70, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        /* 滚动条样式 */
+        .log-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .log-container::-webkit-scrollbar-track {
+            background: rgba(10, 25, 47, 0.5);
+            border-radius: 10px;
+        }
+        
+        .log-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #40e0d0, #1e90ff);
+            border-radius: 10px;
+        }
+        
+        /* 日志条目 */
+        .log-entry {
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+            border-radius: 0 8px 8px 0;
+            background: rgba(30, 60, 90, 0.5);
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .log-entry:hover {
+            transform: translateX(5px);
+            background: rgba(30, 60, 90, 0.7);
+        }
+        
+        .log-date {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .log-date i {
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        
+        .log-content {
+            line-height: 1.6;
+            color: #b0c4de;
+        }
+        
+        /* 不同严重级别的日志样式 */
+        .log-normal {
+            border-left-color: #1e90ff;
+        }
+        
+        .log-warning {
+            border-left-color: #ffa500;
+        }
+        
+        .log-critical {
+            border-left-color: #ff4500;
+        }
+        
+        .log-important {
+            border-left-color: #40e0d0;
+            background: rgba(64, 224, 208, 0.1);
+        }
+        
+        /* 可点击关键词 */
+        .keyword {
+            color: #40e0d0;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(64, 224, 208, 0.5);
+            padding: 0 2px;
+        }
+        
+        .keyword:hover {
+            color: #1e90ff;
+            text-shadow: 0 0 8px rgba(30, 144, 255, 0.5);
+            border-bottom-style: solid;
+        }
+        
+        /* 密码输入区域 */
+        .password-section {
+            background: rgba(142, 68, 173, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+            text-align: center;
+        }
+        
+        .password-title {
+            color: #da70d6;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .password-title::before {
+            content: "🔒";
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .password-input-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .password-input {
+            background: rgba(10, 25, 47, 0.8);
+            border: 1px solid #40e0d0;
+            border-radius: 5px;
+            padding: 12px 15px;
+            color: #e0e7ff;
+            font-size: 16px;
+            width: 200px;
+            margin-right: 10px;
+            outline: none;
+        }
+        
+        .password-input:focus {
+            box-shadow: 0 0 10px rgba(64, 224, 208, 0.5);
+        }
+        
+        .password-submit {
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .password-submit:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(64, 224, 208, 0.5);
+        }
+        
+        /* 加密日志显示区域 */
+        .encrypted-log {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(142, 68, 173, 0.15);
+            border-radius: 10px;
+            border: 1px solid rgba(147, 112, 219, 0.5);
+        }
+        
+        .encrypted-log.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .encrypted-log-title {
+            color: #da70d6;
+            font-size: 20px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(147, 112, 219, 0.3);
+            padding-bottom: 10px;
+        }
+        
+        .encrypted-log-content {
+            color: #e0e7ff;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        /* 消息提示 */
+        .message {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateX(150%);
+            transition: transform 0.4s ease;
+            max-width: 350px;
+        }
+        
+        .message.active {
+            transform: translateX(0);
+        }
+        
+        .message.info {
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            border-left: 5px solid #1e90ff;
+        }
+        
+        .message.warning {
+            background: linear-gradient(90deg, #ff8c00, #ffa500);
+            border-left: 5px solid #ff4500;
+        }
+        
+        .message.error {
+            background: linear-gradient(90deg, #ff4500, #dc143c);
+            border-left: 5px solid #8b0000;
+        }
+        
+        .message.success {
+            background: linear-gradient(90deg, #32cd32, #228b22);
+            border-left: 5px solid #006400;
+        }
+        
+        /* 内部弹窗样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            border: 2px solid #40e0d0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            transform: scale(0.8);
+            transition: transform 0.3s;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+        
+        .modal-header {
+            background: rgba(20, 40, 70, 0.9);
+            padding: 20px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            color: #40e0d0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: #87ceeb;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .modal-close:hover {
+            color: #ff4500;
+        }
+        
+        .modal-body {
+            padding: 25px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            color: #b0c4de;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .modal-footer {
+            padding: 15px 25px;
+            border-top: 1px solid rgba(64, 224, 208, 0.3);
+            display: flex;
+            justify-content: flex-end;
+            background: rgba(20, 40, 70, 0.5);
+        }
+        
+        .modal-button {
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .modal-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(64, 224, 208, 0.5);
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #708090;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(112, 128, 144, 0.3);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .emblem-text {
+                font-size: 20px;
+            }
+            
+            .emblem-symbol {
+                width: 110px;
+                height: 110px;
+            }
+            
+            .file-title {
+                font-size: 24px;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .screenshot-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+            }
+            
+            .message {
+                top: 20px;
+                right: 20px;
+                left: 20px;
+                max-width: none;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .password-input-container {
+                flex-direction: column;
+            }
+            
+            .password-input {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            
+            .log-entry {
+                padding: 15px;
+            }
+            
+            .screenshot-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .screenshot-item {
+                min-height: 250px;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 局徽 -->
+        <div class="emblem">
+            <div class="emblem-symbol">
+                <div class="logo-img"></div>
+            </div>
+            <div class="emblem-text">墟境调和局</div>
+            <div class="emblem-subtext">XUJING HARMONY BUREAU</div>
+        </div>
+        
+        <!-- 档案标题 -->
+        <h1 class="file-title">新部员入职档案</h1>
+        <div class="file-subtitle">SECURITY CLEARANCE LEVEL 2 - LIMITED ACCESS</div>
+        
+        <div class="content">
+            <!-- 基本信息 -->
+            <div class="file-card">
+                <h2 class="card-title">📝 基本信息</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">姓名</div>
+                        <div class="info-value">蒋小雪</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">员工编号</div>
+                        <div class="info-value">XHB-2025-074</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">入职日期</div>
+                        <div class="info-value">2025年10月31日</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">所属部门</div>
+                        <div class="info-value">墟境调和局 - 特殊应对科</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">安全权限</div>
+                        <div class="info-value">二级(可接触常规异常信息)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">当前状态</div>
+                        <div class="info-value">🔵 待命 / 观察期</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 能力评估 -->
+            <div class="file-card">
+                <h2 class="card-title">⚡ 能力评估</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">异常感知能力</div>
+                        <div class="rating-bar">
+                            <div class="rating-fill" style="width: 88%">
+                                <div class="rating-value">88%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">墟境稳定性</div>
+                        <div class="rating-bar">
+                            <div class="rating-fill" style="width: 92%">
+                                <div class="rating-value">92%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">精神抗性</div>
+                        <div class="rating-bar">
+                            <div class="rating-fill" style="width: 85%">
+                                <div class="rating-value">85%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">信息解析能力</div>
+                        <div class="rating-bar">
+                            <div class="rating-fill" style="width: 78%">
+                                <div class="rating-value">78%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">团队协作</div>
+                        <div class="rating-bar">
+                            <div class="rating-fill" style="width: 70%">
+                                <div class="rating-value">70%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">危机应对</div>
+                        <div class="rating-bar">
+                            <div class="rating-fill" style="width: 65%">
+                                <div class="rating-value">65%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">特殊能力描述</div>
+                    <div class="info-value">
+                        具备罕见的「镜界感知」能力，可在特定条件下观测到墟境与现实世界的重叠区域。能力表现为对异常空间波动的敏感性，尤其在镜面反射介质中感知能力增强。初步测试显示，该能力有潜力发展为主动的「镜面干涉」技能。
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 背景信息 -->
+            <div class="file-card">
+                <h2 class="card-title">📜 背景信息</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">发现日期</div>
+                        <div class="info-value">2025年7月15日</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">发现地点</div>
+                        <div class="info-value">C市老城区镜巷事件</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">发现者</div>
+                        <div class="info-value">特工「夜枭」(XHB-2019-022)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">异常接触史</div>
+                        <div class="info-value">首次接触即表现出适应性</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">背景描述</div>
+                    <div class="info-value">
+                        原为C市大学物理系研究生，专业方向为光学与空间物理。在「镜巷事件」中偶然接触到墟境泄露点，意外展现出对异常空间的高度适应性。事件后记忆被部分修正，但保留了潜意识中的异常感知能力。经三个月观察评估后，被招募进入墟境调和局。
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 录音记录 -->
+            <div class="audio-section">
+                <h3 class="audio-title">入职面试录音片段</h3>
+                <audio controls class="audio-player">
+                    <source src="#" type="audio/mpeg">
+                    您的浏览器不支持音频元素。
+                </audio>
+                <div class="audio-transcript">
+                    <strong>面试官「夜枭」：</strong>请描述你在镜巷事件中看到的东西。<br><br>
+                    <strong>林雨辰：</strong>那不是...不是普通的镜子。那些反射...它们不遵循光学定律。有的镜子映出不存在的东西，有的...有的映出的不是我。<br><br>
+                    <strong>面试官「夜枭」：</strong>你当时为什么没有像其他人一样陷入恐慌？<br><br>
+                    <strong>林雨辰：</strong>因为我觉得它们在...<span class="highlight">传达信息</span>。不是以我们能理解的方式，但确实是有序的。<br><br>
+                    <strong>面试官「夜枭」：</strong>记录显示，事件平息后你曾试图返回现场？<br><br>
+                    <strong>林雨辰：</strong>是的。我...我想确认那是不是我的幻觉。但我发现，<span class="highlight">普通镜子现在看起来不一样了</span>。
+                </div>
+            </div>
+            
+            <!-- 监控记录 -->
+            <div class="file-card monitoring-section">
+                <h2 class="card-title">📷 监控记录</h2>
+                <div class="screenshot-grid">
+                    <div class="screenshot-item">
+                        <div class="screenshot-img" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80');"></div>
+                        <div class="screenshot-caption">能力测试 - 镜面反应实验 (2025.10.15)</div>
+                    </div>
+                    <div class="screenshot-item">
+                        <div class="screenshot-img" style="background-image: url('https://images.unsplash.com/photo-1534796636918-6a8c0be14515?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');"></div>
+                        <div class="screenshot-caption">首次墟境接触训练 (2025.11.02)</div>
+                    </div>
+                    <div class="screenshot-item">
+                        <div class="screenshot-img" style="background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80');"></div>
+                        <div class="screenshot-caption">异常空间感知测试 (2025.11.20)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 近期日志 -->
+            <div class="file-card">
+                <h2 class="card-title">📋 近期日志</h2>
+                <div class="log-container">
+                    <div class="log-entry log-important">
+                        <div class="log-date"><i>📅</i> 2025年12月5日 | 特殊训练日志</div>
+                        <div class="log-content">
+                            今日与特工「夜枭」进行了首次实战模拟训练。在模拟墟境环境中，<span class="keyword" data-modal="modal1">镜面感知能力</span>表现稳定，成功识别出3处异常波动点。但精神消耗较大，训练后出现轻微眩晕。建议增加精神耐力训练。
+                        </div>
+                    </div>
+                    
+                    <div class="log-entry log-normal">
+                        <div class="log-date"><i>📅</i> 2025年12月1日 | 常规评估</div>
+                        <div class="log-content">
+                            完成本月心理评估，<span class="keyword" data-modal="modal2">Dr. 陈</span>认为适应情况良好。对墟境相关知识的吸收速度超出预期，但对局内保密协议的重要性认识仍需加强。安排下周与资深探员「白泽」会面。
+                        </div>
+                    </div>
+                    
+                    <div class="log-entry log-warning">
+                        <div class="log-date"><i>📅</i> 2025年11月25日 | 异常事件报告</div>
+                        <div class="log-content">
+                            宿舍区的<span class="keyword" data-modal="modal3">洗手间镜面</span>出现短暂异常反射。上报后检测到微弱墟境辐射，但未达到危险阈值。建议为敏感者提供非镜面替代品。
+                        </div>
+                    </div>
+                    
+                    <div class="log-entry log-critical">
+                        <div class="log-date"><i>📅</i> 2025年11月18日 | 紧急训练事件</div>
+                        <div class="log-content">
+                            在高级模拟训练中意外触发了<span class="keyword" data-modal="modal4">深层墟境连接</span>。虽然迅速断开连接，但导致训练区域出现现实扭曲，持续27秒。事件已记录，能力潜力需重新评估。
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 加密日志访问 -->
+            <div class="password-section">
+                <h3 class="password-title">加密日志访问 (需二级权限)</h3>
+                <div class="password-input-container">
+                    <input type="password" class="password-input" placeholder="输入访问密码" id="passwordInput">
+                    <button class="password-submit" id="passwordSubmit">确认访问</button>
+                </div>
+                <div class="encrypted-log" id="encryptedLog">
+                    <h4 class="encrypted-log-title">🔐 加密日志 - 仅供授权人员访问</h4>
+                    <div class="encrypted-log-content">
+                        <p><strong>日期：</strong>2025年12月10日</p>
+                        <p><strong>记录者：</strong>Dr. 陈 (心理评估科)</p>
+                        <br>
+                        <p>受试者林雨辰表现出对墟境异常高度的亲和性，这种亲和性在局内记录中仅出现在3%的敏感者中。值得注意的是，其能力似乎与「镜巷事件」的核心异常同源。</p>
+                        <br>
+                        <p>今日测试中，受试者在无引导情况下准确指出了训练区中隐藏的3个「弱连接点」，这些连接点本应在今天下午才计划向其揭示。这表明其感知能力可能具有预知性成分，或者...</p>
+                        <br>
+                        <p><em>（以下内容需要三级及以上权限）</em></p>
+                        <p class="highlight">...或者受试者本身正在成为新的连接点。建议提升监控等级至「琥珀级」。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>墟境调和局 - 人事档案系统 | 最后更新: 2025年12月10日 23:47:21</p>
+            <p>⚠️ 未经授权访问或泄露此档案将受到《异常信息保密法》严厉制裁</p>
+        </div>
+    </div>
+    
+    <!-- 消息提示 -->
+    <div class="message" id="message">
+        默认消息
+    </div>
+    
+    <!-- 模态框 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">模态框标题</div>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-content" id="modalContent">
+                    模态框内容
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button" id="modalConfirm">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 等待页面加载完成
+        document.addEventListener('DOMContentLoaded', function() {
+            // 密码访问功能
+            const passwordInput = document.getElementById('passwordInput');
+            const passwordSubmit = document.getElementById('passwordSubmit');
+            const encryptedLog = document.getElementById('encryptedLog');
+            const message = document.getElementById('message');
+            
+            // 正确的密码
+            const correctPassword = 'XHB2025074';
+            
+            // 密码提交事件
+            passwordSubmit.addEventListener('click', function() {
+                if (passwordInput.value === correctPassword) {
+                    encryptedLog.classList.add('active');
+                    showMessage('访问权限已确认，加密日志解锁', 'success');
+                    passwordInput.value = '';
+                    
+                    // 添加解锁动画效果
+                    encryptedLog.style.animation = 'fadeIn 0.5s ease-out';
+                    
+                    // 3秒后自动滚动到加密日志
+                    setTimeout(() => {
+                        encryptedLog.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 500);
+                } else {
+                    showMessage('密码错误，访问被拒绝', 'error');
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                    
+                    // 添加震动效果
+                    passwordInput.style.transform = 'translateX(10px)';
+                    setTimeout(() => {
+                        passwordInput.style.transform = 'translateX(-10px)';
+                    }, 100);
+                    setTimeout(() => {
+                        passwordInput.style.transform = 'translateX(0)';
+                    }, 200);
+                }
+            });
+            
+            // 回车键提交密码
+            passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    passwordSubmit.click();
+                }
+            });
+            
+            // 关键词点击事件
+            const keywords = document.querySelectorAll('.keyword');
+            keywords.forEach(keyword => {
+                keyword.addEventListener('click', function() {
+                    const modalId = this.getAttribute('data-modal');
+                    openModal(modalId);
+                });
+            });
+            
+            // 模态框相关元素
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalClose = document.getElementById('modalClose');
+            const modalConfirm = document.getElementById('modalConfirm');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalContent = document.getElementById('modalContent');
+            
+            // 关闭模态框
+            modalClose.addEventListener('click', closeModal);
+            modalConfirm.addEventListener('click', closeModal);
+            modalOverlay.addEventListener('click', function(e) {
+                if (e.target === modalOverlay) {
+                    closeModal();
+                }
+            });
+            
+            // 模态框内容
+            const modalContents = {
+                modal1: {
+                    title: '镜面感知能力',
+                    content: '林雨辰的特殊能力，使其能够通过镜面或其他反光表面感知到墟境与现实世界的重叠区域。能力强度与环境中的「墟境辐射」水平成正比。在镜巷事件后首次显现，目前处于发展阶段。'
+                },
+                modal2: {
+                    title: 'Dr. 陈',
+                    content: '墟境调和局心理评估科主管，负责新部员的心理适应性与稳定性评估。拥有超过15年的异常心理学研究经验，特别擅长处理与墟境接触相关的心理创伤。安全权限：三级。'
+                },
+                modal3: {
+                    title: '洗手间镜面事件',
+                    content: '2025年11月25日记录到的事件，林雨辰报告其宿舍洗手间镜面出现异常反射，映出非当前时间段的场景。检测显示有微量墟境辐射泄露，源头未明。事件被标记为「低风险观察」。'
+                },
+                modal4: {
+                    title: '深层墟境连接',
+                    content: '一种危险的异常现象，指个体意识与墟境深层结构建立稳定连接。通常会导致现实扭曲和认知污染。林雨辰在训练中意外触发此现象，表明其能力潜力可能远超初步评估。'
+                }
+            };
+            
+            // 打开模态框函数
+            function openModal(modalId) {
+                if (modalContents[modalId]) {
+                    modalTitle.textContent = modalContents[modalId].title;
+                    modalContent.textContent = modalContents[modalId].content;
+                    modalOverlay.classList.add('active');
+                }
+            }
+            
+            // 关闭模态框函数
+            function closeModal() {
+                modalOverlay.classList.remove('active');
+            }
+            
+            // 显示消息函数
+            function showMessage(text, type) {
+                message.textContent = text;
+                message.className = `message ${type} active`;
+                
+                setTimeout(() => {
+                    message.classList.remove('active');
+                }, 4000);
+            }
+            
+            // 初始化评级条动画
+            setTimeout(() => {
+                const ratingFills = document.querySelectorAll('.rating-fill');
+                ratingFills.forEach(fill => {
+                    const width = fill.style.width;
+                    fill.style.width = '0';
+                    
+                    setTimeout(() => {
+                        fill.style.width = width;
+                    }, 100);
+                });
+            }, 500);
+            
+            // 添加截图悬停效果
+            const screenshotItems = document.querySelectorAll('.screenshot-item');
+            screenshotItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    const caption = this.querySelector('.screenshot-caption');
+                    caption.style.backgroundColor = 'rgba(10, 25, 47, 0.95)';
+                    caption.style.color = '#40e0d0';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    const caption = this.querySelector('.screenshot-caption');
+                    caption.style.backgroundColor = '';
+                    caption.style.color = '';
+                });
+            });
+            
+            // 添加日志条目悬停效果
+            const logEntries = document.querySelectorAll('.log-entry');
+            logEntries.forEach(entry => {
+                entry.addEventListener('mouseenter', function() {
+                    const borderColor = window.getComputedStyle(this).borderLeftColor;
+                    this.style.boxShadow = `0 5px 15px ${borderColor}40`;
+                });
+                
+                entry.addEventListener('mouseleave', function() {
+                    this.style.boxShadow = '';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

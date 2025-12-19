@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>栖居权锚定申请表 - 墟境调和局·华苑分局</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景特效 - 调整为华苑社区风格 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(41, 128, 185, 0.1) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(142, 68, 173, 0.08) 0px, transparent 50%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M50 0 L100 50 L50 100 L0 50 Z" fill="none" stroke="rgba(64, 224, 208, 0.03)" stroke-width="1"/></svg>');
+            z-index: -2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(10, 25, 47, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 顶部装饰线 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #20b2aa, #1e90ff);
+        }
+        
+        /* 局徽样式 - 更新为墟境调和局 */
+        .emblem {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .emblem-logo {
+            display: inline-block;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: rgba(20, 40, 70, 0.7);
+            box-shadow: 0 0 25px rgba(64, 224, 208, 0.4);
+            animation: pulse 4s infinite alternate;
+            position: relative;
+        }
+        
+        .emblem-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 10px;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 25px rgba(64, 224, 208, 0.4); }
+            100% { box-shadow: 0 0 35px rgba(64, 224, 208, 0.7); }
+        }
+        
+        .emblem-text {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+        }
+        
+        .emblem-subtext {
+            color: #87ceeb;
+            font-size: 14px;
+            letter-spacing: 4px;
+            margin-bottom: 5px;
+        }
+        
+        .emblem-address {
+            color: #b0c4de;
+            font-size: 14px;
+            font-style: italic;
+        }
+        
+        .emblem-address .highlight {
+            color: #40e0d0;
+            font-weight: bold;
+        }
+        
+        /* 申请表标题 */
+        .form-title {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.3);
+        }
+        
+        .form-title h1 {
+            font-size: 28px;
+            color: #40e0d0;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        
+        .form-title p {
+            color: #b0c4de;
+            font-size: 16px;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* 部门简介 */
+        .department-intro {
+            background: rgba(20, 40, 70, 0.5);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid #40e0d0;
+        }
+        
+        .department-intro h3 {
+            color: #20b2aa;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .department-intro h3::before {
+            content: "✦";
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .department-intro p {
+            color: #b0c4de;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+        
+        .duties-list {
+            list-style-type: none;
+            margin-top: 15px;
+        }
+        
+        .duties-list li {
+            margin-bottom: 8px;
+            padding-left: 25px;
+            position: relative;
+            color: #87ceeb;
+        }
+        
+        .duties-list li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #1e90ff;
+        }
+        
+        /* 表单样式 */
+        .application-form {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+            margin-top: 20px;
+        }
+        
+        .form-section {
+            margin-bottom: 35px;
+        }
+        
+        .form-section-title {
+            font-size: 22px;
+            color: #40e0d0;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.3);
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .form-section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background-color: #1e90ff;
+        }
+        
+        .form-section-title i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        /* 表单组样式 */
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #87ceeb;
+            font-weight: bold;
+        }
+        
+        .required::after {
+            content: " *";
+            color: #ff6b6b;
+        }
+        
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: rgba(20, 40, 70, 0.7);
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            border-radius: 6px;
+            color: #e0e7ff;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: #40e0d0;
+            box-shadow: 0 0 0 2px rgba(64, 224, 208, 0.2);
+        }
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-hint {
+            font-size: 14px;
+            color: #87ceeb;
+            margin-top: 5px;
+            line-height: 1.5;
+        }
+        
+        .form-example {
+            background-color: rgba(30, 60, 90, 0.5);
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            border-left: 3px solid #1e90ff;
+        }
+        
+        .form-example p {
+            color: #b0c4de;
+            font-style: italic;
+            line-height: 1.6;
+        }
+        
+        /* 多字段行 */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        /* 生物特征部分 */
+        .bio-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .feature-checkbox {
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-checkbox input {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+        }
+        
+        .feature-checkbox label {
+            color: #b0c4de;
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-info-box {
+            background: rgba(20, 40, 70, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .info-title {
+            color: #20b2aa;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .info-title::before {
+            content: "✧";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .info-list {
+            list-style-type: none;
+        }
+        
+        .info-list li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.6;
+            color: #b0c4de;
+        }
+        
+        .info-list li::before {
+            content: "◆";
+            position: absolute;
+            left: 0;
+            color: #1e90ff;
+            font-size: 14px;
+        }
+        
+        .warning-box {
+            background: rgba(142, 68, 173, 0.1);
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+            margin-bottom: 30px;
+        }
+        
+        .warning-title {
+            color: #da70d6;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .warning-title::before {
+            content: "⚠";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+        
+        .warning-text {
+            line-height: 1.7;
+            color: #d8bfd8;
+            font-style: italic;
+        }
+        
+        /* 服务说明 */
+        .service-info {
+            background: rgba(30, 60, 90, 0.6);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .service-info h3 {
+            color: #87ceeb;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .service-info h3::before {
+            content: "⏱";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+        
+        .service-info p {
+            color: #b0c4de;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+        
+        /* 提交按钮 */
+        .submit-section {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(64, 224, 208, 0.3);
+        }
+        
+        .submit-button {
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(30, 144, 255, 0.3);
+            letter-spacing: 1px;
+        }
+        
+        .submit-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 144, 255, 0.5);
+        }
+        
+        .submit-button:active {
+            transform: translateY(0);
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #708090;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(112, 128, 144, 0.3);
+        }
+        
+        .footer a {
+            color: #87ceeb;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 自定义弹窗样式 */
+        .custom-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .custom-modal-content {
+            background: linear-gradient(135deg, rgba(10, 25, 47, 0.95) 0%, rgba(20, 40, 70, 0.95) 100%);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            position: relative;
+            animation: slideIn 0.4s ease;
+        }
+        
+        .custom-modal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .custom-modal-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+        }
+        
+        .success-icon {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+        
+        .warning-icon {
+            background: linear-gradient(135deg, #ff9800, #ff8a00);
+            color: white;
+        }
+        
+        .info-icon {
+            background: linear-gradient(135deg, #2196F3, #1e90ff);
+            color: white;
+        }
+        
+        .custom-modal-title {
+            font-size: 22px;
+            color: #40e0d0;
+            font-weight: bold;
+        }
+        
+        .custom-modal-body {
+            color: #b0c4de;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+        
+        .app-id {
+            background: rgba(30, 144, 255, 0.15);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 18px;
+            color: #40e0d0;
+            text-align: center;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            letter-spacing: 1px;
+        }
+        
+        .custom-modal-footer {
+            text-align: right;
+        }
+        
+        .modal-btn {
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(30, 144, 255, 0.3);
+        }
+        
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(30, 144, 255, 0.5);
+        }
+        
+        .modal-btn:active {
+            transform: translateY(0);
+        }
+        
+        .modal-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #87ceeb;
+            font-size: 24px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        
+        .modal-close-btn:hover {
+            background-color: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+        }
+        
+        /* 登录表单样式 */
+        .login-form {
+            margin: 20px 0;
+        }
+        
+        .login-form .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .login-form .form-label {
+            color: #87ceeb;
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .login-form .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: rgba(20, 40, 70, 0.7);
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            border-radius: 6px;
+            color: #e0e7ff;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .login-form .form-input:focus {
+            outline: none;
+            border-color: #40e0d0;
+            box-shadow: 0 0 0 2px rgba(64, 224, 208, 0.2);
+        }
+        
+        .login-hint {
+            font-size: 13px;
+            color: #87ceeb;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        /* 历史记录表格样式 */
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: block;
+        }
+        
+        .history-table th {
+            background: rgba(30, 144, 255, 0.2);
+            color: #40e0d0;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+            border-bottom: 2px solid rgba(64, 224, 208, 0.3);
+            position: sticky;
+            top: 0;
+        }
+        
+        .history-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.2);
+            color: #b0c4de;
+        }
+        
+        .history-table tr:hover {
+            background-color: rgba(64, 224, 208, 0.1);
+        }
+        
+        .status-approved {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .status-pending {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        
+        .status-rejected {
+            color: #ff5252;
+            font-weight: bold;
+        }
+        /* 返回按钮 */
+        .back-button {
+            display: inline-block;
+            background: rgba(20, 40, 70, 0.7);
+            color: #87ceeb;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .back-button:hover {
+            background: rgba(64, 224, 208, 0.1);
+            border-color: #40e0d0;
+            transform: translateY(-3px);
+        }
+        
+        
+        /* 弹窗动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .application-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            
+            .custom-modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+            
+            .history-table {
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .form-title h1 {
+                font-size: 24px;
+            }
+            
+            .form-section-title {
+                font-size: 20px;
+            }
+            
+            .bio-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .custom-modal-content {
+                padding: 15px;
+            }
+            
+            .custom-modal-title {
+                font-size: 20px;
+            }
+            
+            .history-table {
+                font-size: 12px;
+            }
+            
+            .history-table th, .history-table td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+    <link rel="icon" type="image/png" href="./xjthj.png">
+</head>
+<body>
+    <!-- 自定义弹窗容器 -->
+    <div id="customModal" class="custom-modal">
+        <div class="custom-modal-content">
+            <button class="modal-close-btn" id="modalCloseBtn">&times;</button>
+            <div class="custom-modal-header">
+                <div class="custom-modal-icon" id="modalIcon">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="custom-modal-title" id="modalTitle">提示</div>
+            </div>
+            <div class="custom-modal-body" id="modalBody">
+                这里是弹窗内容
+            </div>
+            <div class="custom-modal-footer">
+                <button class="modal-btn" id="modalConfirmBtn">确定</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- 局徽 -->
+        <div class="emblem">
+            <div class="emblem-logo">
+                <!-- 使用 xjthj.png 作为logo -->
+                <img src="./xjthj.png" alt="墟境调和局徽标" 
+                     onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\'width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#40e0d0;font-weight:bold;font-size:16px;text-align:center;line-height:1.3\'>墟境<br>调和局</div>'">
+            </div>
+            <div class="emblem-text">墟境调和局·华苑分局</div>
+            <div class="emblem-subtext">XUJING HARMONY BUREAU · HUAYUAN BRANCH</div>
+            <div class="emblem-address">办公地点：<span class="highlight">栖乔华苑7栋401</span></div>
+        </div>
+        
+        <!-- 部门简介 -->
+        <div class="department-intro">
+            <h3>部门简介</h3>
+            <p>我们是华苑社区隐态秩序的维护者，负责调和"日常"与"异常"之间的界限。</p>
+            
+            <h4 style="color: #87ceeb; margin-top: 15px;">主要职责：</h4>
+            <ul class="duties-list">
+                <li><strong>屏障"栖界无尘"运维：</strong>覆盖全社区的灵态屏障，可自动驱逐蟑螂群、伪人及恶意入侵者，维持基础环境安宁。</li>
+                <li><strong>异常事件管理：</strong>对鬼怪、异变现象等进行登记、沟通或无害化处理，确保社区隐态平衡。</li>
+            </ul>
+        </div>
+        
+        <!-- 申请表标题 -->
+        <div class="form-title">
+            <h1>栖居权锚定申请表</h1>
+            <p>根据《华苑社区异常管理条例》规定，如您因饲养宠物（如蜘蛛）需要保留特定生物作为饵料，可向我局申请【栖居权锚定】服务。我们将对指定个体注射微剂量定位调和剂，使其被"栖界无尘"屏障识别为"家庭特许成员"，避免被自动驱逐。</p>
+        </div>
+        
+        <!-- 申请表主体 -->
+        <form id="anchoringForm" class="application-form">
+            <!-- 左侧表单区域 -->
+            <div class="form-main">
+                <!-- 申请人信息 -->
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="fas fa-user-circle"></i> 申请人信息
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="ownerName">申请人全名</label>
+                            <input type="text" id="ownerName" class="form-input" placeholder="请输入您的全名" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required" for="residentID">社区居民ID</label>
+                            <input type="text" id="residentID" class="form-input" placeholder="例：HY-7F3A9B2" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="contactCode">联络方式</label>
+                            <input type="text" id="contactCode" class="form-input" placeholder="手机号码或社区通讯码" required>
+                            <div class="form-hint">用于接收审批结果及服务通知</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required" for="address">住址</label>
+                            <input type="text" id="address" class="form-input" placeholder="例：栖乔华苑X栋XXX室" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required" for="relationship">与申请对象关系</label>
+                        <select id="relationship" class="form-select" required>
+                            <option value="">请选择关系类型</option>
+                            <option value="petOwner">宠物饲主</option>
+                            <option value="caretaker">照料者</option>
+                            <option value="familyMember">家庭成员</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- 需保护生物信息 -->
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="fas fa-dna"></i> 需保护生物信息
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required" for="speciesName">生物种类名称</label>
+                        <input type="text" id="speciesName" class="form-input" placeholder="请输入生物种类名称" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="groupCode">群体编号/名称</label>
+                            <input type="text" id="groupCode" class="form-input" placeholder="例：GDZL/双马尾" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required" for="individualRange">个体编号/描述</label>
+                            <input type="text" id="individualRange" class="form-input" placeholder="例：ZL-114 或 LS-134 或 YCC-31" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">需保护的关键特征（可选）</label>
+                        <div class="bio-features">
+                            <div class="feature-checkbox">
+                                <input type="checkbox" id="feature1" name="bioFeatures">
+                                <label for="feature1">形态稳定性</label>
+                            </div>
+                            <div class="feature-checkbox">
+                                <input type="checkbox" id="feature2" name="bioFeatures">
+                                <label for="feature2">生命周期连续性</label>
+                            </div>
+                            <div class="feature-checkbox">
+                                <input type="checkbox" id="feature3" name="bioFeatures">
+                                <label for="feature3">行为模式稳定性</label>
+                            </div>
+                            <div class="feature-checkbox">
+                                <input type="checkbox" id="feature4" name="bioFeatures">
+                                <label for="feature4">生态位维持</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="specialFeatures">生物特殊描述</label>
+                        <textarea id="specialFeatures" class="form-textarea" placeholder="请描述该生物的特殊习性、外观特征或生态作用..."></textarea>
+                    </div>
+                    
+                    <div class="form-example">
+                        <p><strong>示例填写：</strong>为"双马尾"（群体名称，个体编号ZL-114到ZL-134）申请锚定。需保护特征包括：形态稳定性、生命周期连续性。该群体具有独特的繁殖周期，对维护花园生态平衡有重要作用。</p>
+                    </div>
+                </div>
+                
+                <!-- 申请理由 -->
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="fas fa-file-alt"></i> 申请理由
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required" for="anchoringReason">锚定必要性说明</label>
+                        <textarea id="anchoringReason" class="form-textarea" placeholder="请详细说明为何需要为该生物申请栖居权锚定..." required></textarea>
+                        <div class="form-hint">请包括：1) 该生物对您饲养宠物的必要性 2) 该生物的生态作用 3) 如不锚定可能面临的后果</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="petInfo">宠物信息（如需作为饵料）</label>
+                        <textarea id="petInfo" class="form-textarea" placeholder="请描述您饲养的宠物种类、数量及喂养需求..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="additionalInfo">补充信息</label>
+                        <textarea id="additionalInfo" class="form-textarea" placeholder="其他需要说明的信息..."></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧侧边栏 -->
+            <div class="sidebar">
+                <!-- 服务说明 -->
+                <div class="service-info">
+                    <h3>服务说明</h3>
+                    <p><strong>栖居权锚定服务：</strong>对指定个体注射微剂量定位调和剂，使其被"栖界无尘"屏障识别为"家庭特许成员"，避免被自动驱逐。</p>
+                    <p><strong>流程特点：</strong></p>
+                    <ul class="info-list">
+                        <li>流程快速安全，耗时约3分钟</li>
+                        <li>支持现场办理，立等可取</li>
+                        <li>调和剂对生物无害，仅改变屏障识别信号</li>
+                        <li>锚定有效期为一年，到期可续</li>
+                    </ul>
+                </div>
+                
+                <!-- 申请须知 -->
+                <div class="form-info-box">
+                    <div class="info-title">申请须知</div>
+                    <ul class="info-list">
+                        <li>本申请表用于申请特定生物的栖居权锚定</li>
+                        <li>所有标记*的字段为必填项</li>
+                        <li>申请审批周期通常为1-3个工作日</li>
+                        <li>锚定成功后，您将收到锚定确认凭证</li>
+                        <li>屏障规则不可关闭，但住户合理的生态需求，我们会尽力调和</li>
+                        <li>锚定有效期为一年，到期前一个月可申请续期</li>
+                    </ul>
+                </div>
+                
+                <!-- 重要警告 -->
+                <div class="warning-box">
+                    <div class="warning-title">重要警告</div>
+                    <div class="warning-text">
+                        <p>锚定过程涉及屏障识别调整，不当申请可能导致：</p>
+                        <p>1. 屏障识别混乱<br>
+                        2. 生态平衡扰动<br>
+                        3. 社区安全风险<br>
+                        4. 个人信誉损失</p>
+                        <p>请确保所填信息准确无误，虚假申请将面临社区管理条例的处罚。</p>
+                    </div>
+                </div>
+                
+                <!-- 法律条款 -->
+                <div class="form-info-box">
+                    <div class="info-title">条款确认</div>
+                    <div class="form-group">
+                        <div class="feature-checkbox">
+                            <input type="checkbox" id="terms1" required>
+                            <label for="terms1">我了解并同意遵守《华苑社区异常管理条例》</label>
+                        </div>
+                        <div class="feature-checkbox">
+                            <input type="checkbox" id="terms2" required>
+                            <label for="terms2">我确认所提供信息真实准确，无虚假陈述</label>
+                        </div>
+                        <div class="feature-checkbox">
+                            <input type="checkbox" id="terms3" required>
+                            <label for="terms3">我了解锚定服务仅改变屏障识别，不影响生物本身</label>
+                        </div>
+                        <div class="feature-checkbox">
+                            <input type="checkbox" id="terms4" required>
+                            <label for="terms4">我同意承担因锚定生物可能引发的相关责任</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 提交按钮 -->
+            <div class="submit-section">
+                <button type="submit" class="submit-button">
+                    <i class="fas fa-paper-plane"></i> 提交栖居权锚定申请
+                </button>
+                <p class="form-hint" style="margin-top: 15px;">提交后您将收到申请确认编码，请妥善保存。审批通过后请携带凭证至7栋401办理锚定手续。</p>
+            </div>
+        </form>
+       
+       <div style="display: grid; place-items: center; width: 100%;">
+    <a href="SY.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> 返回墟境调和局首页
+    </a>
+</div>
+
+
+        
+        
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>墟境调和局·华苑分局 © 2025 | 办公地点：栖乔华苑7栋401 | 服务时间：工作日 9:00-17:00</p>
+            <p>
+                <a href="#">隐私政策</a> | 
+                <a href="#">社区管理条例</a> | 
+                <a href="#">服务条款</a> | 
+                <a href="#">紧急联络：华苑社区管理处转墟境调和局</a>
+            </p>
+        </div>
+    </div>
+    
+   <script>
+        // 自定义弹窗功能
+        const customModal = document.getElementById('customModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const modalIcon = document.getElementById('modalIcon');
+        const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+        const modalCloseBtn = document.getElementById('modalCloseBtn');
+        
+        // 默认登录凭据（用户看到的）
+        const DEFAULT_DISPLAY_USERNAME = 'intern';
+        const DEFAULT_DISPLAY_PASSWORD = '12345';
+
+        // 实际验证的登录凭据（只有这个能登录）
+        const ACTUAL_USERNAME = 'Li_xingmang';
+        const ACTUAL_PASSWORD = 'ganmangcao';
+        
+        // 模拟历史记录数据
+        const mockHistoryData = [
+            { id: 'HY-CW-78349215', name: '林星辰', species: '双马尾', date: '2025-12-15', status: 'approved' },
+            { id: 'HY-CW-65218734', name: '张明', species: '花园蜘蛛', date: '2025-12-12', status: 'pending' },
+            { id: 'HY-CW-93145827', name: '王丽', species: '荧光蟋蟀', date: '2025-12-05', status: 'approved' },
+            { id: 'HY-CW-27469513', name: '麦姝冰', species: '夜光蝶', date: '2025-09-28', status: 'rejected' },
+            { id: 'HY-CW-58631247', name: '刘洋', species: '水晶蜗牛', date: '2025-09-20', status: 'approved' },
+            { id: 'HY-CW-41987635', name: '崔梓萱', species: '彩虹蜻蜓', date: '2025-09-15', status: 'pending' },
+            { id: 'HY-CW-73254918', name: '陈知意', species: '月光萤火虫', date: '2025-09-10', status: 'approved' },
+            { id: 'HY-CW-16583742', name: '周婷', species: '星尘甲虫', date: '2025-09-05', status: 'rejected' }
+        ];
+        
+        // 显示弹窗函数
+        function showModal(type, title, message, customContent = null) {
+            // 设置图标
+            modalIcon.className = 'custom-modal-icon';
+            let iconClass = '';
+            let iconHtml = '';
+            
+            switch(type) {
+                case 'success':
+                    iconClass = 'success-icon';
+                    iconHtml = '<i class="fas fa-check-circle"></i>';
+                    break;
+                case 'warning':
+                    iconClass = 'warning-icon';
+                    iconHtml = '<i class="fas fa-exclamation-triangle"></i>';
+                    break;
+                case 'info':
+                default:
+                    iconClass = 'info-icon';
+                    iconHtml = '<i class="fas fa-info-circle"></i>';
+                    break;
+            }
+            
+            modalIcon.className = `custom-modal-icon ${iconClass}`;
+            modalIcon.innerHTML = iconHtml;
+            
+            // 设置标题和内容
+            modalTitle.textContent = title;
+            
+            let bodyContent = message;
+            if (customContent) {
+                bodyContent = customContent;
+            }
+            
+            modalBody.innerHTML = bodyContent;
+            
+            // 显示弹窗
+            customModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // 关闭弹窗函数
+        function closeModal() {
+            customModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // 弹窗按钮事件
+        modalConfirmBtn.addEventListener('click', closeModal);
+        modalCloseBtn.addEventListener('click', closeModal);
+        
+        // 点击弹窗背景关闭
+        customModal.addEventListener('click', function(e) {
+            if (e.target === customModal) {
+                closeModal();
+            }
+        });
+        
+        // 显示登录表单
+        function showLoginForm() {
+            const loginFormHTML = `
+                <div class="login-form">
+                    <p>请输入后台账户及其密码以查看历史记录：</p>
+                    <div class="form-group">
+                        <label class="form-label">用户名</label>
+                        <input type="text" id="loginUsername" class="form-input" placeholder="请输入用户名" value="${DEFAULT_DISPLAY_USERNAME}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">密码</label>
+                        <input type="password" id="loginPassword" class="form-input" placeholder="请输入密码" value="${DEFAULT_DISPLAY_PASSWORD}">
+                    </div>
+                    <p class="login-hint">默认账户:intern, 默认密码: ${DEFAULT_DISPLAY_PASSWORD}</p>
+                </div>
+            `;
+            
+            // 修改确认按钮为登录
+            modalConfirmBtn.textContent = '登录';
+            
+            // 显示登录表单
+            showModal('info', '管理员登录', loginFormHTML);
+            
+            // 设置登录验证
+            modalConfirmBtn.onclick = function() {
+                const username = document.getElementById('loginUsername').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                // 只验证实际的账户密码
+                if (username === ACTUAL_USERNAME && password === ACTUAL_PASSWORD) {
+                    // 登录成功，显示历史记录
+                    showHistoryRecords();
+                } else {
+                    // 登录失败
+                    showModal('warning', '登录失败', '用户名或密码错误，请重试！<br>提示：请输入正确的账户名及其密码，账户名格式示例：Wang_xiaoli');
+                    // 重新设置登录按钮事件
+                    modalConfirmBtn.onclick = function() {
+                        const username = document.getElementById('loginUsername').value;
+                        const password = document.getElementById('loginPassword').value;
+                        
+                        if (username === ACTUAL_USERNAME && password === ACTUAL_PASSWORD) {
+                            showHistoryRecords();
+                        } else {
+                            showModal('warning', '登录失败', '用户名或密码错误，请重试！<br>提示：请输入实习生李星芒的正确密码。');
+                        }
+                    };
+                }
+            };
+        }
+        
+        // 显示历史记录
+        function showHistoryRecords() {
+            // 生成历史记录表格
+            let historyHTML = `
+                <h3 style="color: #40e0d0; margin-bottom: 15px;">申请历史记录</h3>
+                <p>共 ${mockHistoryData.length} 条记录</p>
+                <div style="max-height: 350px; overflow-y: auto; margin-top: 15px;">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>申请编号</th>
+                                <th>申请人</th>
+                                <th>生物种类</th>
+                                <th>申请日期</th>
+                                <th>状态</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            mockHistoryData.forEach(record => {
+                let statusClass = '';
+                let statusText = '';
+                
+                switch(record.status) {
+                    case 'approved':
+                        statusClass = 'status-approved';
+                        statusText = '已批准';
+                        break;
+                    case 'pending':
+                        statusClass = 'status-pending';
+                        statusText = '审核中';
+                        break;
+                    case 'rejected':
+                        statusClass = 'status-rejected';
+                        statusText = '已驳回';
+                        break;
+                }
+                
+                historyHTML += `
+                    <tr>
+                        <td>${record.id}</td>
+                        <td>${record.name}</td>
+                        <td>${record.species}</td>
+                        <td>${record.date}</td>
+                        <td class="${statusClass}">${statusText}</td>
+                    </tr>
+                `;
+            });
+            
+            historyHTML += `
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin-top: 20px; font-size: 13px; color: #87ceeb;">
+                    <p><i class="fas fa-info-circle"></i> 预计2025.12.19晚开展巡查行动，其目的为确认锚定生物稳定性</p>
+                </div>
+            `;
+            
+            // 修改确认按钮为关闭
+            modalConfirmBtn.textContent = '关闭';
+            modalConfirmBtn.onclick = closeModal;
+            
+            // 显示历史记录
+            showModal('info', '申请历史记录', historyHTML);
+        }
+        
+        // 表单提交处理
+        document.getElementById('anchoringForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 简单验证
+            const requiredFields = document.querySelectorAll('[required]');
+            let valid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    valid = false;
+                    field.style.borderColor = '#ff6b6b';
+                } else {
+                    field.style.borderColor = '';
+                }
+            });
+            
+            // 验证条款同意
+            const terms = document.querySelectorAll('.feature-checkbox input[type="checkbox"][required]');
+            terms.forEach(term => {
+                if (!term.checked) {
+                    valid = false;
+                    term.parentElement.style.color = '#ff6b6b';
+                } else {
+                    term.parentElement.style.color = '';
+                }
+            });
+            
+            if (valid) {
+                // 模拟提交成功
+                const submitBtn = document.querySelector('.submit-button');
+                const originalText = submitBtn.innerHTML;
+                
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 申请提交中...';
+                submitBtn.disabled = true;
+                
+                // 模拟服务器处理
+                setTimeout(() => {
+                    submitBtn.innerHTML = '<i class="fas fa-check"></i> 申请提交成功！';
+                    submitBtn.style.background = 'linear-gradient(90deg, #4CAF50, #45a049)';
+                    
+                    // 生成申请编号
+                    const appId = 'HY-APP-' + Date.now().toString().slice(-8);
+                    
+                    // 显示成功弹窗
+                    showModal(
+                        'success',
+                        '申请提交成功！',
+                        '栖居权锚定申请已成功提交至墟境调和局·华苑分局。',
+                        `<p>栖居权锚定申请已成功提交至墟境调和局·华苑分局。</p>
+                         <div class="app-id">${appId}</div>
+                         <p>请妥善保存此编号，用于查询申请状态。审批通过后请携带此编号及有效证件至栖乔华苑7栋401办理锚定手续。</p>`
+                    );
+                    
+                    // 重置表单
+                    setTimeout(() => {
+                        document.getElementById('anchoringForm').reset();
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                        submitBtn.style.background = '';
+                    }, 5000); // 5秒后自动重置
+                }, 2000);
+            } else {
+                // 显示错误弹窗
+                showModal(
+                    'warning',
+                    '表单验证失败',
+                    '请填写所有必填字段并同意相关条款！<br>请检查表单中标记为红色的字段。'
+                );
+            }
+        });
+        
+        // 输入框焦点效果
+        const formInputs = document.querySelectorAll('.form-input, .form-textarea, .form-select');
+        formInputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = '';
+            });
+        });
+        
+        // 查看历史记录按钮
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加查看历史记录按钮
+            const historyBtn = document.createElement('button');
+            historyBtn.innerHTML = '<i class="fas fa-history"></i> 查看历史记录';
+            historyBtn.style.position = 'fixed';
+            historyBtn.style.bottom = '20px';
+            historyBtn.style.right = '20px';
+            historyBtn.style.background = 'linear-gradient(90deg, #8e44ad, #9b59b6)';
+            historyBtn.style.color = '#fff';
+            historyBtn.style.border = 'none';
+            historyBtn.style.padding = '12px 18px';
+            historyBtn.style.borderRadius = '8px';
+            historyBtn.style.fontWeight = 'bold';
+            historyBtn.style.cursor = 'pointer';
+            historyBtn.style.zIndex = '1000';
+            historyBtn.style.boxShadow = '0 4px 15px rgba(142, 68, 173, 0.4)';
+            historyBtn.style.display = 'flex';
+            historyBtn.style.alignItems = 'center';
+            historyBtn.style.gap = '8px';
+            historyBtn.style.transition = 'all 0.3s';
+            
+            historyBtn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px)';
+                this.style.boxShadow = '0 6px 20px rgba(142, 68, 173, 0.6)';
+            });
+            
+            historyBtn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0 4px 15px rgba(142, 68, 173, 0.4)';
+            });
+            
+            historyBtn.addEventListener('click', showLoginForm);
+            
+            document.body.appendChild(historyBtn);
+        });
+    </script>
+<script src="jinzhi.js"></script>
+</body>
+</html>

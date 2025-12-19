@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拟态发声系统 - 信息交互平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景特效 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(41, 128, 185, 0.1) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(142, 68, 173, 0.08) 0px, transparent 50%);
+            z-index: -2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(10, 25, 47, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 顶部装饰线 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #20b2aa, #1e90ff);
+        }
+        
+        /* 局徽样式 - 更新为圆形图片 */
+        .emblem {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .emblem-symbol {
+            display: inline-block;
+            width: 140px;
+            height: 140px;
+            position: relative;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(64, 224, 208, 0.3);
+            box-shadow: 
+                0 0 20px rgba(64, 224, 208, 0.3),
+                inset 0 0 20px rgba(10, 25, 47, 0.5);
+            animation: pulse 4s infinite alternate;
+            background-color: rgba(178, 217, 246, 0.956);
+        }
+        
+        /* logo图片容器 */
+        .emblem-symbol .logo-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://via.placeholder.com/140x140/1a3a5f/40e0d0?text=LOGO');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        
+        /* 圆形遮罩，确保图片显示为完美圆形 */
+        .emblem-symbol::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 2px rgba(64, 224, 208, 0.2);
+            z-index: 2;
+        }
+        
+        /* 圆形边框特效 */
+        .emblem-symbol::after {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #40e0d0, #1e90ff, #40e0d0);
+            z-index: -1;
+            opacity: 0.5;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes pulse {
+            0% { 
+                box-shadow: 
+                    0 0 20px rgba(64, 224, 208, 0.3),
+                    inset 0 0 20px rgba(10, 25, 47, 0.5);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 30px rgba(64, 224, 208, 0.5),
+                    inset 0 0 20px rgba(10, 25, 47, 0.7);
+            }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .emblem-text {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+        }
+        
+        .emblem-subtext {
+            color: #87ceeb;
+            font-size: 14px;
+            letter-spacing: 8px;
+        }
+        
+        /* 内容区域 */
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+            margin-top: 20px;
+        }
+        
+        .main-content {
+            padding-right: 20px;
+            border-right: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        /* 部门简介 */
+        .section {
+            margin-bottom: 35px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            color: #40e0d0;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.3);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background-color: #1e90ff;
+        }
+        
+        .intro-text {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #b0c4de;
+        }
+        
+        .duties {
+            list-style-type: none;
+            margin-left: 20px;
+        }
+        
+        .duties li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.6;
+        }
+        
+        .duties li::before {
+            content: "◆";
+            position: absolute;
+            left: 0;
+            color: #1e90ff;
+            font-size: 14px;
+        }
+        
+        .highlight {
+            color: #40e0d0;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(64, 224, 208, 0.5);
+        }
+        
+        .highlight:hover {
+            color: #1e90ff;
+            text-shadow: 0 0 8px rgba(30, 144, 255, 0.5);
+            border-bottom-style: solid;
+        }
+        
+        /* 新增悬停效果样式 */
+        .building-display {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        
+        .building-normal {
+            display: inline;
+        }
+        
+        .building-hover {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: rgba(10, 25, 47, 0.95);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            white-space: nowrap;
+            z-index: 100;
+            animation: fadeIn 0.3s;
+        }
+        
+        .building-display:hover .building-normal {
+            opacity: 0;
+        }
+        
+        .building-display:hover .building-hover {
+            display: inline;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .service-box {
+            background: rgba(20, 40, 70, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .service-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: rgba(64, 224, 208, 0.4);
+        }
+        
+        .service-title {
+            color: #20b2aa;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .service-title::before {
+            content: "✧";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .service-link {
+            display: inline-block;
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(30, 144, 255, 0.3);
+        }
+        
+        .service-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(30, 144, 255, 0.5);
+        }
+        
+        .notice-box {
+            background: rgba(142, 68, 173, 0.1);
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+        }
+        
+        .notice-title {
+            color: #da70d6;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .notice-title::before {
+            content: "⚠";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+        
+        .notice-text {
+            line-height: 1.7;
+            color: #d8bfd8;
+            font-style: italic;
+        }
+        
+        /* 公告栏 */
+        .bulletin-board {
+            background: rgba(30, 60, 90, 0.6);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .bulletin-title {
+            color: #87ceeb;
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .bulletin-title::before {
+            content: "📋";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+        
+        .bulletin-list {
+            list-style-type: none;
+        }
+        
+        .bulletin-item {
+            padding: 15px;
+            border-bottom: 1px solid rgba(135, 206, 235, 0.2);
+            transition: background-color 0.3s;
+        }
+        
+        .bulletin-item:hover {
+            background-color: rgba(64, 224, 208, 0.1);
+        }
+        
+        .bulletin-item:last-child {
+            border-bottom: none;
+        }
+        
+        .bulletin-date {
+            color: #20b2aa;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .bulletin-content {
+            color: #b0c4de;
+            line-height: 1.5;
+        }
+        
+        .bulletin-link {
+            color: #87ceeb;
+            cursor: pointer;
+            transition: color 0.3s;
+            border-bottom: 1px dotted #87ceeb;
+        }
+        
+        .bulletin-link:hover {
+            color: #40e0d0;
+            border-bottom-style: solid;
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #708090;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(112, 128, 144, 0.3);
+        }
+        
+        .footer a {
+            color: #87ceeb;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding-right: 0;
+                border-right: none;
+                border-bottom: 1px solid rgba(64, 224, 208, 0.2);
+                padding-bottom: 30px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .emblem-text {
+                font-size: 20px;
+            }
+            
+            .emblem-symbol {
+                width: 110px;
+                height: 110px;
+            }
+            
+            .section-title {
+                font-size: 20px;
+            }
+            
+            .building-hover {
+                font-size: 14px;
+                white-space: normal;
+                min-width: 100px;
+            }
+        }
+        
+        /* 自定义弹窗样式 */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
+        .custom-modal {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            border-radius: 15px;
+            border: 2px solid rgba(64, 224, 208, 0.3);
+            box-shadow: 0 0 40px rgba(30, 144, 255, 0.5);
+            width: 90%;
+            max-width: 500px;
+            overflow: hidden;
+            transform: translateY(-30px);
+            animation: slideIn 0.4s forwards;
+        }
+        
+        @keyframes slideIn {
+            to { transform: translateY(0); }
+        }
+        
+        .modal-header {
+            background: linear-gradient(90deg, #1a3a5f, #0c1a2d);
+            padding: 20px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.3);
+            position: relative;
+        }
+        
+        .modal-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+        }
+        
+        .modal-title {
+            color: #40e0d0;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .modal-title::before {
+            content: "✧";
+            font-size: 24px;
+        }
+        
+        .modal-body {
+            padding: 30px;
+        }
+        
+        .modal-text {
+            color: #b0c4de;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        .modal-input {
+            width: 100%;
+            padding: 15px;
+            background-color: rgba(20, 40, 70, 0.7);
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            border-radius: 8px;
+            color: #e0e7ff;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: border-color 0.3s;
+        }
+        
+        .modal-input:focus {
+            outline: none;
+            border-color: #40e0d0;
+            box-shadow: 0 0 10px rgba(64, 224, 208, 0.3);
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .modal-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .modal-btn-primary {
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+        }
+        
+        .modal-btn-primary:hover {
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            box-shadow: 0 0 15px rgba(64, 224, 208, 0.5);
+        }
+        
+        .modal-btn-secondary {
+            background: rgba(112, 128, 144, 0.3);
+            color: #b0c4de;
+            border: 1px solid rgba(112, 128, 144, 0.5);
+        }
+        
+        .modal-btn-secondary:hover {
+            background: rgba(112, 128, 144, 0.5);
+            border-color: #708090;
+        }
+        
+        .modal-btn-error {
+            background: linear-gradient(90deg, #ff416c, #ff4b2b);
+            color: white;
+        }
+        
+        .modal-btn-error:hover {
+            background: linear-gradient(90deg, #ff4b2b, #ff416c);
+            box-shadow: 0 0 15px rgba(255, 75, 43, 0.5);
+        }
+        
+        .modal-error {
+            color: #ff6b6b;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .modal-success {
+            color: #40e0d0;
+            font-size: 24px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        /* 错误消息样式 */
+        .error-message {
+            color: #ff6b6b;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            background-color: rgba(255, 107, 107, 0.1);
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        /* 成功消息样式 */
+        .success-message {
+            color: #40e0d0;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            background-color: rgba(64, 224, 208, 0.1);
+            border-radius: 8px;
+            margin-top: 15px;
+            animation: pulseSuccess 2s infinite;
+        }
+        
+        @keyframes pulseSuccess {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        /* 关闭按钮 */
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #40e0d0;
+            font-size: 24px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .modal-close:hover {
+            background-color: rgba(64, 224, 208, 0.1);
+            transform: rotate(90deg);
+        }
+        
+        /* 发声系统样式 */
+        .voice-controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .voice-btn {
+            padding: 10px 20px;
+            border: 1px solid rgba(64, 224, 208, 0.5);
+            background: rgba(20, 40, 70, 0.7);
+            color: #40e0d0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .voice-btn:hover {
+            background: rgba(64, 224, 208, 0.2);
+            box-shadow: 0 0 10px rgba(64, 224, 208, 0.3);
+        }
+        
+        .voice-btn.active {
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            border-color: transparent;
+        }
+        
+        .voice-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ff416c;
+            margin-right: 5px;
+            animation: pulseIndicator 1.5s infinite;
+        }
+        
+        @keyframes pulseIndicator {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        .voice-waveform {
+            width: 100%;
+            height: 80px;
+            background-color: rgba(10, 25, 47, 0.7);
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .wave-bar {
+            position: absolute;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to top, #40e0d0, #1e90ff);
+            border-radius: 2px 2px 0 0;
+            transition: height 0.1s ease;
+        }
+        
+        /* 文本内容区域 */
+        .text-content {
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 15px;
+            background-color: rgba(10, 25, 47, 0.5);
+            border-radius: 8px;
+            border: 1px solid rgba(64, 224, 208, 0.1);
+            margin-top: 15px;
+            line-height: 1.6;
+        }
+        
+        .text-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .text-content::-webkit-scrollbar-track {
+            background: rgba(10, 25, 47, 0.3);
+            border-radius: 3px;
+        }
+        
+        .text-content::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #40e0d0, #1e90ff);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部局徽区域 -->
+        <div class="emblem">
+            <div class="emblem-symbol">
+                <div class="logo-img"></div>
+            </div>
+            <div class="emblem-text">拟态发声系统</div>
+            <div class="emblem-subtext">INFORMATION INTERFACE</div>
+        </div>
+        
+        <!-- 主要内容区域 -->
+        <div class="content">
+            <div class="main-content">
+                <!-- 部门简介 -->
+                <div class="section">
+                    <h2 class="section-title">系统简介</h2>
+                    <p class="intro-text">
+                        拟态发声系统是一个创新的信息交互平台，采用先进的
+                        <span class="highlight" id="voiceTech">语音合成技术</span>
+                        和
+                        <span class="building-display">
+                            <span class="building-normal">拟态交互设计</span>
+                            <span class="building-hover">基于仿生学的用户界面设计</span>
+                        </span>
+                        ，旨在为用户提供高效、自然的信息传递与接收体验。系统整合了多模态交互、智能语义分析和实时数据处理等前沿技术。
+                    </p>
+                    <p class="intro-text">
+                        本系统支持
+                        <span class="highlight" id="textToSpeech">文本转语音</span>
+                        、
+                        <span class="highlight" id="voiceControl">语音控制</span>
+                        和
+                        <span class="highlight" id="interactiveMode">交互模式</span>
+                        等多种功能，可广泛应用于信息发布、教育培训、辅助阅读等领域，特别适合需要高效信息传达的场景。
+                    </p>
+                </div>
+                
+                <!-- 功能特点 -->
+                <div class="section">
+                    <h2 class="section-title">核心功能</h2>
+                    <ul class="duties">
+                        <li><strong>文本转语音：</strong>将任意文本内容转换为自然流畅的语音输出，支持多种音色和语速调节。</li>
+                        <li><strong>语音控制：</strong>通过语音指令控制系统功能，实现无需手动操作的交互体验。</li>
+                        <li><strong>交互模式：</strong>支持对话式交互，系统能够理解上下文并作出智能回应。</li>
+                        <li><strong>多语言支持：</strong>内置多种语言和方言模型，满足不同用户群体的需求。</li>
+                        <li><strong>可定制化：</strong>系统界面和功能可根据使用场景进行个性化定制。</li>
+                    </ul>
+                </div>
+                
+                <!-- 发声系统控制 -->
+                <div class="section">
+                    <h2 class="section-title">发声控制台</h2>
+                    <div class="intro-text">
+                        <p>使用下方控制台体验拟态发声系统的核心功能：</p>
+                    </div>
+                    
+                    <!-- 语音控制按钮 -->
+                    <div class="voice-controls">
+                        <button class="voice-btn" id="startVoice">
+                            <span class="voice-indicator"></span>
+                            启动发声
+                        </button>
+                        <button class="voice-btn" id="pauseVoice" disabled>
+                            ⏸️ 暂停
+                        </button>
+                        <button class="voice-btn" id="resumeVoice" disabled>
+                            ▶️ 继续
+                        </button>
+                        <button class="voice-btn" id="stopVoice" disabled>
+                            ⏹️ 停止
+                        </button>
+                        <button class="voice-btn" id="changeVoice">
+                            🔊 切换音色
+                        </button>
+                        <button class="voice-btn" id="speedUp">
+                            ⏩ 加速
+                        </button>
+                        <button class="voice-btn" id="speedDown">
+                            ⏪ 减速
+                        </button>
+                    </div>
+                    
+                    <!-- 语音波形显示 -->
+                    <div class="voice-waveform" id="voiceWaveform">
+                        <!-- 动态波形条将由JavaScript生成 -->
+                    </div>
+                    
+                    <!-- 文本内容区域 -->
+                    <div class="text-content" id="voiceContent">
+                        <p>欢迎使用拟态发声系统！这是一个模拟的语音合成演示界面。</p>
+                        <p>系统当前状态：<strong id="systemStatus">待机中</strong></p>
+                        <p>音色设置：<strong id="voiceType">标准女声</strong></p>
+                        <p>语速设置：<strong id="speechRate">正常</strong></p>
+                        <p>您可以点击上方控制按钮体验系统的发声功能。系统支持文本转语音、语音控制和交互对话等多种功能。</p>
+                        <p>拟态发声系统采用先进的语音合成技术，能够生成自然流畅的语音输出，为用户提供高效的信息传递体验。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <!-- 快速服务 -->
+                <div class="service-box">
+                    <h3 class="service-title">快速服务</h3>
+                    <p class="intro-text">体验拟态发声系统的核心功能，开始您的语音交互之旅。</p>
+                    <a href="javascript:void(0);" class="service-link" id="startDemo">启动演示</a>
+                    <a href="javascript:void(0);" class="service-link" id="guideLink">使用指南</a>
+                </div>
+                
+                <!-- 系统公告 -->
+                <div class="notice-box">
+                    <h3 class="notice-title">系统公告</h3>
+                    <p class="notice-text">拟态发声系统目前处于演示阶段。我们正在不断优化系统的语音质量和交互体验，感谢您的使用与反馈。</p>
+                </div>
+                
+                <!-- 公告栏 -->
+                <div class="bulletin-board">
+                    <h3 class="bulletin-title">最新动态</h3>
+                    <ul class="bulletin-list">
+                        <li class="bulletin-item">
+                            <div class="bulletin-date">2023-11-15</div>
+                            <div class="bulletin-content">系统新增<span class="bulletin-link" id="newFeatureLink">多音色切换</span>功能</div>
+                        </li>
+                        <li class="bulletin-item">
+                            <div class="bulletin-date">2023-11-10</div>
+                            <div class="bulletin-content">优化语音合成算法，提升语音自然度</div>
+                        </li>
+                        <li class="bulletin-item">
+                            <div class="bulletin-date">2023-11-05</div>
+                            <div class="bulletin-content">发布交互模式测试版，支持简单对话交互</div>
+                        </li>
+                        <li class="bulletin-item">
+                            <div class="bulletin-date">2023-10-28</div>
+                            <div class="bulletin-content">系统界面更新，优化用户体验</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>拟态发声系统 © 2023 信息交互平台 | 技术支持：前沿科技实验室</p>
+            <p>
+                <a href="javascript:void(0);" id="aboutLink">关于我们</a> | 
+                <a href="javascript:void(0);" id="contactLink">联系我们</a> | 
+                <a href="javascript:void(0);" id="privacyLink">隐私政策</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- 自定义弹窗 -->
+    <div id="customModal" class="custom-modal-overlay" style="display: none;">
+        <div class="custom-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">拟态发声系统</h3>
+                <button class="modal-close" id="modalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <div id="modalContent">
+                    <!-- 弹窗内容动态填充 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 系统状态变量
+        let systemStatus = "待机中"; // 系统状态：待机中、发声中、暂停中
+        let voiceType = "标准女声"; // 音色类型
+        let speechRate = "正常"; // 语速
+        let isPlaying = false; // 是否正在播放
+        let isPaused = false; // 是否暂停
+        let waveInterval = null; // 波形动画间隔
+        let voiceTypes = ["标准女声", "标准男声", "温柔女声", "浑厚男声", "儿童声音"];
+        let speechRates = ["极慢", "较慢", "正常", "较快", "极快"];
+        let currentRateIndex = 2; // 正常语速对应的索引
+        
+        // DOM元素引用
+        const startVoiceBtn = document.getElementById('startVoice');
+        const pauseVoiceBtn = document.getElementById('pauseVoice');
+        const resumeVoiceBtn = document.getElementById('resumeVoice');
+        const stopVoiceBtn = document.getElementById('stopVoice');
+        const changeVoiceBtn = document.getElementById('changeVoice');
+        const speedUpBtn = document.getElementById('speedUp');
+        const speedDownBtn = document.getElementById('speedDown');
+        const systemStatusEl = document.getElementById('systemStatus');
+        const voiceTypeEl = document.getElementById('voiceType');
+        const speechRateEl = document.getElementById('speechRate');
+        const voiceWaveform = document.getElementById('voiceWaveform');
+        const voiceContent = document.getElementById('voiceContent');
+        const customModal = document.getElementById('customModal');
+        const modalContent = document.getElementById('modalContent');
+        const modalClose = document.getElementById('modalClose');
+        
+        // 初始化波形显示
+        function initWaveform() {
+            voiceWaveform.innerHTML = '';
+            const barCount = 60;
+            const barWidth = voiceWaveform.offsetWidth / barCount;
+            
+            for (let i = 0; i < barCount; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'wave-bar';
+                bar.style.left = `${i * barWidth}px`;
+                bar.style.width = `${barWidth - 2}px`;
+                bar.style.height = '5px';
+                voiceWaveform.appendChild(bar);
+            }
+        }
+        
+        // 开始波形动画
+        function startWaveAnimation() {
+            if (waveInterval) clearInterval(waveInterval);
+            
+            waveInterval = setInterval(() => {
+                const bars = document.querySelectorAll('.wave-bar');
+                bars.forEach(bar => {
+                    // 随机生成高度，模拟声波
+                    const minHeight = 5;
+                    const maxHeight = 80;
+                    const newHeight = minHeight + Math.random() * (maxHeight - minHeight);
+                    bar.style.height = `${newHeight}px`;
+                    
+                    // 根据高度设置透明度
+                    const opacity = 0.3 + (newHeight / maxHeight) * 0.7;
+                    bar.style.opacity = opacity;
+                });
+            }, 150);
+        }
+        
+        // 停止波形动画
+        function stopWaveAnimation() {
+            if (waveInterval) {
+                clearInterval(waveInterval);
+                waveInterval = null;
+            }
+            
+            // 将所有波形条恢复到最低高度
+            const bars = document.querySelectorAll('.wave-bar');
+            bars.forEach(bar => {
+                bar.style.height = '5px';
+                bar.style.opacity = '0.3';
+            });
+        }
+        
+        // 更新系统状态
+        function updateSystemStatus() {
+            systemStatusEl.textContent = systemStatus;
+            voiceTypeEl.textContent = voiceType;
+            speechRateEl.textContent = speechRate;
+            
+            // 更新按钮状态
+            if (systemStatus === "发声中") {
+                startVoiceBtn.disabled = true;
+                pauseVoiceBtn.disabled = false;
+                resumeVoiceBtn.disabled = true;
+                stopVoiceBtn.disabled = false;
+                startVoiceBtn.classList.remove('active');
+                pauseVoiceBtn.classList.add('active');
+                startWaveAnimation();
+            } else if (systemStatus === "暂停中") {
+                startVoiceBtn.disabled = true;
+                pauseVoiceBtn.disabled = true;
+                resumeVoiceBtn.disabled = false;
+                stopVoiceBtn.disabled = false;
+                pauseVoiceBtn.classList.remove('active');
+                resumeVoiceBtn.classList.add('active');
+                stopWaveAnimation();
+            } else {
+                startVoiceBtn.disabled = false;
+                pauseVoiceBtn.disabled = true;
+                resumeVoiceBtn.disabled = true;
+                stopVoiceBtn.disabled = true;
+                startVoiceBtn.classList.remove('active');
+                pauseVoiceBtn.classList.remove('active');
+                resumeVoiceBtn.classList.remove('active');
+                stopWaveAnimation();
+            }
+        }
+        
+        // 开始发声
+        function startVoice() {
+            systemStatus = "发声中";
+            updateSystemStatus();
+            
+            // 模拟语音播放
+            voiceContent.innerHTML += '<p><em>系统开始发声：正在朗读文本内容...</em></p>';
+            voiceContent.scrollTop = voiceContent.scrollHeight;
+        }
+        
+        // 暂停发声
+        function pauseVoice() {
+            systemStatus = "暂停中";
+            updateSystemStatus();
+            
+            // 模拟暂停
+            voiceContent.innerHTML += '<p><em>系统已暂停发声。</em></p>';
+            voiceContent.scrollTop = voiceContent.scrollHeight;
+        }
+        
+        // 继续发声
+        function resumeVoice() {
+            systemStatus = "发声中";
+            updateSystemStatus();
+            
+            // 模拟继续播放
+            voiceContent.innerHTML += '<p><em>系统继续发声...</em></p>';
+            voiceContent.scrollTop = voiceContent.scrollHeight;
+        }
+        
+        // 停止发声
+        function stopVoice() {
+            systemStatus = "待机中";
+            updateSystemStatus();
+            
+            // 模拟停止
+            voiceContent.innerHTML += '<p><em>系统已停止发声。</em></p>';
+            voiceContent.scrollTop = voiceContent.scrollHeight;
+        }
+        
+        // 切换音色
+        function changeVoice() {
+            const currentIndex = voiceTypes.indexOf(voiceType);
+            const nextIndex = (currentIndex + 1) % voiceTypes.length;
+            voiceType = voiceTypes[nextIndex];
+            updateSystemStatus();
+            
+            // 显示提示
+            voiceContent.innerHTML += `<p><em>音色已切换为：${voiceType}</em></p>`;
+            voiceContent.scrollTop = voiceContent.scrollHeight;
+        }
+        
+        // 加速语速
+        function speedUp() {
+            if (currentRateIndex < speechRates.length - 1) {
+                currentRateIndex++;
+                speechRate = speechRates[currentRateIndex];
+                updateSystemStatus();
+                
+                voiceContent.innerHTML += `<p><em>语速已调整为：${speechRate}</em></p>`;
+                voiceContent.scrollTop = voiceContent.scrollHeight;
+            }
+        }
+        
+        // 减速语速
+        function speedDown() {
+            if (currentRateIndex > 0) {
+                currentRateIndex--;
+                speechRate = speechRates[currentRateIndex];
+                updateSystemStatus();
+                
+                voiceContent.innerHTML += `<p><em>语速已调整为：${speechRate}</em></p>`;
+                voiceContent.scrollTop = voiceContent.scrollHeight;
+            }
+        }
+        
+        // 显示弹窗
+        function showModal(title, content, isHtml = false) {
+            let modalHTML = `
+                <h3 class="modal-title">${title}</h3>
+                <div class="modal-text">${isHtml ? content : `<p>${content}</p>`}</div>
+            `;
+            
+            modalContent.innerHTML = modalHTML;
+            customModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // 关闭弹窗
+        function closeModal() {
+            customModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // 初始化事件监听
+        function initEventListeners() {
+            // 发声控制按钮事件
+            startVoiceBtn.addEventListener('click', startVoice);
+            pauseVoiceBtn.addEventListener('click', pauseVoice);
+            resumeVoiceBtn.addEventListener('click', resumeVoice);
+            stopVoiceBtn.addEventListener('click', stopVoice);
+            changeVoiceBtn.addEventListener('click', changeVoice);
+            speedUpBtn.addEventListener('click', speedUp);
+            speedDownBtn.addEventListener('click', speedDown);
+            
+            // 高亮文本点击事件
+            document.getElementById('voiceTech').addEventListener('click', () => {
+                showModal('语音合成技术', '语音合成技术是指将文本信息转换为自然语音的技术。它通过分析文本的语义、语法和语调，生成符合人类语音特征的音频输出。现代语音合成技术已能产生非常自然、接近真人发音的效果。');
+            });
+            
+            document.getElementById('textToSpeech').addEventListener('click', () => {
+                showModal('文本转语音', '文本转语音（TTS）是拟态发声系统的核心功能之一。该功能能够将任何文本内容转换为流畅的语音输出，支持多种语言、音色和语速调节，适用于多种场景如信息播报、内容朗读、无障碍阅读等。');
+            });
+            
+            document.getElementById('voiceControl').addEventListener('click', () => {
+                showModal('语音控制', '语音控制功能允许用户通过语音指令操作系统，实现无需手动操作的交互体验。系统能够识别多种语音指令，包括启动/停止发声、切换音色、调整语速等控制命令。');
+            });
+            
+            document.getElementById('interactiveMode').addEventListener('click', () => {
+                showModal('交互模式', '交互模式是拟态发声系统的高级功能，支持对话式交互。系统能够理解上下文语义，根据用户的问题或指令作出智能回应，实现更加自然的人机交互体验。');
+            });
+            
+            // 快速服务按钮事件
+            document.getElementById('startDemo').addEventListener('click', startVoice);
+            document.getElementById('guideLink').addEventListener('click', () => {
+                showModal('使用指南', '<p>1. 点击"启动发声"按钮开始语音合成</p><p>2. 使用控制按钮调整发声状态和参数</p><p>3. 点击不同音色和语速按钮体验不同效果</p><p>4. 点击页面中的高亮文本了解更多信息</p>', true);
+            });
+            
+            // 公告链接事件
+            document.getElementById('newFeatureLink').addEventListener('click', () => {
+                showModal('多音色切换功能', '系统新增了5种不同的音色选择：标准女声、标准男声、温柔女声、浑厚男声和儿童声音。用户可以根据使用场景和个人喜好选择合适的音色。');
+            });
+            
+            // 页脚链接事件
+            document.getElementById('aboutLink').addEventListener('click', () => {
+                showModal('关于我们', '拟态发声系统由前沿科技实验室开发，致力于提供先进的语音交互解决方案。我们的团队由语音技术专家、交互设计师和软件工程师组成，专注于创造自然、高效的人机交互体验。');
+            });
+            
+            document.getElementById('contactLink').addEventListener('click', () => {
+                showModal('联系我们', '如有任何问题或建议，请通过以下方式联系我们：<br><br>邮箱：contact@mimetic-voice.com<br>电话：+86 400-123-4567<br>地址：科技创新园区人工智能大厦A座', true);
+            });
+            
+            document.getElementById('privacyLink').addEventListener('click', () => {
+                showModal('隐私政策', '拟态发声系统高度重视用户隐私保护。我们承诺：<br><br>1. 不收集或存储用户的语音数据<br>2. 所有处理均在本地设备完成<br>3. 不会将用户数据用于任何商业用途<br>4. 严格遵守相关数据保护法律法规', true);
+            });
+            
+            // 弹窗关闭事件
+            modalClose.addEventListener('click', closeModal);
+            customModal.addEventListener('click', (e) => {
+                if (e.target === customModal) {
+                    closeModal();
+                }
+            });
+            
+            // 窗口大小变化时重新初始化波形
+            window.addEventListener('resize', initWaveform);
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initWaveform();
+            updateSystemStatus();
+            initEventListeners();
+            
+            // 页面加载完成后的欢迎消息
+            setTimeout(() => {
+                voiceContent.innerHTML += '<p><em>系统初始化完成，等待用户指令...</em></p>';
+                voiceContent.scrollTop = voiceContent.scrollHeight;
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WZ万知search</title>
+    <link rel="icon" href="search.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            -webkit-tap-highlight-color: transparent; /* 移除移动端点击高亮 */
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+            overflow-x: hidden; /* 防止横向滚动 */
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 顶部logo和标题 */
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+            text-align: center;
+            padding: 0 10px;
+        }
+        
+        .logo-container {
+            margin-bottom: 15px;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+        }
+        
+        .title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #7f8c8d;
+            max-width: 500px;
+            line-height: 1.5;
+        }
+        
+        /* 搜索区域 */
+        .search-section {
+            background-color: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            width: 100%;
+        }
+        
+        .search-container {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        #searchInput {
+            flex: 1;
+            padding: 18px 25px;
+            border: 2px solid #e0e6ed;
+            border-radius: 15px 0 0 15px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+            -webkit-appearance: none; /* 移除iOS默认样式 */
+        }
+        
+        #searchInput:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        #searchButton {
+            background: linear-gradient(to right, #3a9cf8, #0470f5);
+            color: white;
+            border: none;
+            border-radius: 0 15px 15px 0;
+            padding: 0 35px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+        
+        #searchButton:hover {
+            background: linear-gradient(to right, #48aff4, #0099ff);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+        }
+        
+        #searchButton:active {
+            transform: translateY(0);
+        }
+        
+        .search-icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        
+        /* 热门关键词 */
+        .hot-keywords-section {
+            margin-top: 20px;
+        }
+        
+        .hot-keywords-title {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        
+        .hot-keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .keyword-tag {
+            background-color: #f1f8ff;
+            color: #0366d6;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #d1e6ff;
+            white-space: nowrap;
+            touch-action: manipulation; /* 改善移动端触摸体验 */
+        }
+        
+        .keyword-tag:hover {
+            background-color: #e1f0ff;
+            transform: translateY(-2px);
+        }
+        
+        /* 历史记录区域 */
+        .history-section {
+            background-color: white;
+            border-radius: 20px;
+            padding: 25px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-title h2 {
+            font-size: 20px;
+            color: #2c3e50;
+        }
+        
+        #clearHistory {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            touch-action: manipulation;
+        }
+        
+        #clearHistory:hover {
+            background-color: #ffeaea;
+        }
+        
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch; /* iOS平滑滚动 */
+        }
+        
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .history-item:hover {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        
+        .history-keyword {
+            font-size: 16px;
+            color: #2c3e50;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            padding-right: 10px;
+        }
+        
+        .history-time {
+            font-size: 13px;
+            color: #95a5a6;
+            flex-shrink: 0;
+        }
+        
+        .empty-history {
+            text-align: center;
+            padding: 40px 20px;
+            color: #bdc3c7;
+            font-size: 16px;
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 14px;
+            padding: 20px 10px;
+            width: 100%;
+        }
+        
+        /* 自定义滚动条 */
+        .history-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .history-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .history-list::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+        
+        .history-list::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        
+        /* 移动端适配 - 主要针对小屏幕 */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px 10px;
+            }
+            
+            .container {
+                padding: 15px 10px;
+                max-width: 100%;
+            }
+            
+            .header {
+                margin-bottom: 25px;
+            }
+            
+            .logo {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .title {
+                font-size: 24px;
+                margin-bottom: 6px;
+            }
+            
+            .subtitle {
+                font-size: 15px;
+                line-height: 1.4;
+                padding: 0 10px;
+            }
+            
+            .search-section {
+                padding: 25px 20px;
+                border-radius: 18px;
+                margin-bottom: 20px;
+            }
+            
+            #searchInput {
+                padding: 16px 20px;
+                font-size: 16px;
+                min-height: 56px; /* 增加触摸区域 */
+            }
+            
+            #searchButton {
+                padding: 0 25px;
+                font-size: 16px;
+                min-width: 90px;
+                min-height: 56px;
+            }
+            
+            .hot-keywords-section {
+                margin-top: 25px;
+            }
+            
+            .hot-keywords {
+                gap: 8px;
+                justify-content: center;
+            }
+            
+            .keyword-tag {
+                padding: 9px 16px;
+                font-size: 14px;
+            }
+            
+            .history-section {
+                padding: 20px;
+                border-radius: 18px;
+            }
+            
+            .section-title h2 {
+                font-size: 18px;
+            }
+            
+            #clearHistory {
+                font-size: 13px;
+                padding: 6px 10px;
+            }
+            
+            .history-keyword {
+                font-size: 15px;
+            }
+            
+            .history-time {
+                font-size: 12px;
+            }
+            
+            .footer {
+                font-size: 13px;
+                padding: 15px 10px;
+                margin-top: 20px;
+            }
+        }
+        
+        /* 超小屏幕设备（手机竖屏） */
+        @media (max-width: 480px) {
+            .header {
+                margin-bottom: 20px;
+            }
+            
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .title {
+                font-size: 22px;
+            }
+            
+            .subtitle {
+                font-size: 14px;
+            }
+            
+            .search-section {
+                padding: 20px 15px;
+                border-radius: 16px;
+            }
+            
+            .search-container {
+                flex-direction: column;
+                margin-bottom: 0;
+            }
+            
+            #searchInput {
+                border-radius: 12px 12px 0 0;
+                border-bottom: 1px solid #e0e6ed;
+                padding: 18px 20px;
+                min-height: 60px;
+                font-size: 16px;
+            }
+            
+            #searchButton {
+                border-radius: 0 0 12px 12px;
+                padding: 18px;
+                min-height: 60px;
+                font-size: 17px;
+                width: 100%;
+            }
+            
+            .hot-keywords-title {
+                font-size: 15px;
+                margin-top: 20px;
+                text-align: center;
+            }
+            
+            .hot-keywords {
+                gap: 6px;
+                justify-content: center;
+            }
+            
+            .keyword-tag {
+                padding: 8px 14px;
+                font-size: 13px;
+                border-radius: 20px;
+            }
+            
+            .history-section {
+                padding: 18px 15px;
+            }
+            
+            .section-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .section-title h2 {
+                font-size: 17px;
+            }
+            
+            #clearHistory {
+                align-self: flex-end;
+                padding: 5px 10px;
+            }
+            
+            .history-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+                padding: 12px 0;
+            }
+            
+            .history-item:hover {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+            
+            .history-keyword {
+                width: 100%;
+                font-size: 15px;
+            }
+            
+            .history-time {
+                align-self: flex-end;
+                font-size: 12px;
+            }
+            
+            .footer {
+                font-size: 12px;
+            }
+        }
+        
+        /* 平板设备横屏模式 */
+        @media (min-width: 769px) and (max-width: 1024px) and (orientation: landscape) {
+            .container {
+                max-width: 90%;
+            }
+            
+            .search-section {
+                padding: 25px;
+            }
+            
+            #searchInput {
+                padding: 16px 22px;
+            }
+            
+            #searchButton {
+                padding: 0 30px;
+            }
+        }
+        
+        /* 大屏幕手机（如iPhone 12 Pro Max等） */
+        @media (min-width: 481px) and (max-width: 768px) and (orientation: portrait) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .search-section {
+                padding: 25px;
+            }
+            
+            #searchInput {
+                min-height: 58px;
+            }
+            
+            #searchButton {
+                min-height: 58px;
+            }
+        }
+        
+        /* 针对iPhone安全区域（刘海屏） */
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: max(15px, env(safe-area-inset-left));
+                padding-right: max(15px, env(safe-area-inset-right));
+                padding-top: max(20px, env(safe-area-inset-top));
+                padding-bottom: max(20px, env(safe-area-inset-bottom));
+            }
+        }
+        
+        /* 高对比度模式支持 */
+        @media (prefers-contrast: high) {
+            .search-section, .history-section {
+                border: 2px solid #000;
+            }
+            
+            #searchInput {
+                border-width: 2px;
+            }
+        }
+        
+        /* 减少动画模式 */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+     <!-- 外部CSS文件 -->
+    <link rel="stylesheet" href="search-assistant.css">
+    
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部logo和标题 -->
+        <div class="header">
+            <div class="logo-container">
+                <img src="search.png" alt="搜索logo" class="logo" id="pageLogo">
+            </div>
+            <h1 class="title">WZ万知搜索引擎</h1>
+            <p class="subtitle">安全、高效的信息检索平台，请输入关键词查找相关档案资料</p>
+        </div>
+        
+        <!-- 搜索区域 -->
+        <div class="search-section">
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="请输入关键词..." aria-label="搜索关键词输入框">
+                <button id="searchButton" aria-label="搜索按钮">
+                    搜索
+                </button>
+            </div>
+            
+            
+        </div>
+        
+        <!-- 历史记录区域 -->
+        <div class="history-section">
+            <div class="section-title">
+                <h2>近期搜索</h2>
+                <button id="clearHistory" aria-label="清空搜索历史">清空记录</button>
+            </div>
+            <div class="history-list" id="historyList">
+                <!-- 历史记录将通过JS动态生成 -->
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>© 2025 万知搜索引擎 | 版本 1.0</p>
+            <p style="margin-top: 5px; font-size: 12px;">仅供内部使用，未经授权不得访问</p>
+        </div>
+    </div>
+
+    <!-- 引入外部搜索引擎核心文件 -->
+    <script src="search-engine.js"></script>
+    <!-- 外部JS文件 -->
+    
+    <script src="storage.js"></script>
+    <script src="navigation.js"></script>
+    <script src="visitor.js"></script>
+    <script src="search-ass.js"></script>
+    <script>
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 防止移动端双击缩放
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function(event) {
+                const now = Date.now();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+            
+            // 初始化搜索引擎
+            searchEngine.init();
+            
+            // 设置搜索事件
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const clearHistoryBtn = document.getElementById('clearHistory');
+            const hotKeywordsContainer = document.getElementById('hotKeywords');
+            const historyListContainer = document.getElementById('historyList');
+            
+            // 从搜索引擎获取热门关键词
+            function loadHotKeywords() {
+                const allKeywords = searchEngine.getAllKeywords();
+                // 取前6个作为热门关键词（移动端显示更少）
+                const hotKeywords = allKeywords.slice(0, 6);
+                
+                hotKeywordsContainer.innerHTML = '';
+                hotKeywords.forEach(keywordInfo => {
+                    const keywordTag = document.createElement('div');
+                    keywordTag.className = 'keyword-tag';
+                    keywordTag.textContent = keywordInfo.keyword;
+                    keywordTag.title = keywordInfo.description;
+                    keywordTabindex = "0";
+                    keywordTag.setAttribute('role', 'button');
+                    
+                    keywordTag.addEventListener('click', function() {
+                        searchInput.value = keywordInfo.keyword;
+                        performSearch();
+                    });
+                    
+                    // 添加键盘支持
+                    keywordTag.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            searchInput.value = keywordInfo.keyword;
+                            performSearch();
+                        }
+                    });
+                    
+                    hotKeywordsContainer.appendChild(keywordTag);
+                });
+            }
+            
+            // 从localStorage加载搜索历史
+            function loadSearchHistory() {
+                let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+                
+                historyListContainer.innerHTML = '';
+                
+                if (searchHistory.length === 0) {
+                    const emptyMsg = document.createElement('div');
+                    emptyMsg.className = 'empty-history';
+                    emptyMsg.textContent = '暂无搜索记录';
+                    historyListContainer.appendChild(emptyMsg);
+                    return;
+                }
+                
+                // 移动端显示更少的记录
+                const maxHistoryItems = window.innerWidth <= 480 ? 8 : 10;
+                searchHistory.slice(0, maxHistoryItems).forEach(item => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'history-item';
+                    historyItem.tabIndex = 0;
+                    historyItem.setAttribute('role', 'button');
+                    
+                    const keywordSpan = document.createElement('span');
+                    keywordSpan.className = 'history-keyword';
+                    keywordSpan.textContent = item.keyword;
+                    
+                    const timeSpan = document.createElement('span');
+                    timeSpan.className = 'history-time';
+                    timeSpan.textContent = formatTime(item.timestamp);
+                    
+                    historyItem.appendChild(keywordSpan);
+                    historyItem.appendChild(timeSpan);
+                    
+                    // 点击历史记录项进行搜索
+                    historyItem.addEventListener('click', function() {
+                        searchInput.value = item.keyword;
+                        performSearch();
+                    });
+                    
+                    // 键盘支持
+                    historyItem.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            searchInput.value = item.keyword;
+                            performSearch();
+                        }
+                    });
+                    
+                    historyListContainer.appendChild(historyItem);
+                });
+            }
+            
+            // 格式化时间
+            function formatTime(timestamp) {
+                const date = new Date(timestamp);
+                const now = new Date();
+                const diff = now - date;
+                
+                // 如果是今天
+                if (date.toDateString() === now.toDateString()) {
+                    return `今天 ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+                }
+                
+                // 如果是昨天
+                const yesterday = new Date(now);
+                yesterday.setDate(yesterday.getDate() - 1);
+                if (date.toDateString() === yesterday.toDateString()) {
+                    return `昨天 ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+                }
+                
+                // 一周内
+                if (diff < 7 * 24 * 60 * 60 * 1000) {
+                    const days = Math.floor(diff / (24 * 60 * 60 * 1000));
+                    return `${days}天前`;
+                }
+                
+                // 更早的时间
+                return `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+            }
+            
+            // 添加到搜索历史
+            function addToSearchHistory(keyword, success) {
+                if (!keyword || !success) return;
+                
+                let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+                
+                // 移除重复项
+                searchHistory = searchHistory.filter(item => item.keyword !== keyword);
+                
+                // 添加到开头
+                searchHistory.unshift({
+                    keyword: keyword,
+                    timestamp: Date.now()
+                });
+                
+                // 限制历史记录数量
+                if (searchHistory.length > 50) {
+                    searchHistory = searchHistory.slice(0, 50);
+                }
+                
+                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+                
+                // 重新加载历史记录显示
+                loadSearchHistory();
+            }
+            
+            // 清空搜索历史
+            clearHistoryBtn.addEventListener('click', function() {
+                if (confirm('确定要清空所有搜索记录吗？')) {
+                    localStorage.removeItem('searchHistory');
+                    loadSearchHistory();
+                    showAlert('搜索记录已清空', 1500);
+                }
+            });
+            
+            // 搜索函数（增强版，记录历史）
+            async function performSearch() {
+                const keyword = searchInput.value.trim();
+                
+                if (!keyword) {
+                    showAlert('请输入搜索关键词', 2000);
+                    searchInput.focus();
+                    return;
+                }
+
+                // 确保搜索引擎初始化
+                if (!searchEngine.keywordsData) {
+                    await searchEngine.init();
+                }
+
+                const result = searchEngine.search(keyword);
+                
+                if (result.success) {
+                    const rule = result.rule;
+                    
+                    // 显示成功提醒
+                    showAlert(`找到"${keyword}"相关页面，即将跳转...`, 1500);
+                    
+                    // 记录到搜索历史（仅成功搜索）
+                    addToSearchHistory(keyword, true);
+                    
+                    // 延迟跳转
+                    setTimeout(() => {
+                        window.location.href = rule.targetUrl;
+                    }, 1500);
+                } else {
+                    // 显示失败提醒（不透露任何页面内容）
+                    showAlert(`未找到与"${keyword}"相关的页面`, 2000);
+                    
+                    // 不记录失败的搜索到历史
+                }
+            }
+            
+            // 绑定搜索事件
+            if (searchInput) {
+                // Enter键搜索
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+                
+                // 移动端虚拟键盘完成按钮
+                searchInput.addEventListener('search', function() {
+                    performSearch();
+                });
+            }
+            
+            if (searchButton) {
+                searchButton.addEventListener('click', performSearch);
+                // 改善移动端触摸反馈
+                searchButton.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.98)';
+                });
+                searchButton.addEventListener('touchend', function() {
+                    this.style.transform = '';
+                });
+            }
+            
+            // 初始化热门关键词和历史记录
+            loadHotKeywords();
+            loadSearchHistory();
+            
+            // 页面加载后让搜索框获得焦点（移动端谨慎使用）
+            if (window.innerWidth > 768) {
+                setTimeout(() => {
+                    if (searchInput) searchInput.focus();
+                }, 500);
+            }
+            
+            // 监听窗口大小变化
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    loadHotKeywords();
+                    loadSearchHistory();
+                }, 250);
+            });
+            
+            // 测试解码功能（仅开发时使用）
+            console.log('搜索引擎初始化完成');
+            console.log('可用关键词:', searchEngine.getAllKeywords().map(k => k.keyword));
+        });
+        
+        // 显示提示信息
+        function showAlert(message, duration = 2000) {
+            // 移除已存在的提示
+            const existingAlert = document.querySelector('.custom-alert');
+            if (existingAlert) {
+                existingAlert.remove();
+            }
+            
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'custom-alert';
+            alertDiv.textContent = message;
+            alertDiv.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: rgba(0, 0, 0, 0.85);
+                color: white;
+                padding: 18px 25px;
+                border-radius: 12px;
+                z-index: 1000;
+                font-size: 16px;
+                text-align: center;
+                max-width: 80%;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+                animation: fadeInOut ${duration}ms ease-in-out;
+                backdrop-filter: blur(10px);
+            `;
+            
+            // 添加动画样式
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeInOut {
+                    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+                    15% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                    85% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(alertDiv);
+            
+            // 自动移除
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+                if (style.parentNode) {
+                    style.remove();
+                }
+            }, duration);
+        }
+    </script>
+</body>
+</html>

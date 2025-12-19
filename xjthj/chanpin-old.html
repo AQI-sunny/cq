@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>墟境调和局 · 民用隐态安防产品目录</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景特效 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(41, 128, 185, 0.1) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(142, 68, 173, 0.08) 0px, transparent 50%);
+            z-index: -2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(10, 25, 47, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 顶部装饰线 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #20b2aa, #1e90ff);
+        }
+        
+        /* 标题样式 */
+        .main-title {
+            text-align: center;
+            color: #40e0d0;
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(64, 224, 208, 0.3);
+            letter-spacing: 2px;
+            position: relative;
+            padding-bottom: 20px;
+        }
+        
+        .main-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            width: 50%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #40e0d0, #1e90ff, #40e0d0, transparent);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #87ceeb;
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+        
+        /* 章节标题 */
+        .section-title {
+            color: #20b2aa;
+            font-size: 1.8rem;
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.3);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+        
+        /* 声明框样式 */
+        .declaration-box {
+            background: rgba(30, 60, 90, 0.6);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            border-left: 5px solid #40e0d0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .declaration-title {
+            color: #20b2aa;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .declaration-title i {
+            margin-right: 10px;
+        }
+        
+        /* 产品表格样式 */
+        .product-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .product-table th {
+            background: linear-gradient(90deg, #1a3a5f, #2a4a7f);
+            color: #40e0d0;
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: bold;
+            border-bottom: 2px solid #40e0d0;
+            position: relative;
+        }
+        
+        .product-table th::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #40e0d0, transparent);
+        }
+        
+        .product-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.1);
+            transition: background 0.3s;
+        }
+        
+        .product-table tr {
+            background: rgba(20, 40, 70, 0.5);
+        }
+        
+        .product-table tr:nth-child(even) {
+            background: rgba(25, 45, 75, 0.5);
+        }
+        
+        .product-table tr:hover {
+            background: rgba(64, 224, 208, 0.1);
+        }
+        
+        .product-id {
+            color: #ffa500;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .product-id:hover {
+            color: #ffcc00;
+            text-shadow: 0 0 8px rgba(255, 165, 0, 0.5);
+        }
+        
+        .product-name {
+            color: #40e0d0;
+            font-weight: bold;
+        }
+        
+        /* 重点产品样式 */
+        .highlight-product {
+            background: rgba(30, 60, 90, 0.7) !important;
+            border-left: 4px solid #ffa500;
+            margin: 25px 0;
+            padding: 25px;
+            border-radius: 0 10px 10px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .highlight-title {
+            color: #ffa500;
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .highlight-title i {
+            margin-right: 10px;
+        }
+        
+        .case-study {
+            background: rgba(255, 165, 0, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 3px solid #ffa500;
+        }
+        
+        .case-title {
+            color: #ffa500;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        /* 列表样式 */
+        .step-list, .principle-list {
+            margin: 15px 0 15px 25px;
+        }
+        
+        .step-list li, .principle-list li {
+            margin-bottom: 10px;
+            padding-left: 10px;
+            position: relative;
+        }
+        
+        .step-list li::before, .principle-list li::before {
+            content: "▶";
+            color: #40e0d0;
+            position: absolute;
+            left: -15px;
+        }
+        
+        /* 引用样式 */
+        .quote-box {
+            background: rgba(64, 224, 208, 0.1);
+            border-left: 5px solid #40e0d0;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 0 10px 10px 0;
+            font-style: italic;
+            position: relative;
+        }
+        
+        .quote-box::before {
+            content: "“";
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 4rem;
+            color: rgba(64, 224, 208, 0.2);
+            font-family: serif;
+        }
+        
+        .quote-text {
+            font-size: 1.3rem;
+            color: #b0e0e6;
+            margin-bottom: 10px;
+        }
+        
+        .quote-author {
+            text-align: right;
+            color: #87ceeb;
+            font-size: 1rem;
+        }
+        
+        /* 附录样式 */
+        .appendix-box {
+            background: rgba(142, 68, 173, 0.1);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+        }
+        
+        .appendix-title {
+            color: #da70d6;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .appendix-title i {
+            margin-right: 10px;
+        }
+        
+        /* 联系信息样式 */
+        .contact-info {
+            background: rgba(30, 60, 90, 0.6);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        .contact-item {
+            flex: 1;
+            min-width: 250px;
+            margin: 10px;
+            padding: 15px;
+            background: rgba(20, 40, 70, 0.8);
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .contact-title {
+            color: #40e0d0;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .contact-detail {
+            color: #87ceeb;
+            font-size: 1.1rem;
+        }
+        
+        .highlight-detail {
+            color: #ffa500;
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+        
+        /* 页脚样式 */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(64, 224, 208, 0.2);
+            color: #708090;
+            font-size: 0.9rem;
+        }
+        
+        .version-info {
+            color: #87ceeb;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        /* 分隔线 */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #40e0d0, transparent);
+            margin: 40px 0;
+        }
+        
+        /* 自定义弹窗样式 */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .custom-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .custom-modal {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            border: 2px solid #40e0d0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+        
+        .custom-modal-overlay.active .custom-modal {
+            transform: scale(1);
+        }
+        
+        .custom-modal-header {
+            background: rgba(20, 40, 70, 0.9);
+            padding: 20px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .custom-modal-title {
+            color: #40e0d0;
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .custom-modal-title i {
+            margin-right: 10px;
+        }
+        
+        .custom-modal-close {
+            background: none;
+            border: none;
+            color: #87ceeb;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .custom-modal-close:hover {
+            color: #ff4500;
+        }
+        
+        .custom-modal-body {
+            padding: 25px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .custom-modal-message {
+            color: #b0c4de;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            white-space: pre-line;
+        }
+        
+        .custom-modal-footer {
+            padding: 15px 25px;
+            border-top: 1px solid rgba(64, 224, 208, 0.3);
+            display: flex;
+            justify-content: flex-end;
+            background: rgba(20, 40, 70, 0.5);
+        }
+        
+        .custom-modal-button {
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .custom-modal-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(64, 224, 208, 0.5);
+        }
+        .product-name {
+    color: #40e0d0;
+    font-weight: bold;
+    /* 确保中文能正常断行 */
+    word-break: break-word;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    /* 可选：设置最小宽度确保有足够空间 */
+    min-width: 100px;
+}
+
+/* 或者更精确的控制 */
+.product-table tr td:nth-child(2) {
+    min-width: 100px;
+    max-width: 150px;
+    word-break: break-word;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    /* 控制最小字符数换行 */
+    text-align: justify;
+    text-justify: inter-ideograph; /* 对中文有效 */
+}
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .main-title {
+                font-size: 2.2rem;
+            }
+            
+            .product-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .main-title {
+                font-size: 1.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .product-table th, .product-table td {
+                padding: 10px 8px;
+                font-size: 0.9rem;
+            }
+            
+            .custom-modal {
+                width: 95%;
+            }
+        }
+    </style>
+    <link rel="icon" type="image/png" href="./xjthj.png">
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-title">墟境调和局 · 民用隐态安防产品目录</h1>
+        <p class="subtitle">隐态共生 · 安宁有序</p>
+        
+        <div class="declaration-box">
+            <h2 class="declaration-title"><i class="fas fa-file-contract"></i> 产品使用授权声明</h2>
+            <p>以下产品经墟境调和局技术认证，适用于栖乔华苑全域（含静乔公寓、住宅区、别墅区）。所有产品遵循"非杀伤性共生原则"，旨在建立人态与隐态的安全平衡。</p>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <h2 class="section-title"><i class="fas fa-table"></i> 产品总览表</h2>
+        
+        <table class="product-table">
+            <thead>
+                <tr>
+                    <th>产品编号</th>
+                    <th>产品名称</th>
+                    <th>主要功能</th>
+                    <th>适用场景</th>
+                    <th>生效时长</th>
+                    <th>特殊备注</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="product-id">GHJ-01</td>
+                    <td class="product-name">阈界橄化剂</td>
+                    <td>释放"橄韵波"驱离低阶侵扰体；可经激活转为"共生体锚定剂"</td>
+                    <td>日常防护/特殊共生需求备案</td>
+                    <td>72小时</td>
+                    <td>淡橄榄香型；需授权频段激活锚定功能</td>
+                </tr>
+                <tr>
+                    <td class="product-id">GHJ-02</td>
+                    <td class="product-name">檐影宁雾剂</td>
+                    <td>形成视觉忽略场，弱化游荡灵体感知</td>
+                    <td>别墅区、低层庭院、连廊</td>
+                    <td>48小时</td>
+                    <td>雨雾天气效果增强；檀木香型</td>
+                </tr>
+                <tr>
+                    <td class="product-id">GHJ-03</td>
+                    <td class="product-name">栖域根固凝胶</td>
+                    <td>抑制小型孔洞维度渗透，稳固边界</td>
+                    <td>老旧管道、地下室、墙体缝隙</td>
+                    <td>30天</td>
+                    <td>对"墙中低语"有抑制效果；无味</td>
+                </tr>
+                <tr>
+                    <td class="product-id">GHJ-04</td>
+                    <td class="product-name">镜界擦净水</td>
+                    <td>消除镜面影像回溯风险及伪人标记</td>
+                    <td>浴室、橱窗、反光装饰面</td>
+                    <td>按次使用</td>
+                    <td>柠檬草香型；每周使用不超过3次</td>
+                </tr>
+                <tr>
+                    <td class="product-id">GHJ-05</td>
+                    <td class="product-name">无声苔片</td>
+                    <td>吸收电器类灵态噪声干扰</td>
+                    <td>配电箱周边、电器集中区</td>
+                    <td>15天</td>
+                    <td>失效后变为灰白色；可回收</td>
+                </tr>
+                <tr>
+                    <td class="product-id">GHJ-06</td>
+                    <td class="product-name">谧廊喷雾</td>
+                    <td>抑制走廊回音畸变与脚步幻听</td>
+                    <td>公寓长廊、夜间楼道、消防通道</td>
+                    <td>8小时</td>
+                    <td>薄荷雪松香型；不影响正常通行</td>
+                </tr>
+                <tr>
+                    <td class="product-id">GHJ-07</td>
+                    <td class="product-name">窗荧守夜脂</td>
+                    <td>窗框荧光提示屏障完整性，异常穿透报警</td>
+                    <td>落地窗、阁楼窗、阳台门窗</td>
+                    <td>90天</td>
+                    <td>需自然光激活；对"飞影"敏感</td>
+                </tr>
+                <tr>
+                    <td class="product-id">GHJ-08</td>
+                    <td class="product-name">植契营养液</td>
+                    <td>强化植物作为临时屏障节点</td>
+                    <td>庭院植物、阳台盆栽区</td>
+                    <td>与植物共生</td>
+                    <td>叶片泛珍珠光泽；含灵态微量元素</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="divider"></div>
+        
+        <h2 class="section-title"><i class="fas fa-star"></i> 重点产品详解</h2>
+        
+        <div class="highlight-product">
+            <h3 class="highlight-title"><i class="fas fa-flask"></i> GHJ-01 阈界橄化剂</h3>
+            
+            <div class="case-study">
+                <div class="case-title">适用案例："双马尾"蟑螂家庭共生备案</div>
+            </div>
+            
+            <h4>使用流程：</h4>
+            <ol class="step-list">
+                <li>至静乔公寓4栋401室填写《特殊共生体申请表》</li>
+                <li>领取激活频段密钥（一次性加密芯片）</li>
+                <li>对目标个体喷洒本品并同步触发密钥</li>
+                <li>个体将在120秒内完成"栖居权锚定"</li>
+            </ol>
+            
+            <h4>注意事项：</h4>
+            <ul class="principle-list">
+                <li>激活后需24小时内完成社区生物信息录入</li>
+                <li>本品不可用于脊椎类异常生物</li>
+                <li>锚定后个体仍受"无伤家居公约"约束</li>
+            </ul>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <h2 class="section-title"><i class="fas fa-clipboard-check"></i> 使用规范</h2>
+        
+        <h3>通用原则</h3>
+        <ol class="principle-list">
+            <li>所有产品不得与市售化学药剂混合使用</li>
+            <li>每月1日需通过社区内网提交《产品使用反馈表》</li>
+            <li>产品空瓶须返还4栋401室回收处（可兑换积分）</li>
+        </ol>
+        
+        <h3>应急情况处理</h3>
+        <p>如遇产品失效或异常反应：</p>
+        <ol class="step-list">
+            <li>立即远离处理区域至少5米</li>
+            <li>拨打调和局内线专线 <span class="highlight-detail">#401#</span></li>
+            <li>如涉及伪人标记，使用<strong>镜界擦净水</strong>反复擦拭直至标记淡化</li>
+        </ol>
+        
+        <div class="divider"></div>
+        
+        <div class="quote-box">
+            <p class="quote-text">"真正的安宁不在于清除异己，而在于建立有序的共鸣。"</p>
+            <p class="quote-author">——墟境调和局研发中心《隐态共生白皮书》第一章</p>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="appendix-box">
+            <h3 class="appendix-title"><i class="fas fa-info-circle"></i> 附录：产品编号释义</h3>
+            <ul class="principle-list">
+                <li><strong>GHJ</strong>：调和局（Gǎnghé Jú）首字母缩写</li>
+                <li><strong>首位数字</strong>：1~3为日常防护系，4~6为环境净化系，7~8为边界强化系</li>
+                <li><strong>版本迭代</strong>：每年秋季更新配方，编号后缀加"-A/B/C"表示年度版本</li>
+            </ul>
+        </div>
+        
+        <div class="contact-info">
+            <div class="contact-item">
+                <div class="contact-title">办公地址</div>
+                <div class="contact-detail">栖乔华苑 · 静乔公寓4栋401室</div>
+            </div>
+            <div class="contact-item">
+                <div class="contact-title">服务时间</div>
+                <div class="contact-detail">每日 9:00-18:00<br>(隐态事件24小时响应)</div>
+            </div>
+            <div class="contact-item">
+                <div class="contact-title">内线专线</div>
+                <div class="highlight-detail">#401#</div>
+                <div class="contact-detail">(仅限社区内部线路)</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>本目录内容会根据《华苑隐态管理条令》实时更新，最终解释权归墟境调和局所有。</p>
+            <p class="version-info">版本号：V2.3.1｜更新日期：隐历乙巳年阳月</p>
+        </div>
+    </div>
+    
+    <!-- 自定义弹窗 -->
+    <div class="custom-modal-overlay" id="customModal">
+        <div class="custom-modal">
+            <div class="custom-modal-header">
+                <div class="custom-modal-title"><i class="fas fa-box-open"></i> 产品详情</div>
+                <button class="custom-modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="custom-modal-body">
+                <div class="custom-modal-message" id="modalMessage"></div>
+            </div>
+            <div class="custom-modal-footer">
+                <button class="custom-modal-button" id="modalConfirm">确认</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 获取弹窗元素
+        const customModal = document.getElementById('customModal');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalClose = document.getElementById('modalClose');
+        const modalConfirm = document.getElementById('modalConfirm');
+        
+        // 显示弹窗函数
+        function showModal(message) {
+            modalMessage.textContent = message;
+            customModal.classList.add('active');
+        }
+        
+        // 隐藏弹窗函数
+        function hideModal() {
+            customModal.classList.remove('active');
+        }
+        
+        // 关闭弹窗事件
+        modalClose.addEventListener('click', hideModal);
+        modalConfirm.addEventListener('click', hideModal);
+        
+        // 点击弹窗外部关闭
+        customModal.addEventListener('click', function(e) {
+            if (e.target === customModal) {
+                hideModal();
+            }
+        });
+        
+        // 添加表格行的悬停效果增强
+        document.querySelectorAll('.product-table tr').forEach(row => {
+            row.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(5px)';
+                this.style.transition = 'transform 0.3s, background 0.3s';
+            });
+            
+            row.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+            });
+        });
+        
+        // 为产品编号添加点击效果
+        document.querySelectorAll('.product-id').forEach(item => {
+            item.addEventListener('click', function() {
+                const productName = this.parentElement.querySelector('.product-name').textContent;
+                const row = this.parentElement;
+                const cells = row.querySelectorAll('td');
+                
+                // 获取产品详细信息
+                const productDetails = 
+                    `产品编号: ${this.textContent}\n` +
+                    `产品名称: ${productName}\n` +
+                    `主要功能: ${cells[2].textContent}\n` +
+                    `适用场景: ${cells[3].textContent}\n` +
+                    `生效时长: ${cells[4].textContent}\n` +
+                    `特殊备注: ${cells[5].textContent}\n\n` +
+                    `点击确认返回产品目录`;
+                
+                showModal(productDetails);
+            });
+        });
+        
+        // 为特殊文本添加高亮效果
+        document.querySelectorAll('.highlight-detail').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.textShadow = '0 0 10px rgba(255, 165, 0, 0.7)';
+                this.style.cursor = 'pointer';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.textShadow = 'none';
+            });
+            
+            // 点击内线专线显示提示
+            item.addEventListener('click', function() {
+                showModal(`内线专线: ${this.textContent}\n\n此专线仅限栖乔华苑社区内部线路使用，24小时隐态事件响应服务。`);
+            });
+        });
+        
+        // 为产品名称添加点击效果
+        document.querySelectorAll('.product-name').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.cursor = 'pointer';
+                this.style.textShadow = '0 0 8px rgba(64, 224, 208, 0.5)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.textShadow = 'none';
+            });
+            
+            item.addEventListener('click', function() {
+                const productId = this.parentElement.querySelector('.product-id').textContent;
+                showModal(`产品名称: ${this.textContent}\n产品编号: ${productId}\n\n点击产品编号可查看完整详细信息。`);
+            });
+        });
+        
+        // ESC键关闭弹窗
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && customModal.classList.contains('active')) {
+                hideModal();
+            }
+        });
+    </script>
+</body>
+</html>

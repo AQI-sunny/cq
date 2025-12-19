@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>墟境调和局办公处</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景特效 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(41, 128, 185, 0.1) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(142, 68, 173, 0.08) 0px, transparent 50%);
+            z-index: -2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(10, 25, 47, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 顶部装饰线 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #20b2aa, #1e90ff);
+        }
+        
+        /* 头部样式 - 重新设计 */
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .emblem-symbol {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(64, 224, 208, 0.3);
+            box-shadow: 
+                0 0 20px rgba(64, 224, 208, 0.3),
+                inset 0 0 20px rgba(10, 25, 47, 0.5);
+            animation: pulse 4s infinite alternate;
+            background-color: rgba(178, 217, 246, 0.956);
+        }
+        
+        .emblem-symbol .logo-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('./xjthj.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        
+        .emblem-symbol::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 2px rgba(64, 224, 208, 0.2);
+            z-index: 2;
+        }
+        
+        .emblem-symbol::after {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #40e0d0, #1e90ff, #40e0d0);
+            z-index: -1;
+            opacity: 0.5;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes pulse {
+            0% { 
+                box-shadow: 
+                    0 0 20px rgba(64, 224, 208, 0.3),
+                    inset 0 0 20px rgba(10, 25, 47, 0.5);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 30px rgba(64, 224, 208, 0.5),
+                    inset 0 0 20px rgba(10, 25, 47, 0.7);
+            }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .logo-text {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+        }
+        
+        .logo-text span {
+            color: #ff6b6b;
+        }
+        
+        .contact-info {
+            text-align: right;
+        }
+        
+        .contact-info p {
+            margin: 5px 0;
+            font-size: 0.95rem;
+            color: #b0c4de;
+        }
+        
+        .contact-info i {
+            margin-right: 8px;
+            color: #40e0d0;
+        }
+        
+        /* 图片轮播 - 优化 */
+        .carousel-container {
+            margin: 30px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.7);
+            position: relative;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease;
+            height: 350px;
+        }
+        
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(10, 25, 47, 0.7);
+            color: #40e0d0;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            padding: 15px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+        
+        .carousel-btn:hover {
+            background: rgba(30, 144, 255, 0.7);
+            color: white;
+        }
+        
+        .carousel-btn.prev {
+            left: 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .carousel-btn.next {
+            right: 0;
+            border-radius: 5px 0 0 5px;
+        }
+        
+        .carousel-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .indicator.active {
+            background: #40e0d0;
+            box-shadow: 0 0 10px rgba(64, 224, 208, 0.8);
+        }
+        
+        /* 局长引言 - 优化 */
+        .quote-section {
+            background-color: rgba(20, 40, 70, 0.7);
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border-left: 5px solid #40e0d0;
+            border-right: 1px solid rgba(64, 224, 208, 0.2);
+            border-top: 1px solid rgba(64, 224, 208, 0.1);
+            border-bottom: 1px solid rgba(64, 224, 208, 0.1);
+        }
+        
+        .quote-section blockquote {
+            font-size: 1.3rem;
+            font-style: italic;
+            color: #b0c4de;
+            margin-bottom: 15px;
+            line-height: 1.8;
+            text-align: center;
+        }
+        
+        .quote-author {
+            text-align: right;
+            font-weight: 600;
+            color: #40e0d0;
+            font-size: 1.1rem;
+        }
+        
+        /* 功能区样式 - 优化 */
+        .section-title {
+            font-size: 1.8rem;
+            color: #40e0d0;
+            margin: 30px 0 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(64, 224, 208, 0.3);
+            display: inline-block;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background-color: #1e90ff;
+        }
+        
+        .functions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .function-card {
+            background-color: rgba(20, 40, 70, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+            border-top: 4px solid #40e0d0;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .function-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            border-color: rgba(64, 224, 208, 0.4);
+        }
+        
+        .function-card h3 {
+            color: #40e0d0;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .function-card h3 i {
+            margin-right: 10px;
+        }
+        
+        .function-card p {
+            color: #b0c4de;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .warning {
+            color: #ff6b6b;
+            font-weight: 600;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            padding: 8px 12px;
+            background-color: rgba(255, 107, 107, 0.1);
+            border-radius: 5px;
+            border-left: 3px solid #ff6b6b;
+        }
+        
+        /* 值班人员样式 - 优化 */
+        .staff-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .staff-card {
+            background-color: rgba(20, 40, 70, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+            border-left: 4px solid #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.2);
+        }
+        
+        .staff-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            border-color: rgba(46, 204, 113, 0.4);
+        }
+        
+        .staff-name {
+            font-size: 1.4rem;
+            color: #40e0d0;
+            margin-bottom: 5px;
+        }
+        
+        .staff-role {
+            color: #1e90ff;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+        
+        .staff-quote {
+            font-style: italic;
+            color: #b0c4de;
+            margin-bottom: 15px;
+            padding-left: 15px;
+            border-left: 3px solid rgba(64, 224, 208, 0.5);
+            line-height: 1.6;
+        }
+        
+        .status-out {
+            background-color: rgba(243, 156, 18, 0.1);
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            border-left: 4px solid #f39c12;
+        }
+        
+        .status-out p {
+            color: #f1c40f;
+            margin-bottom: 5px;
+        }
+        
+        /* 便民服务样式 - 优化 */
+        .service-guide {
+            background-color: rgba(20, 40, 70, 0.7);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 40px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .service-section {
+            margin-bottom: 30px;
+        }
+        
+        .service-section h3 {
+            color: #40e0d0;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .service-section h3 i {
+            margin-right: 10px;
+        }
+        
+        .steps {
+            counter-reset: step-counter;
+            list-style: none;
+        }
+        
+        .steps li {
+            counter-increment: step-counter;
+            margin-bottom: 15px;
+            padding-left: 40px;
+            position: relative;
+            color: #b0c4de;
+            line-height: 1.6;
+        }
+        
+        .steps li:before {
+            content: counter(step-counter);
+            background-color: #40e0d0;
+            color: #0c1a2d;
+            font-weight: bold;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        .qa-item {
+            background-color: rgba(30, 60, 90, 0.6);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #2ecc71;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .qa-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .qa-item h4 {
+            color: #40e0d0;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .qa-item h4 i {
+            margin-right: 8px;
+        }
+        
+        .qa-item p {
+            color: #b0c4de;
+            line-height: 1.6;
+        }
+        
+        /* 按钮样式 - 优化 */
+        .btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(30, 144, 255, 0.3);
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(30, 144, 255, 0.5);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(90deg, #ff416c, #ff4b2b);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: linear-gradient(90deg, #ff4b2b, #ff416c);
+            box-shadow: 0 6px 15px rgba(255, 75, 43, 0.5);
+        }
+        
+        /* 快速导航按钮 - 优化 */
+        .quick-nav {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 100;
+        }
+        
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(10, 25, 47, 0.9);
+            color: #40e0d0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+        }
+        
+        .nav-btn:hover {
+            background-color: #40e0d0;
+            color: #0c1a2d;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(64, 224, 208, 0.7);
+        }
+        
+        /* 页脚样式 - 优化 */
+        footer {
+            background-color: rgba(10, 25, 47, 0.9);
+            color: #b0c4de;
+            padding: 30px 0;
+            margin-top: 50px;
+            text-align: center;
+            border-top: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .footer-content p {
+            margin-bottom: 10px;
+        }
+        
+        .footer-content i {
+            color: #40e0d0;
+            margin-right: 8px;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo-section {
+                flex-direction: column;
+                margin-bottom: 15px;
+            }
+            
+            .contact-info {
+                text-align: center;
+                margin-top: 15px;
+            }
+            
+            .carousel {
+                height: 250px;
+            }
+            
+            .functions-grid, .staff-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-nav {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+        
+        /* 新增悬停效果样式 */
+        .building-display {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        
+        .building-normal {
+            display: inline;
+        }
+        
+        .building-hover {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: rgba(10, 25, 47, 0.95);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            white-space: nowrap;
+            z-index: 100;
+            animation: fadeIn 0.3s;
+            color: #40e0d0;
+        }
+        
+        .building-display:hover .building-normal {
+            opacity: 0;
+        }
+        
+        .building-display:hover .building-hover {
+            display: inline;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 链接样式优化 */
+        a {
+            color: #40e0d0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #1e90ff;
+            text-shadow: 0 0 8px rgba(30, 144, 255, 0.5);
+        }
+        
+        /* 添加内容区域网格布局 */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+        }
+        
+        .main-content {
+            padding-right: 20px;
+            border-right: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* 返回按钮样式 */
+        .back-button {
+            display: inline-block;
+            background: rgba(20, 40, 70, 0.7);
+            color: #87ceeb;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .back-button:hover {
+            background: rgba(64, 224, 208, 0.1);
+            border-color: #40e0d0;
+            transform: translateY(-3px);
+        }
+
+
+
+        
+        @media (max-width: 900px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding-right: 0;
+                border-right: none;
+                border-bottom: 1px solid rgba(64, 224, 208, 0.2);
+                padding-bottom: 30px;
+            }
+        }
+    </style>
+    <link rel="icon" type="image/png" href="./xjthj.png">
+    <link rel="stylesheet" href="sc-css.css">
+
+</head>
+<body>
+    <!-- 头部区域 -->
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="emblem-symbol">
+                        <div class="logo-img"></div>
+                    </div>
+                    <div class="logo-text">
+                        <i class="fas fa-hands-helping"></i> 墟境<span>调和局</span>办公处
+                    </div>
+                </div>
+                <div class="contact-info">
+                    <p><i class="fas fa-map-marker-alt"></i> <strong>地址：</strong> 
+                        <span class="building-display">
+                            <span class="building-normal">华苑社区7栋401室</span>
+                            <span class="building-hover">屏障稳定区域 · 需权限访问</span>
+                        </span>
+                    </p>
+                    <p><i class="fas fa-clock"></i> <strong>办公时间：</strong> 周一至周五 9:00-17:00</p>
+                    <p><i class="fas fa-phone"></i> <strong>服务热线：</strong> 400-XXX-XXXX</p>
+                    <p><i class="fas fa-envelope"></i> <strong>电子邮箱：</strong> contact@harmony-bureau.gov.cn</p>
+                </div>
+            </div>
+            
+        </header>
+        
+        <div class="content-grid">
+            <div class="main-content">
+                <!-- 图片轮播 -->
+                <div class="carousel-container">
+                    <div class="carousel">
+                        <div class="carousel-slide" style="background-image: url('bgs0.jpg');">
+                            <div class="slide-caption"></div>
+                        </div>
+                        <div class="carousel-slide" style="background-image: url('bgs1.jpg');">
+                            <div class="slide-caption"></div>
+                        </div>
+                        <div class="carousel-slide" style="background-image: url('bgs2.jpg');">
+                            <div class="slide-caption"></div>
+                        </div>
+                        <div class="carousel-slide" style="background-image: url('bgs3.jpg');">
+                            <div class="slide-caption"></div>
+                        </div>
+                    </div>
+                    <button class="carousel-btn prev"><i class="fas fa-chevron-left"></i></button>
+                    <button class="carousel-btn next"><i class="fas fa-chevron-right"></i></button>
+                    <div class="carousel-indicators">
+                        <div class="indicator active" data-slide="0"></div>
+                        <div class="indicator" data-slide="1"></div>
+                        <div class="indicator" data-slide="2"></div>
+                        <div class="indicator" data-slide="3"></div>
+                    </div>
+                </div>
+                
+                <!-- 局长引言 -->
+                <div class="quote-section">
+                    <blockquote>
+                        "为社区居民提供专业、高效、友好的调和服务是我们的宗旨。"
+                    </blockquote>
+                   <!--  <div class="quote-author">—— 局长 林</div> -->
+                </div>
+                
+                <h2 class="section-title">✦ 我们的办公环境</h2>
+                
+                <!-- 功能区 -->
+                <div class="functions-grid">
+                    <div class="function-card">
+                        <h3><i class="fas fa-door-open"></i> 接待大厅（401-A）</h3>
+                        <p>栖居权申请咨询与初审</p>
+                        <p>异常现象报告受理</p>
+                        <p>调和剂使用指导</p>
+                    </div>
+                    
+                    <div class="function-card">
+                        <h3><i class="fas fa-archive"></i> 档案管理室（401-B）</h3>
+                        <p>居民-非人生物共居档案查询（需预约）</p>
+                        <p>历史案件记录调阅</p>
+                        <p>屏障运行日志公开部分</p>
+                    </div>
+                    
+                    <div class="function-card">
+                        <h3><i class="fas fa-flask"></i> 调和实验室（401-C）</h3>
+                        <p>普通调和剂的分装与检测</p>
+                        <p>基础屏障维护设备存放</p>
+                        <div class="warning">
+                            <i class="fas fa-exclamation-triangle"></i> 危险物品，非工作人员请勿靠近
+                        </div>
+                    </div>
+                    
+                    <div class="function-card">
+                        <h3><i class="fas fa-coffee"></i> 员工休息区（401-D）</h3>
+                        <p>24小时咖啡茶水供应</p>
+                        <p>员工储物柜（每个柜门都有个性化装饰）</p>
+                    </div>
+                </div>
+                
+                <h2 class="section-title">✦ 今日值班人员</h2>
+                
+                <!-- 值班人员 -->
+                <div class="staff-container">
+                    <div class="staff-card">
+                        <div class="staff-name">叶可兰</div>
+                        <div class="staff-role">前台接待</div>
+                        <div class="staff-quote">"您好，请问需要办理什么业务？如果是栖居权申请，请先填写在线表格哦。"</div>
+                        <div class="status">
+                            <span class="btn">在岗</span>
+                        </div>
+                    </div>
+                    
+                    <div class="staff-card">
+                        <div class="staff-name">周玉章</div>
+                        <div class="staff-role">档案管理员</div>
+                        <div class="staff-quote">"调阅档案需要提前预约，并出示有效证件。我们保护每一位居民和共生伙伴的隐私。"</div>
+                        <div class="status">
+                            <span class="btn">在岗</span>
+                        </div>
+                    </div>
+                    
+                    <div class="staff-card">
+                        <div class="staff-name">许林沅</div>
+                        <div class="staff-role">技术顾问</div>
+                        <div class="staff-quote">"屏障系统的稳定是社区安全的基础。"</div>
+                        <div class="status-out">
+                            <p><i class="fas fa-external-link-alt"></i> <strong>外出通知：</strong>前往8栋楼附近处理公务。</p>
+                            <p><i class="fas fa-clock"></i> <strong>预计返回：</strong> 下午3点后。</p>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <!-- 侧边栏服务指南 -->
+                <div class="service-guide">
+                    <h2 class="section-title">✦ 便民服务指南</h2>
+                    
+                    <div class="service-section">
+                        <h3><i class="fas fa-anchor"></i> 如何申请"栖居权锚定"？</h3>
+                        <ol class="steps">
+                            <li>在线填写预申请表<a href="jump1.html" class="btn" style="padding: 5px 10px; font-size: 0.9rem;">点击此处跳转</a></li>
+                            <li>携带宠物/共生伙伴到现场进行生物特征录入</li>
+                            <li>签订《共生责任协议》</li>
+                            <li>领取锚定剂并学习正确使用方法</li>
+                            <li>等待3个工作日的审核期</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="service-section">
+                        <h3><i class="fas fa-exclamation-circle"></i> 如何报告异常现象？</h3>
+                        <ul class="steps">
+                            <li><strong>紧急情况：</strong>直接拨打服务热线 400-XXX-XXXX</li>
+                            <li><strong>非紧急：</strong>填写在线报告表<a href="#" class="btn" style="padding: 5px 10px; font-size: 0.9rem;">点击此处跳转</a></li>
+                            <li><strong>匿名举报：</strong>投入7栋1楼大厅的"异常现象举报箱"</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="service-section">
+                        <h3><i class="fas fa-question-circle"></i> 常见问题 Q&A</h3>
+                        
+                        <div class="qa-item">
+                            <h4><i class="fas fa-bug"></i> Q：我的宠物蟑螂最近行为异常，总是试图往地下室跑，怎么办？</h4>
+                            <p>A：这可能与季节性迁移或寻找食物有关。建议先检查家中卫生，如情况持续，可预约我们的行为咨询。</p>
+                        </div>
+                        
+                        <div class="qa-item">
+                            <h4><i class="fas fa-eye"></i> Q：我好像看到了……长着人手指的虫子，是幻觉吗？</h4>
+                            <p>A：社区屏障系统偶尔会产生光学干扰。如果再次目击，请立即拍照并联系我们，我们会派技术人员检测屏障稳定性。</p>
+                        </div>
+                        
+                        <div class="qa-item">
+                            <h4><i class="fas fa-route"></i> Q：为什么有时候我觉得7栋的走廊长度不太对劲？</h4>
+                            <p>A：建筑设计中考虑到采光和通风，部分走廊采用了视觉延伸设计。这是正常的建筑设计手法，请不必担心。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 公告栏 -->
+                <div class="service-guide">
+                    <h3 class="section-title">✦ 最新公告</h3>
+                    <div class="qa-item">
+                        <h4><i class="fas fa-bullhorn"></i> 屏障系统维护通知</h4>
+                        <p>本周五（10月27日）凌晨2:00-4:00进行屏障系统例行维护，期间可能会出现轻微空间波动，请勿惊慌。</p>
+                    </div>
+                    <div class="qa-item">
+                        <h4><i class="fas fa-calendar-alt"></i> 社区共生节活动</h4>
+                        <p>下月15日将举办年度社区共生节，欢迎居民与非人伙伴共同参与。详情请关注社区公告栏。</p>
+                    </div>
+                    
+                </div>
+                <div style="display: grid; place-items: center; width: 100%;">
+   <a href="SY.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> 返回墟境调和局首页
+    </a>
+</div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <!-- 快速导航按钮 -->
+    <!-- <div class="quick-nav">
+        <div class="nav-btn" id="scrollTopBtn" title="返回顶部">
+            <i class="fas fa-arrow-up"></i>
+        </div>
+        <div class="nav-btn" id="contactBtn" title="联系方式">
+            <i class="fas fa-phone"></i>
+        </div>
+        <div class="nav-btn" id="serviceBtn" title="便民服务">
+            <i class="fas fa-hands-helping"></i>
+        </div>
+    </div> -->
+    <!-- 快速导航按钮 -->
+<div class="quick-nav">
+    <div class="nav-btn" id="scrollTopBtn" title="返回顶部">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    <div class="nav-btn" id="contactBtn" title="联系方式">
+        <i class="fas fa-phone"></i>
+    </div>
+    <div class="nav-btn" id="serviceBtn" title="便民服务">
+        <i class="fas fa-hands-helping"></i>
+    </div>
+    <!-- 新添加的登录按钮 -->
+    <div class="nav-btn" id="loginBtn" title="登录" onclick="window.location.href='mi-xu.html'">
+        <i class="fas fa-sign-in-alt"></i>
+    </div>
+</div>
+ 
+    
+    <!-- 页脚 -->
+    <footer>
+        
+        <div class="container footer-content">
+             
+    
+            <p><i class="fas fa-hands-helping"></i> 墟境调和局办公处 - 致力于维护社区和谐共生</p>
+            <p>© 2023 华苑社区墟境调和局. 保留所有权利.</p>
+            <p><i class="fas fa-shield-alt"></i> 屏障系统运行状态：<span style="color:#40e0d0;">稳定</span></p>
+        </div>
+    </footer>
+    
+    <script>
+        // 图片轮播功能
+        const carousel = document.querySelector('.carousel');
+        const slides = document.querySelectorAll('.carousel-slide');
+        const prevBtn = document.querySelector('.carousel-btn.prev');
+        const nextBtn = document.querySelector('.carousel-btn.next');
+        const indicators = document.querySelectorAll('.indicator');
+        
+        let currentSlide = 0;
+        const slideCount = slides.length;
+        
+        // 更新轮播位置
+        function updateCarousel() {
+            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // 更新指示器状态
+            indicators.forEach((indicator, index) => {
+                if (index === currentSlide) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+        }
+        
+        // 下一张幻灯片
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slideCount;
+            updateCarousel();
+        }
+        
+        // 上一张幻灯片
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+            updateCarousel();
+        }
+        
+        // 自动轮播
+        let slideInterval = setInterval(nextSlide, 5000);
+        
+        // 重置自动轮播计时器
+        function resetInterval() {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+        
+        // 事件监听
+        nextBtn.addEventListener('click', () => {
+            nextSlide();
+            resetInterval();
+        });
+        
+        prevBtn.addEventListener('click', () => {
+            prevSlide();
+            resetInterval();
+        });
+        
+        // 指示器点击事件
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                currentSlide = index;
+                updateCarousel();
+                resetInterval();
+            });
+        });
+        
+        // 快速导航功能
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+        const contactBtn = document.getElementById('contactBtn');
+        const serviceBtn = document.getElementById('serviceBtn');
+        
+        // 返回顶部
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // 跳转到联系方式
+        contactBtn.addEventListener('click', () => {
+            document.querySelector('header').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+        
+        // 跳转到便民服务
+        serviceBtn.addEventListener('click', () => {
+            document.querySelector('.service-guide').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+        
+        // 添加一些交互效果
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+        
+        // 添加页面加载动画
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+        
+        // 悬停效果增强
+        document.querySelectorAll('.function-card, .staff-card, .qa-item').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.zIndex = '10';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.zIndex = '';
+            });
+        });
+        
+        // 添加地址悬停效果
+        const buildingDisplay = document.querySelector('.building-display');
+        buildingDisplay.addEventListener('mouseenter', function() {
+            this.querySelector('.building-normal').style.opacity = '0.3';
+        });
+        
+        buildingDisplay.addEventListener('mouseleave', function() {
+            this.querySelector('.building-normal').style.opacity = '1';
+        });
+    </script>
+<script src="sc-ball.js"></script>
+
+<script src="jinzhi.js"></script>
+</body>
+</html>

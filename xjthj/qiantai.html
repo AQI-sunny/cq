@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>栖乔华苑 - 前台服务</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            background-color: #0d1b2a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        /* 前台场景容器 */
+        .scene-container {
+            width: 100%;
+            max-width: 1000px;
+            height: 95vh;
+            display: flex;
+            flex-direction: column;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+        }
+        
+        /* 前台场景图片 */
+        .scene-image {
+            flex: 1;
+            background: 
+                linear-gradient(rgba(13, 27, 42, 0.85), rgba(13, 27, 42, 0.9)),
+                url('qt.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 30px;
+            position: relative;
+            min-height: 300px;
+        }
+        
+        /* 前台名牌 */
+        .receptionist-badge {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            color: #152238;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10;
+        }
+        
+        .receptionist-badge i {
+            color: #ffd700;
+        }
+        
+        /* 对话区域 - 增大高度 */
+        .dialogue-area {
+            height: 70%;
+            min-height: 400px;
+            background: rgba(10, 20, 35, 0.97);
+            border-top: 7px solid #4facfe;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(8px);
+        }
+        
+        .dialogue-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 15px 10px 5px;
+            margin-bottom: 20px;
+            max-height: 520px;
+        }
+        
+        .dialogue-container::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        .dialogue-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .dialogue-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #4facfe, #00f2fe);
+            border-radius: 10px;
+            border: 2px solid rgba(10, 20, 35, 0.5);
+        }
+        
+        .dialogue-container::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, #3d9bf0, #00d9f2);
+        }
+        
+        .message {
+            margin-bottom: 18px;
+            animation: fadeInUp 0.5s ease;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .receptionist-message {
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .player-message {
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+        }
+        
+        .message-bubble {
+            max-width: 75%;
+            padding: 18px 22px;
+            border-radius: 22px;
+            line-height: 1.6;
+            font-size: 1.15rem;
+            position: relative;
+            word-wrap: break-word;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .receptionist-message .message-bubble {
+            background: linear-gradient(135deg, rgba(30, 60, 114, 0.95), rgba(40, 80, 140, 0.9));
+            border-bottom-left-radius: 5px;
+            margin-left: 10px;
+        }
+        
+        .player-message .message-bubble {
+            background: linear-gradient(135deg, rgba(40, 100, 150, 0.95), rgba(50, 120, 180, 0.9));
+            border-bottom-right-radius: 5px;
+            margin-right: 10px;
+        }
+        
+        .message-speaker {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+            color: #a0c8ff;
+        }
+        
+        .message-speaker i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+        
+        /* 输入区域 */
+        .input-area {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .input-area input {
+            flex: 1;
+            padding: 18px 22px;
+            border-radius: 28px;
+            border: 2px solid rgba(79, 172, 254, 0.6);
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            font-size: 1.15rem;
+            transition: all 0.3s ease;
+        }
+        
+        .input-area input:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 20px rgba(79, 172, 254, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .input-area button {
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            color: #152238;
+            border: none;
+            padding: 0 35px;
+            border-radius: 28px;
+            font-size: 1.15rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .input-area button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.5);
+        }
+        
+        /* 错误提示 */
+        .error-message {
+            color: #ff6b6b;
+            font-size: 1rem;
+            padding: 10px 18px;
+            background: rgba(255, 107, 107, 0.15);
+            border-radius: 10px;
+            border-left: 4px solid #ff6b6b;
+            margin-bottom: 15px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        /* 选项区域 */
+        .options-area {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-top: 15px;
+        }
+        
+        .option-btn {
+            background: linear-gradient(135deg, rgba(40, 80, 140, 0.8), rgba(60, 100, 160, 0.7));
+            border: 2px solid rgba(100, 180, 255, 0.6);
+            color: #f0f0f0;
+            padding: 18px 24px;
+            border-radius: 15px;
+            font-size: 1.15rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+        
+        .option-btn:hover {
+            background: linear-gradient(135deg, rgba(60, 120, 200, 0.95), rgba(80, 140, 220, 0.9));
+            border-color: rgba(100, 180, 255, 0.9);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* 旁白 */
+        .aside-text {
+            font-style: italic;
+            color: #ffcc80;
+            margin-top: 20px;
+            padding: 12px 18px;
+            background: rgba(255, 204, 128, 0.15);
+            border-radius: 10px;
+            border-left: 4px solid #ffcc80;
+            font-size: 1.05rem;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        /* 离开按钮 */
+        .leave-btn {
+            background: linear-gradient(to right, #fe4f4f 0%, #fe9a00 100%);
+            color: white;
+            border: none;
+            padding: 18px 45px;
+            border-radius: 28px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 25px auto 0;
+            display: none;
+            box-shadow: 0 5px 15px rgba(254, 79, 79, 0.3);
+        }
+        
+        .leave-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(254, 79, 79, 0.5);
+        }
+        
+        /* 新增：圆形刷新按钮样式 */
+        .refresh-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: #152238;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .refresh-btn:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.5);
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .scene-container {
+                height: 98vh;
+                max-width: 95vw;
+            }
+            
+            .scene-image {
+                padding: 20px;
+                min-height: 250px;
+            }
+            
+            .receptionist-badge {
+                top: 20px;
+                left: 20px;
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
+            
+            .dialogue-area {
+                height: 60%;
+                min-height: 350px;
+                padding: 20px;
+            }
+            
+            .dialogue-container {
+                max-height: 280px;
+                padding: 8px 12px 8px 5px;
+            }
+            
+            .message-bubble {
+                max-width: 85%;
+                font-size: 1.1rem;
+                padding: 15px 18px;
+            }
+            
+            .input-area input {
+                padding: 15px 18px;
+                font-size: 1.1rem;
+            }
+            
+            .input-area button {
+                padding: 0 25px;
+                font-size: 1.1rem;
+            }
+            
+            .option-btn {
+                padding: 15px 20px;
+                font-size: 1.1rem;
+            }
+            
+            .refresh-btn {
+                width: 55px;
+                height: 55px;
+                bottom: 20px;
+                right: 20px;
+                font-size: 1.4rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .dialogue-area {
+                height: 65%;
+            }
+            
+            .dialogue-container {
+                max-height: 250px;
+            }
+            
+            .message-bubble {
+                max-width: 90%;
+                font-size: 1.05rem;
+                padding: 12px 15px;
+            }
+            
+            .input-area {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .input-area button {
+                padding: 15px;
+            }
+            
+            .refresh-btn {
+                width: 50px;
+                height: 50px;
+                bottom: 15px;
+                right: 15px;
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scene-container">
+        <!-- 前台场景 -->
+        <div class="scene-image">
+            <!-- 前台名牌 -->
+            <div class="receptionist-badge">
+                <i class="fas fa-id-badge"></i>
+                前台 · 米缇
+            </div>
+        </div>
+        
+        <!-- 对话区域 -->
+        <div class="dialogue-area">
+            <div class="dialogue-container" id="dialogueContainer">
+                <!-- 初始对话 -->
+                <div class="message receptionist-message">
+                    <div class="message-bubble">
+                        <div class="message-speaker">
+                            <i class="fas fa-id-badge"></i>前台 · 米缇
+                        </div>
+                        您好，请出示您的居民ID。
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 输入区域 -->
+            <div class="input-area" id="inputArea">
+                <input type="text" id="residentId" placeholder="请输入居民ID">
+                <button id="submitId">验证</button>
+            </div>
+            
+            <!-- 错误提示 -->
+            <div class="error-message" id="errorMessage"></div>
+            
+            <!-- 选项区域 -->
+            <div class="options-area" id="optionsArea" style="display: none;">
+                <!-- 选项将动态添加 -->
+            </div>
+            
+            <!-- 旁白 -->
+            <div class="aside-text" id="asideText" style="display: none;"></div>
+            
+            <!-- 离开按钮 -->
+            <button class="leave-btn" id="leaveBtn">离开前台</button>
+        </div>
+    </div>
+
+    <!-- 新增：圆形刷新按钮 -->
+    <button class="refresh-btn" id="refreshBtn" title="刷新页面">
+        <i class="fas fa-redo"></i>
+    </button>
+
+    <script>
+        // 页面元素
+        const dialogueContainer = document.getElementById('dialogueContainer');
+        const inputArea = document.getElementById('inputArea');
+        const residentIdInput = document.getElementById('residentId');
+        const submitIdBtn = document.getElementById('submitId');
+        const optionsArea = document.getElementById('optionsArea');
+        const asideText = document.getElementById('asideText');
+        const leaveBtn = document.getElementById('leaveBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const refreshBtn = document.getElementById('refreshBtn');
+        
+        // 验证居民ID - 只允许 3D7F03A
+        function validateResidentId(id) {
+            // 移除空格并转换为大写
+            const cleanId = id.trim().toUpperCase();
+            
+            // 只允许特定的ID: 3D7F03A
+            const allowedId = "3D7F03A";
+            
+            return {
+                isValid: cleanId === allowedId,
+                cleanId
+            };
+        }
+        
+        // 添加消息到对话容器
+        function addMessage(content, isPlayer = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isPlayer ? 'player-message' : 'receptionist-message'}`;
+            
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'message-bubble';
+            
+            if (!isPlayer) {
+                const speakerDiv = document.createElement('div');
+                speakerDiv.className = 'message-speaker';
+                speakerDiv.innerHTML = '<i class="fas fa-id-badge"></i>前台 · 米缇';
+                bubbleDiv.appendChild(speakerDiv);
+            }
+            
+            bubbleDiv.appendChild(document.createTextNode(content));
+            messageDiv.appendChild(bubbleDiv);
+            
+            dialogueContainer.appendChild(messageDiv);
+            
+            // 滚动到最新消息
+            dialogueContainer.scrollTop = dialogueContainer.scrollHeight;
+            
+            // 添加动画
+            messageDiv.style.animation = 'fadeInUp 0.5s ease';
+            
+            return messageDiv;
+        }
+        
+        // 显示错误提示
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            
+            // 3秒后自动隐藏错误提示
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 3000);
+            
+            // 输入框红色闪烁
+            residentIdInput.style.borderColor = '#ff6b6b';
+            setTimeout(() => {
+                residentIdInput.style.borderColor = 'rgba(79, 172, 254, 0.6)';
+            }, 600);
+        }
+        
+        // 显示选项
+        function showOptions() {
+            optionsArea.innerHTML = '';
+            
+            const option1 = document.createElement('button');
+            option1.className = 'option-btn';
+            option1.textContent = '7栋401';
+            option1.onclick = () => selectOption('7栋401');
+            
+            const option2 = document.createElement('button');
+            option2.className = 'option-btn';
+            option2.textContent = '7又7分之4栋';
+            option2.onclick = () => selectOption('7又7分之4栋');
+            
+            optionsArea.appendChild(option1);
+            optionsArea.appendChild(option2);
+            optionsArea.style.display = 'flex';
+            inputArea.style.display = 'none';
+        }
+        
+        // 处理选项选择
+        function selectOption(option) {
+            // 添加玩家选择的选项
+            addMessage(option, true);
+            
+            // 隐藏选项区域
+            optionsArea.style.display = 'none';
+            
+            // 根据选择显示不同的回复
+            if (option === '7栋401') {
+                // 前台回复
+                setTimeout(() => {
+                    addMessage('7栋啊？这边是3栋，出门右拐是4栋，4栋往后走800米是9栋，9栋左边700m左右就是7栋咯，门禁密码77six77fa');
+                    
+                    // 显示旁白
+                    setTimeout(() => {
+                        asideText.textContent = '这个前台怎么笑得那么奇怪。。。这什么门禁密码啊，门禁密码一般不都全数字吗。。';
+                        asideText.style.display = 'block';
+                        
+                        // 显示离开按钮
+                        setTimeout(() => {
+                            leaveBtn.style.display = 'block';
+                            dialogueContainer.scrollTop = dialogueContainer.scrollHeight;
+                        }, 800);
+                    }, 1000);
+                }, 800);
+            } else if (option === '7又7分之4栋') {
+                // 前台回复
+                setTimeout(() => {
+                    addMessage('这是什么地址，不好意思，这边不知道呢~');
+                    
+                    // 显示离开按钮
+                    setTimeout(() => {
+                        leaveBtn.style.display = 'block';
+                        dialogueContainer.scrollTop = dialogueContainer.scrollHeight;
+                    }, 1000);
+                }, 800);
+            }
+        }
+        
+        // 显示"我没有其他事情了"按钮
+        function showNoOtherQuestions() {
+            optionsArea.innerHTML = '';
+            
+            const noQuestionBtn = document.createElement('button');
+            noQuestionBtn.className = 'option-btn';
+            noQuestionBtn.textContent = '没事了';
+            noQuestionBtn.onclick = () => {
+                // 添加玩家选择的选项
+                addMessage('阿，我没什么事情，打扰了', true);
+                
+                // 前台回复
+                setTimeout(() => {
+                    addMessage('......好的，再见。');
+                    
+                    // 显示离开按钮
+                    setTimeout(() => {
+                        leaveBtn.style.display = 'block';
+                        leaveBtn.textContent = '离开前台';
+                        dialogueContainer.scrollTop = dialogueContainer.scrollHeight;
+                    }, 800);
+                }, 800);
+                
+                // 隐藏选项区域
+                optionsArea.style.display = 'none';
+            };
+            
+            optionsArea.appendChild(noQuestionBtn);
+            optionsArea.style.display = 'flex';
+            inputArea.style.display = 'none';
+        }
+        
+        // 提交居民ID
+        function submitResidentId() {
+            const residentId = residentIdInput.value;
+            
+            if (!residentId) {
+                showError('请输入居民ID');
+                return;
+            }
+            
+            // 验证ID格式 - 只允许 3D7F03A
+            const validation = validateResidentId(residentId);
+            
+            // 添加玩家输入的ID
+            addMessage(`居民ID: ${residentId}`, true);
+            
+            // 隐藏输入区域和错误提示
+            inputArea.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            if (validation.isValid) {
+                // 正确ID的逻辑
+                setTimeout(() => {
+                    addMessage('阿稍等我查一下哦~ 3栋703A......哦原来如此...就是你小子老打12345投诉是吧！哼，说吧，想问什么');
+                    
+                    // 显示选项
+                    setTimeout(() => {
+                        showOptions();
+                    }, 800);
+                }, 800);
+            } else {
+                // 错误ID的逻辑
+                setTimeout(() => {
+                    addMessage('请问有什么问题吗？');
+                    
+                    // 显示"我没有其他事情了"按钮
+                    setTimeout(() => {
+                        showNoOtherQuestions();
+                    }, 800);
+                }, 800);
+            }
+        }
+        
+        // 刷新按钮功能
+        refreshBtn.addEventListener('click', function() {
+            // 添加旋转动画
+            this.style.transform = 'rotate(360deg)';
+            this.style.transition = 'transform 0.5s ease';
+            
+            // 延迟刷新以显示动画
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+        });
+        
+        // 事件监听
+        submitIdBtn.addEventListener('click', submitResidentId);
+        
+        // 允许按Enter键提交ID
+        residentIdInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitResidentId();
+            }
+        });
+        
+        // 离开按钮事件
+        leaveBtn.addEventListener('click', function() {
+            // 根据当前状态跳转到不同页面
+            const validation = validateResidentId(residentIdInput.value);
+            
+            if (validation.isValid) {
+                // 正确ID跳转到7D401.html
+                window.location.href = 'mi-401menj.html';
+            } else {
+                // 错误ID跳转到sy.html
+                window.location.href = 'sy.html';
+            }
+        });
+        
+        // 初始聚焦到ID输入框
+        residentIdInput.focus();
+    </script>
+    <script src="jinzhi.js"></script>
+</body>
+</html>

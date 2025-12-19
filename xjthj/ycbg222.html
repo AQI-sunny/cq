@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>栖乔华苑紧急报告 - PDF</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SimSun", "宋体", "STSong", serif;
+        }
+        
+        body {
+            background-color: #0a0a14;
+            color: #f0f0f0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .pdf-container {
+            max-width: 210mm;
+            min-height: 297mm;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
+            margin: 0 auto;
+            padding: 20mm;
+            box-shadow: 0 5px 25px rgba(255, 0, 0, 0.2);
+            position: relative;
+            box-sizing: border-box;
+            border: 1px solid #ff4444;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 3px double #ff4444;
+            padding-bottom: 15px;
+        }
+        
+        .report-title {
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+            color: #ff6666;
+            text-shadow: 0 0 10px rgba(255, 50, 50, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #ff8888;
+        }
+        
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        
+        .info-table td {
+            padding: 10px 5px;
+            vertical-align: top;
+            border-bottom: 1px dashed #444;
+        }
+        
+        .info-table td:first-child {
+            width: 35%;
+            font-weight: bold;
+            color: #ff7777;
+        }
+        
+        .info-table td:last-child {
+            color: #dddddd;
+        }
+        
+        .section {
+            margin: 25px 0;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #ff4444;
+            color: #ff7777;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: #ff0000;
+        }
+        
+        .subsection {
+            margin: 18px 0 18px 20px;
+            padding-left: 10px;
+            border-left: 3px solid #ff3333;
+        }
+        
+        .subsection-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #ff9999;
+            font-size: 16px;
+        }
+        
+        .list-item {
+            margin: 10px 0 10px 30px;
+            padding: 5px 0;
+            position: relative;
+        }
+        
+        .list-item::before {
+            content: "▶";
+            position: absolute;
+            left: -20px;
+            color: #ff4444;
+            font-size: 12px;
+        }
+        
+        .footer {
+            margin-top: 50px;
+            padding-top: 25px;
+            border-top: 2px solid #ff4444;
+        }
+        
+        .signature {
+            text-align: right;
+            margin-top: 40px;
+        }
+        
+        .signature div {
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .signature div:first-child {
+            color: #ff7777;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .stamp {
+            position: absolute;
+            right: 40mm;
+            bottom: 40mm;
+            width: 130px;
+            height: 130px;
+            border: 3px solid #ff0000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #ff0000;
+            font-size: 18px;
+            transform: rotate(-15deg);
+            background: rgba(20, 20, 30, 0.9);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+        }
+        
+        .stamp-text {
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .stamp-text div:first-child {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .emergency-tag {
+            position: absolute;
+            top: 20mm;
+            right: 20mm;
+            background: #ff0000;
+            color: white;
+            padding: 8px 15px;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 4px;
+            transform: rotate(10deg);
+            box-shadow: 0 4px 10px rgba(255, 0, 0, 0.5);
+        }
+        
+        .red-line {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #ff4444, transparent);
+            margin: 20px 0;
+        }
+        
+        @media print {
+            body {
+                background: #0a0a14;
+                padding: 0;
+            }
+            
+            .pdf-container {
+                box-shadow: none;
+                margin: 0;
+                padding: 20mm;
+                max-width: 100%;
+                min-height: 100vh;
+                border: 1px solid #ff4444;
+            }
+            
+            .no-print {
+                display: none;
+            }
+        }
+        
+        .controls {
+            max-width: 210mm;
+            margin: 20px auto;
+            padding: 15px;
+            background: rgba(30, 30, 50, 0.9);
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff4444;
+        }
+        
+        .button {
+            background: linear-gradient(135deg, #ff3333 0%, #cc0000 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .button:hover {
+            background: linear-gradient(135deg, #ff5555 0%, #dd2222 100%);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+        }
+        
+        .controls span {
+            margin-left: 20px;
+            color: #ff9999;
+        }
+        
+        .red-highlight {
+            color: #ff6666;
+            font-weight: bold;
+        }
+        
+        .glow-text {
+            text-shadow: 0 0 8px rgba(255, 100, 100, 0.5);
+        }
+        
+        p {
+            color: #dddddd;
+        }
+        
+        strong {
+            color: #ff8888;
+        }
+    </style>
+    <link rel="stylesheet" href="sc-css.css">
+</head>
+<body>
+    <div class="controls no-print">
+        <button class="button" onclick="window.print()">打印/保存为PDF</button>
+        <!-- <button class="button" onclick="toggleStamp()">切换印章显示</button> -->
+        <button class="button" onclick="toggleTheme()">切换日间/夜间模式</button>
+        <span>tip：点击打印按钮可保存为PDF文件</span>
+    </div>
+    
+    <div class="pdf-container">
+        <div class="emergency-tag">紧急报告</div>
+        
+        <div class="header">
+            <div class="report-title glow-text">紧急情况报告</div>
+            <div class="subtitle">关于栖乔华苑4栋内部蟑螂异常异变情况</div>
+        </div>
+        
+        <div class="red-line"></div>
+        
+        <table class="info-table">
+            <tr>
+                <td>呈报对象：</td>
+                <td><span class="red-highlight">栖乔华苑物业高层管理部</span></td>
+            </tr>
+            <tr>
+                <td>呈报部门：</td>
+                <td>栖乔华苑特殊部</td>
+            </tr>
+            <tr>
+                <td>呈报日期：</td>
+                <td><span class="red-highlight">2025年12月19日</span></td>
+            </tr>
+            <tr>
+                <td>巡查人员：</td>
+                <td>李星芒</td>
+            </tr>
+            <tr>
+                <td>巡查时间：</td>
+                <td><span class="red-highlight">2025年12月19日 凌晨2:00-4:00</span></td>
+            </tr>
+            <tr>
+                <td>信息来源：</td>
+                <td>保洁部2025年12月18日日常作业反馈 + 特殊部夜间专项巡查核实</td>
+            </tr>
+        </table>
+        
+        <div class="red-line"></div>
+        
+        <div class="section">
+            <div class="section-title">一、巡查背景与执行情况</div>
+            <p>为保障栖乔华苑住户居住安全及园区生态稳定，特殊部日常开展夜间常态化隐患巡查工作。本次巡查系接保洁部异常情况上报后启动的专项核查行动，巡查范围精准锁定4栋地下停车场、4层楼道拐角、管道井及3-5层楼道杂物间等保洁部上报的异常区域，巡查过程严格遵循特殊部安全操作规范，全程记录现场情况，保洁部相关人员协同配合调查。</p>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">二、异常情况具体描述</div>
+            
+            <div class="subsection">
+                <div class="subsection-title">1. 保洁部先期发现情况</div>
+                <p><span class="red-highlight">2025年12月18日 上午6:00-8:00</span>，保洁部工作人员于4栋开展日常保洁作业时，在楼道区域听到明显窸窸窣窣异响。因园区内长期无鼠患记录，初步排除鼠类活动可能，推测为蟑螂聚集所致。作业期间，保洁部工作人员目击<span class="red-highlight">1-2只网球高度大小的异变蟑螂</span>，该类蟑螂存在直立行走行为，但其走姿较为笨拙；在察觉到被人发现后，该蟑螂立即恢复爬行姿态，迅速逃窜，工作人员未能追踪至其藏匿位置。</p>
+            </div>
+            
+            <div class="subsection">
+                <div class="subsection-title">2. 特殊部夜间巡查核实情况</div>
+                <p>特殊部于<span class="red-highlight">2025年12月19日 凌晨2:00-4:00</span>，对保洁部上报的4栋地下停车场、4层楼道拐角等区域开展专项巡查。</p>
+                
+                <div class="list-item"><strong>虫害异变体征核实：</strong>巡查至4栋负一层管道井及3-5层楼道杂物间时，确证存在大量蟑螂聚集现象，且该批次蟑螂存在明显异常异变特征：体型较常规蟑螂显著增大，整体尺寸约等同网球大小；部分个体可实现直立行走，肢体支撑协调性存在差异，部分个体走姿笨拙；具有主动攻击性，会对巡查人员及探测设备发起突袭，攻击速度较快，但经现场测试，其攻击力暂未达到伤人程度，未造成人员受伤及设备损毁。</div>
+                
+                <div class="list-item"><strong>磁场与电子设备异常现象：</strong>巡查至保洁部工作人员追踪蟑螂的关键区域（4栋地下停车场、4层楼道拐角）时，巡查人员（含特殊部部长李星芒）及协同的保洁部工作人员手机均出现异常失灵状况：信号完全消失，屏幕出现花屏、闪烁等故障，无法正常操作；同时，特殊部携带的磁场探测仪发出异常警报，显示该区域磁场参数与周边正常区域存在显著偏差，波动频率无规律可循。<span class="red-highlight">特殊部部长李星芒</span>凭借自身对未知异常的感知能力，亦能明确捕捉到该区域的异常能量波动。当巡查人员撤离至上述区域外约5米范围时，手机信号与屏幕显示均恢复正常，磁场探测仪读数同步回归基准值；后续多次折返复测，均未再捕捉到同类异常信号。</div>
+            </div>
+            
+            <div class="subsection">
+                <div class="subsection-title">3. 现场环境关联排查</div>
+                <p>现场对异常区域进行初步排查：周边无外来物品堆放，管道井内线路、管道运行正常，无化学品泄漏、设备故障等常规诱因；杂物间内住户存放物品均为日常杂物，未发现特殊生物制剂或不明来源物件；异常蟑螂聚集区域的墙面、地面无破损痕迹，无明显外来生物入侵通道。</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">三、潜在风险评估</div>
+            
+            <div class="list-item">1. <strong>安全风险：</strong>当前异变蟑螂攻击力不足以伤人，但异变特征存在未知演化可能，若其种群规模扩大或攻击性进一步增强，将对4栋住户的日常出行及人身安全构成威胁；攻击速度快的特性，易对老人、儿童等弱势群体造成惊吓或轻微剐蹭。</div>
+            
+            <div class="list-item">2. <strong>环境风险：</strong>异常磁场信号的出现与消失存在极强的未知性，且已明确引发电子设备失灵，不排除该磁场与蟑螂异变存在直接关联；若磁场异常反复出现，可能对楼栋内电子设备、安防系统、消防预警设施造成持续性干扰，影响园区正常安防秩序。</div>
+            
+            <div class="list-item">3. <strong>传播风险：</strong>异变蟑螂的活动范围尚未完全明确，其可快速逃窜的特性增加了追踪难度；若其通过管道、楼道等途径扩散至其他楼栋，可能引发园区内虫害异变的连锁反应，增加后续处置难度。</div>
+            
+            <div class="list-item">4. <strong>信息风险：</strong>该事件涉及生物异变与未知磁场异常，若相关信息外泄，可能引发住户大面积恐慌，影响园区稳定。</div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">四、已采取的临时处置措施</div>
+            
+            <div class="list-item">1. 现场对异变蟑螂聚集区域进行临时隔离，以设备故障检修为公开理由，封锁4栋4层及地下停车场区域，设置醒目的安全警示标识，通过楼栋公告栏、业主群发布安全提醒，禁止住户靠近，引导住户绕行。</div>
+            
+            <div class="list-item">2. 使用特殊部专用捕捉装置，捕获少量异变蟑螂活体样本，封存于密封容器中，待后续移交专业机构分析。</div>
+            
+            <div class="list-item">3. 联合保洁部对4栋全楼进行紧急地毯式排查，重点清查管道井、杂物间、地下停车场等隐蔽区域，确认异变蟑螂的活动边界，暂未发现向其他楼栋扩散的迹象。</div>
+            
+            <div class="list-item">4. 磁场探测设备与移动通讯设备持续处于待机监测状态，安排专人值守4栋地下停车场、4层异常磁场区域，实时记录环境参数与设备异常情况。</div>
+            
+            <div class="list-item">5. 严格控制信息扩散范围，仅同步至物业高层及特殊部、保洁部参与排查人员，避免引发不必要的恐慌。</div>
+            
+            <div class="list-item">6. 调取4栋地下停车场、4层楼道拐角区域近72小时监控录像，排查是否存在外来人员、不明物品投放等异常情况，为后续调查提供支撑。</div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">五、请示与建议</div>
+            
+            <div class="list-item">1. 恳请物业高层协调专业生物研究机构及磁场探测专家，对捕获的蟑螂样本及4栋磁场异常区域进行深度检测分析，明确异变原因及磁场异常的本质。</div>
+            
+            <div class="list-item">2. 申请专项处置经费，用于采购针对性的虫害防控设备及高精度磁场监测设备，强化特殊部的处置能力；同时对参与排查的保洁部工作人员给予适当补贴。</div>
+            
+            <div class="list-item">3. 建议启动园区二级安全预警，调整特殊部巡查频次，扩大夜间巡查范围，重点监控各楼栋隐蔽区域的虫害及磁场情况；建立特殊部与保洁部日常联动机制，确保异常情况第一时间上报、第一时间处置。</div>
+            
+            <div class="list-item">4. 建议对4栋地下停车场、4层楼道拐角区域的电子设备（含监控、照明）进行全面检修，排查磁场异常对设备造成的潜在损伤。</div>
+            
+            <div class="list-item">5. 建议安排专人定期巡查封锁区域，维护警示标识，持续监控区域。</div>
+        </div>
+        
+        <div class="footer">
+            <div class="signature">
+                <div>呈报人：特殊部部长 李星芒</div>
+                <div>工号：XJA-HY23-SPE001</div>
+            </div>
+        </div>
+        
+        <div class="stamp" id="reportStamp">
+            <div class="stamp-text">
+                <div>栖乔华苑物业</div>
+                <div>特殊部</div>
+                <div>2025.12.14</div>
+                <div style="font-size:14px;margin-top:5px;">紧急</div>
+            </div>
+        </div>
+    </div>
+    <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
+    <script>
+        let isDarkMode = true;
+        
+        function toggleStamp() {
+            const stamp = document.getElementById('reportStamp');
+            if (stamp.style.display === 'none') {
+                stamp.style.display = 'flex';
+            } else {
+                stamp.style.display = 'none';
+            }
+        }
+        
+        function toggleTheme() {
+            const body = document.body;
+            const pdfContainer = document.querySelector('.pdf-container');
+            
+            if (isDarkMode) {
+                // 切换到日间模式
+                body.style.backgroundColor = '#f5f5f5';
+                body.style.color = '#333';
+                pdfContainer.style.background = 'white';
+                pdfContainer.style.color = '#333';
+                pdfContainer.style.borderColor = '#ccc';
+                
+                // 更新文本颜色
+                document.querySelectorAll('.section-title, .subsection-title, .info-table td:first-child, .signature div:first-child, .report-title, .subtitle').forEach(el => {
+                    el.style.color = '#b30000';
+                });
+                
+                document.querySelectorAll('p, .info-table td:last-child').forEach(el => {
+                    el.style.color = '#333';
+                });
+                
+                document.querySelectorAll('.list-item').forEach(el => {
+                    el.style.color = '#333';
+                });
+                
+                document.querySelector('.report-title').style.textShadow = 'none';
+                document.querySelector('.controls').style.background = '#fff';
+                document.querySelector('.controls').style.borderColor = '#ccc';
+                
+                isDarkMode = false;
+            } else {
+                // 切换回夜间模式
+                body.style.backgroundColor = '#0a0a14';
+                body.style.color = '#f0f0f0';
+                pdfContainer.style.background = 'linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%)';
+                pdfContainer.style.color = '#f0f0f0';
+                pdfContainer.style.borderColor = '#ff4444';
+                
+                // 恢复文本颜色
+                document.querySelectorAll('.section-title, .subsection-title, .info-table td:first-child, .signature div:first-child').forEach(el => {
+                    el.style.color = '#ff7777';
+                });
+                
+                document.querySelector('.report-title').style.color = '#ff6666';
+                document.querySelector('.report-title').style.textShadow = '0 0 10px rgba(255, 50, 50, 0.5)';
+                document.querySelector('.subtitle').style.color = '#ff8888';
+                
+                document.querySelectorAll('p, .info-table td:last-child').forEach(el => {
+                    el.style.color = '#dddddd';
+                });
+                
+                document.querySelectorAll('.list-item').forEach(el => {
+                    el.style.color = '#f0f0f0';
+                });
+                
+                document.querySelector('.controls').style.background = 'rgba(30, 30, 50, 0.9)';
+                document.querySelector('.controls').style.borderColor = '#ff4444';
+                
+                isDarkMode = true;
+            }
+        }
+        
+        // 页面加载时调整印章位置
+        window.addEventListener('load', function() {
+            const stamp = document.getElementById('reportStamp');
+            stamp.style.bottom = '40mm';
+            stamp.style.right = '40mm';
+        });
+    </script>
+    <script src="sc-ball.js"></script>
+<script src="jinzhi.js"></script>
+</body>
+</html>

@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7又7分之4栋 - 墟境调和局</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景特效 - 更具神秘感 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(64, 224, 208, 0.08) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(142, 68, 173, 0.1) 0px, transparent 50%),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(30, 144, 255, 0.03) 2px, rgba(30, 144, 255, 0.03) 4px);
+            z-index: -2;
+        }
+        
+        /* 闪烁的星光效果 */
+        .star {
+            position: fixed;
+            background-color: white;
+            border-radius: 50%;
+            z-index: -1;
+            animation: twinkle 3s infinite alternate;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.8; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(10, 25, 47, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 顶部装饰线 - 带有流动效果 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #20b2aa, #1e90ff, #9370db, #40e0d0);
+            background-size: 200% 100%;
+            animation: flowingLine 10s linear infinite;
+        }
+        
+        @keyframes flowingLine {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        /* 头部样式 */
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .emblem-symbol {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(64, 224, 208, 0.3);
+            box-shadow: 
+                0 0 20px rgba(64, 224, 208, 0.3),
+                inset 0 0 20px rgba(10, 25, 47, 0.5);
+            animation: pulse 4s infinite alternate;
+            background-color: rgba(178, 217, 246, 0.956);
+        }
+        
+        .emblem-symbol .logo-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1614028674026-65c5c5a2433f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        
+        .emblem-symbol::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 2px rgba(64, 224, 208, 0.2);
+            z-index: 2;
+        }
+        
+        .emblem-symbol::after {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #40e0d0, #1e90ff, #40e0d0);
+            z-index: -1;
+            opacity: 0.5;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes pulse {
+            0% { 
+                box-shadow: 
+                    0 0 20px rgba(64, 224, 208, 0.3),
+                    inset 0 0 20px rgba(10, 25, 47, 0.5);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 30px rgba(64, 224, 208, 0.5),
+                    inset 0 0 20px rgba(10, 25, 47, 0.7);
+            }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .logo-text {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+        }
+        
+        .logo-text span {
+            color: #ff6b6b;
+        }
+        
+        .contact-info {
+            text-align: right;
+        }
+        
+        .contact-info p {
+            margin: 5px 0;
+            font-size: 0.95rem;
+            color: #b0c4de;
+        }
+        
+        .contact-info i {
+            margin-right: 8px;
+            color: #40e0d0;
+        }
+        
+        /* 建筑标题区域 */
+        .building-header {
+            text-align: center;
+            margin: 40px 0;
+            position: relative;
+        }
+        
+        .building-title {
+            font-size: 3.5rem;
+            background: linear-gradient(90deg, #40e0d0, #9370db, #ff6b6b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .building-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #40e0d0, #9370db, transparent);
+        }
+        
+        .building-subtitle {
+            font-size: 1.2rem;
+            color: #87ceeb;
+            font-style: italic;
+            margin-top: 15px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+        
+        /* 内容区域 */
+        .content-section {
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            color: #40e0d0;
+            margin: 30px 0 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(64, 224, 208, 0.3);
+            display: inline-block;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background-color: #1e90ff;
+        }
+        
+        /* 建筑信息卡片 */
+        .info-card {
+            background-color: rgba(20, 40, 70, 0.7);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            border-color: rgba(64, 224, 208, 0.4);
+        }
+        
+        .card-title {
+            color: #40e0d0;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-title i {
+            margin-right: 10px;
+        }
+        
+        .card-content {
+            color: #b0c4de;
+            line-height: 1.7;
+        }
+        
+        .card-list {
+            list-style-type: none;
+            margin-top: 15px;
+        }
+        
+        .card-list li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .card-list li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #9370db;
+        }
+        
+        /* 特别警告样式 */
+        .warning-card {
+            background-color: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-left: 5px solid #ff6b6b;
+        }
+        
+        .warning-card .card-title {
+            color: #ff6b6b;
+        }
+        
+        /* 网格布局 */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        /* 建筑结构可视化 */
+        .structure-visual {
+            background-color: rgba(30, 60, 90, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .structure-title {
+            color: #9370db;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .floor-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .floor-item {
+            padding: 15px;
+            background-color: rgba(20, 40, 70, 0.5);
+            border-radius: 8px;
+            border-left: 4px solid #40e0d0;
+            transition: all 0.3s;
+        }
+        
+        .floor-item:hover {
+            transform: translateX(5px);
+            border-left-color: #9370db;
+        }
+        
+        .floor-name {
+            color: #40e0d0;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .floor-name i {
+            margin-right: 8px;
+        }
+        
+        .floor-desc {
+            color: #b0c4de;
+            font-size: 0.95rem;
+        }
+        
+        /* 居民统计 */
+        .resident-stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(30, 60, 90, 0.5);
+            border-radius: 10px;
+            min-width: 180px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            transition: transform 0.3s;
+        }
+        
+        .stat-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            color: #40e0d0;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #87ceeb;
+            font-size: 1rem;
+        }
+        
+        /* 时间异常区域 */
+        .time-anomaly {
+            background: linear-gradient(135deg, rgba(30, 60, 90, 0.7), rgba(147, 112, 219, 0.3));
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 1px solid rgba(147, 112, 219, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .time-anomaly::before {
+            content: "⏳";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 2rem;
+            opacity: 0.2;
+        }
+        
+        .anomaly-title {
+            color: #da70d6;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        /* 访问指南 */
+        .access-guide {
+            background-color: rgba(30, 144, 255, 0.1);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 1px solid rgba(30, 144, 255, 0.3);
+        }
+        
+        .guide-list {
+            list-style-type: none;
+            counter-reset: guide-counter;
+        }
+        
+        .guide-list li {
+            margin-bottom: 15px;
+            padding-left: 40px;
+            position: relative;
+            color: #b0c4de;
+            line-height: 1.6;
+        }
+        
+        .guide-list li::before {
+            content: counter(guide-counter);
+            counter-increment: guide-counter;
+            background-color: #1e90ff;
+            color: #0c1a2d;
+            font-weight: bold;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        /* 按钮样式 */
+        .btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(30, 144, 255, 0.3);
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(30, 144, 255, 0.5);
+        }
+        
+        .btn-back {
+            background: linear-gradient(90deg, #9370db, #da70d6);
+            margin-top: 20px;
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background-color: rgba(10, 25, 47, 0.9);
+            color: #b0c4de;
+            padding: 30px 0;
+            margin-top: 50px;
+            text-align: center;
+            border-top: 1px solid rgba(64, 224, 208, 0.2);
+            border-radius: 0 0 15px 15px;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .footer-content p {
+            margin-bottom: 10px;
+        }
+        
+        .footer-content i {
+            color: #40e0d0;
+            margin-right: 8px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo-section {
+                flex-direction: column;
+                margin-bottom: 15px;
+            }
+            
+            .contact-info {
+                text-align: center;
+                margin-top: 15px;
+            }
+            
+            .building-title {
+                font-size: 2.5rem;
+            }
+            
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .resident-stats {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stat-item {
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+        
+        /* 特殊数字效果 */
+        .special-number {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(90deg, #ff6b6b, #ffa726);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: bold;
+            padding: 0 5px;
+            border-radius: 3px;
+        }
+        
+        /* 浮动的建筑编号 */
+        .floating-number {
+            position: absolute;
+            font-size: 8rem;
+            font-weight: bold;
+            color: rgba(64, 224, 208, 0.05);
+            z-index: 0;
+            user-select: none;
+            pointer-events: none;
+        }
+        
+        .number-1 { top: 50px; right: 50px; }
+        .number-2 { bottom: 100px; left: 30px; }
+        .number-3 { top: 200px; left: 100px; }
+        
+        /* 建筑图像区域 */
+        .building-image {
+            width: 100%;
+            height: 300px;
+            border-radius: 10px;
+            margin: 30px 0;
+            background: linear-gradient(135deg, rgba(64, 224, 208, 0.1), rgba(147, 112, 219, 0.1));
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .building-image::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 30% 70%, rgba(64, 224, 208, 0.2) 0px, transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(147, 112, 219, 0.2) 0px, transparent 50%);
+        }
+        
+        .image-text {
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.1);
+            font-weight: bold;
+            letter-spacing: 10px;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- 闪烁的星光 -->
+    <div id="stars-container"></div>
+    
+    <!-- 浮动的建筑编号 -->
+    <div class="floating-number number-1">7¾</div>
+    <div class="floating-number number-2">7.75</div>
+    <div class="floating-number number-3">7+4/7</div>
+    
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="emblem-symbol">
+                        <div class="logo-img"></div>
+                    </div>
+                    <div class="logo-text">
+                        <i class="fas fa-hands-helping"></i> 墟境<span>调和局</span>
+                    </div>
+                </div>
+                <div class="contact-info">
+                    <p><i class="fas fa-map-marker-alt"></i> <strong>管辖区域：</strong> 华苑社区特殊建筑</p>
+                    <p><i class="fas fa-shield-alt"></i> <strong>屏障状态：</strong> <span style="color:#40e0d0;">稳定运行</span></p>
+                    <p><i class="fas fa-exclamation-triangle"></i> <strong>访问权限：</strong> <span style="color:#ffa726;">等级Ⅱ以上</span></p>
+                </div>
+            </div>
+        </header>
+        
+        <!-- 建筑标题 -->
+        <div class="building-header">
+            <h1 class="building-title">7又7分之4栋</h1>
+            <p class="building-subtitle">介于现实与墟境之间的特殊建筑 · 时空异常点 · 非欧几里得几何实体</p>
+        </div>
+        
+        <!-- 建筑图像区域 -->
+        <div class="building-image">
+            <div class="image-text">7⁴⁄₇</div>
+        </div>
+        
+        <!-- 建筑基本信息 -->
+        <div class="content-section">
+            <h2 class="section-title"><i class="fas fa-info-circle"></i> 建筑基本信息</h2>
+            
+            <div class="info-card">
+                <h3 class="card-title"><i class="fas fa-building"></i> 建筑标识</h3>
+                <div class="card-content">
+                    <p><strong>正式名称：</strong>华苑社区第7又7分之4栋（简称7¾栋）</p>
+                    <p><strong>建筑类型：</strong>超维度结构 / 现实锚定点</p>
+                    <p><strong>建造时间：</strong><span class="special-number">不可确定</span>（时间记录显示为多个时间点叠加）</p>
+                    <p><strong>空间坐标：</strong>(X: 7.75, Y: <span class="special-number">∞</span>, Z: 0) - 相对坐标，实际位置随观察者变化</p>
+                    <p><strong>视觉外观：</strong>在大部分观察者眼中呈现为7栋与8栋之间的模糊区域，具体形态因人而异</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 建筑结构 -->
+        <div class="content-section">
+            <h2 class="section-title"><i class="fas fa-layer-group"></i> 建筑结构</h2>
+            
+            <div class="structure-visual">
+                <h3 class="structure-title">楼层分布与特性</h3>
+                <div class="floor-list">
+                    <div class="floor-item">
+                        <div class="floor-name"><i class="fas fa-door-closed"></i> 地面层（入口层）</div>
+                        <div class="floor-desc">唯一稳定入口，设有调和局接待处和基础屏障控制站。此层遵循常规物理规律。</div>
+                    </div>
+                    
+                    <div class="floor-item">
+                        <div class="floor-name"><i class="fas fa-expand-arrows-alt"></i> 第2-6层（空间扩展层）</div>
+                        <div class="floor-desc">每层面积比下层大<span class="special-number">1.618</span>倍（黄金比例），走廊长度存在非欧几里得几何特征。</div>
+                    </div>
+                    
+                    <div class="floor-item">
+                        <div class="floor-name"><i class="fas fa-hourglass-half"></i> 第7层（时间异常层）</div>
+                        <div class="floor-desc">时间流速不稳定，局部区域时间可能加速、减速甚至逆流。需佩戴时间稳定装置进入。</div>
+                    </div>
+                    
+                    <div class="floor-item">
+                        <div class="floor-name"><i class="fas fa-infinity"></i> 第7又7分之4层（核心层）</div>
+                        <div class="floor-desc">建筑的实际中心，空间坐标<span class="special-number">(7.75, 7.75, 7.75)</span>，是所有异常现象的源头。</div>
+                    </div>
+                    
+                    <div class="floor-item">
+                        <div class="floor-name"><i class="fas fa-ghost"></i> 夹层空间（间隙层）</div>
+                        <div class="floor-desc">存在于整数层之间的非整数层，仅在特定时间（如7:75分）或特定条件下可进入。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 居民情况 -->
+        <div class="content-section">
+            <h2 class="section-title"><i class="fas fa-users"></i> 居民情况</h2>
+            
+            <div class="resident-stats">
+                <div class="stat-item">
+                    <div class="stat-number">42</div>
+                    <div class="stat-label">已登记居民</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-number">17</div>
+                    <div class="stat-label">非人共生伙伴</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">时空异常居民</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">维度旅行者</div>
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <h3 class="card-title"><i class="fas fa-home"></i> 居民特点</h3>
+                <div class="card-content">
+                    <p>7¾栋的居民普遍具有以下特征：</p>
+                    <ul class="card-list">
+                        <li>对时空异常现象有较高的适应性和感知能力</li>
+                        <li>多数居民掌握至少一种"现实稳定技巧"</li>
+                        <li>约35%的居民从事与维度研究、异常现象处理相关的工作</li>
+                        <li>居民平均居住时间：<span class="special-number">7.75</span>年（标准差极大）</li>
+                        <li>社区内形成独特的"间隙时间"作息规律</li>
+                    </ul>
+                    <p style="margin-top: 15px;"><strong>著名居民：</strong>维度学者李教授、时间园艺师张女士、记忆调酒师阿影（非人）等。</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 时间异常现象 -->
+        <div class="content-section">
+            <h2 class="section-title"><i class="fas fa-clock"></i> 时间异常现象</h2>
+            
+            <div class="time-anomaly">
+                <h3 class="anomaly-title"><i class="fas fa-hourglass-end"></i> 已记录的时间异常</h3>
+                <div class="card-content">
+                    <p>7¾栋是社区内时间异常现象最集中的区域，已记录的现象包括：</p>
+                    <ul class="card-list">
+                        <li><strong>时间膨胀：</strong>部分房间内时间流速比外部慢<span class="special-number">0.75</span>倍</li>
+                        <li><strong>时间循环：</strong>每周四的7:75分会发生小范围时间循环（持续7.75分钟）</li>
+                        <li><strong>时间碎片：</strong>建筑内可偶尔观察到来自其他时间点的影像碎片</li>
+                        <li><strong>时间门：</strong>特定位置（如7¾号储物柜）可能通向不同时间点</li>
+                        <li><strong>生日悖论：</strong>居民庆祝生日的频率异常高，平均每年<span class="special-number">1.75</span>次</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 访问指南与注意事项 -->
+        <div class="content-section">
+            <h2 class="section-title"><i class="fas fa-exclamation-circle"></i> 访问指南与注意事项</h2>
+            
+            <div class="warning-card info-card">
+                <h3 class="card-title"><i class="fas fa-radiation"></i> 重要警告</h3>
+                <div class="card-content">
+                    <p>7⁴⁄₇栋为<strong>高异常区域</strong>，未经许可或未佩戴防护设备进入可能导致：</p>
+                    <ul class="card-list">
+                        <li>时空认知混乱（克里普克-时间综合征）</li>
+                        <li>记忆碎片化或时间线混淆</li>
+                        <li>现实锚定失效（短暂失去对物理规律的感知）</li>
+                        <li>遭遇未登记的维度实体</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="access-guide">
+                <h3 class="card-title"><i class="fas fa-door-open"></i> 安全访问指南</h3>
+                <ol class="guide-list">
+                    <li>所有访问者必须提前向墟境调和局申请访问权限（最低要求：等级Ⅱ）</li>
+                    <li>进入前需在接待处领取并佩戴时空稳定手环</li>
+                    <li>严格按照批准路线行动，切勿探索未标记区域</li>
+                    <li>如遇走廊长度异常变化，请立即闭眼默数7秒后睁开</li>
+                    <li>避免在建筑内进行时间敏感操作（如设置定时器、安排会面等）</li>
+                    <li>如发现时间倒流现象，保持静止并等待调和局人员协助</li>
+                    <li>离开建筑后需在接待处进行认知校准（免费服务）</li>
+                </ol>
+            </div>
+        </div>
+        
+        <!-- 其他设施与服务 -->
+        <div class="content-section">
+            <h2 class="section-title"><i class="fas fa-concierge-bell"></i> 建筑内设施与服务</h2>
+            
+            <div class="grid-container">
+                <div class="info-card">
+                    <h3 class="card-title"><i class="fas fa-utensils"></i> 7¾咖啡馆</h3>
+                    <div class="card-content">
+                        <p>位于建筑夹层，提供时间特性饮品：</p>
+                        <ul class="card-list">
+                            <li>时间膨胀咖啡（饮用后感觉时间变慢）</li>
+                            <li>记忆拿铁（带有特定时间点的记忆片段）</li>
+                            <li>未来预测茶（可能品尝到未来版本）</li>
+                        </ul>
+                        <p><strong>营业时间：</strong>7:75 - 19:75（遵循建筑内时间）</p>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <h3 class="card-title"><i class="fas fa-book"></i> 间隙图书馆</h3>
+                    <div class="card-content">
+                        <p>收藏来自不同时间线的书籍，特点：</p>
+                        <ul class="card-list">
+                            <li>部分书籍内容会随时间变化</li>
+                            <li>收藏有未出版作品的"可能性版本"</li>
+                            <li>提供维度间借阅服务</li>
+                            <li>每周四7:75分举办"时间读书会"</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <h3 class="card-title"><i class="fas fa-seedling"></i> 时间花园</h3>
+                    <div class="card-content">
+                        <p>位于第7层的时间异常植物园：</p>
+                        <ul class="card-list">
+                            <li>种植四季同时开放的花卉</li>
+                            <li>时间加速区：植物以7.75倍速生长</li>
+                            <li>时间停滞区：植物保持开花状态</li>
+                            <li>提供"时间种子"（可在不同时间点发芽）</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 调和局管理信息 -->
+        <div class="content-section">
+            <h2 class="section-title"><i class="fas fa-user-shield"></i> 调和局管理措施</h2>
+            
+            <div class="info-card">
+                <h3 class="card-title"><i class="fas fa-tools"></i> 当前实施的管理措施</h3>
+                <div class="card-content">
+                    <ul class="card-list">
+                        <li>建筑周边设有<strong>三级现实稳定屏障</strong>，防止异常扩散</li>
+                        <li>每层部署<strong>时间锚定器</strong>，控制时间异常范围</li>
+                        <li>每周进行<strong>空间几何校准</strong>，防止非欧几里得特征过度发展</li>
+                        <li>居民每月需参加<strong>认知稳定性检查</strong></li>
+                        <li>设立<strong>异常现象报告点</strong>，及时处理新增异常</li>
+                        <li>与7栋、8栋建立<strong>现实缓冲带</strong>，确保周边建筑安全</li>
+                    </ul>
+                    <p style="margin-top: 15px;"><strong>最近一次全面检测：</strong>2023年10月7.75日</p>
+                    <p><strong>下一次屏障维护：</strong>2023年11月7.75日（预计）</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 返回按钮 -->
+        <div style="text-align: center; margin-top: 50px;">
+            <a href="7D401.html" class="btn btn-back">
+                <i class="fas fa-arrow-left"></i> 返回办公处主页
+            </a>
+        </div>
+        
+    </div>
+    
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-content">
+            <p><i class="fas fa-hands-helping"></i> 墟境调和局 - 特殊建筑管理部门</p>
+            <p>© 2023 华苑社区墟境调和局. 7¾栋资料 · 安全等级：机密（内部查阅）</p>
+            <p><i class="fas fa-shield-alt"></i> 现实稳定系数：<span style="color:#40e0d0;">87.5%</span> | 时间异常指数：<span style="color:#ffa726;">7.75</span></p>
+        </div>
+    </footer>
+    
+    <script>
+        // 创建闪烁的星光
+        function createStars() {
+            const container = document.getElementById('stars-container');
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                // 随机大小和位置
+                const size = Math.random() * 3 + 1;
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                const duration = Math.random() * 5 + 2;
+                const delay = Math.random() * 5;
+                
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                star.style.animationDuration = `${duration}s`;
+                star.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(star);
+            }
+        }
+        
+        // 卡片悬停效果增强
+        function enhanceCardEffects() {
+            const cards = document.querySelectorAll('.info-card, .floor-item');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.zIndex = '10';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.zIndex = '';
+                });
+            });
+        }
+        
+        // 特殊数字闪烁效果
+        function addNumberEffects() {
+            const specialNumbers = document.querySelectorAll('.special-number');
+            specialNumbers.forEach(number => {
+                number.addEventListener('mouseenter', function() {
+                    this.style.animation = 'pulse 0.5s';
+                });
+                
+                number.addEventListener('mouseleave', function() {
+                    this.style.animation = '';
+                });
+            });
+        }
+        
+        // 建筑标题动画
+        function animateTitle() {
+            const title = document.querySelector('.building-title');
+            let hue = 0;
+            
+            setInterval(() => {
+                hue = (hue + 1) % 360;
+                title.style.background = `linear-gradient(90deg, hsl(${hue}, 100%, 65%), hsl(${(hue + 60) % 360}, 100%, 65%), hsl(${(hue + 120) % 360}, 100%, 65%))`;
+                title.style.webkitBackgroundClip = 'text';
+                title.style.backgroundClip = 'text';
+            }, 100);
+        }
+        
+        // 页面加载完成后执行
+        window.addEventListener('load', () => {
+            // 页面淡入效果
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.8s ease';
+            
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+            
+            // 初始化效果
+            createStars();
+            enhanceCardEffects();
+            addNumberEffects();
+            animateTitle();
+            
+            // 添加点击特效
+            document.querySelector('.building-image').addEventListener('click', function() {
+                this.style.background = `linear-gradient(135deg, rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 0.1), rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 0.1))`;
+            });
+        });
+        
+        // 随机显示建筑数据
+        function updateStats() {
+            const stats = document.querySelectorAll('.stat-number');
+            stats.forEach(stat => {
+                const original = parseInt(stat.textContent);
+                // 随机波动 ±1
+                const fluctuation = Math.random() > 0.5 ? 1 : -1;
+                const newValue = original + fluctuation;
+                
+                // 短暂显示波动效果
+                stat.textContent = newValue;
+                stat.style.color = fluctuation > 0 ? '#4cd964' : '#ff3b30';
+                
+                setTimeout(() => {
+                    stat.textContent = original;
+                    stat.style.color = '#40e0d0';
+                }, 1000);
+            });
+        }
+        
+        // 每30秒更新一次统计数据
+        setInterval(updateStats, 30000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>许林沅 | 授权访问系统</title>
+    <link rel="icon" type="image/png" href="./xjthj.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+        
+        /* 背景特效 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(41, 128, 185, 0.1) 0px, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(142, 68, 173, 0.08) 0px, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(64, 224, 208, 0.05) 0px, transparent 70%);
+            z-index: -2;
+        }
+        
+        /* 网格背景 */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(64, 224, 208, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(64, 224, 208, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        /* 顶部导航栏 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 40px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #40e0d0, #1e90ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #0c1a2d;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(64, 224, 208, 0.4);
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(20, 40, 70, 0.8);
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #ff6b6b, #ffa726);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: white;
+        }
+        
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .user-name {
+            font-weight: bold;
+            color: #40e0d0;
+            font-size: 16px;
+        }
+        
+        .user-role {
+            font-size: 12px;
+            color: #87ceeb;
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 992px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* 左侧面板 */
+        .left-panel {
+            background: rgba(10, 25, 47, 0.85);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .panel-title {
+            font-size: 20px;
+            color: #40e0d0;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.3);
+            position: relative;
+        }
+        
+        .panel-title::after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, #40e0d0, transparent);
+        }
+        
+        /* 用户信息卡片 */
+        .profile-card {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+        
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #40e0d0, #1e90ff, #ff6b6b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .avatar-border {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #40e0d0, #1e90ff, #40e0d0);
+            animation: rotate 10s linear infinite;
+            opacity: 0.7;
+            z-index: 0;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .profile-name {
+            font-size: 28px;
+            font-weight: bold;
+            color: #e0e7ff;
+            margin-bottom: 5px;
+        }
+        
+        .profile-title {
+            color: #87ceeb;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        .profile-id {
+            display: inline-block;
+            background: rgba(20, 40, 70, 0.8);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #40e0d0;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+        }
+        
+        /* 状态指示器 */
+        .status-indicators {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            background: rgba(20, 40, 70, 0.6);
+            border-radius: 8px;
+            border-left: 4px solid #40e0d0;
+        }
+        
+        .status-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .status-active .status-icon {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+        }
+        
+        .status-warning .status-icon {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: #FFC107;
+        }
+        
+        .status-info .status-icon {
+            background-color: rgba(33, 150, 243, 0.2);
+            color: #2196F3;
+        }
+        
+        .status-text {
+            flex: 1;
+        }
+        
+        .status-title {
+            font-size: 14px;
+            color: #87ceeb;
+        }
+        
+        .status-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #e0e7ff;
+        }
+        
+        /* 右侧面板 */
+        .right-panel {
+            background: rgba(10, 25, 47, 0.85);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 授权码卡片 */
+        .auth-code-card {
+            background: linear-gradient(135deg, rgba(64, 224, 208, 0.1), rgba(30, 144, 255, 0.1));
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .auth-code-card::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(64, 224, 208, 0.1) 0%, transparent 70%);
+        }
+        
+        .auth-code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .auth-code-title {
+            font-size: 22px;
+            color: #40e0d0;
+            font-weight: bold;
+        }
+        
+        .auth-code-badge {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+        
+        .code-display {
+            background: rgba(10, 25, 47, 0.9);
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 25px;
+            border: 2px solid rgba(64, 224, 208, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .code-display::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff, #40e0d0);
+        }
+        
+        .code-label {
+            font-size: 14px;
+            color: #87ceeb;
+            margin-bottom: 10px;
+        }
+        
+        .code-value {
+            font-family: 'Courier New', monospace;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            color: #40e0d0;
+            text-shadow: 0 0 10px rgba(64, 224, 208, 0.5);
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            margin: 10px 0;
+            display: inline-block;
+            min-width: 300px;
+        }
+        
+        .code-expiry {
+            color: #FFC107;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .code-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(30, 144, 255, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(20, 40, 70, 0.8);
+            color: #e0e7ff;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(30, 60, 90, 0.8);
+            border-color: #40e0d0;
+            transform: translateY(-3px);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(90deg, #ff416c, #ff4b2b);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(255, 65, 108, 0.4);
+        }
+        
+        /* 访问历史 */
+        .access-history {
+            margin-top: 40px;
+        }
+        
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .history-table th {
+            text-align: left;
+            padding: 15px;
+            background: rgba(20, 40, 70, 0.8);
+            color: #87ceeb;
+            font-weight: normal;
+            border-bottom: 2px solid rgba(64, 224, 208, 0.3);
+        }
+        
+        .history-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .history-table tr:hover {
+            background: rgba(30, 60, 90, 0.3);
+        }
+        
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .status-success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+        
+        .status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #FFC107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+        
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #708090;
+            font-size: 14px;
+            border-top: 1px solid rgba(112, 128, 144, 0.3);
+            margin-top: 40px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .footer-links a {
+            color: #87ceeb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #40e0d0;
+        }
+        
+        /* 通知消息 */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(20, 40, 70, 0.95);
+            border-left: 4px solid #40e0d0;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transform: translateX(120%);
+            transition: transform 0.5s ease-out;
+            max-width: 400px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification-title {
+            font-weight: bold;
+            color: #40e0d0;
+            margin-bottom: 5px;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .code-value {
+                font-size: 24px;
+                min-width: auto;
+                word-break: break-all;
+            }
+            
+            .code-actions {
+                flex-direction: column;
+            }
+            
+            .history-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部导航栏 -->
+        <header class="header fade-in">
+            <div class="logo">
+                <div class="logo-icon">X</div>
+                <div class="logo-text">许林沅 · 授权系统</div>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">许</div>
+                <div class="user-details">
+                    <div class="user-name">Xu_linyuan</div>
+                    <div class="user-role">高级授权用户</div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- 主内容区域 -->
+        <main class="main-content">
+            <!-- 左侧面板 -->
+            <div class="left-panel fade-in">
+                <h2 class="panel-title">个人信息</h2>
+                
+                <div class="profile-card">
+                    <div class="profile-avatar">
+                        <div class="avatar-border"></div>
+                        <div class="avatar-img">许</div>
+                    </div>
+                    <h1 class="profile-name">许林沅</h1>
+                    <div class="profile-title">高级系统管理员</div>
+                    <div class="profile-id">用户ID: XLY-2023-001</div>
+                </div>
+                
+                <h2 class="panel-title">系统状态</h2>
+                
+                <div class="status-indicators">
+                    <div class="status-item status-active">
+                        <div class="status-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="status-text">
+                            <div class="status-title">授权状态</div>
+                            <div class="status-value">已验证 ✓</div>
+                        </div>
+                    </div>
+                    
+                    <div class="status-item status-info">
+                        <div class="status-icon"><i class="fas fa-clock"></i></div>
+                        <div class="status-text">
+                            <div class="status-title">会话时间</div>
+                            <div class="status-value" id="sessionTimer">00:00:00</div>
+                        </div>
+                    </div>
+                    
+                    <div class="status-item status-warning">
+                        <div class="status-icon"><i class="fas fa-key"></i></div>
+                        <div class="status-text">
+                            <div class="status-title">授权码有效期</div>
+                            <div class="status-value" id="codeExpiryTime">24:00:00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧面板 -->
+            <div class="right-panel fade-in">
+                <div class="auth-code-card">
+                    <div class="auth-code-header">
+                        <h2 class="auth-code-title">动态授权码</h2>
+                        <div class="auth-code-badge">有效</div>
+                    </div>
+                    
+                    <div class="code-display">
+                        <div class="code-label">当前授权码</div>
+                        <div class="code-value" id="authCode">XLY-8A3B-9C2D-4F7E</div>
+                        <div class="code-expiry">有效期至: <span id="expiryDate">2023-12-31 23:59:59</span></div>
+                    </div>
+                    
+                    <div class="code-actions">
+                        <button class="action-btn btn-primary" id="generateCodeBtn">
+                            <i class="fas fa-sync-alt"></i> 生成新授权码
+                        </button>
+                        <button class="action-btn btn-secondary" id="copyCodeBtn">
+                            <i class="far fa-copy"></i> 复制授权码
+                        </button>
+                        <button class="action-btn btn-danger" id="revokeCodeBtn">
+                            <i class="fas fa-ban"></i> 撤销授权码
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="access-history">
+                    <h2 class="panel-title">最近访问记录</h2>
+                    
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>时间</th>
+                                <th>IP地址</th>
+                                <th>操作</th>
+                                <th>状态</th>
+                            </tr>
+                        </thead>
+                        <tbody id="accessHistory">
+                            <!-- 访问记录将通过JavaScript动态生成 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+        
+        <!-- 页脚 -->
+        <footer class="footer fade-in">
+            <p>© 2023 许林沅授权访问系统 | 版本 2.1.0 | 最后登录: <span id="lastLogin">2023-11-15 14:30:22</span></p>
+            <div class="footer-links">
+                <a href="#"><i class="fas fa-cog"></i> 系统设置</a>
+                <a href="#"><i class="fas fa-history"></i> 完整日志</a>
+                <a href="#"><i class="fas fa-sign-out-alt"></i> 退出系统</a>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- 通知消息 -->
+    <div class="notification" id="notification">
+        <div class="notification-title" id="notificationTitle">通知标题</div>
+        <div class="notification-message" id="notificationMessage">通知内容</div>
+    </div>
+    
+    <script>
+        // 用户数据
+        const userData = {
+            name: "许林沅",
+            username: "Xu_linyuan",
+            userId: "XLY-2023-001",
+            role: "高级系统管理员",
+            lastLogin: "2023-11-15 14:30:22"
+        };
+        
+        // 授权码相关变量
+        let authCode = "";
+        let codeExpiryTime = null;
+        let sessionStartTime = new Date();
+        
+        // DOM元素
+        const authCodeElement = document.getElementById('authCode');
+        const expiryDateElement = document.getElementById('expiryDate');
+        const sessionTimerElement = document.getElementById('sessionTimer');
+        const codeExpiryTimeElement = document.getElementById('codeExpiryTime');
+        const accessHistoryElement = document.getElementById('accessHistory');
+        const lastLoginElement = document.getElementById('lastLogin');
+        const generateCodeBtn = document.getElementById('generateCodeBtn');
+        const copyCodeBtn = document.getElementById('copyCodeBtn');
+        const revokeCodeBtn = document.getElementById('revokeCodeBtn');
+        const notification = document.getElementById('notification');
+        const notificationTitle = document.getElementById('notificationTitle');
+        const notificationMessage = document.getElementById('notificationMessage');
+        
+        // 访问历史数据
+        const accessHistory = [
+            { time: "2023-11-15 14:30:22", ip: "192.168.1.101", action: "系统登录", status: "success" },
+            { time: "2023-11-15 10:15:33", ip: "192.168.1.105", action: "授权码生成", status: "success" },
+            { time: "2023-11-14 16:45:12", ip: "192.168.1.101", action: "文件访问", status: "success" },
+            { time: "2023-11-14 09:20:05", ip: "192.168.1.110", action: "系统登录", status: "success" },
+            { time: "2023-11-13 22:10:47", ip: "192.168.1.101", action: "配置修改", status: "pending" }
+        ];
+        
+        // 生成随机授权码
+        // 固定的十个授权码
+const fixedAuthCodes = [
+    'D7MZ-Q7UT-YANC-9272',
+    '2PV8-TICN-Q1VX-XFFK',
+    '4QRF-N0KL-HQN6-LMWM',
+    '7E77-Y157-W4R8-NS40',
+    'MJ83-NX00-PJQ2-6LCK',
+    '4KFA-PT7Q-2TVS-Z4VA',
+    '4WT7-RRC4-DO87-O322',
+    '0B69-2YFZ-W0ST-X6FK',
+    '8QSG-BZQZ-VGWA-JK6O',
+    'Y6SO-VU9L-V0OX-W1WN'
+];
+
+// 打乱数组顺序（这样轮播看起来更随机）
+function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
+// 打乱后的授权码数组
+let shuffledCodes = shuffleArray(fixedAuthCodes);
+let currentIndex = 0;
+
+// 生成"随机"授权码（实际上是打乱后轮播）
+function generateAuthCode() {
+    const code = shuffledCodes[currentIndex];
+    
+    currentIndex++;
+    
+    // 如果已经遍历完所有代码，重新打乱并重置索引
+    if (currentIndex >= shuffledCodes.length) {
+        shuffledCodes = shuffleArray(fixedAuthCodes);
+        currentIndex = 0;
+    }
+    
+    return code;
+}
+
+// 使用示例
+console.log("模拟随机生成授权码：");
+for (let i = 0; i < 20; i++) { // 测试20次
+    console.log(`${i + 1}. ${generateAuthCode()}`);
+}
+        
+        // 设置授权码过期时间（24小时后）
+        function setExpiryTime() {
+            const now = new Date();
+            codeExpiryTime = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24小时
+            return codeExpiryTime;
+        }
+        
+        // 格式化时间
+        function formatTime(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        }
+        
+        // 显示通知
+        function showNotification(title, message, duration = 3000) {
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, duration);
+        }
+        
+        // 更新会话计时器
+        function updateSessionTimer() {
+            const now = new Date();
+            const diff = now - sessionStartTime;
+            
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            sessionTimerElement.textContent = 
+                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+        
+        // 更新授权码过期倒计时
+        function updateCodeExpiryTimer() {
+            if (!codeExpiryTime) return;
+            
+            const now = new Date();
+            const diff = codeExpiryTime - now;
+            
+            if (diff <= 0) {
+                codeExpiryTimeElement.textContent = "已过期";
+                showNotification("授权码过期", "当前授权码已过期，请生成新的授权码", 5000);
+                return;
+            }
+            
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            codeExpiryTimeElement.textContent = 
+                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+        
+        // 初始化授权码
+        function initAuthCode() {
+            authCode = generateAuthCode();
+            const expiryTime = setExpiryTime();
+            
+            authCodeElement.textContent = authCode;
+            expiryDateElement.textContent = formatTime(expiryTime);
+            
+            // 添加到访问历史
+            accessHistory.unshift({
+                time: formatTime(new Date()),
+                ip: "192.168.1.101",
+                action: "授权码生成",
+                status: "success"
+            });
+            
+            renderAccessHistory();
+            showNotification("授权码已生成", `新授权码: ${authCode}`, 4000);
+        }
+        
+        // 复制授权码到剪贴板
+        function copyAuthCode() {
+            navigator.clipboard.writeText(authCode)
+                .then(() => {
+                    showNotification("复制成功", "授权码已复制到剪贴板", 2000);
+                })
+                .catch(err => {
+                    console.error('复制失败: ', err);
+                    showNotification("复制失败", "请手动复制授权码", 3000);
+                });
+        }
+        
+        // 撤销授权码
+        function revokeAuthCode() {
+            if (showNotification("系统正在维护，不可撤销授权码", "请稍后再试", 3000)) {
+                codeExpiryTime = new Date(); // 立即过期
+                authCodeElement.textContent = "已撤销";
+                authCodeElement.style.color = "#ff6b6b";
+                expiryDateElement.textContent = formatTime(new Date());
+                expiryDateElement.style.color = "#ff6b6b";
+                
+                // 更新访问历史
+                accessHistory.unshift({
+                    time: formatTime(new Date()),
+                    ip: "192.168.1.101",
+                    action: "授权码撤销",
+                    status: "pending"
+                });
+                
+                renderAccessHistory();
+                showNotification("授权码已撤销", "当前授权码已被撤销，请生成新的授权码", 4000);
+            }
+        }
+        
+        // 渲染访问历史
+        function renderAccessHistory() {
+            accessHistoryElement.innerHTML = '';
+            
+            accessHistory.forEach(record => {
+                const row = document.createElement('tr');
+                
+                const statusClass = record.status === 'success' ? 'status-success' : 'status-pending';
+                const statusText = record.status === 'success' ? '成功' : '待处理';
+                
+                row.innerHTML = `
+                    <td>${record.time}</td>
+                    <td>${record.ip}</td>
+                    <td>${record.action}</td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                `;
+                
+                accessHistoryElement.appendChild(row);
+            });
+        }
+        
+        // 初始化页面
+        function initPage() {
+            // 设置用户信息
+            lastLoginElement.textContent = userData.lastLogin;
+            
+            // 初始化授权码
+            initAuthCode();
+            
+            // 渲染访问历史
+            renderAccessHistory();
+            
+            // 设置定时器
+            setInterval(updateSessionTimer, 1000);
+            setInterval(updateCodeExpiryTimer, 1000);
+            
+            // 初始更新时间
+            updateSessionTimer();
+            updateCodeExpiryTimer();
+            
+            // 绑定按钮事件
+            generateCodeBtn.addEventListener('click', initAuthCode);
+            copyCodeBtn.addEventListener('click', copyAuthCode);
+            revokeCodeBtn.addEventListener('click', revokeAuthCode);
+            
+            // 添加键盘快捷键
+            document.addEventListener('keydown', (e) => {
+                // Ctrl+G 生成新授权码
+                if (e.ctrlKey && e.key === 'g') {
+                    e.preventDefault();
+                    initAuthCode();
+                }
+                
+                // Ctrl+C 复制授权码
+                if (e.ctrlKey && e.key === 'c') {
+                    e.preventDefault();
+                    copyAuthCode();
+                }
+                
+                // Ctrl+R 撤销授权码
+                if (e.ctrlKey && e.key === 'r') {
+                    e.preventDefault();
+                    revokeAuthCode();
+                }
+                
+                // F5 刷新页面（阻止默认行为，显示提示）
+                if (e.key === 'F5') {
+                    e.preventDefault();
+                    showNotification("系统提示", "请使用页面内的刷新功能", 3000);
+                }
+            });
+        }
+        
+        // 页面加载完成后初始化
+        window.addEventListener('load', initPage);
+    </script>
+    <script src="jinzhi.js"></script>
+</body>
+</html>

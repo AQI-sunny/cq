@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>螂人沙档案 - 墟境调和局</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景特效 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(41, 128, 185, 0.1) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(142, 68, 173, 0.08) 0px, transparent 50%);
+            z-index: -2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(10, 25, 47, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 顶部装饰线 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #20b2aa, #1e90ff);
+        }
+        
+        /* 局徽样式 - 更新为圆形图片 */
+        .emblem {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .emblem-symbol {
+            display: inline-block;
+            width: 140px;
+            height: 140px;
+            position: relative;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(64, 224, 208, 0.3);
+            box-shadow: 
+                0 0 20px rgba(64, 224, 208, 0.3),
+                inset 0 0 20px rgba(10, 25, 47, 0.5);
+            animation: pulse 4s infinite alternate;
+            background-color: rgba(178, 217, 246, 0.956);
+        }
+        
+        /* logo图片容器 */
+        .emblem-symbol .logo-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="%230c1a2d" stroke="%2340e0d0" stroke-width="2"/><path d="M35,30 L65,30 L75,50 L65,70 L35,70 L25,50 Z" fill="none" stroke="%231e90ff" stroke-width="3"/><circle cx="50" cy="50" r="15" fill="none" stroke="%2340e0d0" stroke-width="2"/><path d="M50,35 L50,65 M40,50 L60,50" stroke="%23ffa500" stroke-width="2"/></svg>');
+            background-size: 80%;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        
+        /* 圆形遮罩，确保图片显示为完美圆形 */
+        .emblem-symbol::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 2px rgba(64, 224, 208, 0.2);
+            z-index: 2;
+        }
+        
+        /* 圆形边框特效 */
+        .emblem-symbol::after {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #40e0d0, #1e90ff, #40e0d0);
+            z-index: -1;
+            opacity: 0.5;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes pulse {
+            0% { 
+                box-shadow: 
+                    0 0 20px rgba(64, 224, 208, 0.3),
+                    inset 0 0 20px rgba(10, 25, 47, 0.5);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 30px rgba(64, 224, 208, 0.5),
+                    inset 0 0 20px rgba(10, 25, 47, 0.7);
+            }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .emblem-text {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+        }
+        
+        .emblem-subtext {
+            color: #87ceeb;
+            font-size: 14px;
+            letter-spacing: 8px;
+        }
+        
+        /* 档案卡片样式 */
+        .archive-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .archive-header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(64, 224, 208, 0.3);
+        }
+        
+        .archive-title {
+            font-size: 32px;
+            color: #40e0d0;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .archive-title::after {
+            content: "🪳";
+            position: absolute;
+            right: -40px;
+            font-size: 28px;
+        }
+        
+        .archive-subtitle {
+            color: #87ceeb;
+            font-size: 18px;
+            font-style: italic;
+        }
+        
+        /* 档案卡片 */
+        .archive-card {
+            background: rgba(20, 40, 70, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+        }
+        
+        .archive-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .card-title {
+            font-size: 22px;
+            color: #40e0d0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.3);
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-title i {
+            margin-right: 10px;
+        }
+        
+        .card-content {
+            line-height: 1.6;
+            color: #b0c4de;
+        }
+        
+        /* 定义区域 */
+        .definition-section {
+            border-left: 5px solid #1e90ff;
+            padding-left: 20px;
+            background: rgba(30, 60, 90, 0.3);
+            border-radius: 0 8px 8px 0;
+        }
+        
+        /* 特征区域 */
+        .features-section ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        
+        .features-section li {
+            margin-bottom: 15px;
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .features-section li::before {
+            content: "🪲";
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        /* 危险等级区域 */
+        .danger-section {
+            border-left: 5px solid #ffa500;
+            padding-left: 20px;
+            background: rgba(255, 165, 0, 0.1);
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .danger-level {
+            display: inline-block;
+            background: linear-gradient(90deg, #ff8c00, #ffa500);
+            color: #0c1a2d;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        /* 处理协议区域 */
+        .protocol-section {
+            border-left: 5px solid #40e0d0;
+            padding-left: 20px;
+            background: rgba(64, 224, 208, 0.1);
+            border-radius: 0 8px 8px 0;
+        }
+        
+        /* 可点击关键词 */
+        .keyword {
+            color: #40e0d0;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(64, 224, 208, 0.5);
+            padding: 0 2px;
+        }
+        
+        .keyword:hover {
+            color: #1e90ff;
+            text-shadow: 0 0 8px rgba(30, 144, 255, 0.5);
+            border-bottom-style: solid;
+        }
+        .keyword-two {
+            color: #e04040;
+            font-weight: bold;
+            /* cursor: pointer; */
+            transition: all 0.3s;
+            /* text-decoration: none;
+            border-bottom: 1px dotted rgba(64, 224, 208, 0.5); */
+            padding: 0 2px;
+        }
+        
+        /* 内部弹窗样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            border: 2px solid #40e0d0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            transform: scale(0.8);
+            transition: transform 0.3s;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+        
+        .modal-header {
+            background: rgba(20, 40, 70, 0.9);
+            padding: 20px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            color: #40e0d0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: #87ceeb;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .modal-close:hover {
+            color: #ff4500;
+        }
+        
+        .modal-body {
+            padding: 25px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            color: #b0c4de;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .modal-content h3 {
+            color: #40e0d0;
+            margin: 15px 0 10px;
+        }
+        
+        .modal-content ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .modal-content li {
+            margin-bottom: 8px;
+        }
+        
+        .modal-footer {
+            padding: 15px 25px;
+            border-top: 1px solid rgba(64, 224, 208, 0.3);
+            display: flex;
+            justify-content: flex-end;
+            background: rgba(20, 40, 70, 0.5);
+        }
+        
+        .modal-button {
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .modal-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(64, 224, 208, 0.5);
+        }
+        
+        /* 档案编号 */
+        .archive-id {
+            text-align: right;
+            margin-top: 30px;
+            color: #708090;
+            font-size: 14px;
+            font-style: italic;
+            border-top: 1px solid rgba(112, 128, 144, 0.3);
+            padding-top: 15px;
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #708090;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(112, 128, 144, 0.3);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .emblem-text {
+                font-size: 20px;
+            }
+            
+            .emblem-symbol {
+                width: 110px;
+                height: 110px;
+            }
+            
+            .archive-title {
+                font-size: 28px;
+            }
+            
+            .card-title {
+                font-size: 20px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .archive-title {
+                font-size: 24px;
+            }
+            
+            .archive-subtitle {
+                font-size: 16px;
+            }
+            
+            .archive-card {
+                padding: 20px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="sc-css.css">
+    <link rel="icon" type="image/png" href="./xjthj.png">
+</head>
+<body>
+    <div class="container">
+        <div class="emblem">
+            <div class="emblem-symbol">
+                <div class="logo-img"></div>
+            </div>
+            <div class="emblem-text">墟境调和局——异人管理部</div>
+            <div class="emblem-subtext">ARCHIVES</div>
+        </div>
+        
+        <div class="archive-container">
+            <div class="archive-header">
+                <h1 class="archive-title">螂人沙档案</h1>
+                <p class="archive-subtitle">生物档案卡片 - 保密等级：内部</p>
+            </div>
+            
+            <div class="archive-card definition-section">
+                <h2 class="card-title"><i class="fas fa-dna"></i> 定义</h2>
+                <div class="card-content">
+                    <p>螂人是一种由人类与蟑螂基因意外融合产生的亚种生物。首次发现于2025年"新生命"生物实验室的事故现场。该亚种的出现被认为是基因编辑技术失控的典型案例。</p>
+                    <p>螂人并非自然进化产物，而是实验室事故导致的基因嵌合体。其保留了约60%的人类基因特征和40%的蟑螂基因特征，形成了一种独特的半人半虫生物。</p>
+                </div>
+            </div>
+            
+            <div class="archive-card features-section">
+                <h2 class="card-title"><i class="fas fa-bug"></i> 特征</h2>
+                <div class="card-content">
+                    <ul>
+                        <li><strong>昼伏夜出</strong>：螂人具有典型的夜行性特征，白天通常躲藏在阴暗潮湿的环境中，夜间活动频繁。</li>
+                        <li><strong>群体智慧</strong>：单个螂人智力有限，但当形成群体时，会展现出类似蚁群或蜂群的集体智慧，能够解决复杂问题。</li>
+                        <li><strong>模仿人类行为</strong>：螂人具有显著的<span class="keyword" id="mimicry-link">模仿人类行为</span>能力，能够学习并复制简单的人类动作、语言片段和<span class="keyword-two">社会</span>行为模式。</li>
+                        <li><strong>快速繁殖</strong>：螂人继承了蟑螂的高繁殖能力，但受人类基因影响，繁殖速度有所降低。</li>
+                        <li><strong>环境适应力</strong>：能够在极端环境中生存，包括高辐射、低氧和污染严重的区域。</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="archive-card danger-section">
+                <h2 class="card-title"><i class="fas fa-radiation-alt"></i> 危险等级</h2>
+                <div class="card-content">
+                    <p>螂人被评定为<strong>C级威胁</strong>（非恶意但引发恐慌）。</p>
+                    <p>螂人本身不具有主动攻击性，但其外观和行为模式容易在人群中引发恐慌和骚乱。主要风险包括：</p>
+                    <ul>
+                        <li>公共卫生风险：螂人可能携带并传播变异病原体</li>
+                        <li>社会心理影响：其存在容易引发集体恐慌和城市传说</li>
+                        <li>生态影响：可能对当地生态系统造成不可预测的影响</li>
+                    </ul>
+                    <div class="danger-level">C级威胁</div>
+                </div>
+            </div>
+            
+            <div class="archive-card protocol-section">
+                <h2 class="card-title"><i class="fas fa-clipboard-list"></i> 处理协议</h2>
+                <div class="card-content">
+                    <p>发现螂人个体或群体时，请遵循以下处理协议：</p>
+                    <ol>
+                        <li><strong>隔离区域</strong>：立即隔离螂人出现的区域，防止其扩散</li>
+                        <li><strong>非致命制服</strong>：使用特制麻醉剂（型号：Tranq-CR-7）使螂人失去行动能力</li>
+                        <li><strong>安全运输</strong>：将麻醉后的螂人装入生物安全运输容器（标准：BSC-3型）</li>
+                        <li><strong>移交处理</strong>：在24小时内将螂人送至最近的<strong>地下生态保留区</strong></li>
+                        <li><strong>信息管控</strong>：对目击者进行标准记忆处理（协议M-7），防止信息泄露</li>
+                    </ol>
+                    <p><strong>注意</strong>：严禁使用致命武力或公开处理螂人，以免引发社会恐慌或激化螂人群体行为。</p>
+                </div>
+            </div>
+            
+            <div class="archive-id">
+                档案编号：CR-2025-12-19 | 最后更新：2025年12月19日 | 负责人：Dr. Xu
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>墟境调和局——异人管理部 © 2025 | 本档案仅限内部使用，未经授权禁止复制或传播</p>
+        </div>
+    </div>
+    
+    <!-- 模仿行为弹窗 -->
+    <div class="modal-overlay" id="mimicry-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">模仿人类行为 - 详细分析</h2>
+                <button class="modal-close" id="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-content">
+                    <h3>行为特征</h3>
+                    <p>螂人表现出的模仿行为分为几个层次：</p>
+                    <ul>
+                        <li><strong>基础动作模仿</strong>：能够模仿行走、站立、抓取物品等基础人类动作</li>
+                        <li><strong>语言片段复制</strong>：可以重复听到的简单词汇和短语，但缺乏语言理解能力</li>
+                        <li><strong>社会行为模拟</strong>：在群体中会模拟简单的社会互动，如分享食物、协作移动</li>
+                        <li><strong>工具使用尝试</strong>：观察到部分个体尝试使用简单工具，但成功率较低</li>
+                    </ul>
+                    
+                    <h3>神经机制</h3>
+                    <p>研究表明，螂人的模仿能力源于其独特的神经<span class="keyword-two">结构</span>：</p>
+                    <ul>
+                        <li>保留了人类镜像神经元系统的部分功能</li>
+                        <li>蟑螂神经节的快速学习机制被整合到模仿行为中</li>
+                        <li>视觉和听觉信息处理区域存在异常连接</li>
+                    </ul>
+                    
+                    <h3>潜在风险</h3>
+                    <p>这种模仿能力带来特定的管理挑战：</p>
+                    <ul>
+                        <li>可能伪装成人类混入人群</li>
+                        <li>在群体中传递危险行为模式</li>
+                        <li>引发"恐怖谷"效应，加剧公众恐慌</li>
+                    </ul>
+                    
+                    <h3>应对策略</h3>
+                    <p>针对螂人的模仿行为，建议：</p>
+                    <ul>
+                        <li>避免在螂人面前展示复杂或危险行为</li>
+                        <li>使用非语言方式进行管理和引导</li>
+                        <li>定期评估模仿行为的发展程度</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button" id="close-modal-btn">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
+    
+    <script>
+        // 弹窗功能
+        const mimicryLink = document.getElementById('mimicry-link');
+        const mimicryModal = document.getElementById('mimicry-modal');
+        const closeModal = document.getElementById('close-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        
+        // 打开弹窗
+        mimicryLink.addEventListener('click', () => {
+            mimicryModal.classList.add('active');
+        });
+        
+        // 关闭弹窗
+        const closeModalFunc = () => {
+            mimicryModal.classList.remove('active');
+        };
+        
+        closeModal.addEventListener('click', closeModalFunc);
+        closeModalBtn.addEventListener('click', closeModalFunc);
+        
+        // 点击弹窗外部关闭
+        mimicryModal.addEventListener('click', (e) => {
+            if (e.target === mimicryModal) {
+                closeModalFunc();
+            }
+        });
+        
+        // 点击关键词效果
+        const keywords = document.querySelectorAll('.keyword');
+        keywords.forEach(keyword => {
+            keyword.addEventListener('click', function() {
+                this.style.textShadow = '0 0 15px rgba(30, 144, 255, 0.8)';
+                setTimeout(() => {
+                    this.style.textShadow = '';
+                }, 500);
+            });
+        });
+        
+        // 页面加载效果
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.archive-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'opacity 0.5s, transform 0.5s';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 50);
+                }, index * 150);
+            });
+        });
+    </script>
+
+    <script src="sc-ball.js"></script>
+
+</body>
+</html>

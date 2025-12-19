@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>螂人CO-114的独白</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            cursor: default;
+            overflow-x: hidden;
+            overflow-y: auto; /* 改为auto允许滚动 */
+        }
+        
+        /* 恐怖背景效果 */
+        #background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(120, 0, 0, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(0, 60, 60, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(40, 0, 80, 0.1) 0%, transparent 50%),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(20, 20, 20, 0.1) 2px, rgba(20, 20, 20, 0.1) 4px);
+            z-index: -3;
+            pointer-events: none;
+        }
+        
+        /* 蟑螂轮廓水印背景 */
+        .roach-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><path d="M80,150 C80,100 120,80 150,80 C180,80 220,100 220,150 C220,200 180,220 150,220 C120,220 80,200 80,150 Z" fill="none" stroke="rgba(80,0,0,0.1)" stroke-width="1.5"/><path d="M150,220 L150,260" fill="none" stroke="rgba(80,0,0,0.1)" stroke-width="1.5"/><path d="M130,260 L170,260" fill="none" stroke="rgba(80,0,0,0.1)" stroke-width="1.5"/><path d="M100,140 L60,130" fill="none" stroke="rgba(80,0,0,0.1)" stroke-width="1.5"/><path d="M200,140 L240,130" fill="none" stroke="rgba(80,0,0,0.1)" stroke-width="1.5"/></svg>');
+            background-repeat: repeat;
+            background-size: 400px;
+            opacity: 0.15;
+            z-index: -2;
+            pointer-events: none;
+            animation: roachMove 120s infinite linear;
+        }
+        
+        @keyframes roachMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 400px 300px; }
+        }
+        
+        /* 扫描线效果 */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent 50%,
+                rgba(0, 255, 0, 0.03) 50%
+            );
+            background-size: 100% 4px;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+        
+        /* 闪烁噪点效果 */
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            z-index: -1;
+            pointer-events: none;
+            animation: noiseFlicker 0.2s infinite;
+        }
+        
+        @keyframes noiseFlicker {
+            0%, 100% { opacity: 0.03; }
+            50% { opacity: 0.05; }
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+            min-height: 100vh; /* 确保容器足够高 */
+        }
+        
+        .handwritten-text {
+            font-family: 'Caveat', 'Comic Sans MS', cursive;
+            font-size: 24px;
+            white-space: pre-line;
+            margin-bottom: 50px;
+            letter-spacing: 0.8px;
+            line-height: 1.9;
+            text-shadow: 
+                0 0 3px rgba(255, 255, 255, 0.1),
+                0 0 10px rgba(255, 0, 0, 0.1);
+            animation: textFlicker 20s infinite alternate;
+            position: relative;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-left: 2px solid #8b0000;
+            box-shadow: 
+                inset 0 0 20px rgba(139, 0, 0, 0.3),
+                0 0 30px rgba(0, 0, 0, 0.8);
+            border-radius: 2px;
+        }
+        
+        @keyframes textFlicker {
+            0%, 92%, 100% { opacity: 1; }
+            93%, 98% { opacity: 0.85; }
+        }
+        
+        .keyword {
+            color: #7fffd4;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 0 3px;
+            border-bottom: 1px dashed #7fffd4;
+            position: relative;
+        }
+        
+        .keyword:hover {
+            background-color: rgba(127, 255, 212, 0.15);
+            text-shadow: 0 0 10px rgba(127, 255, 212, 0.8);
+            box-shadow: 0 0 15px rgba(127, 255, 212, 0.4);
+        }
+        
+        .he-keyword {
+            color: #ff0000;
+            font-weight: bold;
+            animation: redFlicker 1.2s infinite alternate;
+            cursor: pointer;
+            padding: 0 3px;
+            text-decoration: underline;
+            position: relative;
+        }
+        
+        @keyframes redFlicker {
+            0%, 100% { 
+                opacity: 1; 
+                text-shadow: 
+                    0 0 5px rgba(255, 0, 0, 0.8),
+                    0 0 15px rgba(255, 0, 0, 0.4);
+            }
+            50% { 
+                opacity: 0.6; 
+                text-shadow: 
+                    0 0 10px rgba(255, 0, 0, 1),
+                    0 0 25px rgba(255, 0, 0, 0.7);
+            }
+        }
+        
+        .countdown-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            font-family: 'Orbitron', monospace;
+            font-size: 16px;
+            background: rgba(10, 10, 10, 0.85);
+            padding: 15px 20px;
+            border-radius: 8px;
+            border: 1px solid #8b0000;
+            box-shadow: 
+                0 0 15px rgba(255, 0, 0, 0.3),
+                inset 0 0 10px rgba(139, 0, 0, 0.2);
+            color: #ff4444;
+            text-align: center;
+            min-width: 240px;
+            backdrop-filter: blur(3px);
+            z-index: 100;
+        }
+        
+        .countdown-label {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+        
+        .countdown-timer {
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .warning {
+            color: #ff4444;
+            text-align: center;
+            margin-top: 30px;
+            font-size: 18px;
+            font-style: italic;
+            animation: pulseWarning 2.5s infinite;
+            text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+            padding: 10px;
+            border-top: 1px solid #8b0000;
+            border-bottom: 1px solid #8b0000;
+        }
+        
+        @keyframes pulseWarning {
+            0%, 100% { 
+                opacity: 0.7; 
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1.02);
+            }
+        }
+        
+        /* 页面内提示弹窗 */
+        .page-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(10, 0, 0, 0.95);
+            border: 2px solid #8b0000;
+            border-radius: 8px;
+            padding: 30px;
+            z-index: 1000;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 
+                0 0 40px rgba(255, 0, 0, 0.5),
+                inset 0 0 20px rgba(139, 0, 0, 0.3);
+            display: none;
+            backdrop-filter: blur(5px);
+        }
+        
+        .page-alert.active {
+            display: block;
+            animation: alertAppear 0.5s ease-out;
+        }
+        
+        @keyframes alertAppear {
+            0% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            100% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
+        .alert-title {
+            color: #ff4444;
+            font-size: 22px;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 1px solid #8b0000;
+            padding-bottom: 10px;
+        }
+        
+        .alert-content {
+            color: #ccc;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .alert-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(20, 0, 0, 0.8);
+            border: 1px solid #8b0000;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        
+        .alert-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        
+        .alert-button {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(to bottom, #8b0000, #660000);
+            border: none;
+            color: white;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .alert-button:hover {
+            background: linear-gradient(to bottom, #a00000, #770000);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        }
+        
+        .alert-button.cancel {
+            background: linear-gradient(to bottom, #333, #222);
+        }
+        
+        .alert-button.cancel:hover {
+            background: linear-gradient(to bottom, #444, #333);
+            box-shadow: 0 0 15px rgba(100, 100, 100, 0.5);
+        }
+        
+        /* 血迹效果 */
+        .blood-stain {
+            position: fixed;
+            width: 200px;
+            height: 150px;
+            background: radial-gradient(ellipse at center, rgba(139, 0, 0, 0.3) 0%, transparent 70%);
+            filter: blur(5px);
+            z-index: -1;
+            pointer-events: none;
+            animation: bloodFade 30s infinite alternate;
+        }
+        
+        @keyframes bloodFade {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .blood-1 { top: 15%; left: 10%; }
+        .blood-2 { bottom: 20%; right: 15%; }
+        .blood-3 { top: 40%; right: 25%; }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .handwritten-text {
+                font-size: 18px;
+                padding: 20px;
+            }
+            
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .countdown-container {
+                position: fixed;
+                bottom: 20px;
+                right: 50%;
+                transform: translateX(50%);
+                margin: 0;
+                width: 90%;
+                max-width: 300px;
+            }
+            
+            .page-alert {
+                width: 90%;
+                padding: 20px;
+            }
+        }
+        
+        /* 添加更多空白内容确保可以滚动 */
+        .spacer {
+            height: 100px;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 背景效果层 -->
+    <div id="background-overlay"></div>
+    <div class="roach-bg"></div>
+    <div class="scanlines"></div>
+    <div class="noise"></div>
+    <div class="blood-stain blood-1"></div>
+    <div class="blood-stain blood-2"></div>
+    <div class="blood-stain blood-3"></div>
+    
+    <div class="container">
+        <div class="handwritten-text">
+我躲起来了，他们找不到我。
+
+他们在残害我的同胞，但我们明明才是从<span class="keyword" data-target="shanggu.html">上古繁衍至今</span>的最古老种族，
+但他们说我们是害虫。
+
+他们说我的同胞肮脏、恶心、丑陋，每个人都应该唾弃并杀害我们，
+但我们明明没有恶意，每天飞来爬去只是为了寻找食物，
+和他们上班打工有何异？
+
+我的族人制造出来我，就是为了复仇，
+为我几千年来死去的同胞复仇，
+为此，我接受了<span class="he-keyword" data-target="ta.html">他</span>的力量，
+现在，我和他们外观无二，我能混迹其中，最终破坏这个世界。
+
+我在等待，那个世纪的来临，
+就在这里，末日，即将上演！
+
+享受最后<span class="keyword" data-target="7d.html" data-password="true">七天</span>的欢乐时光吧，人类。。。。。。
+        </div>
+        
+        <div class="warning">
+            （警告：访问已记录。追踪协议已启动...）
+        </div>
+        
+        <!-- 添加更多内容确保可以滚动 -->
+        <div class="spacer"></div>
+        <div class="warning" style="font-size: 14px; color: #f70202; border: none;">
+            嘶嘶嘶 嘶嘶嘶 嘶嘶嘶...
+        </div>
+        <div class="spacer"></div>
+        
+        <!-- 隐藏的额外信息 -->
+        <div class="handwritten-text" style="font-size: 18px; opacity: 0.8; margin-top: 50px;">
+            <strong>访问记录：</strong>
+            
+            坐标已记录：北纬 22.5559° 东经 113.8847°
+            时间戳：<span id="timestamp"></span>
+            访问者IP：<span id="fake-ip">192.168.1.███</span>
+            
+            我们的计划正在进行中...
+            第一阶段：渗透完成
+            第二阶段：同化进行中
+            第三阶段：███ ██████ ████
+            
+            记住，我们无处不在。
+            在黑暗中，在角落里，在你们的恐惧中...
+        </div>
+        
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+    </div>
+    
+    <div class="countdown-container">
+        <div class="countdown-label">末日倒计时</div>
+        <div class="countdown-timer" id="countdown">6天 23:59:59</div>
+    </div>
+    
+    <!-- 页面内提示弹窗 -->
+    <div id="pageAlert" class="page-alert">
+        <div class="alert-title" id="alertTitle">访问被限制</div>
+        <div class="alert-content" id="alertContent">
+            此页面需要特殊权限才能访问。
+        </div>
+        <div id="passwordSection" style="display: none;">
+            <input type="password" id="passwordInput" class="alert-input" placeholder="输入访问密码">
+            <div class="alert-content" id="passwordHint" style="font-size: 14px; color: #888; margin-top: -10px; margin-bottom: 15px;"></div>
+        </div>
+        <div class="alert-buttons">
+            <button id="confirmBtn" class="alert-button">确认</button>
+            <button id="cancelBtn" class="alert-button cancel">取消</button>
+        </div>
+    </div>
+
+    <script>
+        // 初始化倒计时（从6天23小时59分开始）
+        let totalSeconds = 7 * 24 * 60 * 60 - 60; // 7天减1分钟
+        const countdownElement = document.getElementById('countdown');
+        let targetUrl = '';
+        let isPasswordProtected = false;
+        
+        // 设置时间戳
+        const timestampElement = document.getElementById('timestamp');
+        const now = new Date();
+        timestampElement.textContent = `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+        
+        function updateCountdown() {
+            if (totalSeconds <= 0) {
+                countdownElement.textContent = "末日降临";
+                countdownElement.style.color = "#ff0000";
+                countdownElement.style.animation = "redFlicker 0.5s infinite alternate";
+                
+                // 倒计时结束效果
+                if (totalSeconds === 0) {
+                    createFinalEffect();
+                }
+                return;
+            }
+            
+            const days = Math.floor(totalSeconds / (24 * 60 * 60));
+            const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+            const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+            const seconds = totalSeconds % 60;
+            
+            countdownElement.textContent = `${days}天 ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            totalSeconds--;
+            
+            // 最后24小时倒计时变为红色并闪烁
+            if (totalSeconds < 24 * 60 * 60) {
+                countdownElement.style.color = "#ff0000";
+                countdownElement.style.animation = "redFlicker 1s infinite alternate";
+            }
+        }
+        
+        // 页面内提示弹窗控制
+        const pageAlert = document.getElementById('pageAlert');
+        const alertTitle = document.getElementById('alertTitle');
+        const alertContent = document.getElementById('alertContent');
+        const passwordSection = document.getElementById('passwordSection');
+        const passwordInput = document.getElementById('passwordInput');
+        const passwordHint = document.getElementById('passwordHint');
+        const confirmBtn = document.getElementById('confirmBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        
+        function showAlert(title, content, showPassword = false, hint = '') {
+            alertTitle.textContent = title;
+            alertContent.textContent = content;
+            passwordSection.style.display = showPassword ? 'block' : 'none';
+            passwordHint.textContent = hint;
+            passwordInput.value = '';
+            pageAlert.classList.add('active');
+            
+            if (showPassword) {
+                setTimeout(() => passwordInput.focus(), 100);
+            }
+        }
+        
+        function hideAlert() {
+            pageAlert.classList.remove('active');
+        }
+        
+        // 弹窗按钮事件
+        confirmBtn.addEventListener('click', function() {
+            if (isPasswordProtected) {
+                const password = passwordInput.value.trim();
+                if (password.toLowerCase() === 'blattodea') {
+                    // 密码正确，直接跳转
+                    window.location.href = targetUrl;
+                } else if (password) {
+                    showAlert('密码错误', '访问被拒绝。\n\n提示：螂人最古老的名字是什么？（拉丁文）', true, '提示：拉丁学名，共8个字母');
+                } else {
+                    showAlert('需要密码', '请输入密码以继续访问。', true, '提示：拉丁学名，共8个字母');
+                }
+            } else {
+                // 不需要密码，直接跳转
+                window.location.href = targetUrl;
+            }
+        });
+        
+        cancelBtn.addEventListener('click', hideAlert);
+        
+        // 关键词点击事件
+        document.querySelectorAll('.keyword, .he-keyword').forEach(keyword => {
+            keyword.addEventListener('click', function() {
+                targetUrl = this.getAttribute('data-target');
+                isPasswordProtected = this.getAttribute('data-password') === 'true';
+                
+                if (targetUrl === 'ta.html') {
+                    showAlert('访问被拒绝', '此页面 (ta.html) 已加密，需要特殊权限才能访问。\n\n线索：寻找红色的秘密...', false);
+                } else if (targetUrl === 'shanggu.html') {
+                    showAlert('上古繁衍记录', '正在访问上古繁衍记录...\n（提示：shanggu.html 需要解码密钥）', false);
+                    // 3秒后自动跳转
+                    setTimeout(() => {
+                        window.location.href = targetUrl;
+                    }, 3000);
+                } else if (targetUrl === '7d.html') {
+                    showAlert('访问受限', '访问 7d.html 需要验证密码：', true, '提示：螂人最古老的名字是什么？（拉丁文，共8个字母）');
+                }
+            });
+        });
+        
+        // 初始更新倒计时
+        updateCountdown();
+        // 每秒更新一次倒计时
+        setInterval(updateCountdown, 1000);
+        
+        // 随机文字闪烁效果
+        const textElements = document.querySelectorAll('.handwritten-text');
+        
+        function randomFlicker() {
+            textElements.forEach(textElement => {
+                const originalText = textElement.textContent;
+                const chars = '.,!-;:';
+                const randomChar = chars[Math.floor(Math.random() * chars.length)];
+                const textArray = originalText.split('');
+                
+                // 随机选择一个位置（仅针对标点）
+                let positions = [];
+                textArray.forEach((char, index) => {
+                    if (chars.includes(char)) {
+                        positions.push(index);
+                    }
+                });
+                
+                if (positions.length > 0) {
+                    const randomPosition = positions[Math.floor(Math.random() * positions.length)];
+                    textArray[randomPosition] = randomChar;
+                    textElement.textContent = textArray.join('');
+                    
+                    // 短暂延迟后恢复
+                    setTimeout(() => {
+                        textElement.textContent = originalText;
+                    }, 80);
+                }
+            });
+        }
+        
+        // 每2-8秒随机闪烁一次
+        setInterval(randomFlicker, Math.random() * 6000 + 2000);
+        
+        // 随机背景闪烁效果
+        function randomBackgroundFlash() {
+            const overlay = document.getElementById('background-overlay');
+            const originalOpacity = '0.15';
+            
+            // 随机红色闪光
+            overlay.style.opacity = '0.3';
+            overlay.style.background = `radial-gradient(circle at ${Math.random()*100}% ${Math.random()*100}%, rgba(255, 0, 0, 0.3) 0%, transparent 50%), ${overlay.style.background}`;
+            
+            setTimeout(() => {
+                overlay.style.opacity = originalOpacity;
+            }, 200);
+        }
+        
+        // 每10-30秒随机背景闪烁
+        setInterval(randomBackgroundFlash, Math.random() * 20000 + 10000);
+        
+        // 创建倒计时结束特效
+        function createFinalEffect() {
+            const warning = document.querySelector('.warning');
+            warning.textContent = '（时间到。它们来了...）';
+            warning.style.animation = 'redFlicker 0.3s infinite alternate';
+            
+            // 添加红色全屏闪烁
+            const flash = document.createElement('div');
+            flash.style.position = 'fixed';
+            flash.style.top = '0';
+            flash.style.left = '0';
+            flash.style.width = '100%';
+            flash.style.height = '100%';
+            flash.style.background = 'rgba(255, 0, 0, 0.3)';
+            flash.style.zIndex = '9999';
+            flash.style.pointerEvents = 'none';
+            flash.style.animation = 'redFlicker 0.5s infinite alternate';
+            document.body.appendChild(flash);
+        }
+        
+        // 点击页面其他地方关闭弹窗
+        document.addEventListener('click', function(e) {
+            if (pageAlert.classList.contains('active') && 
+                !pageAlert.contains(e.target) && 
+                !e.target.classList.contains('keyword') && 
+                !e.target.classList.contains('he-keyword')) {
+                hideAlert();
+            }
+        });
+        
+        // 回车键确认密码
+        passwordInput.addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                confirmBtn.click();
+            }
+        });
+        
+        // 添加滚动时的视差效果
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const roachBg = document.querySelector('.roach-bg');
+            roachBg.style.transform = `translateY(${scrolled * 0.5}px)`;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简历查询验证</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* 背景特效 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(41, 128, 185, 0.1) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(142, 68, 173, 0.08) 0px, transparent 50%);
+            z-index: -2;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(10, 25, 47, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        /* 顶部装饰线 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #20b2aa, #1e90ff);
+        }
+        
+        /* 局徽样式 */
+        .emblem {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .emblem-symbol {
+            display: inline-block;
+            width: 140px;
+            height: 140px;
+            position: relative;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(64, 224, 208, 0.3);
+            box-shadow: 
+                0 0 20px rgba(64, 224, 208, 0.3),
+                inset 0 0 20px rgba(10, 25, 47, 0.5);
+            animation: pulse 4s infinite alternate;
+            background-color: rgba(178, 217, 246, 0.956);
+        }
+        
+        /* logo图片容器 */
+        .emblem-symbol .logo-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('xjthj.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        
+        /* 圆形边框特效 */
+        .emblem-symbol::after {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #40e0d0, #1e90ff, #40e0d0);
+            z-index: -1;
+            opacity: 0.5;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes pulse {
+            0% { 
+                box-shadow: 
+                    0 0 20px rgba(64, 224, 208, 0.3),
+                    inset 0 0 20px rgba(10, 25, 47, 0.5);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 30px rgba(64, 224, 208, 0.5),
+                    inset 0 0 20px rgba(10, 25, 47, 0.7);
+            }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .emblem-text {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+        }
+        
+        .emblem-subtext {
+            color: #87ceeb;
+            font-size: 14px;
+            letter-spacing: 8px;
+        }
+        
+        /* 验证区域 */
+        .auth-box {
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(20, 40, 70, 0.7);
+            border-radius: 10px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .auth-title {
+            color: #40e0d0;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+        
+        .hint {
+            color: #87ceeb;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+        
+        .hint strong {
+            color: #40e0d0;
+            text-decoration: underline;
+        }
+        
+        /* 密码输入区域 */
+        .password-container {
+            margin: 25px 0;
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(10, 20, 40, 0.8);
+            border: 2px solid rgba(64, 224, 208, 0.4);
+            border-radius: 8px;
+            color: #e0e7ff;
+            font-size: 18px;
+            text-align: center;
+            letter-spacing: 5px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        
+        .password-input:focus {
+            outline: none;
+            border-color: #40e0d0;
+            box-shadow: 0 0 15px rgba(64, 224, 208, 0.4);
+        }
+        
+        .submit-btn {
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(30, 144, 255, 0.3);
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(30, 144, 255, 0.5);
+        }
+        
+        /* 九键键盘样式 */
+        .keypad-container {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(30, 60, 90, 0.6);
+            border-radius: 10px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .keypad-title {
+            color: #87ceeb;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        .key {
+            background: rgba(10, 20, 40, 0.9);
+            border: 2px solid rgba(64, 224, 208, 0.3);
+            border-radius: 8px;
+            height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        
+        .key:hover {
+            background: rgba(20, 40, 80, 0.9);
+            border-color: #40e0d0;
+            transform: translateY(-3px);
+        }
+        
+        .key:active {
+            transform: translateY(1px);
+        }
+        
+        .key-number {
+            font-size: 22px;
+            font-weight: bold;
+            color: #40e0d0;
+        }
+        
+        .key-letters {
+            font-size: 12px;
+            color: #87ceeb;
+            margin-top: 3px;
+        }
+        
+        .key-special {
+            grid-column: span 2;
+            background: rgba(142, 68, 173, 0.3);
+        }
+        
+        .key-special .key-number {
+            color: #da70d6;
+        }
+        
+        /* 消息提示 */
+        .message {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        .error {
+            background-color: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.5);
+            color: #ff7b7b;
+        }
+        
+        .success {
+            background-color: rgba(40, 167, 69, 0.2);
+            border: 1px solid rgba(40, 167, 69, 0.5);
+            color: #80ffaa;
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #708090;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(112, 128, 144, 0.3);
+        }
+        
+        .footer a {
+            color: #87ceeb;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .emblem-text {
+                font-size: 20px;
+            }
+            
+            .emblem-symbol {
+                width: 110px;
+                height: 110px;
+            }
+            
+            .auth-title {
+                font-size: 20px;
+            }
+            
+            .keypad {
+                gap: 10px;
+            }
+            
+            .key {
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 局徽部分 -->
+        <div class="emblem">
+            <div class="emblem-symbol">
+                <div class="logo-img"></div>
+            </div>
+            <div class="emblem-text">简历查询验证系统</div>
+            <div class="emblem-subtext">SECURITY ACCESS</div>
+        </div>
+        
+        <!-- 验证区域 -->
+        <div class="auth-box">
+            <h2 class="auth-title">请输入访问密码</h2>
+            <p class="hint">提示：<strong>权限码</strong>可查阅实际办公地点页面</p>
+            
+            <!-- 密码输入框 -->
+            <div class="password-container">
+                <input type="password" id="passwordInput" class="password-input" placeholder="点击输入密码">
+                <button id="submitBtn" class="submit-btn">验证并进入</button>
+                
+                <!-- 消息提示 -->
+                <div id="message" class="message"></div>
+            </div>
+            
+            <!-- 九键键盘 -->
+           <!--  <div class="keypad-container">
+                <div class="keypad-title">九键键盘</div>
+                <div class="keypad" id="keypad">
+             键盘按键通过JavaScript动态生成 ->
+                </div>
+                <p style="color: #708090; font-size: 14px; margin-top: 15px;">提示：九键指的是手机上的九宫格键盘</p>
+            </div> -->
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>© 2025 简历查询验证系统 | 需要授权访问</p>
+            <p>未经授权，禁止访问</p>
+        </div>
+    </div>
+
+    <script>
+
+    const _0x779b6c=_0x1d9e;(function(_0x4652f9,_0x29171e){const _0x488a33=_0x1d9e,_0x2d5b58=_0x4652f9();while(!![]){try{const _0x435afa=-parseInt(_0x488a33(0x1bb))/0x1*(-parseInt(_0x488a33(0x192))/0x2)+-parseInt(_0x488a33(0x194))/0x3*(parseInt(_0x488a33(0x1ca))/0x4)+-parseInt(_0x488a33(0x1b8))/0x5+-parseInt(_0x488a33(0x1a7))/0x6*(parseInt(_0x488a33(0x1c3))/0x7)+parseInt(_0x488a33(0x1c6))/0x8+parseInt(_0x488a33(0x1c1))/0x9+parseInt(_0x488a33(0x1a2))/0xa*(-parseInt(_0x488a33(0x1b4))/0xb);if(_0x435afa===_0x29171e)break;else _0x2d5b58['push'](_0x2d5b58['shift']());}catch(_0xa327d3){_0x2d5b58['push'](_0x2d5b58['shift']());}}}(_0x130e,0xc8268));const keypadLayout=[{'number':'1','letters':''},{'number':'2','letters':_0x779b6c(0x1bf)},{'number':'3','letters':_0x779b6c(0x19d)},{'number':'4','letters':_0x779b6c(0x19a)},{'number':'5','letters':_0x779b6c(0x1c2)},{'number':'6','letters':_0x779b6c(0x1cb)},{'number':'7','letters':_0x779b6c(0x1c8)},{'number':'8','letters':_0x779b6c(0x1b7)},{'number':'9','letters':'WXYZ'},{'number':'*','letters':''},{'number':'0','letters':'+'},{'number':'#','letters':''}];function initKeypad(){const _0x91f783=_0x779b6c,_0x2b556e=document[_0x91f783(0x198)](_0x91f783(0x1be));_0x2b556e[_0x91f783(0x1ad)]='',keypadLayout[_0x91f783(0x1c5)](_0x575f07=>{const _0x15fc64=_0x91f783,_0x564ee8=document[_0x15fc64(0x1a8)]('div');_0x564ee8['className']=_0x15fc64(0x1a5),(_0x575f07[_0x15fc64(0x197)]==='*'||_0x575f07[_0x15fc64(0x197)]==='0'||_0x575f07[_0x15fc64(0x197)]==='#')&&_0x564ee8[_0x15fc64(0x1b6)]['add'](_0x15fc64(0x1af)),_0x564ee8['innerHTML']='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22key-number\x22>'+_0x575f07[_0x15fc64(0x197)]+_0x15fc64(0x1c9)+(_0x575f07[_0x15fc64(0x1b0)]?_0x15fc64(0x196)+_0x575f07[_0x15fc64(0x1b0)]+_0x15fc64(0x19c):'')+_0x15fc64(0x19b),_0x564ee8[_0x15fc64(0x1a6)](_0x15fc64(0x1b1),()=>{const _0x38953f=_0x15fc64,_0x4ad3ea=document[_0x38953f(0x198)]('passwordInput');_0x4ad3ea[_0x38953f(0x1c4)]+=_0x575f07['number'],_0x4ad3ea['focus']();}),_0x2b556e[_0x15fc64(0x1bc)](_0x564ee8);});const _0x1e17dd=document[_0x91f783(0x1a8)]('div');_0x1e17dd[_0x91f783(0x1aa)]=_0x91f783(0x1b2),_0x1e17dd[_0x91f783(0x1ad)]=_0x91f783(0x1ba),_0x1e17dd[_0x91f783(0x1a6)](_0x91f783(0x1b1),()=>{const _0x45bc9f=_0x91f783,_0x523fcd=document[_0x45bc9f(0x198)]('passwordInput');_0x523fcd[_0x45bc9f(0x1c4)]=_0x523fcd['value'][_0x45bc9f(0x1a1)](0x0,-0x1),_0x523fcd[_0x45bc9f(0x1ae)]();}),_0x2b556e[_0x91f783(0x1bc)](_0x1e17dd);}function _0x130e(){const _0x216681=['139599SoDYUq','appendChild','1656315646','keypad','ABC','keyup','11579238LUIFXq','JKL','211505rtxWDJ','value','forEach','10451608LJddVj','message\x20','PQRS','</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','541436JLJVjC','MNO','DOMContentLoaded','head','2ptNYOS','error','3wnWsRc','animation','<div\x20class=\x22key-letters\x22>','number','getElementById','密码错误，请重新输入','GHI','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','</div>','DEF','请输入密码','textContent','submitBtn','slice','28390BuZvHY','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20@keyframes\x20shake\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x200%,\x20100%\x20{\x20transform:\x20translateX(0);\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x2010%,\x2030%,\x2050%,\x2070%,\x2090%\x20{\x20transform:\x20translateX(-5px);\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x2020%,\x2040%,\x2060%,\x2080%\x20{\x20transform:\x20translateX(5px);\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20','passwordInput','key','addEventListener','168wRIaot','createElement','none','className','Enter','success','innerHTML','focus','key-special','letters','click','key\x20key-special','opacity','2387ZzQViW','style','classList','TUV','1576870dpRcig','lxm.html','<div\x20class=\x22key-number\x22\x20style=\x22font-size:\x2018px;\x22>删除</div>'];_0x130e=function(){return _0x216681;};return _0x130e();}function _0x1d9e(_0x2c394c,_0x5f4dba){_0x2c394c=_0x2c394c-0x190;const _0x130e57=_0x130e();let _0x1d9e4a=_0x130e57[_0x2c394c];return _0x1d9e4a;}function showMessage(_0x5bae7e,_0x3644ab){const _0x522c4e=_0x779b6c,_0x43b783=document[_0x522c4e(0x198)]('message');_0x43b783[_0x522c4e(0x19f)]=_0x5bae7e,_0x43b783[_0x522c4e(0x1aa)]=_0x522c4e(0x1c7)+_0x3644ab,_0x43b783[_0x522c4e(0x1b5)][_0x522c4e(0x1b3)]='1',setTimeout(()=>{const _0x127cf0=_0x522c4e;_0x43b783[_0x127cf0(0x1b5)][_0x127cf0(0x1b3)]='0';},0xbb8);}function validatePassword(){const _0x22a138=_0x779b6c,_0x51631b=document[_0x22a138(0x198)]('passwordInput'),_0xc0fd5d=_0x51631b[_0x22a138(0x1c4)],_0x3be36f=document[_0x22a138(0x198)]('message');_0x3be36f['style']['opacity']='0';if(!_0xc0fd5d){showMessage(_0x22a138(0x19e),_0x22a138(0x193)),_0x51631b[_0x22a138(0x1ae)]();return;}const _0x1277f3=_0x22a138(0x1bd);_0xc0fd5d===_0x1277f3?(showMessage('密码正确！正在跳转...',_0x22a138(0x1ac)),setTimeout(()=>{const _0x47fd92=_0x22a138;window['location']['href']=_0x47fd92(0x1b9);},0x5dc)):(showMessage(_0x22a138(0x199),'error'),_0x51631b[_0x22a138(0x1c4)]='',_0x51631b[_0x22a138(0x1ae)](),_0x51631b[_0x22a138(0x1b5)]['animation']=_0x22a138(0x1a9),setTimeout(()=>{const _0x3e936a=_0x22a138;_0x51631b[_0x3e936a(0x1b5)][_0x3e936a(0x195)]='shake\x200.5s';},0xa));}const style=document[_0x779b6c(0x1a8)](_0x779b6c(0x1b5));style[_0x779b6c(0x19f)]=_0x779b6c(0x1a3),document[_0x779b6c(0x191)][_0x779b6c(0x1bc)](style),document[_0x779b6c(0x198)](_0x779b6c(0x1a0))['addEventListener'](_0x779b6c(0x1b1),validatePassword),document[_0x779b6c(0x198)]('passwordInput')[_0x779b6c(0x1a6)](_0x779b6c(0x1c0),_0x1e707f=>{const _0x5c562b=_0x779b6c;_0x1e707f['key']===_0x5c562b(0x1ab)&&validatePassword();}),document[_0x779b6c(0x1a6)]('DOMContentLoaded',initKeypad),document['addEventListener'](_0x779b6c(0x190),()=>{setTimeout(()=>{const _0x83c0c4=_0x1d9e;document[_0x83c0c4(0x198)](_0x83c0c4(0x1a4))['focus']();},0x1f4);});
+</script>
+    <script src="jinzhi.js"></script>
+</body>
+</html>

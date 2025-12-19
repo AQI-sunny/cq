@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件获取 - CO114-voice-ntfs-jiexi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 背景装饰元素 */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(41, 128, 185, 0.1) 0px, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(142, 68, 173, 0.08) 0px, transparent 50%);
+            z-index: -1;
+        }
+        
+        /* 动态网格背景 */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(64, 224, 208, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(64, 224, 208, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        
+        /* 主容器 */
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background-color: rgba(10, 25, 47, 0.85);
+            border-radius: 20px;
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.6),
+                0 0 0 1px rgba(64, 224, 208, 0.2);
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        /* 容器顶部装饰线 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff, #40e0d0);
+        }
+        
+        /* 发光边框效果 */
+        .container::after {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #40e0d0, #1e90ff, #40e0d0);
+            border-radius: 22px;
+            z-index: -1;
+            opacity: 0.3;
+            filter: blur(10px);
+        }
+        
+        /* 主要文本样式 */
+        .main-message {
+            font-size: 36px;
+            margin-bottom: 30px;
+            color: #b0c4de;
+            line-height: 1.4;
+        }
+        
+        /* 高亮部分 */
+        .highlight {
+            color: #40e0d0;
+            font-weight: bold;
+        }
+        
+        /* 文件名展示区 */
+        .filename-container {
+            background: rgba(20, 40, 70, 0.7);
+            border-radius: 15px;
+            padding: 40px 30px;
+            margin: 40px 0;
+            border: 2px solid rgba(64, 224, 208, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 文件名标题 */
+        .filename-title {
+            color: #87ceeb;
+            font-size: 20px;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+        
+        /* 文件名本身 */
+        .filename {
+            font-family: 'Courier New', monospace;
+            font-size: 42px;
+            color: #40e0d0;
+            font-weight: bold;
+            letter-spacing: 3px;
+            padding: 20px;
+            background: rgba(10, 25, 47, 0.9);
+            border-radius: 10px;
+            border: 1px solid rgba(64, 224, 208, 0.4);
+            display: inline-block;
+            position: relative;
+            box-shadow: 
+                0 5px 15px rgba(0, 0, 0, 0.3),
+                inset 0 0 10px rgba(64, 224, 208, 0.1);
+            animation: pulse 3s infinite alternate;
+        }
+        
+        /* 文件名脉冲动画 */
+        @keyframes pulse {
+            0% { 
+                box-shadow: 
+                    0 5px 15px rgba(0, 0, 0, 0.3),
+                    inset 0 0 10px rgba(64, 224, 208, 0.1);
+            }
+            100% { 
+                box-shadow: 
+                    0 5px 25px rgba(0, 0, 0, 0.5),
+                    0 0 20px rgba(64, 224, 208, 0.2),
+                    inset 0 0 15px rgba(64, 224, 208, 0.2);
+            }
+        }
+        
+        /* 文件名中的不同部分 */
+        .file-prefix {
+            color: #ffa500;
+        }
+        
+        .file-main {
+            color: #40e0d0;
+        }
+        
+        .file-extension {
+            color: #da70d6;
+        }
+        
+        /* 文件信息 */
+        .file-info {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .info-item {
+            background: rgba(30, 60, 90, 0.5);
+            border-radius: 10px;
+            padding: 20px;
+            min-width: 200px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        
+        .info-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(64, 224, 208, 0.5);
+        }
+        
+        .info-label {
+            color: #87ceeb;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .info-value {
+            color: #b0c4de;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        /* 底部装饰 */
+        .footer {
+            margin-top: 50px;
+            color: #708090;
+            font-size: 14px;
+            border-top: 1px solid rgba(112, 128, 144, 0.3);
+            padding-top: 20px;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 20px;
+            }
+            
+            .main-message {
+                font-size: 28px;
+            }
+            
+            .filename {
+                font-size: 32px;
+                padding: 15px;
+            }
+            
+            .file-info {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-message {
+                font-size: 24px;
+            }
+            
+            .filename {
+                font-size: 24px;
+                letter-spacing: 2px;
+            }
+            
+            .filename-title {
+                font-size: 18px;
+            }
+        }
+        
+        /* 文件图标装饰 */
+        .file-icon {
+            position: absolute;
+            font-size: 60px;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .file-icon-1 {
+            top: 30px;
+            left: 30px;
+        }
+        
+        .file-icon-2 {
+            bottom: 30px;
+            right: 30px;
+            transform: rotate(15deg);
+        }
+    </style>
+</head>
+<body>
+    <!-- 网格背景 -->
+    <div class="grid-bg"></div>
+    
+    <!-- 主容器 -->
+    <div class="container">
+        <!-- 文件图标装饰 -->
+        <div class="file-icon file-icon-1"></div>
+        <div class="file-icon file-icon-2">📄</div>
+        
+        <!-- 主要消息 -->
+        <div class="main-message">
+            获得一份<span class="highlight">文件</span>，文件名为
+        </div>
+        
+        <!-- 文件名展示区 -->
+        <div class="filename-container">
+            <div class="filename-title">文件名称</div>
+            <div class="filename">
+                <span class="file-prefix">CO114</span>-
+                <span class="file-main">voice-ntfs</span>-
+                <span class="file-extension">jiexi</span>
+            </div>
+        </div>
+        
+        <!-- 文件信息 -->
+        <!-- <div class="file-info">
+            <div class="info-item">
+                <div class="info-label">文件类型</div>
+                <div class="info-value">解析文件</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">标识符</div>
+                <div class="info-value">CO114</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">内容类型</div>
+                <div class="info-value">语音-NTFS</div>
+            </div>
+        </div> -->
+        
+        <!-- 底部信息 -->
+        <div class="footer">
+            <p>文件已准备就绪，请妥善保存此文件名</p>
+        </div>
+    </div>
+    
+    <script>
+        // 添加一些简单的交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 文件名点击效果
+            const filename = document.querySelector('.filename');
+            filename.addEventListener('click', function() {
+                // 创建临时元素来复制文件名
+                const tempInput = document.createElement('input');
+                tempInput.value = 'CO114-voice-ntfs-jiexi';
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                
+                // 视觉反馈
+                const originalColor = this.style.color;
+                this.style.color = '#20b2aa';
+                this.style.transform = 'scale(1.05)';
+                
+                setTimeout(() => {
+                    this.style.color = originalColor;
+                    this.style.transform = 'scale(1)';
+                }, 300);
+                
+                // 显示复制成功提示
+                const message = document.createElement('div');
+                message.textContent = '文件名已复制到剪贴板';
+                message.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: rgba(64, 224, 208, 0.9);
+                    color: #0c1a2d;
+                    padding: 10px 20px;
+                    border-radius: 6px;
+                    font-weight: bold;
+                    z-index: 1000;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                    animation: fadeInOut 3s forwards;
+                `;
+                
+                document.body.appendChild(message);
+                
+                setTimeout(() => {
+                    document.body.removeChild(message);
+                }, 3000);
+            });
+            
+            // 添加键盘快捷键支持
+            document.addEventListener('keydown', function(e) {
+                // Ctrl+C 或 Cmd+C 复制文件名
+                if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
+                    const tempInput = document.createElement('input');
+                    tempInput.value = 'CO114-voice-ntfs-jiexi';
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+                }
+            });
+            
+            // 添加CSS动画定义
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeInOut {
+                    0% { opacity: 0; transform: translateX(50px); }
+                    20% { opacity: 1; transform: translateX(0); }
+                    80% { opacity: 1; transform: translateX(0); }
+                    100% { opacity: 0; transform: translateX(50px); }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>繁殖行为报告 - 红色机密</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+            position: relative;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(80, 0, 0, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(80, 0, 0, 0.1) 0%, transparent 20%);
+        }
+        
+        /* 机密水印 */
+        body::before {
+            content: "红色机密";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40vw;
+            font-weight: 900;
+            color: rgba(180, 0, 0, 0.06);
+            z-index: -1;
+            pointer-events: none;
+            letter-spacing: 10px;
+            transform: rotate(-30deg);
+            text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 2px solid #8b0000;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            color: #d32f2f;
+            text-shadow: 0 0 10px rgba(211, 47, 47, 0.5);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: #b0b0b0;
+            font-style: italic;
+        }
+        
+        .classified-stamp {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            background: #8b0000;
+            color: #ffcc00;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transform: rotate(10deg);
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(139, 0, 0, 0.7);
+            border: 2px dashed #ffcc00;
+        }
+        
+        .content {
+            background-color: rgba(20, 20, 20, 0.85);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 25px rgba(139, 0, 0, 0.3);
+            border: 1px solid #444;
+            margin-bottom: 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        .section h2 {
+            color: #d32f2f;
+            margin-bottom: 15px;
+            padding-left: 15px;
+            border-left: 4px solid #8b0000;
+            font-size: 1.8rem;
+        }
+        
+        .section p {
+            margin-bottom: 15px;
+            text-align: justify;
+            font-size: 1.1rem;
+        }
+        
+        .highlight {
+            background-color: rgba(139, 0, 0, 0.2);
+            padding: 10px 15px;
+            border-left: 3px solid #d32f2f;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        
+        .keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+        }
+        
+        .keyword {
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            border: 1px solid #444;
+            padding: 12px 20px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .keyword:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(211, 47, 47, 0.4);
+            border-color: #d32f2f;
+        }
+        
+        .keyword::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(211, 47, 47, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .keyword:hover::before {
+            left: 100%;
+        }
+        
+        .keyword i {
+            margin-right: 8px;
+            color: #d32f2f;
+        }
+        
+        .unlocked-section {
+            background-color: rgba(0, 50, 0, 0.2);
+            border: 1px solid #0a8f0a;
+            padding: 25px;
+            border-radius: 6px;
+            margin-top: 30px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(10, 143, 10, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(10, 143, 10, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(10, 143, 10, 0); }
+        }
+        
+        .unlocked-section h3 {
+            color: #4CAF50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .unlocked-section h3 i {
+            margin-right: 10px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+            border-top: 1px solid #333;
+            margin-top: 30px;
+        }
+        
+        .location {
+            display: inline-block;
+            background-color: rgba(139, 0, 0, 0.3);
+            padding: 8px 15px;
+            border-radius: 4px;
+            margin: 10px 5px;
+            font-family: monospace;
+        }
+        
+        .warning {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        
+        .emergency {
+            color: #f44336;
+            font-weight: bold;
+            animation: blink 1.5s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.7; }
+        }
+        
+        .report-id {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            font-family: monospace;
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .keywords {
+                flex-direction: column;
+            }
+            
+            .classified-stamp {
+                position: relative;
+                right: auto;
+                top: auto;
+                display: inline-block;
+                margin-top: 15px;
+                transform: rotate(5deg);
+            }
+            
+            .report-id {
+                position: relative;
+                left: auto;
+                top: auto;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="report-id">文件编号: FZ-2025-12-15-螂人</div>
+            <h1><i class="fas fa-file-contract"></i> 繁殖行为报告</h1>
+            <div class="subtitle">螂人异常生物研究项目 - 内部文件</div>
+            <div class="classified-stamp">
+                <i class="fas fa-lock"></i> 机密文件
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2><i class="fas fa-binoculars"></i> 观察发现</h2>
+                <p>经过持续72小时的隐蔽观察与数据采集，研究小组确认螂人（代号：Mantodea-Hominid）表现出高度复杂的社会性繁殖行为，与昆虫纲螳螂目生物习性存在显著差异。</p>
+                
+                <div class="highlight">
+                    <p><strong>关键发现：</strong>螂人群体采用<strong>集体抚养幼体</strong>的社会结构。观察到的三个独立群体均显示，成年个体共同承担幼体保护、喂养及训练职责，打破了此前关于其"独立繁殖"的假设。</p>
+                </div>
+                
+                <p>这种行为模式表明螂人已进化出初级社会组织形式，可能具有信息传递与任务分配能力，威胁等级需重新评估。</p>
+            </div>
+            
+            <div class="section">
+                <h2><i class="fas fa-user-secret"></i> 针对性部署行为</h2>
+                <p>监测数据显示，螂人群体展现出明确的针对性部署策略。编号"CO114-CO134"等个体集群表现出异常活跃的侦察行为模式。</p>
+                
+                <p>这些个体被<strong>故意放置于华苑小区4栋401室附近</strong>，该住宅户主为<strong>林星辰</strong>（身份已核实，无明显异常）。连续5天的红外监测显示，这些个体以401室为中心呈环形侦查阵型，每日22:00-04:00期间活动频率提升300%。</p>
+                
+                <div class="highlight">
+                    <p><strong>分析结论：</strong>"CO114-CO134"个体集群极有可能是螂人群体针对特定目标部署的<strong>"侦察员"单元</strong>，其行为模式符合有组织情报收集特征。建议对林星辰及其社交圈进行安全审查。</p>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2><i class="fas fa-archway"></i> 巢穴定位</h2>
+                <p>通过热成像扫描与振动分析，已初步锁定螂人群体主要聚集点。</p>
+                
+                <p><span class="location">华苑小区4栋地下室</span>区域检测到异常热源分布及规律性低频振动信号，与已知螂人活动特征匹配度达<strong>87.3%</strong>。该区域存在以下异常指标：</p>
+                
+                <ul style="margin-left: 20px; margin-top: 10px; margin-bottom: 15px;">
+                    <li>恒温28-32℃（与环境温差显著）</li>
+                    <li>周期性振动信号（间隔约45分钟）</li>
+                    <li>二氧化碳浓度异常（超过环境值3.2倍）</li>
+                    <li>夜间进出活动频率异常</li>
+                </ul>
+                
+                <p class="warning"><i class="fas fa-exclamation-triangle"></i> <strong>警告：</strong>初步评估该巢穴可能容纳30-50个成年个体，且存在扩张迹象。建议立即制定控制方案。</p>
+            </div>
+            
+            <div id="unlockedSection" class="unlocked-section">
+                <h3><i class="fas fa-unlock-alt"></i> 新增信息（连接隐藏页面后解锁）</h3>
+                <p>通过深度渗透侦察，已获取螂人群体最新进化情报：</p>
+                
+                <div class="highlight" style="border-left-color: #4CAF50;">
+                    <p><span class="emergency">紧急发现：</span>螂人群体中存在<strong>"完全拟态个体"</strong>，生理结构与行为模式可实现<strong>100%人类模仿</strong>。目前已确认至少3例成功渗透案例。</p>
+                </div>
+                
+                <p>这些拟态个体能够通过未知生物机制完美复制人类外貌特征、声音模式及基础行为逻辑，仅可通过微量外激素差异（检测误差率12%）或极端应激反应进行识别。</p>
+                
+                <p><strong>应对建议：</strong>立即启动<strong>"清影行动"</strong>，对所有接触过已知螂人活动区域的人员进行三级生物特征筛查，重点关注华苑小区4栋居民及相关工作人员。</p>
+                
+                <p style="margin-top: 15px;"><i class="fas fa-clock"></i> <strong>情报时效性：</strong>本信息更新于<span class="emergency">24小时</span>内，需立即采取应对措施。</p>
+            </div>
+            
+            <div class="section">
+                <h2><i class="fas fa-link"></i> 相关链接与对策</h2>
+                <p>点击以下关键词获取详细应对方案与技术资料：</p>
+                
+                <div class="keywords">
+                    <div class="keyword" onclick="window.location.href='qusan.html'">
+                        <i class="fas fa-broadcast-tower"></i> 高频驱散器
+                    </div>
+                    
+                    <div class="keyword" onclick="window.location.href='nest.html'">
+                        <i class="fas fa-archway"></i> 巢穴结构分析
+                    </div>
+                    
+                    <div class="keyword" onclick="window.location.href='nitai.html'">
+                        <i class="fas fa-user-ninja"></i> 完全拟态个体
+                    </div>
+                </div>
+                
+                <p style="margin-top: 20px; font-size: 0.9rem; color: #aaa;">
+                    <i class="fas fa-info-circle"></i> 提示：以上链接仅限内部网络访问，点击将跳转至对应机密文档。
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>螂人研究项目组 · 异常生物对策部</p>
+            <p>本文件属于红色机密级别，未经授权禁止复制、传播或销毁</p>
+            <p>最后更新: 2025-12-15 | 文件版本: 2.4.1</p>
+        </div>
+    </div>
+
+    <script>
+        // 模拟机密文件访问效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为所有关键词添加点击效果
+            const keywords = document.querySelectorAll('.keyword');
+            keywords.forEach(keyword => {
+                keyword.addEventListener('click', function() {
+                    // 添加点击反馈
+                    this.style.transform = 'scale(0.95)';
+                    this.style.boxShadow = '0 0 20px rgba(211, 47, 47, 0.8)';
+                    
+                    setTimeout(() => {
+                        this.style.transform = '';
+                        this.style.boxShadow = '';
+                    }, 300);
+                    
+                    // 这里在实际应用中会跳转到相应页面
+                    // 演示中只显示提示
+                    const keywordText = this.textContent.trim();
+                    alert(`[模拟跳转] 即将访问: ${keywordText} 相关文档\n\n在实际系统中，这将跳转到对应的机密文件页面。`);
+                });
+            });
+            
+            // 解锁部分闪烁提醒
+            const unlockedSection = document.getElementById('unlockedSection');
+            setInterval(() => {
+                unlockedSection.style.borderColor = unlockedSection.style.borderColor === 'rgb(10, 143, 10)' ? '#0f0' : '#0a8f0a';
+            }, 2000);
+            
+            // 添加机密水印随机移动效果
+            let angle = -30;
+            setInterval(() => {
+                angle = angle + 0.2;
+                document.body.style.setProperty('--watermark-rotation', angle + 'deg');
+            }, 5000);
+            
+            // 模拟打字机效果显示报告内容
+            const paragraphs = document.querySelectorAll('.section p, .highlight p');
+            paragraphs.forEach(p => {
+                const originalText = p.textContent;
+                p.textContent = '';
+                
+                let i = 0;
+                const typeWriter = () => {
+                    if (i < originalText.length) {
+                        p.textContent += originalText.charAt(i);
+                        i++;
+                        setTimeout(typeWriter, 10);
+                    }
+                };
+                
+                // 延迟开始，按顺序显示
+                setTimeout(typeWriter, Math.random() * 1000 + 500);
+            });
+        });
+    </script>
+</body>
+</html>
