@@ -548,6 +548,28 @@
         .footer a:hover {
             text-decoration: underline;
         }
+        /* 返回按钮样式 */
+        .back-button {
+            display: inline-block;
+            background: rgba(20, 40, 70, 0.7);
+            color: #87ceeb;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .back-button:hover {
+            background: rgba(64, 224, 208, 0.1);
+            border-color: #40e0d0;
+            transform: translateY(-3px);
+        }
+
+
+
         
         /* 响应式设计 */
         @media (max-width: 900px) {
@@ -754,6 +776,11 @@
                 </div>
             </div>
         </div>
+        <div style="display: grid; place-items: center; width: 100%;">
+    <a href="SY.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> 返回墟境调和局首页
+    </a>
+</div>
         
         <!-- 页脚 -->
         <div class="footer">
