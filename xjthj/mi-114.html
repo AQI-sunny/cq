@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安全验证</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* 背景特效 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(41, 128, 185, 0.1) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(142, 68, 173, 0.08) 0px, transparent 50%);
+            z-index: -2;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(10, 25, 47, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        /* 顶部装饰线 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #20b2aa, #1e90ff);
+        }
+        
+        /* 局徽样式 */
+        .emblem {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .emblem-symbol {
+            display: inline-block;
+            width: 140px;
+            height: 140px;
+            position: relative;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(64, 224, 208, 0.3);
+            box-shadow: 
+                0 0 20px rgba(64, 224, 208, 0.3),
+                inset 0 0 20px rgba(10, 25, 47, 0.5);
+            animation: pulse 4s infinite alternate;
+            background-color: rgba(178, 217, 246, 0.956);
+        }
+        
+        /* logo图片容器 */
+        .emblem-symbol .logo-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('xjthj.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        
+        /* 圆形边框特效 */
+        .emblem-symbol::after {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #40e0d0, #1e90ff, #40e0d0);
+            z-index: -1;
+            opacity: 0.5;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes pulse {
+            0% { 
+                box-shadow: 
+                    0 0 20px rgba(64, 224, 208, 0.3),
+                    inset 0 0 20px rgba(10, 25, 47, 0.5);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 30px rgba(64, 224, 208, 0.5),
+                    inset 0 0 20px rgba(10, 25, 47, 0.7);
+            }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .emblem-text {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+        }
+        
+        .emblem-subtext {
+            color: #87ceeb;
+            font-size: 14px;
+            letter-spacing: 8px;
+        }
+        
+        /* 验证区域 */
+        .auth-box {
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(20, 40, 70, 0.7);
+            border-radius: 10px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .auth-title {
+            color: #40e0d0;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+        
+        .hint {
+            color: #87ceeb;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+        
+        .hint strong {
+            color: #40e0d0;
+            text-decoration: underline;
+        }
+        
+        /* 密码输入区域 */
+        .password-container {
+            margin: 25px 0;
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(10, 20, 40, 0.8);
+            border: 2px solid rgba(64, 224, 208, 0.4);
+            border-radius: 8px;
+            color: #e0e7ff;
+            font-size: 18px;
+            text-align: center;
+            letter-spacing: 5px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        
+        .password-input:focus {
+            outline: none;
+            border-color: #40e0d0;
+            box-shadow: 0 0 15px rgba(64, 224, 208, 0.4);
+        }
+        
+        .submit-btn {
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(30, 144, 255, 0.3);
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(30, 144, 255, 0.5);
+        }
+        
+        /* 九键键盘样式 */
+        .keypad-container {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(30, 60, 90, 0.6);
+            border-radius: 10px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .keypad-title {
+            color: #87ceeb;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        .key {
+            background: rgba(10, 20, 40, 0.9);
+            border: 2px solid rgba(64, 224, 208, 0.3);
+            border-radius: 8px;
+            height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        
+        .key:hover {
+            background: rgba(20, 40, 80, 0.9);
+            border-color: #40e0d0;
+            transform: translateY(-3px);
+        }
+        
+        .key:active {
+            transform: translateY(1px);
+        }
+        
+        .key-number {
+            font-size: 22px;
+            font-weight: bold;
+            color: #40e0d0;
+        }
+        
+        .key-letters {
+            font-size: 12px;
+            color: #87ceeb;
+            margin-top: 3px;
+        }
+        
+        .key-special {
+            grid-column: span 2;
+            background: rgba(142, 68, 173, 0.3);
+        }
+        
+        .key-special .key-number {
+            color: #da70d6;
+        }
+        
+        /* 消息提示 */
+        .message {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        .error {
+            background-color: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.5);
+            color: #ff7b7b;
+        }
+        
+        .success {
+            background-color: rgba(40, 167, 69, 0.2);
+            border: 1px solid rgba(40, 167, 69, 0.5);
+            color: #80ffaa;
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #708090;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(112, 128, 144, 0.3);
+        }
+        
+        .footer a {
+            color: #87ceeb;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .emblem-text {
+                font-size: 20px;
+            }
+            
+            .emblem-symbol {
+                width: 110px;
+                height: 110px;
+            }
+            
+            .auth-title {
+                font-size: 20px;
+            }
+            
+            .keypad {
+                gap: 10px;
+            }
+            
+            .key {
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 局徽部分 -->
+        <div class="emblem">
+            <div class="emblem-symbol">
+                <div class="logo-img"></div>
+            </div>
+            <div class="emblem-text">⏅⍮⏣⩩⨭⨼⏀⨻ ⍫⏅⏣⨼</div>
+            <div class="emblem-subtext">⏅⍮⏣⩩⨭⨼⏀⨻ ⍫⏅⏣⨼</div>
+        </div>
+        
+        <!-- 验证区域 -->
+        <div class="auth-box">
+            <h2 class="auth-title"> </h2>
+            <p class="hint"><strong>⏅⍮⏣⩩⨭⨼⏀⨻ ⍫⏅⏣⨼</strong></p>
+            
+            <!-- 密码输入框 -->
+            <div class="password-container">
+                <input type="password" id="passwordInput" class="password-input" placeholder="点击输入密码">
+                <button id="submitBtn" class="submit-btn">进入</button>
+                
+                <!-- 消息提示 -->
+                <div id="message" class="message"></div>
+            </div>
+            
+            <!-- 九键键盘 -->
+           <!--  <div class="keypad-container">
+                <div class="keypad-title">九键键盘</div>
+                <div class="keypad" id="keypad">
+             键盘按键通过JavaScript动态生成 ->
+                </div>
+                <p style="color: #708090; font-size: 14px; margin-top: 15px;">提示：九键指的是手机上的九宫格键盘</p>
+            </div> -->
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>© 2025 ⏅⍮⏣⩩⨭⨼⏀⨻ ⍫⏅⏣⨼ | ⏅⍮⏣⩩⨭⨼⏀⨻ ⍫⏅⏣⨼</p>
+            <p>⏅⍮⏣⩩⨭⨼⏀⨻ ⍫⏅⏣⨼</p>
+        </div>
+    </div>
+<script>
+   const _0x1cd945=_0x413c;(function(_0x101622,_0x5ad677){const _0x1a4c9d=_0x413c,_0x1dd8ad=_0x101622();while(!![]){try{const _0x3e4061=parseInt(_0x1a4c9d(0x1d8))/0x1+parseInt(_0x1a4c9d(0x1e5))/0x2+parseInt(_0x1a4c9d(0x204))/0x3+parseInt(_0x1a4c9d(0x1f5))/0x4*(-parseInt(_0x1a4c9d(0x209))/0x5)+-parseInt(_0x1a4c9d(0x1eb))/0x6+-parseInt(_0x1a4c9d(0x1fc))/0x7*(-parseInt(_0x1a4c9d(0x1db))/0x8)+-parseInt(_0x1a4c9d(0x1f2))/0x9;if(_0x3e4061===_0x5ad677)break;else _0x1dd8ad['push'](_0x1dd8ad['shift']());}catch(_0x26347f){_0x1dd8ad['push'](_0x1dd8ad['shift']());}}}(_0x3984,0xbe13c));const keypadLayout=[{'number':'1','letters':''},{'number':'2','letters':_0x1cd945(0x1e3)},{'number':'3','letters':_0x1cd945(0x1df)},{'number':'4','letters':_0x1cd945(0x1d6)},{'number':'5','letters':_0x1cd945(0x1f0)},{'number':'6','letters':_0x1cd945(0x1d9)},{'number':'7','letters':_0x1cd945(0x1e6)},{'number':'8','letters':_0x1cd945(0x205)},{'number':'9','letters':_0x1cd945(0x1fa)},{'number':'*','letters':''},{'number':'0','letters':'+'},{'number':'#','letters':''}];function _0x413c(_0x12783f,_0x48b5f0){_0x12783f=_0x12783f-0x1d5;const _0x3984de=_0x3984();let _0x413c03=_0x3984de[_0x12783f];return _0x413c03;}function initKeypad(){const _0x58c9ec=_0x1cd945,_0x310469=document[_0x58c9ec(0x1f4)](_0x58c9ec(0x1e4));_0x310469[_0x58c9ec(0x208)]='',keypadLayout[_0x58c9ec(0x1e2)](_0x5934c2=>{const _0x28991=_0x58c9ec,_0x5bd593=document['createElement']('div');_0x5bd593['className']=_0x28991(0x1dc),(_0x5934c2[_0x28991(0x1f6)]==='*'||_0x5934c2[_0x28991(0x1f6)]==='0'||_0x5934c2[_0x28991(0x1f6)]==='#')&&_0x5bd593[_0x28991(0x203)][_0x28991(0x1fb)](_0x28991(0x1ed)),_0x5bd593[_0x28991(0x208)]=_0x28991(0x1d7)+_0x5934c2['number']+'</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20'+(_0x5934c2[_0x28991(0x1ff)]?_0x28991(0x20b)+_0x5934c2[_0x28991(0x1ff)]+_0x28991(0x1ea):'')+'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20',_0x5bd593[_0x28991(0x1de)]('click',()=>{const _0x3e103a=_0x28991,_0x4dd357=document[_0x3e103a(0x1f4)]('passwordInput');_0x4dd357[_0x3e103a(0x1da)]+=_0x5934c2[_0x3e103a(0x1f6)],_0x4dd357[_0x3e103a(0x1fd)]();}),_0x310469[_0x28991(0x1e0)](_0x5bd593);});const _0x4fa26f=document[_0x58c9ec(0x20f)](_0x58c9ec(0x201));_0x4fa26f['className']=_0x58c9ec(0x200),_0x4fa26f[_0x58c9ec(0x208)]=_0x58c9ec(0x1e9),_0x4fa26f[_0x58c9ec(0x1de)]('click',()=>{const _0x55c6f1=_0x58c9ec,_0x47fc91=document[_0x55c6f1(0x1f4)](_0x55c6f1(0x1ee));_0x47fc91[_0x55c6f1(0x1da)]=_0x47fc91[_0x55c6f1(0x1da)][_0x55c6f1(0x20e)](0x0,-0x1),_0x47fc91[_0x55c6f1(0x1fd)]();}),_0x310469[_0x58c9ec(0x1e0)](_0x4fa26f);}function showMessage(_0x4cf4bd,_0x12357e){const _0x491c74=_0x1cd945,_0x33b39e=document['getElementById']('message');_0x33b39e[_0x491c74(0x1ef)]=_0x4cf4bd,_0x33b39e[_0x491c74(0x20d)]=_0x491c74(0x206)+_0x12357e,_0x33b39e['style'][_0x491c74(0x1f3)]='1',setTimeout(()=>{const _0x1dc30b=_0x491c74;_0x33b39e[_0x1dc30b(0x1d5)]['opacity']='0';},0xbb8);}function validatePassword(){const _0x307b69=_0x1cd945,_0x2374b1=document['getElementById'](_0x307b69(0x1ee)),_0x337f59=_0x2374b1['value'],_0x2dc0b7=document[_0x307b69(0x1f4)](_0x307b69(0x1e8));_0x2dc0b7[_0x307b69(0x1d5)][_0x307b69(0x1f3)]='0';if(!_0x337f59){showMessage('请输入密码',_0x307b69(0x1f9)),_0x2374b1[_0x307b69(0x1fd)]();return;}const _0x4b32a1='ANCESTORPACT';_0x337f59===_0x4b32a1?(showMessage(_0x307b69(0x207),_0x307b69(0x1f8)),setTimeout(()=>{const _0x1ea1d1=_0x307b69;window[_0x1ea1d1(0x20c)]['href']=_0x1ea1d1(0x20a);},0x5dc)):(showMessage(_0x307b69(0x1dd),_0x307b69(0x1f9)),_0x2374b1[_0x307b69(0x1da)]='',_0x2374b1[_0x307b69(0x1fd)](),_0x2374b1['style']['animation']=_0x307b69(0x1e1),setTimeout(()=>{_0x2374b1['style']['animation']='shake\x200.5s';},0xa));}const style=document[_0x1cd945(0x20f)](_0x1cd945(0x1d5));style[_0x1cd945(0x1ef)]=_0x1cd945(0x1ec),document[_0x1cd945(0x1e7)][_0x1cd945(0x1e0)](style),document[_0x1cd945(0x1f4)](_0x1cd945(0x1fe))[_0x1cd945(0x1de)](_0x1cd945(0x1f7),validatePassword),document[_0x1cd945(0x1f4)]('passwordInput')[_0x1cd945(0x1de)]('keyup',_0x5a0b0c=>{const _0x2a6b18=_0x1cd945;_0x5a0b0c[_0x2a6b18(0x1dc)]===_0x2a6b18(0x1f1)&&validatePassword();}),document[_0x1cd945(0x1de)](_0x1cd945(0x202),initKeypad),document[_0x1cd945(0x1de)](_0x1cd945(0x202),()=>{setTimeout(()=>{const _0x10d186=_0x413c;document[_0x10d186(0x1f4)](_0x10d186(0x1ee))[_0x10d186(0x1fd)]();},0x1f4);});function _0x3984(){const _0x30de97=['MNO','value','7614592iWIfpT','key','密码错误，请重新输入','addEventListener','DEF','appendChild','none','forEach','ABC','keypad','314002kjqYrY','PQRS','head','message','<div\x20class=\x22key-number\x22\x20style=\x22font-size:\x2018px;\x22>删除</div>','</div>','4412268JgweQE','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20@keyframes\x20shake\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x200%,\x20100%\x20{\x20transform:\x20translateX(0);\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x2010%,\x2030%,\x2050%,\x2070%,\x2090%\x20{\x20transform:\x20translateX(-5px);\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x2020%,\x2040%,\x2060%,\x2080%\x20{\x20transform:\x20translateX(5px);\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20','key-special','passwordInput','textContent','JKL','Enter','11525706CWfcFx','opacity','getElementById','414332ffNFjc','number','click','success','error','WXYZ','add','7dftbKG','focus','submitBtn','letters','key\x20key-special','div','DOMContentLoaded','classList','3239901SMrgnh','TUV','message\x20','密码正确！正在跳转...','innerHTML','5kAJlxV','hidden-114.html','<div\x20class=\x22key-letters\x22>','location','className','slice','createElement','style','GHI','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22key-number\x22>','709359uZLFOu'];_0x3984=function(){return _0x30de97;};return _0x3984();}
+    </script>
+    <script src="jinzhi.js"></script>
+    
+
+</body>
+</html>

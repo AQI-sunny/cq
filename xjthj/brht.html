@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>螂人半融合态技术白皮书 - 墟境调和局</title>
+    <link rel="icon" type="image/png" href="xjthj.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景特效 - 调整为华苑社区风格 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(41, 128, 185, 0.1) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(142, 68, 173, 0.08) 0px, transparent 50%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M50 0 L100 50 L50 100 L0 50 Z" fill="none" stroke="rgba(64, 224, 208, 0.03)" stroke-width="1"/></svg>');
+            z-index: -2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(10, 25, 47, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 顶部装饰线 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #20b2aa, #1e90ff);
+        }
+        
+        /* 局徽样式 - 更新为墟境调和局 */
+        .emblem {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .emblem-logo {
+            display: inline-block;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: rgba(20, 40, 70, 0.7);
+            box-shadow: 0 0 25px rgba(64, 224, 208, 0.4);
+            animation: pulse 4s infinite alternate;
+            position: relative;
+        }
+        
+        .emblem-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 10px;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 25px rgba(64, 224, 208, 0.4); }
+            100% { box-shadow: 0 0 35px rgba(64, 224, 208, 0.7); }
+        }
+        
+        .emblem-text {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+        }
+        
+        .emblem-subtext {
+            color: #87ceeb;
+            font-size: 14px;
+            letter-spacing: 4px;
+            margin-bottom: 5px;
+        }
+        
+        .emblem-address {
+            color: #b0c4de;
+            font-size: 14px;
+            font-style: italic;
+        }
+        
+        .emblem-address .highlight {
+            color: #40e0d0;
+            font-weight: bold;
+        }
+        
+        /* 白皮书标题 */
+        .whitepaper-title {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.3);
+        }
+        
+        .whitepaper-title h1 {
+            font-size: 28px;
+            color: #40e0d0;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        
+        .whitepaper-title p {
+            color: #b0c4de;
+            font-size: 16px;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* 白皮书内容区域 */
+        .whitepaper-content {
+            background: rgba(20, 40, 70, 0.5);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 4px solid #40e0d0;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+            white-space: pre-line;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .whitepaper-content::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(64, 224, 208, 0.5), transparent);
+        }
+        
+        .whitepaper-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            color: #20b2aa;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+        }
+        
+        .section-title::before {
+            content: "█";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .section-content {
+            color: #b0c4de;
+            line-height: 1.7;
+            margin-bottom: 15px;
+            padding-left: 20px;
+        }
+        
+        .terminal-text {
+            color: #87ceeb;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 10px 15px;
+            border-radius: 5px;
+            border-left: 3px solid #ff6b6b;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .emergency-code {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .code-item {
+            background: rgba(142, 68, 173, 0.2);
+            padding: 12px;
+            text-align: center;
+            border-radius: 6px;
+            font-family: monospace;
+            font-weight: bold;
+            color: #da70d6;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+            transition: all 0.3s;
+        }
+        
+        .code-item:hover {
+            background: rgba(142, 68, 173, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(142, 68, 173, 0.3);
+        }
+        
+        /* 解锁提示区域 */
+        .unlock-section {
+            text-align: center;
+            padding: 30px;
+            margin: 30px 0;
+            background: rgba(20, 40, 70, 0.3);
+            border-radius: 10px;
+            border: 1px dashed rgba(64, 224, 208, 0.5);
+            display: none;
+        }
+        
+        .unlock-message {
+            color: #87ceeb;
+            font-size: 18px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .unlock-message::before {
+            content: "🔓";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .unlock-button {
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(30, 144, 255, 0.3);
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .unlock-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 144, 255, 0.5);
+        }
+        
+        /* 警告框 */
+        .warning-box {
+            background: rgba(142, 68, 173, 0.1);
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+            margin-bottom: 30px;
+        }
+        
+        .warning-title {
+            color: #da70d6;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .warning-title::before {
+            content: "⚠";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+        
+        .warning-text {
+            line-height: 1.7;
+            color: #d8bfd8;
+            font-style: italic;
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #708090;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(112, 128, 144, 0.3);
+        }
+        
+        .footer a {
+            color: #87ceeb;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 机密标签 */
+        .classification {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff6b6b;
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+        }
+        
+        /* 倒计时指示器 */
+        .countdown {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(20, 40, 70, 0.9);
+            color: #40e0d0;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            display: none;
+            z-index: 1000;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .emergency-code {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .whitepaper-title h1 {
+                font-size: 24px;
+            }
+            
+            .section-title {
+                font-size: 18px;
+            }
+            
+            .emergency-code {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .countdown {
+                bottom: 10px;
+                right: 10px;
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="classification">最高机密 - 级别：Ω</div>
+        
+        <!-- 局徽 -->
+        <div class="emblem">
+            <div class="emblem-logo">
+                <img src="xjthj.png" alt="墟境调和局标志">
+            </div>
+            <div class="emblem-text">墟境调和局</div>
+            <div class="emblem-subtext">XUJING HARMONY BUREAU</div>
+            <div class="emblem-address">华苑社区 · <span class="highlight">异常现象研究部</span></div>
+        </div>
+        
+        <!-- 白皮书标题 -->
+        <div class="whitepaper-title">
+            <h1>《螂人半融合态技术白皮书》</h1>
+            <p>项目编号：XJHB-PROJECT-Ω-7 | 归档日期：████年██月██日</p>
+            <p style="color: #ff6b6b; font-size: 14px; margin-top: 10px;">警告：此文档包含高度敏感信息，未经授权访问将受到法律严惩</p>
+        </div>
+        
+        <!-- 警告框 -->
+        <div class="warning-box">
+            <div class="warning-title">访问权限警告</div>
+            <div class="warning-text">
+                您正在访问墟境调和局最高机密文件。此文件包含关于"屏障"突破技术的敏感信息。根据《异常现象保密法》第7条第3款，未经授权泄露、复制或传播本文档内容将面临最高终身监禁的刑罚。继续访问即表示您已接受相关保密协议条款。
+            </div>
+        </div>
+        
+        <!-- 白皮书内容 -->
+        <div class="whitepaper-content">
+            <div class="whitepaper-section">
+                <div class="section-title">螂人项目真相</div>
+                <div class="section-content">
+                    螂人项目（代号：MAN-TIS）是一项旨在突破现实"屏障"的生物神经工程实验。
+                    
+                    试图将蜻蜓、蝴蝶、萤火虫等生物的生存基因与螂人神经结合，创造能突破"屏障"的生物载体...
+                    
+                    实验体需稳定的情感锚点控制，以防止认知崩溃与维度失稳。
+                </div>
+            </div>
+            
+            <div class="whitepaper-section">
+                <div class="section-title">基因融合原理</div>
+                <div class="section-content">
+                    蜻蜓基因：提供超高速神经反射与360度全景感知能力，使实验体能够感知"屏障"的微妙波动。
+                    
+                    蝴蝶基因：赋予跨维度信息感知与形态适应性，实验体可通过基因表达调整自身频率以匹配屏障谐振点。
+                    
+                    萤火虫基因：提供生物冷光通信机制，使实验体能够在无常规通信环境下传递"屏障"另一侧的信息。
+                    
+                    螂人神经基础：螂人特有的复眼-神经网络结构可作为多维度信息处理的中枢，承受跨维度感知带来的认知负荷。
+                </div>
+            </div>
+            
+            <div class="whitepaper-section">
+                <div class="section-title">突破屏障机制</div>
+                <div class="section-content">
+                    "屏障"（官方代号：REALITY-VEIL）是一种分离已知现实与未知维度的能量-信息过滤结构。
+                    
+                    半融合态螂人通过基因工程获得以下突破能力：
+                    1. 频率共振：调整自身生物场频率与屏障薄弱点同步
+                    2. 信息渗透：将意识编码为量子态信息流穿过屏障孔隙
+                    3. 锚点稳定：利用情感锚点作为回归现实的"安全绳"
+                    
+                    实验表明，纯螂人神经无法承受跨维度信息流，必须融入昆虫基因的简易神经结构作为"减压阀"。
+                </div>
+            </div>
+            
+            <div class="whitepaper-section">
+                <div class="section-title">情感锚点系统</div>
+                <div class="section-content">
+                    情感锚点（Emotional Anchor System, EAS）是防止实验体在屏障穿越过程中认知崩溃的关键。
+                    
+                    锚点类型：
+                    - 初级锚点：对特定人物的强烈情感连接（成功率78%）
+                    - 次级锚点：对特定地点的归属感（成功率45%）
+                    - 三级锚点：对特定事件的深刻记忆（成功率32%）
+                    
+                    锚点稳定性直接影响实验体返回的成功率。失锚实验体将永久滞留于屏障间层，成为"徘徊者"。
+                </div>
+            </div>
+            
+            <div class="whitepaper-section">
+                <div class="section-title">项目风险与终止</div>
+                <div class="section-content">
+                    实验记录显示，17号、23号与41号实验体在突破尝试中出现严重异常：
+                    - 认知分裂：实验体报告同时感知多个现实层面
+                    - 物理失稳：身体部分组织呈现量子叠加态
+                    - 锚点腐蚀：情感连接被未知信息流逐渐侵蚀
+                    
+                    鉴于上述不可控风险，项目于████年██月██日被紧急终止。
+                </div>
+            </div>
+            
+            <div class="terminal-text">
+                > 系统提示：以下为项目紧急终止码序列
+                > 请妥善保存，仅在最高紧急情况下使用
+                > 每个代码仅可使用一次，使用后自毁
+            </div>
+            
+            <div class="whitepaper-section">
+                <div class="section-title">紧急终止码序列</div>
+                <div id="emergencyCodes" class="emergency-code">
+                    <!-- 紧急终止码将通过JavaScript动态生成 -->
+                </div>
+                <div class="section-content" style="margin-top: 20px; color: #ff6b6b;">
+                    警告：任何终止码的使用都将触发全局警报并抹除所有相关实验数据。使用前需三级授权确认。
+                </div>
+            </div>
+        </div>
+        
+        <!-- 解锁提示区域 -->
+        <div id="unlockSection" class="unlock-section">
+            <div class="unlock-message">您已解锁新页面</div>
+            <a href="pingz3-denglu.html" class="unlock-button">立即访问</a>
+            <div style="margin-top: 15px; color: #87ceeb; font-size: 14px;">
+                提示：新页面包含屏障技术的最新研究进展
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>墟境调和局 © 2025 | 异常现象研究与调和部 | 华苑社区第七区</p>
+            <p>文档版本：Ω-7.3.2 | 最后更新：████-██-██ ██:██:██</p>
+            <div>
+                <a href="SY.html">返回主界面</a> | 
+                <a href="屏障2.0.html" onclick="showAccessLog()">返回上级页面</a> | 
+                <a href="javascript:void(0)" onclick="location.reload()">刷新页面</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 倒计时指示器 -->
+    <div id="countdown" class="countdown">30</div>
+    
+    <script>
+        // 生成10个随机的紧急终止码
+        // 生成5个固定的紧急终止码（看起来随机但实际固定）
+function generateEmergencyCodes() {
+    const codesContainer = document.getElementById('emergencyCodes');
+    
+    // 5个固定的终止码 - 看起来随机但实际是预设的
+    const fixedCodes = [
+        '3F8A-9B2C',
+        '7D4E-1F6A',
+        'Ω2C9-4B8D',
+        'A5F3-8E2C',
+        '9B1D-7Ω4A'
+    ];
+    
+    // 渲染固定的代码到页面
+    fixedCodes.forEach(code => {
+        const codeElement = document.createElement('div');
+        codeElement.className = 'code-item';
+        codeElement.textContent = code;
+        codeElement.title = '点击复制终止码';
+        codeElement.onclick = function() {
+            copyToClipboard(code);
+        };
+        codesContainer.appendChild(codeElement);
+    });
+    
+    // 同时更新提示信息，说明只有5个终止码
+    const emergencySection = document.querySelector('.whitepaper-section:last-child');
+    const warningText = emergencySection.querySelector('.section-content:last-child');
+    if (warningText) {
+        warningText.innerHTML = '警告：任何终止码的使用都将触发全局警报并抹除所有相关实验数据。';
+    }
+}
+        // 复制到剪贴板
+        function copyToClipboard(text) {
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            
+            // 显示复制成功的视觉反馈
+            const originalText = event.target.textContent;
+            event.target.textContent = '已复制!';
+            event.target.style.backgroundColor = 'rgba(76, 175, 80, 0.3)';
+            event.target.style.color = '#4CAF50';
+            
+            setTimeout(() => {
+                event.target.textContent = originalText;
+                event.target.style.backgroundColor = '';
+                event.target.style.color = '';
+            }, 1000);
+        }
+        
+        // 倒计时功能
+        function startCountdown() {
+            const countdownElement = document.getElementById('countdown');
+            const unlockSection = document.getElementById('unlockSection');
+            let seconds = 30;
+            
+            // 显示倒计时
+            countdownElement.style.display = 'block';
+            countdownElement.textContent = seconds;
+            
+            const countdownInterval = setInterval(() => {
+                seconds--;
+                countdownElement.textContent = seconds;
+                
+                if (seconds <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownElement.style.display = 'none';
+                    
+                    // 显示解锁区域
+                    unlockSection.style.display = 'block';
+                    
+                    // 添加解锁动画效果
+                    unlockSection.style.animation = 'fadeIn 0.5s ease';
+                    
+                    // 滚动到解锁区域
+                    unlockSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 1000);
+        }
+        
+        // 显示访问日志（模拟）
+        function showAccessLog() {
+            const logs = [
+                { user: "USER-Ω-7", time: "████-██-██ 14:23:11", action: "文档访问" },
+                { user: "ADMIN-Ω-1", time: "████-██-██ 09:45:32", action: "权限验证" },
+                { user: "SYSTEM", time: "████-██-██ 03:12:47", action: "自动备份" },
+                { user: "RESEARCHER-Ω-3", time: "████-██-██ 18:34:56", action: "内容更新" },
+                { user: "USER-Ω-7", time: "████-██-██ 14:25:03", action: "终止码查看" }
+            ];
+            
+            const logHTML = logs.map(log => 
+                `<div style="padding: 8px 0; border-bottom: 1px solid rgba(64, 224, 208, 0.2);">
+                    <span style="color: #40e0d0;">${log.user}</span> | 
+                    <span style="color: #87ceeb;">${log.time}</span> | 
+                    <span style="color: #b0c4de;">${log.action}</span>
+                </div>`
+            ).join('');
+            
+            // 创建一个简单的弹窗显示日志
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, rgba(10, 25, 47, 0.95) 0%, rgba(20, 40, 70, 0.95) 100%);
+                    border-radius: 10px;
+                    padding: 25px;
+                    width: 90%;
+                    max-width: 500px;
+                    border: 1px solid rgba(64, 224, 208, 0.3);
+                    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+                ">
+                    <div style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 20px;
+                        border-bottom: 1px solid rgba(64, 224, 208, 0.3);
+                        padding-bottom: 10px;
+                    ">
+                        <h3 style="color: #40e0d0;">访问日志</h3>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" style="
+                            background: none;
+                            border: none;
+                            color: #87ceeb;
+                            font-size: 24px;
+                            cursor: pointer;
+                        ">×</button>
+                    </div>
+                    <div>${logHTML}</div>
+                    <div style="margin-top: 20px; text-align: center;">
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" style="
+                            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+                            color: #0c1a2d;
+                            border: none;
+                            padding: 10px 25px;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-weight: bold;
+                        ">关闭</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 生成紧急终止码
+            generateEmergencyCodes();
+            
+            // 开始30秒倒计时
+            setTimeout(() => {
+                startCountdown();
+            }, 1000);
+            
+            // 添加一些动态效果
+            const whitepaperContent = document.querySelector('.whitepaper-content');
+            whitepaperContent.addEventListener('click', function() {
+                this.style.boxShadow = '0 0 30px rgba(64, 224, 208, 0.2)';
+                setTimeout(() => {
+                    this.style.boxShadow = '';
+                }, 500);
+            });
+            
+            // 模拟打字机效果
+            const terminalText = document.querySelector('.terminal-text');
+            const originalText = terminalText.textContent;
+            terminalText.textContent = '';
+            
+            let i = 0;
+            const typeWriter = setInterval(() => {
+                if (i < originalText.length) {
+                    terminalText.textContent += originalText.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typeWriter);
+                }
+            }, 30);
+        });
+        
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            .unlock-section {
+                animation: fadeIn 0.5s ease;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+    <script src="pages.js"></script>
+</body>
+</html>

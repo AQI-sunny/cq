@@ -838,9 +838,12 @@
                         <div class="staff-name">叶可兰</div>
                         <div class="staff-role">前台接待</div>
                         <div class="staff-quote">"您好，请问需要办理什么业务？如果是栖居权申请，请先填写在线表格哦。"</div>
-                        <div class="status">
+                        <!-- <div class="status">
                             <span class="btn">在岗</span>
-                        </div>
+                        </div> -->
+                        <div class="status">
+    <a href="xjthj-qt.html" class="btn">在岗</a>
+</div>
                     </div>
                     
                     <div class="staff-card">
@@ -962,7 +965,22 @@
     </div>
 </div>
  
+    <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
     
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
     <!-- 页脚 -->
     <footer>
         
@@ -970,8 +988,9 @@
              
     
             <p><i class="fas fa-hands-helping"></i> 墟境调和局办公处 - 致力于维护社区和谐共生</p>
-            <p>© 2023 华苑社区墟境调和局. 保留所有权利.</p>
+            <p>© 2025 华苑社区墟境调和局 - 保留所有权利</p>
             <p><i class="fas fa-shield-alt"></i> 屏障系统运行状态：<span style="color:#40e0d0;">稳定</span></p>
+        <p><span style="color:#e04540;">尝试查询档案管理室无预约通道？</span></p>
         </div>
     </footer>
     
@@ -1111,7 +1130,7 @@
         });
     </script>
 <script src="sc-ball.js"></script>
-
+<script src="pages.js"></script>
 <script src="jinzhi.js"></script>
 </body>
 </html>

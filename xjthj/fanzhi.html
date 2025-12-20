@@ -245,6 +245,22 @@
             font-size: 0.9rem;
         }
         
+        /* 链接样式 */
+        .content a {
+            color: #4dabf7;
+            text-decoration: none;
+            border-bottom: 1px dashed #4dabf7;
+            transition: all 0.3s ease;
+            padding: 0 2px;
+            cursor: pointer;
+        }
+        
+        .content a:hover {
+            color: #74c0fc;
+            border-bottom: 1px solid #74c0fc;
+            background-color: rgba(77, 171, 247, 0.1);
+        }
+        
         /* 响应式设计 */
         @media (max-width: 768px) {
             .header h1 {
@@ -305,10 +321,10 @@
                 <h2><i class="fas fa-user-secret"></i> 针对性部署行为</h2>
                 <p>监测数据显示，螂人群体展现出明确的针对性部署策略。编号"CO114-CO134"等个体集群表现出异常活跃的侦察行为模式。</p>
                 
-                <p>这些个体被<strong>故意放置于华苑小区4栋401室附近</strong>，该住宅户主为<strong>林星辰</strong>（身份已核实，无明显异常）。连续5天的红外监测显示，这些个体以401室为中心呈环形侦查阵型，每日22:00-04:00期间活动频率提升300%。</p>
+                <p>这些个体似乎偶尔会出现在<strong>栖乔华苑小区4栋401室附近</strong>，该住宅户主为<a href="co134-lxc.html" target="_blank"><strong>林星辰</strong></a>（身份已核实，无明显异常）。连续5天的红外监测显示，这些个体以401室为中心呈环形侦查阵型，每日22:00-04:00期间活动频率提升300%。</p>
                 
                 <div class="highlight">
-                    <p><strong>分析结论：</strong>"CO114-CO134"个体集群极有可能是螂人群体针对特定目标部署的<strong>"侦察员"单元</strong>，其行为模式符合有组织情报收集特征。建议对林星辰及其社交圈进行安全审查。</p>
+                    <p><strong>分析结论：</strong>"CO114-<a href="hidden-134.html" target="_blank">CO134</a>"个体集群极有可能是螂人群体针对特定目标部署的<strong>"侦察员"单元</strong>，其行为模式符合有组织情报收集特征。建议对林星辰及其社交圈进行安全审查。</p>
                 </div>
             </div>
             
@@ -343,20 +359,22 @@
                 <p style="margin-top: 15px;"><i class="fas fa-clock"></i> <strong>情报时效性：</strong>本信息更新于<span class="emergency">24小时</span>内，需立即采取应对措施。</p>
             </div>
             
+            <!--  原注释部分保持不动 -->
+               
             <div class="section">
                 <h2><i class="fas fa-link"></i> 相关链接与对策</h2>
                 <p>点击以下关键词获取详细应对方案与技术资料：</p>
                 
                 <div class="keywords">
-                    <div class="keyword" onclick="window.location.href='qusan.html'">
+                    <div class="keyword" onclick="window.location.href='#'">
                         <i class="fas fa-broadcast-tower"></i> 高频驱散器
                     </div>
                     
-                    <div class="keyword" onclick="window.location.href='nest.html'">
+                    <div class="keyword" onclick="window.location.href='#'">
                         <i class="fas fa-archway"></i> 巢穴结构分析
                     </div>
                     
-                    <div class="keyword" onclick="window.location.href='nitai.html'">
+                    <div class="keyword" onclick="window.location.href='mi-fanzhi.html'">
                         <i class="fas fa-user-ninja"></i> 完全拟态个体
                     </div>
                 </div>
@@ -364,7 +382,8 @@
                 <p style="margin-top: 20px; font-size: 0.9rem; color: #aaa;">
                     <i class="fas fa-info-circle"></i> 提示：以上链接仅限内部网络访问，点击将跳转至对应机密文档。
                 </p>
-            </div>
+            </div> 
+            
         </div>
         
         <div class="footer">
@@ -375,39 +394,23 @@
     </div>
 
     <script>
-        // 模拟机密文件访问效果
         document.addEventListener('DOMContentLoaded', function() {
-            // 为所有关键词添加点击效果
-            const keywords = document.querySelectorAll('.keyword');
-            keywords.forEach(keyword => {
-                keyword.addEventListener('click', function() {
-                    // 添加点击反馈
-                    this.style.transform = 'scale(0.95)';
-                    this.style.boxShadow = '0 0 20px rgba(211, 47, 47, 0.8)';
-                    
-                    setTimeout(() => {
-                        this.style.transform = '';
-                        this.style.boxShadow = '';
-                    }, 300);
-                    
-                    // 这里在实际应用中会跳转到相应页面
-                    // 演示中只显示提示
-                    const keywordText = this.textContent.trim();
-                    alert(`[模拟跳转] 即将访问: ${keywordText} 相关文档\n\n在实际系统中，这将跳转到对应的机密文件页面。`);
-                });
-            });
-            
             // 解锁部分闪烁提醒
             const unlockedSection = document.getElementById('unlockedSection');
-            setInterval(() => {
-                unlockedSection.style.borderColor = unlockedSection.style.borderColor === 'rgb(10, 143, 10)' ? '#0f0' : '#0a8f0a';
-            }, 2000);
+            if (unlockedSection) {
+                setInterval(() => {
+                    unlockedSection.style.borderColor = unlockedSection.style.borderColor === 'rgb(10, 143, 10)' ? '#0f0' : '#0a8f0a';
+                }, 2000);
+            }
             
             // 添加机密水印随机移动效果
             let angle = -30;
             setInterval(() => {
                 angle = angle + 0.2;
-                document.body.style.setProperty('--watermark-rotation', angle + 'deg');
+                const watermark = document.querySelector('body::before');
+                if (watermark) {
+                    watermark.style.transform = `rotate(${angle}deg)`;
+                }
             }, 5000);
             
             // 模拟打字机效果显示报告内容
@@ -425,10 +428,19 @@
                     }
                 };
                 
-                // 延迟开始，按顺序显示
                 setTimeout(typeWriter, Math.random() * 1000 + 500);
+            });
+            
+            // 确保所有链接都能正常工作
+            const links = document.querySelectorAll('a[href]');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    console.log('点击链接:', this.href);
+                    // 允许链接正常跳转
+                });
             });
         });
     </script>
+    <script src="pages.js"></script>
 </body>
 </html>

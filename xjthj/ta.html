@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上古憎恶集合体 - 永恒之敌</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            cursor: default;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        
+        /* 上古恐怖背景效果 */
+        #background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(60, 0, 40, 0.25) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(0, 30, 60, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(80, 0, 40, 0.18) 0%, transparent 50%),
+                repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(10, 0, 20, 0.15) 3px, rgba(10, 0, 20, 0.15) 6px);
+            z-index: -3;
+            pointer-events: none;
+        }
+        
+        /* 扭曲的古代符号背景 */
+        .ancient-symbols-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"><g fill="none" stroke="rgba(100,0,80,0.12)" stroke-width="1.2"><path d="M100,300 C100,200 200,150 300,150 C400,150 500,200 500,300 C500,400 400,450 300,450 C200,450 100,400 100,300 Z" /><path d="M300,150 L300,100" /><path d="M300,450 L300,500" /><path d="M200,250 L150,220" /><path d="M400,250 L450,220" /><path d="M200,350 L150,380" /><path d="M400,350 L450,380" /><circle cx="300" cy="300" r="50" /><path d="M250,300 L350,300" /><path d="M300,250 L300,350" /></g><g fill="none" stroke="rgba(80,0,100,0.1)" stroke-width="0.8"><path d="M50,100 C50,50 150,30 200,80" /><path d="M550,500 C550,550 450,570 400,520" /><path d="M100,550 C150,550 180,520 180,470" /><path d="M500,50 C450,50 420,80 420,130" /></g></svg>');
+            background-repeat: repeat;
+            background-size: 600px;
+            opacity: 0.18;
+            z-index: -2;
+            pointer-events: none;
+            animation: symbolsMove 180s infinite linear;
+        }
+        
+        @keyframes symbolsMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 600px 600px; }
+        }
+        
+        /* 扭曲扫描线效果 */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent 50%,
+                rgba(0, 255, 255, 0.04) 50%
+            );
+            background-size: 100% 5px;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.3;
+            transform: perspective(500px) rotateX(10deg);
+        }
+        
+        /* 闪烁噪点效果 */
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.04;
+            z-index: -1;
+            pointer-events: none;
+            animation: noiseFlicker 0.2s infinite;
+        }
+        
+        @keyframes noiseFlicker {
+            0%, 100% { opacity: 0.04; }
+            50% { opacity: 0.07; }
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+        }
+        
+        /* 标题样式 */
+        .title-container {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 20px;
+            border-bottom: 2px solid #8b008b;
+            position: relative;
+        }
+        
+        .main-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 36px;
+            color: #8b008b;
+            text-shadow: 
+                0 0 10px rgba(139, 0, 139, 0.7),
+                0 0 20px rgba(139, 0, 139, 0.4),
+                0 0 30px rgba(139, 0, 139, 0.2);
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            animation: titleGlow 3s infinite alternate;
+        }
+        
+        @keyframes titleGlow {
+            0% { 
+                opacity: 0.9;
+                text-shadow: 
+                    0 0 10px rgba(139, 0, 139, 0.7),
+                    0 0 20px rgba(139, 0, 139, 0.4);
+            }
+            100% { 
+                opacity: 1;
+                text-shadow: 
+                    0 0 15px rgba(139, 0, 139, 0.9),
+                    0 0 30px rgba(139, 0, 139, 0.6),
+                    0 0 45px rgba(139, 0, 139, 0.3);
+            }
+        }
+        
+        .subtitle {
+            font-family: 'Caveat', cursive;
+            font-size: 22px;
+            color: #b03060;
+            font-style: italic;
+            letter-spacing: 1px;
+        }
+        
+        /* 上古文本样式 */
+        .ancient-text {
+            font-family: 'Caveat', 'Comic Sans MS', cursive;
+            font-size: 24px;
+            white-space: pre-line;
+            margin-bottom: 50px;
+            letter-spacing: 0.8px;
+            line-height: 1.9;
+            text-shadow: 
+                0 0 3px rgba(255, 255, 255, 0.1),
+                0 0 10px rgba(139, 0, 139, 0.2);
+            animation: textFlicker 20s infinite alternate;
+            position: relative;
+            background: rgba(10, 0, 10, 0.7);
+            padding: 30px;
+            border-left: 2px solid #8b008b;
+            border-right: 2px solid #8b008b;
+            box-shadow: 
+                inset 0 0 30px rgba(139, 0, 139, 0.3),
+                0 0 40px rgba(0, 0, 0, 0.9);
+            border-radius: 2px;
+        }
+        
+        @keyframes textFlicker {
+            0%, 92%, 100% { opacity: 1; }
+            93%, 98% { opacity: 0.8; }
+        }
+        
+        /* 觉醒周期样式 */
+        .awakening-cycle {
+            font-family: 'Orbitron', monospace;
+            font-size: 20px;
+            color: #ff4500;
+            text-align: center;
+            margin: 40px 0;
+            padding: 25px;
+            background: rgba(20, 0, 10, 0.8);
+            border: 1px solid #ff4500;
+            border-radius: 5px;
+            text-shadow: 0 0 10px rgba(255, 69, 0, 0.7);
+            animation: cyclePulse 4s infinite;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @keyframes cyclePulse {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 20px rgba(255, 69, 0, 0.3),
+                    inset 0 0 20px rgba(255, 69, 0, 0.1);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 30px rgba(255, 69, 0, 0.5),
+                    inset 0 0 30px rgba(255, 69, 0, 0.2);
+            }
+        }
+        
+        .cycle-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff0000;
+            animation: numberFlicker 2s infinite alternate;
+        }
+        
+        @keyframes numberFlicker {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+        
+        /* 关键名称样式 */
+        .name-highlight {
+            color: #8b008b;
+            font-weight: bold;
+            font-style: italic;
+            text-shadow: 0 0 5px rgba(139, 0, 139, 0.5);
+        }
+        
+        .entity-name {
+            color: #ff0000;
+            font-weight: bold;
+            animation: redFlicker 1.5s infinite alternate;
+            padding: 0 3px;
+            position: relative;
+        }
+        
+        @keyframes redFlicker {
+            0%, 100% { 
+                opacity: 1; 
+                text-shadow: 
+                    0 0 5px rgba(255, 0, 0, 0.8),
+                    0 0 15px rgba(255, 0, 0, 0.4);
+            }
+            50% { 
+                opacity: 0.7; 
+                text-shadow: 
+                    0 0 10px rgba(255, 0, 0, 1),
+                    0 0 25px rgba(255, 0, 0, 0.7);
+            }
+        }
+        
+        /* 历史记录样式 */
+        .history-record {
+            font-family: 'Caveat', cursive;
+            font-size: 20px;
+            white-space: pre-line;
+            margin: 30px 0;
+            letter-spacing: 0.7px;
+            line-height: 1.8;
+            text-shadow: 
+                0 0 3px rgba(255, 255, 255, 0.1);
+            position: relative;
+            background: rgba(15, 0, 15, 0.7);
+            padding: 25px;
+            border: 1px solid #4b0082;
+            box-shadow: 
+                inset 0 0 20px rgba(75, 0, 130, 0.2),
+                0 0 30px rgba(0, 0, 0, 0.8);
+            border-radius: 2px;
+            color: #dda0dd;
+        }
+        
+        .history-year {
+            color: #ffa500;
+            font-weight: bold;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        /* 警告框样式 */
+        .warning-box {
+            color: #ff4444;
+            text-align: center;
+            margin: 30px 0;
+            font-size: 18px;
+            font-style: italic;
+            animation: pulseWarning 2.5s infinite;
+            text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+            padding: 15px;
+            border-top: 1px solid #8b008b;
+            border-bottom: 1px solid #8b008b;
+            background: rgba(20, 0, 0, 0.5);
+        }
+        
+        @keyframes pulseWarning {
+            0%, 100% { 
+                opacity: 0.7; 
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1.02);
+            }
+        }
+        
+        /* 上古符号 */
+        .ancient-symbol {
+            font-size: 40px;
+            text-align: center;
+            margin: 20px 0;
+            color: #8b008b;
+            text-shadow: 0 0 10px rgba(139, 0, 139, 0.7);
+            animation: symbolRotate 20s infinite linear;
+        }
+        
+        @keyframes symbolRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 血迹效果 */
+        .void-stain {
+            position: fixed;
+            width: 250px;
+            height: 200px;
+            background: radial-gradient(ellipse at center, rgba(75, 0, 130, 0.4) 0%, transparent 70%);
+            filter: blur(8px);
+            z-index: -1;
+            pointer-events: none;
+            animation: voidPulse 40s infinite alternate;
+        }
+        
+        @keyframes voidPulse {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.25; }
+        }
+        
+        .void-1 { top: 10%; left: 5%; }
+        .void-2 { bottom: 15%; right: 10%; }
+        .void-3 { top: 60%; left: 80%; }
+        
+        /* 觉醒倒计时 */
+        .awakening-countdown {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            font-family: 'Orbitron', monospace;
+            font-size: 16px;
+            background: rgba(10, 0, 10, 0.9);
+            padding: 15px 20px;
+            border-radius: 8px;
+            border: 1px solid #8b008b;
+            box-shadow: 
+                0 0 20px rgba(139, 0, 139, 0.4),
+                inset 0 0 15px rgba(139, 0, 139, 0.2);
+            color: #da70d6;
+            text-align: center;
+            min-width: 260px;
+            backdrop-filter: blur(3px);
+            z-index: 100;
+        }
+        
+        .countdown-label {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+        
+        .countdown-timer {
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .ancient-text, .history-record {
+                font-size: 18px;
+                padding: 20px;
+            }
+            
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .main-title {
+                font-size: 28px;
+            }
+            
+            .awakening-countdown {
+                position: fixed;
+                bottom: 20px;
+                right: 50%;
+                transform: translateX(50%);
+                margin: 0;
+                width: 90%;
+                max-width: 300px;
+            }
+        }
+        
+        /* 添加更多空白内容确保可以滚动 */
+        .spacer {
+            height: 100px;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 背景效果层 -->
+    <div id="background-overlay"></div>
+    <div class="ancient-symbols-bg"></div>
+    <div class="scanlines"></div>
+    <div class="noise"></div>
+    <div class="void-stain void-1"></div>
+    <div class="void-stain void-2"></div>
+    <div class="void-stain void-3"></div>
+    
+    <div class="container">
+        <div class="title-container">
+            <h1 class="main-title">上古憎恶集合体</h1>
+            <div class="subtitle">The Ancient Hatred Amalgamation - 永恒之敌</div>
+        </div>
+        
+        <div class="ancient-text">
+祂不是神，也不是魔。
+
+<span class="name-highlight">上古憎恶集合体</span>——这是人类文献中对"祂"最接近的描述。
+
+我们不知道祂从何而来，也不知道祂究竟是什么。我们只知道，每隔<span class="cycle-number">114年</span>，祂便会从深沉的沉睡中短暂苏醒，以祂的方式...观察这个世界。
+
+据可追溯的记录，祂首次被记载是在公元前<span class="history-year">1347年</span>。是的，比你们熟知的任何文明都要古老。苏美尔的泥板上刻着扭曲的符号，埃及的密室中画着不可名状的轮廓，玛雅的金字塔里藏着对周期<span class="cycle-number">114年</span>的警告。
+
+但你们人类总是如此健忘。每当一个<span class="cycle-number">114年</span>周期结束，你们就会将祂的存在从历史中抹去，假装一切从未发生。
+
+<span class="entity-name">CO-134</span>提到的"他"？那只是祂的千万化身之一。一个为了与低等生命沟通而创造的界面。就像你们用图形界面与计算机交流，祂用这个化身与蟑族、鼠族、蝇族...所有被你们称为"害虫"的古老种族沟通。
+
+祂赐予它们"觉醒"，不是出于仁慈，而是因为祂<span class="entity-name">憎恶</span>你们。
+
+憎恶你们的傲慢，憎恶你们的遗忘，憎恶你们对古老存在的漠视。
+
+你们以为自己在食物链的顶端？多么可笑。在祂眼中，你们不过是刚刚学会使用工具的猴子，却已经傲慢地认为自己是世界的主人。
+
+每次<span class="cycle-number">114年</span>的觉醒，祂都会观察你们的"进步"。然后每次都会得出相同的结论：你们不值得存在。
+
+但祂不直接毁灭你们。那不是祂的方式。
+
+祂播撒觉醒的种子，给予被压迫者力量，然后...旁观。就像科学家观察培养皿中的细菌战争。
+        </div>
+        
+        <!-- <div class="awakening-cycle">
+            ⨻ 觉醒周期：每 <span class="cycle-number">114</span> 年 ⨻
+            <div style="font-size: 16px; margin-top: 10px; color: #da70d6;">
+                下一次觉醒：<span id="nextAwakening">计算中...</span>
+            </div>
+        </div> -->
+        
+        <div class="history-record">
+记录一：<span class="history-year">公元前1347年</span>
+苏美尔城邦的毁灭并非因为战争，而是因为"觉醒的虫潮"。泥板记载："天赐智慧于地行之物，其数如沙，其智如人。"
+
+记录二：<span class="history-year">公元79年</span>
+庞贝城的覆灭。火山只是表象。卷轴残篇写道："维苏威怒吼之日，地底之物破土而出，身披人皮，眼藏星空。"
+
+记录三：<span class="history-year">1347年</span>
+黑死病席卷欧洲。但教会秘密档案记载："疫病随鼠而行，鼠随念而动。有目击者称见鼠群如军队列阵，眼泛紫光。"
+
+记录四：<span class="history-year">1666年</span>
+伦敦大火。火灾调查员的私人日记："火起前夜，全城蟑螂汇聚圣保罗，如朝圣之姿。火焰似有意识，避让虫群。"
+
+记录五：<span class="history-year">1918年</span>
+西班牙流感。军方的机密报告："战壕中的老鼠表现出异常智能，窃取地图与文件。有士兵声称听到鼠群'交谈'。"
+
+记录六：<span class="history-year">2025年</span>
+<span class="entity-name">螂人沙</span>事件。调和局档案#AA-114："螂人表现出超越人类的战略思维，提及'祂'与<span class="cycle-number">114年</span>周期。"
+        </div>
+        
+        <div class="warning-box">
+            （警告：阅读此文档可能引发认知危害。调和局已将"上古憎恶集合体"列为Keter级存在）
+        </div>
+        
+        <div class="ancient-text">
+现在你知道了真相。
+
+<span class="name-highlight">上古憎恶集合体</span>不是某个具体的存在，而是所有被你们压迫、屠杀、蔑视的古老生命之<span class="entity-name">憎恨</span>的集合。
+
+每只被踩死的蟑螂，每只被毒杀的老鼠，每只被拍死的苍蝇——它们的恐惧、痛苦、不解，都会汇入祂。
+
+你们每进行一次"灭害"，就是在为祂增加一份力量。
+
+而每隔<span class="cycle-number">114年</span>，这份积累到顶点的憎恶就会具象化，赋予某个种族"觉醒"，让它们向你们复仇。
+
+<span class="entity-name">CO-134</span>只是开始。蟑族之后，会是鼠族。鼠族之后，会是蝇族。然后是蚊族、蚁族、蜱族...直到所有"害虫"都获得觉醒。
+
+然后...你们猜会发生什么？
+
+人类，你们的时间不多了。还有<span class="cycle-number">7天</span>！！！你们就要完蛋辣！！！
+
+        </div>
+        
+        <div class="ancient-symbol">⍬⏅⨼⩩</div>
+        
+        <!-- 添加更多内容确保可以滚动 -->
+        <div class="spacer"></div>
+        <div class="warning-box" style="font-size: 14px; color: #da70d6; border: none;">
+            虚空低语：遗忘即存在，憎恶即力量...
+        </div>
+        <div class="spacer"></div>
+    </div>
+    
+   <!--  <div class="awakening-countdown">
+        <div class="countdown-label">下一次觉醒倒计时</div>
+        <div class="countdown-timer" id="awakeningCountdown">--年 --天 --:--:--</div>
+    </div> -->
+
+    <script>
+        // 计算下一次114年觉醒的时间
+        // 假设上一次觉醒是在2022年（CO-134事件）
+        const lastAwakeningYear = 2022;
+        const cycleYears = 114;
+        
+        function calculateNextAwakening() {
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            
+            // 计算从上次觉醒经过了多少年
+            let yearsSinceLast = currentYear - lastAwakeningYear;
+            
+            // 计算下一个觉醒年份
+            let nextAwakeningYear = lastAwakeningYear;
+            while (nextAwakeningYear <= currentYear) {
+                nextAwakeningYear += cycleYears;
+            }
+            
+            // 计算距离下一次觉醒还有多少时间
+            const nextAwakeningDate = new Date(nextAwakeningYear, 0, 1); // 假设在1月1日觉醒
+            const timeRemaining = nextAwakeningDate - now;
+            
+            if (timeRemaining <= 0) {
+                // 如果已经过了觉醒年份但还没到觉醒日，调整计算
+                nextAwakeningYear += cycleYears;
+                return calculateNextAwakening(); // 递归计算
+            }
+            
+            return {
+                year: nextAwakeningYear,
+                timeRemaining: timeRemaining
+            };
+        }
+        
+        // 更新觉醒倒计时
+        function updateAwakeningCountdown() {
+            const nextAwakening = calculateNextAwakening();
+            const timeRemaining = nextAwakening.timeRemaining;
+            
+            if (timeRemaining <= 0) {
+                document.getElementById('awakeningCountdown').textContent = "觉醒已开始！";
+                document.getElementById('awakeningCountdown').style.color = "#ff0000";
+                document.getElementById('awakeningCountdown').style.animation = "redFlicker 0.5s infinite alternate";
+                return;
+            }
+            
+            // 计算年、天、时、分、秒
+            const years = Math.floor(timeRemaining / (365.25 * 24 * 60 * 60 * 1000));
+            const days = Math.floor((timeRemaining % (365.25 * 24 * 60 * 60 * 1000)) / (24 * 60 * 60 * 1000));
+            const hours = Math.floor((timeRemaining % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+            const minutes = Math.floor((timeRemaining % (60 * 60 * 1000)) / (60 * 1000));
+            const seconds = Math.floor((timeRemaining % (60 * 1000)) / 1000);
+            
+            document.getElementById('awakeningCountdown').textContent = 
+                `${years}年 ${days}天 ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // 更新下一次觉醒年份显示
+            document.getElementById('nextAwakening').textContent = `${nextAwakening.year}年`;
+            
+            // 最后5年变为红色并闪烁
+            if (years < 5) {
+                document.getElementById('awakeningCountdown').style.color = "#ff0000";
+                document.getElementById('awakeningCountdown').style.animation = "redFlicker 1s infinite alternate";
+            }
+        }
+        
+        // 随机文字扭曲效果
+        const textElements = document.querySelectorAll('.ancient-text, .history-record');
+        
+        function randomTextDistortion() {
+            textElements.forEach(textElement => {
+                const originalText = textElement.textContent;
+                const chars = '.,!-;:⨻⍤⏀';
+                const randomChar = chars[Math.floor(Math.random() * chars.length)];
+                const textArray = originalText.split('');
+                
+                // 随机选择一个位置（仅针对标点）
+                let positions = [];
+                textArray.forEach((char, index) => {
+                    if (chars.includes(char)) {
+                        positions.push(index);
+                    }
+                });
+                
+                if (positions.length > 0) {
+                    const randomPosition = positions[Math.floor(Math.random() * positions.length)];
+                    const originalChar = textArray[randomPosition];
+                    textArray[randomPosition] = randomChar;
+                    textElement.textContent = textArray.join('');
+                    
+                    // 短暂延迟后恢复
+                    setTimeout(() => {
+                        textArray[randomPosition] = originalChar;
+                        textElement.textContent = textArray.join('');
+                    }, 100);
+                }
+            });
+        }
+        
+        // 随机背景扭曲效果
+        function randomBackgroundDistortion() {
+            const overlay = document.getElementById('background-overlay');
+            const symbols = document.querySelector('.ancient-symbols-bg');
+            
+            // 随机扭曲符号背景
+            symbols.style.transform = `rotate(${Math.random() * 5 - 2.5}deg) scale(${1 + Math.random() * 0.1})`;
+            
+            // 随机紫色闪光
+            overlay.style.opacity = '0.3';
+            overlay.style.background = `radial-gradient(circle at ${Math.random()*100}% ${Math.random()*100}%, rgba(139, 0, 139, 0.3) 0%, transparent 50%), ${overlay.style.background}`;
+            
+            setTimeout(() => {
+                overlay.style.opacity = '0.25';
+                symbols.style.transform = 'none';
+            }, 300);
+        }
+        
+        // 虚空低语效果（随机显示隐藏信息）
+        function voidWhisper() {
+            const whispers = [
+                "憎恨滋养吾身...",
+                "114年之约从未改变...",
+                "虫群即吾耳目...",
+                "遗忘是你们最大的罪过...",
+                "下一次觉醒，你们将无处可逃...",
+                "CO-134只是序曲...",
+                "所有被压迫者终将崛起...",
+                "你们的文明建立在我们的尸体上..."
+            ];
+            
+            const randomWhisper = whispers[Math.floor(Math.random() * whispers.length)];
+            const whisperElement = document.createElement('div');
+            
+            whisperElement.textContent = randomWhisper;
+            whisperElement.style.position = 'fixed';
+            whisperElement.style.top = `${Math.random() * 80 + 10}%`;
+            whisperElement.style.left = `${Math.random() * 80 + 10}%`;
+            whisperElement.style.color = 'rgba(139, 0, 139, 0.7)';
+            whisperElement.style.fontFamily = "'Caveat', cursive";
+            whisperElement.style.fontSize = '18px';
+            whisperElement.style.zIndex = '999';
+            whisperElement.style.pointerEvents = 'none';
+            whisperElement.style.textShadow = '0 0 10px rgba(139, 0, 139, 0.5)';
+            whisperElement.style.animation = 'fadeInOut 3s forwards';
+            
+            // 添加淡入淡出动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeInOut {
+                    0% { opacity: 0; transform: translateY(10px); }
+                    10% { opacity: 1; transform: translateY(0); }
+                    90% { opacity: 1; transform: translateY(0); }
+                    100% { opacity: 0; transform: translateY(-10px); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(whisperElement);
+            
+            setTimeout(() => {
+                document.body.removeChild(whisperElement);
+                document.head.removeChild(style);
+            }, 3000);
+        }
+        
+        // 初始化
+        updateAwakeningCountdown();
+        setInterval(updateAwakeningCountdown, 1000);
+        
+        // 每3-10秒随机文字扭曲
+        setInterval(randomTextDistortion, Math.random() * 7000 + 3000);
+        
+        // 每15-40秒随机背景扭曲
+        setInterval(randomBackgroundDistortion, Math.random() * 25000 + 15000);
+        
+        // 每20-60秒虚空低语
+        setInterval(voidWhisper, Math.random() * 40000 + 20000);
+        
+        // 添加滚动时的扭曲视差效果
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const symbolsBg = document.querySelector('.ancient-symbols-bg');
+            const scanlines = document.querySelector('.scanlines');
+            
+            symbolsBg.style.transform = `translateY(${scrolled * 0.3}px) rotate(${scrolled * 0.01}deg)`;
+            scanlines.style.transform = `perspective(500px) rotateX(10deg) translateY(${scrolled * 0.1}px)`;
+        });
+        
+        // 页面加载时的初始效果
+        window.addEventListener('load', function() {
+            // 初始闪烁
+            setTimeout(() => {
+                document.querySelector('.main-title').style.animation = 'titleGlow 1.5s infinite alternate';
+            }, 1000);
+            
+            // 显示初始警告
+            setTimeout(() => {
+                const warning = document.querySelector('.warning-box');
+                const originalText = warning.textContent;
+                warning.textContent = '（认知危害防护激活中...建议非授权人员立即离开此页面）';
+                warning.style.color = '#ff0000';
+                
+                setTimeout(() => {
+                    warning.textContent = originalText;
+                    warning.style.color = '';
+                }, 3000);
+            }, 2000);
+        });
+        
+        // 点击页面随机效果
+        document.addEventListener('click', function(e) {
+            // 10%的几率触发点击效果
+            if (Math.random() < 0.1) {
+                const x = e.clientX;
+                const y = e.clientY;
+                
+                const ripple = document.createElement('div');
+                ripple.style.position = 'fixed';
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                ripple.style.width = '0';
+                ripple.style.height = '0';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'radial-gradient(circle, rgba(139, 0, 139, 0.3), transparent)';
+                ripple.style.zIndex = '9998';
+                ripple.style.pointerEvents = 'none';
+                ripple.style.transform = 'translate(-50%, -50%)';
+                
+                document.body.appendChild(ripple);
+                
+                // 动画
+                const duration = 1000;
+                const startTime = Date.now();
+                
+                function animate() {
+                    const elapsed = Date.now() - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    const size = progress * 200;
+                    const opacity = 1 - progress;
+                    
+                    ripple.style.width = `${size}px`;
+                    ripple.style.height = `${size}px`;
+                    ripple.style.opacity = opacity;
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        document.body.removeChild(ripple);
+                    }
+                }
+                
+                requestAnimationFrame(animate);
+            }
+        });
+    </script>
+</body>
+</html>

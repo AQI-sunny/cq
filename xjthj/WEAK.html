@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>墟境调和局 - 空间薄弱点报告</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景特效 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(41, 128, 185, 0.1) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(142, 68, 173, 0.08) 0px, transparent 50%);
+            z-index: -2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(10, 25, 47, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 顶部装饰线 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #20b2aa, #1e90ff);
+        }
+        
+        /* 局徽样式 */
+        .emblem {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .emblem-symbol {
+            display: inline-block;
+            width: 140px;
+            height: 140px;
+            position: relative;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(64, 224, 208, 0.3);
+            box-shadow: 
+                0 0 20px rgba(64, 224, 208, 0.3),
+                inset 0 0 20px rgba(10, 25, 47, 0.5);
+            animation: pulse 4s infinite alternate;
+            background-color: rgba(178, 217, 246, 0.956);
+        }
+         .emblem-symbol img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* 图片自适应容器 */
+        display: block;
+    }
+    
+    /* 添加光晕动画效果 */
+    @keyframes pulse {
+        0% {
+            box-shadow: 
+                0 0 20px rgba(64, 224, 208, 0.3),
+                inset 0 0 20px rgba(10, 25, 47, 0.5);
+        }
+        100% {
+            box-shadow: 
+                0 0 30px rgba(64, 224, 208, 0.5),
+                0 0 50px rgba(64, 224, 208, 0.2),
+                inset 0 0 20px rgba(10, 25, 47, 0.5);
+        }
+    }
+    
+    /* 悬停效果 */
+    .emblem-symbol:hover {
+        transform: scale(1.05);
+        transition: transform 0.3s ease;
+    }
+        
+        /* 圆形边框特效 */
+        .emblem-symbol::after {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #40e0d0, #1e90ff, #40e0d0);
+            z-index: -1;
+            opacity: 0.5;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes pulse {
+            0% { 
+                box-shadow: 
+                    0 0 20px rgba(64, 224, 208, 0.3),
+                    inset 0 0 20px rgba(10, 25, 47, 0.5);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 30px rgba(64, 224, 208, 0.5),
+                    inset 0 0 20px rgba(10, 25, 47, 0.7);
+            }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .emblem-text {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+        }
+        
+        .emblem-subtext {
+            color: #87ceeb;
+            font-size: 14px;
+            letter-spacing: 8px;
+        }
+        
+        /* 内容区域 */
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+            margin-top: 20px;
+        }
+        
+        .main-content {
+            padding-right: 20px;
+            border-right: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        /* 部门简介 */
+        .section {
+            margin-bottom: 35px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            color: #40e0d0;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.3);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background-color: #1e90ff;
+        }
+        
+        .intro-text {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #b0c4de;
+        }
+        
+        .duties {
+            list-style-type: none;
+            margin-left: 20px;
+        }
+        
+        .duties li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.6;
+        }
+        
+        .duties li::before {
+            content: "◆";
+            position: absolute;
+            left: 0;
+            color: #1e90ff;
+            font-size: 14px;
+        }
+        
+        .highlight {
+            color: #40e0d0;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(64, 224, 208, 0.5);
+        }
+        
+        .highlight:hover {
+            color: #1e90ff;
+            text-shadow: 0 0 8px rgba(30, 144, 255, 0.5);
+            border-bottom-style: solid;
+        }
+        
+        /* 薄弱点示意图 */
+        .weak-points-diagram {
+            background-color: rgba(20, 40, 70, 0.5);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            position: relative;
+            min-height: 400px;
+        }
+        
+        .diagram-title {
+            color: #20b2aa;
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .diagram-title::before {
+            content: "📍";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .community-map {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background-color: rgba(10, 25, 47, 0.7);
+            border-radius: 8px;
+            border: 1px solid rgba(64, 224, 208, 0.1);
+            overflow: hidden;
+        }
+        
+        .weak-point {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .weak-point.inactive {
+            background-color: rgba(64, 224, 208, 0.3);
+            border: 2px solid #40e0d0;
+            box-shadow: 0 0 8px rgba(64, 224, 208, 0.5);
+        }
+        
+        .weak-point.active {
+            background-color: rgba(255, 69, 0, 0.7);
+            border: 2px solid #ff4500;
+            box-shadow: 0 0 12px rgba(255, 69, 0, 0.8);
+            animation: pulseActive 2s infinite;
+        }
+        
+        @keyframes pulseActive {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .weak-point:hover {
+            transform: scale(1.2);
+            z-index: 20;
+        }
+        
+        .weak-point-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(10, 25, 47, 0.9);
+            color: #e0e7ff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        
+        .weak-point:hover .weak-point-label {
+            opacity: 1;
+        }
+        
+        /* 异常记录弹窗 */
+        .record-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .record-content {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 15px;
+            border: 2px solid rgba(64, 224, 208, 0.3);
+            box-shadow: 0 0 40px rgba(30, 144, 255, 0.5);
+            overflow: hidden;
+            transform: translateY(-30px);
+            animation: slideIn 0.4s forwards;
+        }
+        
+        @keyframes slideIn {
+            to { transform: translateY(0); }
+        }
+        
+        .record-header {
+            background: linear-gradient(90deg, #1a3a5f, #0c1a2d);
+            padding: 20px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.3);
+            position: relative;
+        }
+        
+        .record-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+        }
+        
+        .record-title {
+            color: #40e0d0;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .record-title::before {
+            content: "⚠";
+            font-size: 24px;
+        }
+        
+        .record-body {
+            padding: 30px;
+        }
+        
+        .record-location {
+            color: #ffa500;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .record-location::before {
+            content: "📍";
+        }
+        
+        .record-text {
+            color: #b0c4de;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 16px;
+            background-color: rgba(20, 40, 70, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #40e0d0;
+        }
+        
+        .record-status {
+            color: #ff6b6b;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .record-status::before {
+            content: "⚠";
+        }
+        
+        .record-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #40e0d0;
+            font-size: 24px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .record-close:hover {
+            background-color: rgba(64, 224, 208, 0.1);
+            transform: rotate(90deg);
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .service-box {
+            background: rgba(20, 40, 70, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .service-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: rgba(64, 224, 208, 0.4);
+        }
+        
+        .service-title {
+            color: #20b2aa;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .service-title::before {
+            content: "✧";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .service-link {
+            display: inline-block;
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(30, 144, 255, 0.3);
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .service-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(30, 144, 255, 0.5);
+        }
+        
+        .service-link.disabled {
+            background: linear-gradient(90deg, #708090, #778899);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .service-link.disabled:hover {
+            transform: none;
+            box-shadow: 0 4px 10px rgba(30, 144, 255, 0.3);
+        }
+        
+        .notice-box {
+            background: rgba(142, 68, 173, 0.1);
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+        }
+        
+        .notice-title {
+            color: #da70d6;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .notice-title::before {
+            content: "⚠";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+        
+        .notice-text {
+            line-height: 1.7;
+            color: #d8bfd8;
+            font-style: italic;
+        }
+        
+        /* 权限验证弹窗 */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s forwards;
+        }
+        
+        .auth-content {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 15px;
+            border: 2px solid rgba(64, 224, 208, 0.3);
+            box-shadow: 0 0 40px rgba(30, 144, 255, 0.5);
+            overflow: hidden;
+            transform: translateY(-30px);
+            animation: slideIn 0.4s forwards;
+        }
+        
+        .auth-header {
+            background: linear-gradient(90deg, #1a3a5f, #0c1a2d);
+            padding: 20px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.3);
+            position: relative;
+        }
+        
+        .auth-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+        }
+        
+        .auth-title {
+            color: #40e0d0;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .auth-title::before {
+            content: "🔒";
+            font-size: 24px;
+        }
+        
+        .auth-body {
+            padding: 30px;
+        }
+        
+        .auth-text {
+            color: #b0c4de;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        .auth-input {
+            width: 100%;
+            padding: 15px;
+            background-color: rgba(20, 40, 70, 0.7);
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            border-radius: 8px;
+            color: #e0e7ff;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: border-color 0.3s;
+        }
+        
+        .auth-input:focus {
+            outline: none;
+            border-color: #40e0d0;
+            box-shadow: 0 0 10px rgba(64, 224, 208, 0.3);
+        }
+        
+        .auth-error {
+            color: #ff6b6b;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .auth-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .auth-btn-primary {
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+        }
+        
+        .auth-btn-primary:hover {
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            box-shadow: 0 0 15px rgba(64, 224, 208, 0.5);
+        }
+        
+        .auth-btn-secondary {
+            background: rgba(112, 128, 144, 0.3);
+            color: #b0c4de;
+            border: 1px solid rgba(112, 128, 144, 0.5);
+        }
+        
+        .auth-btn-secondary:hover {
+            background: rgba(112, 128, 144, 0.5);
+            border-color: #708090;
+        }
+        
+        .auth-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #40e0d0;
+            font-size: 24px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .auth-close:hover {
+            background-color: rgba(64, 224, 208, 0.1);
+            transform: rotate(90deg);
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #708090;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(112, 128, 144, 0.3);
+        }
+        
+        .footer a {
+            color: #87ceeb;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding-right: 0;
+                border-right: none;
+                border-bottom: 1px solid rgba(64, 224, 208, 0.2);
+                padding-bottom: 30px;
+            }
+            
+            .community-map {
+                height: 300px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .emblem-text {
+                font-size: 20px;
+            }
+            
+            .emblem-symbol {
+                width: 110px;
+                height: 110px;
+            }
+            
+            .section-title {
+                font-size: 20px;
+            }
+            
+            .weak-point-label {
+                font-size: 10px;
+                top: -20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 局徽 -->
+        <div class="emblem">
+            <div class="emblem-symbol"> <!-- 使用xjthj.png图片 -->
+        <img src="xjthj.png" alt="局徽"></div>
+            <div class="emblem-text">墟境调和局</div>
+            <div class="emblem-subtext">XUJING TIAOHEJU</div>
+        </div>
+        
+        <!-- 内容区域 -->
+        <div class="content">
+            <!-- 主内容 -->
+            <div class="main-content">
+                <!-- 报告标题 -->
+                <div class="section">
+                    <h1 class="section-title">空间薄弱点报告 #DAA-7W-774</h1>
+                    <p class="intro-text">
+                        本报告基于对华苑社区的持续监测数据，识别出7处"空间薄弱点"——这些是<span class="highlight" id="buildingRef">7又7分之4栋</span>与主现实位面偶尔交融的地点。报告日期：<span id="currentDate"></span>
+                    </p>
+                </div>
+                
+                <!-- 薄弱点示意图 -->
+                <div class="section">
+                    <h2 class="section-title">华苑社区空间薄弱点示意图</h2>
+                    <div class="weak-points-diagram">
+                        <h3 class="diagram-title">点击标记点查看异常记录</h3>
+                        <div class="community-map" id="communityMap">
+                            <!-- 薄弱点将通过JavaScript动态添加 -->
+                        </div>
+                    </div>
+                    
+                    <p class="intro-text">
+                        示意图显示了7处空间薄弱点的位置。其中<strong style="color:#ff4500;">3个标记为红色的点</strong>表示近期活性增强，需要重点关注。
+                    </p>
+                </div>
+                
+                <!-- 报告结论 -->
+                <div class="section">
+                    <h2 class="section-title">分析结论</h2>
+                    <p class="intro-text">
+                        监测数据显示，华苑社区的空间稳定性正在下降。7处薄弱点中，有3处（标记为红色）活性显著增强。
+                   <!--  这些异常现象与<span class="highlight">ANCESTRAL-PACT协议信号衰减曲线</span>高度吻合。 -->
+                    </p>
+                    
+                    <p class="intro-text" style="color:#ff6b6b; border-left:4px solid #ff6b6b; padding-left:15px;">
+                        <strong>结论：</strong>活性增强表明屏障效力正在减弱。这些薄弱点可能成为"完全拟态个体"的进出通道，对社区现实稳定性构成潜在威胁。建议立即加强监测并制定应急响应预案。
+                    </p>
+                    
+                    <h3 style="color:#20b2aa; margin-top:25px; margin-bottom:15px;">近期活性增强点详情：</h3>
+                    <ul class="duties">
+                        <li><strong>4栋402室墙壁内：</strong>检测到异常声波频率，与已知拟态个体特征匹配度72%</li>
+                        <li><strong>3栋地下室管道：</strong>空间扭曲指数达到0.47，超过安全阈值0.3</li>
+                        <li><strong>社区花园喷泉下：</strong>检测到短暂的能量脉冲，持续时间3.7秒，强度4.2级</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <!-- 监控访问 -->
+                <div class="service-box">
+                    <h3 class="service-title">薄弱点实时监控</h3>
+                    <p class="intro-text">访问实时监控系统，查看当前空间稳定性数据、异常活动警报及历史记录。</p>
+                    <div class="service-link disabled" id="monitorLink">系统维护中</div>
+                    <!-- <p class="intro-text" style="font-size:14px; margin-top:10px; color:#87ceeb;">
+                        提示：二级权限需通过身份验证或从<b>building.html</b>、<b>mimicry_cases.html</b>的密码入口访问。
+                    </p> -->
+                </div>
+                
+                <!-- 相关协议 -->
+                <div class="notice-box">
+                    <h3 class="notice-title">相关协议</h3>
+                    <p class="notice-text">
+                        <strong>████████协议：</strong>一项古老的空间稳定协议，用于维持主现实位面与异常维度的隔离。协议效力衰减可能导致空间薄弱点增加，异常实体渗透风险上升。
+                    </p>
+                </div>
+                
+                <!-- 行动建议 -->
+                <div class="service-box">
+                    <h3 class="service-title">建议行动</h3>
+                    <ul class="duties" style="margin-left:0;">
+                        <li>加强薄弱点周边巡逻频率</li>
+                        <li>部署临时现实稳定锚点</li>
+                        <li>通知居民保持警惕，报告任何异常现象</li>
+                        <li>准备应急响应小组，应对可能的空间破裂事件</li>
+                    </ul>
+                </div>
+                
+                <!-- 报告信息 -->
+                <div class="notice-box">
+                    <h3 class="notice-title">报告信息</h3>
+                    <p class="notice-text">
+                        <strong>报告编号：</strong> DAA-7W-774<br>
+                        <strong>生成时间：</strong> <span id="reportTime"></span><br>
+                        <strong>保密等级：</strong> 二级<br>
+                        <strong>负责部门：</strong> 空间异常科
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>墟境调和局 &copy; <span id="currentYear"></span> | 本报告仅限内部使用，未经授权禁止传播</p>
+            <p>
+                <a href="building.html">返回建筑档案</a> | 
+                <a href="zbjs.html">空间异常科便捷工具</a> | 
+                <a href="SY.html">返回调和局主页</a>
+            </p>
+        </div>
+    </div>
+    
+    <!-- 异常记录弹窗 -->
+    <div class="record-modal" id="recordModal">
+        <div class="record-content">
+            <div class="record-header">
+                <h3 class="record-title">异常记录详情</h3>
+                <button class="record-close" id="closeRecordBtn">&times;</button>
+            </div>
+            <div class="record-body">
+                <h4 class="record-location" id="recordLocation">位置名称</h4>
+                <div class="record-text" id="recordText">异常记录内容</div>
+                <div class="record-status" id="recordStatus">状态信息</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 权限验证弹窗 -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-content">
+            <div class="auth-header">
+                <h3 class="auth-title">二级权限验证</h3>
+                <button class="auth-close" id="closeAuthBtn">&times;</button>
+            </div>
+            <div class="auth-body">
+                <p class="auth-text">访问薄弱点实时监控需要二级权限。请输入验证密码：</p>
+                <input type="password" class="auth-input" id="authPassword" placeholder="请输入密码">
+                <div class="auth-error" id="authError">密码错误，请重试</div>
+                <div class="auth-buttons">
+                    <button class="auth-btn auth-btn-secondary" id="cancelAuthBtn">取消</button>
+                    <button class="auth-btn auth-btn-primary" id="submitAuthBtn">验证</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 设置当前日期
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('zh-CN', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        document.getElementById('reportTime').textContent = new Date().toLocaleString('zh-CN');
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // 薄弱点数据
+        const weakPoints = [
+            {
+                id: 1,
+                name: "4栋402室墙壁内",
+                x: 20,
+                y: 30,
+                active: true,
+                record: "2025年10月15日，住户报告听到墙壁内传来对话声，内容无法辨识。声纹分析显示与已知拟态个体特征匹配度72%。随后检测到短暂的空间扭曲，持续约12秒。",
+                status: "近期活性增强 - 建议立即检查"
+            },
+            {
+                id: 2,
+                name: "3栋地下室管道",
+                x: 75,
+                y: 80,
+                active: true,
+                record: "2025年11月3日，维修人员报告管道内部出现异常几何结构，不符合物理规律。空间扭曲指数达到0.47，超过安全阈值0.3。检测到低温异常（-12°C）。",
+                status: "近期活性增强 - 空间稳定性下降"
+            },
+            {
+                id: 3,
+                name: "社区花园喷泉下",
+                x: 50,
+                y: 60,
+                active: true,
+                record: "2025年11月10日，喷泉水出现逆重力现象，水滴向上漂浮持续3.7秒。同时检测到能量脉冲，强度4.2级。附近植物出现异常生长模式。",
+                status: "近期活性增强 - 能量波动异常"
+            },
+            {
+                id: 4,
+                name: "2栋天台水箱",
+                x: 80,
+                y: 20,
+                active: false,
+                record: "2025年9月5日，夜间监测到微弱的光学扭曲现象。水箱水位出现无法解释的变化，但未检测到能量波动。目前处于稳定状态。",
+                status: "低活性 - 定期监测"
+            },
+            {
+                id: 5,
+                name: "社区北门石狮",
+                x: 10,
+                y: 70,
+                active: false,
+                record: "2025年8月22日，石狮表面温度异常升高至56°C，持续15分钟。目击者报告石狮眼睛短暂发光。后续监测未发现重复现象。",
+                status: "稳定 - 无需特别关注"
+            },
+            {
+                id: 6,
+                name: "5栋地下停车场角落",
+                x: 60,
+                y: 40,
+                active: false,
+                record: "2025年7月30日，监控摄像头捕捉到短暂的空间扭曲，持续约2秒。现场检测到微弱的异常辐射，但未超过安全阈值。",
+                status: "低活性 - 定期监测"
+            },
+            {
+                id: 7,
+                name: "社区中心广场雕像",
+                x: 40,
+                y: 80,
+                active: false,
+                record: "2025年6月18日，雕像周围检测到轻微的时间流异常，时间差异约0.3秒。多名居民报告在雕像附近有轻微的迷失方向感。",
+                status: "稳定 - 观察中"
+            }
+        ];
+        
+        // 渲染薄弱点地图
+        const communityMap = document.getElementById('communityMap');
+        
+        weakPoints.forEach(point => {
+            const weakPointEl = document.createElement('div');
+            weakPointEl.className = `weak-point ${point.active ? 'active' : 'inactive'}`;
+            weakPointEl.style.left = `${point.x}%`;
+            weakPointEl.style.top = `${point.y}%`;
+            weakPointEl.dataset.id = point.id;
+            
+            const labelEl = document.createElement('div');
+            labelEl.className = 'weak-point-label';
+            labelEl.textContent = point.name;
+            
+            weakPointEl.appendChild(labelEl);
+            communityMap.appendChild(weakPointEl);
+            
+            // 添加点击事件
+            weakPointEl.addEventListener('click', () => {
+                showRecordModal(point);
+            });
+        });
+        
+        // 异常记录弹窗
+        const recordModal = document.getElementById('recordModal');
+        const closeRecordBtn = document.getElementById('closeRecordBtn');
+        const recordLocation = document.getElementById('recordLocation');
+        const recordText = document.getElementById('recordText');
+        const recordStatus = document.getElementById('recordStatus');
+        
+        function showRecordModal(point) {
+            recordLocation.textContent = point.name;
+            recordText.textContent = point.record;
+            recordStatus.textContent = point.status;
+            recordModal.style.display = 'flex';
+        }
+        
+        closeRecordBtn.addEventListener('click', () => {
+            recordModal.style.display = 'none';
+        });
+        
+        recordModal.addEventListener('click', (e) => {
+            if (e.target === recordModal) {
+                recordModal.style.display = 'none';
+            }
+        });
+        
+        // 权限验证
+        const monitorLink = document.getElementById('monitorLink');
+        const authModal = document.getElementById('authModal');
+        const closeAuthBtn = document.getElementById('closeAuthBtn');
+        const cancelAuthBtn = document.getElementById('cancelAuthBtn');
+        const submitAuthBtn = document.getElementById('submitAuthBtn');
+        const authPassword = document.getElementById('authPassword');
+        const authError = document.getElementById('authError');
+        
+        // 正确的密码（可以从其他页面传递）
+        const correctPassword = "无密码";
+        
+        monitorLink.addEventListener('click', () => {
+            // 检查是否有已保存的权限
+            const hasAccess = localStorage.getItem('weakPointsAccess') === 'granted';
+            
+            if (hasAccess) {
+                // 已经授权，直接跳转
+                window.location.href = "weak_points_monitor.html";
+            } else {
+                // 需要验证
+                authModal.style.display = 'flex';
+                authPassword.value = '';
+                authError.style.display = 'none';
+            }
+        });
+        
+        closeAuthBtn.addEventListener('click', () => {
+            authModal.style.display = 'none';
+        });
+        
+        cancelAuthBtn.addEventListener('click', () => {
+            authModal.style.display = 'none';
+        });
+        
+        submitAuthBtn.addEventListener('click', () => {
+            if (authPassword.value === correctPassword) {
+                // 密码正确，保存权限
+                localStorage.setItem('weakPointsAccess', 'granted');
+                authModal.style.display = 'none';
+                
+                // 更新链接状态
+                monitorLink.classList.remove('disabled');
+                monitorLink.textContent = "进入实时监控系统";
+                monitorLink.removeAttribute('id');
+                
+                // 跳转到监控页面
+                window.location.href = "#";
+            } else {
+                // 密码错误
+                authError.style.display = 'block';
+                authPassword.value = '';
+                authPassword.focus();
+            }
+        });
+        
+        authPassword.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                submitAuthBtn.click();
+            }
+        });
+        
+        authModal.addEventListener('click', (e) => {
+            if (e.target === authModal) {
+                authModal.style.display = 'none';
+            }
+        });
+        
+        // 检查是否有从其他页面传递的密码
+        const urlParams = new URLSearchParams(window.location.search);
+        const accessCode = urlParams.get('access');
+        
+        if (accessCode === 'ANCESTRAL-PACT-774' || accessCode === 'mimicry-access') {
+            // 自动授权
+            localStorage.setItem('weakPointsAccess', 'granted');
+            monitorLink.classList.remove('disabled');
+            monitorLink.textContent = "进入实时监控系统";
+            monitorLink.removeAttribute('id');
+            
+            // 显示成功消息
+            const successMsg = document.createElement('div');
+            successMsg.className = 'success-message';
+            successMsg.innerHTML = '✅ 二级权限已自动授予';
+            monitorLink.parentNode.insertBefore(successMsg, monitorLink.nextSibling);
+            
+            // 3秒后移除消息
+            setTimeout(() => {
+                successMsg.remove();
+            }, 3000);
+        }
+        
+        // 7又7分之4栋悬停效果
+        const buildingRef = document.getElementById('buildingRef');
+        buildingRef.addEventListener('mouseenter', () => {
+            buildingRef.style.color = '#1e90ff';
+            buildingRef.style.textShadow = '0 0 8px rgba(30, 144, 255, 0.5)';
+        });
+        
+        buildingRef.addEventListener('mouseleave', () => {
+            buildingRef.style.color = '';
+            buildingRef.style.textShadow = '';
+        });
+    </script>
+<script src="pages.js"></script>
+</body>
+</html>

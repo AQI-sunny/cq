@@ -1354,9 +1354,7 @@
         
         // 播放音效函数（模拟）
         function playSoundEffect(type) {
-            // 在实际游戏中，这里会播放真实的音效文件
-            // 这里我们只模拟音效播放
-            console.log(`播放音效: ${type}`);
+            
             
             // 可以添加一些简单的音频反馈
             if (type === 'hover' || type === 'click') {
@@ -1399,10 +1397,11 @@
                 document.body.style.opacity = '1';
                 
                 setTimeout(() => {
-                    showMessage("欢迎，探索者。你已进入上古共生协议的核心档案。时间紧迫，请仔细阅读并完成仪式。", true);
+                    showMessage("你已进入上古共生协议的核心档案。时间紧迫，请仔细阅读并完成仪式。", true);
                 }, 1000);
             }, 500);
         });
     </script>
+<script src="pages.js"></script>
 </body>
 </html>

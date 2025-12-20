@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>清除程序行动报告 - 终焉之战结局</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a0c0c 0%, #3a1a1a 100%);
+            color: #ffe0e0;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景特效 - 红色主题 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(185, 41, 41, 0.15) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(173, 68, 68, 0.12) 0px, transparent 50%);
+            z-index: -2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(30, 10, 10, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(224, 64, 64, 0.3);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 顶部装饰线 - 红色 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #ff4040, #b22222, #8b0000);
+        }
+        
+        /* 结局内容区域 */
+        .ending-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .ending-header {
+            margin-bottom: 40px;
+        }
+        
+        .ending-title {
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #ff4040, #b22222, #ff4500);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 64, 64, 0.4);
+        }
+        
+        .ending-subtitle {
+            font-size: 22px;
+            color: #eb8787;
+            margin-bottom: 10px;
+        }
+        
+        .ending-badge {
+            display: inline-block;
+            background: linear-gradient(90deg, #ff4500, #8b0000);
+            color: #ffe0e0;
+            padding: 8px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 15px rgba(255, 69, 0, 0.6);
+            animation: badge-pulse 2.5s infinite alternate;
+        }
+        
+        @keyframes badge-pulse {
+            0% { box-shadow: 0 0 15px rgba(255, 69, 0, 0.6); }
+            100% { box-shadow: 0 0 25px rgba(255, 69, 0, 0.9); }
+        }
+        
+        /* 结局内容 */
+        .ending-content {
+            background-color: rgba(50, 20, 20, 0.7);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(224, 64, 64, 0.4);
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ending-content::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #ff4040, #ff4500);
+        }
+        
+        .ending-text {
+            font-size: 20px;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            color: #deb0b0;
+            text-indent: 2em;
+        }
+        
+        .ending-text:last-child {
+            margin-bottom: 0;
+        }
+        
+        .highlight {
+            color: #ff4040;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(255, 64, 64, 0.5);
+        }
+        
+        .casualty-highlight {
+            color: #ff8c00;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(255, 140, 0, 0.7);
+            font-size: 24px;
+        }
+        
+        .warning-note {
+            background-color: rgba(90, 30, 30, 0.8);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 5px solid #ff4040;
+        }
+        
+        .warning-title {
+            color: #ff4040;
+            font-size: 22px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .warning-title i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .warning-list {
+            list-style-type: none;
+        }
+        
+        .warning-list li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.6;
+            color: #ffd0d0;
+        }
+        
+        .warning-list li::before {
+            content: "⚠";
+            position: absolute;
+            left: 0;
+            color: #ff4040;
+            font-size: 16px;
+        }
+        
+        /* 行动数据 */
+        .action-data {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 40px 0;
+            gap: 20px;
+        }
+        
+        .data-card {
+            background-color: rgba(50, 20, 20, 0.8);
+            border-radius: 10px;
+            padding: 25px;
+            width: 220px;
+            border: 1px solid rgba(224, 64, 64, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .data-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border-color: rgba(224, 64, 64, 0.7);
+        }
+        
+        .data-icon {
+            font-size: 36px;
+            color: #ff4040;
+            margin-bottom: 15px;
+        }
+        
+        .data-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #ff8c00;
+            margin-bottom: 10px;
+        }
+        
+        .data-label {
+            color: #eb8787;
+            font-size: 16px;
+        }
+        
+        /* 关注作者按钮 */
+        .author-section {
+            margin-top: 50px;
+            padding: 30px;
+            background-color: rgba(60, 25, 25, 0.8);
+            border-radius: 15px;
+            border: 1px solid rgba(219, 112, 147, 0.5);
+        }
+        
+        .author-title {
+            color: #da70d6;
+            font-size: 26px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .author-title i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .author-button {
+            display: inline-block;
+            background: linear-gradient(90deg, #9b30ff, #da70d6);
+            color: white;
+            text-decoration: none;
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(147, 112, 219, 0.4);
+            letter-spacing: 1px;
+        }
+        
+        .author-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(147, 112, 219, 0.7);
+            background: linear-gradient(90deg, #8a2be2, #da70d6);
+        }
+        
+        .author-button i {
+            margin-right: 10px;
+        }
+        
+        .author-note {
+            color: #d8bfd8;
+            margin-top: 20px;
+            font-style: italic;
+            font-size: 16px;
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #907070;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(144, 112, 112, 0.4);
+        }
+        
+        .footer a {
+            color: #eb8787;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .action-data {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .data-card {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .ending-title {
+                font-size: 32px;
+            }
+            
+            .ending-subtitle {
+                font-size: 18px;
+            }
+            
+            .ending-content {
+                padding: 25px;
+            }
+            
+            .ending-text {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="ending-container">
+            <div class="ending-header">
+                <h1 class="ending-title">清除程序行动报告</h1>
+                <h2 class="ending-subtitle">"终焉净化"行动 - 最终阶段</h2>
+                <div class="ending-badge">全面战争已触发</div>
+            </div>
+            
+            <div class="ending-content">
+                <p class="ending-text">根据《极端威胁应对协定》第3条第1款授权，你做出了最终决策：<span class="highlight">启动巢穴清除程序</span>，并执行了代号为"终焉净化"的军事行动。</p>
+                
+                <p class="ending-text">清除程序激活后，螂人巢穴的<span class="casualty-highlight">自卫机制全面启动</span>。在随后的48小时内，全球范围内爆发了大规模冲突，螂人利用其生物科技对人类城市发动了全面反击。</p>
+                
+                <p class="ending-text">尽管军事行动成功摧毁了<span class="highlight">92%的螂人巢穴</span>并阻止了维度融合进程，但螂人的反击造成了灾难性后果。全球主要城市遭受重创，基础设施遭到系统性破坏。</p>
+                
+                <p class="ending-text">最终统计显示，人类方伤亡率达到<span class="highlight">87.3%</span>，与预估数据基本一致。螂人种群被消灭<span class="highlight">96%</span>，残余个体退入地下深层巢穴，转入休眠状态。</p>
+                
+                <div class="warning-note">
+                    <h3 class="warning-title"><i class="fas fa-exclamation-triangle"></i> 重大损失报告</h3>
+                    <ul class="warning-list">
+                        <li>人类文明基础设施损毁率：78%</li>
+                        <li>全球人口损失：87.3%（预估63亿）</li>
+                        <li>主要城市完全损毁：42座</li>
+                        <li>生态灾难触发：7级（最高级）</li>
+                        <li>文明重建预估时间：3个世纪以上</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="action-data">
+                <div class="data-card">
+                    <div class="data-icon"><i class="fas fa-skull-crossbones"></i></div>
+                    <div class="data-value">87.3%</div>
+                    <div class="data-label">伤亡率</div>
+                </div>
+                
+                <div class="data-card">
+                    <div class="data-icon"><i class="fas fa-city"></i></div>
+                    <div class="data-value">42</div>
+                    <div class="data-label">城市损毁</div>
+                </div>
+                
+                <div class="data-card">
+                    <div class="data-icon"><i class="fas fa-clock"></i></div>
+                    <div class="data-value">48h</div>
+                    <div class="data-label">战争时长</div>
+                </div>
+                
+                <div class="data-card">
+                    <div class="data-icon"><i class="fas fa-biohazard"></i></div>
+                    <div class="data-value">96%</div>
+                    <div class="data-label">螂人清除率</div>
+                </div>
+            </div>
+            
+            <div class="author-section">
+                <h3 class="author-title"><i class="fas fa-heart"></i> 感谢体验此游戏</h3>
+                <p class="ending-text" style="text-align: center; text-indent: 0; margin-bottom: 20px;">
+                    《墟境调和局》是由阿七开发的第二个网页解谜游戏系列。恭喜解锁结局B，如果你喜欢这个故事，欢迎关注作者↓
+                </p>
+                
+                <div style="text-align: center;">
+                    <a href="https://sylvie-seven-cq.top" target="_blank" class="author-button">
+                        <i class="fas fa-external-link-alt"></i> 访问作者主页
+                    </a>
+                </div>
+                
+                <p class="author-note">点击上方按钮将跳转到作者的个人网站，了解更多创作内容</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>全球防御委员会 | 清除程序行动记录 | 机密等级：绝密</p>
+            <p>© 2025 墟境调和局 | 本记录仅供授权人员查阅</p>
+            <p>
+                <a href="#">返回任务列表</a> | 
+                <a href="nest.html">查看其他结局</a> | 
+                <a href="#">行动完整记录</a>
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // 添加一些简单的交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为数据卡片添加点击效果
+            const dataCards = document.querySelectorAll('.data-card');
+            dataCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
+                });
+            });
+            
+            // 为高亮文本添加闪烁效果
+            const highlights = document.querySelectorAll('.casualty-highlight');
+            highlights.forEach(highlight => {
+                setInterval(() => {
+                    highlight.style.textShadow = highlight.style.textShadow === '0 0 8px rgba(255, 140, 0, 0.7)' 
+                        ? '0 0 12px rgba(255, 140, 0, 0.9)' 
+                        : '0 0 8px rgba(255, 140, 0, 0.7)';
+                }, 1500);
+            });
+            
+            // 作者按钮悬停效果增强
+            const authorButton = document.querySelector('.author-button');
+            authorButton.addEventListener('mouseenter', function() {
+                this.innerHTML = '<i class="fas fa-external-link-alt"></i> 前往sylvie-seven-cq.top';
+            });
+            authorButton.addEventListener('mouseleave', function() {
+                this.innerHTML = '<i class="fas fa-external-link-alt"></i> 访问作者主页';
+            });
+        });
+    </script>
+<script src="pages.js"></script>
+</body>
+</html>

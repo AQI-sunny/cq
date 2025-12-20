@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>墟境调和局·异常生物管理部门公开档案 - 陆栖言博士</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景特效 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(41, 128, 185, 0.1) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(142, 68, 173, 0.08) 0px, transparent 50%);
+            z-index: -2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(10, 25, 47, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 顶部装饰线 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #20b2aa, #1e90ff);
+        }
+        
+        /* 局徽样式 - 更新为圆形图片 */
+        .emblem {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .emblem-symbol {
+            display: inline-block;
+            width: 140px;
+            height: 140px;
+            position: relative;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(64, 224, 208, 0.3);
+            box-shadow: 
+                0 0 20px rgba(64, 224, 208, 0.3),
+                inset 0 0 20px rgba(10, 25, 47, 0.5);
+            animation: pulse 4s infinite alternate;
+            background-color: rgba(178, 217, 246, 0.956);
+        }
+        
+        /* logo图片容器 */
+        .emblem-symbol .logo-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('xjthj.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        
+        /* 圆形遮罩，确保图片显示为完美圆形 */
+        .emblem-symbol::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 2px rgba(64, 224, 208, 0.2);
+            z-index: 2;
+        }
+        
+        /* 圆形边框特效 */
+        .emblem-symbol::after {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #40e0d0, #1e90ff, #40e0d0);
+            z-index: -1;
+            opacity: 0.5;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes pulse {
+            0% { 
+                box-shadow: 
+                    0 0 20px rgba(64, 224, 208, 0.3),
+                    inset 0 0 20px rgba(10, 25, 47, 0.5);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 30px rgba(64, 224, 208, 0.5),
+                    inset 0 0 20px rgba(10, 25, 47, 0.7);
+            }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .emblem-text {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+        }
+        
+        .emblem-subtext {
+            color: #87ceeb;
+            font-size: 14px;
+            letter-spacing: 8px;
+        }
+        
+        /* 档案标题区域 */
+        .archive-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .archive-title {
+            font-size: 32px;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        
+        .archive-subtitle {
+            font-size: 18px;
+            color: #87ceeb;
+            font-style: italic;
+        }
+        
+        /* 内容区域 */
+        .content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        /* 章节样式 */
+        .section {
+            background: rgba(20, 40, 70, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+        }
+        
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .section-title {
+            font-size: 22px;
+            color: #40e0d0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(64, 224, 208, 0.3);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+        }
+        
+        /* 信息列表样式 */
+        .info-list {
+            list-style-type: none;
+        }
+        
+        .info-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.1);
+            display: flex;
+        }
+        
+        .info-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            min-width: 200px;
+            font-weight: bold;
+            color: #87ceeb;
+        }
+        
+        .info-value {
+            color: #e0e7ff;
+        }
+        
+        /* 引用块样式 */
+        .quote-block {
+            border-left: 4px solid #40e0d0;
+            padding-left: 20px;
+            margin: 20px 0;
+            color: #b0c4de;
+            font-style: italic;
+        }
+        
+        /* 成就列表样式 */
+        .achievement-item {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed rgba(64, 224, 208, 0.2);
+        }
+        
+        .achievement-item:last-child {
+            border-bottom: none;
+        }
+        
+        .achievement-title {
+            font-size: 18px;
+            color: #40e0d0;
+            margin-bottom: 8px;
+        }
+        
+        .achievement-desc {
+            color: #b0c4de;
+            line-height: 1.6;
+        }
+        
+        /* 行动记录样式 */
+        .action-record {
+            background: rgba(30, 60, 90, 0.5);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 3px solid #1e90ff;
+        }
+        
+        .action-title {
+            color: #87ceeb;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .action-details {
+            color: #b0c4de;
+            line-height: 1.5;
+        }
+        
+        /* 安全须知样式 */
+        .safety-note {
+            background: rgba(255, 69, 0, 0.1);
+            border: 1px solid rgba(255, 69, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .safety-title {
+            color: #ffa500;
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .safety-title i {
+            margin-right: 10px;
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #708090;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(112, 128, 144, 0.3);
+        }
+        
+        .signature {
+            font-size: 16px;
+            color: #40e0d0;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .emblem-text {
+                font-size: 20px;
+            }
+            
+            .emblem-symbol {
+                width: 110px;
+                height: 110px;
+            }
+            
+            .archive-title {
+                font-size: 26px;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .info-list li {
+                flex-direction: column;
+            }
+            
+            .info-label {
+                min-width: auto;
+                margin-bottom: 5px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .archive-title {
+                font-size: 22px;
+            }
+            
+            .section-title {
+                font-size: 19px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 局徽 -->
+        <div class="emblem">
+            <div class="emblem-symbol">
+                <div class="logo-img"></div>
+            </div>
+            <div class="emblem-text">墟境调和局</div>
+            <div class="emblem-subtext">ANOMALY MANAGEMENT</div>
+        </div>
+        
+        <!-- 档案标题 -->
+        <div class="archive-header">
+            <h1 class="archive-title">异常生物管理部门公开档案</h1>
+            <p class="archive-subtitle">档案编号: XJTHJ-ABM-047-LQY</p>
+        </div>
+        
+        <div class="content">
+            <!-- 个人基础信息 -->
+            <section class="section">
+                <h2 class="section-title"><i class="fas fa-user-circle"></i> 个人基础信息</h2>
+                <ul class="info-list">
+                    <li>
+                        <span class="info-label">姓名:</span>
+                        <span class="info-value">陆栖言</span>
+                    </li>
+                    <li>
+                        <span class="info-label">职称:</span>
+                        <span class="info-value">一级异常生物研究博士、跨维度伦理委员会首席顾问</span>
+                    </li>
+                    <li>
+                        <span class="info-label">部门:</span>
+                        <span class="info-value">墟境调和局 - 异人管理部 - 异常生物科</span>
+                    </li>
+                    <li>
+                        <span class="info-label">入职时间:</span>
+                        <span class="info-value">████年██月██日</span>
+                    </li>
+                    <li>
+                        <span class="info-label">安全权限等级:</span>
+                        <span class="info-value">Ω-3（可接触维度不稳定型异常实体）</span>
+                    </li>
+                </ul>
+            </section>
+            
+            <!-- 专业领域 -->
+            <section class="section">
+                <h2 class="section-title"><i class="fas fa-brain"></i> 专业领域</h2>
+                <ul class="info-list">
+                    <li>异常生物行为心理学</li>
+                    <li>跨维度实体沟通学</li>
+                    <li>非标准时空伦理框架构建</li>
+                    <li>现实稳定场理论与应用</li>
+                    <li>共生型异常关系调解</li>
+                </ul>
+            </section>
+            
+            <!-- 教育背景 -->
+            <section class="section">
+                <h2 class="section-title"><i class="fas fa-graduation-cap"></i> 教育背景</h2>
+                <ul class="info-list">
+                    <li>██████大学 超常心理学博士</li>
+                    <li>墟境调和局内部培训学院 异常实体交流专业（特优毕业）</li>
+                    <li>多次参与跨维度研究交流项目（详情涉密）</li>
+                </ul>
+            </section>
+            
+            <!-- 公开成就 -->
+            <section class="section">
+                <h2 class="section-title"><i class="fas fa-trophy"></i> 公开成就</h2>
+                
+                <div class="achievement-item">
+                    <h3 class="achievement-title">《非人类智能的情感映射系统》（获局内杰出贡献奖）</h3>
+                    <p class="achievement-desc">开发了首套适用于78类异常生物的共情模型，成功应用于15起高危异人冲突的和平解决。</p>
+                </div>
+                
+                <div class="achievement-item">
+                    <h3 class="achievement-title">"镜面对话"协议</h3>
+                    <p class="achievement-desc">建立与反射维度实体的安全交流标准流程，使镜面类异常事件发生率下降67%。</p>
+                </div>
+                
+                <div class="achievement-item">
+                    <h3 class="achievement-title">跨维度伦理框架V3.1</h3>
+                    <p class="achievement-desc">被采纳为局内异人互动基本准则，平衡了现实稳定与异常实体权利保护。</p>
+                </div>
+                
+                <h3 style="color:#87ceeb; margin-top:25px; margin-bottom:15px;">公开行动记录（脱密版）</h3>
+                
+                <div class="action-record">
+                    <div class="action-title">"午夜图书馆"调解事件（████年）</div>
+                    <div class="action-details">成功与一座活体建筑达成共生协议，避免了大规模现实重构事件。</div>
+                </div>
+                
+                <div class="action-record">
+                    <div class="action-title">"哭泣天使"收容方案优化（████年）</div>
+                    <div class="action-details">将传统收容转为管理型共存，建立了首个天使类实体社区。</div>
+                </div>
+                
+                <div class="action-record">
+                    <div class="action-title">"影兽迁徙"协调项目（████年）</div>
+                    <div class="action-details">引导影维度生物群体完成季节性迁徙，保护了三个城市的阴影生态平衡。</div>
+                </div>
+            </section>
+            
+            <!-- 公开理念声明 -->
+            <section class="section">
+                <h2 class="section-title"><i class="fas fa-quote-left"></i> 公开理念声明</h2>
+                <div class="quote-block">
+                    <p>"异常不是错误，只是不同维度的正确。我们的职责不是'修正'，<strong>而是在差异之间编织理解的网络。</strong>"</p>
+                </div>
+                <div class="quote-block">
+                    <p>"每个低语都有其旋律，每道阴影都有其形状。真正的危险不是未知，<strong>而是拒绝理解的傲慢。</strong>"</p>
+                </div>
+                <div class="quote-block">
+                    <p>"在墟境的边缘，我们不是守卫高墙的士兵，而是搭建桥梁的工匠。"</p>
+                </div>
+            </section>
+            
+            <!-- 公众互动 -->
+            <section class="section">
+                <h2 class="section-title"><i class="fas fa-users"></i> 公众互动</h2>
+                
+                <h3 style="color:#87ceeb; margin-top:15px; margin-bottom:10px;">公开讲座主题（部分）</h3>
+                <ul class="info-list">
+                    <li>《当你的影子开始说话：日常异常的识别与应对》</li>
+                    <li>《与不可理解之物对话：基础跨维度交流技巧》</li>
+                    <li>《家的另一面：如何与住宅异常体共存》</li>
+                </ul>
+                
+                <h3 style="color:#87ceeb; margin-top:20px; margin-bottom:10px;">局内培训课程</h3>
+                <ul class="info-list">
+                    <li>异人关系入门：从恐惧到理解</li>
+                    <li>非标准沟通工作坊</li>
+                    <li>现实弹性心理建设</li>
+                </ul>
+            </section>
+            
+            <!-- 安全须知 -->
+            <section class="section">
+                <h2 class="section-title"><i class="fas fa-exclamation-triangle"></i> 安全须知（公众版）</h2>
+                <div class="safety-note">
+                    <div class="safety-title"><i class="fas fa-shield-alt"></i> 重要提醒</div>
+                    <ul class="info-list">
+                        <li>陆博士接触的异常实体多为高认知复杂度类型</li>
+                        <li>如有偶遇，请保持正常态度，避免突然动作</li>
+                        <li>博士周围可能出现轻微现实扭曲现象（如物品颜色流动、声音延迟等），属正常范围</li>
+                        <li>如发现博士正在与"不可见对话者"交流，请勿打断，安静离开即可</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <!-- 联络信息 -->
+            <section class="section">
+                <h2 class="section-title"><i class="fas fa-address-card"></i> 联络信息</h2>
+                <ul class="info-list">
+                    <li>
+                        <span class="info-label">公众咨询:</span>
+                        <span class="info-value">通过墟境调和局官网转异人关系科</span>
+                    </li>
+                    <li>
+                        <span class="info-label">紧急异常事件:</span>
+                        <span class="info-value">请拨打调和局热线████████</span>
+                    </li>
+                    <li>
+                        <span class="info-label">学术合作:</span>
+                        <span class="info-value">需通过局外事部提交正式申请</span>
+                    </li>
+                </ul>
+            </section>
+        </div>
+        
+        <!-- 页脚信息 -->
+        <div class="footer">
+            <p>档案最后更新：████年██月██日</p>
+            <p>公开级别：黄级（可向公众开放）</p>
+            <p>备注：陆博士的资料定期由现实稳定部门审核，确保信息无认知危害风险。</p>
+            <p class="signature">"墟境不是边界，而是相遇之处。" —— 陆栖言博士</p>
+        </div>
+    </div>
+    
+    <script>
+        // 添加交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为所有信息项添加点击效果
+            const infoItems = document.querySelectorAll('.info-list li, .achievement-item, .action-record');
+            
+            infoItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    this.style.backgroundColor = 'rgba(64, 224, 208, 0.1)';
+                    setTimeout(() => {
+                        this.style.backgroundColor = '';
+                    }, 300);
+                });
+            });
+            
+            // 添加打印提示
+            console.log("%c墟境调和局档案系统 - 安全提醒", "color: #40e0d0; font-size: 18px; font-weight: bold;");
+            console.log("%c此档案为公开版本，包含部分信息脱敏处理。", "color: #87ceeb;");
+            console.log("%c未经授权复制、传播或修改档案内容将触犯《异常信息管理条例》。", "color: #ffa500;");
+        });
+    </script>
+    <script src="pages.js"></script>
+</body>
+</html>

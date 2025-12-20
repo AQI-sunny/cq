@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>墟境调和局 - 系统操作日志（最近72小时）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a1a 0%, #121230 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景特效 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 150, 255, 0.05) 0px, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(150, 0, 255, 0.05) 0px, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 100, 0, 0.03) 0px, transparent 50%);
+            z-index: -2;
+        }
+        
+        /* 网格线背景 */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 150, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 150, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        /* 返回按钮 */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(20, 40, 80, 0.7);
+            color: #40e0d0;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .back-button:hover {
+            background: rgba(64, 224, 208, 0.2);
+            border-color: #40e0d0;
+            box-shadow: 0 0 10px rgba(64, 224, 208, 0.3);
+        }
+        
+        .back-button::before {
+            content: "←";
+            margin-right: 8px;
+            font-weight: bold;
+        }
+        
+        /* 容器 */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: rgba(10, 15, 30, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(0, 150, 255, 0.3);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+        }
+        
+        /* 顶部装饰线 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #ff0040, #ff8000, #ffff00, #00ff40, #0080ff, #8000ff);
+            background-size: 600% 100%;
+            animation: scanline 8s linear infinite;
+        }
+        
+        @keyframes scanline {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 600% 0%; }
+        }
+        
+        /* 标题区域 */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .logo-container {
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(64, 224, 208, 0.5);
+            box-shadow: 0 0 20px rgba(64, 224, 208, 0.5);
+            animation: pulse 3s infinite alternate;
+        }
+        
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: transparent;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 15px rgba(64, 224, 208, 0.5); }
+            100% { box-shadow: 0 0 25px rgba(64, 224, 208, 0.8); }
+        }
+        
+        .title {
+            font-size: 32px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(64, 224, 208, 0.3);
+        }
+        
+        .subtitle {
+            color: #87ceeb;
+            font-size: 16px;
+            letter-spacing: 4px;
+            margin-bottom: 5px;
+        }
+        
+        .time-range {
+            color: #ffa500;
+            font-size: 14px;
+            background: rgba(255, 165, 0, 0.1);
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 165, 0, 0.3);
+        }
+        
+        /* 日志内容区域 - 修正版 */
+        .log-content {
+            position: relative;
+        }
+        
+        /* 垂直时间线 */
+        .log-content::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 140px; /* 时间线固定位置 */
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0, 150, 255, 0.5), transparent);
+            z-index: 1;
+        }
+        
+        .log-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            position: relative;
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0;
+            min-height: 70px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 为每个日志项设置不同的延迟动画 */
+        .log-item:nth-child(1) { animation-delay: 0.1s; }
+        .log-item:nth-child(2) { animation-delay: 0.2s; }
+        .log-item:nth-child(3) { animation-delay: 0.3s; }
+        .log-item:nth-child(4) { animation-delay: 0.4s; }
+        .log-item:nth-child(5) { animation-delay: 0.5s; }
+        .log-item:nth-child(6) { animation-delay: 0.6s; }
+        .log-item:nth-child(7) { animation-delay: 0.7s; }
+        
+        /* 时间点圆点 */
+        .log-item::before {
+            content: "";
+            position: absolute;
+            left: 136px; /* 刚好在时间线左边 */
+            top: 10px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #40e0d0;
+            box-shadow: 0 0 10px #40e0d0;
+            z-index: 2;
+        }
+        
+        /* 时间列 - 固定宽度，右对齐 */
+        .time-column {
+            width: 130px; /* 固定宽度 */
+            text-align: right;
+            padding-right: 15px;
+            color: #87ceeb;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+        
+        /* 日志内容 */
+        .log-details {
+            flex: 1;
+            background: rgba(20, 30, 50, 0.6);
+            border-radius: 10px;
+            padding: 15px 20px;
+            border-left: 4px solid;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-left: 10px;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .log-details:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* 不同日志类型的不同边框颜色 */
+        .log-item:nth-child(1) .log-details { border-left-color: #ff0040; }
+        .log-item:nth-child(2) .log-details { border-left-color: #ff8000; }
+        .log-item:nth-child(3) .log-details { border-left-color: #40e0d0; }
+        .log-item:nth-child(4) .log-details { border-left-color: #1e90ff; }
+        .log-item:nth-child(5) .log-details { border-left-color: #ff0040; }
+        .log-item:nth-child(6) .log-details { border-left-color: #ffa500; }
+        .log-item:nth-child(7) .log-details { border-left-color: #40e0d0; }
+        
+        .log-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #e0e7ff;
+            margin-bottom: 5px;
+        }
+        
+        .log-subtext {
+            font-size: 13px;
+            color: #87ceeb;
+            line-height: 1.4;
+        }
+        
+        /* 高亮样式 */
+        .highlight {
+            color: #ff0040;
+            font-weight: bold;
+            background: rgba(255, 0, 64, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-shadow: 0 0 5px rgba(255, 0, 64, 0.5);
+        }
+        
+        .highlight-yellow {
+            color: #ffff00;
+            font-weight: bold;
+            background: rgba(255, 255, 0, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
+        }
+        
+        .warning {
+            color: #ff8000;
+            font-weight: bold;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .mosaic {
+            background: linear-gradient(45deg, #888 25%, #aaa 25%, #aaa 50%, #888 50%, #888 75%, #aaa 75%, #aaa);
+            background-size: 10px 10px;
+            color: transparent;
+            padding: 2px 8px;
+            border-radius: 4px;
+            user-select: none;
+        }
+        
+        .sensitivity {
+            display: inline-block;
+            padding: 3px 10px;
+            background: linear-gradient(90deg, rgba(255, 0, 64, 0.2), rgba(255, 0, 64, 0.4));
+            color: #ff0040;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+            border: 1px solid rgba(255, 0, 64, 0.5);
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #708090;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(112, 128, 144, 0.3);
+        }
+        
+        .footer a {
+            color: #87ceeb;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 26px;
+            }
+            
+            .log-content::before {
+                left: 120px;
+            }
+            
+            .log-item::before {
+                left: 116px;
+            }
+            
+            .time-column {
+                width: 110px;
+                font-size: 13px;
+            }
+            
+            .log-details {
+                padding: 12px 15px;
+            }
+            
+            .log-text {
+                font-size: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .log-content::before {
+                left: 100px;
+            }
+            
+            .log-item::before {
+                left: 96px;
+            }
+            
+            .time-column {
+                width: 90px;
+                font-size: 12px;
+                padding-right: 10px;
+            }
+            
+            .log-item {
+                align-items: flex-start;
+                margin-bottom: 20px;
+            }
+            
+            .log-details {
+                margin-left: 5px;
+                padding: 10px 12px;
+            }
+        }
+    </style>
+    <link rel="icon" type="image/png" href="./xjthj.png">
+</head>
+<body>
+    <!-- 返回按钮 -->
+    <div class="container">
+        <a href="屏障2.0.html" class="back-button">返回屏障2.0系统</a>
+        
+        <!-- 标题区域 -->
+        <div class="header">
+            <div class="logo-container">
+                <img src="./xjthj.png" alt="墟境调和局标志">
+            </div>
+            <h1 class="title">墟境调和局 - 系统操作日志</h1>
+            <p class="subtitle">XUJING HARMONY BUREAU</p>
+            <div class="time-range">最近72小时记录 | 时间倒序显示</div>
+        </div>
+        
+        <!-- 日志内容区域 -->
+        <div class="log-content">
+            <!-- 日志项使用简单布局 -->
+            <div class="log-item">
+                <div class="time-column">12/20 19:09<br>(6分钟前)</div>
+                <div class="log-details">
+                    <div class="log-text">敏感度调整为级别4 <span class="sensitivity">LEVEL 4</span></div>
+                    <div class="log-subtext">自动调整 | 系统检测到异常活动模式</div>
+                </div>
+            </div>
+            
+            <div class="log-item">
+                <div class="time-column">12/20 15:15<br>(4小时前)</div>
+                <div class="log-details">
+                    <div class="log-text">神经波动扫描：发现异常生物特征</div>
+                    <div class="log-subtext">特征匹配度：87% | 定位：第3实验区</div>
+                </div>
+            </div>
+            
+            <div class="log-item">
+                <div class="time-column">12/20 12:15<br>(7小时前)</div>
+                <div class="log-details">
+                    <div class="log-text">输入密钥访问：<span class="highlight-yellow">《繁殖行为报告》</span></div>
+                    <div class="log-subtext">访问者：Dr.████ | 授权级别：5</div>
+                </div>
+            </div>
+            
+            <div class="log-item">
+                <div class="time-column">12/20 11:45<br>(7.5小时前)</div>
+                <div class="log-details">
+                    <div class="log-text">博士登录 - 查看螂人项目进度</div>
+                    <div class="log-subtext">访问时长：23分钟 | 下载文件：3个</div>
+                </div>
+            </div>
+            
+            <div class="log-item">
+                <div class="time-column">12/20 10:15<br>(9小时前)</div>
+                <div class="log-details">
+                    <div class="log-text"><span class="warning">警告：锚点波动！锚点波动！锚点波动！</span></div>
+                    <div class="log-subtext">协议不稳定：<span class="mosaic">████</span> | 影响范围：第2-4实验区</div>
+                </div>
+            </div>
+            
+            <div class="log-item">
+                <div class="time-column">12/20 09:15<br>(10小时前)</div>
+                <div class="log-details">
+                    <div class="log-text">最后正常操作：博士修改实验参数</div>
+                    <div class="log-subtext">参数组：Gamma-7 | 变更值：+37%</div>
+                </div>
+            </div>
+            
+            <div class="log-item">
+                <div class="time-column">12/20 09:00<br>(10.25小时前)</div>
+                <div class="log-details">
+                    <div class="log-text">记录日期：<span class="highlight">2025-12-11</span> 14:30</div>
+                    <div class="log-subtext">系统状态：正常 | 所有协议运行中</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>墟境调和局 | 系统操作日志 | 最近72小时记录 | 自动归档中...</p>
+            <p>© 2025 墟境调和局 | 安全级别：<span class="highlight">最高机密</span></p>
+            <p>最后更新: <span id="current-time"></span></p>
+        </div>
+    </div>
+    
+    <script>
+        // 更新当前时间
+        function updateCurrentTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            const timeString = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            document.getElementById('current-time').textContent = timeString;
+        }
+        
+        // 为高亮文本添加点击效果
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000);
+            
+            const highlights = document.querySelectorAll('.highlight, .highlight-yellow');
+            highlights.forEach(highlight => {
+                highlight.addEventListener('click', function() {
+                    this.style.animation = 'none';
+                    setTimeout(() => {
+                        this.style.animation = 'blink 0.5s 3';
+                    }, 10);
+                });
+            });
+        });
+    </script>
+    <script src="pages.js"></script>
+</body>
+</html>

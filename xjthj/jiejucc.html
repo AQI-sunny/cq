@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上古协议签署报告 - 和平共存结局</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0d1e1e 0%, #1a3a3a 100%);
+            color: #e8f5f5;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景特效 - 蓝绿色主题 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(76, 175, 175, 0.08) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(56, 142, 142, 0.06) 0px, transparent 50%);
+            z-index: -2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(18, 40, 45, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(102, 204, 204, 0.25);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 顶部装饰线 - 蓝绿色 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #66cccc, #43a0a0, #2e7d7d);
+        }
+        
+        /* 结局内容区域 */
+        .ending-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .ending-header {
+            margin-bottom: 40px;
+        }
+        
+        .ending-title {
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #81c7c7, #66bbbb, #4cafaf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px rgba(102, 204, 204, 0.2);
+        }
+        
+        .ending-subtitle {
+            font-size: 22px;
+            color: #a5d6d6;
+            margin-bottom: 10px;
+        }
+        
+        .ending-badge {
+            display: inline-block;
+            background: linear-gradient(90deg, #66cccc, #43a0a0);
+            color: #f1f8f8;
+            padding: 8px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 12px rgba(76, 204, 204, 0.3);
+            animation: badge-pulse 3s infinite alternate;
+        }
+        
+        @keyframes badge-pulse {
+            0% { box-shadow: 0 0 12px rgba(76, 204, 204, 0.3); }
+            100% { box-shadow: 0 0 20px rgba(76, 204, 204, 0.5); }
+        }
+        
+        /* 结局内容 */
+        .ending-content {
+            background-color: rgba(30, 60, 60, 0.5);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(102, 204, 204, 0.3);
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ending-content::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #66cccc, #4cafaf);
+        }
+        
+        .ending-text {
+            font-size: 20px;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            color: #c8e6e6;
+            text-indent: 2em;
+        }
+        
+        .ending-text:last-child {
+            margin-bottom: 0;
+        }
+        
+        .highlight {
+            color: #81c7c7;
+            font-weight: bold;
+            text-shadow: 0 0 4px rgba(129, 199, 199, 0.3);
+        }
+        
+        .peace-highlight {
+            color: #a5d6d6;
+            font-weight: bold;
+            text-shadow: 0 0 6px rgba(165, 214, 214, 0.4);
+            font-size: 24px;
+        }
+        
+        .achievements {
+            background-color: rgba(40, 80, 80, 0.5);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 5px solid #66cccc;
+        }
+        
+        .achievements-title {
+            color: #81c7c7;
+            font-size: 22px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .achievements-title i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .achievements-list {
+            list-style-type: none;
+        }
+        
+        .achievements-list li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.6;
+            color: #e8f5f5;
+        }
+        
+        .achievements-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #66cccc;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        /* 行动数据 */
+        .action-data {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 40px 0;
+            gap: 20px;
+        }
+        
+        .data-card {
+            background-color: rgba(30, 60, 60, 0.5);
+            border-radius: 10px;
+            padding: 25px;
+            width: 220px;
+            border: 1px solid rgba(102, 204, 204, 0.25);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .data-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-color: rgba(102, 204, 204, 0.5);
+        }
+        
+        .data-icon {
+            font-size: 36px;
+            color: #81c7c7;
+            margin-bottom: 15px;
+        }
+        
+        .data-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #a5d6d6;
+            margin-bottom: 10px;
+        }
+        
+        .data-label {
+            color: #a5d6d6;
+            font-size: 16px;
+        }
+        
+        /* 关注作者按钮 */
+        .author-section {
+            margin-top: 50px;
+            padding: 30px;
+            background-color: rgba(40, 70, 75, 0.6);
+            border-radius: 15px;
+            border: 1px solid rgba(102, 153, 204, 0.4);
+        }
+        
+        .author-title {
+            color: #66b3cc;
+            font-size: 26px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .author-title i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .author-button {
+            display: inline-block;
+            background: linear-gradient(90deg, #4a90e2, #66cccc);
+            color: white;
+            text-decoration: none;
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(102, 153, 204, 0.4);
+            letter-spacing: 1px;
+        }
+        
+        .author-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(102, 153, 204, 0.7);
+            background: linear-gradient(90deg, #3a80d2, #66cccc);
+        }
+        
+        .author-button i {
+            margin-right: 10px;
+        }
+        
+        .author-note {
+            color: #b8d8e8;
+            margin-top: 20px;
+            font-style: italic;
+            font-size: 16px;
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #8ba6a6;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(139, 166, 166, 0.3);
+        }
+        
+        .footer a {
+            color: #a5d6d6;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .action-data {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .data-card {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .ending-title {
+                font-size: 32px;
+            }
+            
+            .ending-subtitle {
+                font-size: 18px;
+            }
+            
+            .ending-content {
+                padding: 25px;
+            }
+            
+            .ending-text {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="ending-container">
+            <div class="ending-header">
+                <h1 class="ending-title">上古协议签署报告</h1>
+                <h2 class="ending-subtitle">跨物种和平协定 - 最终阶段</h2>
+                <div class="ending-badge">和平共存协议生效</div>
+            </div>
+            
+            <div class="ending-content">
+                <p class="ending-text">根据《跨文明交流基本原则》第1条授权，你做出了最终决策：<span class="highlight">与螂人首领进行谈判</span>，并成功重新签署了失落的上古和平协议。</p>
+                
+                <p class="ending-text">经过72小时的紧张谈判，人类代表与螂人首领<span class="peace-highlight">"甲壳智者卡拉图"</span>达成历史性共识。双方确认了上古时期签订的《维度共生协定》仍然有效，并在此基础上制定了新的实施细则。</p>
+                
+                <p class="ending-text">协议规定：螂人种群将<span class="highlight">撤回所有地表巢穴</span>，转入深层地下生态圈生活；作为交换，人类将提供必要的技术援助，帮助螂人修复其受损的维度稳定装置。</p>
+                
+                <p class="ending-text">螂人分享了其<span class="highlight">先进的生物工程科技</span>，特别是在生态修复和医疗领域的知识。人类科学家与螂人生物技师组建了联合研究团队，共同开发解决环境问题的创新方案。</p>
+                
+                <div class="achievements">
+                    <h3 class="achievements-title"><i class="fas fa-handshake"></i> 协议主要成果</h3>
+                    <ul class="achievements-list">
+                        <li>跨物种和平委员会：已正式成立并开始运作</li>
+                        <li>联合科技研发中心：在3个大陆建立</li>
+                        <li>生态修复计划：启动，预计5年内恢复30%受损生态</li>
+                        <li>文化交流项目：首批人类-螂人交换学者已就位</li>
+                        <li>维度稳定装置：修复完成，两个世界连接恢复正常</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="action-data">
+                <div class="data-card">
+                    <div class="data-icon"><i class="fas fa-handshake"></i></div>
+                    <div class="data-value">100%</div>
+                    <div class="data-label">协议通过率</div>
+                </div>
+                
+                <div class="data-card">
+                    <div class="data-icon"><i class="fas fa-users"></i></div>
+                    <div class="data-value">0.01%</div>
+                    <div class="data-label">伤亡率</div>
+                </div>
+                
+                <div class="data-card">
+                    <div class="data-icon"><i class="fas fa-clock"></i></div>
+                    <div class="data-value">7.2h</div>
+                    <div class="data-label">谈判时长</div>
+                </div>
+                
+                <div class="data-card">
+                    <div class="data-icon"><i class="fas fa-leaf"></i></div>
+                    <div class="data-value">30%</div>
+                    <div class="data-label">生态修复率</div>
+                </div>
+            </div>
+            
+            <div class="author-section">
+                <h3 class="author-title"><i class="fas fa-heart"></i> 感谢体验此游戏</h3>
+                <p class="ending-text" style="text-align: center; text-indent: 0; margin-bottom: 20px;">
+                    《墟境调和局》是由阿七开发的第二个网页解谜游戏系列。恭喜解锁结局C，如果你喜欢这个故事，欢迎关注作者↓
+                </p>
+                
+                <div style="text-align: center;">
+                    <a href="https://sylvie-seven-cq.top" target="_blank" class="author-button">
+                        <i class="fas fa-external-link-alt"></i> 访问作者主页
+                    </a>
+                </div>
+                
+                <p class="author-note">点击上方按钮将跳转到作者的个人网站，了解更多创作内容</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>跨文明和平委员会 | 上古协议签署记录 | 公开等级：A级</p>
+            <p>© 2025 墟境调和局 | 本记录向全文明开放查阅</p>
+            <p>
+                <a href="#">返回任务列表</a> | 
+                <a href="nest.html">查看其他结局</a> | 
+                <a href="#">协议完整文本</a>
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // 添加一些简单的交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为数据卡片添加点击效果
+            const dataCards = document.querySelectorAll('.data-card');
+            dataCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
+                });
+            });
+            
+            // 为高亮文本添加闪烁效果
+            const highlights = document.querySelectorAll('.peace-highlight');
+            highlights.forEach(highlight => {
+                setInterval(() => {
+                    highlight.style.textShadow = highlight.style.textShadow === '0 0 6px rgba(165, 214, 214, 0.4)' 
+                        ? '0 0 10px rgba(165, 214, 214, 0.6)' 
+                        : '0 0 6px rgba(165, 214, 214, 0.4)';
+                }, 1500);
+            });
+            
+            // 作者按钮悬停效果增强
+            const authorButton = document.querySelector('.author-button');
+            authorButton.addEventListener('mouseenter', function() {
+                this.innerHTML = '<i class="fas fa-external-link-alt"></i> 前往sylvie-seven-cq.top';
+            });
+            authorButton.addEventListener('mouseleave', function() {
+                this.innerHTML = '<i class="fas fa-external-link-alt"></i> 访问作者主页';
+            });
+        });
+    </script>
+    <script src="pages.js"></script>
+</body>
+</html>

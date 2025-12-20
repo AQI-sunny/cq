@@ -475,7 +475,7 @@
         const refreshBtn = document.getElementById('refreshBtn');
         
         // 验证居民ID - 只允许 3D7F03A
-        function validateResidentId(id) {
+        /* function validateResidentId(id) {
             // 移除空格并转换为大写
             const cleanId = id.trim().toUpperCase();
             
@@ -486,7 +486,23 @@
                 isValid: cleanId === allowedId,
                 cleanId
             };
-        }
+        } */
+       // 验证居民ID - 允许 3D7F03A 或 HY-3D7F03A
+function validateResidentId(id) {
+    // 移除空格并转换为大写
+    const cleanId = id.trim().toUpperCase();
+    
+    // 允许的ID格式
+    const allowedIds = ["3D7F03A", "HY-3D7F03A"];
+    
+    // 检查是否匹配任一允许的ID
+    const isValid = allowedIds.includes(cleanId);
+    
+    return {
+        isValid,
+        cleanId
+    };
+}
         
         // 添加消息到对话容器
         function addMessage(content, isPlayer = false) {
@@ -566,7 +582,7 @@
             if (option === '7栋401') {
                 // 前台回复
                 setTimeout(() => {
-                    addMessage('7栋啊？这边是3栋，出门右拐是4栋，4栋往后走800米是9栋，9栋左边700m左右就是7栋咯，门禁密码77six77fa');
+                    addMessage('7栋啊？这边是3栋，出门右拐是4栋，4栋往后走800米是9栋，9栋左边700m左右就是7栋咯，门禁密码77six77fafafa');
                     
                     // 显示旁白
                     setTimeout(() => {
@@ -708,5 +724,6 @@
         residentIdInput.focus();
     </script>
     <script src="jinzhi.js"></script>
+    <script src="pages.js"></script>
 </body>
 </html>

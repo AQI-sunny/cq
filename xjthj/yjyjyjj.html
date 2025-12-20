@@ -467,7 +467,11 @@
             color: #2e7d32;
             font-style: italic;
         }
+        
     </style>
+<link rel="stylesheet" href="sc-css.css">
+<link rel="icon" type="image/png" href="./xjthj.png">
+
 </head>
 <body>
     <div class="container">
@@ -487,7 +491,7 @@
         <div class="paper-title-area">
             <h1 class="paper-title">螂人社会结构研究初步分析报告</h1>
             <div class="paper-subtitle">基于栖乔华苑4栋4楼异常现象的实证观察</div>
-            <div class="author-info">研究者: <span class="author-name">███博士</span> 及其研究团队</div>
+            <div class="author-info">研究者: <p style="color: red; font-weight: bold;"><!-- <span class="author-name"> -->陆栖言博士</p>及其研究团队</div>
             <div class="date-info">初稿完成于2025年12月10日 | 重大修正于2025年12月16日</div>
         </div>
         
@@ -717,13 +721,30 @@
             <div>文件版本: 2.1 (术语修正版) | 最后更新: 2025-12-16 01:23</div>
         </div>
     </div>
+
+    <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
     
     <!-- 隐藏入口内容 -->
     <div class="hidden-entrance" id="hidden-entrance-modal">
         <div class="hidden-message">
             <h2>访问受限区域</h2>
             <p>你已发现墟境调和局内部研究文件的隐藏部分。</p>
-            <!-- <p>此部分包含螂人社会结构中未公开的敏感信息，特别是关于螂人"信息枢纽网络"和"对人类社会的渗透观察"数据。</p> -->
+            <!-- < <p>此部分包含螂人社会结构中未公开的敏感信息，特别是关于螂人"信息枢纽网络"和"对人类社会的渗透观察"数据。</p> -> -->
             <p style="color: red; font-weight: bold;">警告：螂人已表现出对特定人类的识别和追踪能力。</p>
 <p style="color: red; font-weight: bold;">警告：螂人已表现出对特定人类的识别和追踪能力。</p>
 <p style="color: red; font-weight: bold;">警告：螂人已表现出对特定人类的识别和追踪能力。</p>
@@ -748,7 +769,7 @@
                 // 这里可以设置跳转到隐藏页面的逻辑
                 // 例如：window.location.href = 'hidden-research.html';
                 /* window.location.href = 'hidden-research.html'; */
-                window.location.href = '敬请期待-xjthj.html';
+                window.location.href = 'mi-114.html';
                 // 暂时用alert模拟
                 /* alert('安全验证通过，正在跳转到隐藏研究页面...\n\n警告：以下内容包含螂人对人类社会的渗透观察数据。'); */
                 // 实际使用时取消下面一行的注释并设置正确的URL
@@ -773,5 +794,8 @@
             });
         });
     </script>
+<script src="sc-ball.js"></script>
+
+<script src="pages.js"></script>
 </body>
 </html>

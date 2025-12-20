@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>迁移协议执行报告 - 融合完成结局</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a0c2d 0%, #2d1a3a 100%);
+            color: #f0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景特效 - 紫色主题 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(128, 41, 185, 0.12) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(142, 68, 173, 0.10) 0px, transparent 50%);
+            z-index: -2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(25, 18, 40, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(147, 112, 219, 0.3);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 顶部装饰线 - 紫色 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #9370db, #8a2be2, #6a0dad);
+        }
+        
+        /* 结局内容区域 */
+        .ending-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .ending-header {
+            margin-bottom: 40px;
+        }
+        
+        .ending-title {
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #9370db, #8a2be2, #6a0dad);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px rgba(147, 112, 219, 0.3);
+        }
+        
+        .ending-subtitle {
+            font-size: 22px;
+            color: #b19cd9;
+            margin-bottom: 10px;
+        }
+        
+        .ending-badge {
+            display: inline-block;
+            background: linear-gradient(90deg, #8a2be2, #6a0dad);
+            color: #f0e7ff;
+            padding: 8px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.4);
+            animation: badge-pulse 2.8s infinite alternate;
+        }
+        
+        @keyframes badge-pulse {
+            0% { box-shadow: 0 0 15px rgba(138, 43, 226, 0.4); }
+            100% { box-shadow: 0 0 25px rgba(138, 43, 226, 0.7); }
+        }
+        
+        /* 警告区域 */
+        .warning-section {
+            background-color: rgba(40, 30, 60, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid rgba(178, 34, 34, 0.5);
+            position: relative;
+        }
+        
+        .warning-icon {
+            font-size: 48px;
+            color: #b22222;
+            margin-bottom: 20px;
+            animation: warning-pulse 2s infinite alternate;
+        }
+        
+        @keyframes warning-pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+        
+        .warning-text {
+            font-size: 24px;
+            color: #ff6b6b;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+            margin-bottom: 15px;
+        }
+        
+        /* 结局内容 */
+        .ending-content {
+            background-color: rgba(35, 25, 55, 0.6);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(147, 112, 219, 0.4);
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ending-content::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #9370db, #8a2be2);
+        }
+        
+        .ending-text {
+            font-size: 20px;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            color: #d0c4de;
+            text-indent: 2em;
+        }
+        
+        .ending-text:last-child {
+            margin-bottom: 0;
+        }
+        
+        .highlight {
+            color: #9370db;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(147, 112, 219, 0.5);
+        }
+        
+        .corruption-highlight {
+            color: #ff6b6b;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(255, 107, 107, 0.7);
+            font-size: 24px;
+        }
+        
+        .consequences {
+            background-color: rgba(50, 35, 75, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 5px solid #8a2be2;
+        }
+        
+        .consequences-title {
+            color: #9370db;
+            font-size: 22px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .consequences-title i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .consequences-list {
+            list-style-type: none;
+        }
+        
+        .consequences-list li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.6;
+            color: #e0d6ff;
+        }
+        
+        .consequences-list li::before {
+            content: "⨯";
+            position: absolute;
+            left: 0;
+            color: #ff6b6b;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        /* 行动数据 */
+        .action-data {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 40px 0;
+            gap: 20px;
+        }
+        
+        .data-card {
+            background-color: rgba(35, 25, 55, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            width: 220px;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .data-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            border-color: rgba(147, 112, 219, 0.6);
+        }
+        
+        .data-icon {
+            font-size: 36px;
+            color: #9370db;
+            margin-bottom: 15px;
+        }
+        
+        .data-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin-bottom: 10px;
+        }
+        
+        .data-label {
+            color: #b19cd9;
+            font-size: 16px;
+        }
+        
+        /* 真相揭示 */
+        .truth-reveal {
+            background-color: rgba(60, 20, 40, 0.8);
+            border-radius: 15px;
+            padding: 35px;
+            margin: 40px 0;
+            border: 2px solid rgba(178, 34, 34, 0.6);
+            position: relative;
+        }
+        
+        .truth-title {
+            color: #ff6b6b;
+            font-size: 26px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .truth-title i {
+            margin-right: 15px;
+            font-size: 28px;
+        }
+        
+        .truth-text {
+            font-size: 20px;
+            line-height: 1.7;
+            color: #ffb6c1;
+            text-align: center;
+            font-style: italic;
+        }
+        
+        /* 关注作者按钮 */
+        .author-section {
+            margin-top: 50px;
+            padding: 30px;
+            background-color: rgba(50, 35, 75, 0.7);
+            border-radius: 15px;
+            border: 1px solid rgba(147, 112, 219, 0.5);
+        }
+        
+        .author-title {
+            color: #da70d6;
+            font-size: 26px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .author-title i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .author-button {
+            display: inline-block;
+            background: linear-gradient(90deg, #9b30ff, #da70d6);
+            color: white;
+            text-decoration: none;
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(147, 112, 219, 0.4);
+            letter-spacing: 1px;
+        }
+        
+        .author-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(147, 112, 219, 0.7);
+            background: linear-gradient(90deg, #8a2be2, #da70d6);
+        }
+        
+        .author-button i {
+            margin-right: 10px;
+        }
+        
+        .author-note {
+            color: #d8bfd8;
+            margin-top: 20px;
+            font-style: italic;
+            font-size: 16px;
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #8b7b9e;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(139, 123, 158, 0.3);
+        }
+        
+        .footer a {
+            color: #b19cd9;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .action-data {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .data-card {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .ending-title {
+                font-size: 32px;
+            }
+            
+            .ending-subtitle {
+                font-size: 18px;
+            }
+            
+            .ending-content {
+                padding: 25px;
+            }
+            
+            .ending-text {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="ending-container">
+            <div class="ending-header">
+                <h1 class="ending-title">迁移协议执行报告</h1>
+                <h2 class="ending-subtitle">"维度调和"行动 - 最终阶段</h2>
+                <div class="ending-badge">上古憎恶者已苏醒</div>
+            </div>
+            
+            <div class="warning-section">
+                <div class="warning-icon">
+                    <i class="fas fa-skull-crossbones"></i>
+                </div>
+                <div class="warning-text">警告：旧世界已终结</div>
+                <p style="color: #d0c4de; text-align: center; font-size: 18px;">迁移协议执行后7天，维度融合已完成</p>
+            </div>
+            
+            <div class="ending-content">
+                <p class="ending-text">根据《跨维度生物迁移协定》第5条第2款授权，你做出了最终决策：<span class="highlight">执行表面上的迁移协议</span>，启动了名为"维度调和"的行动。</p>
+                
+                <p class="ending-text">然而，这份协议实际上是一个精心设计的陷阱。在协议执行的<span class="corruption-highlight">第3天</span>，监测系统检测到异常的能量波动。所谓的"迁移通道"实际上是<span class="highlight">上古憎恶者"涅墨西斯"的渗透路径</span>。</p>
+                
+                <p class="ending-text">协议执行到<span class="highlight">第7天</span>，维度屏障完全崩溃。上古憎恶者的意识已渗透至现实世界的每一个角落，旧世界的物理法则开始瓦解。人类文明在无声无息中迎来了终结。</p>
+                
+                <p class="ending-text">分析显示，螂人种群实际上早已被涅墨西斯腐化，整个"迁移协议"是其精心策划的仪式，目的是<span class="corruption-highlight">绕过维度屏障的最后防御</span>。</p>
+                
+                <div class="truth-reveal">
+                    <h3 class="truth-title"><i class="fas fa-eye"></i> 真相揭示</h3>
+                    <p class="truth-text">"调和局从一开始就是骗局。我们以为是管理者，实则是祭品。上古憎恶者从未沉睡，祂一直在等待一个足够愚蠢的文明，自愿打开囚笼的大门。"</p>
+                    <p class="truth-text" style="margin-top: 15px; color: #ff6b6b;">—— 前第七分局首席分析师，最后通讯记录</p>
+                </div>
+                
+                <div class="consequences">
+                    <h3 class="consequences-title"><i class="fas fa-history"></i> 旧世界终结记录</h3>
+                    <ul class="consequences-list">
+                        <li>维度屏障崩溃时间：协议执行后168小时</li>
+                        <li>上古憎恶者渗透率：100%（完全融合）</li>
+                        <li>人类文明存续时间：0（已终结）</li>
+                        <li>物理法则稳定性：已瓦解</li>
+                        <li>时间流连续性：已断裂</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="action-data">
+                <div class="data-card">
+                    <div class="data-icon"><i class="fas fa-calendar-times"></i></div>
+                    <div class="data-value">7天</div>
+                    <div class="data-label">融合完成时间</div>
+                </div>
+                
+                <div class="data-card">
+                    <div class="data-icon"><i class="fas fa-brain"></i></div>
+                    <div class="data-value">100%</div>
+                    <div class="data-label">憎恶者渗透率</div>
+                </div>
+                
+                <div class="data-card">
+                    <div class="data-icon"><i class="fas fa-hourglass-end"></i></div>
+                    <div class="data-value">0</div>
+                    <div class="data-label">文明存续率</div>
+                </div>
+                
+                <div class="data-card">
+                    <div class="data-icon"><i class="fas fa-unlink"></i></div>
+                    <div class="data-value">∞</div>
+                    <div class="data-label">时间流断裂点</div>
+                </div>
+            </div>
+            
+            <div class="author-section">
+                <h3 class="author-title"><i class="fas fa-heart"></i> 感谢体验此游戏</h3>
+                <p class="ending-text" style="text-align: center; text-indent: 0; margin-bottom: 20px;">
+                    《墟境调和局》是由阿七开发的第二个网页解谜游戏系列。恭喜解锁结局A，如果你喜欢这个故事，欢迎关注作者↓
+                </p>
+                
+                <div style="text-align: center;">
+                    <a href="https://sylvie-seven-cq.top" target="_blank" class="author-button">
+                        <i class="fas fa-external-link-alt"></i> 访问作者主页
+                    </a>
+                </div>
+                
+                <p class="author-note">点击上方按钮将跳转到作者的个人网站，了解更多创作内容</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>第七分局维度事务部 | 迁移协议执行记录 | 机密等级：湮灭级</p>
+            <p>© 2023 跨维度生物管理局 | 本记录仅供历史研究参考</p>
+            <p>
+                <a href="#">返回任务列表</a> | 
+                <a href="nest.html">查看其他结局</a> | 
+                <a href="#">最终事件记录</a>
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // 添加一些简单的交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为数据卡片添加点击效果
+            const dataCards = document.querySelectorAll('.data-card');
+            dataCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
+                });
+            });
+            
+            // 为高亮文本添加闪烁效果
+            const highlights = document.querySelectorAll('.corruption-highlight');
+            highlights.forEach(highlight => {
+                setInterval(() => {
+                    highlight.style.textShadow = highlight.style.textShadow === '0 0 8px rgba(255, 107, 107, 0.7)' 
+                        ? '0 0 12px rgba(255, 107, 107, 0.9)' 
+                        : '0 0 8px rgba(255, 107, 107, 0.7)';
+                }, 1500);
+            });
+            
+            // 为警告图标添加旋转效果
+            const warningIcon = document.querySelector('.warning-icon i');
+            setInterval(() => {
+                warningIcon.style.transform = warningIcon.style.transform === 'rotate(10deg)' 
+                    ? 'rotate(-10deg)' 
+                    : 'rotate(10deg)';
+            }, 2000);
+            
+            // 作者按钮悬停效果增强
+            const authorButton = document.querySelector('.author-button');
+            authorButton.addEventListener('mouseenter', function() {
+                this.innerHTML = '<i class="fas fa-external-link-alt"></i> 前往sylvie-seven-cq.top';
+            });
+            authorButton.addEventListener('mouseleave', function() {
+                this.innerHTML = '<i class="fas fa-external-link-alt"></i> 访问作者主页';
+            });
+            
+            // 添加一些氛围效果
+            const container = document.querySelector('.container');
+            let pulseCount = 0;
+            setInterval(() => {
+                if (pulseCount < 3) {
+                    container.style.boxShadow = '0 10px 30px rgba(138, 43, 226, 0.6)';
+                    setTimeout(() => {
+                        container.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
+                    }, 500);
+                    pulseCount++;
+                }
+            }, 10000);
+        });
+    </script>
+<script src="pages.js"></script>
+</body>
+</html>

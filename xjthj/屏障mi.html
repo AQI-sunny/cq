@@ -308,6 +308,28 @@
             border: 1px solid rgba(40, 167, 69, 0.5);
             color: #80ffaa;
         }
+        /* 返回按钮样式 */
+        .back-button {
+            display: inline-block;
+            background: rgba(20, 40, 70, 0.7);
+            color: #87ceeb;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .back-button:hover {
+            background: rgba(64, 224, 208, 0.1);
+            border-color: #40e0d0;
+            transform: translateY(-3px);
+        }
+
+
+
         
         /* 页脚 */
         .footer {
@@ -327,25 +349,6 @@
         
         .footer a:hover {
             text-decoration: underline;
-        }
-        /* 返回按钮样式 */
-        .back-button {
-            display: inline-block;
-            background: rgba(20, 40, 70, 0.7);
-            color: #87ceeb;
-            text-decoration: none;
-            padding: 12px 25px;
-            border-radius: 6px;
-            margin-top: 20px;
-            border: 1px solid rgba(64, 224, 208, 0.3);
-            transition: all 0.3s;
-            text-align: center;
-        }
-        
-        .back-button:hover {
-            background: rgba(64, 224, 208, 0.1);
-            border-color: #40e0d0;
-            transform: translateY(-3px);
         }
         
         /* 响应式设计 */
@@ -375,7 +378,6 @@
                 height: 60px;
             }
         }
-    
     </style>
 </head>
 <body>
@@ -392,7 +394,8 @@
         <!-- 验证区域 -->
         <div class="auth-box">
             <h2 class="auth-title">请输入访问密码</h2>
-            <p class="hint">提示：<strong>产品档案号</strong></p>
+            <p class="hint">提示：<strong>总部实际地址缩写+某个相关的产品编号</strong>
+                <br>(数字与大写字母混杂，格式XXXXXXX-XXX)</p>
             
             <!-- 密码输入框 -->
             <div class="password-container">
@@ -402,6 +405,12 @@
                 <!-- 消息提示 -->
                 <div id="message" class="message"></div>
             </div>
+
+            <div style="display: grid; place-items: center; width: 100%;">
+    <a href="SY.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> 返回墟境调和局首页
+    </a>
+</div>
             
             <!-- 九键键盘 -->
            <!--  <div class="keypad-container">
@@ -412,11 +421,7 @@
                 <p style="color: #708090; font-size: 14px; margin-top: 15px;">提示：九键指的是手机上的九宫格键盘</p>
             </div> -->
         </div>
-        <div style="display: grid; place-items: center; width: 100%;">
-    <a href="SY.html" class="back-button">
-        <i class="fas fa-arrow-left"></i> 返回墟境调和局首页
-    </a>
-</div>
+
         
         <!-- 页脚 -->
         <div class="footer">
@@ -425,11 +430,144 @@
         </div>
     </div>
 
-    
     <script>
-
-    const _0x4a285d=_0x1223;function _0x431b(){const _0x14e974=['8644869vYJwUh','none','key','createElement','898836bNpIan','href','location','shake\x200.5s','PQRS','16900XLXHhI','style','密码正确！正在跳转...','value','GHI','click','密码错误，请重新输入','letters','MNO','passwordInput','3WCzuDy','key\x20key-special','error','textContent','classList','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20@keyframes\x20shake\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x200%,\x20100%\x20{\x20transform:\x20translateX(0);\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x2010%,\x2030%,\x2050%,\x2070%,\x2090%\x20{\x20transform:\x20translateX(-5px);\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x2020%,\x2040%,\x2060%,\x2080%\x20{\x20transform:\x20translateX(5px);\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20','1940538OxvWHr','number','ABC','head','151088VMuAXt','appendChild','key-special','pingz.html','XJTH-ZQY-754','164Loqfub','<div\x20class=\x22key-number\x22\x20style=\x22font-size:\x2018px;\x22>删除</div>','className','addEventListener','opacity','</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','JKL','getElementById','div','10THIcvf','focus','keypad','keyup','请输入密码','DOMContentLoaded','139024CUOJNV','99055YbgZoe','message','animation','<div\x20class=\x22key-letters\x22>','innerHTML'];_0x431b=function(){return _0x14e974;};return _0x431b();}(function(_0x153b7f,_0x324f3a){const _0x19f69b=_0x1223,_0x419e50=_0x153b7f();while(!![]){try{const _0x184676=-parseInt(_0x19f69b(0x124))/0x1+parseInt(_0x19f69b(0x12d))/0x2*(-parseInt(_0x19f69b(0x13c))/0x3)+-parseInt(_0x19f69b(0x114))/0x4*(-parseInt(_0x19f69b(0x132))/0x5)+-parseInt(_0x19f69b(0x143))/0x6+parseInt(_0x19f69b(0x147))/0x7+parseInt(_0x19f69b(0x123))/0x8+parseInt(_0x19f69b(0x129))/0x9*(parseInt(_0x19f69b(0x11d))/0xa);if(_0x184676===_0x324f3a)break;else _0x419e50['push'](_0x419e50['shift']());}catch(_0xcc7f12){_0x419e50['push'](_0x419e50['shift']());}}}(_0x431b,0x40fcb));function _0x1223(_0x5ea30e,_0xa85482){_0x5ea30e=_0x5ea30e-0x112;const _0x431b81=_0x431b();let _0x12234e=_0x431b81[_0x5ea30e];return _0x12234e;}const keypadLayout=[{'number':'1','letters':''},{'number':'2','letters':_0x4a285d(0x145)},{'number':'3','letters':'DEF'},{'number':'4','letters':_0x4a285d(0x136)},{'number':'5','letters':_0x4a285d(0x11a)},{'number':'6','letters':_0x4a285d(0x13a)},{'number':'7','letters':_0x4a285d(0x131)},{'number':'8','letters':'TUV'},{'number':'9','letters':'WXYZ'},{'number':'*','letters':''},{'number':'0','letters':'+'},{'number':'#','letters':''}];function initKeypad(){const _0x198b23=_0x4a285d,_0x331aa4=document['getElementById'](_0x198b23(0x11f));_0x331aa4[_0x198b23(0x128)]='',keypadLayout['forEach'](_0x2c2bcb=>{const _0x28fe07=_0x198b23,_0x1cb4a3=document[_0x28fe07(0x12c)](_0x28fe07(0x11c));_0x1cb4a3[_0x28fe07(0x116)]='key',(_0x2c2bcb[_0x28fe07(0x144)]==='*'||_0x2c2bcb[_0x28fe07(0x144)]==='0'||_0x2c2bcb[_0x28fe07(0x144)]==='#')&&_0x1cb4a3[_0x28fe07(0x140)]['add'](_0x28fe07(0x149)),_0x1cb4a3['innerHTML']='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22key-number\x22>'+_0x2c2bcb[_0x28fe07(0x144)]+_0x28fe07(0x119)+(_0x2c2bcb[_0x28fe07(0x139)]?_0x28fe07(0x127)+_0x2c2bcb[_0x28fe07(0x139)]+'</div>':'')+_0x28fe07(0x141),_0x1cb4a3[_0x28fe07(0x117)](_0x28fe07(0x137),()=>{const _0x2aa861=_0x28fe07,_0xc9fbf1=document[_0x2aa861(0x11b)](_0x2aa861(0x13b));_0xc9fbf1[_0x2aa861(0x135)]+=_0x2c2bcb[_0x2aa861(0x144)],_0xc9fbf1['focus']();}),_0x331aa4[_0x28fe07(0x148)](_0x1cb4a3);});const _0x4a27f6=document['createElement'](_0x198b23(0x11c));_0x4a27f6[_0x198b23(0x116)]=_0x198b23(0x13d),_0x4a27f6[_0x198b23(0x128)]=_0x198b23(0x115),_0x4a27f6[_0x198b23(0x117)](_0x198b23(0x137),()=>{const _0x246abd=_0x198b23,_0x251a0f=document[_0x246abd(0x11b)]('passwordInput');_0x251a0f[_0x246abd(0x135)]=_0x251a0f[_0x246abd(0x135)]['slice'](0x0,-0x1),_0x251a0f['focus']();}),_0x331aa4['appendChild'](_0x4a27f6);}function showMessage(_0xe10e61,_0x4e6489){const _0x4f0c06=_0x4a285d,_0x4a75f9=document[_0x4f0c06(0x11b)]('message');_0x4a75f9[_0x4f0c06(0x13f)]=_0xe10e61,_0x4a75f9[_0x4f0c06(0x116)]='message\x20'+_0x4e6489,_0x4a75f9[_0x4f0c06(0x133)][_0x4f0c06(0x118)]='1',setTimeout(()=>{const _0x15fb6a=_0x4f0c06;_0x4a75f9['style'][_0x15fb6a(0x118)]='0';},0xbb8);}function validatePassword(){const _0x50000d=_0x4a285d,_0x4f02e2=document[_0x50000d(0x11b)]('passwordInput'),_0x3066d2=_0x4f02e2[_0x50000d(0x135)],_0x4a27c2=document[_0x50000d(0x11b)](_0x50000d(0x125));_0x4a27c2[_0x50000d(0x133)][_0x50000d(0x118)]='0';if(!_0x3066d2){showMessage(_0x50000d(0x121),_0x50000d(0x13e)),_0x4f02e2['focus']();return;}const _0x62a8e2=_0x50000d(0x113);_0x3066d2===_0x62a8e2?(showMessage(_0x50000d(0x134),'success'),setTimeout(()=>{const _0xcb689f=_0x50000d;window[_0xcb689f(0x12f)][_0xcb689f(0x12e)]=_0xcb689f(0x112);},0x5dc)):(showMessage(_0x50000d(0x138),'error'),_0x4f02e2['value']='',_0x4f02e2['focus'](),_0x4f02e2['style'][_0x50000d(0x126)]=_0x50000d(0x12a),setTimeout(()=>{const _0x3c3303=_0x50000d;_0x4f02e2[_0x3c3303(0x133)]['animation']=_0x3c3303(0x130);},0xa));}const style=document['createElement'](_0x4a285d(0x133));style[_0x4a285d(0x13f)]=_0x4a285d(0x142),document[_0x4a285d(0x146)]['appendChild'](style),document[_0x4a285d(0x11b)]('submitBtn')['addEventListener'](_0x4a285d(0x137),validatePassword),document['getElementById'](_0x4a285d(0x13b))['addEventListener'](_0x4a285d(0x120),_0x231d3f=>{const _0xc1ff4b=_0x4a285d;_0x231d3f[_0xc1ff4b(0x12b)]==='Enter'&&validatePassword();}),document[_0x4a285d(0x117)](_0x4a285d(0x122),initKeypad),document['addEventListener'](_0x4a285d(0x122),()=>{setTimeout(()=>{const _0x2cf54f=_0x1223;document['getElementById'](_0x2cf54f(0x13b))[_0x2cf54f(0x11e)]();},0x1f4);});
-</script>
-    <script src="jinzhi.js"></script>
+        // 九键键盘映射 (传统手机九键布局)
+        const keypadLayout = [
+            { number: '1', letters: '' },
+            { number: '2', letters: 'ABC' },
+            { number: '3', letters: 'DEF' },
+            { number: '4', letters: 'GHI' },
+            { number: '5', letters: 'JKL' },
+            { number: '6', letters: 'MNO' },
+            { number: '7', letters: 'PQRS' },
+            { number: '8', letters: 'TUV' },
+            { number: '9', letters: 'WXYZ' },
+            { number: '*', letters: '' },
+            { number: '0', letters: '+' },
+            { number: '#', letters: '' }
+        ];
+        
+        // 初始化键盘
+        function initKeypad() {
+            const keypad = document.getElementById('keypad');
+            keypad.innerHTML = '';
+            
+            keypadLayout.forEach(key => {
+                const keyElement = document.createElement('div');
+                keyElement.className = 'key';
+                if (key.number === '*' || key.number === '0' || key.number === '#') {
+                    keyElement.classList.add('key-special');
+                }
+                
+                keyElement.innerHTML = `
+                    <div class="key-number">${key.number}</div>
+                    ${key.letters ? `<div class="key-letters">${key.letters}</div>` : ''}
+                `;
+                
+                // 添加点击事件
+                keyElement.addEventListener('click', () => {
+                    const passwordInput = document.getElementById('passwordInput');
+                    passwordInput.value += key.number;
+                    passwordInput.focus();
+                });
+                
+                keypad.appendChild(keyElement);
+            });
+            
+            // 添加删除键
+            const deleteKey = document.createElement('div');
+            deleteKey.className = 'key key-special';
+            deleteKey.innerHTML = '<div class="key-number" style="font-size: 18px;">删除</div>';
+            deleteKey.addEventListener('click', () => {
+                const passwordInput = document.getElementById('passwordInput');
+                passwordInput.value = passwordInput.value.slice(0, -1);
+                passwordInput.focus();
+            });
+            keypad.appendChild(deleteKey);
+        }
+        
+        // 显示消息
+        function showMessage(text, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `message ${type}`;
+            messageEl.style.opacity = '1';
+            
+            setTimeout(() => {
+                messageEl.style.opacity = '0';
+            }, 3000);
+        }
+        
+        // 密码验证函数
+        function validatePassword() {
+            const passwordInput = document.getElementById('passwordInput');
+            const password = passwordInput.value;
+            
+            // 清除之前的消息
+            const messageEl = document.getElementById('message');
+            messageEl.style.opacity = '0';
+            
+            // 检查是否为空
+            if (!password) {
+                showMessage('请输入密码', 'error');
+                passwordInput.focus();
+                return;
+            }
+            
+            // 根据"九键"提示，密码是九键键盘对应的数字
+            
+            const YINMIMIMA = "7Y7FZ4D-754";
+            
+            if (password === YINMIMIMA) {
+                showMessage('密码正确！正在跳转...', 'success');
+                
+                // 3秒后跳转到屏障页面
+                setTimeout(() => {
+                    window.location.href = "pingz.html";
+                }, 1500);
+            } else {
+                showMessage('密码错误，请重新输入', 'error');
+                passwordInput.value = '';
+                passwordInput.focus();
+                
+                // 添加抖动效果
+                passwordInput.style.animation = 'none';
+                setTimeout(() => {
+                    passwordInput.style.animation = 'shake 0.5s';
+                }, 10);
+            }
+        }
+        
+        // 添加抖动动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // 事件监听
+        document.getElementById('submitBtn').addEventListener('click', validatePassword);
+        
+        // 按Enter键也可以提交
+        document.getElementById('passwordInput').addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') {
+                validatePassword();
+            }
+        });
+        
+        // 页面加载完成后初始化键盘
+        document.addEventListener('DOMContentLoaded', initKeypad);
+        
+        // 初始化后让输入框获得焦点
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.getElementById('passwordInput').focus();
+            }, 500);
+        });
+    </script>
 </body>
 </html>

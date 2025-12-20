@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>坐标偏移计算器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景特效 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(41, 128, 185, 0.1) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(142, 68, 173, 0.08) 0px, transparent 50%);
+            z-index: -2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(10, 25, 47, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 顶部装饰线 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #20b2aa, #1e90ff);
+        }
+        
+        /* 局徽样式 */
+        .emblem {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .emblem-symbol {
+            display: inline-block;
+            width: 140px;
+            height: 140px;
+            position: relative;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(64, 224, 208, 0.3);
+            box-shadow: 
+                0 0 20px rgba(64, 224, 208, 0.3),
+                inset 0 0 20px rgba(10, 25, 47, 0.5);
+            animation: pulse 4s infinite alternate;
+            background-color: rgba(178, 217, 246, 0.956);
+        }
+        
+        .emblem-symbol img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        /* 添加光晕动画效果 */
+        @keyframes pulse {
+            0% {
+                box-shadow: 
+                    0 0 20px rgba(64, 224, 208, 0.3),
+                    inset 0 0 20px rgba(10, 25, 47, 0.5);
+            }
+            100% {
+                box-shadow: 
+                    0 0 30px rgba(64, 224, 208, 0.5),
+                    0 0 50px rgba(64, 224, 208, 0.2),
+                    inset 0 0 20px rgba(10, 25, 47, 0.5);
+            }
+        }
+        
+        /* 悬停效果 */
+        .emblem-symbol:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+        
+        /* 圆形边框特效 */
+        .emblem-symbol::after {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #40e0d0, #1e90ff, #40e0d0);
+            z-index: -1;
+            opacity: 0.5;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .emblem-text {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+        }
+        
+        .emblem-subtext {
+            color: #87ceeb;
+            font-size: 14px;
+            letter-spacing: 8px;
+        }
+        
+        /* 内容区域 */
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+            margin-top: 20px;
+        }
+        
+        .main-content {
+            padding-right: 20px;
+            border-right: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        /* 计算器区域 */
+        .calculator-section {
+            margin-bottom: 35px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            color: #40e0d0;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.3);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background-color: #1e90ff;
+        }
+        
+        .calculator-container {
+            background-color: rgba(20, 40, 70, 0.5);
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            margin-top: 20px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #b0c4de;
+            font-size: 16px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: rgba(10, 25, 47, 0.8);
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            border-radius: 6px;
+            color: #e0e7ff;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #40e0d0;
+            box-shadow: 0 0 10px rgba(64, 224, 208, 0.3);
+        }
+        
+        .unit-label {
+            color: #87ceeb;
+            font-size: 14px;
+            margin-top: 5px;
+            display: block;
+        }
+        
+        .calculator-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .calc-btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            text-align: center;
+        }
+        
+        .calc-btn-primary {
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+        }
+        
+        .calc-btn-primary:hover {
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            box-shadow: 0 0 15px rgba(64, 224, 208, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .calc-btn-secondary {
+            background: rgba(112, 128, 144, 0.3);
+            color: #b0c4de;
+            border: 1px solid rgba(112, 128, 144, 0.5);
+        }
+        
+        .calc-btn-secondary:hover {
+            background: rgba(112, 128, 144, 0.5);
+            border-color: #708090;
+        }
+        
+        .results-container {
+            margin-top: 30px;
+            background-color: rgba(10, 25, 47, 0.8);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid rgba(64, 224, 208, 0.1);
+        }
+        
+        .result-title {
+            color: #20b2aa;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .result-title::before {
+            content: "📊";
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.1);
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .result-label {
+            color: #b0c4de;
+        }
+        
+        .result-value {
+            color: #40e0d0;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .info-box {
+            background: rgba(20, 40, 70, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .info-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: rgba(64, 224, 208, 0.4);
+        }
+        
+        .info-title {
+            color: #20b2aa;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .info-title::before {
+            content: "✧";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .info-text {
+            color: #b0c4de;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+        
+        .highlight {
+            color: #40e0d0;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(64, 224, 208, 0.5);
+        }
+        
+        .highlight:hover {
+            color: #1e90ff;
+            text-shadow: 0 0 8px rgba(30, 144, 255, 0.5);
+            border-bottom-style: solid;
+        }
+        
+        .notice-box {
+            background: rgba(142, 68, 173, 0.1);
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+        }
+        
+        .notice-title {
+            color: #da70d6;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .notice-title::before {
+            content: "⚠";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+        
+        .notice-text {
+            line-height: 1.7;
+            color: #d8bfd8;
+            font-style: italic;
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #708090;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(112, 128, 144, 0.3);
+        }
+        
+        .footer a {
+            color: #87ceeb;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        /* 返回按钮样式 */
+        .back-button {
+            display: inline-block;
+            background: rgba(20, 40, 70, 0.7);
+            color: #87ceeb;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .back-button:hover {
+            background: rgba(64, 224, 208, 0.1);
+            border-color: #40e0d0;
+            transform: translateY(-3px);
+        }
+
+
+
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding-right: 0;
+                border-right: none;
+                border-bottom: 1px solid rgba(64, 224, 208, 0.2);
+                padding-bottom: 30px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .emblem-text {
+                font-size: 20px;
+            }
+            
+            .emblem-symbol {
+                width: 110px;
+                height: 110px;
+            }
+            
+            .section-title {
+                font-size: 20px;
+            }
+            
+            .calculator-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部标志区域 -->
+        <div class="emblem">
+            <div class="emblem-symbol">
+                <!-- 修改位置1：可以替换为您的标志图片 -->
+                <div style="width:100%; height:100%; background: linear-gradient(135deg, #1e90ff, #40e0d0); display:flex; align-items:center; justify-content:center; color:#0c1a2d; font-size:24px;">
+                    GPS
+                </div>
+            </div>
+            <div class="emblem-text">坐标偏移计算器</div>
+            <div class="emblem-subtext">COORDINATE CALCULATOR</div>
+        </div>
+        
+        <!-- 主要内容区域 -->
+        <div class="content">
+            <div class="main-content">
+                <!-- 计算器区域 -->
+                <div class="calculator-section">
+                    <h2 class="section-title">坐标偏移计算</h2>
+                    <div class="calculator-container">
+                        <div class="input-group">
+                            <label for="distance1">第一个距离 (单位：米)</label>
+                            <!-- 修改位置2：可以修改默认距离值 -->
+                            <input type="number" id="distance1" placeholder="请输入第一个距离" value="000">
+                            <span class="unit-label">不要弄错顺序哦~</span>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="distance2">第二个距离 (单位：米)</label>
+                            <!-- 修改位置3：可以修改默认距离值 -->
+                            <input type="number" id="distance2" placeholder="请输入第二个距离" value="000">
+                            <span class="unit-label">不要弄错顺序哦~</span>
+                        </div>
+                        
+                        <!-- 修改位置4：可以修改基准纬度 -->
+                        <div class="input-group">
+                            <label for="baseLatitude">基准纬度 (北纬，单位：度)</label>
+                            <input type="number" id="baseLatitude" placeholder="请输入基准纬度" value="30.0" step="0.0001">
+                            <span class="unit-label">用于计算经度偏移，建议使用默认基准纬度</span>
+                        </div>
+                        
+                        <div class="calculator-buttons">
+                            <button id="calculateBtn" class="calc-btn calc-btn-primary">计算偏移角度</button>
+                            <button id="resetBtn" class="calc-btn calc-btn-secondary">重置输入</button>
+                        </div>
+                        
+                        <!-- 结果区域 -->
+                        <div id="resultsContainer" class="results-container" style="display:none;">
+                            <h3 class="result-title">计算结果</h3>
+                            <div class="result-item">
+                                <span class="result-label">纬度偏移角度：</span>
+                                <span id="latOffset" class="result-value">0.0000°</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">经度偏移角度：</span>
+                                <span id="lngOffset" class="result-value">0.0000°</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">纬度偏移距离：</span>
+                                <span id="latDistance" class="result-value">0.0 m</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">经度偏移距离：</span>
+                                <span id="lngDistance" class="result-value">0.0 m</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <div class="info-box">
+                    <h3 class="info-title">计算原理</h3>
+                    <p class="info-text">本计算器根据输入的南北向和东西向距离，计算对应的经纬度偏移角度。</p>
+                    <p class="info-text">纬度偏移计算公式：<span class="highlight">纬度偏移角度 = 距离 / 111000</span></p>
+                    <p class="info-text">经度偏移计算公式：<span class="highlight">经度偏移角度 = 距离 / (111000 × cos(基准纬度))</span></p>
+                    <p class="info-text">其中，111000 米是地球表面上每度纬度的大致距离。</p>
+                </div>
+                
+                <div class="info-box">
+                    <h3 class="info-title">使用说明</h3>
+                    <p class="info-text">1. 在输入框中输入两个距离值（单位：米）</p>
+                    <p class="info-text">2. 输入基准纬度（用于准确计算经度偏移）</p>
+                    <p class="info-text">3. 点击"计算偏移角度"按钮获取结果</p>
+                    <p class="info-text">4. 结果将显示纬度偏移和经度偏移的角度值（建议保留3位小数）</p>
+                </div>
+                
+                <div class="notice-box">
+                    <h3 class="notice-title">注意事项</h3>
+                    <p class="notice-text">• 计算结果为近似值，实际应用中可能存在微小误差</p>
+                    <p class="notice-text">• 经度偏移计算受纬度影响，高纬度地区偏移更大</p>
+                    <p class="notice-text">• 适用于小范围坐标偏移计算（通常小于100公里）</p>
+                    <p class="notice-text">• 计算结果可用于地图标注、导航系统等应用</p>
+                </div>
+            </div>
+        </div>
+        <div style="display: grid; place-items: center; width: 100%;">
+    <a href="SY.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> 返回墟境调和局首页
+    </a>
+</div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>坐标偏移计算器 v1.0 | 仅供技术参考使用</p>
+            <p>计算结果基于地球近似球体模型，实际应用中请结合具体场景调整参数</p>
+        </div>
+    </div>
+
+    <script>
+        // DOM元素获取
+        const distance1Input = document.getElementById('distance1');
+        const distance2Input = document.getElementById('distance2');
+        const baseLatitudeInput = document.getElementById('baseLatitude');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const latOffsetElement = document.getElementById('latOffset');
+        const lngOffsetElement = document.getElementById('lngOffset');
+        const latDistanceElement = document.getElementById('latDistance');
+        const lngDistanceElement = document.getElementById('lngDistance');
+        
+        // 地球半径常数（米）
+        const EARTH_RADIUS = 6371000;
+        const DEGREE_TO_METERS = 111000; // 每度纬度的大致距离
+        
+        // 计算偏移角度
+        function calculateOffset() {
+            // 获取输入值
+            const distance1 = parseFloat(distance1Input.value);
+            const distance2 = parseFloat(distance2Input.value);
+            const baseLatitude = parseFloat(baseLatitudeInput.value);
+            
+            // 验证输入
+            if (isNaN(distance1) || isNaN(distance2) || isNaN(baseLatitude)) {
+                alert('请输入有效的数值！');
+                return;
+            }
+            
+            if (distance1 <= 0 || distance2 <= 0) {
+                alert('距离值必须大于0！');
+                return;
+            }
+            
+            if (Math.abs(baseLatitude) > 90) {
+                alert('纬度值必须在-90到90之间！');
+                return;
+            }
+            
+            // 修改位置5：可以调整计算精度
+            const precision = 6; // 小数点后保留位数
+            
+            // 计算纬度偏移角度（距离1作为南北距离）
+            const latOffset = distance1 / DEGREE_TO_METERS;
+            
+            // 计算经度偏移角度（距离2作为东西距离）
+            // 经度1度的距离随纬度变化：111000 * cos(纬度)
+            const lngDegreeDistance = DEGREE_TO_METERS * Math.cos(baseLatitude * Math.PI / 180);
+            const lngOffset = distance2 / lngDegreeDistance;
+            
+            // 显示结果
+            latOffsetElement.textContent = latOffset.toFixed(precision) + '°';
+            lngOffsetElement.textContent = lngOffset.toFixed(precision) + '°';
+            latDistanceElement.textContent = distance1.toFixed(1) + ' m';
+            lngDistanceElement.textContent = distance2.toFixed(1) + ' m';
+            
+            // 显示结果容器
+            resultsContainer.style.display = 'block';
+            
+            // 添加结果高亮效果
+            resultsContainer.style.animation = 'none';
+            setTimeout(() => {
+                resultsContainer.style.animation = 'pulse 2s';
+            }, 10);
+        }
+        
+        // 重置输入
+        function resetInputs() {
+            // 修改位置6：可以修改重置后的默认值
+            distance1Input.value = '700';
+            distance2Input.value = '800';
+            baseLatitudeInput.value = '30.0';
+            resultsContainer.style.display = 'none';
+        }
+        
+        // 事件监听
+        calculateBtn.addEventListener('click', calculateOffset);
+        resetBtn.addEventListener('click', resetInputs);
+        
+        // 按Enter键触发计算
+        distance1Input.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                calculateOffset();
+            }
+        });
+        
+        distance2Input.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                calculateOffset();
+            }
+        });
+        
+        baseLatitudeInput.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                calculateOffset();
+            }
+        });
+        
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 可以添加初始化代码
+            console.log('坐标偏移计算器已加载');
+        });
+    </script>
+<script src="pages.js"></script>
+</body>
+</html>

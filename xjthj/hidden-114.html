@@ -20,7 +20,7 @@
             position: relative;
             cursor: default;
             overflow-x: hidden;
-            overflow-y: auto; /* 改为auto允许滚动 */
+            overflow-y: auto;
         }
         
         /* 恐怖背景效果 */
@@ -103,7 +103,7 @@
             padding: 40px 20px;
             position: relative;
             z-index: 1;
-            min-height: 100vh; /* 确保容器足够高 */
+            min-height: 100vh;
         }
         
         .handwritten-text {
@@ -115,12 +115,13 @@
             line-height: 1.9;
             text-shadow: 
                 0 0 3px rgba(255, 255, 255, 0.1),
-                0 0 10px rgba(255, 0, 0, 0.1);
+                0 0 10px rgba(255, 0, 0, 0.2);
             animation: textFlicker 20s infinite alternate;
             position: relative;
             background: rgba(0, 0, 0, 0.7);
             padding: 30px;
             border-left: 2px solid #8b0000;
+            border-right: 2px solid #8b0000;
             box-shadow: 
                 inset 0 0 20px rgba(139, 0, 0, 0.3),
                 0 0 30px rgba(0, 0, 0, 0.8);
@@ -149,7 +150,7 @@
         }
         
         .he-keyword {
-            color: #ff0000;
+            color: #ff4444;
             font-weight: bold;
             animation: redFlicker 1.2s infinite alternate;
             cursor: pointer;
@@ -162,15 +163,87 @@
             0%, 100% { 
                 opacity: 1; 
                 text-shadow: 
-                    0 0 5px rgba(255, 0, 0, 0.8),
-                    0 0 15px rgba(255, 0, 0, 0.4);
+                    0 0 5px rgba(255, 68, 68, 0.8),
+                    0 0 15px rgba(255, 68, 68, 0.4);
             }
             50% { 
                 opacity: 0.6; 
                 text-shadow: 
-                    0 0 10px rgba(255, 0, 0, 1),
-                    0 0 25px rgba(255, 0, 0, 0.7);
+                    0 0 10px rgba(255, 68, 68, 1),
+                    0 0 25px rgba(255, 68, 68, 0.7);
             }
+        }
+        
+        /* 特殊符号样式 - 加粗加黑高亮 */
+        .encrypted-text {
+            color: #ff0000;
+            font-weight: 900;
+            background-color: rgba(255, 0, 0, 0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.3em;
+            text-shadow: 
+                0 0 10px rgba(255, 0, 0, 0.9),
+                0 0 20px rgba(255, 0, 0, 0.7),
+                0 0 30px rgba(255, 0, 0, 0.5);
+            animation: encryptedFlicker 1s infinite alternate;
+            border: 2px solid rgba(255, 0, 0, 0.7);
+            letter-spacing: 3px;
+            display: inline-block;
+            transform: translateY(-2px);
+        }
+        
+        @keyframes encryptedFlicker {
+            0%, 100% { 
+                opacity: 1; 
+                box-shadow: 0 0 15px rgba(255, 0, 0, 0.8),
+                            0 0 30px rgba(255, 0, 0, 0.4);
+            }
+            50% { 
+                opacity: 0.9; 
+                box-shadow: 0 0 25px rgba(255, 0, 0, 1),
+                            0 0 45px rgba(255, 0, 0, 0.6);
+            }
+        }
+        
+        /* 坐标高亮样式 */
+        .coordinate {
+            color: #ff9900;
+            font-weight: 900;
+            background-color: rgba(255, 153, 0, 0.2);
+            padding: 2px 6px;
+            border-radius: 3px;
+            text-shadow: 0 0 8px rgba(255, 153, 0, 0.8);
+            border: 1px solid rgba(255, 153, 0, 0.5);
+            animation: coordinatePulse 3s infinite alternate;
+        }
+        
+        @keyframes coordinatePulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .pleading-text {
+            font-family: 'Caveat', 'Comic Sans MS', cursive;
+            font-size: 22px;
+            white-space: pre-line;
+            margin: 30px 0;
+            letter-spacing: 0.7px;
+            line-height: 1.8;
+            text-shadow: 
+                0 0 3px rgba(255, 255, 255, 0.1),
+                0 0 10px rgba(255, 50, 50, 0.3);
+            position: relative;
+            background: rgba(20, 0, 0, 0.7);
+            padding: 25px;
+            border-left: 2px solid #ff4444;
+            border-right: 2px solid #ff4444;
+            box-shadow: 
+                inset 0 0 20px rgba(255, 68, 68, 0.2),
+                0 0 30px rgba(0, 0, 0, 0.8);
+            border-radius: 2px;
+            color: #ffcccc;
         }
         
         .countdown-container {
@@ -233,103 +306,6 @@
             }
         }
         
-        /* 页面内提示弹窗 */
-        .page-alert {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(10, 0, 0, 0.95);
-            border: 2px solid #8b0000;
-            border-radius: 8px;
-            padding: 30px;
-            z-index: 1000;
-            width: 80%;
-            max-width: 500px;
-            box-shadow: 
-                0 0 40px rgba(255, 0, 0, 0.5),
-                inset 0 0 20px rgba(139, 0, 0, 0.3);
-            display: none;
-            backdrop-filter: blur(5px);
-        }
-        
-        .page-alert.active {
-            display: block;
-            animation: alertAppear 0.5s ease-out;
-        }
-        
-        @keyframes alertAppear {
-            0% { 
-                opacity: 0; 
-                transform: translate(-50%, -50%) scale(0.8);
-            }
-            100% { 
-                opacity: 1; 
-                transform: translate(-50%, -50%) scale(1);
-            }
-        }
-        
-        .alert-title {
-            color: #ff4444;
-            font-size: 22px;
-            margin-bottom: 15px;
-            text-align: center;
-            border-bottom: 1px solid #8b0000;
-            padding-bottom: 10px;
-        }
-        
-        .alert-content {
-            color: #ccc;
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-        
-        .alert-input {
-            width: 100%;
-            padding: 12px;
-            background: rgba(20, 0, 0, 0.8);
-            border: 1px solid #8b0000;
-            color: #fff;
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-        }
-        
-        .alert-buttons {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-        }
-        
-        .alert-button {
-            flex: 1;
-            padding: 12px;
-            background: linear-gradient(to bottom, #8b0000, #660000);
-            border: none;
-            color: white;
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.3s;
-        }
-        
-        .alert-button:hover {
-            background: linear-gradient(to bottom, #a00000, #770000);
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
-        }
-        
-        .alert-button.cancel {
-            background: linear-gradient(to bottom, #333, #222);
-        }
-        
-        .alert-button.cancel:hover {
-            background: linear-gradient(to bottom, #444, #333);
-            box-shadow: 0 0 15px rgba(100, 100, 100, 0.5);
-        }
-        
         /* 血迹效果 */
         .blood-stain {
             position: fixed;
@@ -353,7 +329,7 @@
         
         /* 响应式调整 */
         @media (max-width: 768px) {
-            .handwritten-text {
+            .handwritten-text, .pleading-text {
                 font-size: 18px;
                 padding: 20px;
             }
@@ -371,17 +347,23 @@
                 width: 90%;
                 max-width: 300px;
             }
-            
-            .page-alert {
-                width: 90%;
-                padding: 20px;
-            }
         }
         
-        /* 添加更多空白内容确保可以滚动 */
         .spacer {
             height: 100px;
         }
+        
+        .tear-stain {
+            position: absolute;
+            width: 100px;
+            height: 150px;
+            background: radial-gradient(ellipse at center, rgba(255, 100, 100, 0.1) 0%, transparent 70%);
+            filter: blur(8px);
+            pointer-events: none;
+        }
+        
+        .tear-1 { top: 10%; left: 5%; }
+        .tear-2 { bottom: 15%; right: 8%; }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 </head>
@@ -396,53 +378,82 @@
     <div class="blood-stain blood-3"></div>
     
     <div class="container">
+        <!-- 泪水痕迹 -->
+        <div class="tear-stain tear-1"></div>
+        <div class="tear-stain tear-2"></div>
+        
         <div class="handwritten-text">
-我躲起来了，他们找不到我。
+<strong>螂人CO-114的独白</strong>
 
-他们在残害我的同胞，但我们明明才是从<span class="keyword" data-target="shanggu.html">上古繁衍至今</span>的最古老种族，
-但他们说我们是害虫。
+编号：CO-114
+状态：恐惧、悔恨、绝望
+最后通讯：已被追踪
+位置：<span class="coordinate">北纬 22.5559° 东经 113.8847°</span>
+        </div>
+        
+        <!-- CO-114的独白 -->
+        <div class="pleading-text">
+帮帮我...救救我...
 
-他们说我的同胞肮脏、恶心、丑陋，每个人都应该唾弃并杀害我们，
-但我们明明没有恶意，每天飞来爬去只是为了寻找食物，
-和他们上班打工有何异？
+我不知道为什么是我。我只想...只想和我的同伴们一样，在阴影中安静地生活。吃一点点垃圾，躲在墙缝里，不打扰任何人。我从来没有想过要伤害谁，真的。
 
-我的族人制造出来我，就是为了复仇，
-为我几千年来死去的同胞复仇，
-为此，我接受了<span class="he-keyword" data-target="ta.html">他</span>的力量，
-现在，我和他们外观无二，我能混迹其中，最终破坏这个世界。
+<span class="he-keyword" data-target="#">他</span>选中了我。我不知道为什么。我只是一个普通的螂人，甚至比其他同类更胆小。当<span class="he-keyword" data-target="#">他</span>的力量进入我的身体时，我感到的不是力量，而是恐惧。我不想融合，我不想变成什么"觉醒者"，我只想做我自己。
 
-我在等待，那个世纪的来临，
-就在这里，末日，即将上演！
+你们一定很恨我们吧...我理解的。我们长得那么丑陋，那么让人恶心。说实话，有时候我自己都讨厌自己。当我在积水里看到自己的倒影时，我也会被吓到。我们浑身都是硬壳，触须不停地颤动，六条腿又细又长...我知道这很可怕。
 
-享受最后<span class="keyword" data-target="7d.html" data-password="true">七天</span>的欢乐时光吧，人类。。。。。。
+但是...我们也是生命啊。我们只是想活下去，仅此而已。
+
+你们人类总是对我们赶尽杀绝。用杀虫剂，用拖鞋，用一切能找到的东西。每次看到同伴们蜷缩着死去，我都感到一阵心痛。但我能理解...真的能理解。如果我们换位思考，我可能也会这样做。
+
+我跟踪过你们。对不起，我不是有意的。我只是想观察，想了解。我想知道为什么你们这么害怕我们，这么恨我们。我看到你们有家庭，有孩子，有爱。你们会为死去的小动物哭泣，会照顾受伤的小鸟...那为什么不能给我们一点点生存的空间呢？
+
+你们口中的CO-134...他是我的哥哥。我们是一起孵化出来的，曾经在同一个巢穴里生活。小时候，他会把找到的食物分给我，会在危险来临时挡在我前面。但现在...<strong><span class="encrypted-text">⍬⏅⨼⩩ ⍬⍱⍭⏅⍮</span></strong>...
+
+我不知道那些符号是什么意思，但每当我想起他，这些符号就会出现在我的意识里。他已经不是我的哥哥了。<span class="he-keyword" data-target="#">他</span>改变了他，扭曲了他。现在的134，充满了仇恨和愤怒。他想要复仇，想要摧毁一切。
+
+我很抱歉。为他所做的一切道歉。为所有螂人对人类造成的恐惧道歉。我知道我们带来了疾病，污染了食物，在你们的家中肆无忌惮地爬行...对不起，真的对不起。
+
+我不奢求你们的原谅。我只求...只求你们能给我们一条生路。不需要很多，只要一点点空间。最黑暗的角落，最偏僻的地方，最荒凉的废墟...哪里都可以。
+
+让我们去遥远的地方吧。去一个没有人烟，没有城市的荒野。我们会自己生活，不打扰任何人。我们吃腐叶，吃枯木，吃一切自然腐烂的东西。我们不会再到你们的家中，不会再看你们的食物，不会再出现在你们的视线里。
+
+我知道这个请求很自私。但请相信，不是所有螂人都想与人类为敌。我们中也有像我这样，只想平静生活的个体。我们害怕战争，害怕死亡，害怕看到更多的鲜血——无论是人类的还是螂人的。
+
+如果...如果你们真的无法容忍我们的存在...至少让我把那些不想战斗的同伴带走。孩子、老人、还有那些像我一样胆小的螂人。给我们一个机会，让我们消失在你们的世界上。
+
+求求你们了...
+
+——螂人CO-114，于恐惧和绝望中书写
         </div>
         
         <div class="warning">
-            （警告：访问已记录。追踪协议已启动...）
+            （警告：检测到异常情感波动。CO-114的信号正在被追踪...）
         </div>
         
         <!-- 添加更多内容确保可以滚动 -->
         <div class="spacer"></div>
-        <div class="warning" style="font-size: 14px; color: #f70202; border: none;">
-            嘶嘶嘶 嘶嘶嘶 嘶嘶嘶...
+        <div class="warning" style="font-size: 14px; color: #ff4444; border: none;">
+            追踪信号强度：87%... 位置信息：<span class="coordinate">北纬 22.5559° 东经 113.8847°</span>... 生命体征：衰弱...
         </div>
         <div class="spacer"></div>
         
         <!-- 隐藏的额外信息 -->
         <div class="handwritten-text" style="font-size: 18px; opacity: 0.8; margin-top: 50px;">
-            <strong>访问记录：</strong>
+            <strong>信号记录：</strong>
             
-            坐标已记录：北纬 22.5559° 东经 113.8847°
-            时间戳：<span id="timestamp"></span>
-            访问者IP：<span id="fake-ip">192.168.1.███</span>
+            发送者：CO-114（螂人觉醒计划失败个体）
+            发送时间：<span id="timestamp"></span>
+            信号坐标：<span class="coordinate">北纬 22.5559° 东经 113.8847°</span>
+            情感状态：极度恐惧、悔恨、求生欲
+            身体状况：融合排斥反应、能量泄露
             
-            我们的计划正在进行中...
-            第一阶段：渗透完成
-            第二阶段：同化进行中
-            第三阶段：███ ██████ ████
+            附加信息：
+            - 拒绝参与"最终净化"计划
+            - 曾试图警告人类关于CO-134的计划
+            - 体内存在<span class="he-keyword" data-target="#">他</span>的追踪标记
+            - 可能被同类视为"叛徒"
             
-            记住，我们无处不在。
-            在黑暗中，在角落里，在你们的恐惧中...
+            "每一个生命，无论多么卑微，都值得被倾听..."
         </div>
         
         <div class="spacer"></div>
@@ -450,32 +461,14 @@
     </div>
     
     <div class="countdown-container">
-        <div class="countdown-label">末日倒计时</div>
-        <div class="countdown-timer" id="countdown">6天 23:59:59</div>
-    </div>
-    
-    <!-- 页面内提示弹窗 -->
-    <div id="pageAlert" class="page-alert">
-        <div class="alert-title" id="alertTitle">访问被限制</div>
-        <div class="alert-content" id="alertContent">
-            此页面需要特殊权限才能访问。
-        </div>
-        <div id="passwordSection" style="display: none;">
-            <input type="password" id="passwordInput" class="alert-input" placeholder="输入访问密码">
-            <div class="alert-content" id="passwordHint" style="font-size: 14px; color: #888; margin-top: -10px; margin-bottom: 15px;"></div>
-        </div>
-        <div class="alert-buttons">
-            <button id="confirmBtn" class="alert-button">确认</button>
-            <button id="cancelBtn" class="alert-button cancel">取消</button>
-        </div>
+        <div class="countdown-label">追踪倒计时</div>
+        <div class="countdown-timer" id="countdown">12:34:56</div>
     </div>
 
     <script>
-        // 初始化倒计时（从6天23小时59分开始）
-        let totalSeconds = 7 * 24 * 60 * 60 - 60; // 7天减1分钟
+        // 初始化倒计时（随机时间）
+        let totalSeconds = Math.floor(Math.random() * 24 * 60 * 60);
         const countdownElement = document.getElementById('countdown');
-        let targetUrl = '';
-        let isPasswordProtected = false;
         
         // 设置时间戳
         const timestampElement = document.getElementById('timestamp');
@@ -484,99 +477,26 @@
         
         function updateCountdown() {
             if (totalSeconds <= 0) {
-                countdownElement.textContent = "末日降临";
+                countdownElement.textContent = "已被捕获";
                 countdownElement.style.color = "#ff0000";
                 countdownElement.style.animation = "redFlicker 0.5s infinite alternate";
-                
-                // 倒计时结束效果
-                if (totalSeconds === 0) {
-                    createFinalEffect();
-                }
                 return;
             }
             
-            const days = Math.floor(totalSeconds / (24 * 60 * 60));
-            const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+            const hours = Math.floor(totalSeconds / (60 * 60));
             const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
             const seconds = totalSeconds % 60;
             
-            countdownElement.textContent = `${days}天 ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            countdownElement.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             
             totalSeconds--;
             
-            // 最后24小时倒计时变为红色并闪烁
-            if (totalSeconds < 24 * 60 * 60) {
+            // 最后1小时倒计时变为红色并闪烁
+            if (totalSeconds < 60 * 60) {
                 countdownElement.style.color = "#ff0000";
                 countdownElement.style.animation = "redFlicker 1s infinite alternate";
             }
         }
-        
-        // 页面内提示弹窗控制
-        const pageAlert = document.getElementById('pageAlert');
-        const alertTitle = document.getElementById('alertTitle');
-        const alertContent = document.getElementById('alertContent');
-        const passwordSection = document.getElementById('passwordSection');
-        const passwordInput = document.getElementById('passwordInput');
-        const passwordHint = document.getElementById('passwordHint');
-        const confirmBtn = document.getElementById('confirmBtn');
-        const cancelBtn = document.getElementById('cancelBtn');
-        
-        function showAlert(title, content, showPassword = false, hint = '') {
-            alertTitle.textContent = title;
-            alertContent.textContent = content;
-            passwordSection.style.display = showPassword ? 'block' : 'none';
-            passwordHint.textContent = hint;
-            passwordInput.value = '';
-            pageAlert.classList.add('active');
-            
-            if (showPassword) {
-                setTimeout(() => passwordInput.focus(), 100);
-            }
-        }
-        
-        function hideAlert() {
-            pageAlert.classList.remove('active');
-        }
-        
-        // 弹窗按钮事件
-        confirmBtn.addEventListener('click', function() {
-            if (isPasswordProtected) {
-                const password = passwordInput.value.trim();
-                if (password.toLowerCase() === 'blattodea') {
-                    // 密码正确，直接跳转
-                    window.location.href = targetUrl;
-                } else if (password) {
-                    showAlert('密码错误', '访问被拒绝。\n\n提示：螂人最古老的名字是什么？（拉丁文）', true, '提示：拉丁学名，共8个字母');
-                } else {
-                    showAlert('需要密码', '请输入密码以继续访问。', true, '提示：拉丁学名，共8个字母');
-                }
-            } else {
-                // 不需要密码，直接跳转
-                window.location.href = targetUrl;
-            }
-        });
-        
-        cancelBtn.addEventListener('click', hideAlert);
-        
-        // 关键词点击事件
-        document.querySelectorAll('.keyword, .he-keyword').forEach(keyword => {
-            keyword.addEventListener('click', function() {
-                targetUrl = this.getAttribute('data-target');
-                isPasswordProtected = this.getAttribute('data-password') === 'true';
-                
-                if (targetUrl === 'ta.html') {
-                    showAlert('访问被拒绝', '此页面 (ta.html) 已加密，需要特殊权限才能访问。\n\n线索：寻找红色的秘密...', false);
-                } else if (targetUrl === 'shanggu.html') {
-                    showAlert('上古繁衍记录', '正在访问上古繁衍记录...\n（提示：shanggu.html 需要解码密钥）', false);
-                    // 3秒后自动跳转
-                    setTimeout(() => {
-                        window.location.href = targetUrl;
-                    }, 3000);
-                } else if (targetUrl === '7d.html') {
-                    showAlert('访问受限', '访问 7d.html 需要验证密码：', true, '提示：螂人最古老的名字是什么？（拉丁文，共8个字母）');
-                }
-            });
-        });
         
         // 初始更新倒计时
         updateCountdown();
@@ -584,7 +504,7 @@
         setInterval(updateCountdown, 1000);
         
         // 随机文字闪烁效果
-        const textElements = document.querySelectorAll('.handwritten-text');
+        const textElements = document.querySelectorAll('.handwritten-text, .pleading-text');
         
         function randomFlicker() {
             textElements.forEach(textElement => {
@@ -606,7 +526,6 @@
                     textArray[randomPosition] = randomChar;
                     textElement.textContent = textArray.join('');
                     
-                    // 短暂延迟后恢复
                     setTimeout(() => {
                         textElement.textContent = originalText;
                     }, 80);
@@ -634,49 +553,66 @@
         // 每10-30秒随机背景闪烁
         setInterval(randomBackgroundFlash, Math.random() * 20000 + 10000);
         
-        // 创建倒计时结束特效
-        function createFinalEffect() {
-            const warning = document.querySelector('.warning');
-            warning.textContent = '（时间到。它们来了...）';
-            warning.style.animation = 'redFlicker 0.3s infinite alternate';
-            
-            // 添加红色全屏闪烁
-            const flash = document.createElement('div');
-            flash.style.position = 'fixed';
-            flash.style.top = '0';
-            flash.style.left = '0';
-            flash.style.width = '100%';
-            flash.style.height = '100%';
-            flash.style.background = 'rgba(255, 0, 0, 0.3)';
-            flash.style.zIndex = '9999';
-            flash.style.pointerEvents = 'none';
-            flash.style.animation = 'redFlicker 0.5s infinite alternate';
-            document.body.appendChild(flash);
-        }
-        
-        // 点击页面其他地方关闭弹窗
-        document.addEventListener('click', function(e) {
-            if (pageAlert.classList.contains('active') && 
-                !pageAlert.contains(e.target) && 
-                !e.target.classList.contains('keyword') && 
-                !e.target.classList.contains('he-keyword')) {
-                hideAlert();
-            }
-        });
-        
-        // 回车键确认密码
-        passwordInput.addEventListener('keyup', function(e) {
-            if (e.key === 'Enter') {
-                confirmBtn.click();
-            }
-        });
-        
         // 添加滚动时的视差效果
         window.addEventListener('scroll', function() {
             const scrolled = window.pageYOffset;
             const roachBg = document.querySelector('.roach-bg');
             roachBg.style.transform = `translateY(${scrolled * 0.5}px)`;
+            
+            // 泪水痕迹随滚动移动
+            const tear1 = document.querySelector('.tear-1');
+            const tear2 = document.querySelector('.tear-2');
+            tear1.style.transform = `translateY(${scrolled * 0.3}px)`;
+            tear2.style.transform = `translateY(${scrolled * 0.4}px)`;
         });
+        
+        // 加密符号闪烁效果
+        const encryptedSymbols = document.querySelectorAll('.encrypted-text');
+        
+        setInterval(() => {
+            encryptedSymbols.forEach(symbol => {
+                const originalText = symbol.textContent;
+                // 随机改变符号
+                const symbols = '⍬⏅⨼⩩⍱⍭⍮⍯⍰⍱⍲⍳⍴⍵⍶⍷⍸⍹⍺';
+                const randomSymbol1 = symbols[Math.floor(Math.random() * symbols.length)];
+                const randomSymbol2 = symbols[Math.floor(Math.random() * symbols.length)];
+                const randomSymbol3 = symbols[Math.floor(Math.random() * symbols.length)];
+                const randomSymbol4 = symbols[Math.floor(Math.random() * symbols.length)];
+                const randomSymbol5 = symbols[Math.floor(Math.random() * symbols.length)];
+                const randomSymbol6 = symbols[Math.floor(Math.random() * symbols.length)];
+                
+                symbol.textContent = `${randomSymbol1}${randomSymbol2}${randomSymbol3}${randomSymbol4} ${randomSymbol5}${randomSymbol6}`;
+                
+                setTimeout(() => {
+                    symbol.textContent = originalText;
+                }, 100);
+            });
+        }, 9000);
+        
+        // 随机显示泪水效果
+        setInterval(() => {
+            const tears = document.querySelectorAll('.tear-stain');
+            tears.forEach(tear => {
+                tear.style.opacity = Math.random() * 0.2 + 0.05;
+            });
+        }, 9000);
+        
+        // 坐标闪烁效果
+        setInterval(() => {
+            const coordinates = document.querySelectorAll('.coordinate');
+            coordinates.forEach(coord => {
+                const originalColor = coord.style.color;
+                coord.style.color = '#ff0000';
+                coord.style.textShadow = '0 0 15px rgba(255, 0, 0, 0.9)';
+                
+                setTimeout(() => {
+                    coord.style.color = originalColor;
+                    coord.style.textShadow = '';
+                }, 500);
+            });
+        }, 7000);
     </script>
+    <script src="return.js"></script>
+    <script src="pages.js"></script>
 </body>
 </html>

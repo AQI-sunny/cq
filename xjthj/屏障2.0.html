@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>屏障运行细则 - 墟境调和局</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
+            color: #e0e7ff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 背景特效 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(41, 128, 185, 0.1) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(142, 68, 173, 0.08) 0px, transparent 50%);
+            z-index: -2;
+        }
+        
+        /* 弹窗样式 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: rgba(10, 25, 47, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            border: 2px solid rgba(220, 20, 60, 0.5);
+            box-shadow: 0 0 40px rgba(220, 20, 60, 0.3);
+        }
+        
+        /* 权限弹窗样式 */
+        .permission-modal .modal-content {
+            border: 2px solid rgba(255, 165, 0, 0.5);
+            box-shadow: 0 0 40px rgba(255, 165, 0, 0.3);
+        }
+        
+        .permission-modal .modal-title {
+            color: #ffa500;
+        }
+        
+        .modal-title {
+            color: #dc143c;
+            font-size: 22px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .modal-text {
+            color: #e0e7ff;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .modal-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+        
+        .modal-confirm {
+            background: linear-gradient(90deg, #dc143c, #ff4d6d);
+            color: white;
+        }
+        
+        .modal-ok {
+            background: linear-gradient(90deg, #ffa500, #ff8c00);
+            color: white;
+        }
+        
+        .modal-cancel {
+            background: rgba(64, 224, 208, 0.2);
+            color: #40e0d0;
+            border: 1px solid #40e0d0;
+        }
+        
+        .modal-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 权限信息样式 */
+        .permission-info {
+            background: rgba(255, 165, 0, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #ffa500;
+        }
+        
+        .permission-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .permission-label {
+            color: #ffa500;
+        }
+        
+        .permission-value {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(10, 25, 47, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 顶部装饰线 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #40e0d0, #20b2aa, #1e90ff);
+        }
+        
+        /* 局徽样式 */
+        .emblem {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .emblem-symbol {
+            display: inline-block;
+            width: 140px;
+            height: 140px;
+            position: relative;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(64, 224, 208, 0.3);
+            box-shadow: 
+                0 0 20px rgba(64, 224, 208, 0.3),
+                inset 0 0 20px rgba(10, 25, 47, 0.5);
+            animation: pulse 4s infinite alternate;
+            background-color: rgba(178, 217, 246, 0.956);
+        }
+        
+        .emblem-symbol .logo-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('xjthj.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        
+        .emblem-symbol::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 2px rgba(64, 224, 208, 0.2);
+            z-index: 2;
+        }
+        
+        .emblem-symbol::after {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #40e0d0, #1e90ff, #40e0d0);
+            z-index: -1;
+            opacity: 0.5;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes pulse {
+            0% { 
+                box-shadow: 
+                    0 0 20px rgba(64, 224, 208, 0.3),
+                    inset 0 0 20px rgba(10, 25, 47, 0.5);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 30px rgba(64, 224, 208, 0.5),
+                    inset 0 0 20px rgba(10, 25, 47, 0.7);
+            }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .emblem-text {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+        }
+        
+        .emblem-subtext {
+            color: #87ceeb;
+            font-size: 14px;
+            letter-spacing: 8px;
+        }
+        
+        /* 内容区域 */
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+            margin-top: 20px;
+        }
+        
+        .main-content {
+            padding-right: 20px;
+            border-right: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        /* 部门简介 */
+        .section {
+            margin-bottom: 35px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            color: #40e0d0;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.3);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background-color: #1e90ff;
+        }
+        
+        .intro-text {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #b0c4de;
+        }
+        
+        .duties {
+            list-style-type: none;
+            margin-left: 20px;
+        }
+        
+        .duties li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.6;
+        }
+        
+        .duties li::before {
+            content: "◆";
+            position: absolute;
+            left: 0;
+            color: #1e90ff;
+            font-size: 14px;
+        }
+        
+        /* 关键词样式 - 已移除高亮和链接效果 */
+        .keyword {
+            color: #b0c4de;
+            font-weight: normal;
+            cursor: default;
+            text-decoration: none;
+            border-bottom: none;
+        }
+        
+        /* 特定关键词保持可点击样式 */
+        .keyword-clickable {
+            color: #40e0d0;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(64, 224, 208, 0.5);
+        }
+        
+        .keyword-clickable:hover {
+            color: #1e90ff;
+            text-shadow: 0 0 8px rgba(30, 144, 255, 0.5);
+            border-bottom-style: solid;
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .service-box {
+            background: rgba(20, 40, 70, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .service-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: rgba(64, 224, 208, 0.4);
+        }
+        
+        .service-title {
+            color: #20b2aa;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .service-title::before {
+            content: "✧";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .service-link {
+            display: inline-block;
+            background: linear-gradient(90deg, #1e90ff, #40e0d0);
+            color: #0c1a2d;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(30, 144, 255, 0.3);
+        }
+        
+        .service-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(30, 144, 255, 0.5);
+        }
+        
+        .notice-box {
+            background: rgba(142, 68, 173, 0.1);
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+        }
+        
+        .notice-title {
+            color: #da70d6;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .notice-title::before {
+            content: "⚠";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+        
+        .notice-text {
+            line-height: 1.7;
+            color: #d8bfd8;
+            font-style: italic;
+        }
+        
+        /* 公告栏 */
+        .bulletin-board {
+            background: rgba(30, 60, 90, 0.6);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+        }
+        
+        .bulletin-title {
+            color: #87ceeb;
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .bulletin-title::before {
+            content: "📋";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+        
+        .bulletin-list {
+            list-style-type: none;
+        }
+        
+        .bulletin-item {
+            padding: 15px;
+            border-bottom: 1px solid rgba(135, 206, 235, 0.2);
+            transition: background-color 0.3s;
+        }
+        
+        .bulletin-item:hover {
+            background-color: rgba(64, 224, 208, 0.1);
+        }
+        
+        .bulletin-item:last-child {
+            border-bottom: none;
+        }
+        
+        .bulletin-date {
+            color: #20b2aa;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .bulletin-content {
+            color: #b0c4de;
+            line-height: 1.5;
+        }
+        
+        .bulletin-link {
+            color: #87ceeb;
+            cursor: pointer;
+            transition: color 0.3s;
+            border-bottom: 1px dotted #87ceeb;
+        }
+        
+        .bulletin-link:hover {
+            color: #40e0d0;
+            border-bottom-style: solid;
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #708090;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(112, 128, 144, 0.3);
+        }
+        
+        .footer a {
+            color: #87ceeb;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 技术文档特定样式 */
+        .tech-spec {
+            background: rgba(15, 35, 60, 0.6);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #40e0d0;
+        }
+        
+        .tech-spec-title {
+            color: #40e0d0;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .accuracy-box {
+            background: rgba(220, 20, 60, 0.1);
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .accuracy-highlight {
+            color: #ff4d6d;
+            font-weight: bold;
+        }
+        
+        .parameter-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .parameter-table th {
+            background-color: rgba(30, 144, 255, 0.2);
+            color: #87ceeb;
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 2px solid rgba(64, 224, 208, 0.3);
+        }
+        
+        .parameter-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(135, 206, 235, 0.2);
+        }
+        
+        .parameter-table tr:hover {
+            background-color: rgba(64, 224, 208, 0.1);
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-active {
+            background-color: #32cd32;
+            box-shadow: 0 0 8px #32cd32;
+        }
+        
+        .status-warning {
+            background-color: #ffa500;
+            box-shadow: 0 0 8px #ffa500;
+        }
+        
+        /* 威胁等级指示器 */
+        .threat-level {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .threat-level-1 {
+            background-color: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            border: 1px solid #ffd700;
+        }
+        
+        .threat-level-2 {
+            background-color: rgba(255, 165, 0, 0.2);
+            color: #ffa500;
+            border: 1px solid #ffa500;
+        }
+        
+        .threat-level-3 {
+            background-color: rgba(255, 69, 0, 0.2);
+            color: #ff4500;
+            border: 1px solid #ff4500;
+        }
+        
+        .threat-level-4 {
+            background-color: rgba(220, 20, 60, 0.2);
+            color: #dc143c;
+            border: 1px solid #dc143c;
+        }
+        
+        /* 驱逐流程图示容器 */
+        .evacuation-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(20, 40, 70, 0.5);
+            border-radius: 10px;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+        }
+        
+        .flow-step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+        
+        .flow-step:not(:last-child)::after {
+            content: "→";
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #40e0d0;
+            font-size: 20px;
+        }
+        
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(64, 224, 208, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            border: 2px solid #40e0d0;
+        }
+        
+        .step-text {
+            font-size: 14px;
+            color: #b0c4de;
+        }
+        
+        /* 快速操作按钮组 */
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        /* 系统状态显示 */
+        .system-status {
+            margin-bottom: 15px;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(64, 224, 208, 0.1);
+        }
+        
+        .status-label {
+            color: #b0c4de;
+            font-size: 14px;
+        }
+        
+        .status-value {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .status-value.active {
+            color: #32cd32;
+        }
+        
+        .status-value.warning {
+            color: #ffa500;
+        }
+        
+        /* 进度条 */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #40e0d0, #1e90ff);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        /* 威胁类型列表 */
+        .threat-types {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .threat-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            transition: background-color 0.3s;
+        }
+        
+        .threat-item:hover {
+            background: rgba(64, 224, 208, 0.1);
+        }
+        
+        .threat-icon {
+            font-size: 18px;
+            margin-right: 10px;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .threat-name {
+            flex: 1;
+            color: #e0e7ff;
+            font-size: 14px;
+        }
+        
+        .threat-link {
+            color: #87ceeb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .threat-link:hover {
+            color: #40e0d0;
+            text-decoration: underline;
+        }
+        
+        .threat-count {
+            color: #ffa500;
+            font-size: 13px;
+            font-weight: bold;
+            background: rgba(255, 165, 0, 0.1);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        
+        /* 技术支持链接 */
+        .notice-box a {
+            color: #87ceeb;
+            text-decoration: none;
+            border-bottom: 1px dotted #87ceeb;
+            transition: all 0.3s;
+        }
+        
+        .notice-box a:hover {
+            color: #40e0d0;
+            border-bottom-style: solid;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding-right: 0;
+                border-right: none;
+                border-bottom: 1px solid rgba(64, 224, 208, 0.2);
+                padding-bottom: 30px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .emblem-text {
+                font-size: 20px;
+            }
+            
+            .emblem-symbol {
+                width: 110px;
+                height: 110px;
+            }
+            
+            .section-title {
+                font-size: 20px;
+            }
+            
+            .parameter-table {
+                font-size: 14px;
+            }
+            
+            .parameter-table th,
+            .parameter-table td {
+                padding: 8px 10px;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .modal-btn {
+                width: 100%;
+            }
+        }
+    </style>
+    <link rel="icon" type="image/png" href="./xjthj.png">
+    <link rel="stylesheet" href="sc-css.css">
+    
+</head>
+<body>
+    <!-- 螂人警告弹窗 -->
+    <div id="warningModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="modal-title">警告：潜在不适内容</h3>
+            <p class="modal-text">即将跳转到螂人概念图，可能引起观感不适，请确认是否跳转</p>
+            <div class="modal-buttons">
+                <button id="confirmJump" class="modal-btn modal-confirm">确认跳转</button>
+                <button id="cancelJump" class="modal-btn modal-cancel">取消</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 权限不足弹窗 -->
+    <div id="permissionModal" class="modal-overlay permission-modal">
+        <div class="modal-content">
+            <h3 class="modal-title">⚠ 权限不足</h3>
+            <p class="modal-text">您当前暂无权限启动自动驱逐协议</p>
+            
+            <div class="permission-info">
+                <div class="permission-detail">
+                    <span class="permission-label">所需权限等级：</span>
+                    <span class="permission-value">L5指挥官</span>
+                </div>
+                <div class="permission-detail">
+                    <span class="permission-label">当前用户等级：</span>
+                    <span class="permission-value">L3操作员</span>
+                </div>
+                <div class="permission-detail">
+                    <span class="permission-label">权限验证状态：</span>
+                    <span class="permission-value">未通过</span>
+                </div>
+            </div>
+            
+            <p class="modal-text" style="font-size: 14px; color: #ffa500;">
+                如需启动该协议，请联系上级指挥官或申请权限提升
+            </p>
+            
+            <div class="modal-buttons">
+                <button id="okPermission" class="modal-btn modal-ok">确认</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- 局徽区域 -->
+        <div class="emblem">
+            <div class="emblem-symbol">
+                <div class="logo-img"></div>
+            </div>
+            <div class="emblem-text">墟境调和局</div>
+            <div class="emblem-subtext">XUJING TIAOHEJU</div>
+        </div>
+        
+        <div class="content">
+            <!-- 主内容区域 -->
+            <div class="main-content">
+                <!-- 屏障工作原理部分 -->
+                <div class="section">
+                    <h2 class="section-title">屏障工作原理</h2>
+                    <p class="intro-text">
+                        "栖界无尘"屏障，又称异常生物防控屏障（Anomalous Biocontainment Barrier，简称AB屏障）是一套基于量子生物识别与意图分析的多维智能防御系统。系统采用四层防护架构，不仅能识别异常生物实体，还能检测并驱逐<strong>恶意意图携带者</strong>。
+                    </p>
+                    
+                    <div class="tech-spec">
+                        <h3 class="tech-spec-title">四层防护架构</h3>
+                        <ul class="duties">
+                            <li><strong>第一层：物理检测</strong> - 扫描生物特征、能量波动及存在性频率</li>
+                            <li><strong>第二层：意图分析</strong> - 通过神经波动读取技术检测潜在威胁意图</li>
+                            <li><strong>第三层：行为预测</strong> - 基于历史数据预测实体未来行为模式</li>
+                            <li><strong>第四层：多维封锁</strong> - 激活空间扭曲场实现物理与能量双重隔离</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tech-spec">
+                        <h3 class="tech-spec-title">恶意意图检测机制</h3>
+                        <p class="intro-text" style="margin-bottom: 15px;">
+                            系统采用先进的<span class="keyword">神经波动扫描技术</span>，能够非侵入式检测以下恶意意图指标：
+                        </p>
+                        <ul class="duties">
+                            <li><span class="accuracy-highlight">攻击性思维模式</span>：检测肾上腺素水平、神经兴奋模式及战斗反应倾向</li>
+                            <li><span class="accuracy-highlight">欺骗性意图</span>：分析微表情、心率变异性和神经语言编程模式</li>
+                            <li><span class="accuracy-highlight">隐蔽威胁</span>：识别伪装行为、能量抑制企图及空间异常携带物</li>
+                            <li><span class="accuracy-highlight">群体性威胁</span>：监控协同攻击意图及通讯加密行为</li>
+                        </ul>
+                        
+                        <div class="accuracy-box" style="margin-top: 15px;">
+                            <p class="intro-text">
+                                <span class="accuracy-highlight">检测精度：</span>恶意意图识别准确率高达97.3%，误报率控制在2.1%以内。对于训练有素的<span class="keyword-clickable" data-type="langren">螂人</span>，识别率降至89.5%。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-spec">
+                        <h3 class="tech-spec-title">多维驱逐机制</h3>
+                        <p class="intro-text" style="margin-bottom: 15px;">
+                            当检测到恶意意图或确认异常生物威胁时，系统将启动渐进式驱逐协议：
+                        </p>
+                        
+                        <table class="parameter-table">
+                            <thead>
+                                <tr>
+                                    <th>威胁等级</th>
+                                    <th>驱逐措施</th>
+                                    <th>响应时间</th>
+                                    <th>作用范围</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Ⅰ级（潜在威胁）</td>
+                                    <td>意识警告 + 能量场轻微排斥</td>
+                                    <td>&lt; 0.1秒</td>
+                                    <td>目标个体</td>
+                                </tr>
+                                <tr>
+                                    <td>Ⅱ级（确认威胁）</td>
+                                    <td>神经抑制 + 局部空间扭曲</td>
+                                    <td>&lt; 0.05秒</td>
+                                    <td>半径3米</td>
+                                </tr>
+                                <tr>
+                                    <td>Ⅲ级（高威胁）</td>
+                                    <td>能量束缚 + 强制位移</td>
+                                    <td>&lt; 0.03秒</td>
+                                    <td>半径10米</td>
+                                </tr>
+                                <tr>
+                                    <td>Ⅳ级（紧急威胁）</td>
+                                    <td>维度隔离 + 记忆擦除（需授权）</td>
+                                    <td>&lt; 0.01秒</td>
+                                    <td>指定区域</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- 驱逐执行流程 -->
+                        <h4 style="color: #40e0d0; margin: 20px 0 15px;">驱逐执行流程</h4>
+                        <div class="evacuation-flow">
+                            <div class="flow-step">
+                                <div class="step-icon">1</div>
+                                <div class="step-text">威胁检测</div>
+                            </div>
+                            <div class="flow-step">
+                                <div class="step-icon">2</div>
+                                <div class="step-text">意图分析</div>
+                            </div>
+                            <div class="flow-step">
+                                <div class="step-icon">3</div>
+                                <div class="step-text">等级判定</div>
+                            </div>
+                            <div class="flow-step">
+                                <div class="step-icon">4</div>
+                                <div class="step-text">驱逐执行</div>
+                            </div>
+                            <div class="flow-step">
+                                <div class="step-icon">5</div>
+                                <div class="step-text">结果记录</div>
+                            </div>
+                        </div>
+                        
+                        <div class="notice-box" style="margin-top: 15px;">
+                            <p class="notice-text">
+                                <strong>驱逐协议说明：</strong>Ⅲ级及以上驱逐将触发<span class="keyword-clickable" data-type="quzhu">自动驱逐</span>协议，目标将被强制转移至隔离区。Ⅳ级驱逐需至少两名L5以上指挥官授权。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-spec">
+                        <h3 class="tech-spec-title">智能学习与适应性</h3>
+                        <ul class="duties">
+                            <li><strong>实时学习：</strong>系统每毫秒分析新威胁模式，更新识别算法</li>
+                            <li><strong>协同防御：</strong>多个屏障单元可共享威胁数据，形成区域防御网络</li>
+                            <li><strong>伪装识别：</strong>能识别高级<span class="keyword-clickable" data-type="brht">半融合态</span>实体的伪装，漏判率低于0.3%</li>
+                            <li><strong>反击防护：</strong>具备反干扰、反探测及反破解多重保护机制</li>
+                        </ul>
+                    </div>
+                    
+                    <p class="intro-text">
+                        屏障系统已连续运行1,247天，成功拦截异常生物入侵2,843次，驱逐恶意意图者17,592人次，系统可用性达到99.99%。当前版本（v3.7.1）针对<span class="keyword-clickable" data-type="langren">螂人</span>变体的识别率优化至99.7%，<span class="keyword-clickable" data-type="brht">半融合态</span>漏判概率控制在0.3%以内。
+                    </p>
+                </div>
+                
+                <!-- 识别逻辑部分 -->
+                <div class="section">
+                    <h2 class="section-title">识别逻辑</h2>
+                    <p class="intro-text">
+                        屏障系统采用分层识别策略，结合生物特征、行为模式及能量特征进行综合判断。
+                    </p>
+                    
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>检测层级</th>
+                                <th>检测项目</th>
+                                <th>权重</th>
+                                <th>当前状态</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>初级扫描</td>
+                                <td>基础生物特征</td>
+                                <td>30%</td>
+                                <td><span class="status-indicator status-active"></span>运行中</td>
+                            </tr>
+                            <tr>
+                                <td>中级分析</td>
+                                <td>DNA异常序列检测</td>
+                                <td>40%</td>
+                                <td><span class="status-indicator status-active"></span>运行中</td>
+                            </tr>
+                            <tr>
+                                <td>高级识别</td>
+                                <td>能量波动模式分析</td>
+                                <td>20%</td>
+                                <td><span class="status-indicator status-active"></span>运行中</td>
+                            </tr>
+                            <tr>
+                                <td>最终判定</td>
+                                <td>综合威胁评估</td>
+                                <td>10%</td>
+                                <td><span class="status-indicator status-warning"></span>需人工复核</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="accuracy-box">
+                        <p class="intro-text">
+                            <span class="accuracy-highlight">重要提示：</span>屏障系统对标准<span class="keyword-clickable" data-type="langren">螂人</span>变体识别率达到99.7%，但对<span class="keyword-clickable" data-type="brht">半融合态</span>实体存在<strong>0.3%的漏判概率</strong>。此类情况需启动二级人工核查程序。
+                        </p>
+                    </div>
+                    
+                    <p class="intro-text">
+                        识别逻辑基于机器学习算法持续优化，系统每迭代周期更新一次威胁数据库。当前版本已收录2,847种异常生物特征，识别准确率相比上一迭代周期提升0.8%。
+                    </p>
+                </div>
+                
+                <!-- 豁免条件部分 -->
+                <div class="section">
+                    <h2 class="section-title">豁免条件</h2>
+                    <p class="intro-text">
+                        在特定条件下，部分实体可获得屏障系统豁免权。所有豁免申请需经三级审批程序。
+                    </p>
+                    
+                    <div class="tech-spec">
+                        <h3 class="tech-spec-title">自动豁免条件</h3>
+                        <ul class="duties">
+                            <li>持有有效防控局认证的生物相容性证明</li>
+                            <li>能量波动低于阈值（< 0.5μSv/h）</li>
+                            <li>已完成<span class="keyword-clickable" data-type="langren">螂人</span>逆转治疗并通过6个月观察期</li>
+                            <li>佩戴经批准的抑制装置（型号ABD-7及以上）</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tech-spec">
+                        <h3 class="tech-spec-title">临时豁免条件</h3>
+                        <ul class="duties">
+                            <li>研究用途（需持研究许可证）</li>
+                            <li>医疗紧急情况（需现场指挥官批准）</li>
+                            <li>外交豁免（仅限签署《异常生物互访协议》的实体）</li>
+                            <li>系统维护期间的人工覆盖（最高权限要求）</li>
+                        </ul>
+                    </div>
+                    
+                    <p class="intro-text">
+                        所有豁免实体仍需接受定期复查，复查周期不超过30天。若发现豁免滥用，将立即触发<span class="keyword-clickable" data-type="quzhu">自动驱逐</span>协议。
+                    </p>
+                </div>
+            </div>
+            
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <!-- 快速服务 -->
+                <div class="service-box">
+                    <h3 class="service-title">快速操作</h3>
+                    <p class="intro-text">需要立即处理屏障相关事务？</p>
+                    <div class="quick-actions">
+                        <a href="#" class="service-link" id="startEvacuation">启动自动驱逐协议</a>
+                        <a href="#" class="service-link" style="background: linear-gradient(90deg, #ff8c00, #ffa500); margin-top: 10px;">调整屏障敏感度</a>
+                        <a href="logs.html" class="service-link" style="background: linear-gradient(90deg, #20b2aa, #40e0d0); margin-top: 10px;">查看系统日志</a>
+                    </div>
+                </div>
+                
+                <!-- 系统状态 -->
+                <div class="service-box">
+                    <h3 class="service-title">实时系统状态</h3>
+                    <div class="system-status">
+                        <div class="status-item">
+                            <span class="status-label">屏障状态：</span>
+                            <span class="status-value active">在线运行</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">威胁等级：</span>
+                            <span class="status-value warning">级别4（高警戒）</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">今日拦截：</span>
+                            <span class="status-value">28次</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">内存使用：</span>
+                            <span class="status-value">73%</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 73%;"></div>
+                    </div>
+                </div>
+                
+                <!-- 重要通知 -->
+                <div class="notice-box">
+                    <h3 class="notice-title">紧急通知</h3>
+                    <p class="notice-text">
+                        近期检测到<span class="keyword-clickable" data-type="brht">半融合态</span>实体活动增加。所有单位需将屏障敏感度调至级别4，并准备手动复核程序。
+                    </p>
+                    <p class="notice-text" style="margin-top: 10px; font-size: 13px;">
+                        <strong>生效时间：</strong>立即生效<br>
+                        <strong>影响范围：</strong>所有区域屏障<br>
+                        <strong>通知编号：</strong>AB-114-EM-07
+                    </p>
+                </div>
+                
+                <!-- 常见威胁类型 -->
+                <div class="service-box">
+                    <h3 class="service-title">常见威胁类型</h3>
+                    <div class="threat-types">
+                        <div class="threat-item">
+                            <span class="threat-icon">🪳</span>
+                            <span class="threat-name"><span class="keyword-clickable" data-type="langren">螂人变体</span></span>
+                            <span class="threat-count">1,247次</span>
+                        </div>
+                        <div class="threat-item">
+                            <span class="threat-icon">🧬</span>
+                            <span class="threat-name"><span class="keyword-clickable" data-type="brht">半融合态</span></span>
+                            <span class="threat-count">583次</span>
+                        </div>
+                        <div class="threat-item">
+                            <span class="threat-icon">😈</span>
+                            <span class="threat-name">恶意意图者</span>
+                            <span class="threat-count">892次</span>
+                        </div>
+                        <div class="threat-item">
+                            <span class="threat-icon">🌀</span>
+                            <span class="threat-name">能量异常体</span>
+                            <span class="threat-count">121次</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 公告栏 -->
+                <div class="bulletin-board">
+                    <h3 class="bulletin-title">近期更新</h3>
+                    <ul class="bulletin-list">
+                        <li class="bulletin-item">
+                            <div class="bulletin-date">第114迭代周期 · 屏障系统</div>
+                            <div class="bulletin-content">更新了<span class="keyword-clickable" data-type="langren">螂人</span>亚变体识别算法，识别率提升至99.7%</div>
+                        </li>
+                        <li class="bulletin-item">
+                            <div class="bulletin-date">第113迭代周期 · 安全协议</div>
+                            <div class="bulletin-content">修订了<span class="keyword-clickable" data-type="quzhu">自动驱逐</span>触发条件，减少误报率</div>
+                        </li>
+                        <li class="bulletin-item">
+                            <div class="bulletin-date">第112迭代周期 · 研究进展</div>
+                            <div class="bulletin-content">发布<span class="keyword-clickable" data-type="brht">半融合态</span>实体研究报告，更新识别参数</div>
+                        </li>
+                        <li class="bulletin-item">
+                            <div class="bulletin-date">第111迭代周期 · 系统维护</div>
+                            <div class="bulletin-content">完成屏障系统季度维护，性能提升12%</div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 技术支持 -->
+                <div class="notice-box" style="background: rgba(30, 144, 255, 0.1);">
+                    <h3 class="notice-title" style="color: #1e90ff;">技术支持</h3>
+                    <p class="notice-text" style="color: #b0c4de;">
+                        遇到技术问题？<br>
+                        <strong>内部热线：</strong>分机 3407<br>
+                        <strong>紧急联络：</strong>分机 911<br>
+                        <strong>在线文档：</strong><span class="keyword">技术手册库</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>异常生物防控局 · 屏障运行部 | 机密级别：限制访问</p>
+            <p>
+                <a href="pingz.html">回到上级</a> | 
+                <span class="keyword">半融合态研究</span> | 
+                <span class="keyword">驱逐协议</span>
+            </p>
+            <p>最后更新：第114迭代周期</p>
+            <p>© 异常生物防控局 - 未经授权禁止复制或传播</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取弹窗元素
+            const warningModal = document.getElementById('warningModal');
+            const permissionModal = document.getElementById('permissionModal');
+            const confirmBtn = document.getElementById('confirmJump');
+            const cancelBtn = document.getElementById('cancelJump');
+            const okPermissionBtn = document.getElementById('okPermission');
+            const startEvacuationBtn = document.getElementById('startEvacuation');
+            
+            let targetUrl = '';
+            
+            // 螂人弹窗确认按钮点击事件
+            confirmBtn.addEventListener('click', function() {
+                warningModal.style.display = 'none';
+                if (targetUrl) {
+                    window.open(targetUrl, '_blank');
+                }
+                targetUrl = '';
+            });
+            
+            // 螂人弹窗取消按钮点击事件
+            cancelBtn.addEventListener('click', function() {
+                warningModal.style.display = 'none';
+                targetUrl = '';
+            });
+            
+            // 权限弹窗确认按钮点击事件
+            okPermissionBtn.addEventListener('click', function() {
+                permissionModal.style.display = 'none';
+            });
+            
+            // 点击弹窗外部关闭
+            [warningModal, permissionModal].forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                        if (modal === warningModal) {
+                            targetUrl = '';
+                        }
+                    }
+                });
+            });
+            
+            // 启动自动驱逐协议按钮点击事件
+            startEvacuationBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                permissionModal.style.display = 'flex';
+            });
+            
+            // 处理所有可点击关键词
+            const clickableKeywords = document.querySelectorAll('.keyword-clickable');
+            
+            clickableKeywords.forEach(keyword => {
+                const keywordType = keyword.getAttribute('data-type');
+                
+                keyword.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    switch(keywordType) {
+                        case 'langren':
+                            // 显示螂人弹窗
+                            targetUrl = 'langren2.0.png';
+                            warningModal.style.display = 'flex';
+                            break;
+                            
+                        case 'brht':
+                            // 跳转到半融合态页面
+                            window.location.href = 'mi-brht.html';
+                            break;
+                            
+                        case 'quzhu':
+                            // 跳转到自动驱逐页面
+                            window.location.href = 'mi-quzhu.html';
+                            break;
+                    }
+                });
+            });
+            
+            // 移除其他所有高亮效果并禁用跳转
+            const allKeywords = document.querySelectorAll('.keyword, .bulletin-link, .threat-link, .highlight, .accuracy-highlight');
+            
+            allKeywords.forEach(keyword => {
+                // 如果已经是可点击关键词，跳过
+                if (keyword.classList.contains('keyword-clickable')) return;
+                
+                // 移除点击事件和链接效果
+                keyword.removeAttribute('onclick');
+                keyword.style.cursor = 'default';
+                keyword.style.color = '#b0c4de';
+                keyword.style.fontWeight = 'normal';
+                keyword.style.textDecoration = 'none';
+                keyword.style.borderBottom = 'none';
+                
+                // 阻止所有点击事件
+                keyword.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+            });
+            
+            // 移除公告栏链接的点击事件
+            const bulletinLinks = document.querySelectorAll('.bulletin-link');
+            bulletinLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                });
+            });
+            
+            // 移除页脚链接的点击事件
+            const footerLinks = document.querySelectorAll('.footer a');
+            footerLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!this.getAttribute('href')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+            
+            // 移除其他服务链接的默认行为
+            const serviceLinks = document.querySelectorAll('.service-link');
+            serviceLinks.forEach(link => {
+                if (link.id !== 'startEvacuation') {
+                    link.addEventListener('click', function(e) {
+                        if (this.getAttribute('href') === '#') {
+                            e.preventDefault();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <script src="pages.js"></script>
+    <script src="sc-ball.js"></script>
+
+</body>
+</html>
