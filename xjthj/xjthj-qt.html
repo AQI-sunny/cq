@@ -604,13 +604,13 @@
             
             const option1 = document.createElement('button');
             option1.className = 'option-btn';
-            option1.textContent = '是的，还想问问7栋401';
-            option1.onclick = () => selectOption('7栋401');
+            option1.textContent = '是的，还想问问7又4分之3栋';
+            option1.onclick = () => selectOption('是的，还想问问7又4分之3栋');
             
             const option2 = document.createElement('button');
             option2.className = 'option-btn';
             option2.textContent = '是的，还想问问7又7分之4栋';
-            option2.onclick = () => selectOption('7又7分之4栋');
+            option2.onclick = () => selectOption('是的，还想问问7又7分之4栋');
             
             optionsArea.appendChild(option1);
             optionsArea.appendChild(option2);
@@ -627,7 +627,7 @@
             optionsArea.style.display = 'none';
             
             // 根据选择显示不同的回复
-            if (option === '7又4分之3栋') {
+            if (option === '是的，还想问问7又4分之3栋') {
                 is7HouseSelected = false;
                 
                 // 前台回复
@@ -646,7 +646,7 @@
                         }, 800);
                     }, 1000);
                 }, 800);
-            } else if (option === '7又7分之4栋') {
+            } else if (option === '是的，还想问问7又7分之4栋') {
                 is7HouseSelected = true;
                 
                 // 前台先表示疑惑
