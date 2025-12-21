@@ -144,6 +144,13 @@
             margin: 0 auto;
         }
         
+        .whitepaper-title p.access-count {
+            color: #ff6b6b;
+            font-size: 14px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+        }
+        
         /* 白皮书内容区域 */
         .whitepaper-content {
             background: rgba(20, 40, 70, 0.5);
@@ -236,7 +243,6 @@
             background: rgba(20, 40, 70, 0.3);
             border-radius: 10px;
             border: 1px dashed rgba(64, 224, 208, 0.5);
-            display: none;
         }
         
         .unlock-message {
@@ -355,6 +361,22 @@
             z-index: 1000;
         }
         
+        /* 访问统计显示 */
+        .access-info {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(20, 40, 70, 0.9);
+            color: #87ceeb;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            z-index: 1000;
+            display: none;
+        }
+        
         /* 响应式设计 */
         @media (max-width: 900px) {
             .emergency-code {
@@ -385,6 +407,13 @@
                 font-size: 12px;
                 padding: 8px 12px;
             }
+            
+            .access-info {
+                left: 10px;
+                bottom: 10px;
+                font-size: 10px;
+                padding: 8px 12px;
+            }
         }
     </style>
 </head>
@@ -406,6 +435,7 @@
         <div class="whitepaper-title">
             <h1>《螂人半融合态技术白皮书》</h1>
             <p>项目编号：XJHB-PROJECT-Ω-7 | 归档日期：████年██月██日</p>
+            <p class="access-count" id="accessCountInfo">访问次数：加载中...</p>
             <p style="color: #ff6b6b; font-size: 14px; margin-top: 10px;">警告：此文档包含高度敏感信息，未经授权访问将受到法律严惩</p>
         </div>
         
@@ -422,7 +452,7 @@
             <div class="whitepaper-section">
                 <div class="section-title">螂人项目真相</div>
                 <div class="section-content">
-                    螂人项目（代号：MAN-TIS）是一项旨在突破现实"屏障"的生物神经工程实验。
+                    螂人所研究的项目（代号：MAN-TIS）是一项旨在突破现实"屏障"的生物神经工程实验。
                     
                     试图将蜻蜓、蝴蝶、萤火虫等生物的生存基因与螂人神经结合，创造能突破"屏障"的生物载体...
                     
@@ -501,7 +531,7 @@
         </div>
         
         <!-- 解锁提示区域 -->
-        <div id="unlockSection" class="unlock-section">
+        <div id="unlockSection" class="unlock-section" style="display: none;">
             <div class="unlock-message">您已解锁新页面</div>
             <a href="pingz3-denglu.html" class="unlock-button">立即访问</a>
             <div style="margin-top: 15px; color: #87ceeb; font-size: 14px;">
@@ -522,42 +552,77 @@
     </div>
     
     <!-- 倒计时指示器 -->
-    <div id="countdown" class="countdown">20</div>
+    <div id="countdown" class="countdown"></div>
+    
+    <!-- 访问统计显示 -->
+    <div id="accessInfo" class="access-info"></div>
     
     <script>
-        // 生成10个随机的紧急终止码
-        // 生成5个固定的紧急终止码（看起来随机但实际固定）
-function generateEmergencyCodes() {
-    const codesContainer = document.getElementById('emergencyCodes');
-    
-    // 5个固定的终止码 - 看起来随机但实际是预设的
-    const fixedCodes = [
-        '3F8A-9B2C',
-        '7D4E-1F6A',
-        'Ω2C9-4B8D',
-        'A5F3-8E2C',
-        '9B1D-7Ω4A'
-    ];
-    
-    // 渲染固定的代码到页面
-    fixedCodes.forEach(code => {
-        const codeElement = document.createElement('div');
-        codeElement.className = 'code-item';
-        codeElement.textContent = code;
-        codeElement.title = '点击复制终止码';
-        codeElement.onclick = function() {
-            copyToClipboard(code);
-        };
-        codesContainer.appendChild(codeElement);
-    });
-    
-    // 同时更新提示信息，说明只有5个终止码
-    const emergencySection = document.querySelector('.whitepaper-section:last-child');
-    const warningText = emergencySection.querySelector('.section-content:last-child');
-    if (warningText) {
-        warningText.innerHTML = '警告：任何终止码的使用都将触发全局警报并抹除所有相关实验数据。';
-    }
-}
+        // 访问计数管理
+        function getAccessCount() {
+            const accessCount = localStorage.getItem('whitepaper_access_count');
+            return accessCount ? parseInt(accessCount) : 0;
+        }
+        
+        function incrementAccessCount() {
+            const currentCount = getAccessCount();
+            const newCount = currentCount + 1;
+            localStorage.setItem('whitepaper_access_count', newCount);
+            return newCount;
+        }
+        
+        // 获取不同访问次数的倒计时时间
+        function getCountdownTime(accessCount) {
+            const countdownMap = {
+                0: 30, // 第一次：30秒
+                1: 20, // 第二次：20秒
+                2: 10, // 第三次：10秒
+                3: 5,  // 第四次：5秒
+                4: 0   // 第五次及以上：直接显示
+            };
+            
+            return countdownMap[accessCount] !== undefined ? countdownMap[accessCount] : 0;
+        }
+        
+        // 获取访问次数描述
+        function getAccessDescription(accessCount) {
+            const descriptions = [
+                "首次访问",
+                "第二次访问",
+                "第三次访问",
+                "第四次访问",
+                "第五次及以上访问"
+            ];
+            
+            return accessCount < descriptions.length ? descriptions[accessCount] : descriptions[4];
+        }
+        
+        // 生成5个固定的紧急终止码
+        function generateEmergencyCodes() {
+            const codesContainer = document.getElementById('emergencyCodes');
+            
+            // 5个固定的终止码
+            const fixedCodes = [
+                '3F8A-9B2C',
+                '7D4E-1F6A',
+                'Ω2C9-4B8D',
+                'A5F3-8E2C',
+                '9B1D-7Ω4A'
+            ];
+            
+            // 渲染固定的代码到页面
+            fixedCodes.forEach(code => {
+                const codeElement = document.createElement('div');
+                codeElement.className = 'code-item';
+                codeElement.textContent = code;
+                codeElement.title = '点击复制终止码';
+                codeElement.onclick = function() {
+                    copyToClipboard(code);
+                };
+                codesContainer.appendChild(codeElement);
+            });
+        }
+        
         // 复制到剪贴板
         function copyToClipboard(text) {
             const tempInput = document.createElement('input');
@@ -581,10 +646,15 @@ function generateEmergencyCodes() {
         }
         
         // 倒计时功能
-        function startCountdown() {
+        function startCountdown(seconds) {
             const countdownElement = document.getElementById('countdown');
             const unlockSection = document.getElementById('unlockSection');
-            let seconds = 20;
+            
+            if (seconds <= 0) {
+                // 直接显示解锁区域
+                showUnlockSection();
+                return;
+            }
             
             // 显示倒计时
             countdownElement.style.display = 'block';
@@ -597,17 +667,21 @@ function generateEmergencyCodes() {
                 if (seconds <= 0) {
                     clearInterval(countdownInterval);
                     countdownElement.style.display = 'none';
-                    
-                    // 显示解锁区域
-                    unlockSection.style.display = 'block';
-                    
-                    // 添加解锁动画效果
-                    unlockSection.style.animation = 'fadeIn 0.5s ease';
-                    
-                    // 滚动到解锁区域
-                    unlockSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    showUnlockSection();
                 }
             }, 1000);
+        }
+        
+        // 显示解锁区域
+        function showUnlockSection() {
+            const unlockSection = document.getElementById('unlockSection');
+            unlockSection.style.display = 'block';
+            
+            // 添加解锁动画效果
+            unlockSection.style.animation = 'fadeIn 0.5s ease';
+            
+            // 滚动到解锁区域
+            unlockSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
         
         // 显示访问日志（模拟）
@@ -690,12 +764,33 @@ function generateEmergencyCodes() {
         
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
+            // 更新访问计数
+            const currentAccessCount = incrementAccessCount();
+            
+            // 显示访问信息
+            const accessCountInfo = document.getElementById('accessCountInfo');
+            const accessDescription = getAccessDescription(currentAccessCount);
+            accessCountInfo.textContent = `访问次数：第${currentAccessCount + 1}次 (${accessDescription})`;
+            
+            // 显示访问信息面板
+            const accessInfoElement = document.getElementById('accessInfo');
+            accessInfoElement.style.display = 'block';
+            accessInfoElement.textContent = `访问次数: ${currentAccessCount + 1} | ${accessDescription}`;
+            
+            // 3秒后隐藏访问信息面板
+            setTimeout(() => {
+                accessInfoElement.style.opacity = '0.5';
+            }, 3000);
+            
             // 生成紧急终止码
             generateEmergencyCodes();
             
-            // 开始30秒倒计时
+            // 获取当前访问次数的倒计时时间
+            const countdownTime = getCountdownTime(currentAccessCount);
+            
+            // 开始倒计时
             setTimeout(() => {
-                startCountdown();
+                startCountdown(countdownTime);
             }, 1000);
             
             // 添加一些动态效果
@@ -733,6 +828,10 @@ function generateEmergencyCodes() {
             
             .unlock-section {
                 animation: fadeIn 0.5s ease;
+            }
+            
+            .access-info {
+                transition: opacity 0.5s ease;
             }
         `;
         document.head.appendChild(style);
