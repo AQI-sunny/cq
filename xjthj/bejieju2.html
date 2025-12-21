@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bad Ending - 悲伤结局</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            padding: 30px;
+            background-color: rgba(10, 10, 20, 0.7);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(100, 100, 150, 0.2);
+            position: relative;
+            z-index: 10;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .header {
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 3.5rem;
+            color: #c0392b;
+            text-shadow: 0 0 15px rgba(192, 57, 43, 0.7);
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+            animation: flicker 3s infinite alternate;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            color: #b8b8b8;
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        
+        .ending-content {
+            background-color: rgba(20, 20, 35, 0.6);
+            border-radius: 15px;
+            padding: 40px 30px;
+            margin-bottom: 50px;
+            position: relative;
+            border-left: 4px solid #c0392b;
+            border-right: 4px solid #c0392b;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .ending-text {
+            font-size: 1.5rem;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            color: #d0d0d0;
+            text-align: left;
+            padding: 0 20px;
+        }
+        
+        .quote {
+            font-style: italic;
+            font-size: 1.8rem;
+            color: #a3a3c2;
+            text-align: center;
+            margin: 40px 0;
+            padding: 20px;
+            border-top: 1px solid rgba(192, 57, 43, 0.3);
+            border-bottom: 1px solid rgba(192, 57, 43, 0.3);
+            position: relative;
+        }
+        
+        .quote::before, .quote::after {
+            content: '"';
+            color: #c0392b;
+            font-size: 2.5rem;
+            position: absolute;
+        }
+        
+        .quote::before {
+            top: 5px;
+            left: 10px;
+        }
+        
+        .quote::after {
+            bottom: -15px;
+            right: 10px;
+        }
+        
+        .buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .btn {
+            padding: 18px 40px;
+            font-size: 1.3rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-decoration: none;
+            min-width: 250px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-return {
+            background: linear-gradient(to right, #2c3e50, #4a6491);
+            color: #f0f0f0;
+        }
+        
+        .btn-follow {
+            background: linear-gradient(to right, #8e44ad, #9b59b6);
+            color: #f0f0f0;
+        }
+        
+        .btn:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4);
+        }
+        
+        .btn-return:hover {
+            background: linear-gradient(to right, #34495e, #5d7cb3);
+        }
+        
+        .btn-follow:hover {
+            background: linear-gradient(to right, #9b59b6, #af7ac5);
+        }
+        
+        .btn i {
+            font-size: 1.5rem;
+        }
+        
+        .footer {
+            margin-top: 60px;
+            color: #888;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+        }
+        
+        /* 动画效果 */
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 1.5s ease-out;
+        }
+        
+        .float {
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        /* 装饰元素 */
+        .decoration {
+            position: absolute;
+            opacity: 0.1;
+            z-index: 1;
+        }
+        
+        .broken-heart {
+            top: 15%;
+            left: 10%;
+            font-size: 5rem;
+            color: #c0392b;
+            transform: rotate(-15deg);
+        }
+        
+        .feather {
+            top: 20%;
+            right: 8%;
+            font-size: 4rem;
+            color: #a3a3c2;
+            transform: rotate(20deg);
+        }
+        
+        .tear {
+            bottom: 25%;
+            left: 12%;
+            font-size: 3.5rem;
+            color: #3498db;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin-top: 10px;
+            }
+            
+            .title {
+                font-size: 2.5rem;
+            }
+            
+            .ending-text {
+                font-size: 1.2rem;
+                padding: 0 10px;
+            }
+            
+            .quote {
+                font-size: 1.4rem;
+            }
+            
+            .buttons-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                min-width: 90%;
+                padding: 16px 30px;
+            }
+            
+            .decoration {
+                display: none;
+            }
+        }
+        
+        /* 雨滴效果 */
+        .raindrop {
+            position: absolute;
+            background: linear-gradient(to bottom, transparent, rgba(52, 152, 219, 0.3));
+            width: 1px;
+            height: 60px;
+            animation: rain 3s linear infinite;
+            z-index: 2;
+        }
+        
+        @keyframes rain {
+            0% {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+        
+        /* 心跳监视器线效果 */
+        .heart-line {
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background: rgba(192, 57, 43, 0.2);
+            top: 50%;
+            left: 0;
+            z-index: 1;
+        }
+        
+        .heart-line::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(192, 57, 43, 0.6), transparent);
+            animation: heartbeat 4s infinite;
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scaleX(0); opacity: 0; }
+            10%, 90% { opacity: 1; }
+            50% { transform: scaleX(1); opacity: 0.8; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 装饰元素 -->
+    <div class="decoration broken-heart float">
+        <i class="fas fa-heart-broken"></i>
+    </div>
+    <div class="decoration feather">
+        <i class="fas fa-feather-alt"></i>
+    </div>
+    <div class="decoration tear">
+        <i class="fas fa-tint"></i>
+    </div>
+    
+    <!-- 心跳线 -->
+    <div class="heart-line"></div>
+    
+    <!-- 雨滴效果将通过JS动态生成 -->
+    
+    <div class="container fade-in">
+        <div class="header">
+            <h1 class="title">BAD ENDING</h1>
+            <p class="subtitle">失败的结局，遗憾的选择</p>
+            <!-- <p class="subtitle">有些故事，注定没有美好的结局...</p> -->
+        </div>
+        
+        <div class="ending-content">
+            <!-- <p class="ending-text">所有的一切都结束了。那些曾经的美好回忆，如同风中残烛，在最后的黑暗中摇曳、熄灭。你伸出手，却什么也抓不住；你呼喊着，却没有任何回应。</p>
+            
+            <p class="ending-text">你曾以为努力就能改变命运，付出就能得到回报，真心就能换来真心。但现实却给了你最残酷的答案——不是所有的故事都有圆满结局，不是所有的付出都有相应回报。</p>
+            
+            <div class="quote">
+                最深的遗憾不是失去，而是明明有机会，却选择了错误的道路。
+            </div>
+            
+            <p class="ending-text">屏幕渐渐暗去，如同这个故事最后的结局。但请记住，即使在这个悲伤的结局里，你曾真实地感受过、经历过、选择过。这些经历本身，或许就是故事的意义。</p>
+             -->
+
+
+             <div class="quote">
+                很遗憾你签署失败了......七天时间已逝......你眼睁睁的看着他带领螂人毁灭了世界......
+            </div>
+            <p class="ending-text fade-in" style="animation-delay: 1s; margin-top: 30px; text-align: center; font-size: 1.6rem; color: #c0392b;">
+                感谢你体验这个故事，如果喜欢请关注作者~
+            </p>
+        </div>
+        
+        <div class="buttons-container">
+            <a href="sgxy2.html" class="btn btn-return">
+                <i class="fas fa-arrow-left"></i>
+                返回上级页面
+            </a>
+            
+            <a href="https://sylvie-seven-cq.top" target="_blank" class="btn btn-follow">
+                <i class="fas fa-heart"></i>
+                关注作者
+            </a>
+        </div>
+        
+        <div class="footer">
+           <!--  <p>BE结局页面 | 设计灵感来自经典悲剧故事 | 希望这个结局能给你带来思考</p> -->
+            <p style="margin-top: 10px; font-size: 0.8rem;">© 2025 XUJING TIAOHEJU | 墟境调和局·华苑分局</p>
+        </div>
+    </div>
+    
+    <script>
+        // 创建雨滴效果
+        function createRaindrops() {
+            const rainContainer = document.createElement('div');
+            rainContainer.style.position = 'fixed';
+            rainContainer.style.top = '0';
+            rainContainer.style.left = '0';
+            rainContainer.style.width = '100%';
+            rainContainer.style.height = '100%';
+            rainContainer.style.pointerEvents = 'none';
+            rainContainer.style.zIndex = '1';
+            document.body.appendChild(rainContainer);
+            
+            // 创建60个雨滴
+            for (let i = 0; i < 60; i++) {
+                const raindrop = document.createElement('div');
+                raindrop.className = 'raindrop';
+                
+                // 随机位置
+                const left = Math.random() * 100;
+                raindrop.style.left = left + '%';
+                
+                // 随机延迟
+                const delay = Math.random() * 5;
+                raindrop.style.animationDelay = delay + 's';
+                
+                // 随机长度
+                const height = 30 + Math.random() * 70;
+                raindrop.style.height = height + 'px';
+                
+                // 随机透明度
+                const opacity = 0.1 + Math.random() * 0.4;
+                raindrop.style.opacity = opacity;
+                
+                rainContainer.appendChild(raindrop);
+            }
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            createRaindrops();
+            
+            // 为按钮添加点击效果
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // 创建点击涟漪效果
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.cssText = `
+                        position: absolute;
+                        border-radius: 50%;
+                        background: rgba(255, 255, 255, 0.7);
+                        transform: scale(0);
+                        animation: ripple-animation 0.6s linear;
+                        width: ${size}px;
+                        height: ${size}px;
+                        top: ${y}px;
+                        left: ${x}px;
+                        pointer-events: none;
+                    `;
+                    
+                    this.appendChild(ripple);
+                    
+                    // 移除涟漪元素
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+            
+            // 添加CSS动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes ripple-animation {
+                    to {
+                        transform: scale(4);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // 渐入效果
+            const elements = document.querySelectorAll('.ending-text, .quote');
+            elements.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.animation = `fadeIn 1.5s ease-out ${index * 0.5}s forwards`;
+            });
+        });
+    </script>
+</body>
+</html>

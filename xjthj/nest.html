@@ -613,7 +613,7 @@
                 <div class="alert">
                     <p><strong>"他"的力量正在渗透屏障</strong></p>
                    <!--  <p>根据古老预言，7天后完全融合将无法避免。调和局的"人道迁移"实际上是加速渗透的仪式。</p> -->
-                   <p>根据古老预言，7天后完全融合将无法避免。请尽快输入行动代码下发指令。</p>
+                   <p>根据古老预言，7天后完全融合将无法避免。请尽快输入对应的行动代号下发指令。</p>
                 </div>
             </div>
             
@@ -652,7 +652,7 @@
                         • 密钥：<strong>SGXY-114</strong> (导向 SGXY.html)
                     </div> -->
                     
-                    <input type="text" id="actionCode" placeholder="输入行动代码" autocomplete="off">
+                    <input type="text" id="actionCode" placeholder="输入行动代号" autocomplete="off">
                     <br>
                     <button id="confirmBtn">确认执行</button>
                     
@@ -868,7 +868,7 @@
                 
                 return true;
             } else {
-                resultMessage.innerHTML = '<span style="color:#f44336">✗ 无效的行动代码</span>';
+                resultMessage.innerHTML = '<span style="color:#f44336">✗ 无效的行动代号</span>';
                 actionButtons.style.display = 'none';
                 return false;
             }
@@ -933,11 +933,11 @@
                     });
                     this.style.borderColor = '#1e88e5';
                     
-                    // 根据选项提供不同的行动代码提示
+                    // 根据选项提供不同的行动代号提示
                     const codeInput = document.getElementById('actionCode');
                     switch(optionNum) {
                         case '1':
-                            codeInput.placeholder = '输入 迁移代码 执行迁移';
+                            codeInput.placeholder = '输入 行动代号 执行迁移';
                             break;
                         case '2':
                             codeInput.placeholder = '输入 终止码 执行清除';

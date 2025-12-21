@@ -18,7 +18,7 @@ const SimplePageCounter = {
 'jqt简历.html',
 'ycbg.html',
 'ycbg222.html',
-
+'langr.html',
 'pingz.html',
 'tiaojie.html',
 '屏障2.0.html',
@@ -27,12 +27,6 @@ const SimplePageCounter = {
 'chanpin.html',
 'qiantai.html',
 '7D401.html',
-
-'dxsdxs.html',
-'langr.html',
-
-
-'ntfs.html',
 'pingz3-denglu.html',
 'scan.html',
 /* 'search.html', */
@@ -48,18 +42,19 @@ const SimplePageCounter = {
 'building.html',
 'WEAK.html',
 /* 'wjmydh.html', */
-
-'xjthj-sy.html',
-
+'zbjs.html',
 'xly.html',
-
 'yjyjyjj.html',
 'fanzhi.html',
-'zbjs.html',
+'dxsdxs.html',
+
 'hidden-114.html',
 'co134-lxc.html',
-'hidden-134.html',
+
 'ta.html',
+'horrorsy.html',
+'bejieju.html',
+'bejieju2.html',
 'nest.html',
 'SGXY.html',
 'jiejuaaa.html',

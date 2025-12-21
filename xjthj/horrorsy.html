@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>墟境调和局·华苑分局 - 暗黑版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 暗黑背景特效 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 0, 0, 0.8) 0px, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(20, 20, 30, 0.7) 0px, transparent 50%),
+                linear-gradient(45deg, transparent 98%, rgba(139, 0, 139, 0.1) 100%);
+            z-index: -2;
+        }
+        
+        /* 暗黑网格背景 */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(30, 30, 30, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 30, 30, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(15, 15, 25, 0.95);
+            border-radius: 15px;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.8),
+                0 0 0 1px rgba(139, 0, 139, 0.2),
+                inset 0 0 20px rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 顶部装饰线 - 暗红 */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #8b0000, #4a0000, #2e0000);
+            box-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+        }
+        
+        /* 底部装饰 */
+        .container::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(139, 0, 139, 0.3), transparent);
+        }
+        
+        /* 局徽样式 - 暗黑版 */
+        .emblem {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .emblem-symbol {
+            display: inline-block;
+            width: 160px;
+            height: 160px;
+            position: relative;
+            margin-bottom: 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(139, 0, 139, 0.5);
+            box-shadow: 
+                0 0 25px rgba(139, 0, 139, 0.4),
+                inset 0 0 25px rgba(0, 0, 0, 0.8);
+            animation: pulse-dark 5s infinite alternate;
+            background: radial-gradient(circle at 30% 30%, #1a1a2e, #0a0a1a);
+        }
+        
+        @keyframes pulse-dark {
+            0% { 
+                box-shadow: 
+                    0 0 25px rgba(139, 0, 139, 0.4),
+                    inset 0 0 25px rgba(0, 0, 0, 0.8);
+                border-color: rgba(139, 0, 139, 0.5);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 35px rgba(139, 0, 139, 0.6),
+                    inset 0 0 30px rgba(0, 0, 0, 0.9);
+                border-color: rgba(178, 34, 34, 0.7);
+            }
+        }
+        
+        /* logo图片容器 */
+        .emblem-symbol .logo-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('xjthj.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: brightness(0.8) sepia(0.3) hue-rotate(-20deg);
+            z-index: 1;
+        }
+        
+        /* 圆形遮罩 */
+        .emblem-symbol::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 
+                inset 0 0 0 2px rgba(139, 0, 139, 0.3),
+                inset 0 0 30px rgba(0, 0, 0, 0.9);
+            z-index: 2;
+        }
+        
+        /* 圆形边框特效 */
+        .emblem-symbol::after {
+            content: "";
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            right: -8px;
+            bottom: -8px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #8b0000, #4a0000, #2e0000, #4a0000, #8b0000);
+            z-index: -1;
+            opacity: 0.4;
+            animation: rotate-dark 15s linear infinite;
+        }
+        
+        @keyframes rotate-dark {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .emblem-text {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #8b0000, #b22222, #8b0000);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 4px;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .emblem-subtext {
+            color: #696969;
+            font-size: 14px;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+        
+        /* 内容区域 */
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+            margin-top: 20px;
+        }
+        
+        .main-content {
+            padding-right: 20px;
+            border-right: 1px solid rgba(139, 0, 139, 0.2);
+        }
+        
+        /* 部门简介 */
+        .section {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(50, 50, 50, 0.5);
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            color: #b22222;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(139, 0, 139, 0.3);
+            position: relative;
+            font-weight: 600;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, #8b0000, transparent);
+        }
+        
+        .intro-text {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #b0b0b0;
+            font-size: 16px;
+        }
+        
+        .duties {
+            list-style-type: none;
+            margin-left: 20px;
+        }
+        
+        .duties li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+            line-height: 1.7;
+            color: #c0c0c0;
+        }
+        
+        .duties li::before {
+            content: "⛤";
+            position: absolute;
+            left: 0;
+            color: #8b0000;
+            font-size: 16px;
+        }
+        
+        .highlight {
+            color: #b22222;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(178, 34, 34, 0.5);
+            padding: 0 2px;
+        }
+        
+        .highlight:hover {
+            color: #ff4500;
+            text-shadow: 0 0 10px rgba(255, 69, 0, 0.7);
+            border-bottom-style: solid;
+        }
+        
+        /* 悬停效果样式 */
+        .building-display {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        
+        .building-normal {
+            display: inline;
+        }
+        
+        .building-hover {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: rgba(10, 10, 20, 0.98);
+            padding: 8px 15px;
+            border-radius: 6px;
+            border: 1px solid rgba(139, 0, 139, 0.4);
+            box-shadow: 
+                0 4px 20px rgba(0, 0, 0, 0.8),
+                0 0 0 1px rgba(139, 0, 139, 0.2);
+            white-space: nowrap;
+            z-index: 100;
+            animation: fadeInDark 0.3s;
+            color: #b22222;
+            font-weight: bold;
+            min-width: 150px;
+            text-align: center;
+        }
+        
+        .building-display:hover .building-normal {
+            opacity: 0;
+        }
+        
+        .building-display:hover .building-hover {
+            display: inline-block;
+        }
+        
+        @keyframes fadeInDark {
+            from { 
+                opacity: 0; 
+                transform: translateY(-10px) scale(0.95); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .service-box {
+            background: linear-gradient(145deg, rgba(30, 30, 40, 0.9), rgba(20, 20, 30, 0.9));
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(139, 0, 139, 0.3);
+            box-shadow: 
+                inset 0 1px 0 rgba(255, 255, 255, 0.05),
+                0 8px 25px rgba(0, 0, 0, 0.6);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .service-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 15px 30px rgba(0, 0, 0, 0.8),
+                0 0 0 1px rgba(178, 34, 34, 0.3);
+            border-color: rgba(178, 34, 34, 0.5);
+        }
+        
+        .service-title {
+            color: #8b0000;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .service-title::before {
+            content: "☠";
+            margin-right: 12px;
+            font-size: 22px;
+        }
+        
+        .service-link {
+            display: inline-block;
+            background: linear-gradient(90deg, #8b0000, #b22222, #8b0000);
+            color: #f0f0f0;
+            text-decoration: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            transition: all 0.3s;
+            box-shadow: 
+                0 4px 15px rgba(139, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(139, 0, 139, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+        }
+        
+        .service-link:hover {
+            transform: scale(1.05);
+            box-shadow: 
+                0 6px 20px rgba(139, 0, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            background: linear-gradient(90deg, #b22222, #8b0000, #b22222);
+        }
+        
+        .notice-box {
+            background: linear-gradient(145deg, rgba(50, 0, 50, 0.2), rgba(25, 0, 25, 0.2));
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(75, 0, 130, 0.3);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .notice-title {
+            color: #9370db;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        
+        .notice-title::before {
+            content: "⚠";
+            margin-right: 12px;
+            font-size: 22px;
+            color: #ff4500;
+        }
+        
+        .notice-text {
+            line-height: 1.7;
+            color: #b0a0c0;
+            font-style: italic;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 公告栏 */
+        .bulletin-board {
+            background: rgba(25, 25, 35, 0.9);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+            border: 1px solid rgba(139, 0, 139, 0.2);
+            box-shadow: 
+                inset 0 0 20px rgba(0, 0, 0, 0.4),
+                0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .bulletin-title {
+            color: #808080;
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .bulletin-title::before {
+            content: "📜";
+            margin-right: 12px;
+            font-size: 22px;
+        }
+        
+        .bulletin-list {
+            list-style-type: none;
+        }
+        
+        .bulletin-item {
+            padding: 18px;
+            border-bottom: 1px solid rgba(80, 80, 80, 0.3);
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .bulletin-item:hover {
+            background-color: rgba(139, 0, 139, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .bulletin-item::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: linear-gradient(to bottom, transparent, #8b0000, transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .bulletin-item:hover::before {
+            opacity: 0.6;
+        }
+        
+        .bulletin-item:last-child {
+            border-bottom: none;
+        }
+        
+        .bulletin-date {
+            color: #8b0000;
+            font-size: 13px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        .bulletin-content {
+            color: #b0b0b0;
+            line-height: 1.6;
+        }
+        
+        .bulletin-link {
+            color: #9370db;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 1px dotted #9370db;
+            padding: 0 2px;
+        }
+        
+        .bulletin-link:hover {
+            color: #ba55d3;
+            border-bottom-style: solid;
+            text-shadow: 0 0 8px rgba(186, 85, 211, 0.5);
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(80, 80, 80, 0.5);
+            position: relative;
+        }
+        
+        .footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #8b0000, transparent);
+        }
+        
+        .footer p {
+            margin-bottom: 10px;
+        }
+        
+        .footer a {
+            color: #808080;
+            text-decoration: none;
+            margin: 0 15px;
+            transition: color 0.3s;
+            position: relative;
+            padding: 0 5px;
+        }
+        
+        .footer a:hover {
+            color: #b22222;
+        }
+        
+        .footer a::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: #b22222;
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+        
+        .footer a:hover::after {
+            transform: scaleX(1);
+        }
+        
+        /* 自定义弹窗样式 - 暗黑版 */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            animation: fadeInModal 0.4s forwards;
+            backdrop-filter: blur(5px);
+        }
+        
+        @keyframes fadeInModal {
+            to { opacity: 1; }
+        }
+        
+        .custom-modal {
+            background: linear-gradient(145deg, #0a0a1a, #1a1a2e);
+            border-radius: 15px;
+            border: 2px solid rgba(139, 0, 139, 0.5);
+            box-shadow: 
+                0 0 50px rgba(139, 0, 0, 0.7),
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                inset 0 0 20px rgba(0, 0, 0, 0.8);
+            width: 90%;
+            max-width: 500px;
+            overflow: hidden;
+            transform: translateY(-40px) scale(0.9);
+            animation: slideInModal 0.5s forwards;
+        }
+        
+        @keyframes slideInModal {
+            to { transform: translateY(0) scale(1); }
+        }
+        
+        .modal-header {
+            background: linear-gradient(90deg, #1a1a2e, #0a0a1a);
+            padding: 25px;
+            border-bottom: 1px solid rgba(139, 0, 139, 0.4);
+            position: relative;
+        }
+        
+        .modal-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #8b0000, #4a0000, #2e0000);
+            box-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+        }
+        
+        .modal-title {
+            color: #b22222;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-title::before {
+            content: "⌖";
+            font-size: 26px;
+        }
+        
+        .modal-body {
+            padding: 35px;
+        }
+        
+        .modal-text {
+            color: #b0b0b0;
+            line-height: 1.7;
+            margin-bottom: 25px;
+            font-size: 16px;
+            text-align: center;
+        }
+        
+        .modal-input {
+            width: 100%;
+            padding: 18px;
+            background-color: rgba(10, 10, 20, 0.9);
+            border: 1px solid rgba(139, 0, 139, 0.5);
+            border-radius: 8px;
+            color: #f0f0f0;
+            font-size: 16px;
+            margin-top: 15px;
+            transition: all 0.3s;
+            font-family: monospace;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-input:focus {
+            outline: none;
+            border-color: #b22222;
+            box-shadow: 
+                0 0 15px rgba(178, 34, 34, 0.5),
+                inset 0 2px 10px rgba(0, 0, 0, 0.7);
+            background-color: rgba(15, 15, 25, 0.95);
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 20px;
+            margin-top: 35px;
+        }
+        
+        .modal-btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            min-width: 120px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        .modal-btn-primary {
+            background: linear-gradient(90deg, #8b0000, #b22222);
+            color: #f0f0f0;
+            box-shadow: 
+                0 4px 15px rgba(139, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(139, 0, 139, 0.3);
+        }
+        
+        .modal-btn-primary:hover {
+            background: linear-gradient(90deg, #b22222, #8b0000);
+            box-shadow: 
+                0 6px 20px rgba(178, 34, 34, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .modal-btn-secondary {
+            background: linear-gradient(90deg, #333, #444);
+            color: #ccc;
+            border: 1px solid rgba(80, 80, 80, 0.5);
+            box-shadow: 
+                0 4px 10px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+        
+        .modal-btn-secondary:hover {
+            background: linear-gradient(90deg, #444, #333);
+            border-color: #666;
+            transform: translateY(-2px);
+        }
+        
+        .modal-btn-error {
+            background: linear-gradient(90deg, #8b0000, #660000);
+            color: white;
+        }
+        
+        .modal-btn-error:hover {
+            background: linear-gradient(90deg, #660000, #8b0000);
+            box-shadow: 0 0 20px rgba(139, 0, 0, 0.7);
+        }
+        
+        .modal-error {
+            color: #ff6b6b;
+            margin-top: 15px;
+            font-size: 14px;
+            display: none;
+            text-align: center;
+            padding: 10px;
+            background-color: rgba(139, 0, 0, 0.1);
+            border-radius: 6px;
+            border: 1px solid rgba(139, 0, 0, 0.3);
+        }
+        
+        .modal-success {
+            color: #b22222;
+            font-size: 24px;
+            text-align: center;
+            margin: 25px 0;
+            text-shadow: 0 0 10px rgba(178, 34, 34, 0.5);
+            animation: pulseSuccessDark 1.5s infinite alternate;
+        }
+        
+        @keyframes pulseSuccessDark {
+            0% { 
+                color: #b22222;
+                text-shadow: 0 0 10px rgba(178, 34, 34, 0.5);
+            }
+            100% { 
+                color: #ff4500;
+                text-shadow: 0 0 20px rgba(255, 69, 0, 0.8);
+            }
+        }
+        
+        /* 错误消息样式 */
+        .error-message {
+            color: #ff6b6b;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            background-color: rgba(139, 0, 0, 0.15);
+            border-radius: 8px;
+            margin-top: 20px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* 成功消息样式 */
+        .success-message {
+            color: #b22222;
+            text-align: center;
+            padding: 25px;
+            border: 1px solid rgba(178, 34, 34, 0.4);
+            background-color: rgba(139, 0, 139, 0.1);
+            border-radius: 8px;
+            margin-top: 20px;
+            animation: pulseSuccessDark 2s infinite;
+        }
+        
+        /* 关闭按钮 */
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(139, 0, 139, 0.2);
+            border: 1px solid rgba(139, 0, 139, 0.4);
+            color: #b22222;
+            font-size: 28px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-close:hover {
+            background-color: rgba(178, 34, 34, 0.3);
+            transform: rotate(90deg);
+            box-shadow: 0 0 15px rgba(178, 34, 34, 0.5);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding-right: 0;
+                border-right: none;
+                border-bottom: 1px solid rgba(139, 0, 139, 0.2);
+                padding-bottom: 40px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .emblem-text {
+                font-size: 22px;
+            }
+            
+            .emblem-symbol {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .section-title {
+                font-size: 20px;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .modal-btn {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 自定义弹窗容器 -->
+    <div id="customModalContainer"></div>
+    
+    <div class="container">
+        <!-- 局徽 - 暗黑版 -->
+        <div class="emblem">
+            <div class="emblem-symbol">
+                <div class="logo-img"></div>
+            </div>
+            <div class="emblem-text">墟境调和局·华苑分局</div>
+            <div class="emblem-subtext">XUJING TIAOHEJU</div>
+        </div>
+        
+        <div class="content">
+            <!-- 主内容区 -->
+            <div class="main-content">
+                <!-- 部门简介 -->
+                <div class="section">
+                    <h2 class="section-title">部门简介</h2>
+                    <p class="intro-text">
+                        特殊部门：墟境调和局·华苑分局<br>
+                        办公地点：
+                        <span class="highlight building-display" id="building-link">
+                            <span class="building-normal">7栋401</span>
+                            <span class="building-hover">巢穴</span>
+                        </span>
+                    </p>
+                    <p class="intro-text">
+                        我们是华苑社区隐态秩序的维护者，负责调和"日常"与"异常"之间的界限。
+                    </p>
+                </div>
+                
+                <!-- 主要职责 -->
+                <div class="section">
+                    <h2 class="section-title">主要职责</h2>
+                    <ul class="duties">
+                        <li>
+                            <strong>屏障"<span class="highlight" id="barrier-link">栖界无尘</span>"运维：</strong> 
+                            覆盖全社区的灵态屏障，可自动驱逐蟑螂群、伪人及恶意入侵者，维持基础环境安宁。
+                        </li>
+                        <li>
+                            <strong>异常事件管理：</strong> 
+                            对鬼怪、异变现象等进行登记、沟通或无害化处理，确保社区隐态平衡。
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 特殊服务申请 -->
+                <div class="section">
+                    <h2 class="section-title">特殊服务申请</h2>
+                    <p class="intro-text">
+                        如您因饲养宠物（如蜘蛛）需要保留特定生物作为饵料，可向我局申请 
+                        <span class="highlight" id="service-link">【栖居权锚定】</span> 服务。
+                    </p>
+                    <p class="intro-text">
+                        我们将对指定个体（例如"<span class="highlight" id="case-link">双马尾</span>"）注射微剂量定位调和剂，
+                        使其被屏障识别为"家庭特许成员"，避免被自动驱逐。
+                    </p>
+                    <p class="intro-text">
+                        流程快速安全，耗时约3分钟，支持现场办理。
+                    </p>
+                </div>
+            </div>
+            
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <!-- 服务申请入口 -->
+                <div class="service-box">
+                    <h3 class="service-title">特殊服务申请入口</h3>
+                    <p>需要为您的特殊宠物申请豁免？点击下方链接开始申请流程。</p>
+                    <a href="lianxjz.html" class="service-link">联系局长</a>
+                </div>
+                
+                <!-- 须知 -->
+                <div class="notice-box">
+                    <h3 class="notice-title">重要须知</h3>
+                    <p class="notice-text">
+                        屏障规则不可关闭，但住户合理的生态需求，我们会尽力调和。
+                        请注意，所有服务申请需经审核，并非所有生物都符合豁免条件。
+                    </p>
+                </div>
+                
+                <!-- 公告栏 -->
+                <div class="bulletin-board">
+                    <h3 class="bulletin-title">最近公告栏</h3>
+                    <ul class="bulletin-list">
+                        <li class="bulletin-item">
+                            <div class="bulletin-date">2025年12月26日</div>
+                            <div class="bulletin-content">
+                                屏障"栖界无尘"已完成第114次迭代更新，检测灵敏度提升7%。
+                            </div>
+                        </li>
+                        <li class="bulletin-item">
+                            <div class="bulletin-date">2025年12月25日</div>
+                            <div class="bulletin-content">
+                                社区巡逻发现异常活动迹象，请居民夜间关好门窗。
+                            </div>
+                        </li>
+                        <li class="bulletin-item">
+                            <div class="bulletin-date">2025年12月24日</div>
+                            <div class="bulletin-content">
+                                <span class="bulletin-link" id="event-log-link">最近异常事件报告</span>已更新，包含三起屏障触发记录。
+                            </div>
+                        </li>
+                        <li class="bulletin-item">
+                            <div class="bulletin-date">2025年12月23日</div>
+                            <div class="bulletin-content">
+                                本月已处理栖居权锚定申请<span class="highlight">12</span>起，其中<span class="highlight">11</span>起已批准。
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>墟境调和局·华苑分局 © 2025 | 隐态秩序维护者</p>
+            <p>紧急联系电话：800-8208820 | 非紧急事务请通过网站申请</p>
+            <p>
+                <a href="#">隐私政策</a> | 
+                <a href="#">使用条款</a> | 
+                <a href="#">联系我们</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // 自定义弹窗类 - 暗黑版
+        class CustomModal {
+            constructor() {
+                this.modalContainer = document.getElementById('customModalContainer');
+                this.currentModal = null;
+            }
+
+            // 显示提示弹窗
+            showPrompt(message, title = '坐标验证', placeholder = '请输入坐标') {
+                return new Promise((resolve) => {
+                    const overlay = document.createElement('div');
+                    overlay.className = 'custom-modal-overlay';
+                    overlay.innerHTML = `
+                        <div class="custom-modal">
+                            <div class="modal-header">
+                                <h3 class="modal-title">${title}</h3>
+                                <button class="modal-close" onclick="this.closest('.custom-modal-overlay').remove(); resolve(null)">×</button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="modal-text">${message}</p>
+                                <input type="text" class="modal-input" id="modalInput" placeholder="${placeholder}" autocomplete="off">
+                                <div class="modal-error" id="modalError"></div>
+                                <div class="modal-buttons">
+                                    <button class="modal-btn modal-btn-secondary" id="cancelBtn">取消</button>
+                                    <button class="modal-btn modal-btn-primary" id="submitBtn">确认</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    this.modalContainer.appendChild(overlay);
+                    this.currentModal = overlay;
+                    
+                    const input = overlay.querySelector('#modalInput');
+                    const submitBtn = overlay.querySelector('#submitBtn');
+                    const cancelBtn = overlay.querySelector('#cancelBtn');
+                    const errorEl = overlay.querySelector('#modalError');
+                    
+                    input.focus();
+                    
+                    const submitHandler = () => {
+                        const value = input.value.trim();
+                        if (value === 'N22.562,E113.892' || value === 'N22.5629,E113.8927') {
+                            this.showSuccess('坐标验证成功，正在为您导航...', '坐标验证通过')
+                                .then(() => {
+                                    window.location.href = 'mi-nest.html';
+                                });
+                        } else if (value) {
+                            errorEl.textContent = '坐标错误，访问被拒绝。';
+                            errorEl.style.display = 'block';
+                        } else {
+                            errorEl.textContent = '请输入坐标';
+                            errorEl.style.display = 'block';
+                        }
+                    };
+                    
+                    const cancelHandler = () => {
+                        overlay.remove();
+                        resolve(null);
+                    };
+                    
+                    submitBtn.onclick = submitHandler;
+                    cancelBtn.onclick = cancelHandler;
+                    
+                    input.onkeydown = (e) => {
+                        if (e.key === 'Enter') submitHandler();
+                        if (e.key === 'Escape') cancelHandler();
+                        errorEl.style.display = 'none';
+                    };
+                    
+                    overlay.onclick = (e) => {
+                        if (e.target === overlay) cancelHandler();
+                    };
+                });
+            }
+
+            // 显示成功消息
+            showSuccess(message, title = '成功') {
+                return new Promise((resolve) => {
+                    const overlay = document.createElement('div');
+                    overlay.className = 'custom-modal-overlay';
+                    overlay.innerHTML = `
+                        <div class="custom-modal">
+                            <div class="modal-header">
+                                <h3 class="modal-title">${title}</h3>
+                                <button class="modal-close" onclick="this.closest('.custom-modal-overlay').remove(); resolve()">×</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="modal-success">✓</div>
+                                <p class="modal-text">${message}</p>
+                                <div class="modal-buttons">
+                                    <button class="modal-btn modal-btn-primary" id="confirmBtn">确定</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    this.modalContainer.appendChild(overlay);
+                    this.currentModal = overlay;
+                    
+                    const confirmBtn = overlay.querySelector('#confirmBtn');
+                    confirmBtn.onclick = () => {
+                        overlay.remove();
+                        resolve();
+                    };
+                    
+                    overlay.onclick = (e) => {
+                        if (e.target === overlay) {
+                            overlay.remove();
+                            resolve();
+                        }
+                    };
+                });
+            }
+
+            // 显示错误消息
+            showError(message, title = '错误') {
+                return new Promise((resolve) => {
+                    const overlay = document.createElement('div');
+                    overlay.className = 'custom-modal-overlay';
+                    overlay.innerHTML = `
+                        <div class="custom-modal">
+                            <div class="modal-header">
+                                <h3 class="modal-title">${title}</h3>
+                                <button class="modal-close" onclick="this.closest('.custom-modal-overlay').remove(); resolve()">×</button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="modal-text">${message}</p>
+                                <div class="modal-buttons">
+                                    <button class="modal-btn modal-btn-primary" id="confirmBtn">确定</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    this.modalContainer.appendChild(overlay);
+                    this.currentModal = overlay;
+                    
+                    const confirmBtn = overlay.querySelector('#confirmBtn');
+                    confirmBtn.onclick = () => {
+                        overlay.remove();
+                        resolve();
+                    };
+                    
+                    overlay.onclick = (e) => {
+                        if (e.target === overlay) {
+                            overlay.remove();
+                            resolve();
+                        }
+                    };
+                });
+            }
+
+            // 显示警告弹窗
+            showAlert(message, title = '警告') {
+                return this.showError(message, title);
+            }
+
+            // 关闭当前弹窗
+            close() {
+                if (this.currentModal) {
+                    this.currentModal.remove();
+                    this.currentModal = null;
+                }
+            }
+        }
+
+        // 初始化模态框
+        const modal = new CustomModal();
+
+        // 页面加载完成
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('%c墟境调和局·华苑分局 - 暗黑版', 'color: #b22222; font-size: 18px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.5);');
+            console.log('%c隐态秩序维护中...屏障"栖界无尘"运行正常', 'color: #8b0000;');
+            
+            // 设置logo加载失败处理
+            const logoImg = document.querySelector('.logo-img');
+            logoImg.onerror = function() {
+                console.warn('Logo图片加载失败，使用替代显示');
+                this.style.backgroundImage = 'none';
+                this.style.backgroundColor = 'rgba(139, 0, 139, 0.1)';
+                const text = document.createElement('div');
+                text.innerHTML = '墟境<br>调和局';
+                text.style.position = 'absolute';
+                text.style.top = '50%';
+                text.style.left = '50%';
+                text.style.transform = 'translate(-50%, -50%)';
+                text.style.color = '#8b0000';
+                text.style.fontSize = '18px';
+                text.style.fontWeight = 'bold';
+                text.style.textAlign = 'center';
+                text.style.textShadow = '0 1px 2px rgba(0,0,0,0.5)';
+                text.style.zIndex = '2';
+                this.appendChild(text);
+            };
+
+            // 绑定点击事件
+            // 建筑链接 - 办公地点
+            document.getElementById('building-link').addEventListener('click', async function(e) {
+                e.preventDefault();
+                await modal.showPrompt(
+                    '请输入坐标<br>请输入坐标<br>请输入坐标',
+                    '坐标验证',
+                    ''
+                );
+            });
+
+            // 屏障链接
+            document.getElementById('barrier-link').addEventListener('click', async function(e) {
+                e.preventDefault();
+                await modal.showPrompt(
+                    '请输入坐标<br>请输入坐标<br>请输入坐标',
+                    '坐标验证',
+                    ''
+                );
+            });
+
+            // 服务链接
+            document.getElementById('service-link').addEventListener('click', async function(e) {
+                e.preventDefault();
+                await modal.showPrompt(
+                    '请输入坐标<br>请输入坐标<br>请输入坐标',
+                    '坐标验证',
+                    ''
+                );
+            });
+
+            // 案例链接 - 双马尾
+            document.getElementById('case-link').addEventListener('click', async function(e) {
+                e.preventDefault();
+                await modal.showPrompt(
+                    '请输入坐标<br>请输入坐标<br>请输入坐标',
+                    '坐标验证',
+                    ''
+                );
+            });
+
+            // 事件日志链接
+            document.getElementById('event-log-link').addEventListener('click', async function(e) {
+                e.preventDefault();
+                await modal.showPrompt(
+                    '请输入坐标<br>请输入坐标<br>请输入坐标',
+                    '坐标验证',
+                    ''
+                );
+            });
+
+            // 为所有高亮元素添加悬停效果
+            const highlights = document.querySelectorAll('.highlight');
+            highlights.forEach(el => {
+                el.addEventListener('mouseenter', function() {
+                    this.style.transition = 'all 0.2s';
+                });
+            });
+
+            // 页面渐入效果
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.8s';
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        // 回车键提交功能
+        (function() {
+            'use strict';
+            
+            function init() {
+                document.addEventListener('keydown', handleEnterKey);
+                console.log('回车提交功能已启用');
+            }
+            
+            function handleEnterKey(e) {
+                if (e.key !== 'Enter') return;
+                
+                const excludedTags = ['TEXTAREA', 'SELECT', 'A', 'BUTTON', 'INPUT'];
+                const tagName = e.target.tagName;
+                
+                if (excludedTags.includes(tagName)) {
+                    if (tagName === 'INPUT') {
+                        const type = e.target.type;
+                        if (type === 'text' || type === 'password' || type === 'email' || type === 'search') {
+                            // 这些input可以触发提交
+                        } else {
+                            return;
+                        }
+                    }
+                    if (tagName === 'TEXTAREA') return;
+                }
+                
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // 查找当前活跃的输入框并触发提交
+                const activeModal = document.querySelector('.custom-modal-overlay');
+                if (activeModal) {
+                    const submitBtn = activeModal.querySelector('#submitBtn, #confirmBtn');
+                    if (submitBtn && !submitBtn.disabled) {
+                        submitBtn.click();
+                        return;
+                    }
+                }
+                
+                // 查找页面中的提交按钮
+                const primaryBtns = document.querySelectorAll('.modal-btn-primary, .service-link, [type="submit"]');
+                for (let btn of primaryBtns) {
+                    if (!btn.disabled && btn.offsetParent !== null) {
+                        btn.click();
+                        return;
+                    }
+                }
+            }
+            
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+        })();
+    </script>
+</body>
+</html>
