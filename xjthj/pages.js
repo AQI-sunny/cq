@@ -125,7 +125,7 @@ const SimplePageCounter = {
     },
     
     // 获取当前页码
-    getPageNumber: function() {
+    /* getPageNumber: function() {
         // 获取当前文件名
         const currentFile = this.getCurrentFileName();
         
@@ -193,10 +193,11 @@ const SimplePageCounter = {
                 fileName: currentFile
             };
         }
-    },
+    }, */
+    
     
     // 从URL参数获取页码（备用方法）
-    getFromURL: function() {
+   /*  getFromURL: function() {
         const urlParams = new URLSearchParams(window.location.search);
         const pageParams = ['page', 'p', 'pg', 'pagenum'];
         
@@ -211,7 +212,99 @@ const SimplePageCounter = {
             }
         }
         return null;
-    },
+    }, */
+// 获取当前页码
+getPageNumber: function() {
+    // 先尝试从URL参数获取（如果有的话）
+    const urlPageInfo = this.getFromURL();
+    if (urlPageInfo) return urlPageInfo;
+    
+    // 获取当前文件名
+    const currentFile = this.getCurrentFileName();
+    
+    // 首先尝试去除查询参数和哈希
+    const cleanFile = currentFile.split('?')[0].split('#')[0];
+    let pageIndex = this.pageList.indexOf(cleanFile);
+    
+    // 如果没找到，尝试URL解码
+    if (pageIndex === -1) {
+        try {
+            const decodedFile = decodeURIComponent(cleanFile);
+            pageIndex = this.pageList.indexOf(decodedFile);
+        } catch (e) {
+            // 如果解码失败，忽略
+        }
+    }
+    
+    // 如果还没找到，尝试精确匹配原始文件名
+    if (pageIndex === -1) {
+        pageIndex = this.pageList.indexOf(currentFile);
+    }
+    
+    // 尝试处理空格差异
+    if (pageIndex === -1) {
+        for (let i = 0; i < this.pageList.length; i++) {
+            const pageFile = this.pageList[i];
+            const normalizedCurrent = cleanFile.replace(/\s+/g, ' ').trim();
+            const normalizedPage = pageFile.replace(/\s+/g, ' ').trim();
+            
+            if (normalizedCurrent === normalizedPage) {
+                pageIndex = i;
+                break;
+            }
+        }
+    }
+    
+    // 尝试部分匹配
+    if (pageIndex === -1) {
+        for (let i = 0; i < this.pageList.length; i++) {
+            const pageFile = this.pageList[i];
+            
+            // 检查是否相互包含
+            if (cleanFile.includes(pageFile) || pageFile.includes(cleanFile)) {
+                pageIndex = i;
+                break;
+            }
+        }
+    }
+    
+    // 返回结果
+    if (pageIndex !== -1) {
+        return {
+            current: pageIndex + 1,
+            total: this.pageList.length,
+            found: true,
+            fileName: this.pageList[pageIndex]
+        };
+    } else {
+        // 没找到页面
+        return {
+            current: 0,
+            total: this.pageList.length,
+            found: false,
+            fileName: currentFile
+        };
+    }
+},
+
+// 从URL参数获取页码（备用方法）
+getFromURL: function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pageParams = ['page', 'p', 'pg', 'pagenum'];
+    
+    for (const param of pageParams) {
+        if (urlParams.has(param)) {
+            const pageNum = parseInt(urlParams.get(param)) || 1;
+            return {
+                current: pageNum,
+                total: this.pageList.length,
+                found: true
+            };
+        }
+    }
+    return null;
+},
+    
     
     // 获取当前文件名
     getCurrentFileName: function() {
