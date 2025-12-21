@@ -5,62 +5,52 @@
  */
 
 const SimplePageCounter = {
-    // 配置：您的页面组
-    // 请在这里添加您的所有HTML页面文件名，按顺序排列
+    // 配置：严格按照您要求的顺序排列
     pageList: [
-        // 示例：按您的实际文件名修改
-    
-
-
-'SY.html',
-'jump1.html',
-'smw.html',
-'jqt简历.html',
-'ycbg.html',
-'ycbg222.html',
-'langr.html',
-'pingz.html',
-'tiaojie.html',
-'屏障2.0.html',
-'brht.html',
-'logs.html',
-'chanpin.html',
-'qiantai.html',
-'7D401.html',
-'pingz3-denglu.html',
-'scan.html',
-/* 'search.html', */
-'shouquanm - xuliny.html',
-'xjthj-qt.html',
-'chajlquanxianm.html',
-'lxm.html',
-'quzhu.html',
-'biaog111.html',
-'shouquanm-xuliny.html',
-'shouquanm.html',
-'lubos.html',
-'building.html',
-'WEAK.html',
-/* 'wjmydh.html', */
-'zbjs.html',
-'xly.html',
-'yjyjyjj.html',
-'fanzhi.html',
-'dxsdxs.html',
-
-'hidden-114.html',
-'co134-lxc.html',
-
-'ta.html',
-'horrorsy.html',
-'bejieju.html',
-'bejieju2.html',
-'nest.html',
-'SGXY.html',
-'jiejuaaa.html',
-'jiejubbb.html',
-'jiejucc.html'
-],
+        'SY.html',
+        'jump1.html',
+        'smw.html',
+        'jqt简历.html',
+        'ycbg.html',
+        'ycbg222.html',
+        'langr.html',
+        'pingz.html',
+        'tiaojie.html',
+        '屏障2.0.html',
+        'brht.html',
+        'logs.html',
+        'chanpin.html',
+        'qiantai.html',
+        '7D401.html',
+        'pingz3-denglu.html',
+        'scan.html',
+        'xjthj-qt.html',
+        'chajlquanxianm.html',
+        'lxm.html',
+        'quzhu.html',
+        'biaog111.html',
+        'shouquanm-xuliny.html',
+        'shouquanm.html',
+        'lubos.html',
+        'building.html',
+        'WEAK.html',
+        'zbjs.html',
+        'xly.html',
+        'yjyjyjj.html',
+        'fanzhi.html',
+        'dxsdxs.html',
+        'hidden-114.html',
+        'co134-lxc.html',
+        'ta.html',
+        'horrorsy.html',
+        'bejieju.html',
+        'bejieju2.html',
+        'nest.html',
+        'SGXY.html',
+        'jiejuaaa.html',
+        'jiejubbb.html',
+        'jiejucc.html'
+    ],
     
     // 样式 - 极简风格
     styles: `
@@ -86,6 +76,18 @@ const SimplePageCounter = {
             opacity: 0.9;
         }
         
+        /* 未找到页面的样式 */
+        #simple-page-counter.miss {
+            background: rgba(255, 165, 0, 0.7); /* 橙色背景 */
+            font-weight: bold;
+            animation: blink 2s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 0.9; }
+        }
+        
         /* 移动端更小 */
         @media (max-width: 768px) {
             #simple-page-counter {
@@ -106,9 +108,10 @@ const SimplePageCounter = {
         const pageNumber = this.getPageNumber();
         
         // 显示页码
-        if (pageNumber) {
-            this.showPageCounter(pageNumber);
-        }
+        this.showPageCounter(pageNumber);
+        
+        // 输出调试信息到控制台
+        this.logDebugInfo();
     },
     
     // 注入样式
@@ -126,100 +129,95 @@ const SimplePageCounter = {
         // 获取当前文件名
         const currentFile = this.getCurrentFileName();
         
-        // 在页面列表中查找当前文件
-        const pageIndex = this.pageList.indexOf(currentFile);
+        // 首先尝试精确匹配
+        let pageIndex = this.pageList.indexOf(currentFile);
         
-        if (pageIndex !== -1) {
-            // 找到文件，返回页码信息
-            return {
-                current: pageIndex + 1,  // 当前是第几页（从1开始）
-                total: this.pageList.length  // 总页数
-            };
+        // 如果精确匹配失败，尝试多种匹配策略
+        if (pageIndex === -1) {
+            // 1. 尝试去除URL编码
+            try {
+                const decodedFile = decodeURIComponent(currentFile);
+                pageIndex = this.pageList.indexOf(decodedFile);
+            } catch (e) {
+                // 如果解码失败，忽略
+            }
         }
         
-        // 如果没找到，尝试其他方法
+        // 2. 尝试去除查询参数和哈希
+        if (pageIndex === -1) {
+            const cleanFile = currentFile.split('?')[0].split('#')[0];
+            pageIndex = this.pageList.indexOf(cleanFile);
+        }
         
-        // 方法1: 从URL参数获取
-        const urlInfo = this.getFromURL();
-        if (urlInfo) return urlInfo;
+        // 3. 尝试处理空格差异
+        if (pageIndex === -1) {
+            for (let i = 0; i < this.pageList.length; i++) {
+                const pageFile = this.pageList[i];
+                const normalizedCurrent = currentFile.replace(/\s+/g, ' ').trim();
+                const normalizedPage = pageFile.replace(/\s+/g, ' ').trim();
+                
+                if (normalizedCurrent === normalizedPage) {
+                    pageIndex = i;
+                    break;
+                }
+            }
+        }
         
-        // 方法2: 从data属性获取
-        const dataInfo = this.getFromData();
-        if (dataInfo) return dataInfo;
+        // 4. 尝试部分匹配
+        if (pageIndex === -1) {
+            for (let i = 0; i < this.pageList.length; i++) {
+                const pageFile = this.pageList[i];
+                
+                // 检查是否相互包含
+                if (currentFile.includes(pageFile) || pageFile.includes(currentFile)) {
+                    pageIndex = i;
+                    break;
+                }
+            }
+        }
         
-        // 方法3: 从文件名猜测（如果文件名包含数字）
-        const guessInfo = this.guessFromFilename(currentFile);
-        if (guessInfo) return guessInfo;
-        
-        return null;
+        // 返回结果
+        if (pageIndex !== -1) {
+            return {
+                current: pageIndex + 1,  // 当前是第几页（从1开始）
+                total: this.pageList.length,  // 总页数
+                found: true,
+                fileName: this.pageList[pageIndex]
+            };
+        } else {
+            // 没找到页面
+            return {
+                current: 0,
+                total: this.pageList.length,
+                found: false,
+                fileName: currentFile
+            };
+        }
     },
     
-    // 从URL参数获取页码
+    // 从URL参数获取页码（备用方法）
     getFromURL: function() {
         const urlParams = new URLSearchParams(window.location.search);
-        
-        // 检查常见页码参数
         const pageParams = ['page', 'p', 'pg', 'pagenum'];
+        
         for (const param of pageParams) {
             if (urlParams.has(param)) {
                 const pageNum = parseInt(urlParams.get(param)) || 1;
                 return {
                     current: pageNum,
-                    total: this.pageList.length || pageNum + 5
+                    total: this.pageList.length,
+                    found: true
                 };
             }
         }
-        
-        return null;
-    },
-    
-    // 从data属性获取
-    getFromData: function() {
-        const pageElements = document.querySelectorAll('[data-page], [data-page-num], [data-current-page]');
-        
-        for (const el of pageElements) {
-            let current = 1;
-            
-            if (el.dataset.page) {
-                current = parseInt(el.dataset.page);
-            } else if (el.dataset.pageNum) {
-                current = parseInt(el.dataset.pageNum);
-            } else if (el.dataset.currentPage) {
-                current = parseInt(el.dataset.currentPage);
-            }
-            
-            if (current > 0) {
-                return {
-                    current: current,
-                    total: this.pageList.length || current + 3
-                };
-            }
-        }
-        
-        return null;
-    },
-    
-    // 从文件名猜测（如果文件名包含数字）
-    guessFromFilename: function(filename) {
-        // 提取文件名中的数字
-        const matches = filename.match(/\d+/g);
-        
-        if (matches && matches.length > 0) {
-            const pageNum = parseInt(matches[0]);
-            if (pageNum > 0) {
-                return {
-                    current: pageNum,
-                    total: this.pageList.length || pageNum + 3
-                };
-            }
-        }
-        
         return null;
     },
     
     // 获取当前文件名
     getCurrentFileName: function() {
-        return window.location.pathname.split('/').pop() || 'index.html';
+        const pathname = window.location.pathname;
+        const filename = pathname.split('/').pop() || 'index.html';
+        return filename;
     },
     
     // 显示页码计数器
@@ -232,20 +230,35 @@ const SimplePageCounter = {
         const counter = document.createElement('div');
         counter.id = 'simple-page-counter';
         
-        // 设置文本格式：当前页/总页数
-        counter.textContent = `${pageInfo.current}/${pageInfo.total}`;
+        // 根据是否找到页面设置不同的显示
+        if (pageInfo.found) {
+            // 找到页面：显示 当前页/总页数
+            counter.textContent = `${pageInfo.current}/${pageInfo.total}`;
+            counter.title = `当前第 ${pageInfo.current} 页，共 ${pageInfo.total} 页（${pageInfo.fileName}）`;
+        } else {
+            // 没找到页面：显示 miss/总页数
+            counter.textContent = `miss/${pageInfo.total}`;
+            counter.classList.add('miss');
+            counter.title = `页面未在列表中：${pageInfo.fileName}，共 ${pageInfo.total} 页`;
+        }
         
         // 添加到页面
         document.body.appendChild(counter);
+    },
+    
+    // 输出调试信息
+    logDebugInfo: function() {
+        console.log('=== 页码调试信息 ===');
+        console.log(`总页数: ${this.pageList.length}`);
+        console.log('页面列表:');
+        this.pageList.forEach((page, index) => {
+            console.log(`${index + 1}. ${page}`);
+        });
         
-        // 可选：添加标题属性显示更多信息
-        counter.title = `当前第 ${pageInfo.current} 页，共 ${pageInfo.total} 页`;
+        const currentFile = this.getCurrentFileName();
+        console.log(`当前文件: ${currentFile}`);
     }
 };
-
-// 使用方法：
-// 1. 修改上面的 pageList 数组，添加您的所有HTML文件名
-// 2. 将此JS文件引入到您的所有HTML页面中
 
 // 自动初始化
 if (document.readyState === 'loading') {
