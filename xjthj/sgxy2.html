@@ -1786,46 +1786,22 @@
                     showConfirmationDialog(
                         "上古协议已重启",
                         "上古共生契约已重新锚定。\n\n真结局触发条件：\n1. 访问所有隐藏页面 ✓\n2. 找到古老图腾并完成仪式 ✓\n3. 确认上古协议 ✓\n\n结局：调和局启动古老仪式，将'他'的力量重新锚定为保护屏障，螂人获得合法生态区，CT-114作为信使回归，7又7分之4栋恢复稳定。\n\n是否前往最终决策页面？",
-                        function() {
-                            // 在实际游戏中，这里应该重定向到 nest_location.html
-                            window.location.href = "jiejucc.html";
-                            
-                            // 模拟重定向
-                            showMessage("正在前往最终决策页面...", true);
-                            playSoundEffect('transition');
-                            
-                            // 添加一个模拟链接
-                            const finalLink = document.createElement('a');
-                            finalLink.href = "#";
-                            finalLink.textContent = "点击这里前往最终决策";
-                            finalLink.style.display = 'block';
-                            finalLink.style.textAlign = 'center';
-                            finalLink.style.margin = '20px auto';
-                            finalLink.style.color = '#2E8B57';
-                            finalLink.style.fontWeight = 'bold';
-                            finalLink.style.textDecoration = 'none';
-                            finalLink.style.fontSize = '1.1rem';
-                            finalLink.style.padding = '10px';
-                            finalLink.style.border = '2px solid #2E8B57';
-                            finalLink.style.borderRadius = '5px';
-                            finalLink.style.maxWidth = '300px';
-                            
-                            finalLink.addEventListener('mouseenter', function() {
-                                this.style.backgroundColor = 'rgba(46, 139, 87, 0.1)';
-                            });
-                            
-                            finalLink.addEventListener('mouseleave', function() {
-                                this.style.backgroundColor = 'transparent';
-                            });
-                            
-                            finalLink.addEventListener('click', function(e) {
-                                e.preventDefault();
-                                showMessage("(将【确认上古协议】)", true);
-                            });
-                            
-                            document.querySelector('.ritual-message').appendChild(finalLink);
-                        }
-                    );
+                       function() {
+    // 先显示消息和效果
+    showMessage("正在前往最终结局...", true);
+    playSoundEffect('transition');
+    
+    // 添加视觉反馈（如淡出效果）
+    document.body.style.transition = 'opacity 0.5s';
+    document.body.style.opacity = '0.8';
+    
+    // 延迟1秒后跳转，让用户看到效果
+    setTimeout(() => {
+        window.location.href = "jiejucc.html";
+    }, 1000);
+    
+    // 注意：不要添加finalLink，避免冲突
+} );
                 }, 1500);
             }, 3000);
         });
