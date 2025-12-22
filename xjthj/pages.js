@@ -8,18 +8,21 @@ const SimplePageCounter = {
     // 配置：严格按照您要求的顺序排列
     pageList: [
         'SY.html',
+        'jqt简历.html',
         'jump1.html',
         'smw.html',
-        'jqt简历.html',
+        
         'ycbg.html',
         'ycbg222.html',
+         'chanpin.html',
         'langr.html',
         'pingz.html',
         'tiaojie.html',
         '屏障2.0.html',
         'brht.html',
         'logs.html',
-        'chanpin.html',
+        'quzhu.html',
+       
         'qiantai.html',
         '7D401.html',
         'pingz3-denglu.html',
@@ -27,7 +30,7 @@ const SimplePageCounter = {
         'xjthj-qt.html',
         'chajlquanxianm.html',
         'lxm.html',
-        'quzhu.html',
+       
         'biaog111.html',
         'shouquanm-xuliny.html',
         'shouquanm.html',
@@ -362,3 +365,4 @@ if (document.readyState === 'loading') {
 
 // 暴露为全局对象
 window.SimplePageCounter = SimplePageCounter;
+
