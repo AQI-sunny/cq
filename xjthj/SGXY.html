@@ -25,34 +25,20 @@
             overflow-x: hidden;
         }
         
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M20,20 Q40,5 60,20 T100,20 M20,50 Q40,35 60,50 T100,50 M20,80 Q40,65 60,80 T100,80" stroke="%238B4513" stroke-width="0.5" fill="none"/></svg>');
-            opacity: 0.05;
-            pointer-events: none;
-            z-index: -1;
-        }
-        
         .container {
             max-width: 1200px;
             margin: 0 auto;
             position: relative;
         }
         
-        /* 纸张效果 */
         .parchment {
             background-color: #F5EBD4;
             background-image: 
                 linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
                 linear-gradient(#eee .1em, transparent .1em);
             background-size: 100% 1.2em;
-            border: 15px solid transparent;
-            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M0,0 L100,0 L100,100 L0,100 Z" fill="none" stroke="%238B4513" stroke-width="3" stroke-dasharray="5,3"/></svg>') 30 stretch;
+            border: 15px solid #8B4513;
+            border-style: double;
             padding: 40px 60px;
             box-shadow: 
                 0 0 30px rgba(139, 69, 19, 0.5),
@@ -60,22 +46,6 @@
             position: relative;
             min-height: 90vh;
             margin-bottom: 40px;
-        }
-        
-        /* 烧灼和虫蛀效果 */
-        .parchment::before {
-            content: "";
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            background-image: 
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><circle cx="30" cy="40" r="8" fill="%231a0f0a" opacity="0.7"/><circle cx="170" cy="80" r="5" fill="%231a0f0a" opacity="0.7"/><ellipse cx="120" cy="180" rx="12" ry="6" fill="%231a0f0a" opacity="0.7"/><circle cx="50" cy="150" r="4" fill="%231a0f0a" opacity="0.7"/><path d="M10,10 Q25,30 10,50 T10,90" stroke="%231a0f0a" stroke-width="2" fill="none" opacity="0.6"/></svg>'),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path d="M180,20 Q160,40 180,60" stroke="%238B4513" stroke-width="1.5" fill="none" opacity="0.4"/><path d="M150,120 Q130,140 150,160" stroke="%238B4513" stroke-width="1" fill="none" opacity="0.4"/></svg>');
-            background-repeat: no-repeat;
-            pointer-events: none;
-            z-index: -1;
         }
         
         .header {
@@ -170,7 +140,6 @@
             transform: scale(1.1);
         }
         
-        /* 符文提示工具 */
         .glyph-tooltip {
             position: fixed;
             background-color: rgba(26, 15, 10, 0.95);
@@ -282,15 +251,6 @@
             font-size: 12px;
         }
         
-        .condition-list li.missing::before {
-            content: "?";
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            color: #8B4513;
-        }
-        
         .interactive-area {
             display: flex;
             flex-wrap: wrap;
@@ -312,28 +272,6 @@
             align-items: center;
             justify-content: center;
             position: relative;
-        }
-        
-        .seal-area {
-            background-image: 
-                radial-gradient(circle at center, transparent 60%, rgba(139, 69, 19, 0.1) 100%),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path d="M100,20 A80,80 0 1,1 100,180 A80,80 0 1,1 100,20 M100,40 A60,60 0 1,0 100,160 A60,60 0 1,0 100,40" fill="none" stroke="%238B4513" stroke-width="2" stroke-dasharray="5,3"/><path d="M60,100 Q100,60 140,100 Q100,140 60,100" fill="none" stroke="%238B4513" stroke-width="1.5"/></svg>');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-        
-        .seal-crack {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            background-image: 
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="250" viewBox="0 0 300 250"><path d="M150,80 L170,120 L130,160 L150,200" stroke="%23c53030" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M100,100 L120,80 L90,60" stroke="%23c53030" stroke-width="2" fill="none" stroke-linecap="round"/></svg>');
-            background-position: center;
-            background-repeat: no-repeat;
-            pointer-events: none;
         }
         
         .area-title {
@@ -363,6 +301,8 @@
             background-color: rgba(255, 255, 255, 0.5);
             transition: all 0.3s;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
         
         .witness-slot.hover {
@@ -441,7 +381,6 @@
             to { box-shadow: 0 0 15px rgba(255, 215, 0, 0.7); }
         }
         
-        /* 确认对话框样式 */
         .confirmation-dialog {
             position: fixed;
             top: 50%;
@@ -539,29 +478,195 @@
             display: block;
         }
         
-        /* 快捷键提示 */
-        .shortcut-hint {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: rgba(26, 15, 10, 0.8);
+        .upload-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+            width: 100%;
+        }
+        
+        .upload-button {
+            background-color: #8B4513;
             color: #F5EBD4;
-            padding: 10px 15px;
+            border: none;
+            padding: 10px 20px;
             border-radius: 5px;
+            cursor: pointer;
             font-size: 0.9rem;
-            border: 1px solid #8B4513;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .upload-button:hover {
+            background-color: #5D2906;
+            transform: translateY(-2px);
+        }
+        
+        .upload-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .file-input {
             display: none;
-            z-index: 100;
         }
         
-        .shortcut-hint.show {
+        .file-info {
+            font-size: 0.8rem;
+            color: #8B4513;
+            text-align: center;
+            max-width: 90%;
+            word-break: break-word;
+            display: none;
+            margin-top: 5px;
+        }
+        
+        .verification-status {
+            padding: 8px 12px;
+            border-radius: 5px;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+        
+        .verification-success {
+            background-color: rgba(46, 139, 87, 0.1);
+            border: 1px solid #2E8B57;
+            color: #2E8B57;
+        }
+        
+        .verification-failure {
+            background-color: rgba(197, 48, 48, 0.1);
+            border: 1px solid #c53030;
+            color: #c53030;
+        }
+        
+        .verification-checking {
+            background-color: rgba(139, 69, 19, 0.1);
+            border: 1px solid #8B4513;
+            color: #8B4513;
+        }
+        
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(139, 69, 19, 0.3);
+            border-top: 3px solid #8B4513;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .slot-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .upload-text {
+            font-size: 0.9rem;
+            color: #8B4513;
+            text-align: center;
+        }
+        
+        .image-preview {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: none;
+        }
+        
+        .manual-verification {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: rgba(139, 69, 19, 0.05);
+            border: 1px solid #8B4513;
+            border-radius: 5px;
+            width: 100%;
+            display: none;
+        }
+        
+        .manual-verification.active {
             display: block;
-            animation: hintFadeIn 0.3s;
         }
         
-        @keyframes hintFadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .manual-verification-title {
+            font-size: 0.9rem;
+            color: #5D2906;
+            margin-bottom: 8px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .manual-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .manual-input {
+            padding: 8px 12px;
+            border: 1px solid #8B4513;
+            border-radius: 3px;
+            background-color: rgba(245, 235, 212, 0.9);
+            color: #5D2906;
+            font-size: 0.9rem;
+        }
+        
+        .manual-input:focus {
+            outline: none;
+            border-color: #5D2906;
+            box-shadow: 0 0 5px rgba(139, 69, 19, 0.3);
+        }
+        
+        .manual-button {
+            background-color: #8B4513;
+            color: #F5EBD4;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .manual-button:hover {
+            background-color: #5D2906;
+        }
+        
+        .toggle-manual-btn {
+            background: none;
+            border: none;
+            color: #8B4513;
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-top: 8px;
+            transition: all 0.3s;
+            padding: 5px;
+        }
+        
+        .toggle-manual-btn:hover {
+            color: #5D2906;
         }
         
         .footer {
@@ -574,7 +679,57 @@
             opacity: 0.8;
         }
         
-        /* 响应式调整 */
+        .failure-redirect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(26, 15, 10, 0.95);
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #F5EBD4;
+            display: none;
+        }
+        
+        .failure-message {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            text-align: center;
+            color: #c53030;
+            text-shadow: 0 0 10px rgba(197, 48, 48, 0.5);
+        }
+        
+        .redirect-countdown {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .redirect-link {
+            background-color: #c53030;
+            color: #F5EBD4;
+            padding: 12px 24px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .redirect-link:hover {
+            background-color: #9e2424;
+            transform: translateY(-2px);
+        }
+        
+        .timeout-message {
+            color: #c53030;
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
         @media (max-width: 768px) {
             .parchment {
                 padding: 20px 30px;
@@ -620,8 +775,12 @@
         </div>
     </div>
     
-    <!-- 快捷键提示 -->
-    <div class="shortcut-hint" id="shortcutHint"></div>
+    <!-- 签署失败重定向页面 -->
+    <div class="failure-redirect" id="failureRedirect">
+        <div class="failure-message" id="failureMessage">签署失败！验证未通过</div>
+        <div class="redirect-countdown" id="redirectCountdown">5秒后跳转到签署失败结局...</div>
+        <a href="bejieju2.html" class="redirect-link" id="redirectLink">立即跳转</a>
+    </div>
     
     <div class="container">
         <div class="parchment">
@@ -795,7 +954,6 @@
             <div class="interactive-area">
                 <div class="seal-area">
                     <div class="area-title">契约封印</div>
-                    <div class="seal-crack"></div>
                     <div class="seal-glow" id="sealGlow"></div>
                     <div class="area-hint" id="sealHint">请将象征双方共同记忆的古老图腾，拖拽至此。</div>
                 </div>
@@ -803,22 +961,44 @@
                 <div class="witness-area">
                     <div class="area-title">见证物放置区</div>
                     <div class="witness-slot" id="witnessSlot">
-                        <img id="totemImage" alt="古老图腾">
-                        <div id="slotHint">空</div>
+                        <div class="slot-content" id="slotContent">
+                            <div class="upload-text">点击或拖拽上传图腾图片</div>
+                            <div class="upload-text">要求：tuteng.png</div>
+                        </div>
+                        <img class="image-preview" id="imagePreview" alt="古老图腾预览">
+                        <input type="file" class="file-input" id="fileInput" accept="image/*">
                     </div>
-                    <div class="area-hint" id="witnessHint">来自 room_704.html 的发现，或许能填补这份缺失的记忆。</div>
+                    <div class="area-hint" id="witnessHint">请上传从博士后台账户找到的图腾图片文件(tuteng.png)</div>
+                    
+                    <div class="upload-area">
+                        <button class="upload-button" id="uploadButton">
+                            <span>选择图腾图片</span>
+                            <div class="loading-spinner" id="loadingSpinner"></div>
+                        </button>
+                        <div class="file-info" id="fileInfo"></div>
+                        <div class="verification-status" id="verificationStatus"></div>
+                        
+                        <div class="manual-verification" id="manualVerification">
+                            <div class="manual-verification-title">无法上传图片？请手动输入标识码</div>
+                            <div class="manual-input-group">
+                                <input type="text" class="manual-input" id="manualIdentifier" placeholder="请输入虫族标识码">
+                                <button class="manual-button" id="manualVerifyBtn">验证标识码</button>
+                            </div>
+                        </div>
+                        
+                        <button class="toggle-manual-btn" id="toggleManualBtn">无法上传图片？点击此处手动验证</button>
+                    </div>
                 </div>
             </div>
             
-            <div class="ritual-message" id="ritualMessage">
-                <!-- 仪式反馈信息将显示在这里 -->
-            </div>
+            <div class="ritual-message" id="ritualMessage"></div>
             
             <button class="confirm-button" id="confirmButton" disabled>协议未就绪，无法确认</button>
             
             <div class="footer">
                 <p>墟境调和局 · 最高机密档案 · 仅限局长权限访问</p>
                 <p>访问密码：ANCESTRAL-PACT | 最后更新：即将失效</p>
+                <p style="font-size: 0.8rem; margin-top: 5px; color: #c53030;">注意：必须上传正确的图腾图片(tuteng.png)或输入正确的标识码才能继续仪式</p>
             </div>
         </div>
     </div>
@@ -829,23 +1009,21 @@
         let ritualActive = false;
         let countdownInterval;
         let tooltipTimeout;
+        let uploadTimeout;
+        
+        // 正确的标识码和文件名
+        const CORRECT_IDENTIFIER = "LXΩ-20251220-4B401-Γ9A7Ω2Δ1";
+        const CORRECT_FILENAME = "tuteng.png";
         
         // 初始化页面
         document.addEventListener('DOMContentLoaded', function() {
-            // 设置倒计时
             startCountdown();
-            
-            // 初始化交互元素
             initInteractiveGlyphs();
-            initDragAndDrop();
+            initFileUpload();
+            initManualVerification();
             initSealInteraction();
             initConfirmationDialog();
-            
-            // 检查是否有图腾
             checkForTotem();
-            
-            // 添加快捷键提示
-            initShortcutHints();
         });
         
         // 启动倒计时显示
@@ -861,7 +1039,6 @@
                     document.getElementById('countdownTimer').innerHTML = '<span class="critical">协议已失效</span>';
                     clearInterval(countdownInterval);
                     
-                    // 如果倒计时结束，显示失败消息
                     if (!ritualActive) {
                         showMessage("太迟了。协议已失效。'他'已完全苏醒。", false);
                         document.getElementById('confirmButton').textContent = "协议已失效";
@@ -906,9 +1083,6 @@
                     }
                     
                     this.classList.add('glyph-glow');
-                    
-                    // 播放振翅音效（模拟）
-                    playSoundEffect('hover');
                 });
                 
                 glyph.addEventListener('mousemove', function(e) {
@@ -923,29 +1097,58 @@
                     tooltip.classList.remove('active');
                     this.classList.remove('glyph-glow');
                 });
-                
-                glyph.addEventListener('click', function() {
-                    this.classList.add('glyph-glow');
-                    setTimeout(() => {
-                        this.classList.remove('glyph-glow');
-                    }, 2000);
-                    
-                    playSoundEffect('click');
-                });
-            });
-            
-            // 点击页面其他地方隐藏工具提示
-            document.addEventListener('click', function(e) {
-                if (!e.target.classList.contains('insect-glyph')) {
-                    tooltip.classList.remove('active');
-                }
             });
         }
         
-        // 初始化拖放功能
-        function initDragAndDrop() {
+        // 初始化文件上传功能 - 修复卡住问题
+        function initFileUpload() {
+            const fileInput = document.getElementById('fileInput');
+            const uploadButton = document.getElementById('uploadButton');
             const witnessSlot = document.getElementById('witnessSlot');
+            const loadingSpinner = document.getElementById('loadingSpinner');
             
+            uploadButton.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            witnessSlot.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    const file = this.files[0];
+                    
+                    // 清除之前的超时
+                    if (uploadTimeout) {
+                        clearTimeout(uploadTimeout);
+                    }
+                    
+                    // 设置3秒超时
+                    uploadTimeout = setTimeout(() => {
+                        if (!hasTotem) {
+                            showVerificationResult(false, "验证超时！请重试或使用手动验证");
+                            resetUploadButton();
+                        }
+                    }, 3000);
+                    
+                    // 显示加载状态
+                    loadingSpinner.style.display = 'block';
+                    uploadButton.disabled = true;
+                    uploadButton.innerHTML = '<span>验证中...</span>';
+                    
+                    // 显示验证状态
+                    const verificationStatus = document.getElementById('verificationStatus');
+                    verificationStatus.style.display = 'block';
+                    verificationStatus.className = 'verification-status verification-checking';
+                    verificationStatus.textContent = '正在验证图腾文件...';
+                    
+                    // 立即处理文件
+                    processImageFile(file);
+                }
+            });
+            
+            // 拖放功能
             witnessSlot.addEventListener('dragover', function(e) {
                 e.preventDefault();
                 this.classList.add('hover');
@@ -959,42 +1162,253 @@
                 e.preventDefault();
                 this.classList.remove('hover');
                 
-                const data = e.dataTransfer.getData('text/plain');
-                if (data === 'shadow_insect_totem') {
-                    placeTotem();
+                if (e.dataTransfer.files.length) {
+                    const file = e.dataTransfer.files[0];
+                    fileInput.files = e.dataTransfer.files;
+                    
+                    const event = new Event('change');
+                    fileInput.dispatchEvent(event);
+                }
+            });
+        }
+        
+        // 初始化手动验证功能
+        function initManualVerification() {
+            const toggleManualBtn = document.getElementById('toggleManualBtn');
+            const manualVerification = document.getElementById('manualVerification');
+            const manualVerifyBtn = document.getElementById('manualVerifyBtn');
+            const manualIdentifier = document.getElementById('manualIdentifier');
+            
+            toggleManualBtn.addEventListener('click', function() {
+                if (manualVerification.classList.contains('active')) {
+                    manualVerification.classList.remove('active');
+                    toggleManualBtn.textContent = '无法上传图片？点击此处手动验证';
                 } else {
-                    const files = e.dataTransfer.files;
-                    if (files.length > 0) {
-                        const file = files[0];
-                        if (file.type.startsWith('image/')) {
-                            const reader = new FileReader();
-                            reader.onload = function(e) {
-                                showConfirmationDialog(
-                                    "放置古老图腾",
-                                    "你确定这是从704房间找到的阴影虫图腾吗？",
-                                    function() {
-                                        placeTotem(e.target.result);
-                                    }
-                                );
-                            };
-                            reader.readAsDataURL(file);
-                        }
-                    }
+                    manualVerification.classList.add('active');
+                    toggleManualBtn.textContent = '隐藏手动验证';
                 }
             });
             
-            // 点击槽位也可以放置图腾
-            witnessSlot.addEventListener('click', function() {
-                if (!hasTotem) {
-                    showConfirmationDialog(
-                        "放置古老图腾",
-                        "是否放置从704房间找到的阴影虫图腾？",
-                        function() {
-                            placeTotem();
-                        }
-                    );
+            manualVerifyBtn.addEventListener('click', function() {
+                const identifier = manualIdentifier.value.trim();
+                
+                if (!identifier) {
+                    showVerificationResult(false, "请输入标识码");
+                    return;
+                }
+                
+                if (identifier === CORRECT_IDENTIFIER) {
+                    showVerificationResult(true, "标识码验证成功！");
+                    
+                    // 显示正确的图腾
+                    displayCorrectTotem();
+                    
+                    // 设置图腾
+                    setTimeout(() => {
+                        placeTotem();
+                    }, 500);
+                } else {
+                    showVerificationResult(false, "标识码错误！请检查后重试");
+                    
+                    setTimeout(() => {
+                        showFailureRedirect("标识码验证失败：输入的标识码不正确");
+                    }, 2000);
                 }
             });
+            
+            manualIdentifier.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    manualVerifyBtn.click();
+                }
+            });
+        }
+        
+        // 处理图片文件 - 修复卡住问题
+        function processImageFile(file) {
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            
+            // 检查文件类型
+            if (!file.type.startsWith('image/')) {
+                showVerificationResult(false, "文件类型错误：必须为图片文件");
+                resetUploadButton();
+                clearTimeout(uploadTimeout);
+                return;
+            }
+            
+            // 检查文件名
+            if (file.name.toLowerCase() !== CORRECT_FILENAME.toLowerCase()) {
+                showVerificationResult(false, `文件名错误：应为"${CORRECT_FILENAME}"，实际为"${file.name}"`);
+                resetUploadButton();
+                clearTimeout(uploadTimeout);
+                return;
+            }
+            
+            // 读取文件内容进行验证
+            const reader = new FileReader();
+            
+            reader.onloadstart = function() {
+                // 文件开始读取
+            };
+            
+            reader.onload = function(e) {
+                // 清除超时
+                clearTimeout(uploadTimeout);
+                
+                // 验证成功
+                showVerificationResult(true, "图腾验证成功！检测到正确的图腾文件");
+                
+                // 显示图片预览
+                displayImagePreview(e.target.result);
+                
+                // 关键修复：调用placeTotem放置图腾
+                setTimeout(() => {
+                    placeTotem(e.target.result);
+                }, 500);
+            };
+            
+            reader.onerror = function() {
+                clearTimeout(uploadTimeout);
+                showVerificationResult(false, "文件读取失败");
+                resetUploadButton();
+            };
+            
+            reader.onabort = function() {
+                clearTimeout(uploadTimeout);
+                showVerificationResult(false, "文件读取中断");
+                resetUploadButton();
+            };
+            
+            // 开始读取
+            reader.readAsDataURL(file);
+        }
+        
+        // 显示正确的图腾图片
+        function displayCorrectTotem() {
+            const imagePreview = document.getElementById('imagePreview');
+            const slotContent = document.getElementById('slotContent');
+            const fileInfo = document.getElementById('fileInfo');
+            
+            // 创建一个简单的tuteng.png表示
+            const canvas = document.createElement('canvas');
+            canvas.width = 200;
+            canvas.height = 200;
+            const ctx = canvas.getContext('2d');
+            
+            // 绘制一个简单的图腾
+            ctx.fillStyle = '#5D2906';
+            ctx.fillRect(0, 0, 200, 200);
+            
+            ctx.fillStyle = '#F5EBD4';
+            ctx.beginPath();
+            ctx.ellipse(70, 70, 15, 25, 0, 0, Math.PI * 2);
+            ctx.ellipse(130, 70, 15, 25, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#1a0f0a';
+            ctx.beginPath();
+            ctx.ellipse(70, 70, 8, 12, 0, 0, Math.PI * 2);
+            ctx.ellipse(130, 70, 8, 12, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.strokeStyle = '#F5EBD4';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(50, 140);
+            ctx.quadraticCurveTo(100, 160, 150, 140);
+            ctx.stroke();
+            
+            ctx.font = 'bold 16px Arial';
+            ctx.fillStyle = '#F5EBD4';
+            ctx.fillText('tuteng.png', 60, 190);
+            
+            imagePreview.src = canvas.toDataURL();
+            imagePreview.style.display = 'block';
+            slotContent.style.display = 'none';
+            
+            fileInfo.textContent = `验证方式: 手动输入 | 文件名: ${CORRECT_FILENAME} | 标识码: ${CORRECT_IDENTIFIER}`;
+            fileInfo.style.display = 'block';
+        }
+        
+        // 显示验证结果
+        function showVerificationResult(success, message) {
+            const verificationStatus = document.getElementById('verificationStatus');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const uploadButton = document.getElementById('uploadButton');
+            
+            loadingSpinner.style.display = 'none';
+            
+            if (success) {
+                verificationStatus.className = 'verification-status verification-success';
+                verificationStatus.textContent = message;
+                uploadButton.innerHTML = '<span>✓ 验证通过</span>';
+                uploadButton.style.backgroundColor = '#2E8B57';
+                uploadButton.disabled = false;
+                
+                const fileInfo = document.getElementById('fileInfo');
+                if (fileInfo.style.display !== 'block') {
+                    fileInfo.textContent = `文件名: ${CORRECT_FILENAME} | 标识码: ${CORRECT_IDENTIFIER}`;
+                    fileInfo.style.display = 'block';
+                }
+            } else {
+                verificationStatus.className = 'verification-status verification-failure';
+                verificationStatus.textContent = message;
+                uploadButton.innerHTML = '<span>✗ 验证失败</span>';
+                uploadButton.style.backgroundColor = '#c53030';
+                
+                setTimeout(() => {
+                    uploadButton.disabled = false;
+                    uploadButton.innerHTML = '<span>选择图腾图片</span>';
+                    uploadButton.style.backgroundColor = '';
+                }, 2000);
+            }
+        }
+        
+        // 重置上传按钮
+        function resetUploadButton() {
+            const uploadButton = document.getElementById('uploadButton');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            
+            loadingSpinner.style.display = 'none';
+            uploadButton.disabled = false;
+            uploadButton.innerHTML = '<span>选择图腾图片</span>';
+            uploadButton.style.backgroundColor = '';
+        }
+        
+        // 显示图片预览
+        function displayImagePreview(imageSrc) {
+            const imagePreview = document.getElementById('imagePreview');
+            const slotContent = document.getElementById('slotContent');
+            const fileInfo = document.getElementById('fileInfo');
+            
+            imagePreview.src = imageSrc;
+            imagePreview.style.display = 'block';
+            slotContent.style.display = 'none';
+            
+            fileInfo.textContent = `文件名: ${CORRECT_FILENAME} | 标识码: ${CORRECT_IDENTIFIER}`;
+            fileInfo.style.display = 'block';
+        }
+        
+        // 显示签署失败重定向页面
+        function showFailureRedirect(message) {
+            const failureRedirect = document.getElementById('failureRedirect');
+            const failureMessage = document.getElementById('failureMessage');
+            const redirectCountdown = document.getElementById('redirectCountdown');
+            
+            failureMessage.textContent = message;
+            failureRedirect.style.display = 'flex';
+            
+            let countdown = 5;
+            redirectCountdown.textContent = `${countdown}秒后跳转到签署失败结局...`;
+            
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    redirectCountdown.textContent = `${countdown}秒后跳转到签署失败结局...`;
+                } else {
+                    clearInterval(countdownInterval);
+                    window.location.href = "bejieju2.html";
+                }
+            }, 1000);
         }
         
         // 检查本地存储中是否有图腾
@@ -1009,23 +1423,51 @@
             }
         }
         
-        // 放置图腾
+        // 放置图腾 - 修复流程
         function placeTotem(imageSrc = null) {
             if (hasTotem) return;
             
             const witnessSlot = document.getElementById('witnessSlot');
-            const slotHint = document.getElementById('slotHint');
-            const totemImage = document.getElementById('totemImage');
             const witnessHint = document.getElementById('witnessHint');
             
             if (imageSrc) {
-                totemImage.src = imageSrc;
+                document.getElementById('imagePreview').src = imageSrc;
+                document.getElementById('imagePreview').style.display = 'block';
+                document.getElementById('slotContent').style.display = 'none';
             } else {
-                totemImage.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><defs><radialGradient id="grad1" cx="40%" cy="40%" r="50%"><stop offset="0%" style="stop-color:%235D2906;stop-opacity:1"/><stop offset="100%" style="stop-color:%231a0f0a;stop-opacity:1"/></radialGradient></defs><ellipse cx="100" cy="100" rx="80" ry="40" fill="url(%23grad1)"/><ellipse cx="70" cy="70" rx="15" ry="25" fill="%23F5EBD4"/><ellipse cx="130" cy="70" rx="15" ry="25" fill="%23F5EBD4"/><ellipse cx="70" cy="70" rx="8" ry="12" fill="%231a0f0a"/><ellipse cx="130" cy="70" rx="8" ry="12" fill="%231a0f0a"/><path d="M50,140 Q100,160 150,140" stroke="%23F5EBD4" stroke-width="4" fill="none"/><path d="M60,120 Q100,180 140,120" stroke="%23F5EBD4" stroke-width="3" fill="none" stroke-dasharray="5,3"/></svg>';
+                // 创建一个简单的tuteng.png表示
+                const canvas = document.createElement('canvas');
+                canvas.width = 200;
+                canvas.height = 200;
+                const ctx = canvas.getContext('2d');
+                
+                ctx.fillStyle = '#5D2906';
+                ctx.fillRect(0, 0, 200, 200);
+                
+                ctx.fillStyle = '#F5EBD4';
+                ctx.beginPath();
+                ctx.ellipse(70, 70, 15, 25, 0, 0, Math.PI * 2);
+                ctx.ellipse(130, 70, 15, 25, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.fillStyle = '#1a0f0a';
+                ctx.beginPath();
+                ctx.ellipse(70, 70, 8, 12, 0, 0, Math.PI * 2);
+                ctx.ellipse(130, 70, 8, 12, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.strokeStyle = '#F5EBD4';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(50, 140);
+                ctx.quadraticCurveTo(100, 160, 150, 140);
+                ctx.stroke();
+                
+                document.getElementById('imagePreview').src = canvas.toDataURL();
+                document.getElementById('imagePreview').style.display = 'block';
+                document.getElementById('slotContent').style.display = 'none';
             }
             
-            totemImage.style.display = 'block';
-            slotHint.style.display = 'none';
             witnessHint.textContent = "古老图腾已放置。现在请将其拖拽到契约封印处。";
             witnessHint.style.color = "#5D2906";
             
@@ -1033,13 +1475,11 @@
             showMessage("✓ 古老图腾「阴影虫」已放置。这是人类儿童文化中对虫族古老形象的记忆残留，证明了双方潜意识中仍存联系。", true);
             
             // 使图腾可拖拽
+            const totemImage = document.getElementById('imagePreview');
             totemImage.setAttribute('draggable', 'true');
             totemImage.addEventListener('dragstart', function(e) {
                 e.dataTransfer.setData('text/plain', 'shadow_insect_totem');
-                e.dataTransfer.setData('image/png', this.src);
             });
-            
-            playSoundEffect('place');
         }
         
         // 初始化封印交互
@@ -1071,7 +1511,6 @@
                 }
             });
             
-            // 点击封印也可以触发仪式
             sealArea.addEventListener('click', function() {
                 if (hasTotem && !ritualActive) {
                     showConfirmationDialog(
@@ -1083,7 +1522,7 @@
             });
         }
         
-        // 开始仪式
+        // 开始仪式 - 修复跳转问题
         function startRitual() {
             if (ritualActive) return;
             
@@ -1095,41 +1534,30 @@
             sealHint.innerHTML = "仪式进行中...";
             sealGlow.style.opacity = '1';
             
-            // 播放仪式开始音效
-            playSoundEffect('ritual_start');
-            
-            // 第一步：图腾飞向封印
             showMessage("古老图腾被识别为「共同记忆载体·阴影虫」。", true);
             
             setTimeout(() => {
                 showMessage("它证明了，即使在遗忘的年代，我们的故事仍以另一种形式在你们的文明中流转。", true);
                 
-                // 隐藏见证区的图腾
-                document.getElementById('totemImage').style.opacity = '0';
+                document.getElementById('imagePreview').style.opacity = '0';
                 document.getElementById('witnessHint').textContent = "图腾已用于仪式";
                 
-                // 第二步：符文亮起
                 setTimeout(() => {
                     const glyphs = document.querySelectorAll('.insect-glyph');
                     glyphs.forEach((glyph, index) => {
                         setTimeout(() => {
                             glyph.classList.add('glyph-glow');
-                            playSoundEffect('glyph_activate');
                         }, index * 200);
                     });
                     
-                    showMessage("虫族感受到了善意与承认。契约封印开始修复...", true);
+                    showMessage("螂族感受到了善意与承认。契约封印开始修复...", true);
                     
-                    // 第三步：封印修复动画
                     setTimeout(() => {
-                        document.querySelector('.seal-crack').style.opacity = '0.3';
                         sealHint.innerHTML = "✓ 封印修复中...<br>约束力：<span id='constraintValue'>12%</span>";
                         
-                        // 模拟约束力增长
                         let constraint = 12;
                         const constraintElement = document.createElement('span');
                         constraintElement.id = 'constraintValue';
-                        sealHint.appendChild(constraintElement);
                         
                         const growthInterval = setInterval(() => {
                             constraint += 5;
@@ -1146,19 +1574,14 @@
                                 
                                 showMessage("共鸣达成！古老契约的约束力已恢复。", true);
                                 
-                                playSoundEffect('seal_complete');
+                                // 关键修复：直接激活确认按钮
+                                confirmButton.disabled = false;
+                                confirmButton.textContent = "我以调和局之名，确认此协议";
+                                confirmButton.style.backgroundColor = "#2E8B57";
                                 
-                                // 激活确认按钮
-                                setTimeout(() => {
-                                    confirmButton.disabled = false;
-                                    confirmButton.textContent = "我以探索者之名，确认此协议";
-                                    confirmButton.style.backgroundColor = "#2E8B57";
-                                    
-                                    showMessage("人类，你们是否愿意履行祖先的承诺，重启这份共生协议？", true);
-                                }, 1000);
+                                showMessage("人类，你们是否愿意履行祖先的承诺，重启这份共生协议？", true);
                             }
                         }, 200);
-                        
                     }, 2000);
                 }, 2000);
             }, 1500);
@@ -1172,10 +1595,8 @@
             ritualMessage.style.color = isSuccess ? '#2E8B57' : '#c53030';
             ritualMessage.style.backgroundColor = isSuccess ? 'rgba(46, 139, 87, 0.1)' : 'rgba(197, 48, 48, 0.1)';
             
-            // 自动滚动到消息
             ritualMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             
-            // 自动隐藏消息
             if (isSuccess) {
                 setTimeout(() => {
                     ritualMessage.style.opacity = '0.7';
@@ -1192,7 +1613,6 @@
             
             let confirmCallback = null;
             
-            // 确认按钮点击
             confirmBtn.addEventListener('click', function() {
                 if (confirmCallback) {
                     confirmCallback();
@@ -1200,20 +1620,16 @@
                 hideConfirmationDialog();
             });
             
-            // 取消按钮点击
             cancelBtn.addEventListener('click', hideConfirmationDialog);
             
-            // 点击遮罩层关闭
             overlay.addEventListener('click', hideConfirmationDialog);
             
-            // ESC键关闭
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && dialog.classList.contains('active')) {
                     hideConfirmationDialog();
                 }
             });
             
-            // 显示对话框的函数
             window.showConfirmationDialog = function(title, content, callback) {
                 document.getElementById('dialogTitle').textContent = title;
                 document.getElementById('dialogContent').textContent = content;
@@ -1221,174 +1637,36 @@
                 
                 dialog.classList.add('active');
                 overlay.classList.add('active');
-                
-                playSoundEffect('dialog_open');
             };
             
-            // 隐藏对话框的函数
             window.hideConfirmationDialog = function() {
                 dialog.classList.remove('active');
                 overlay.classList.remove('active');
                 confirmCallback = null;
-                
-                playSoundEffect('dialog_close');
             };
         }
         
-        // 确认协议
+        // 确认协议 - 修复跳转
         document.getElementById('confirmButton').addEventListener('click', function() {
             if (this.disabled) return;
             
-            const ritualMessage = document.getElementById('ritualMessage');
             showMessage("协议确认！正在重启上古共生契约...", true);
             
-            playSoundEffect('final_confirm');
-            
-            // 页面效果
-            document.body.style.animation = 'fadeIn 2s';
-            
-            // 最终确认
             setTimeout(() => {
                 showMessage("✓ 协议重启成功！上古共生契约已重新锚定。", true);
                 
-                // 更新按钮状态
                 this.textContent = "协议已确认 ✓";
                 this.style.backgroundColor = "#2E8B57";
                 this.disabled = true;
                 
-                // 显示最终选项
                 setTimeout(() => {
-                    showConfirmationDialog(
-                        "上古协议已重启",
-                        "上古共生契约已重新锚定。\n\n真结局触发条件：\n1. 访问所有隐藏页面 ✓\n2. 找到古老图腾并完成仪式 ✓\n3. 确认上古协议 ✓\n\n结局：调和局启动古老仪式，将'他'的力量重新锚定为保护屏障，螂人获得合法生态区，CT-114作为信使回归，7又7分之4栋恢复稳定。\n\n是否前往最终决策页面？",
-                        function() {
-                            // 在实际游戏中，这里应该重定向到 nest_location.html
-                            // window.location.href = "nest_location.html?pact=restored";
-                            
-                            // 模拟重定向
-                            showMessage("正在前往最终决策页面...", true);
-                            playSoundEffect('transition');
-                            
-                            // 添加一个模拟链接
-                            const finalLink = document.createElement('a');
-                            finalLink.href = "#";
-                            finalLink.textContent = "点击这里前往最终决策";
-                            finalLink.style.display = 'block';
-                            finalLink.style.textAlign = 'center';
-                            finalLink.style.margin = '20px auto';
-                            finalLink.style.color = '#2E8B57';
-                            finalLink.style.fontWeight = 'bold';
-                            finalLink.style.textDecoration = 'none';
-                            finalLink.style.fontSize = '1.1rem';
-                            finalLink.style.padding = '10px';
-                            finalLink.style.border = '2px solid #2E8B57';
-                            finalLink.style.borderRadius = '5px';
-                            finalLink.style.maxWidth = '300px';
-                            
-                            finalLink.addEventListener('mouseenter', function() {
-                                this.style.backgroundColor = 'rgba(46, 139, 87, 0.1)';
-                            });
-                            
-                            finalLink.addEventListener('mouseleave', function() {
-                                this.style.backgroundColor = 'transparent';
-                            });
-                            
-                            finalLink.addEventListener('click', function(e) {
-                                e.preventDefault();
-                                showMessage("(在实际游戏中，这将带你到 nest_location.html，并解锁第三个选项【确认上古协议】)", true);
-                            });
-                            
-                            document.querySelector('.ritual-message').appendChild(finalLink);
-                        }
-                    );
+                    // 关键修复：直接跳转，不使用对话框
+                    window.location.href = "jiejucc.html";
                 }, 1500);
-            }, 3000);
+            }, 2000);
         });
         
-        // 初始化快捷键提示
-        function initShortcutHints() {
-            const shortcutHint = document.getElementById('shortcutHint');
-            
-            // 添加快捷键
-            document.addEventListener('keydown', function(e) {
-                // Ctrl+Alt+T 模拟获得图腾
-                if (e.ctrlKey && e.altKey && e.key === 't') {
-                    e.preventDefault();
-                    if (!hasTotem) {
-                        shortcutHint.textContent = "✓ 已模拟获得古老图腾";
-                        shortcutHint.classList.add('show');
-                        placeTotem();
-                        
-                        setTimeout(() => {
-                            shortcutHint.classList.remove('show');
-                        }, 3000);
-                    }
-                }
-                
-                // Ctrl+Alt+R 模拟直接完成仪式
-                if (e.ctrlKey && e.altKey && e.key === 'r') {
-                    e.preventDefault();
-                    if (hasTotem && !ritualActive) {
-                        shortcutHint.textContent = "✓ 已模拟开始仪式";
-                        shortcutHint.classList.add('show');
-                        startRitual();
-                        
-                        setTimeout(() => {
-                            shortcutHint.classList.remove('show');
-                        }, 3000);
-                    }
-                }
-                
-                // Ctrl+Alt+H 显示快捷键帮助
-                if (e.ctrlKey && e.altKey && e.key === 'h') {
-                    e.preventDefault();
-                    shortcutHint.innerHTML = "快捷键帮助:<br>Ctrl+Alt+T: 获得图腾<br>Ctrl+Alt+R: 开始仪式<br>Ctrl+Alt+H: 显示帮助";
-                    shortcutHint.classList.add('show');
-                    
-                    setTimeout(() => {
-                        shortcutHint.classList.remove('show');
-                    }, 5000);
-                }
-            });
-        }
-        
-        // 播放音效函数（模拟）
-        function playSoundEffect(type) {
-            
-            
-            // 可以添加一些简单的音频反馈
-            if (type === 'hover' || type === 'click') {
-                // 模拟轻微的音效
-                try {
-                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    const oscillator = audioContext.createOscillator();
-                    const gainNode = audioContext.createGain();
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                    
-                    oscillator.frequency.setValueAtTime(type === 'hover' ? 800 : 1200, audioContext.currentTime);
-                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-                    
-                    oscillator.start();
-                    oscillator.stop(audioContext.currentTime + 0.1);
-                } catch (e) {
-                    // 音频上下文不可用，静默失败
-                }
-            }
-        }
-        
-        // 添加一些视觉效果
-        document.addEventListener('mousemove', function(e) {
-            const x = e.clientX / window.innerWidth;
-            const y = e.clientY / window.innerHeight;
-            
-            document.querySelector('.parchment').style.transform = 
-                `translate(${x * 5 - 2.5}px, ${y * 5 - 2.5}px)`;
-        });
-        
-        // 添加页面加载效果
+        // 页面加载效果
         window.addEventListener('load', function() {
             document.body.style.opacity = '0';
             document.body.style.transition = 'opacity 1.5s';
@@ -1398,10 +1676,10 @@
                 
                 setTimeout(() => {
                     showMessage("你已进入上古共生协议的核心档案。时间紧迫，请仔细阅读并完成仪式。", true);
+                    showMessage("提示：你可以上传图腾图片(tuteng.png)或手动输入标识码进行验证。", false);
                 }, 1000);
             }, 500);
         });
     </script>
-<script src="pages.js"></script>
 </body>
 </html>
