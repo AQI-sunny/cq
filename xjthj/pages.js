@@ -11,7 +11,6 @@ const SimplePageCounter = {
         'jqt简历.html',
         'jump1.html',
         'smw.html',
-        
         'ycbg.html',
         'ycbg222.html',
          'chanpin.html',
@@ -22,7 +21,6 @@ const SimplePageCounter = {
         'brht.html',
         'logs.html',
         'quzhu.html',
-       
         'qiantai.html',
         '7D401.html',
         'pingz3-denglu.html',
@@ -30,9 +28,7 @@ const SimplePageCounter = {
         'xjthj-qt.html',
         'chajlquanxianm.html',
         'lxm.html',
-       
         'biaog111.html',
-      
         'shouquanm.html',
         'lubos.html',
         'building.html',
@@ -365,5 +361,6 @@ if (document.readyState === 'loading') {
 
 // 暴露为全局对象
 window.SimplePageCounter = SimplePageCounter;
+
 
 
