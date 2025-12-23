@@ -42,12 +42,13 @@ const SimplePageCounter = {
         'co134-lxc.html',
         'ta.html',
         'horrorsy.html',
+        'lianxjz.html',
         'bejieju.html',
-        'bejieju2.html',
         'nest.html',
         'SGXY.html',
         'jiejuaaa.html',
         'jiejubbb.html',
+        'bejieju2.html',
         'jiejucc.html'
     ],
     
@@ -361,6 +362,7 @@ if (document.readyState === 'loading') {
 
 // 暴露为全局对象
 window.SimplePageCounter = SimplePageCounter;
+
 
 
 
