@@ -2,14 +2,21 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
     <title>上古共生协议 - 墟境调和局机密档案</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'SimSun', 'STSong', serif;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
         }
         
         body {
@@ -19,16 +26,27 @@
                 radial-gradient(circle at 80% 70%, rgba(139, 69, 19, 0.1) 1px, transparent 1px);
             background-size: 50px 50px, 30px 30px;
             min-height: 100vh;
-            padding: 20px;
+            min-height: -webkit-fill-available;
+            padding: 10px;
             color: #8B4513;
             position: relative;
             overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', 'SimSun', 'STSong', serif;
+            overscroll-behavior: none;
+        }
+        
+        /* 修复iOS Safari 100vh问题 */
+        @supports (-webkit-touch-callout: none) {
+            body {
+                min-height: -webkit-fill-available;
+            }
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 100%;
             margin: 0 auto;
             position: relative;
+            padding: 5px;
         }
         
         .parchment {
@@ -37,39 +55,52 @@
                 linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
                 linear-gradient(#eee .1em, transparent .1em);
             background-size: 100% 1.2em;
-            border: 15px solid #8B4513;
+            border: 10px solid #8B4513;
             border-style: double;
-            padding: 40px 60px;
+            padding: 20px 15px;
             box-shadow: 
-                0 0 30px rgba(139, 69, 19, 0.5),
-                inset 0 0 50px rgba(139, 69, 19, 0.1);
+                0 0 15px rgba(139, 69, 19, 0.5),
+                inset 0 0 30px rgba(139, 69, 19, 0.1);
             position: relative;
-            min-height: 90vh;
-            margin-bottom: 40px;
+            min-height: calc(100vh - 20px);
+            min-height: -webkit-fill-available;
+            margin-bottom: 20px;
+            overflow-x: hidden;
+            border-radius: 5px;
+        }
+        
+        /* 修复iOS滚动弹性 */
+        .parchment {
+            -webkit-overflow-scrolling: touch;
+            overflow-y: auto;
+            max-height: calc(100vh - 20px);
         }
         
         .header {
             text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
             border-bottom: 2px double #8B4513;
             position: relative;
         }
         
         .header h1 {
-            font-size: 2.8rem;
+            font-size: 1.8rem;
             color: #5D2906;
-            letter-spacing: 8px;
+            letter-spacing: 4px;
             text-shadow: 2px 2px 4px rgba(139, 69, 19, 0.3);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            word-break: break-word;
+            line-height: 1.3;
         }
         
         .header h2 {
-            font-size: 1.5rem;
+            font-size: 1.1rem;
             color: #8B4513;
             font-weight: normal;
             font-style: italic;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
+            line-height: 1.4;
         }
         
         .header::after {
@@ -81,122 +112,139 @@
             background: #F5EBD4;
             padding: 0 15px;
             color: #8B4513;
-            font-size: 1.2rem;
+            font-size: 1rem;
         }
         
         .section {
-            margin-bottom: 35px;
+            margin-bottom: 25px;
             position: relative;
         }
         
         .section-title {
-            font-size: 1.6rem;
+            font-size: 1.3rem;
             color: #5D2906;
-            border-left: 4px solid #8B4513;
-            padding-left: 15px;
-            margin-bottom: 15px;
+            border-left: 3px solid #8B4513;
+            padding-left: 12px;
+            margin-bottom: 12px;
             position: relative;
             display: inline-block;
+            line-height: 1.4;
         }
         
         .section-title::before {
             content: "◈";
-            margin-right: 10px;
+            margin-right: 8px;
+            font-size: 0.9rem;
         }
         
         .clause {
-            margin-bottom: 25px;
-            padding-left: 10px;
+            margin-bottom: 20px;
+            padding-left: 8px;
         }
         
         .clause-title {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #5D2906;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: bold;
+            line-height: 1.4;
         }
         
         .clause-content {
-            line-height: 1.8;
+            line-height: 1.6;
             text-align: justify;
             margin-bottom: 5px;
+            font-size: 0.95rem;
+            word-break: break-word;
         }
         
         .insect-glyph {
             display: inline-block;
             font-family: monospace;
             background-color: rgba(139, 69, 19, 0.1);
-            padding: 2px 6px;
+            padding: 2px 5px;
             border-radius: 3px;
             cursor: pointer;
             transition: all 0.3s;
             margin: 0 2px;
             vertical-align: middle;
             position: relative;
+            font-size: 0.9rem;
+            -webkit-touch-callout: text;
+            -webkit-user-select: text;
+            user-select: text;
         }
         
-        .insect-glyph:hover {
+        .insect-glyph:active {
             background-color: rgba(139, 69, 19, 0.3);
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
         
         .glyph-tooltip {
             position: fixed;
             background-color: rgba(26, 15, 10, 0.95);
             color: #F5EBD4;
-            padding: 12px 16px;
+            padding: 10px 14px;
             border-radius: 6px;
             border: 1px solid #8B4513;
             z-index: 1000;
-            max-width: 300px;
-            font-size: 0.95rem;
-            line-height: 1.5;
+            max-width: 280px;
+            width: 90vw;
+            font-size: 0.9rem;
+            line-height: 1.4;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             opacity: 0;
             transform: translateY(10px);
             transition: opacity 0.3s, transform 0.3s;
             pointer-events: none;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 20px;
         }
         
         .glyph-tooltip.active {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateX(-50%) translateY(0);
         }
         
         .status-diagnosis {
             background-color: rgba(139, 69, 19, 0.08);
-            border-left: 4px solid #8B4513;
-            padding: 20px;
-            margin: 30px 0;
+            border-left: 3px solid #8B4513;
+            padding: 15px;
+            margin: 20px 0;
             border-radius: 0 5px 5px 0;
         }
         
         .status-title {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             color: #5D2906;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
+            line-height: 1.3;
         }
         
         .status-title::before {
             content: "⚠";
-            margin-right: 10px;
-            font-size: 1.6rem;
+            margin-right: 8px;
+            font-size: 1.3rem;
         }
         
         .status-item {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             display: flex;
+            flex-direction: column;
         }
         
         .status-label {
-            min-width: 160px;
             font-weight: bold;
+            margin-bottom: 3px;
+            font-size: 0.95rem;
         }
         
         .status-value {
             flex-grow: 1;
+            font-size: 0.9rem;
         }
         
         .critical {
@@ -214,29 +262,30 @@
         .restart-conditions {
             background-color: rgba(245, 235, 212, 0.9);
             border: 2px dashed #8B4513;
-            padding: 25px;
-            margin: 30px 0;
+            padding: 18px;
+            margin: 20px 0;
             border-radius: 5px;
         }
         
         .condition-list {
             list-style-type: none;
-            margin-left: 20px;
+            margin-left: 15px;
         }
         
         .condition-list li {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             position: relative;
-            padding-left: 30px;
+            padding-left: 25px;
+            font-size: 0.9rem;
         }
         
         .condition-list li::before {
             content: "";
             position: absolute;
             left: 0;
-            top: 8px;
-            width: 18px;
-            height: 18px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
             border: 2px solid #8B4513;
             border-radius: 50%;
         }
@@ -248,24 +297,23 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 10px;
         }
         
         .interactive-area {
             display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            margin: 40px 0;
+            flex-direction: column;
+            gap: 20px;
+            margin: 30px 0;
             justify-content: center;
         }
         
         .seal-area, .witness-area {
-            flex: 1;
-            min-width: 300px;
-            min-height: 250px;
+            width: 100%;
+            min-height: 200px;
             border: 2px solid #8B4513;
             border-radius: 5px;
-            padding: 20px;
+            padding: 15px;
             background-color: rgba(245, 235, 212, 0.7);
             display: flex;
             flex-direction: column;
@@ -275,34 +323,38 @@
         }
         
         .area-title {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             color: #5D2906;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             text-align: center;
+            line-height: 1.3;
         }
         
         .area-hint {
             font-style: italic;
             color: #8B4513;
             text-align: center;
-            max-width: 80%;
-            margin-top: 10px;
+            max-width: 90%;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            line-height: 1.4;
         }
         
         .witness-slot {
-            width: 150px;
-            height: 150px;
+            width: 140px;
+            height: 140px;
             border: 2px dashed #8B4513;
             border-radius: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 15px 0;
+            margin: 12px 0;
             background-color: rgba(255, 255, 255, 0.5);
             transition: all 0.3s;
             cursor: pointer;
             position: relative;
             overflow: hidden;
+            -webkit-tap-highlight-color: rgba(139, 69, 19, 0.3);
         }
         
         .witness-slot.hover {
@@ -314,44 +366,54 @@
             max-width: 90%;
             max-height: 90%;
             display: none;
+            -webkit-user-drag: none;
         }
         
         .confirm-button {
             display: block;
-            margin: 30px auto;
-            padding: 15px 40px;
-            font-size: 1.2rem;
+            margin: 25px auto;
+            padding: 14px 30px;
+            font-size: 1.1rem;
             background-color: #8B4513;
             color: #F5EBD4;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
             text-align: center;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
+            width: 90%;
+            max-width: 300px;
+            font-weight: bold;
+            -webkit-appearance: none;
+            appearance: none;
+            touch-action: manipulation;
         }
         
-        .confirm-button:hover:not(:disabled) {
+        .confirm-button:active:not(:disabled) {
             background-color: #5D2906;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(139, 69, 19, 0.4);
         }
         
         .confirm-button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none !important;
         }
         
         .ritual-message {
             text-align: center;
-            margin: 20px 0;
-            padding: 15px;
+            margin: 15px 0;
+            padding: 12px;
             background-color: rgba(139, 69, 19, 0.1);
             border-radius: 5px;
             display: none;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #5D2906;
             animation: fadeIn 1s;
+            line-height: 1.4;
+            word-break: break-word;
         }
         
         @keyframes fadeIn {
@@ -377,8 +439,8 @@
         }
         
         @keyframes glyphGlow {
-            from { box-shadow: 0 0 5px rgba(139, 69, 19, 0.5); }
-            to { box-shadow: 0 0 15px rgba(255, 215, 0, 0.7); }
+            from { box-shadow: 0 0 3px rgba(139, 69, 19, 0.5); }
+            to { box-shadow: 0 0 10px rgba(255, 215, 0, 0.7); }
         }
         
         .confirmation-dialog {
@@ -389,12 +451,14 @@
             background-color: rgba(245, 235, 212, 0.98);
             border: 3px solid #8B4513;
             border-radius: 10px;
-            padding: 30px;
+            padding: 25px;
             z-index: 2000;
-            max-width: 500px;
-            width: 90%;
+            max-width: 90%;
+            width: 400px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             display: none;
+            max-height: 80vh;
+            overflow-y: auto;
         }
         
         .confirmation-dialog.active {
@@ -414,35 +478,42 @@
         }
         
         .dialog-title {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: #5D2906;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: center;
             border-bottom: 1px solid #8B4513;
-            padding-bottom: 10px;
+            padding-bottom: 8px;
+            line-height: 1.3;
         }
         
         .dialog-content {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 25px;
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
             color: #5D2906;
+            word-break: break-word;
         }
         
         .dialog-buttons {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
+            flex-wrap: wrap;
         }
         
         .dialog-button {
-            padding: 10px 25px;
+            padding: 10px 20px;
             font-size: 1rem;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s;
-            min-width: 100px;
+            min-width: 90px;
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            touch-action: manipulation;
         }
         
         .dialog-button.confirm {
@@ -450,7 +521,7 @@
             color: white;
         }
         
-        .dialog-button.confirm:hover {
+        .dialog-button.confirm:active {
             background-color: #267049;
         }
         
@@ -459,7 +530,7 @@
             color: white;
         }
         
-        .dialog-button.cancel:hover {
+        .dialog-button.cancel:active {
             background-color: #5D2906;
         }
         
@@ -472,6 +543,8 @@
             background-color: rgba(26, 15, 10, 0.7);
             z-index: 1999;
             display: none;
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
         }
         
         .dialog-overlay.active {
@@ -482,8 +555,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
-            margin-top: 15px;
+            gap: 12px;
+            margin-top: 12px;
             width: 100%;
         }
         
@@ -491,27 +564,31 @@
             background-color: #8B4513;
             color: #F5EBD4;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 12px 20px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             transition: all 0.3s;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             width: 100%;
-            justify-content: center;
+            max-width: 250px;
+            -webkit-appearance: none;
+            appearance: none;
+            touch-action: manipulation;
         }
         
-        .upload-button:hover {
+        .upload-button:active:not(:disabled) {
             background-color: #5D2906;
-            transform: translateY(-2px);
+            transform: translateY(-1px);
         }
         
         .upload-button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            transform: none;
+            transform: none !important;
         }
         
         .file-input {
@@ -526,16 +603,19 @@
             word-break: break-word;
             display: none;
             margin-top: 5px;
+            line-height: 1.4;
         }
         
         .verification-status {
             padding: 8px 12px;
             border-radius: 5px;
-            margin-top: 10px;
+            margin-top: 8px;
             text-align: center;
             display: none;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             width: 100%;
+            max-width: 250px;
+            line-height: 1.4;
         }
         
         .verification-success {
@@ -557,8 +637,8 @@
         }
         
         .loading-spinner {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border: 3px solid rgba(139, 69, 19, 0.3);
             border-top: 3px solid #8B4513;
             border-radius: 50%;
@@ -578,12 +658,15 @@
             justify-content: center;
             width: 100%;
             height: 100%;
+            text-align: center;
         }
         
         .upload-text {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #8B4513;
             text-align: center;
+            margin-bottom: 5px;
+            line-height: 1.3;
         }
         
         .image-preview {
@@ -591,15 +674,17 @@
             max-height: 100%;
             object-fit: contain;
             display: none;
+            -webkit-user-drag: none;
         }
         
         .manual-verification {
-            margin-top: 15px;
-            padding: 15px;
+            margin-top: 12px;
+            padding: 12px;
             background-color: rgba(139, 69, 19, 0.05);
             border: 1px solid #8B4513;
             border-radius: 5px;
             width: 100%;
+            max-width: 250px;
             display: none;
         }
         
@@ -608,11 +693,12 @@
         }
         
         .manual-verification-title {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #5D2906;
             margin-bottom: 8px;
             font-weight: bold;
             text-align: center;
+            line-height: 1.3;
         }
         
         .manual-input-group {
@@ -623,12 +709,16 @@
         }
         
         .manual-input {
-            padding: 8px 12px;
+            padding: 10px 12px;
             border: 1px solid #8B4513;
-            border-radius: 3px;
+            border-radius: 6px;
             background-color: rgba(245, 235, 212, 0.9);
             color: #5D2906;
             font-size: 0.9rem;
+            -webkit-appearance: none;
+            appearance: none;
+            font-family: inherit;
+            width: 100%;
         }
         
         .manual-input:focus {
@@ -641,15 +731,18 @@
             background-color: #8B4513;
             color: #F5EBD4;
             border: none;
-            padding: 8px 15px;
-            border-radius: 3px;
+            padding: 10px 15px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             transition: all 0.3s;
             width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            touch-action: manipulation;
         }
         
-        .manual-button:hover {
+        .manual-button:active {
             background-color: #5D2906;
         }
         
@@ -663,20 +756,24 @@
             margin-top: 8px;
             transition: all 0.3s;
             padding: 5px;
+            -webkit-appearance: none;
+            appearance: none;
+            touch-action: manipulation;
         }
         
-        .toggle-manual-btn:hover {
+        .toggle-manual-btn:active {
             color: #5D2906;
         }
         
         .footer {
             text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
+            margin-top: 30px;
+            padding-top: 15px;
             border-top: 1px solid #8B4513;
             color: #8B4513;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             opacity: 0.8;
+            line-height: 1.4;
         }
         
         .failure-redirect {
@@ -693,34 +790,41 @@
             justify-content: center;
             color: #F5EBD4;
             display: none;
+            padding: 20px;
+            text-align: center;
         }
         
         .failure-message {
-            font-size: 1.8rem;
-            margin-bottom: 30px;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
             text-align: center;
             color: #c53030;
             text-shadow: 0 0 10px rgba(197, 48, 48, 0.5);
+            line-height: 1.3;
+            word-break: break-word;
         }
         
         .redirect-countdown {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             margin-bottom: 20px;
+            line-height: 1.4;
         }
         
         .redirect-link {
             background-color: #c53030;
             color: #F5EBD4;
             padding: 12px 24px;
-            border-radius: 5px;
+            border-radius: 8px;
             text-decoration: none;
             font-size: 1rem;
             transition: all 0.3s;
+            display: inline-block;
+            touch-action: manipulation;
         }
         
-        .redirect-link:hover {
+        .redirect-link:active {
             background-color: #9e2424;
-            transform: translateY(-2px);
+            transform: translateY(-1px);
         }
         
         .timeout-message {
@@ -728,33 +832,142 @@
             font-weight: bold;
             margin-top: 10px;
             text-align: center;
+            font-size: 0.9rem;
         }
         
-        @media (max-width: 768px) {
+        /* 横屏优化 */
+        @media (orientation: landscape) and (max-height: 600px) {
             .parchment {
-                padding: 20px 30px;
+                padding: 15px;
+                max-height: 95vh;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .header h2 {
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
+            }
+        }
+        
+        /* 平板优化 */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 700px;
+                padding: 15px;
+            }
+            
+            .parchment {
+                padding: 30px;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .header h2 {
+                font-size: 1.3rem;
+            }
+            
+            .interactive-area {
+                flex-direction: row;
+            }
+            
+            .seal-area, .witness-area {
+                min-height: 250px;
+            }
+            
+            .confirm-button {
+                padding: 15px 40px;
+                font-size: 1.2rem;
+            }
+        }
+        
+        /* 大屏手机优化 */
+        @media (min-width: 400px) and (max-width: 767px) {
+            .parchment {
+                padding: 25px 20px;
             }
             
             .header h1 {
                 font-size: 2rem;
-                letter-spacing: 5px;
             }
             
-            .header h2 {
-                font-size: 1.2rem;
+            .confirm-button {
+                font-size: 1.15rem;
+            }
+        }
+        
+        /* 防止字体大小被系统调整 */
+        html {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+        
+        /* 修复iOS输入框样式 */
+        input, button, textarea {
+            -webkit-appearance: none;
+            appearance: none;
+            border-radius: 0;
+        }
+        
+        /* 滚动条样式优化 */
+        .parchment::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .parchment::-webkit-scrollbar-track {
+            background: rgba(139, 69, 19, 0.1);
+        }
+        
+        .parchment::-webkit-scrollbar-thumb {
+            background: rgba(139, 69, 19, 0.3);
+            border-radius: 3px;
+        }
+        
+        /* 防止长按菜单 */
+        .insect-glyph, .upload-button, .confirm-button, .dialog-button, .manual-button {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+        }
+        
+        /* 允许文本选择 */
+        .clause-content, .dialog-content, .ritual-message {
+            -webkit-user-select: text;
+            user-select: text;
+        }
+        
+        /* TapTap小程序兼容 */
+        @media (max-width: 480px) {
+            :root {
+                --safe-area-inset-top: env(safe-area-inset-top, 0px);
+                --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+                --safe-area-inset-left: env(safe-area-inset-left, 0px);
+                --safe-area-inset-right: env(safe-area-inset-right, 0px);
             }
             
-            .interactive-area {
-                flex-direction: column;
+            body {
+                padding-top: var(--safe-area-inset-top);
+                padding-bottom: var(--safe-area-inset-bottom);
+                padding-left: var(--safe-area-inset-left);
+                padding-right: var(--safe-area-inset-right);
             }
             
-            .seal-area, .witness-area {
-                min-width: 100%;
+            .confirm-button, .upload-button, .manual-button {
+                min-height: 44px; /* iOS最小点击区域 */
             }
             
-            .glyph-tooltip {
-                max-width: 250px;
-                font-size: 0.85rem;
+            .insect-glyph {
+                min-height: 24px;
+                min-width: 24px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
             }
         }
     </style>
@@ -955,14 +1168,14 @@
                 <div class="seal-area">
                     <div class="area-title">契约封印</div>
                     <div class="seal-glow" id="sealGlow"></div>
-                    <div class="area-hint" id="sealHint">请将象征双方共同记忆的古老图腾，拖拽至此。</div>
+                    <div class="area-hint" id="sealHint">请将象征双方共同记忆的古老图腾，拖拽或点击至此。</div>
                 </div>
                 
                 <div class="witness-area">
                     <div class="area-title">见证物放置区</div>
                     <div class="witness-slot" id="witnessSlot">
                         <div class="slot-content" id="slotContent">
-                            <div class="upload-text">点击或拖拽上传图腾图片</div>
+                            <div class="upload-text">点击上传图腾图片</div>
                             <div class="upload-text">要求：tuteng.png</div>
                         </div>
                         <img class="image-preview" id="imagePreview" alt="古老图腾预览">
@@ -1017,6 +1230,23 @@
         
         // 初始化页面
         document.addEventListener('DOMContentLoaded', function() {
+            // 防止双击缩放
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function(event) {
+                const now = Date.now();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+            
+            // 禁止iOS弹性滚动
+            document.addEventListener('touchmove', function(event) {
+                if (event.scale !== 1) {
+                    event.preventDefault();
+                }
+            }, { passive: false });
+            
             startCountdown();
             initInteractiveGlyphs();
             initFileUpload();
@@ -1024,14 +1254,23 @@
             initSealInteraction();
             initConfirmationDialog();
             checkForTotem();
+            
+            // 修复iOS Safari 100vh问题
+            function setAppHeight() {
+                const doc = document.documentElement;
+                doc.style.setProperty('--app-height', `${window.innerHeight}px`);
+            }
+            window.addEventListener('resize', setAppHeight);
+            window.addEventListener('orientationchange', setAppHeight);
+            setAppHeight();
         });
         
         // 启动倒计时显示
         function startCountdown() {
             const endTime = new Date();
-           /*  endTime.setDate(endTime.getDate() + 7); */
-            endTime.setDate(endTime.getDate() + 6);  // 增加6天
-endTime.setHours(endTime.getHours() + 10);  // 再增加10小时
+            endTime.setDate(endTime.getDate() + 6);
+            endTime.setHours(endTime.getHours() + 10);
+            
             function updateCountdown() {
                 const now = new Date();
                 const timeLeft = endTime - now;
@@ -1061,12 +1300,53 @@ endTime.setHours(endTime.getHours() + 10);  // 再增加10小时
             countdownInterval = setInterval(updateCountdown, 1000);
         }
         
-        // 初始化可点击的符文
+        // 初始化可点击的符文 - 移动端优化
         function initInteractiveGlyphs() {
             const glyphs = document.querySelectorAll('.insect-glyph');
             const tooltip = document.getElementById('glyphTooltip');
             
             glyphs.forEach(glyph => {
+                glyph.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const title = this.getAttribute('data-title');
+                    const desc = this.getAttribute('data-desc');
+                    
+                    if (title && desc) {
+                        clearTimeout(tooltipTimeout);
+                        
+                        tooltip.innerHTML = `<strong>${title}</strong><br>${desc}`;
+                        
+                        // 移动端工具提示位置
+                        const rect = this.getBoundingClientRect();
+                        tooltip.style.left = '50%';
+                        tooltip.style.top = (rect.top + window.scrollY - tooltip.offsetHeight - 10) + 'px';
+                        
+                        tooltipTimeout = setTimeout(() => {
+                            tooltip.classList.add('active');
+                        }, 100);
+                    }
+                    
+                    this.classList.add('glyph-glow');
+                });
+                
+                glyph.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    clearTimeout(tooltipTimeout);
+                    
+                    setTimeout(() => {
+                        tooltip.classList.remove('active');
+                        this.classList.remove('glyph-glow');
+                    }, 3000);
+                });
+                
+                glyph.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                });
+                
+                // 桌面端兼容
                 glyph.addEventListener('mouseenter', function(e) {
                     const title = this.getAttribute('data-title');
                     const desc = this.getAttribute('data-desc');
@@ -1099,20 +1379,58 @@ endTime.setHours(endTime.getHours() + 10);  // 再增加10小时
                     this.classList.remove('glyph-glow');
                 });
             });
+            
+            // 点击其他地方关闭工具提示
+            document.addEventListener('touchstart', function(e) {
+                if (!e.target.closest('.insect-glyph')) {
+                    clearTimeout(tooltipTimeout);
+                    tooltip.classList.remove('active');
+                }
+            });
         }
         
-        // 初始化文件上传功能 - 修复卡住问题
+        // 初始化文件上传功能 - 移动端优化
         function initFileUpload() {
             const fileInput = document.getElementById('fileInput');
             const uploadButton = document.getElementById('uploadButton');
             const witnessSlot = document.getElementById('witnessSlot');
             const loadingSpinner = document.getElementById('loadingSpinner');
             
-            uploadButton.addEventListener('click', function() {
+            uploadButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
                 fileInput.click();
             });
             
-            witnessSlot.addEventListener('click', function() {
+            uploadButton.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.style.transform = 'translateY(-1px)';
+            });
+            
+            uploadButton.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.style.transform = '';
+                fileInput.click();
+            });
+            
+            witnessSlot.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                fileInput.click();
+            });
+            
+            witnessSlot.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.classList.add('hover');
+            });
+            
+            witnessSlot.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.classList.remove('hover');
                 fileInput.click();
             });
             
@@ -1149,7 +1467,7 @@ endTime.setHours(endTime.getHours() + 10);  // 再增加10小时
                 }
             });
             
-            // 拖放功能
+            // 移动端拖放功能简化
             witnessSlot.addEventListener('dragover', function(e) {
                 e.preventDefault();
                 this.classList.add('hover');
@@ -1173,24 +1491,40 @@ endTime.setHours(endTime.getHours() + 10);  // 再增加10小时
             });
         }
         
-        // 初始化手动验证功能
+        // 初始化手动验证功能 - 移动端优化
         function initManualVerification() {
             const toggleManualBtn = document.getElementById('toggleManualBtn');
             const manualVerification = document.getElementById('manualVerification');
             const manualVerifyBtn = document.getElementById('manualVerifyBtn');
             const manualIdentifier = document.getElementById('manualIdentifier');
             
-            toggleManualBtn.addEventListener('click', function() {
+            toggleManualBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
                 if (manualVerification.classList.contains('active')) {
                     manualVerification.classList.remove('active');
                     toggleManualBtn.textContent = '无法上传图片？点击此处手动验证';
                 } else {
                     manualVerification.classList.add('active');
                     toggleManualBtn.textContent = '隐藏手动验证';
+                    
+                    // 自动聚焦输入框
+                    setTimeout(() => {
+                        manualIdentifier.focus();
+                    }, 100);
                 }
             });
             
-            manualVerifyBtn.addEventListener('click', function() {
+            toggleManualBtn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+            
+            manualVerifyBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
                 const identifier = manualIdentifier.value.trim();
                 
                 if (!identifier) {
@@ -1217,14 +1551,35 @@ endTime.setHours(endTime.getHours() + 10);  // 再增加10小时
                 }
             });
             
+            manualVerifyBtn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.style.transform = 'translateY(-1px)';
+            });
+            
+            manualVerifyBtn.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.style.transform = '';
+            });
+            
             manualIdentifier.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
+                    e.preventDefault();
                     manualVerifyBtn.click();
                 }
             });
+            
+            // 移动端输入框优化
+            manualIdentifier.addEventListener('focus', function() {
+                // 防止iOS缩放
+                setTimeout(() => {
+                    document.body.style.zoom = 1;
+                }, 100);
+            });
         }
         
-        // 处理图片文件 - 修复卡住问题
+        // 处理图片文件 - 移动端优化
         function processImageFile(file) {
             const loadingSpinner = document.getElementById('loadingSpinner');
             
@@ -1239,6 +1594,14 @@ endTime.setHours(endTime.getHours() + 10);  // 再增加10小时
             // 检查文件名
             if (file.name.toLowerCase() !== CORRECT_FILENAME.toLowerCase()) {
                 showVerificationResult(false, `文件名错误：应为"${CORRECT_FILENAME}"，实际为"${file.name}"`);
+                resetUploadButton();
+                clearTimeout(uploadTimeout);
+                return;
+            }
+            
+            // 检查文件大小（移动端限制）
+            if (file.size > 5 * 1024 * 1024) { // 5MB
+                showVerificationResult(false, "文件过大：请选择小于5MB的图片");
                 resetUploadButton();
                 clearTimeout(uploadTimeout);
                 return;
@@ -1424,7 +1787,7 @@ endTime.setHours(endTime.getHours() + 10);  // 再增加10小时
             }
         }
         
-        // 放置图腾 - 修复流程
+        // 放置图腾 - 移动端优化
         function placeTotem(imageSrc = null) {
             if (hasTotem) return;
             
@@ -1469,21 +1832,40 @@ endTime.setHours(endTime.getHours() + 10);  // 再增加10小时
                 document.getElementById('slotContent').style.display = 'none';
             }
             
-            witnessHint.textContent = "古老图腾已放置。现在请将其拖拽到契约封印处。";
+            witnessHint.textContent = "古老图腾已放置。现在请点击契约封印区域。";
             witnessHint.style.color = "#5D2906";
             
             hasTotem = true;
             showMessage("✓ 古老图腾「阴影虫」已放置。这是人类儿童文化中对虫族古老形象的记忆残留，证明了双方潜意识中仍存联系。", true);
             
-            // 使图腾可拖拽
+            // 移动端简化，使图腾可点击直接触发仪式
             const totemImage = document.getElementById('imagePreview');
-            totemImage.setAttribute('draggable', 'true');
-            totemImage.addEventListener('dragstart', function(e) {
-                e.dataTransfer.setData('text/plain', 'shadow_insect_totem');
+            totemImage.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (hasTotem && !ritualActive) {
+                    showConfirmationDialog(
+                        "开始重启仪式",
+                        "是否将古老图腾放入契约封印，开始重启仪式？",
+                        startRitual
+                    );
+                }
+            });
+            
+            totemImage.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (hasTotem && !ritualActive) {
+                    showConfirmationDialog(
+                        "开始重启仪式",
+                        "是否将古老图腾放入契约封印，开始重启仪式？",
+                        startRitual
+                    );
+                }
             });
         }
         
-        // 初始化封印交互
+        // 初始化封印交互 - 移动端优化
         function initSealInteraction() {
             const sealArea = document.querySelector('.seal-area');
             const sealHint = document.getElementById('sealHint');
@@ -1497,7 +1879,7 @@ endTime.setHours(endTime.getHours() + 10);  // 再增加10小时
             });
             
             sealArea.addEventListener('dragleave', function() {
-                sealHint.textContent = "请将象征双方共同记忆的古老图腾，拖拽至此。";
+                sealHint.textContent = "请将象征双方共同记忆的古老图腾，拖拽或点击至此。";
                 sealHint.style.color = "";
             });
             
@@ -1512,7 +1894,31 @@ endTime.setHours(endTime.getHours() + 10);  // 再增加10小时
                 }
             });
             
-            sealArea.addEventListener('click', function() {
+            // 移动端点击事件
+            sealArea.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (hasTotem && !ritualActive) {
+                    showConfirmationDialog(
+                        "开始重启仪式",
+                        "是否将古老图腾放入契约封印，开始重启仪式？",
+                        startRitual
+                    );
+                }
+            });
+            
+            sealArea.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (hasTotem && !ritualActive) {
+                    this.style.transform = 'scale(0.98)';
+                }
+            });
+            
+            sealArea.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.style.transform = '';
                 if (hasTotem && !ritualActive) {
                     showConfirmationDialog(
                         "开始重启仪式",
@@ -1523,7 +1929,7 @@ endTime.setHours(endTime.getHours() + 10);  // 再增加10小时
             });
         }
         
-        // 开始仪式 - 修复跳转问题
+        // 开始仪式 - 移动端优化
         function startRitual() {
             if (ritualActive) return;
             
@@ -1605,7 +2011,7 @@ endTime.setHours(endTime.getHours() + 10);  // 再增加10小时
             }
         }
         
-        // 初始化确认对话框
+        // 初始化确认对话框 - 移动端优化
         function initConfirmationDialog() {
             const dialog = document.getElementById('confirmationDialog');
             const overlay = document.getElementById('dialogOverlay');
@@ -1614,16 +2020,59 @@ endTime.setHours(endTime.getHours() + 10);  // 再增加10小时
             
             let confirmCallback = null;
             
-            confirmBtn.addEventListener('click', function() {
+            confirmBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
                 if (confirmCallback) {
                     confirmCallback();
                 }
                 hideConfirmationDialog();
             });
             
-            cancelBtn.addEventListener('click', hideConfirmationDialog);
+            confirmBtn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.style.transform = 'translateY(-1px)';
+            });
             
-            overlay.addEventListener('click', hideConfirmationDialog);
+            confirmBtn.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.style.transform = '';
+                if (confirmCallback) {
+                    confirmCallback();
+                }
+                hideConfirmationDialog();
+            });
+            
+            cancelBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                hideConfirmationDialog();
+            });
+            
+            cancelBtn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.style.transform = 'translateY(-1px)';
+            });
+            
+            cancelBtn.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.style.transform = '';
+                hideConfirmationDialog();
+            });
+            
+            overlay.addEventListener('click', function(e) {
+                e.preventDefault();
+                hideConfirmationDialog();
+            });
+            
+            overlay.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                hideConfirmationDialog();
+            });
             
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && dialog.classList.contains('active')) {
@@ -1638,17 +2087,25 @@ endTime.setHours(endTime.getHours() + 10);  // 再增加10小时
                 
                 dialog.classList.add('active');
                 overlay.classList.add('active');
+                
+                // 防止背景滚动
+                document.body.style.overflow = 'hidden';
             };
             
             window.hideConfirmationDialog = function() {
                 dialog.classList.remove('active');
                 overlay.classList.remove('active');
                 confirmCallback = null;
+                
+                // 恢复滚动
+                document.body.style.overflow = '';
             };
         }
         
-        // 确认协议 - 修复跳转
-        document.getElementById('confirmButton').addEventListener('click', function() {
+        // 确认协议 - 移动端优化
+        document.getElementById('confirmButton').addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             if (this.disabled) return;
             
             showMessage("协议确认！正在重启上古共生契约...", true);
@@ -1667,10 +2124,39 @@ endTime.setHours(endTime.getHours() + 10);  // 再增加10小时
             }, 2000);
         });
         
-        // 页面加载效果
+        document.getElementById('confirmButton').addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!this.disabled) {
+                this.style.transform = 'translateY(-1px)';
+            }
+        });
+        
+        document.getElementById('confirmButton').addEventListener('touchend', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.style.transform = '';
+            if (this.disabled) return;
+            
+            showMessage("协议确认！正在重启上古共生契约...", true);
+            
+            setTimeout(() => {
+                showMessage("✓ 协议重启成功！上古共生契约已重新锚定。", true);
+                
+                this.textContent = "协议已确认 ✓";
+                this.style.backgroundColor = "#2E8B57";
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    window.location.href = "jiejucc.html";
+                }, 1500);
+            }, 2000);
+        });
+        
+        // 页面加载效果 - 移动端优化
         window.addEventListener('load', function() {
             document.body.style.opacity = '0';
-            document.body.style.transition = 'opacity 1.5s';
+            document.body.style.transition = 'opacity 1s';
             
             setTimeout(() => {
                 document.body.style.opacity = '1';
@@ -1679,7 +2165,29 @@ endTime.setHours(endTime.getHours() + 10);  // 再增加10小时
                     showMessage("你已进入上古共生协议的核心档案。时间紧迫，请仔细阅读并完成仪式。", true);
                     showMessage("提示：你可以上传图腾图片(tuteng.png)或手动输入标识码进行验证。", false);
                 }, 1000);
-            }, 500);
+            }, 300);
+            
+            // 防止iOS Safari下拉刷新
+            document.body.addEventListener('touchmove', function(e) {
+                if (e.target.closest('.parchment')) {
+                    e.stopPropagation();
+                }
+            }, { passive: false });
+        });
+        
+        // 防止iOS双击缩放
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        });
+        
+        // 修复iOS输入框被键盘遮挡问题
+        const inputs = document.querySelectorAll('input, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                setTimeout(() => {
+                    this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
+            });
         });
     </script>
 </body>
