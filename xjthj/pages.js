@@ -32,7 +32,7 @@ const SimplePageCounter = {
         'lxm.html',
        
         'biaog111.html',
-        'shouquanm-xuliny.html',
+      
         'shouquanm.html',
         'lubos.html',
         'building.html',
@@ -365,4 +365,5 @@ if (document.readyState === 'loading') {
 
 // 暴露为全局对象
 window.SimplePageCounter = SimplePageCounter;
+
 
