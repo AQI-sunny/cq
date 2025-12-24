@@ -834,6 +834,61 @@
             text-align: center;
             font-size: 0.9rem;
         }
+
+        /* 刷新按钮样式 */
+.refresh-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: #8B4513;
+    color: #F5EBD4;
+    border: 2px solid #5D2906;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s;
+    -webkit-appearance: none;
+    appearance: none;
+    touch-action: manipulation;
+}
+
+.refresh-button:active {
+    background-color: #5D2906;
+    transform: rotate(180deg) scale(0.95);
+}
+
+.refresh-button:hover {
+    background-color: #A0522D;
+}
+
+/* 平板优化 */
+@media (max-width: 768px) {
+    .refresh-button {
+        top: 15px;
+        right: 15px;
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
+}
+
+/* 手机优化 */
+@media (max-width: 480px) {
+    .refresh-button {
+        top: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+}
         
         /* 横屏优化 */
         @media (orientation: landscape) and (max-height: 600px) {
@@ -970,9 +1025,26 @@
                 justify-content: center;
             }
         }
+        
+        .tap-hint {
+            font-size: 0.8rem;
+            color: #8B4513;
+            text-align: center;
+            margin-top: 5px;
+            font-style: italic;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .tap-hint {
+                display: block;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- 在body开始标签后添加 -->
+<button class="refresh-button" id="refreshButton" title="刷新页面">↻</button>
     <!-- 符文提示工具 -->
     <div class="glyph-tooltip" id="glyphTooltip"></div>
     
@@ -1169,6 +1241,7 @@
                     <div class="area-title">契约封印</div>
                     <div class="seal-glow" id="sealGlow"></div>
                     <div class="area-hint" id="sealHint">请将象征双方共同记忆的古老图腾，拖拽或点击至此。</div>
+                    <div class="tap-hint">（请点击此区域）</div>
                 </div>
                 
                 <div class="witness-area">
@@ -1179,13 +1252,14 @@
                             <div class="upload-text">要求：tuteng.png</div>
                         </div>
                         <img class="image-preview" id="imagePreview" alt="古老图腾预览">
-                        <input type="file" class="file-input" id="fileInput" accept="image/*">
+                        <input type="file" class="file-input" id="fileInput" accept="image/*" capture="environment">
                     </div>
                     <div class="area-hint" id="witnessHint">请上传从博士后台账户找到的图腾图片文件(tuteng.png)</div>
+                    <div class="tap-hint">（请点击此区域上传图片）</div>
                     
                     <div class="upload-area">
                         <button class="upload-button" id="uploadButton">
-                            <span>选择图腾图片</span>
+                            <span>点击上传图腾图片</span>
                             <div class="loading-spinner" id="loadingSpinner"></div>
                         </button>
                         <div class="file-info" id="fileInfo"></div>
@@ -1212,17 +1286,19 @@
                 <p>墟境调和局 · 最高机密档案 · 仅限局长权限访问</p>
                 <p>访问密码：ANCESTRAL-PACT | 最后更新：即将失效</p>
                 <p style="font-size: 0.8rem; margin-top: 5px; color: #c53030;">注意：必须上传正确的图腾图片(tuteng.png)或输入正确的标识码才能继续仪式</p>
+                <p style="font-size: 0.7rem; margin-top: 5px; color: #8B4513;">提示：点击放置区上传图片，或点击"手动验证"输入标识码</p>
+                <p style="font-size: 0.7rem; margin-top: 5px; color: #8B4513;">标识码：LXΩ-20251220-4B401-Γ9A7Ω2Δ1</p>
             </div>
         </div>
     </div>
+
+    
 
     <script>
         // 全局变量
         let hasTotem = false;
         let ritualActive = false;
         let countdownInterval;
-        let tooltipTimeout;
-        let uploadTimeout;
         
         // 正确的标识码和文件名
         const CORRECT_IDENTIFIER = "LXΩ-20251220-4B401-Γ9A7Ω2Δ1";
@@ -1230,22 +1306,7 @@
         
         // 初始化页面
         document.addEventListener('DOMContentLoaded', function() {
-            // 防止双击缩放
-            let lastTouchEnd = 0;
-            document.addEventListener('touchend', function(event) {
-                const now = Date.now();
-                if (now - lastTouchEnd <= 300) {
-                    event.preventDefault();
-                }
-                lastTouchEnd = now;
-            }, false);
-            
-            // 禁止iOS弹性滚动
-            document.addEventListener('touchmove', function(event) {
-                if (event.scale !== 1) {
-                    event.preventDefault();
-                }
-            }, { passive: false });
+            console.log('页面加载完成，开始初始化');
             
             startCountdown();
             initInteractiveGlyphs();
@@ -1253,7 +1314,12 @@
             initManualVerification();
             initSealInteraction();
             initConfirmationDialog();
-            checkForTotem();
+            
+            // 显示欢迎消息
+            setTimeout(() => {
+                showMessage("欢迎访问上古共生协议档案。请上传图腾图片或输入标识码开始仪式。", true);
+                showMessage("提示：如果图片上传一直显示验证中，可以点击'手动验证'按钮输入标识码。另：标识码位于陆博士个人控制面板。", true);
+            }, 1000);
             
             // 修复iOS Safari 100vh问题
             function setAppHeight() {
@@ -1300,7 +1366,7 @@
             countdownInterval = setInterval(updateCountdown, 1000);
         }
         
-        // 初始化可点击的符文 - 移动端优化
+        // 初始化可点击的符文
         function initInteractiveGlyphs() {
             const glyphs = document.querySelectorAll('.insect-glyph');
             const tooltip = document.getElementById('glyphTooltip');
@@ -1314,16 +1380,11 @@
                     const desc = this.getAttribute('data-desc');
                     
                     if (title && desc) {
-                        clearTimeout(tooltipTimeout);
-                        
                         tooltip.innerHTML = `<strong>${title}</strong><br>${desc}`;
-                        
-                        // 移动端工具提示位置
-                        const rect = this.getBoundingClientRect();
                         tooltip.style.left = '50%';
-                        tooltip.style.top = (rect.top + window.scrollY - tooltip.offsetHeight - 10) + 'px';
+                        tooltip.style.top = '20px';
                         
-                        tooltipTimeout = setTimeout(() => {
+                        setTimeout(() => {
                             tooltip.classList.add('active');
                         }, 100);
                     }
@@ -1333,17 +1394,10 @@
                 
                 glyph.addEventListener('touchend', function(e) {
                     e.preventDefault();
-                    e.stopPropagation();
-                    clearTimeout(tooltipTimeout);
-                    
                     setTimeout(() => {
                         tooltip.classList.remove('active');
                         this.classList.remove('glyph-glow');
-                    }, 3000);
-                });
-                
-                glyph.addEventListener('touchmove', function(e) {
-                    e.preventDefault();
+                    }, 2000);
                 });
                 
                 // 桌面端兼容
@@ -1352,156 +1406,241 @@
                     const desc = this.getAttribute('data-desc');
                     
                     if (title && desc) {
-                        clearTimeout(tooltipTimeout);
-                        
                         tooltip.innerHTML = `<strong>${title}</strong><br>${desc}`;
                         tooltip.style.left = e.pageX + 15 + 'px';
                         tooltip.style.top = e.pageY + 15 + 'px';
-                        
-                        tooltipTimeout = setTimeout(() => {
-                            tooltip.classList.add('active');
-                        }, 300);
+                        tooltip.classList.add('active');
                     }
                     
                     this.classList.add('glyph-glow');
                 });
                 
-                glyph.addEventListener('mousemove', function(e) {
-                    if (tooltip.classList.contains('active')) {
-                        tooltip.style.left = e.pageX + 15 + 'px';
-                        tooltip.style.top = e.pageY + 15 + 'px';
-                    }
-                });
-                
                 glyph.addEventListener('mouseleave', function() {
-                    clearTimeout(tooltipTimeout);
                     tooltip.classList.remove('active');
                     this.classList.remove('glyph-glow');
                 });
             });
-            
-            // 点击其他地方关闭工具提示
-            document.addEventListener('touchstart', function(e) {
-                if (!e.target.closest('.insect-glyph')) {
-                    clearTimeout(tooltipTimeout);
-                    tooltip.classList.remove('active');
-                }
-            });
         }
         
-        // 初始化文件上传功能 - 移动端优化
+        // 初始化文件上传功能 - 修复版
         function initFileUpload() {
+            console.log('初始化文件上传');
+            
             const fileInput = document.getElementById('fileInput');
             const uploadButton = document.getElementById('uploadButton');
             const witnessSlot = document.getElementById('witnessSlot');
-            const loadingSpinner = document.getElementById('loadingSpinner');
             
-            uploadButton.addEventListener('click', function(e) {
+            // 移除所有旧的事件监听器
+            const newUploadButton = uploadButton.cloneNode(true);
+            const newWitnessSlot = witnessSlot.cloneNode(true);
+            
+            uploadButton.parentNode.replaceChild(newUploadButton, uploadButton);
+            witnessSlot.parentNode.replaceChild(newWitnessSlot, witnessSlot);
+            
+            // 重新获取元素
+            const newUploadBtn = document.getElementById('uploadButton');
+            const newWitnessSlotElement = document.getElementById('witnessSlot');
+            
+            // 添加新的事件监听器
+            newUploadBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
+                console.log('上传按钮被点击');
                 fileInput.click();
             });
             
-            uploadButton.addEventListener('touchstart', function(e) {
+            newWitnessSlotElement.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                this.style.transform = 'translateY(-1px)';
-            });
-            
-            uploadButton.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                this.style.transform = '';
+                console.log('放置区域被点击');
                 fileInput.click();
             });
             
-            witnessSlot.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                fileInput.click();
-            });
-            
-            witnessSlot.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                this.classList.add('hover');
-            });
-            
-            witnessSlot.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                this.classList.remove('hover');
-                fileInput.click();
-            });
-            
+            // 文件选择变化时处理
             fileInput.addEventListener('change', function(e) {
+                console.log('文件选择变化，文件数量:', this.files.length);
                 if (this.files && this.files[0]) {
                     const file = this.files[0];
-                    
-                    // 清除之前的超时
-                    if (uploadTimeout) {
-                        clearTimeout(uploadTimeout);
-                    }
-                    
-                    // 设置3秒超时
-                    uploadTimeout = setTimeout(() => {
-                        if (!hasTotem) {
-                            showVerificationResult(false, "验证超时！请重试或使用手动验证");
-                            resetUploadButton();
-                        }
-                    }, 3000);
-                    
-                    // 显示加载状态
-                    loadingSpinner.style.display = 'block';
-                    uploadButton.disabled = true;
-                    uploadButton.innerHTML = '<span>验证中...</span>';
-                    
-                    // 显示验证状态
-                    const verificationStatus = document.getElementById('verificationStatus');
-                    verificationStatus.style.display = 'block';
-                    verificationStatus.className = 'verification-status verification-checking';
-                    verificationStatus.textContent = '正在验证图腾文件...';
-                    
-                    // 立即处理文件
-                    processImageFile(file);
+                    console.log('选择的文件:', file.name, '大小:', file.size, '类型:', file.type);
+                    handleFileUpload(file);
+                } else {
+                    console.log('没有选择文件');
                 }
             });
             
-            // 移动端拖放功能简化
-            witnessSlot.addEventListener('dragover', function(e) {
+            // 简化拖放
+            newWitnessSlotElement.addEventListener('dragover', function(e) {
                 e.preventDefault();
-                this.classList.add('hover');
             });
             
-            witnessSlot.addEventListener('dragleave', function() {
-                this.classList.remove('hover');
-            });
-            
-            witnessSlot.addEventListener('drop', function(e) {
+            newWitnessSlotElement.addEventListener('drop', function(e) {
                 e.preventDefault();
-                this.classList.remove('hover');
-                
+                console.log('文件拖放');
                 if (e.dataTransfer.files.length) {
                     const file = e.dataTransfer.files[0];
-                    fileInput.files = e.dataTransfer.files;
-                    
-                    const event = new Event('change');
-                    fileInput.dispatchEvent(event);
+                    console.log('拖放的文件:', file.name);
+                    handleFileUpload(file);
                 }
             });
         }
         
-        // 初始化手动验证功能 - 移动端优化
+        // 处理文件上传
+        function handleFileUpload(file) {
+            console.log('处理文件:', file.name, '大小:', file.size, '类型:', file.type);
+            
+            // 获取元素
+            const uploadButton = document.getElementById('uploadButton');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const verificationStatus = document.getElementById('verificationStatus');
+            
+            if (!uploadButton || !loadingSpinner || !verificationStatus) {
+                console.error('找不到必要的DOM元素');
+                return;
+            }
+            
+            // 显示加载状态
+            loadingSpinner.style.display = 'block';
+            uploadButton.disabled = true;
+            uploadButton.innerHTML = '<span>验证中...</span>';
+            
+            // 显示验证状态
+            verificationStatus.style.display = 'block';
+            verificationStatus.className = 'verification-status verification-checking';
+            verificationStatus.textContent = '正在验证文件...';
+            
+            // 模拟验证过程
+            setTimeout(() => {
+                console.log('验证文件:', file.name.toLowerCase(), '应该为:', CORRECT_FILENAME.toLowerCase());
+                
+                if (file.name.toLowerCase() === CORRECT_FILENAME.toLowerCase()) {
+                    // 验证成功
+                    console.log('文件验证成功');
+                    showVerificationResult(true, "✓ 图腾验证成功！");
+                    
+                    // 显示图片预览
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        console.log('文件读取成功');
+                        displayImagePreview(e.target.result);
+                        
+                        // 关键：放置图腾
+                        placeTotem(e.target.result);
+                    };
+                    
+                    reader.onerror = function(e) {
+                        console.error('文件读取失败:', e);
+                        showVerificationResult(false, "✗ 文件读取失败，请重试");
+                    };
+                    
+                    reader.readAsDataURL(file);
+                } else {
+                    // 验证失败
+                    console.log('文件验证失败');
+                    showVerificationResult(false, `✗ 文件名错误：应为"${CORRECT_FILENAME}"，实际为"${file.name}"`);
+                    
+                    // 显示手动验证区域
+                    const manualVerification = document.getElementById('manualVerification');
+                    if (manualVerification) {
+                        manualVerification.classList.add('active');
+                        const toggleBtn = document.getElementById('toggleManualBtn');
+                        if (toggleBtn) {
+                            toggleBtn.textContent = '隐藏手动验证';
+                        }
+                        
+                        // 自动聚焦标识码输入框
+                        setTimeout(() => {
+                            const manualIdentifier = document.getElementById('manualIdentifier');
+                            if (manualIdentifier) {
+                                manualIdentifier.focus();
+                            }
+                        }, 300);
+                    }
+                }
+            }, 1500);
+        }
+        
+        // 显示验证结果 - 修复版
+        function showVerificationResult(success, message) {
+            console.log('验证结果:', success, message);
+            
+            // 安全地获取元素
+            const verificationStatus = document.getElementById('verificationStatus');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const uploadButton = document.getElementById('uploadButton');
+            
+            if (!verificationStatus || !loadingSpinner || !uploadButton) {
+                console.error('找不到必要的DOM元素');
+                return;
+            }
+            
+            // 隐藏加载动画
+            if (loadingSpinner) {
+                loadingSpinner.style.display = 'none';
+            }
+            
+            verificationStatus.style.display = 'block';
+            
+            if (success) {
+                verificationStatus.className = 'verification-status verification-success';
+                verificationStatus.textContent = message;
+                
+                uploadButton.innerHTML = '<span>✓ 验证通过</span>';
+                uploadButton.style.backgroundColor = '#2E8B57';
+                uploadButton.disabled = true;
+            } else {
+                verificationStatus.className = 'verification-status verification-failure';
+                verificationStatus.textContent = message;
+                
+                uploadButton.innerHTML = '<span>重新上传</span>';
+                uploadButton.style.backgroundColor = '#c53030';
+                uploadButton.disabled = false;
+                
+                // 2秒后恢复按钮状态
+                setTimeout(() => {
+                    if (uploadButton) {
+                        uploadButton.innerHTML = '<span>点击上传图腾图片</span>';
+                        uploadButton.style.backgroundColor = '#8B4513';
+                    }
+                }, 2000);
+            }
+        }
+        
+        // 显示图片预览
+        function displayImagePreview(imageSrc) {
+            const imagePreview = document.getElementById('imagePreview');
+            const slotContent = document.getElementById('slotContent');
+            const fileInfo = document.getElementById('fileInfo');
+            
+            if (!imagePreview || !slotContent || !fileInfo) {
+                console.error('找不到必要的DOM元素');
+                return;
+            }
+            
+            imagePreview.src = imageSrc;
+            imagePreview.style.display = 'block';
+            slotContent.style.display = 'none';
+            
+            fileInfo.textContent = `文件名: ${CORRECT_FILENAME} | 状态: 已验证`;
+            fileInfo.style.display = 'block';
+        }
+        
+        // 初始化手动验证功能
         function initManualVerification() {
+            console.log('初始化手动验证');
+            
             const toggleManualBtn = document.getElementById('toggleManualBtn');
             const manualVerification = document.getElementById('manualVerification');
             const manualVerifyBtn = document.getElementById('manualVerifyBtn');
             const manualIdentifier = document.getElementById('manualIdentifier');
             
+            if (!toggleManualBtn || !manualVerification || !manualVerifyBtn || !manualIdentifier) {
+                console.error('找不到手动验证相关的DOM元素');
+                return;
+            }
+            
+            // 显示/隐藏手动验证区域
             toggleManualBtn.addEventListener('click', function(e) {
                 e.preventDefault();
-                e.stopPropagation();
-                
                 if (manualVerification.classList.contains('active')) {
                     manualVerification.classList.remove('active');
                     toggleManualBtn.textContent = '无法上传图片？点击此处手动验证';
@@ -1516,529 +1655,345 @@
                 }
             });
             
-            toggleManualBtn.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-            });
-            
-            manualVerifyBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
+            // 标识码验证
+            manualVerifyBtn.addEventListener('click', function() {
                 const identifier = manualIdentifier.value.trim();
+                console.log('验证标识码:', identifier);
                 
                 if (!identifier) {
-                    showVerificationResult(false, "请输入标识码");
+                    alert("请输入标识码");
                     return;
                 }
                 
                 if (identifier === CORRECT_IDENTIFIER) {
-                    showVerificationResult(true, "标识码验证成功！");
+                    showVerificationResult(true, "✓ 标识码验证成功！");
                     
                     // 显示正确的图腾
                     displayCorrectTotem();
                     
-                    // 设置图腾
+                    // 关键：放置图腾
                     setTimeout(() => {
                         placeTotem();
                     }, 500);
                 } else {
-                    showVerificationResult(false, "标识码错误！请检查后重试");
-                    
-                    setTimeout(() => {
-                        showFailureRedirect("标识码验证失败：输入的标识码不正确");
-                    }, 2000);
+                    showVerificationResult(false, "✗ 标识码错误！请检查后重试");
+                    manualIdentifier.focus();
+                    manualIdentifier.select();
                 }
             });
             
-            manualVerifyBtn.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                this.style.transform = 'translateY(-1px)';
-            });
-            
-            manualVerifyBtn.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                this.style.transform = '';
-            });
-            
+            // 回车键验证
             manualIdentifier.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     manualVerifyBtn.click();
                 }
             });
-            
-            // 移动端输入框优化
-            manualIdentifier.addEventListener('focus', function() {
-                // 防止iOS缩放
-                setTimeout(() => {
-                    document.body.style.zoom = 1;
-                }, 100);
-            });
         }
         
-        // 处理图片文件 - 移动端优化
-        function processImageFile(file) {
-            const loadingSpinner = document.getElementById('loadingSpinner');
-            
-            // 检查文件类型
-            if (!file.type.startsWith('image/')) {
-                showVerificationResult(false, "文件类型错误：必须为图片文件");
-                resetUploadButton();
-                clearTimeout(uploadTimeout);
-                return;
-            }
-            
-            // 检查文件名
-            if (file.name.toLowerCase() !== CORRECT_FILENAME.toLowerCase()) {
-                showVerificationResult(false, `文件名错误：应为"${CORRECT_FILENAME}"，实际为"${file.name}"`);
-                resetUploadButton();
-                clearTimeout(uploadTimeout);
-                return;
-            }
-            
-            // 检查文件大小（移动端限制）
-            if (file.size > 5 * 1024 * 1024) { // 5MB
-                showVerificationResult(false, "文件过大：请选择小于5MB的图片");
-                resetUploadButton();
-                clearTimeout(uploadTimeout);
-                return;
-            }
-            
-            // 读取文件内容进行验证
-            const reader = new FileReader();
-            
-            reader.onloadstart = function() {
-                // 文件开始读取
-            };
-            
-            reader.onload = function(e) {
-                // 清除超时
-                clearTimeout(uploadTimeout);
-                
-                // 验证成功
-                showVerificationResult(true, "图腾验证成功！检测到正确的图腾文件");
-                
-                // 显示图片预览
-                displayImagePreview(e.target.result);
-                
-                // 关键修复：调用placeTotem放置图腾
-                setTimeout(() => {
-                    placeTotem(e.target.result);
-                }, 500);
-            };
-            
-            reader.onerror = function() {
-                clearTimeout(uploadTimeout);
-                showVerificationResult(false, "文件读取失败");
-                resetUploadButton();
-            };
-            
-            reader.onabort = function() {
-                clearTimeout(uploadTimeout);
-                showVerificationResult(false, "文件读取中断");
-                resetUploadButton();
-            };
-            
-            // 开始读取
-            reader.readAsDataURL(file);
-        }
-        
-        // 显示正确的图腾图片
+        // 显示正确的图腾
         function displayCorrectTotem() {
+            console.log('显示正确的图腾');
+            
             const imagePreview = document.getElementById('imagePreview');
             const slotContent = document.getElementById('slotContent');
             const fileInfo = document.getElementById('fileInfo');
             
-            // 创建一个简单的tuteng.png表示
+            if (!imagePreview || !slotContent || !fileInfo) {
+                console.error('找不到必要的DOM元素');
+                return;
+            }
+            
+            // 创建图腾图像
             const canvas = document.createElement('canvas');
             canvas.width = 200;
             canvas.height = 200;
             const ctx = canvas.getContext('2d');
             
-            // 绘制一个简单的图腾
-            ctx.fillStyle = '#5D2906';
+            // 绘制图腾背景
+            ctx.fillStyle = '#1a0f0a';
             ctx.fillRect(0, 0, 200, 200);
             
-            ctx.fillStyle = '#F5EBD4';
+            // 绘制图腾图案
+            ctx.fillStyle = '#8B4513';
             ctx.beginPath();
-            ctx.ellipse(70, 70, 15, 25, 0, 0, Math.PI * 2);
-            ctx.ellipse(130, 70, 15, 25, 0, 0, Math.PI * 2);
+            ctx.arc(100, 100, 60, 0, Math.PI * 2);
             ctx.fill();
             
+            ctx.fillStyle = '#F5EBD4';
+            ctx.beginPath();
+            ctx.arc(100, 100, 40, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // 绘制虫族符号
             ctx.fillStyle = '#1a0f0a';
-            ctx.beginPath();
-            ctx.ellipse(70, 70, 8, 12, 0, 0, Math.PI * 2);
-            ctx.ellipse(130, 70, 8, 12, 0, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.font = 'bold 40px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('⏣', 100, 100);
             
-            ctx.strokeStyle = '#F5EBD4';
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            ctx.moveTo(50, 140);
-            ctx.quadraticCurveTo(100, 160, 150, 140);
-            ctx.stroke();
-            
+            ctx.fillStyle = '#8B4513';
             ctx.font = 'bold 16px Arial';
-            ctx.fillStyle = '#F5EBD4';
-            ctx.fillText('tuteng.png', 60, 190);
+            ctx.fillText('tuteng.png', 100, 170);
             
+            // 显示图像
             imagePreview.src = canvas.toDataURL();
             imagePreview.style.display = 'block';
             slotContent.style.display = 'none';
             
-            fileInfo.textContent = `验证方式: 手动输入 | 文件名: ${CORRECT_FILENAME} | 标识码: ${CORRECT_IDENTIFIER}`;
-            fileInfo.style.display = 'block';
-        }
-        
-        // 显示验证结果
-        function showVerificationResult(success, message) {
-            const verificationStatus = document.getElementById('verificationStatus');
-            const loadingSpinner = document.getElementById('loadingSpinner');
-            const uploadButton = document.getElementById('uploadButton');
-            
-            loadingSpinner.style.display = 'none';
-            
-            if (success) {
-                verificationStatus.className = 'verification-status verification-success';
-                verificationStatus.textContent = message;
-                uploadButton.innerHTML = '<span>✓ 验证通过</span>';
-                uploadButton.style.backgroundColor = '#2E8B57';
-                uploadButton.disabled = false;
-                
-                const fileInfo = document.getElementById('fileInfo');
-                if (fileInfo.style.display !== 'block') {
-                    fileInfo.textContent = `文件名: ${CORRECT_FILENAME} | 标识码: ${CORRECT_IDENTIFIER}`;
-                    fileInfo.style.display = 'block';
-                }
-            } else {
-                verificationStatus.className = 'verification-status verification-failure';
-                verificationStatus.textContent = message;
-                uploadButton.innerHTML = '<span>✗ 验证失败</span>';
-                uploadButton.style.backgroundColor = '#c53030';
-                
-                setTimeout(() => {
-                    uploadButton.disabled = false;
-                    uploadButton.innerHTML = '<span>选择图腾图片</span>';
-                    uploadButton.style.backgroundColor = '';
-                }, 2000);
-            }
-        }
-        
-        // 重置上传按钮
-        function resetUploadButton() {
-            const uploadButton = document.getElementById('uploadButton');
-            const loadingSpinner = document.getElementById('loadingSpinner');
-            
-            loadingSpinner.style.display = 'none';
-            uploadButton.disabled = false;
-            uploadButton.innerHTML = '<span>选择图腾图片</span>';
-            uploadButton.style.backgroundColor = '';
-        }
-        
-        // 显示图片预览
-        function displayImagePreview(imageSrc) {
-            const imagePreview = document.getElementById('imagePreview');
-            const slotContent = document.getElementById('slotContent');
-            const fileInfo = document.getElementById('fileInfo');
-            
-            imagePreview.src = imageSrc;
-            imagePreview.style.display = 'block';
-            slotContent.style.display = 'none';
-            
+            // 显示文件信息
             fileInfo.textContent = `文件名: ${CORRECT_FILENAME} | 标识码: ${CORRECT_IDENTIFIER}`;
             fileInfo.style.display = 'block';
         }
         
-        // 显示签署失败重定向页面
-        function showFailureRedirect(message) {
-            const failureRedirect = document.getElementById('failureRedirect');
-            const failureMessage = document.getElementById('failureMessage');
-            const redirectCountdown = document.getElementById('redirectCountdown');
-            
-            failureMessage.textContent = message;
-            failureRedirect.style.display = 'flex';
-            
-            let countdown = 5;
-            redirectCountdown.textContent = `${countdown}秒后跳转到签署失败结局...`;
-            
-            const countdownInterval = setInterval(() => {
-                countdown--;
-                if (countdown > 0) {
-                    redirectCountdown.textContent = `${countdown}秒后跳转到签署失败结局...`;
-                } else {
-                    clearInterval(countdownInterval);
-                    window.location.href = "bejieju2.html";
-                }
-            }, 1000);
-        }
-        
-        // 检查本地存储中是否有图腾
-        function checkForTotem() {
-            if (localStorage.getItem('shadow_insect_totem') === 'acquired') {
-                placeTotem();
-            }
-            
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('totem') && urlParams.get('totem') === 'shadow_insect') {
-                placeTotem();
-            }
-        }
-        
-        // 放置图腾 - 移动端优化
+        // 放置图腾
         function placeTotem(imageSrc = null) {
-            if (hasTotem) return;
+            console.log('放置图腾，hasTotem当前值:', hasTotem);
             
-            const witnessSlot = document.getElementById('witnessSlot');
-            const witnessHint = document.getElementById('witnessHint');
-            
-            if (imageSrc) {
-                document.getElementById('imagePreview').src = imageSrc;
-                document.getElementById('imagePreview').style.display = 'block';
-                document.getElementById('slotContent').style.display = 'none';
-            } else {
-                // 创建一个简单的tuteng.png表示
-                const canvas = document.createElement('canvas');
-                canvas.width = 200;
-                canvas.height = 200;
-                const ctx = canvas.getContext('2d');
-                
-                ctx.fillStyle = '#5D2906';
-                ctx.fillRect(0, 0, 200, 200);
-                
-                ctx.fillStyle = '#F5EBD4';
-                ctx.beginPath();
-                ctx.ellipse(70, 70, 15, 25, 0, 0, Math.PI * 2);
-                ctx.ellipse(130, 70, 15, 25, 0, 0, Math.PI * 2);
-                ctx.fill();
-                
-                ctx.fillStyle = '#1a0f0a';
-                ctx.beginPath();
-                ctx.ellipse(70, 70, 8, 12, 0, 0, Math.PI * 2);
-                ctx.ellipse(130, 70, 8, 12, 0, 0, Math.PI * 2);
-                ctx.fill();
-                
-                ctx.strokeStyle = '#F5EBD4';
-                ctx.lineWidth = 4;
-                ctx.beginPath();
-                ctx.moveTo(50, 140);
-                ctx.quadraticCurveTo(100, 160, 150, 140);
-                ctx.stroke();
-                
-                document.getElementById('imagePreview').src = canvas.toDataURL();
-                document.getElementById('imagePreview').style.display = 'block';
-                document.getElementById('slotContent').style.display = 'none';
+            if (hasTotem) {
+                console.log('图腾已放置，跳过');
+                return;
             }
             
-            witnessHint.textContent = "古老图腾已放置。现在请点击契约封印区域。";
-            witnessHint.style.color = "#5D2906";
+            const witnessHint = document.getElementById('witnessHint');
+            const confirmButton = document.getElementById('confirmButton');
+            
+            if (!witnessHint || !confirmButton) {
+                console.error('找不到必要的DOM元素');
+                return;
+            }
+            
+            // 如果提供了图片源，则使用
+            if (imageSrc) {
+                const imagePreview = document.getElementById('imagePreview');
+                const slotContent = document.getElementById('slotContent');
+                if (imagePreview && slotContent) {
+                    imagePreview.src = imageSrc;
+                    imagePreview.style.display = 'block';
+                    slotContent.style.display = 'none';
+                }
+            } else if (!document.getElementById('imagePreview').src) {
+                // 如果没有图像，显示默认图腾
+                displayCorrectTotem();
+            }
+            
+            witnessHint.textContent = "✓ 古老图腾已放置。现在可以开始仪式。";
+            witnessHint.style.color = "#2E8B57";
+            witnessHint.style.fontWeight = "bold";
+            
+            // 激活确认按钮
+            confirmButton.disabled = false;
+            confirmButton.textContent = "开始重启仪式";
+            confirmButton.style.backgroundColor = "#8B4513";
             
             hasTotem = true;
-            showMessage("✓ 古老图腾「阴影虫」已放置。这是人类儿童文化中对虫族古老形象的记忆残留，证明了双方潜意识中仍存联系。", true);
             
-            // 移动端简化，使图腾可点击直接触发仪式
-            const totemImage = document.getElementById('imagePreview');
-            totemImage.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                if (hasTotem && !ritualActive) {
-                    showConfirmationDialog(
-                        "开始重启仪式",
-                        "是否将古老图腾放入契约封印，开始重启仪式？",
-                        startRitual
-                    );
-                }
-            });
+            // 显示成功消息
+            showMessage("✓ 古老图腾已放置！现在可以点击契约封印区域开始仪式。", true);
             
-            totemImage.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                if (hasTotem && !ritualActive) {
-                    showConfirmationDialog(
-                        "开始重启仪式",
-                        "是否将古老图腾放入契约封印，开始重启仪式？",
-                        startRitual
-                    );
-                }
-            });
+            console.log('图腾放置完成，hasTotem新值:', hasTotem);
         }
         
-        // 初始化封印交互 - 移动端优化
+        // 初始化封印交互
         function initSealInteraction() {
+            console.log('初始化封印交互');
+            
             const sealArea = document.querySelector('.seal-area');
             const sealHint = document.getElementById('sealHint');
             
-            sealArea.addEventListener('dragover', function(e) {
+            if (!sealArea || !sealHint) {
+                console.error('找不到封印相关的DOM元素');
+                return;
+            }
+            
+            // 点击事件
+            sealArea.addEventListener('click', function() {
+                console.log('封印区域被点击，hasTotem:', hasTotem, 'ritualActive:', ritualActive);
+                
                 if (hasTotem && !ritualActive) {
-                    e.preventDefault();
-                    sealHint.textContent = "松开鼠标放置图腾，修复封印";
-                    sealHint.style.color = "#5D2906";
-                }
-            });
-            
-            sealArea.addEventListener('dragleave', function() {
-                sealHint.textContent = "请将象征双方共同记忆的古老图腾，拖拽或点击至此。";
-                sealHint.style.color = "";
-            });
-            
-            sealArea.addEventListener('drop', function(e) {
-                e.preventDefault();
-                
-                if (!hasTotem || ritualActive) return;
-                
-                const data = e.dataTransfer.getData('text/plain');
-                if (data === 'shadow_insect_totem') {
                     startRitual();
+                } else if (!hasTotem) {
+                    showMessage("请先放置古老图腾！", false);
                 }
             });
             
-            // 移动端点击事件
-            sealArea.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                if (hasTotem && !ritualActive) {
-                    showConfirmationDialog(
-                        "开始重启仪式",
-                        "是否将古老图腾放入契约封印，开始重启仪式？",
-                        startRitual
-                    );
-                }
-            });
-            
+            // 触摸事件
             sealArea.addEventListener('touchstart', function(e) {
                 e.preventDefault();
-                e.stopPropagation();
                 if (hasTotem && !ritualActive) {
-                    this.style.transform = 'scale(0.98)';
+                    this.style.opacity = '0.8';
                 }
             });
             
             sealArea.addEventListener('touchend', function(e) {
                 e.preventDefault();
-                e.stopPropagation();
-                this.style.transform = '';
+                this.style.opacity = '1';
+                
                 if (hasTotem && !ritualActive) {
-                    showConfirmationDialog(
-                        "开始重启仪式",
-                        "是否将古老图腾放入契约封印，开始重启仪式？",
-                        startRitual
-                    );
+                    startRitual();
+                } else if (!hasTotem) {
+                    showMessage("请先放置古老图腾！", false);
                 }
             });
         }
         
-        // 开始仪式 - 移动端优化
+        // 开始仪式
         function startRitual() {
-            if (ritualActive) return;
+            console.log('开始仪式，ritualActive当前值:', ritualActive);
+            
+            if (ritualActive) {
+                console.log('仪式已在进行中');
+                return;
+            }
+            
+            if (!hasTotem) {
+                showMessage("请先放置古老图腾！", false);
+                return;
+            }
             
             ritualActive = true;
+            
             const sealHint = document.getElementById('sealHint');
             const sealGlow = document.getElementById('sealGlow');
             const confirmButton = document.getElementById('confirmButton');
             
-            sealHint.innerHTML = "仪式进行中...";
+            if (!sealHint || !sealGlow || !confirmButton) {
+                console.error('找不到仪式相关的DOM元素');
+                return;
+            }
+            
+            sealHint.innerHTML = "⚡ 仪式进行中...";
+            sealHint.style.color = "#5D2906";
             sealGlow.style.opacity = '1';
             
-            showMessage("古老图腾被识别为「共同记忆载体·阴影虫」。", true);
+            // 图腾消失动画
+            const imagePreview = document.getElementById('imagePreview');
+            if (imagePreview) {
+                imagePreview.style.transition = 'opacity 1s';
+                imagePreview.style.opacity = '0';
+            }
+            
+            // 显示仪式步骤
+            showMessage("第一步：图腾识别...", true);
             
             setTimeout(() => {
-                showMessage("它证明了，即使在遗忘的年代，我们的故事仍以另一种形式在你们的文明中流转。", true);
-                
-                document.getElementById('imagePreview').style.opacity = '0';
-                document.getElementById('witnessHint').textContent = "图腾已用于仪式";
+                showMessage("✓ 识别成功：古老图腾「阴影虫」", true);
                 
                 setTimeout(() => {
-                    const glyphs = document.querySelectorAll('.insect-glyph');
-                    glyphs.forEach((glyph, index) => {
-                        setTimeout(() => {
-                            glyph.classList.add('glyph-glow');
-                        }, index * 200);
-                    });
-                    
-                    showMessage("螂族感受到了善意与承认。契约封印开始修复...", true);
+                    showMessage("第二步：唤醒虫族记忆...", true);
                     
                     setTimeout(() => {
-                        sealHint.innerHTML = "✓ 封印修复中...<br>约束力：<span id='constraintValue'>12%</span>";
+                        showMessage("✓ 虫族代表响应协议", true);
                         
-                        let constraint = 12;
-                        const constraintElement = document.createElement('span');
-                        constraintElement.id = 'constraintValue';
+                        // 符文发光效果
+                        const glyphs = document.querySelectorAll('.insect-glyph');
+                        glyphs.forEach((glyph, index) => {
+                            setTimeout(() => {
+                                glyph.classList.add('glyph-glow');
+                            }, index * 300);
+                        });
                         
-                        const growthInterval = setInterval(() => {
-                            constraint += 5;
-                            if (constraint > 100) constraint = 100;
+                        setTimeout(() => {
+                            showMessage("第三步：修复契约封印...", true);
                             
-                            constraintElement.textContent = constraint + "%";
-                            constraintElement.className = constraint < 100 ? 'critical' : '';
-                            constraintElement.style.color = constraint >= 100 ? '#2E8B57' : '#c53030';
+                            sealHint.innerHTML = "🔧 封印修复中...";
                             
-                            if (constraint >= 100) {
-                                clearInterval(growthInterval);
-                                sealHint.innerHTML = "✓ 封印已完全修复！";
-                                sealGlow.style.background = 'radial-gradient(circle at center, rgba(255, 215, 0, 0.5) 0%, rgba(50, 205, 50, 0.3) 50%, transparent 70%)';
+                            // 模拟封印修复进度
+                            let progress = 12;
+                            const progressInterval = setInterval(() => {
+                                progress += 15;
+                                if (progress > 100) progress = 100;
                                 
-                                showMessage("共鸣达成！古老契约的约束力已恢复。", true);
+                                sealHint.innerHTML = `🔧 封印修复中... ${progress}%`;
                                 
-                                // 关键修复：直接激活确认按钮
-                                confirmButton.disabled = false;
-                                confirmButton.textContent = "我以调和局之名，确认此协议";
-                                confirmButton.style.backgroundColor = "#2E8B57";
-                                
-                                showMessage("人类，你们是否愿意履行祖先的承诺，重启这份共生协议？", true);
-                            }
-                        }, 200);
-                    }, 2000);
-                }, 2000);
+                                if (progress >= 100) {
+                                    clearInterval(progressInterval);
+                                    
+                                    sealHint.innerHTML = "✓ 封印已完全修复！";
+                                    sealHint.style.color = "#2E8B57";
+                                    sealGlow.style.background = 'radial-gradient(circle at center, rgba(255, 215, 0, 0.5) 0%, rgba(50, 205, 50, 0.3) 50%, transparent 70%)';
+                                    
+                                    showMessage("✓ 契约封印修复完成！", true);
+                                    
+                                    // 更新确认按钮
+                                    confirmButton.disabled = false;
+                                    confirmButton.textContent = "确认重启协议";
+                                    confirmButton.style.backgroundColor = "#2E8B57";
+                                    
+                                    showMessage("请点击确认按钮，重启上古共生协议。", true);
+                                    
+                                    // 为确认按钮添加事件
+                                    confirmButton.onclick = function() {
+                                        if (this.disabled) return;
+                                        
+                                        this.disabled = true;
+                                        this.textContent = "协议确认中...";
+                                        
+                                        showMessage("正在确认协议...", true);
+                                        
+                                        setTimeout(() => {
+                                            showMessage("✓ 上古共生协议已重启！", true);
+                                            this.textContent = "✓ 协议已确认";
+                                            
+                                            // 跳转到结局
+                                            setTimeout(() => {
+                                                window.location.href = "jiejucc.html";
+                                            }, 1500);
+                                        }, 2000);
+                                    };
+                                    
+                                    // 触摸事件
+                                    confirmButton.ontouchstart = function() {
+                                        if (this.disabled) return;
+                                        this.style.transform = 'scale(0.98)';
+                                    };
+                                    
+                                    confirmButton.ontouchend = function() {
+                                        if (this.disabled) return;
+                                        this.style.transform = '';
+                                        this.onclick();
+                                    };
+                                }
+                            }, 300);
+                        }, 1500);
+                    }, 1500);
+                }, 1500);
             }, 1500);
         }
         
-        // 显示仪式消息
+        // 显示消息
         function showMessage(text, isSuccess = true) {
             const ritualMessage = document.getElementById('ritualMessage');
+            if (!ritualMessage) {
+                console.error('找不到ritualMessage元素');
+                return;
+            }
+            
             ritualMessage.textContent = text;
             ritualMessage.style.display = 'block';
             ritualMessage.style.color = isSuccess ? '#2E8B57' : '#c53030';
             ritualMessage.style.backgroundColor = isSuccess ? 'rgba(46, 139, 87, 0.1)' : 'rgba(197, 48, 48, 0.1)';
             
+            // 自动滚动到消息
             ritualMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            
-            if (isSuccess) {
-                setTimeout(() => {
-                    ritualMessage.style.opacity = '0.7';
-                }, 5000);
-            }
         }
         
-        // 初始化确认对话框 - 移动端优化
+        // 初始化确认对话框
         function initConfirmationDialog() {
             const dialog = document.getElementById('confirmationDialog');
             const overlay = document.getElementById('dialogOverlay');
             const confirmBtn = document.getElementById('dialogConfirm');
             const cancelBtn = document.getElementById('dialogCancel');
             
+            if (!dialog || !overlay || !confirmBtn || !cancelBtn) {
+                console.error('找不到对话框相关的DOM元素');
+                return;
+            }
+            
             let confirmCallback = null;
             
             confirmBtn.addEventListener('click', function(e) {
                 e.preventDefault();
-                e.stopPropagation();
-                if (confirmCallback) {
-                    confirmCallback();
-                }
-                hideConfirmationDialog();
-            });
-            
-            confirmBtn.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                this.style.transform = 'translateY(-1px)';
-            });
-            
-            confirmBtn.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                this.style.transform = '';
                 if (confirmCallback) {
                     confirmCallback();
                 }
@@ -2047,37 +2002,12 @@
             
             cancelBtn.addEventListener('click', function(e) {
                 e.preventDefault();
-                e.stopPropagation();
-                hideConfirmationDialog();
-            });
-            
-            cancelBtn.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                this.style.transform = 'translateY(-1px)';
-            });
-            
-            cancelBtn.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                this.style.transform = '';
                 hideConfirmationDialog();
             });
             
             overlay.addEventListener('click', function(e) {
                 e.preventDefault();
                 hideConfirmationDialog();
-            });
-            
-            overlay.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                hideConfirmationDialog();
-            });
-            
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && dialog.classList.contains('active')) {
-                    hideConfirmationDialog();
-                }
             });
             
             window.showConfirmationDialog = function(title, content, callback) {
@@ -2102,69 +2032,13 @@
             };
         }
         
-        // 确认协议 - 移动端优化
-        document.getElementById('confirmButton').addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            if (this.disabled) return;
-            
-            showMessage("协议确认！正在重启上古共生契约...", true);
-            
-            setTimeout(() => {
-                showMessage("✓ 协议重启成功！上古共生契约已重新锚定。", true);
-                
-                this.textContent = "协议已确认 ✓";
-                this.style.backgroundColor = "#2E8B57";
-                this.disabled = true;
-                
-                setTimeout(() => {
-                    // 关键修复：直接跳转，不使用对话框
-                    window.location.href = "jiejucc.html";
-                }, 1500);
-            }, 2000);
-        });
-        
-        document.getElementById('confirmButton').addEventListener('touchstart', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            if (!this.disabled) {
-                this.style.transform = 'translateY(-1px)';
-            }
-        });
-        
-        document.getElementById('confirmButton').addEventListener('touchend', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            this.style.transform = '';
-            if (this.disabled) return;
-            
-            showMessage("协议确认！正在重启上古共生契约...", true);
-            
-            setTimeout(() => {
-                showMessage("✓ 协议重启成功！上古共生契约已重新锚定。", true);
-                
-                this.textContent = "协议已确认 ✓";
-                this.style.backgroundColor = "#2E8B57";
-                this.disabled = true;
-                
-                setTimeout(() => {
-                    window.location.href = "jiejucc.html";
-                }, 1500);
-            }, 2000);
-        });
-        
-        // 页面加载效果 - 移动端优化
+        // 页面加载效果
         window.addEventListener('load', function() {
             document.body.style.opacity = '0';
             document.body.style.transition = 'opacity 1s';
             
             setTimeout(() => {
                 document.body.style.opacity = '1';
-                
-                setTimeout(() => {
-                    showMessage("你已进入上古共生协议的核心档案。时间紧迫，请仔细阅读并完成仪式。", true);
-                    showMessage("提示：你可以上传图腾图片(tuteng.png)或手动输入标识码进行验证。", false);
-                }, 1000);
             }, 300);
             
             // 防止iOS Safari下拉刷新
@@ -2179,16 +2053,133 @@
         document.addEventListener('gesturestart', function(e) {
             e.preventDefault();
         });
-        
-        // 修复iOS输入框被键盘遮挡问题
-        const inputs = document.querySelectorAll('input, textarea');
-        inputs.forEach(input => {
-            input.addEventListener('focus', function() {
-                setTimeout(() => {
-                    this.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 300);
-            });
-        });
     </script>
+
+    <script>
+// 在初始化函数中添加刷新按钮初始化
+function initRefreshButton() {
+    const refreshButton = document.getElementById('refreshButton');
+    
+    if (!refreshButton) {
+        console.error('找不到刷新按钮');
+        return;
+    }
+    
+    // 点击刷新按钮
+    refreshButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        console.log('刷新按钮被点击');
+        
+        // 显示确认对话框
+        if (window.showConfirmationDialog) {
+            window.showConfirmationDialog(
+                "刷新页面",
+                "确定要刷新页面吗？所有未保存的进度将会丢失。",
+                function() {
+                    // 确认刷新
+                    location.reload();
+                }
+            );
+        } else {
+            // 直接刷新
+            location.reload();
+        }
+    });
+    
+    // 触摸事件
+    refreshButton.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.style.transform = 'scale(0.95)';
+    });
+    
+    refreshButton.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.style.transform = '';
+        
+        if (window.showConfirmationDialog) {
+            window.showConfirmationDialog(
+                "刷新页面",
+                "确定要刷新页面吗？所有未保存的进度将会丢失。",
+                function() {
+                    location.reload();
+                }
+            );
+        } else {
+            location.reload();
+        }
+    });
+}
+
+// 在DOMContentLoaded事件中添加初始化
+document.addEventListener('DOMContentLoaded', function() {
+    // ... 其他初始化代码 ...
+    
+    // 初始化刷新按钮
+    initRefreshButton();
+    
+    // ... 其他初始化代码 ...
+});
+
+// 添加快捷键支持（按F5或Ctrl+R刷新）
+document.addEventListener('keydown', function(e) {
+    if ((e.key === 'F5') || (e.ctrlKey && e.key === 'r')) {
+        e.preventDefault();
+        console.log('快捷键触发刷新');
+        
+        if (window.showConfirmationDialog) {
+            window.showConfirmationDialog(
+                "刷新页面",
+                "确定要刷新页面吗？所有未保存的进度将会丢失。",
+                function() {
+                    location.reload();
+                }
+            );
+        } else {
+            location.reload();
+        }
+    }
+});
+
+// 添加长按刷新按钮重置所有状态的功能
+let longPressTimer;
+const LONG_PRESS_DURATION = 2000; // 2秒
+
+refreshButton.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    longPressTimer = setTimeout(() => {
+        // 长按事件 - 重置所有状态
+        if (window.showConfirmationDialog) {
+            window.showConfirmationDialog(
+                "重置所有状态",
+                "长按检测到！确定要重置所有仪式状态吗？这将清除所有进度。",
+                function() {
+                    // 清除本地存储
+                    localStorage.clear();
+                    // 重新加载页面
+                    location.reload();
+                }
+            );
+        }
+    }, LONG_PRESS_DURATION);
+});
+
+refreshButton.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    clearTimeout(longPressTimer);
+});
+
+// 添加页面离开确认
+window.addEventListener('beforeunload', function(e) {
+    if (ritualActive || hasTotem) {
+        e.preventDefault();
+        e.returnValue = '仪式正在进行中，确定要离开吗？';
+    }
+});
+
+</script>
 </body>
 </html>
