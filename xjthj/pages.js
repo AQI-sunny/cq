@@ -341,7 +341,7 @@ getFromURL: function() {
     },
     
     // 输出调试信息
-    logDebugInfo: function() {
+    /* logDebugInfo: function() {
         console.log('=== 页码调试信息 ===');
         console.log(`总页数: ${this.pageList.length}`);
         console.log('页面列表:');
@@ -351,7 +351,7 @@ getFromURL: function() {
         
         const currentFile = this.getCurrentFileName();
         console.log(`当前文件: ${currentFile}`);
-    }
+    } */
 };
 
 // 自动初始化
