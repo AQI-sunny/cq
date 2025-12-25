@@ -33,6 +33,7 @@ const SimplePageCounter = {
         'lubos.html',
         'building.html',
         'WEAK.html',
+        'luqiyan.html',
         'zbjs.html',
         'xly.html',
         'yjyjyjj.html',
@@ -362,7 +363,6 @@ if (document.readyState === 'loading') {
 
 // 暴露为全局对象
 window.SimplePageCounter = SimplePageCounter;
-
 
 
 
