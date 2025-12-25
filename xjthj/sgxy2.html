@@ -1625,7 +1625,7 @@
         }
         
         // 初始化手动验证功能
-        function initManualVerification() {
+       /*  function initManualVerification() {
             console.log('初始化手动验证');
             
             const toggleManualBtn = document.getElementById('toggleManualBtn');
@@ -1690,8 +1690,81 @@
                 }
             });
         }
+         */
+        // 初始化手动验证功能
+function initManualVerification() {
+    console.log('初始化手动验证');
+    
+    const toggleManualBtn = document.getElementById('toggleManualBtn');
+    const manualVerification = document.getElementById('manualVerification');
+    const manualVerifyBtn = document.getElementById('manualVerifyBtn');
+    const manualIdentifier = document.getElementById('manualIdentifier');
+    
+    if (!toggleManualBtn || !manualVerification || !manualVerifyBtn || !manualIdentifier) {
+        console.error('找不到手动验证相关的DOM元素');
+        return;
+    }
+    
+    // 显示/隐藏手动验证区域
+    toggleManualBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (manualVerification.classList.contains('active')) {
+            manualVerification.classList.remove('active');
+            toggleManualBtn.textContent = '无法上传图片？点击此处手动验证';
+        } else {
+            manualVerification.classList.add('active');
+            toggleManualBtn.textContent = '隐藏手动验证';
+            
+            // 自动聚焦输入框
+            setTimeout(() => {
+                manualIdentifier.focus();
+            }, 100);
+        }
+    });
+    
+    // 标识码验证
+    manualVerifyBtn.addEventListener('click', function() {
+        const identifier = manualIdentifier.value.trim();
+        console.log('验证标识码:', identifier);
         
-        // 显示正确的图腾
+        if (!identifier) {
+            alert("请输入标识码");
+            return;
+        }
+        
+        if (identifier === CORRECT_IDENTIFIER) {
+            showVerificationResult(true, "✓ 标识码验证成功！");
+            
+            // 显示正确的图腾
+            displayCorrectTotem();
+            
+            // 关键：放置图腾
+            setTimeout(() => {
+                placeTotem();
+            }, 500);
+        } else {
+            // 标识码错误，跳转到错误页面
+            console.log('标识码错误，跳转到 bejieju2.html');
+            
+            // 显示验证失败信息
+            showVerificationResult(false, "✗ 标识码错误，正在跳转...");
+            
+            // 延迟跳转，让用户看到错误信息
+            setTimeout(() => {
+                window.location.href = 'bejieju2.html';
+            }, 1000); // 1秒后跳转
+        }
+    });
+    
+    // 回车键验证
+    manualIdentifier.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            manualVerifyBtn.click();
+        }
+    });
+}
+         // 显示正确的图腾
         function displayCorrectTotem() {
             console.log('显示正确的图腾');
             
@@ -1765,7 +1838,7 @@
             
             // 如果提供了图片源，则使用
             if (imageSrc) {
-                const imagePreview = document.getElementById('imagePreview');
+                const imagePreview = document.getElementById('tuteng.png');
                 const slotContent = document.getElementById('slotContent');
                 if (imagePreview && slotContent) {
                     imagePreview.src = imageSrc;
@@ -2181,8 +2254,5 @@ window.addEventListener('beforeunload', function(e) {
 });
 
 </script>
-    <script src="pages.js"></script>
-<script src="jinzhi.js"></script>
 </body>
 </html>
-
