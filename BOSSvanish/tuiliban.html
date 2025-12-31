@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>案件关键信息填空表</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #1a1a2e;
+            color: #e6e6e6;
+            line-height: 1.6;
+            padding: 10px;
+            min-height: 100vh;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="%23222" stroke-width="1"/></svg>');
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+        
+        .header {
+            background-color: #162447;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+            border-left: 5px solid #e43f5a;
+        }
+        
+        .header h1 {
+            color: #fff;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .header .dialogue {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid #1f4068;
+        }
+        
+        .header .dialogue p {
+            margin: 0;
+            font-size: 1.1rem;
+            color: #f1f1f1;
+        }
+        
+        .question-container {
+            background-color: #1f4068;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .question-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #f1f1f1;
+            border-bottom: 2px solid #e43f5a;
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .question-title .number {
+            background-color: #e43f5a;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .answer-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #2d4059;
+            border-radius: 8px;
+            background-color: #0f3460;
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+        
+        .answer-input:focus {
+            outline: none;
+            border-color: #e43f5a;
+            box-shadow: 0 0 0 2px rgba(228, 63, 90, 0.3);
+        }
+        
+        .answer-input.highlight {
+            border-color: #ff9a3c;
+            box-shadow: 0 0 0 2px rgba(255, 154, 60, 0.5);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 2px rgba(255, 154, 60, 0.5); }
+            50% { box-shadow: 0 0 0 4px rgba(255, 154, 60, 0.3); }
+            100% { box-shadow: 0 0 0 2px rgba(255, 154, 60, 0.5); }
+        }
+        
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .option {
+            background-color: #2d4059;
+            color: #e6e6e6;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        
+        .option:hover {
+            background-color: #3d5a80;
+            transform: translateY(-2px);
+        }
+        
+        .option.selected {
+            background-color: #e43f5a;
+            color: white;
+            border-color: #ff6b81;
+        }
+        
+        .buttons-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 16px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-submit {
+            background-color: #e43f5a;
+            color: white;
+        }
+        
+        .btn-submit:hover {
+            background-color: #ff6b81;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(228, 63, 90, 0.4);
+        }
+        
+        .btn-reset {
+            background-color: #2d4059;
+            color: #e6e6e6;
+        }
+        
+        .btn-reset:hover {
+            background-color: #3d5a80;
+            transform: translateY(-3px);
+        }
+        
+        .progress-container {
+            background-color: #162447;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #2d4059;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #e43f5a;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        /* 自定义弹窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            padding: 15px;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background-color: #1f4068;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #fff;
+            text-align: center;
+            border-bottom: 2px solid #e43f5a;
+            padding-bottom: 15px;
+        }
+        
+        .modal-content {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            color: #e6e6e6;
+            text-align: center;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .modal-btn.confirm {
+            background-color: #e43f5a;
+            color: white;
+        }
+        
+        .modal-btn.confirm:hover {
+            background-color: #ff6b81;
+        }
+        
+        .modal-btn.cancel {
+            background-color: #2d4059;
+            color: #e6e6e6;
+        }
+        
+        .modal-btn.cancel:hover {
+            background-color: #3d5a80;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .question-title {
+                font-size: 1.2rem;
+            }
+            
+            .btn {
+                padding: 14px 15px;
+                font-size: 1rem;
+            }
+            
+            .buttons-container {
+                flex-direction: column;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.4rem;
+            }
+            
+            .question-title {
+                font-size: 1.1rem;
+            }
+            
+            .answer-input {
+                padding: 10px 12px;
+                font-size: 0.95rem;
+            }
+            
+            .option {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .question-container {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .question-container:nth-child(odd) {
+            animation-delay: 0.1s;
+        }
+        
+        .question-container:nth-child(even) {
+            animation-delay: 0.2s;
+        }
+        
+        /* 防止TapTap小程序中的点击高亮 */
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-file-contract"></i> 案件关键信息填空表</h1>
+            <div class="dialogue">
+                <p><i class="fas fa-user"></i> <strong>魏警官：</strong> 你填一下这个表吧。</p>
+             <br>
+                <p>     温馨提示：找不到该表？搜索“填表”即可！</p>
+            </div>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-text">
+                <span>填写进度: <span id="completed-count">0</span>/<span id="total-count">14</span></span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+        
+        <div id="questions-container">
+            <!-- 问题将通过JavaScript动态生成 -->
+        </div>
+        
+        <div class="buttons-container">
+            <button class="btn btn-reset" id="reset-btn">
+                <i class="fas fa-redo"></i> 重置所有答案
+            </button>
+            <button class="btn btn-submit" id="submit-btn">
+                <i class="fas fa-paper-plane"></i> 提交答案
+            </button>
+        </div>
+    </div>
+    
+    <!-- 自定义弹窗 - 消息弹窗 -->
+    <div class="modal-overlay" id="message-modal">
+        <div class="modal">
+            <div class="modal-header" id="message-title">提示</div>
+            <div class="modal-content" id="message-content">
+                <!-- 消息内容将通过JavaScript动态生成 -->
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn confirm" id="message-ok">确定</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 自定义弹窗 - 确认弹窗 -->
+    <div class="modal-overlay" id="confirm-modal">
+        <div class="modal">
+            <div class="modal-header" id="confirm-title">确认</div>
+            <div class="modal-content" id="confirm-content">
+                <!-- 确认内容将通过JavaScript动态生成 -->
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" id="confirm-cancel">取消</button>
+                <button class="modal-btn confirm" id="confirm-ok">确定</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 问题数据 - 便于后续增加和修改
+        const questionsData = [
+            { id: 1, text: "你认为真凶是：__________", correctAnswer: "杨威", options: ["沈笑静", "李健兴", "麦", "何安", "杨威", "周于彰"] },
+            { id: 2, text: "你认为死者死因是：__________", correctAnswer: "他杀", options: ["自杀", "他杀"] },
+            { id: 3, text: "你认为毒药：__________", correctAnswer: "蓝色领带", options: ["蓝色领带", "圆形袖扣", "安心药店", "何安"] },
+            { id: 4, text: "你认为的毒药增强物：__________", correctAnswer: "圆形袖扣", options: ["蓝色领带", "圆形袖扣", "安心药店", "何安"] },
+            { id: 5, text: "你认为的下毒者：__________", correctAnswer: "安心药店", options: ["蓝色领带", "圆形袖扣", "安心药店", "何安"] },
+            { id: 6, text: "你认为的下毒方式：__________茶", correctAnswer: "蜂蜜柚子茶", options: ["蜂蜜柚子茶", "rein", "张威", "麦麦"] },
+            { id: 7, text: "监控矛盾：__________秒画面被插入", correctAnswer: "3秒", options: ["3秒", "rein", "张威", "麦麦"] },
+            { id: 8, text: "篡改技术：__________公司系统", correctAnswer: "兴建科技集团", options: ["兴建科技集团", "兴盛制造", "张威", "麦麦"] },
+            { id: 9, text: "凶手权限：__________账号", correctAnswer: "兴盛制造", options: ["兴建科技集团", "兴盛制造", "张威", "麦麦"] },
+            { id: 10, text: "抛尸时间掩护：触发__________", correctAnswer: "火警装置", options: ["火警装置", "zh4xj", "张威", "麦麦"] },
+            { id: 11, text: "财务动机：__________万元", correctAnswer: "何安", options: ["何安", "沈", "叶兰", "周于彰"] },
+            { id: 12, text: "境外账户名：__________", correctAnswer: "沈", options: ["何安", "沈", "叶兰", "周于彰"] },
+            { id: 13, text: "关键物证：__________袖扣、麦麦手机证据文件、", correctAnswer: "叶兰", options: ["何安", "沈", "叶兰", "周于彰"] },
+            { id: 14, text: "目击证人拍摄设备：__________", correctAnswer: "周于彰", options: ["何安", "沈", "叶兰", "周于彰"] },
+            { id: 15, text: "毒药来源：__________药店？日期？监控视频文件？", correctAnswer: "zh4xj", options: ["zh4xj", "rein", "张威", "麦麦"] }
+        ];
+        
+        // 可选词语 - 全部选项
+        const allOptions = [
+            "兴建科技集团", "兴盛制造", "张威", "麦麦", "rein", "自杀", "他杀", 
+            "蜂蜜柚子茶", "3秒", "火警装置", "zh4xj", "蓝色领带", "圆形袖扣", 
+            "安心药店", "安泰药店", "何安", "沈", "叶兰", "周于彰"
+        ];
+        
+        // 正确答案顺序
+        const correctOrder = [
+            "蓝色领带", "圆形袖扣", "安心药店", "何安", "沈", "叶兰", "周于彰", 
+            "兴建科技集团", "兴盛制造", "张威", "麦麦", "rein", "他杀", "蜂蜜柚子茶"
+        ];
+        
+        // 用户答案存储
+        let userAnswers = {};
+        
+        // 初始化函数
+        function init() {
+            renderQuestions();
+            updateProgress();
+            
+            // 事件监听
+            document.getElementById('submit-btn').addEventListener('click', submitAnswers);
+            document.getElementById('reset-btn').addEventListener('click', resetAllAnswers);
+            document.getElementById('message-ok').addEventListener('click', closeMessageModal);
+            document.getElementById('confirm-cancel').addEventListener('click', closeConfirmModal);
+            document.getElementById('confirm-ok').addEventListener('click', handleConfirmOk);
+            
+            // 初始化用户答案对象
+            questionsData.forEach(q => {
+                userAnswers[q.id] = '';
+            });
+        }
+        
+        // 渲染问题
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            questionsData.forEach(question => {
+                const questionEl = document.createElement('div');
+                questionEl.className = 'question-container';
+                questionEl.id = `question-${question.id}`;
+                questionEl.innerHTML = `
+                    <div class="question-title">
+                        <span class="number">${question.id}</span>
+                        <span>${question.text}</span>
+                    </div>
+                    <input 
+                        type="text" 
+                        class="answer-input"
+                        id="answer-${question.id}"
+                        placeholder="点击输入答案或从下方选择"
+                        data-id="${question.id}"
+                        value="${userAnswers[question.id] || ''}"
+                    >
+                    <div class="options-container" id="options-${question.id}">
+                        ${renderOptions(question.options, question.id)}
+                    </div>
+                `;
+                
+                container.appendChild(questionEl);
+                
+                // 为输入框添加事件
+                const input = document.getElementById(`answer-${question.id}`);
+                input.addEventListener('input', function() {
+                    const id = parseInt(this.dataset.id);
+                    userAnswers[id] = this.value.trim();
+                    updateProgress();
+                });
+                
+                // 为选项添加点击事件
+                const optionsContainer = document.getElementById(`options-${question.id}`);
+                optionsContainer.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('option')) {
+                        const id = parseInt(this.id.split('-')[1]);
+                        const value = e.target.textContent;
+                        
+                        // 更新输入框
+                        const input = document.getElementById(`answer-${id}`);
+                        input.value = value;
+                        input.focus();
+                        
+                        // 更新用户答案
+                        userAnswers[id] = value;
+                        
+                        // 更新选项样式
+                        const allOptions = this.querySelectorAll('.option');
+                        allOptions.forEach(opt => opt.classList.remove('selected'));
+                        e.target.classList.add('selected');
+                        
+                        updateProgress();
+                    }
+                });
+            });
+            
+            // 更新选项选择状态
+            updateOptionSelection();
+        }
+        
+        // 渲染选项
+        function renderOptions(options, questionId) {
+            const currentAnswer = userAnswers[questionId];
+            
+            return options.map(option => {
+                let selectedClass = '';
+                
+                // 如果用户选择了这个选项，标记为选中
+                if (currentAnswer === option) {
+                    selectedClass = 'selected';
+                }
+                
+                return `<div class="option ${selectedClass}" data-value="${option}">${option}</div>`;
+            }).join('');
+        }
+        
+        // 更新选项选择状态
+        function updateOptionSelection() {
+            questionsData.forEach(question => {
+                const optionsContainer = document.getElementById(`options-${question.id}`);
+                const currentAnswer = userAnswers[question.id];
+                
+                if (optionsContainer && currentAnswer) {
+                    const allOptions = optionsContainer.querySelectorAll('.option');
+                    allOptions.forEach(opt => {
+                        if (opt.textContent === currentAnswer) {
+                            opt.classList.add('selected');
+                        } else {
+                            opt.classList.remove('selected');
+                        }
+                    });
+                }
+            });
+        }
+        
+        // 更新进度
+        function updateProgress() {
+            const total = questionsData.length;
+            const completed = Object.values(userAnswers).filter(answer => answer.trim() !== '').length;
+            const completedCountEl = document.getElementById('completed-count');
+            const totalCountEl = document.getElementById('total-count');
+            const progressFillEl = document.getElementById('progress-fill');
+            
+            completedCountEl.textContent = completed;
+            totalCountEl.textContent = total;
+            
+            // 计算进度百分比
+            const progressPercent = (completed / total) * 100;
+            progressFillEl.style.width = `${progressPercent}%`;
+        }
+        
+        // 计算正确答案数量
+        function calculateCorrectAnswers() {
+            let correctCount = 0;
+            
+            questionsData.forEach(question => {
+                const userAnswer = userAnswers[question.id];
+                if (userAnswer && userAnswer.trim() === question.correctAnswer) {
+                    correctCount++;
+                }
+            });
+            
+            return correctCount;
+        }
+        
+        // 获取第一个未填写的问题ID
+        function getFirstUnansweredQuestionId() {
+            for (let i = 0; i < questionsData.length; i++) {
+                const question = questionsData[i];
+                const userAnswer = userAnswers[question.id];
+                if (!userAnswer || userAnswer.trim() === '') {
+                    return question.id;
+                }
+            }
+            return null;
+        }
+        
+        // 滚动到指定问题并高亮
+        function scrollToQuestion(questionId) {
+            const questionElement = document.getElementById(`question-${questionId}`);
+            const inputElement = document.getElementById(`answer-${questionId}`);
+            
+            if (questionElement && inputElement) {
+                // 移除之前的高亮
+                document.querySelectorAll('.answer-input.highlight').forEach(input => {
+                    input.classList.remove('highlight');
+                });
+                
+                // 滚动到问题位置
+                questionElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+                
+                // 添加高亮效果
+                setTimeout(() => {
+                    inputElement.classList.add('highlight');
+                    inputElement.focus();
+                }, 300);
+            }
+        }
+        
+        // 提交答案
+        function submitAnswers() {
+            // 检查是否所有问题都已填写
+            const total = questionsData.length;
+            const completed = Object.values(userAnswers).filter(answer => answer.trim() !== '').length;
+            
+            if (completed < total) {
+                // 找到第一个未填写的问题
+                const firstUnansweredId = getFirstUnansweredQuestionId();
+                if (firstUnansweredId) {
+                    // 滚动到第一个未填写的问题
+                    scrollToQuestion(firstUnansweredId);
+                    
+                    // 显示提示信息
+                    showMessage('提示', `您还有${total - completed}个问题未填写，请先填写完整再提交。已自动定位到第一个未填写的问题。`);
+                }
+                return;
+            }
+            
+            // 计算结果
+            const correctCount = calculateCorrectAnswers();
+            const wrongCount = total - correctCount;
+            
+            // 显示简要结果，然后自动跳转
+            const resultText = getResultText(correctCount, wrongCount);
+            const jumpInfo = getJumpInfo(correctCount, wrongCount);
+            
+            showMessage('提交结果', `
+                <p>您已回答了所有${total}个问题。</p>
+                <p><strong>正确：${correctCount} 题</strong></p>
+                <p><strong>错误：${wrongCount} 题</strong></p>
+                <p>${resultText}</p>
+                <p>${jumpInfo}</p>
+            `);
+            
+            // 2秒后自动跳转
+            setTimeout(() => {
+                jumpToResult(correctCount, wrongCount);
+            }, 2000);
+        }
+        
+        // 获取结果文本
+        function getResultText(correctCount, wrongCount) {
+            if (wrongCount === 0) {
+                return '<span style="color: #4ecdc4;">恭喜！所有答案都正确！</span>';
+            } else if (wrongCount <= 5) {
+                return '<span style="color: #ff9a3c;">有部分错误。</span>';
+            } else {
+                return '<span style="color: #ff6b6b;">错误较多。</span>';
+            }
+        }
+        
+        // 获取跳转信息
+        function getJumpInfo(correctCount, wrongCount) {
+            if (wrongCount === 0) {
+                return '即将跳转到结局页面...';
+            } else if (wrongCount <= 5) {
+                return '即将跳转到结局B...';
+            } else {
+                return '即将跳转到结局C...';
+            }
+        }
+        
+        // 跳转到结果页面
+        function jumpToResult(correctCount, wrongCount) {
+            // 根据错误数量跳转到不同页面
+            if (wrongCount === 0) {
+                window.location.href = 'hejieju.html';
+            } else if (wrongCount <= 5) {
+                window.location.href = 'jiejub.html';
+            } else {
+                window.location.href = 'jieju3.html';
+            }
+        }
+        
+        // 重置所有答案
+        function resetAllAnswers() {
+            showConfirm('确认重置', '您确定要重置所有答案吗？这将会清空所有已填写的内容。')
+                .then(result => {
+                    if (result) {
+                        questionsData.forEach(q => {
+                            userAnswers[q.id] = '';
+                        });
+                        renderQuestions();
+                        updateProgress();
+                        showMessage('重置成功', '所有答案已重置，请重新填写。');
+                    }
+                });
+        }
+        
+        // 显示消息弹窗
+        function showMessage(title, content) {
+            document.getElementById('message-title').textContent = title;
+            document.getElementById('message-content').innerHTML = content;
+            document.getElementById('message-modal').classList.add('active');
+        }
+        
+        // 关闭消息弹窗
+        function closeMessageModal() {
+            document.getElementById('message-modal').classList.remove('active');
+        }
+        
+        // 显示确认弹窗
+        function showConfirm(title, content) {
+            document.getElementById('confirm-title').textContent = title;
+            document.getElementById('confirm-content').innerHTML = `<p>${content}</p>`;
+            document.getElementById('confirm-modal').classList.add('active');
+            
+            // 创建Promise来处理确认结果
+            return new Promise((resolve) => {
+                // 存储resolve函数以便在按钮点击时调用
+                window.confirmResolve = resolve;
+            });
+        }
+        
+        // 关闭确认弹窗
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').classList.remove('active');
+            if (window.confirmResolve) {
+                window.confirmResolve(false);
+                window.confirmResolve = null;
+            }
+        }
+        
+        // 处理确认弹窗的确定按钮
+        function handleConfirmOk() {
+            document.getElementById('confirm-modal').classList.remove('active');
+            if (window.confirmResolve) {
+                window.confirmResolve(true);
+                window.confirmResolve = null;
+            }
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

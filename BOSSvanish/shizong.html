@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>旺达商圈新闻 - 兴健科技集团董事长李健兴失踪案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+        
+        /* 页面头部 */
+        .header {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            border-bottom: 4px solid #3949ab;
+        }
+        
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            line-height: 1.4;
+            text-align: center;
+            margin-top: 8px;
+        }
+        
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 16px;
+            font-size: 13px;
+            opacity: 0.9;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* 新闻内容区域 */
+        .news-content {
+            padding: 24px 16px;
+            background-color: white;
+            margin: 8px auto 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            border-radius: 0 0 12px 12px;
+            max-width: 800px;
+        }
+        
+        .news-content p {
+            margin-bottom: 20px;
+            font-size: 16px;
+            text-align: justify;
+            line-height: 1.7;
+        }
+        
+        .news-content p:first-of-type {
+            font-weight: 700;
+            color: #d32f2f;
+            font-size: 18px;
+            border-left: 4px solid #d32f2f;
+            padding-left: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .highlight {
+            background-color: #fff8e1;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #333;
+            border: 1px solid #ffecb3;
+        }
+        
+        .news-image {
+            width: 100%;
+            max-width: 600px;
+            margin: 30px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+            border: 1px solid #eee;
+        }
+        
+        .news-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        
+        .news-image:hover img {
+            transform: scale(1.02);
+        }
+        
+        .image-caption {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+            padding: 0 10px;
+            font-style: italic;
+        }
+        
+        /* 浮动搜索球容器 */
+       /*  .floating-search-ball-container {
+            position: fixed;
+            bottom: 20px;
+            right: 16px;
+            z-index: 1000;
+        }
+         */
+        /* 搜索球（点击展开） */
+        /* .floating-search-ball {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
+            box-shadow: 0 6px 16px rgba(26, 35, 126, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .floating-search-ball::before {
+            content: "🔍";
+            font-size: 22px;
+        }
+        
+        .floating-search-ball:hover, .floating-search-ball:active {
+            background: linear-gradient(135deg, #283593 0%, #3f51b5 100%);
+            transform: scale(1.08);
+            box-shadow: 0 8px 20px rgba(26, 35, 126, 0.5);
+        } */
+        
+        /* 展开的搜索框 */
+       /*  .floating-search-expanded {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 300px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .floating-search-input {
+            padding: 14px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .floating-search-input:focus {
+            border-color: #3949ab;
+            box-shadow: 0 0 0 3px rgba(57, 73, 171, 0.1);
+        }
+        
+        .search-buttons {
+            display: flex;
+            gap: 10px;
+        } */
+        
+       /*  .floating-search-close, .floating-search-submit {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+        } */
+        
+       /*  .floating-search-close {
+            background-color: #f5f5f5;
+            color: #666;
+        }
+        
+        .floating-search-close:hover, .floating-search-close:active {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+        
+        .floating-search-submit {
+            background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
+            color: white;
+        }
+        
+        .floating-search-submit:hover, .floating-search-submit:active {
+            background: linear-gradient(135deg, #283593 0%, #3f51b5 100%);
+            box-shadow: 0 4px 12px rgba(57, 73, 171, 0.3);
+        } */
+        
+        /* 相关新闻部分 */
+        .related-news {
+            margin-top: 36px;
+            padding: 0 16px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .related-news h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #1a237e;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #e8eaf6;
+            position: relative;
+        }
+        
+        .related-news h2::after {
+            content: "";
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background-color: #3949ab;
+        }
+        
+        .news-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .news-item {
+            background-color: white;
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        
+        .news-item:hover, .news-item:active {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            border-left: 4px solid #3949ab;
+        }
+        
+        .news-item h3 {
+            font-size: 17px;
+            margin-bottom: 8px;
+            color: #222;
+        }
+        
+        .news-item p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* 底部信息 */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 0 16px;
+            color: #777;
+            font-size: 13px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .footer p:first-child {
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        /* 响应式调整 - 移动端 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 18px;
+            }
+            
+            .news-content {
+                padding: 20px 16px;
+                border-radius: 0;
+                margin: 0;
+                box-shadow: none;
+            }
+            
+            .news-content p {
+                font-size: 15px;
+            }
+            
+            .news-content p:first-of-type {
+                font-size: 17px;
+            }
+            
+           /*  .floating-search-expanded {
+                width: calc(100vw - 32px);
+                right: -8px;
+            } */
+        }
+        
+        /* 网页端优化 */
+        @media (min-width: 769px) {
+            body {
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                min-height: 100vh;
+            }
+            
+            .header {
+                padding: 20px 16px;
+                border-radius: 12px 12px 0 0;
+                margin: 20px auto 0;
+                max-width: 800px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+                margin-top: 10px;
+            }
+            
+            .news-content {
+                padding: 32px 24px;
+                border-radius: 0 0 12px 12px;
+                margin-top: 0;
+            }
+            
+            .news-content p {
+                font-size: 17px;
+                margin-bottom: 22px;
+            }
+            
+            .news-content p:first-of-type {
+                font-size: 20px;
+            }
+            
+            /* .floating-search-ball-container {
+                right: calc(50% - 400px + 24px);
+            } */
+        }
+        
+        /* 大屏幕优化 */
+        @media (min-width: 1200px) {
+            .header, .news-content, .related-news, .footer {
+                max-width: 900px;
+            }
+            
+            /* .floating-search-ball-container {
+                right: calc(50% - 450px + 24px);
+            } */
+        }
+        
+        /* 针对TapTap小程序优化 */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .container {
+                max-width: 480px;
+                margin: 0 auto;
+            }
+            
+            /* .floating-search-ball-container {
+                right: calc(50% - 240px + 16px);
+            } */
+        }
+    </style>
+    
+<link rel="stylesheet" href="sc-style.css">
+<link rel="icon" type="image/png" href="dtma.png">
+</head>
+<body>
+    <div class="container">
+        <!-- 页面头部 -->
+        <header class="header">
+            <h1>旺达商圈新闻：兴健科技集团董事长李健兴失踪案</h1>
+            <div class="news-meta">
+                <span class="news-date">时间：2025年12月31日</span>
+                <span class="news-source">来源：旺达商圈新闻</span>
+            </div>
+        </header>
+        
+        <!-- 新闻内容区域 -->
+        <main class="news-content">
+            <p>董事长李健兴离奇失踪</p>
+            
+            <p>据警方透露，李健兴自12月31日晚失踪，最后一次被见到是在当晚19:30左右离开兴健科技集团总部大厦。家人于次日凌晨发现其未归且无法取得联系，随即报警。</p>
+            
+            <div class="news-image">
+    <img src="xjds.jpg" width="600" height="350" alt="兴健科技集团大厦">
+    <div class="image-caption">兴健大厦，李健兴董事长最后出现的地点</div>
+</div>
+            
+            <p>公司监控显示李总当晚正常离开大厦，独自一人进入地下停车场。监控录像显示其行为举止正常，未发现任何异常情况。</p>
+            
+            <p>但员工陈沐声称目击李总在电梯内死亡，这一说法与监控录像存在明显矛盾。陈沐表示，当晚约19:45，他在大厦内部电梯中遇到李健兴董事长，<span class="highlight">当时电梯突然停运，李董事长脸色苍白，随后突然倒地不起</span>。陈沐立即尝试施救，他表示当时手机关机，无法立即呼叫救援。电梯恢复运行开门后，陈沐急忙离开电梯前往大堂拨打救援电话求救，但当医护人员到达时，电梯内空无一人。</p>
+            
+            <p>目前警方正在调取兴健大厦所有监控录像，同时对陈沐进行详细询问。警方表示，<span class="highlight">此案存在多处疑点</span>，需要进一步调查才能确定事件真相。兴健科技集团已成立危机处理小组，公司运营目前正常。</p>
+        </main>
+        
+        <!-- 相关新闻部分 -->
+        <section class="related-news">
+            <h2>相关新闻</h2>
+            <div class="news-list">
+                <div class="news-item">
+                    <h3>兴健科技股价今日大幅波动</h3>
+                    <p>受董事长失踪事件影响，兴健科技股价今日开盘下跌8%，随后有所回升。市场分析人士指出，投资者对事件进展保持高度关注...</p>
+                </div>
+                <div class="news-item">
+                    <h3>商圈其他企业家对事件表示关注</h3>
+                    <p>多位商圈企业家对李健兴失踪案表示关注，希望警方尽快查明真相，维护商圈正常秩序...</p>
+                </div>
+                <div class="news-item">
+                    <h3>兴健科技发布官方声明</h3>
+                    <p>兴健科技集团今日发布声明，称公司运营一切正常，正全力配合警方调查...</p>
+                </div>
+            </div>
+        </section>
+       <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
+        
+        <!-- 底部信息 -->
+        <footer class="footer">
+            <p>© 2025 旺达商圈新闻 版权所有</p>
+            <p>新闻热线: 400-xxx-xxxx | 投稿邮箱: news@wanda.com</p>
+        </footer>
+        
+       
+    </div>
+    
+    <!-- 您提到有自己的外部JS文件，因此这里只包含页面结构 -->
+     <script src="visit.js"></script>
+  <script src="pages.js"></script>
+<script src="scball.js"></script>
+    
+</body>
+</html>

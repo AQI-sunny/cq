@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>旺达商圈药店大促 - 会员8折优惠</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background: linear-gradient(135deg, #1a73e8, #0d47a1);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            color: #ffde59;
+        }
+        
+        .tagline {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+        
+        .promo-badge {
+            display: inline-block;
+            background-color: #ff4081;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 8px rgba(255, 64, 129, 0.3);
+        }
+        
+        /* 主内容区 */
+        .content-section {
+            background-color: white;
+            border-radius: 12px;
+            margin: 25px 0;
+            padding: 25px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section-title {
+            color: #1a73e8;
+            border-left: 5px solid #1a73e8;
+            padding-left: 15px;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: #ff4081;
+        }
+        
+        /* 促销信息 */
+        .promo-highlight {
+            background: linear-gradient(to right, #e8f0fe, #fce4ec);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border-left: 5px solid #1a73e8;
+        }
+        
+        .promo-title {
+            font-size: 1.8rem;
+            color: #0d47a1;
+            margin-bottom: 15px;
+        }
+        
+        .promo-details {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+        
+        .price-comparison {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .original-price {
+            text-decoration: line-through;
+            color: #666;
+            font-size: 1.3rem;
+        }
+        
+        .discount-price {
+            color: #ff4081;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .discount-badge {
+            background-color: #ff4081;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        /* 药店列表 */
+        .pharmacy-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .pharmacy-item {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .pharmacy-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .pharmacy-name {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #1a73e8;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .pharmacy-address {
+            color: #666;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .pharmacy-phone {
+            color: #333;
+            font-weight: 500;
+        }
+        
+        /* 健康套餐 */
+        .health-package {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(to right, #f8f9fa, #e8f0fe);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+        
+        .package-items {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .package-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin: 10px;
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .package-icon {
+            width: 70px;
+            height: 70px;
+            background-color: #1a73e8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        /* 搜索球容器样式 */
+        /* .floating-search-ball-container {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .floating-search-ball {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1a73e8, #0d47a1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(26, 115, 232, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .floating-search-ball:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(26, 115, 232, 0.6);
+        }
+        
+        .floating-search-expanded {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 300px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 15px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .floating-search-input {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 100%;
+            transition: border-color 0.3s;
+        }
+        
+        .floating-search-input:focus {
+            outline: none;
+            border-color: #1a73e8;
+        }
+        
+        .floating-search-close, .floating-search-submit {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .floating-search-close {
+            background-color: #f5f5f5;
+            color: #666;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .floating-search-submit {
+            background-color: #1a73e8;
+            color: white;
+        }
+        
+        .floating-search-submit:hover {
+            background-color: #0d47a1;
+        }
+         */
+        /* 页脚 */
+        footer {
+            text-align: center;
+            color: #666;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 0.9rem;
+        }
+        
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            .content-section {
+                padding: 20px 15px;
+                margin: 15px 0;
+            }
+            
+            .promo-title {
+                font-size: 1.5rem;
+            }
+            
+            .pharmacy-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .floating-search-expanded {
+                width: calc(100vw - 40px);
+                right: -10px;
+            }
+            
+            .package-items {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        
+        /* TapTap小程序H5环境适配 */
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.8rem;
+            }
+            
+            .promo-badge {
+                font-size: 1rem;
+                padding: 5px 12px;
+            }
+            
+            .section-title {
+                font-size: 1.4rem;
+            }
+            
+            .discount-price {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="sc-style.css">
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                旺达商圈健康福利
+            </div>
+            <p class="tagline">关注健康，关爱上班族</p>
+            <div class="promo-badge">会员专享8折优惠</div>
+        </div>
+    </header>
+    
+    <main class="container">
+        <section class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-bullhorn"></i>
+                促销信息
+            </h2>
+            
+            <div class="promo-highlight">
+                <h3 class="promo-title">旺达商圈药店大促，会员8折优惠！</h3>
+                <p class="promo-details">
+                    即日起至本月底，凭旺达商圈工作证到任意一家合作药店消费，即可享受会员8折优惠！
+                </p>
+                <p class="promo-details">
+                    常用药品、保健品、医疗器械全线参与。特别推出上班族健康套餐。
+                </p>
+                
+                <div class="price-comparison">
+                    <span class="original-price">原价：128元</span>
+                    <span class="discount-price">现价：88元</span>
+                    <span class="discount-badge">立省40元</span>
+                </div>
+                
+                <p><i class="fas fa-clock"></i> 活动时间：即日起至本月31日</p>
+                <p><i class="fas fa-id-card"></i> 参与方式：凭旺达商圈工作证即可享受优惠</p>
+            </div>
+        </section>
+        
+        <section class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-map-marker-alt"></i>
+                合作药店名单
+            </h2>
+            <p>以下药店均参与本次促销活动，凭工作证可享8折优惠：</p>
+            
+            <div class="pharmacy-list">
+                <div class="pharmacy-item">
+                    <div class="pharmacy-name">
+                        <i class="fas fa-clinic-medical"></i>
+                        健康之家药店（旺达总店）
+                    </div>
+                    <div class="pharmacy-address">
+                        <i class="fas fa-map-pin"></i>
+                        旺达商圈A座1层101室
+                    </div>
+                    <div class="pharmacy-phone">
+                        <i class="fas fa-phone"></i>
+                        联系电话：400-123-4567
+                    </div>
+                </div>
+                
+                <div class="pharmacy-item">
+                    <div class="pharmacy-name">
+                        <i class="fas fa-pills"></i>
+                        康泰大药房（旺达分店）
+                    </div>
+                    <div class="pharmacy-address">
+                        <i class="fas fa-map-pin"></i>
+                        旺达商圈B座地下1层B101
+                    </div>
+                    <div class="pharmacy-phone">
+                        <i class="fas fa-phone"></i>
+                        联系电话：400-234-5678
+                    </div>
+                </div>
+                
+                <div class="pharmacy-item">
+                    <div class="pharmacy-name">
+                        <i class="fas fa-heart"></i>
+                        安心药房（旺达店）
+                    </div>
+                    <div class="pharmacy-address">
+                        <i class="fas fa-map-pin"></i>
+                        旺达商圈C座2层205室
+                    </div>
+                    <div class="pharmacy-phone">
+                        <i class="fas fa-phone"></i>
+                        联系电话：400-345-6789
+                    </div>
+                </div>
+                
+                <div class="pharmacy-item">
+                    <div class="pharmacy-name">
+                        <i class="fas fa-stethoscope"></i>
+                        佟仁堂（旺达商圈店）
+                    </div>
+                    <div class="pharmacy-address">
+                        <i class="fas fa-map-pin"></i>
+                        旺达商圈D座3层301-303室
+                    </div>
+                    <div class="pharmacy-phone">
+                        <i class="fas fa-phone"></i>
+                        联系电话：400-456-7890
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-briefcase"></i>
+                上班族健康套餐
+            </h2>
+            <p>专为上班族设计的健康套餐，缓解工作疲劳，提升工作效率：</p>
+            
+            <div class="health-package">
+                <div class="package-items">
+                    <div class="package-item">
+                        <div class="package-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="package-item-name">缓解眼疲劳眼药水</div>
+                        <div class="package-item-desc">有效缓解长时间使用电脑导致的眼干、眼涩</div>
+                    </div>
+                    
+                    <div class="package-item">
+                        <div class="package-icon">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div class="package-item-name">颈椎舒缓贴</div>
+                        <div class="package-item-desc">缓解颈椎僵硬、疼痛，适合久坐办公族</div>
+                    </div>
+                    
+                    <div class="package-item">
+                        <div class="package-icon">
+                            <i class="fas fa-capsules"></i>
+                        </div>
+                        <div class="package-item-name">复合维生素</div>
+                        <div class="package-item-desc">补充每日所需维生素，增强免疫力</div>
+                    </div>
+                </div>
+                
+                <div class="price-comparison">
+                    <span class="original-price">原价：128元</span>
+                    <span class="discount-price">套餐价：88元</span>
+                </div>
+                
+                <p style="text-align: center; margin-top: 15px;">
+                    <i class="fas fa-exclamation-circle"></i> 
+                    温馨提示：本套餐仅限旺达商圈合作药店购买，每人限购2套
+                </p>
+            </div>
+        </section>
+    </main>
+    
+    <!-- 搜索球容器 -->
+   <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
+    
+    <footer class="container">
+        <p>© 2025 旺达商圈健康福利计划 | 本活动最终解释权归旺达商圈所有</p>
+        <p>健康咨询热线：400-888-9999 | 服务时间：周一至周日 9:00-21:00</p>
+    </footer>
+    
+    <!-- 引用外部JS文件 -->
+    <script src="pages.js"></script>
+    <script>
+        // 这里可以添加一些基本的交互功能，但搜索球的主要交互在外部pages.js中
+        // 这里仅提供基本的DOM元素引用
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('旺达商圈药店促销页面已加载');
+            
+            // 这里不添加搜索球的具体交互逻辑，因为外部pages.js会处理
+            // 仅确保元素存在
+            const searchBall = document.getElementById('searchBall');
+            const searchExpanded = document.getElementById('searchExpanded');
+            const searchInput = document.getElementById('searchInput');
+            const searchClose = document.getElementById('searchClose');
+            const searchSubmit = document.getElementById('searchSubmit');
+            
+            if (searchBall && searchExpanded) {
+                console.log('搜索球组件已找到，交互逻辑由外部pages.js处理');
+            }
+            
+            // 模拟一些简单的交互效果
+            const pharmacyItems = document.querySelectorAll('.pharmacy-item');
+            pharmacyItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    this.style.backgroundColor = '#f0f7ff';
+                    setTimeout(() => {
+                        this.style.backgroundColor = '';
+                    }, 300);
+                });
+            });
+        });
+    </script>
+    <script src="scball.js"></script>
+
+
+</body>
+</html>

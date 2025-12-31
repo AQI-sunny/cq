@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>物业管理处线索搜寻</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: white;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            font-size: 16px;
+            background-color: #111;
+            touch-action: manipulation;
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -1;
+            transition: background-image 0.5s ease-in-out;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.85) 100%);
+            z-index: 0;
+        }
+
+        .game-container {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 15px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.6rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            color: #f8f9fa;
+            padding: 0 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            color: #3498db;
+            font-style: italic;
+            padding: 0 15px;
+        }
+
+        .location {
+            background-color: rgba(44, 62, 80, 0.9);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            border-left: 5px solid #3498db;
+            backdrop-filter: blur(5px);
+        }
+
+        .location h2 {
+            color: #3498db;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .location p {
+            font-size: 1rem;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .inventory {
+            background-color: rgba(41, 128, 185, 0.9);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            border-left: 5px solid #2ecc71;
+            backdrop-filter: blur(5px);
+        }
+
+        .inventory h3 {
+            color: white;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .inventory-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .inventory-item {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+        }
+
+        .inventory-item.found {
+            background-color: rgba(46, 204, 113, 0.3);
+            border: 1px solid #2ecc71;
+            opacity: 1;
+        }
+
+        .clue-hint {
+            background-color: rgba(155, 89, 182, 0.9);
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            border-left: 5px solid #9b59b6;
+            backdrop-filter: blur(5px);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .clue-hint h3 {
+            color: #e0c3ff;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 16px 18px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            min-height: 65px;
+            display: flex;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        button:hover, button:active {
+            background: linear-gradient(135deg, #2980b9 0%, #2573a7 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button::after {
+            content: "→";
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        button.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: linear-gradient(135deg, #7f8c8d 0%, #95a5a6 100%);
+        }
+
+        button.disabled:hover {
+            transform: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.3s ease-in-out;
+            backdrop-filter: blur(5px);
+        }
+
+        .success {
+            background-color: rgba(46, 204, 113, 0.9);
+            border-left: 5px solid #27ae60;
+        }
+
+        .failure {
+            background-color: rgba(231, 76, 60, 0.9);
+            border-left: 5px solid #c0392b;
+        }
+
+        .info {
+            background-color: rgba(52, 152, 219, 0.9);
+            border-left: 5px solid #2980b9;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .progress {
+            margin-top: 15px;
+            background-color: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 0.9rem;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* 手机横屏优化 */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .game-container {
+                padding: 10px;
+                justify-content: flex-start;
+            }
+            
+            h1 {
+                font-size: 1.4rem;
+                margin-bottom: 10px;
+            }
+            
+            .subtitle {
+                margin-bottom: 15px;
+                font-size: 0.9rem;
+            }
+            
+            .location, .inventory, .clue-hint {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+            
+            button {
+                padding: 12px 15px;
+                min-height: 55px;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* 平板样式 */
+        @media (min-width: 768px) {
+            .game-container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .location h2 {
+                font-size: 1.5rem;
+            }
+
+            .options {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+        }
+
+        /* 小屏幕手机优化 */
+        @media (max-width: 360px) {
+            .game-container {
+                padding: 12px;
+            }
+
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            button {
+                padding: 14px 16px;
+                font-size: 0.95rem;
+                min-height: 60px;
+            }
+        }
+
+        /* 滚动条优化 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(52, 152, 219, 0.5);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="background" id="background"></div>
+    <div class="overlay"></div>
+
+    <div class="game-container">
+        <h1>物业管理处线索搜寻</h1>
+        <div class="subtitle">这件事肯定跟物业脱不了干系！找找看有没有什么线索...</div>
+        
+        <div class="clue-hint" id="clue-hint">
+            <h3>🔍 当前发现</h3>
+            <div id="current-clue">这里看起来有些不太对劲...有些地方异常的整洁，有些地方却又格外凌乱。</div>
+        </div>
+        
+        <div class="location" id="current-location">
+            <h2>物业管理处前台</h2>
+            <p>前台区域异常的安静，值班表上的排班似乎被调整过。空气中弥漫着一种说不出的紧张感，你觉得这里一定藏着什么...</p>
+        </div>
+        
+        <div class="inventory" id="inventory">
+            <h3>📦 找到的线索</h3>
+            <div class="inventory-items" id="inventory-items">
+                <div class="inventory-item">???</div>
+                <div class="inventory-item">???</div>
+                <div class="inventory-item">???</div>
+                <div class="inventory-item">???</div>
+            </div>
+        </div>
+
+        <div class="options" id="options-container">
+            <!-- 选项将动态生成 -->
+        </div>
+
+        <div class="result" id="result">
+            <!-- 结果将动态显示 -->
+        </div>
+        
+        <div class="progress" id="progress">
+            线索收集: 0/4 | 继续搜寻...
+        </div>
+    </div>
+
+    <script>
+        // 图片资源
+        const locationImages = {
+            frontDesk: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+            officeDesk: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+            storageRoom: "https://images.unsplash.com/photo-1579226905180-636b76d96082?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+            breakRoom: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+        };
+
+        // 游戏状态
+        let gameState = {
+            currentLocation: 'frontDesk',
+            foundItems: {
+                item1: false,
+                item2: false,
+                item3: false,
+                item4: false
+            },
+            clues: [
+                "这里看起来有些不太对劲...有些地方异常的整洁，有些地方却又格外凌乱。",
+                "值班表上的笔迹很新，像是最近才修改过的...",
+                "有些抽屉上了新锁，这在以前是从未有过的...",
+                "储物室里的灰尘分布不太均匀，有些地方明显被翻动过...",
+                "所有的线索都指向了一个令人不安的真相..."
+            ],
+            itemNames: ["???", "???", "???", "???"]
+        };
+
+        // 位置配置
+        const locations = {
+            frontDesk: {
+                name: "物业管理处前台",
+                description: "前台区域异常的安静，值班表上的排班似乎被调整过。空气中弥漫着一种说不出的紧张感，你觉得这里一定藏着什么...",
+                options: [
+                    { 
+                        text: "仔细检查前台抽屉", 
+                        target: "checkFrontDesk", 
+                        item: "item1",
+                        hint: "抽屉里似乎有什么东西被刻意藏了起来"
+                    },
+                    { 
+                        text: "查看值班表", 
+                        target: "checkDutyBoard", 
+                        item: null,
+                        hint: "值班安排看起来有些奇怪"
+                    },
+                    { 
+                        text: "检查前台角落", 
+                        target: "checkCorner", 
+                        item: null,
+                        hint: "这里什么都没有"
+                    },
+                    { 
+                        text: "进入办公室区域", 
+                        target: "office",
+                        hint: "办公室里可能会有更多发现"
+                    },
+                    { 
+                        text: "前往储物室", 
+                        target: "storage",
+                        hint: "储物室的门半掩着..."
+                    }
+                ],
+                image: "frontDesk"
+            },
+            checkFrontDesk: {
+                name: "前台抽屉",
+                description: "在抽屉最隐蔽的夹层里，你摸到了一个冷硬的物体...这是一个加密的数据存储设备，上面没有任何标识。",
+                options: [
+                    { text: "返回前台", target: "frontDesk" }
+                ],
+                image: "frontDesk",
+                isItemLocation: true,
+                itemId: "item1",
+                foundText: "发现了一个可疑的数据存储设备"
+            },
+            checkDutyBoard: {
+                name: "值班表",
+                description: "值班表上，最近几天的夜班都被同一个人承包了。而且笔迹很新，像是刚刚修改过的。",
+                options: [
+                    { text: "返回前台", target: "frontDesk" }
+                ],
+                image: "frontDesk",
+                isDeadEnd: true
+            },
+            checkCorner: {
+                name: "前台角落",
+                description: "角落里只有一些积灰，看起来已经很久没人打扫过了。",
+                options: [
+                    { text: "返回前台", target: "frontDesk" }
+                ],
+                image: "frontDesk",
+                isDeadEnd: true
+            },
+            office: {
+                name: "办公室",
+                description: "办公室里异常整洁，桌面干净得有些不自然。墙上挂着一幅画，但挂得有些歪斜。书架上的书排列得过于整齐了。",
+                options: [
+                    { 
+                        text: "检查办公桌抽屉", 
+                        target: "checkDeskDrawer", 
+                        item: "item2",
+                        hint: "抽屉上的锁看起来很新",
+                        requires: "item1"
+                    },
+                    { 
+                        text: "查看墙上的画", 
+                        target: "checkPainting", 
+                        item: null,
+                        hint: "画后面好像没什么特别"
+                    },
+                    { 
+                        text: "检查书架", 
+                        target: "checkBookshelf", 
+                        item: "item3",
+                        hint: "有本书看起来格外老旧"
+                    },
+                    { 
+                        text: "返回前台", 
+                        target: "frontDesk"
+                    },
+                    { 
+                        text: "查看通风口", 
+                        target: "checkVent", 
+                        item: null,
+                        hint: "通风口里很干净"
+                    }
+                ],
+                image: "officeDesk"
+            },
+            checkDeskDrawer: {
+                name: "办公桌抽屉",
+                description: "用之前找到的设备打开了抽屉。里面有一把特殊的钥匙，看起来不是普通的门钥匙。钥匙上贴着一张很小的标签，字迹已经模糊不清。",
+                options: [
+                    { text: "返回办公室", target: "office" }
+                ],
+                image: "officeDesk",
+                isItemLocation: true,
+                itemId: "item2",
+                requires: "item1",
+                foundText: "找到了一把特殊的钥匙"
+            },
+            checkPainting: {
+                name: "墙上画作",
+                description: "把画摆正后，后面是普通的墙壁，没有什么特别之处。",
+                options: [
+                    { text: "返回办公室", target: "office" }
+                ],
+                image: "officeDesk",
+                isDeadEnd: true
+            },
+            checkBookshelf: {
+                name: "书架检查",
+                description: "在一本很厚的专业书籍里，你发现了几页手写的笔记。字迹潦草，记录的内容让人不安...",
+                options: [
+                    { text: "返回办公室", target: "office" }
+                ],
+                image: "officeDesk",
+                isItemLocation: true,
+                itemId: "item3",
+                foundText: "发现了手写的笔记"
+            },
+            checkVent: {
+                name: "通风口",
+                description: "通风口的栅栏很牢固，里面除了灰尘什么都没有。",
+                options: [
+                    { text: "返回办公室", target: "office" }
+                ],
+                image: "officeDesk",
+                isDeadEnd: true
+            },
+            storage: {
+                name: "储物室",
+                description: "储物室里堆满了各种工具和备用零件。但仔细看，有些地方的灰尘分布不太均匀，像是最近有人动过。角落里有一个老旧的储物柜，上面落满了灰尘。",
+                options: [
+                    { 
+                        text: "检查储物柜", 
+                        target: "checkStorageCabinet", 
+                        item: "item4",
+                        hint: "这个柜子看起来有些年头了",
+                        requires: "item2"
+                    },
+                    { 
+                        text: "翻找工具箱", 
+                        target: "checkToolbox", 
+                        item: null,
+                        hint: "都是普通的工具"
+                    },
+                    { 
+                        text: "查看货架上层", 
+                        target: "checkShelfTop", 
+                        item: null,
+                        hint: "只有灰尘和蜘蛛网"
+                    },
+                    { 
+                        text: "返回前台", 
+                        target: "frontDesk"
+                    },
+                    { 
+                        text: "检查地面", 
+                        target: "checkFloor", 
+                        item: null,
+                        hint: "地面很牢固"
+                    }
+                ],
+                image: "storageRoom"
+            },
+            checkStorageCabinet: {
+                name: "老旧储物柜",
+                description: "用那把特殊的钥匙，你打开了储物柜。里面只有一张照片，拍摄的时间似乎就在最近。照片上的内容...让人不寒而栗。",
+                options: [
+                    { text: "返回储物室", target: "storage" }
+                ],
+                image: "storageRoom",
+                isItemLocation: true,
+                itemId: "item4",
+                requires: "item2",
+                foundText: "发现了一张可疑的照片"
+            },
+            checkToolbox: {
+                name: "工具箱",
+                description: "工具箱里只有各种维修工具，摆放得很整齐，没有什么异常。",
+                options: [
+                    { text: "返回储物室", target: "storage" }
+                ],
+                image: "storageRoom",
+                isDeadEnd: true
+            },
+            checkShelfTop: {
+                name: "货架上层",
+                description: "货架上层积满了厚厚的灰尘，看起来很久没人碰过了。",
+                options: [
+                    { text: "返回储物室", target: "storage" }
+                ],
+                image: "storageRoom",
+                isDeadEnd: true
+            },
+            checkFloor: {
+                name: "地面检查",
+                description: "地面很平整，没有松动的迹象。",
+                options: [
+                    { text: "返回储物室", target: "storage" }
+                ],
+                image: "storageRoom",
+                isDeadEnd: true
+            }
+        };
+
+        // 物品揭示顺序
+        const itemRevealOrder = [
+            "加密的数据设备",
+            "特殊钥匙",
+            "手写笔记",
+            "关键照片"
+        ];
+
+        // 初始化游戏
+        function initGame() {
+            updateLocation();
+            updateInventory();
+            updateClue();
+        }
+
+        // 更新当前位置和选项
+        function updateLocation() {
+            const current = locations[gameState.currentLocation];
+            const locationElement = document.getElementById('current-location');
+            const optionsContainer = document.getElementById('options-container');
+            const resultElement = document.getElementById('result');
+            const progressElement = document.getElementById('progress');
+
+            // 更新位置信息
+            locationElement.innerHTML = `<h2>${current.name}</h2><p>${current.description}</p>`;
+
+            // 更新进度
+            const foundCount = Object.values(gameState.foundItems).filter(Boolean).length;
+            const progressText = foundCount < 4 ? 
+                `线索收集: ${foundCount}/4 | 继续搜寻...` :
+                `线索收集: 4/4 | 真相即将揭晓...`;
+            progressElement.textContent = progressText;
+
+            // 清除之前的选项和结果
+            optionsContainer.innerHTML = '';
+            resultElement.style.display = 'none';
+            resultElement.className = 'result';
+
+            // 添加选项
+            current.options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option.text;
+                
+                // 检查是否有前置要求
+                if (option.requires && !gameState.foundItems[option.requires]) {
+                    button.classList.add('disabled');
+                    button.onclick = () => {
+                        showResult("这里好像需要什么东西才能打开...", 'failure');
+                    };
+                } else {
+                    button.onclick = () => selectOption(option.target, option.item);
+                }
+                
+                optionsContainer.appendChild(button);
+            });
+
+            // 更换背景图片
+            changeBackground(current.image);
+        }
+
+        // 处理选项选择
+        function selectOption(target, itemId) {
+            gameState.currentLocation = target;
+            updateLocation();
+            
+            // 检查是否是物品位置
+            const current = locations[target];
+            if (current.isItemLocation && !gameState.foundItems[current.itemId]) {
+                // 显示找到物品
+                setTimeout(() => {
+                    const itemIndex = parseInt(current.itemId.replace('item', '')) - 1;
+                    gameState.itemNames[itemIndex] = itemRevealOrder[itemIndex];
+                    
+                    showResult(`找到了线索：${current.foundText}`, 'success');
+                    gameState.foundItems[current.itemId] = true;
+                    updateInventory();
+                    updateClue();
+                    
+                    // 检查游戏是否完成
+                    if (Object.values(gameState.foundItems).every(Boolean)) {
+                        setTimeout(() => {
+                            showResult(`<h3>所有线索都已找到！</h3>
+                            <p>你收集到了全部4个关键线索：</p>
+                            <ul style="margin: 10px 0; padding-left: 20px;">
+                                <li>加密的数据设备</li>
+                                <li>打开储物柜的特殊钥匙</li>
+                                <li>记录异常的手写笔记</li>
+                                <li>关键证据照片</li>
+                            </ul>
+                            <p>把这些证据交给相关部门，物业里的问题很快就能查清楚了。</p>`, 'success');
+                        }, 1500);
+                    }
+                }, 300);
+            } else if (current.isDeadEnd) {
+                setTimeout(() => {
+                    showResult("这里没有发现有用的线索。", 'failure');
+                }, 300);
+            }
+        }
+
+        // 显示结果
+        function showResult(message, type) {
+            const resultElement = document.getElementById('result');
+            resultElement.innerHTML = message;
+            resultElement.className = `result ${type}`;
+            resultElement.style.display = 'block';
+            
+            // 自动隐藏结果
+            if (type === 'failure') {
+                setTimeout(() => {
+                    resultElement.style.display = 'none';
+                }, 2000);
+            }
+        }
+
+        // 更新库存显示
+        function updateInventory() {
+            const inventoryItems = document.getElementById('inventory-items');
+            inventoryItems.innerHTML = '';
+            
+            gameState.itemNames.forEach((itemName, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = gameState.foundItems[`item${index + 1}`] ? 
+                    'inventory-item found' : 'inventory-item';
+                itemDiv.textContent = itemName;
+                inventoryItems.appendChild(itemDiv);
+            });
+        }
+
+        // 更新线索提示
+        function updateClue() {
+            const clueElement = document.getElementById('current-clue');
+            const foundCount = Object.values(gameState.foundItems).filter(Boolean).length;
+            clueElement.textContent = gameState.clues[Math.min(foundCount, gameState.clues.length-1)];
+        }
+
+        // 更换背景图片
+        function changeBackground(imageKey) {
+            const image = locationImages[imageKey] || locationImages.frontDesk;
+            document.getElementById('background').style.backgroundImage = `url('${image}')`;
+        }
+
+        // 防止误触和长按菜单
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // 开始游戏
+        window.onload = initGame;
+    </script>
+</body>
+</html>

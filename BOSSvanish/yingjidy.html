@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>应急电源日志</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        
+        .status-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .status-indicator i {
+            color: #4caf50;
+        }
+        
+        .log-container {
+            padding: 20px;
+        }
+        
+        .time-range {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #1a73e8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .time-range h2 {
+            color: #1a73e8;
+            font-size: 1.3rem;
+        }
+        
+        .current-time {
+            font-weight: 600;
+            color: #333;
+            background-color: #e8f0fe;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+        
+        .log-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #e0e0e0;
+        }
+        
+        .log-event {
+            position: relative;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #1a73e8;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .log-event:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .log-event.important {
+            background-color: #fff8e1;
+            border-left-color: #ff9800;
+        }
+        
+        .log-event.critical {
+            background-color: #ffebee;
+            border-left-color: #f44336;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.2); }
+            70% { box-shadow: 0 0 0 6px rgba(244, 67, 54, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); }
+        }
+        
+        .event-time {
+            font-weight: 600;
+            color: #1a73e8;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .log-event.critical .event-time {
+            color: #f44336;
+        }
+        
+        .event-desc {
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+        .event-details {
+            font-size: 0.9rem;
+            color: #777;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .event-details span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .timeline-marker {
+            position: absolute;
+            left: -25px;
+            top: 24px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #1a73e8;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #e0e0e0;
+        }
+        
+        .log-event.critical .timeline-marker {
+            background-color: #f44336;
+        }
+        
+        .log-event.important .timeline-marker {
+            background-color: #ff9800;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            background-color: #f9f9f9;
+        }
+        
+        /* 移动端优化 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            header {
+                padding: 20px 15px;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .status-indicator {
+                position: static;
+                margin-top: 10px;
+                justify-content: center;
+                width: 100%;
+            }
+            
+            .time-range {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .log-container {
+                padding: 15px;
+            }
+            
+            .log-timeline {
+                padding-left: 25px;
+            }
+            
+            .timeline-marker {
+                left: -20px;
+                width: 18px;
+                height: 18px;
+            }
+            
+            .log-event {
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .event-details {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .log-timeline {
+                padding-left: 20px;
+            }
+            
+            .timeline-marker {
+                left: -18px;
+                width: 16px;
+                height: 16px;
+            }
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 40px 20px;
+            color: #777;
+        }
+        
+        .no-data i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-car-battery"></i> 应急电源监控日志</h1>
+            <p>实时监控系统电源状态与异常事件记录</p>
+            <div class="status-indicator">
+                <i class="fas fa-circle"></i>
+                <span>系统运行正常</span>
+            </div>
+        </header>
+        
+        <div class="log-container">
+            <div class="time-range">
+                <h2>事件时间范围: 18:00 - 19:00</h2>
+                <div class="current-time">
+                    <i class="far fa-clock"></i>
+                    <span id="currentTime">--:--:--</span>
+                </div>
+            </div>
+            
+            <div class="log-timeline">
+                <div class="timeline-line"></div>
+                
+                <!-- 主要事件：监控系统断电 -->
+                <div class="log-event critical">
+                    <div class="timeline-marker"></div>
+                    <div class="event-time">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>18:05 - 18:06:30</span>
+                    </div>
+                    <div class="event-desc">
+                        监控系统断电 - 主电源中断，应急电源已启动
+                    </div>
+                    <div class="event-details">
+                        <span><i class="fas fa-bolt"></i> 电源类型: 应急备用电源</span>
+                        <span><i class="fas fa-clock"></i> 持续时间: 1分30秒</span>
+                        <span><i class="fas fa-microchip"></i> 影响设备: 监控系统</span>
+                    </div>
+                </div>
+                
+                <!-- 其他相关事件 -->
+                <div class="log-event">
+                    <div class="timeline-marker"></div>
+                    <div class="event-time">
+                        <i class="far fa-check-circle"></i>
+                        <span>18:00</span>
+                    </div>
+                    <div class="event-desc">
+                        系统自检完成，所有电源状态正常
+                    </div>
+                </div>
+                
+                <div class="log-event important">
+                    <div class="timeline-marker"></div>
+                    <div class="event-time">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>18:04:45</span>
+                    </div>
+                    <div class="event-desc">
+                        主电源电压波动检测
+                    </div>
+                </div>
+                
+                <div class="log-event">
+                    <div class="timeline-marker"></div>
+                    <div class="event-time">
+                        <i class="fas fa-power-off"></i>
+                        <span>18:06:35</span>
+                    </div>
+                    <div class="event-desc">
+                        主电源恢复，应急电源切换完成
+                    </div>
+                </div>
+                
+                <div class="log-event">
+                    <div class="timeline-marker"></div>
+                    <div class="event-time">
+                        <i class="fas fa-check"></i>
+                        <span>18:10</span>
+                    </div>
+                    <div class="event-desc">
+                        系统电源稳定性检查通过
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>最后更新: <span id="lastUpdateTime">--:--:--</span> | 应急电源监控系统 © 2023</p>
+        </footer>
+    </div>
+    
+    <script>
+        // 更新当前时间
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = now.toTimeString().split(' ')[0];
+            document.getElementById('currentTime').textContent = timeString;
+            
+            // 更新最后更新时间（每5分钟更新一次）
+            const minutes = now.getMinutes();
+            if (minutes % 5 === 0) {
+                document.getElementById('lastUpdateTime').textContent = timeString;
+            }
+        }
+        
+        // 初始化时间
+        updateCurrentTime();
+        setInterval(updateCurrentTime, 1000);
+        
+        // 移动端触摸事件优化
+        document.addEventListener('touchstart', function() {}, {passive: true});
+        
+        // 添加一些交互效果
+        document.querySelectorAll('.log-event').forEach(event => {
+            event.addEventListener('click', function() {
+                this.classList.toggle('expanded');
+            });
+        });
+        
+        // 页面加载时高亮显示关键事件
+        window.addEventListener('load', function() {
+            const criticalEvent = document.querySelector('.log-event.critical');
+            if (criticalEvent) {
+                criticalEvent.scrollIntoView({behavior: 'smooth', block: 'center'});
+                
+                // 添加一个短暂的更明显的高亮效果
+                setTimeout(() => {
+                    criticalEvent.style.backgroundColor = '#ffebee';
+                    setTimeout(() => {
+                        criticalEvent.style.backgroundColor = '';
+                    }, 1000);
+                }, 500);
+            }
+        });
+    </script>
+</body>
+</html>

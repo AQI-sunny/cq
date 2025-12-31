@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>飞鼠 - 移动协作</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
+    <style>
+        /* 移动端优化样式 */
+        :root {
+            --safe-area-top: env(safe-area-inset-top, 0px);
+            --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+            --primary-color: #00B2FF;
+            --secondary-color: #FF4757;
+            --bg-color: #FFFFFF;
+            --chat-bg: #F7F8FA;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg-color);
+            -webkit-overflow-scrolling: touch;
+            -webkit-text-size-adjust: 100%;
+        }
+        
+        /* 隐藏桌面端元素 */
+        .feishu-sidebar,
+        .feishu-header .header-tabs,
+        .info-sidebar,
+        .feishu-sidebar,
+        .header-search {
+            display: none !important;
+        }
+        
+        /* 移动端容器 */
+        .mobile-container {
+            width: 100%;
+            height: 100vh;
+            height: calc(var(--vh, 1vh) * 100);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        /* 顶部导航栏 */
+        .mobile-header {
+            height: 50px;
+            background: var(--bg-color);
+            border-bottom: 1px solid #E5E5E5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            padding-top: calc(var(--safe-area-top) + 8px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+        
+        .mobile-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .mobile-back-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+        
+        .mobile-header-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1A1D29;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .mobile-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .mobile-header-action {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        
+        .mobile-header-action:active {
+            background: #F2F3F5;
+        }
+        
+        /* 主内容区 */
+        .mobile-content {
+            flex: 1;
+            overflow: hidden;
+            margin-top: 50px;
+            margin-bottom: 56px;
+        }
+        
+        /* 消息列表页面 */
+        .message-list-page {
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 0.3s ease;
+        }
+        
+        .message-list-page.hidden {
+            transform: translateX(-100%);
+        }
+        
+        .message-list-header {
+            padding: 16px;
+            background: var(--bg-color);
+            border-bottom: 1px solid #E5E5E5;
+        }
+        
+        .message-list-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1A1D29;
+            margin-bottom: 12px;
+        }
+        
+        .message-filter-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+        
+        .filter-tab {
+            padding: 6px 16px;
+            background: #F2F3F5;
+            border-radius: 20px;
+            color: #666;
+            font-size: 13px;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        
+        .filter-tab.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .message-items {
+            height: calc(100% - 100px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* 消息项优化 */
+        .message-item {
+            padding: 14px 16px;
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #F7F8FA;
+            background: var(--bg-color);
+            transition: background 0.2s;
+        }
+        
+        .message-item:active {
+            background: #F7F8FA;
+        }
+        
+        .message-item.active {
+            background: #E8F7FF;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .message-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary-color), #0066FF);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .message-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .message-sender {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+        
+        .sender-name {
+            font-weight: 600;
+            color: #1A1D29;
+            font-size: 15px;
+        }
+        
+        .external-tag {
+            font-size: 10px;
+            background: #E8F7FF;
+            color: var(--primary-color);
+            padding: 2px 6px;
+            border-radius: 3px;
+            border: 1px solid var(--primary-color);
+        }
+        
+        .message-preview {
+            color: #666;
+            font-size: 14px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.4;
+        }
+        
+        .message-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 4px;
+        }
+        
+        .message-time {
+            color: #999;
+            font-size: 12px;
+        }
+        
+        .message-unread {
+            background: var(--secondary-color);
+            color: white;
+            font-size: 11px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* 聊天页面 */
+        .chat-page {
+            width: 100%;
+            height: 100%;
+            background: var(--chat-bg);
+            position: absolute;
+            top: 0;
+            left: 100%;
+            transition: transform 0.3s ease;
+        }
+        
+        .chat-page.active {
+            transform: translateX(-100%);
+        }
+        
+        .chat-messages-container {
+            height: calc(100% - 140px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 16px;
+        }
+        
+        /* 消息气泡优化 */
+        .message-bubble {
+            max-width: 85%;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message-bubble.sent {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+            margin-left: auto;
+        }
+        
+        .message-bubble.sent .message-content {
+            background: var(--primary-color);
+            color: white;
+            border-radius: 18px 18px 4px 18px;
+        }
+        
+        .message-bubble.received .message-content {
+            background: var(--bg-color);
+            color: #333;
+            border-radius: 18px 18px 18px 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .message-content {
+            padding: 12px 16px;
+            font-size: 15px;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+        
+        .message-time-small {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+            padding: 0 4px;
+        }
+        
+        /* 聊天输入区域 */
+        .chat-input-area {
+            position: fixed;
+            bottom: 56px;
+            left: 0;
+            right: 0;
+            background: var(--bg-color);
+            border-top: 1px solid #E5E5E5;
+            padding: 12px 16px;
+            padding-bottom: calc(var(--safe-area-bottom) + 12px);
+            z-index: 10;
+        }
+        
+        .input-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+        
+        .message-input {
+            flex: 1;
+            background: #F2F3F5;
+            border-radius: 20px;
+            padding: 12px 16px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            line-height: 1.5;
+            resize: none;
+            max-height: 120px;
+            min-height: 44px;
+        }
+        
+        .message-input::placeholder {
+            color: #999;
+        }
+        
+        .send-button {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+        
+        .send-button:active {
+            transform: scale(0.95);
+        }
+        
+        /* 底部导航栏 */
+        .mobile-bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: var(--bg-color);
+            border-top: 1px solid #E5E5E5;
+            display: flex;
+            padding-bottom: var(--safe-area-bottom);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 11px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .nav-item:active {
+            background: #F7F8FA;
+        }
+        
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+        
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        /* 菜单侧边栏 */
+        .menu-sidebar {
+            position: fixed;
+            top: 0;
+            left: -85%;
+            width: 85%;
+            max-width: 320px;
+            height: 100%;
+            background: #1A1D29;
+            z-index: 1000;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .menu-sidebar.active {
+            left: 0;
+        }
+        
+        .menu-header {
+            padding: calc(var(--safe-area-top) + 20px) 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .menu-user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), #0066FF);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .menu-user-info {
+            flex: 1;
+        }
+        
+        .menu-user-name {
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        
+        .menu-user-status {
+            color: var(--primary-color);
+            font-size: 12px;
+            background: rgba(0, 178, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        .menu-close {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        
+        .menu-close:active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-nav {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 20px 0;
+        }
+        
+        .menu-section {
+            margin-bottom: 24px;
+        }
+        
+        .menu-section-title {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 0 20px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .menu-nav-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .menu-nav-item:active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-nav-item.active {
+            background: rgba(0, 178, 255, 0.15);
+            color: var(--primary-color);
+        }
+        
+        .menu-nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--primary-color);
+        }
+        
+        .menu-nav-item i {
+            width: 24px;
+            font-size: 18px;
+            margin-right: 12px;
+        }
+        
+        .menu-nav-text {
+            flex: 1;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .menu-nav-badge {
+            background: var(--secondary-color);
+            color: white;
+            font-size: 11px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* 遮罩层 */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        /* 适配不同屏幕 */
+        @media (max-height: 600px) {
+            .chat-messages-container {
+                height: calc(100% - 120px);
+            }
+            
+            .chat-input-area {
+                bottom: 50px;
+            }
+            
+            .mobile-bottom-nav {
+                height: 50px;
+            }
+        }
+        
+        @media (max-width: 320px) {
+            .message-item {
+                padding: 12px;
+            }
+            
+            .message-avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+            
+            .chat-messages-container {
+                padding: 12px;
+            }
+        }
+        
+        /* 横屏适配 */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .mobile-header {
+                height: 44px;
+                padding-top: calc(var(--safe-area-top) + 4px);
+            }
+            
+            .mobile-content {
+                margin-top: 44px;
+                margin-bottom: 50px;
+            }
+            
+            .mobile-bottom-nav {
+                height: 50px;
+            }
+            
+            .chat-input-area {
+                bottom: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 遮罩层 -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- 菜单侧边栏 -->
+    <div class="menu-sidebar" id="menuSidebar">
+        <div class="menu-header">
+            <div class="menu-user-avatar">麦</div>
+            <div class="menu-user-info">
+                <div class="menu-user-name">麦姝冰</div>
+                <div class="menu-user-status">在线</div>
+            </div>
+            <div class="menu-close" id="menuClose">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        
+        <div class="menu-nav">
+            <div class="menu-section">
+                <div class="menu-section-title">工作区</div>
+                <div class="menu-nav-item active">
+                    <i class="fas fa-comments"></i>
+                    <span class="menu-nav-text">消息</span>
+                    <div class="menu-nav-badge">3</div>
+                </div>
+                <div class="menu-nav-item">
+                    <i class="fas fa-address-book"></i>
+                    <span class="menu-nav-text">通讯录</span>
+                </div>
+                <div class="menu-nav-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span class="menu-nav-text">日历</span>
+                </div>
+                <div class="menu-nav-item">
+                    <i class="fas fa-tasks"></i>
+                    <span class="menu-nav-text">任务</span>
+                </div>
+                <div class="menu-nav-item">
+                    <i class="fas fa-cloud"></i>
+                    <span class="menu-nav-text">云文档</span>
+                </div>
+            </div>
+            
+            <div class="menu-section">
+                <div class="menu-section-title">工具</div>
+                <div class="menu-nav-item">
+                    <i class="fas fa-video"></i>
+                    <span class="menu-nav-text">会议</span>
+                </div>
+                <div class="menu-nav-item">
+                    <i class="fas fa-file-export"></i>
+                    <span class="menu-nav-text">审批</span>
+                </div>
+                <div class="menu-nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span class="menu-nav-text">报表</span>
+                </div>
+            </div>
+            
+            <div class="menu-section">
+                <div class="menu-section-title">设置</div>
+                <div class="menu-nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span class="menu-nav-text">设置</span>
+                </div>
+                <div class="menu-nav-item">
+                    <i class="fas fa-moon"></i>
+                    <span class="menu-nav-text">夜间模式</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主容器 -->
+    <div class="mobile-container">
+        <!-- 顶部导航 -->
+        <div class="mobile-header">
+            <div class="mobile-header-left">
+                <div class="mobile-back-btn" id="backButton">
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+                <div class="mobile-header-title" id="headerTitle">消息</div>
+            </div>
+            <div class="mobile-header-actions">
+                <div class="mobile-header-action" id="menuButton">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="mobile-header-action" id="closeButton">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 主内容 -->
+        <div class="mobile-content">
+            <!-- 消息列表页面 -->
+            <div class="message-list-page" id="messageListPage">
+                <div class="message-list-header">
+                    <div class="message-list-title">消息</div>
+                    <div class="message-filter-tabs">
+                        <div class="filter-tab active">全部</div>
+                        <div class="filter-tab">未读</div>
+                        <div class="filter-tab">@麦姝冰</div>
+                    </div>
+                </div>
+                
+                <div class="message-items" id="messageItems">
+                    <!-- 消息列表项 -->
+                    <div class="message-item active" data-chat="chat1">
+                        <div class="message-avatar">于彰</div>
+                        <div class="message-info">
+                            <div class="message-sender">
+                                <span class="sender-name">周于彰</span>
+                                <span class="external-tag">外部</span>
+                            </div>
+                            <div class="message-preview">好的</div>
+                            <div class="message-meta">
+                                <div class="message-time">09:30</div>
+                                <div class="message-unread">2</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="message-item" data-chat="chat2">
+                        <div class="message-avatar">叶兰</div>
+                        <div class="message-info">
+                            <div class="message-sender">
+                                <span class="sender-name">叶兰</span>
+                            </div>
+                            <div class="message-preview">提前同步：经董事会决议，公司下周一起将启动一轮涉及中层10%的"组织优化"...</div>
+                            <div class="message-meta">
+                                <div class="message-time">前天</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="message-item" data-chat="chat3">
+                        <div class="message-avatar">真真</div>
+                        <div class="message-info">
+                            <div class="message-sender">
+                                <span class="sender-name">严真真</span>
+                            </div>
+                            <div class="message-preview">2025年度年终奖发放安排及个税计算说明.pdf</div>
+                            <div class="message-meta">
+                                <div class="message-time">昨天</div>
+                                <div class="message-unread">1</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 聊天页面 -->
+            <div class="chat-page" id="chatPage">
+                <div class="chat-messages-container" id="chatMessages">
+                    <!-- 聊天消息 -->
+                    <div class="message-bubble sent">
+                        <div class="message-avatar">姝冰</div>
+                        <div>
+                            <div class="message-content">
+                                在吗？下周三上午，公司大堂有重要客户参观，需要你们配合做一下基础维护。
+                            </div>
+                            <div class="message-time-small">09:45</div>
+                        </div>
+                    </div>
+                    
+                    <div class="message-bubble received">
+                        <div class="message-avatar">张</div>
+                        <div>
+                            <div class="message-content">
+                                太好了！我刚刚更新了项目进度表，已经上传到云文档了。大家有空可以看一下，如果有问题我们下午会上讨论。
+                            </div>
+                            <div class="message-time-small">10:15</div>
+                        </div>
+                    </div>
+                    
+                    <div class="message-bubble sent">
+                        <div class="message-avatar">我</div>
+                        <div>
+                            <div class="message-content">
+                                好的，我已经查看了进度表，数据很清晰。关于下午的会议，我已经预定好了3号会议室。
+                            </div>
+                            <div class="message-time-small">10:30</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-input-area">
+                    <div class="input-wrapper">
+                        <textarea class="message-input" id="messageInput" placeholder="输入消息..." rows="1"></textarea>
+                        <button class="send-button" id="sendButton">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部导航 -->
+        <div class="mobile-bottom-nav">
+            <div class="nav-item active" data-page="message">
+                <i class="fas fa-comments"></i>
+                <span>消息</span>
+            </div>
+            <div class="nav-item" data-page="contacts">
+                <i class="fas fa-address-book"></i>
+                <span>通讯录</span>
+            </div>
+            <div class="nav-item" data-page="chat">
+                <i class="fas fa-comment-dots"></i>
+                <span>聊天</span>
+            </div>
+            <div class="nav-item" data-page="calendar">
+                <i class="fas fa-calendar-alt"></i>
+                <span>日历</span>
+            </div>
+            <div class="nav-item" data-page="me">
+                <i class="fas fa-user"></i>
+                <span>我</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 搜索球容器（保持不变） -->
+    <div class="floating-search-ball-container">
+        <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+        <div class="floating-search-expanded" id="searchExpanded">
+            <input type="text" class="floating-search-input" id="searchInput" 
+                   placeholder="输入关键词搜索..." aria-label="搜索输入框">
+            <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+            <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+        </div>
+    </div>
+
+    <script>
+        // 移动端初始化
+        function initMobileApp() {
+            // 解决100vh问题
+            const setVH = () => {
+                const vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            };
+            setVH();
+            window.addEventListener('resize', setVH);
+            
+            // 获取DOM元素
+            const menuButton = document.getElementById('menuButton');
+            const menuSidebar = document.getElementById('menuSidebar');
+            const menuClose = document.getElementById('menuClose');
+            const overlay = document.getElementById('overlay');
+            const backButton = document.getElementById('backButton');
+            const closeButton = document.getElementById('closeButton');
+            const messageItems = document.getElementById('messageItems');
+            const chatPage = document.getElementById('chatPage');
+            const messageListPage = document.getElementById('messageListPage');
+            const headerTitle = document.getElementById('headerTitle');
+            const navItems = document.querySelectorAll('.nav-item');
+            const filterTabs = document.querySelectorAll('.filter-tab');
+            const messageInput = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            const chatMessages = document.getElementById('chatMessages');
+            
+            // 当前页面状态
+            let currentPage = 'message';
+            
+            // 打开菜单
+            menuButton.addEventListener('click', () => {
+                menuSidebar.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            // 关闭菜单
+            function closeMenu() {
+                menuSidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            
+            menuClose.addEventListener('click', closeMenu);
+            overlay.addEventListener('click', closeMenu);
+            
+            // 关闭按钮
+            closeButton.addEventListener('click', () => {
+                window.location.href = 'zw-cpt.html';
+            });
+            
+            // 返回按钮
+            backButton.addEventListener('click', () => {
+                if (currentPage === 'chat') {
+                    showMessageList();
+                }
+            });
+            
+            // 显示消息列表
+            function showMessageList() {
+                chatPage.classList.remove('active');
+                messageListPage.classList.remove('hidden');
+                backButton.style.display = 'none';
+                headerTitle.textContent = '消息';
+                currentPage = 'message';
+                updateNav('message');
+            }
+            
+            // 显示聊天界面
+            function showChat() {
+                chatPage.classList.add('active');
+                messageListPage.classList.add('hidden');
+                backButton.style.display = 'flex';
+                headerTitle.textContent = '周于彰';
+                currentPage = 'chat';
+                updateNav('chat');
+                
+                // 滚动到底部
+                setTimeout(() => {
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 100);
+            }
+            
+            // 消息项点击
+            messageItems.addEventListener('click', (e) => {
+                const messageItem = e.target.closest('.message-item');
+                if (messageItem) {
+                    // 移除所有激活状态
+                    document.querySelectorAll('.message-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    
+                    // 激活当前项
+                    messageItem.classList.add('active');
+                    
+                    // 显示聊天界面
+                    showChat();
+                }
+            });
+            
+            // 过滤标签点击
+            filterTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    filterTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                });
+            });
+            
+            // 底部导航点击
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const page = this.getAttribute('data-page');
+                    if (page === 'message') {
+                        showMessageList();
+                    } else if (page === 'chat') {
+                        if (currentPage !== 'chat') {
+                            showChat();
+                        }
+                    } else {
+                        showToast(`打开${this.querySelector('span').textContent}页面`);
+                    }
+                });
+            });
+            
+            // 更新导航状态
+            function updateNav(page) {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                const activeNav = document.querySelector(`.nav-item[data-page="${page}"]`);
+                if (activeNav) {
+                    activeNav.classList.add('active');
+                }
+            }
+            
+            // 自适应输入框高度
+            messageInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+            });
+            
+            // 发送消息
+            function sendMessage() {
+                const message = messageInput.value.trim();
+                if (message) {
+                    const now = new Date();
+                    const time = now.getHours().toString().padStart(2, '0') + ':' + 
+                                 now.getMinutes().toString().padStart(2, '0');
+                    
+                    const newMessage = document.createElement('div');
+                    newMessage.className = 'message-bubble sent';
+                    newMessage.innerHTML = `
+                        <div class="message-avatar">我</div>
+                        <div>
+                            <div class="message-content">${message}</div>
+                            <div class="message-time-small">${time}</div>
+                        </div>
+                    `;
+                    
+                    chatMessages.appendChild(newMessage);
+                    messageInput.value = '';
+                    messageInput.style.height = 'auto';
+                    
+                    // 滚动到底部
+                    setTimeout(() => {
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }, 100);
+                    
+                    // 模拟回复
+                    setTimeout(() => {
+                        const replyMessage = document.createElement('div');
+                        replyMessage.className = 'message-bubble received';
+                        replyMessage.innerHTML = `
+                            <div class="message-avatar">张</div>
+                            <div>
+                                <div class="message-content">收到，感谢您的反馈。</div>
+                                <div class="message-time-small">${time}</div>
+                            </div>
+                        `;
+                        chatMessages.appendChild(replyMessage);
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }, 1000);
+                }
+            }
+            
+            sendButton.addEventListener('click', sendMessage);
+            
+            messageInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // 初始滚动到底部
+            setTimeout(() => {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 500);
+        }
+        
+        // 显示提示
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'mobile-toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+        
+        // 添加提示样式
+        const toastStyle = document.createElement('style');
+        toastStyle.textContent = `
+            .mobile-toast {
+                position: fixed;
+                bottom: 80px;
+                left: 50%;
+                transform: translateX(-50%) translateY(100px);
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 24px;
+                font-size: 14px;
+                z-index: 2000;
+                transition: transform 0.3s ease;
+                max-width: 80%;
+                text-align: center;
+                pointer-events: none;
+            }
+            .mobile-toast.show {
+                transform: translateX(-50%) translateY(0);
+            }
+        `;
+        document.head.appendChild(toastStyle);
+        
+        // 页面加载
+        window.addEventListener('DOMContentLoaded', initMobileApp);
+    </script>
+    
+    <!-- 原有的外部JS文件 -->
+    <script src="scball.js"></script>
+    <script src="pages.js"></script>
+    <script src="visit.js"></script>
+</body>
+</html>

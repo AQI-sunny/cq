@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>深南市 - 城市介绍</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 0 15px;
+            margin: 0 auto;
+        }
+        
+        /* 头部样式 */
+        header {
+            background: linear-gradient(135deg, #1a6dcc 0%, #0d4d9c 100%);
+            color: white;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            font-size: 28px;
+            margin-right: 10px;
+        }
+        
+        .logo h1 {
+            font-size: 22px;
+            font-weight: 700;
+        }
+        
+        .nav-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* 导航菜单 */
+        nav {
+            display: none;
+            background-color: #0d4d9c;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        nav.active {
+            display: block;
+        }
+        
+        .nav-links {
+            list-style: none;
+        }
+        
+        .nav-links li {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-links li:last-child {
+            border-bottom: none;
+        }
+        
+        .nav-links a {
+            display: block;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 主内容区 */
+        main {
+            padding: 20px 0 40px;
+        }
+        
+        /* 深南市概览 */
+        .city-overview {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .city-overview h2 {
+            color: #1a6dcc;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f4f8;
+            font-size: 22px;
+        }
+        
+        .city-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px 10px;
+            background-color: #f8fafc;
+            border-radius: 10px;
+        }
+        
+        .stat-item i {
+            font-size: 24px;
+            color: #1a6dcc;
+            margin-bottom: 8px;
+        }
+        
+        .stat-item .number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a6dcc;
+        }
+        
+        .stat-item .label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        /* 地图区域 */
+        .city-map {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .city-map h2 {
+            color: #1a6dcc;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        
+        .map-container {
+            position: relative;
+            height: 350px;
+            background-color: #e6f2ff;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        .map-area {
+            position: absolute;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .map-area:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+        
+        /* 各区位置和颜色 */
+        .qiaoan {
+            background-color: #3a86ff;
+            top: 10%;
+            left: 30%;
+            width: 25%;
+            height: 35%;
+        }
+        
+        .nanshan {
+            background-color: #8338ec;
+            top: 10%;
+            right: 15%;
+            width: 25%;
+            height: 25%;
+        }
+        
+        .pudian {
+            background-color: #ff006e;
+            top: 50%;
+            left: 20%;
+            width: 20%;
+            height: 30%;
+        }
+        
+        .binhai {
+            background-color: #fb5607;
+            top: 60%;
+            right: 25%;
+            width: 28%;
+            height: 25%;
+        }
+        
+        .minglan {
+            background-color: #38b000;
+            bottom: 35%;
+            left: 5%;
+            width: 18%;
+            height: 25%;
+        }
+        
+        .ganghua {
+            background-color: #ffbe0b;
+            bottom: 30%;
+            right: 15%;
+            width: 23%;
+            height: 30%;
+        }
+        
+        /* 行政区介绍 */
+        .districts {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .district-card {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+        
+        .district-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .district-header {
+            padding: 20px;
+            color: white;
+        }
+        
+        .district-header h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+        
+        .district-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .district-content {
+            padding: 20px;
+        }
+        
+        .district-content p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        .district-features {
+            list-style: none;
+            margin-top: 15px;
+        }
+        
+        .district-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            color: #666;
+        }
+        
+        .district-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .district-features i {
+            margin-right: 10px;
+            color: #1a6dcc;
+        }
+        
+        /* 底部 */
+        footer {
+            background-color: #1a2937;
+            color: #b0b7c3;
+            padding: 30px 0 20px;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .footer-links a {
+            color: #b0b7c3;
+            text-decoration: none;
+            margin: 0 15px 10px;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #8a94a6;
+        }
+        
+        /* 响应式调整 */
+        @media (min-width: 768px) {
+            .nav-toggle {
+                display: none;
+            }
+            
+            nav {
+                display: block;
+                position: static;
+                background: none;
+                box-shadow: none;
+            }
+            
+            .nav-links {
+                display: flex;
+            }
+            
+            .nav-links li {
+                border-bottom: none;
+                margin-left: 20px;
+            }
+            
+            .nav-links a {
+                padding: 5px 0;
+                position: relative;
+            }
+            
+            .nav-links a::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background-color: white;
+                transition: width 0.3s;
+            }
+            
+            .nav-links a:hover::after {
+                width: 100%;
+            }
+            
+            .city-stats {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .districts {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .districts {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .container {
+                max-width: 960px;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部 -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-city"></i>
+                    <h1>深南市</h1>
+                </div>
+                <button class="nav-toggle" id="navToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav id="mainNav">
+                    <ul class="nav-links">
+                        <li><a href="#overview">城市概览</a></li>
+                        <li><a href="#map">区域地图</a></li>
+                        <li><a href="#districts">行政区介绍</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container">
+        <!-- 深南市概览 -->
+        <section class="city-overview fade-in" id="overview">
+            <h2><i class="fas fa-info-circle"></i> 深南市概览</h2>
+            <p>深南市是中国的经济特区、全国性经济中心城市和国际化城市，位于广东省南部，珠江口东岸。作为中国改革开放的窗口，深南市已发展成为有一定影响力的现代化国际化大都市，创造了举世瞩目的"深南速度"。</p>
+            <p>深南市下辖6个行政区，总面积2,050平方公里，常住人口约1,800万。2022年全市地区生产总值突破3.5万亿元，经济总量位居亚洲城市前五名。</p>
+            
+            <div class="city-stats">
+                <div class="stat-item">
+                    <i class="fas fa-users"></i>
+                    <div class="number">1800万</div>
+                    <div class="label">常住人口</div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-map"></i>
+                    <div class="number">2050 km²</div>
+                    <div class="label">总面积</div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-building"></i>
+                    <div class="number">6个</div>
+                    <div class="label">行政区</div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-chart-line"></i>
+                    <div class="number">3.5万亿</div>
+                    <div class="label">地区生产总值</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 深南市地图 -->
+        <section class="city-map fade-in" id="map">
+            <h2><i class="fas fa-map-marked-alt"></i> 深南市行政区划图</h2>
+            <p>点击地图上的区域查看详细信息</p>
+            
+            <div class="map-container">
+                <div class="map-area qiaoan" data-district="qiaoan">
+                    桥安区
+                </div>
+                <div class="map-area nanshan" data-district="nanshan">
+                    楠山区
+                </div>
+                <div class="map-area pudian" data-district="pudian">
+                    蒲淀区
+                </div>
+                <div class="map-area binhai" data-district="binhai">
+                    滨海新区
+                </div>
+                <div class="map-area minglan" data-district="minglan">
+                    明岚区
+                </div>
+                <div class="map-area ganghua" data-district="ganghua">
+                    岗华区
+                </div>
+            </div>
+        </section>
+
+        <!-- 行政区介绍 -->
+        <section class="districts" id="districts">
+            <h2 style="color: #1a6dcc; margin-bottom: 20px; font-size: 22px;"><i class="fas fa-landmark"></i> 行政区介绍</h2>
+            
+            <!-- 桥安区 -->
+            <article class="district-card fade-in" id="qiaoan">
+                <div class="district-header" style="background-color: #3a86ff;">
+                    <h3>桥安区</h3>
+                    <p>金融中心 · 商业核心</p>
+                </div>
+                <div class="district-content">
+                    <p>桥安区是深南市的金融和商业中心，拥有全市最密集的摩天大楼群。深南证券交易所、多家银行总部和跨国公司地区总部坐落于此。</p>
+                    <ul class="district-features">
+                        <li><i class="fas fa-university"></i> 深南金融中心</li>
+                        <li><i class="fas fa-shopping-bag"></i> 亿象城购物中心</li>
+                        <li><i class="fas fa-subway"></i> 地铁1、2、3号线交汇</li>
+                        <li><i class="fas fa-tree"></i> 桥安中央公园</li>
+                    </ul>
+                </div>
+            </article>
+            
+            <!-- 楠山区 -->
+            <article class="district-card fade-in" id="nanshan">
+                <div class="district-header" style="background-color: #8338ec;">
+                    <h3>楠山区</h3>
+                    <p>科技高地 · 创新引擎</p>
+                </div>
+                <div class="district-content">
+                    <p>楠山区是深南市的高新技术产业中心，被誉为"中国硅谷"。腾讯、华为等科技巨头总部位于此区，拥有众多高科技企业和研发机构。</p>
+                    <ul class="district-features">
+                        <li><i class="fas fa-laptop-code"></i> 高新技术产业园</li>
+                        <li><i class="fas fa-graduation-cap"></i> 深南大学城</li>
+                        <li><i class="fas fa-flask"></i> 国家实验室集群</li>
+                        <li><i class="fas fa-paint-brush"></i> 设计创意园区</li>
+                    </ul>
+                </div>
+            </article>
+            
+            <!-- 蒲淀区 -->
+            <article class="district-card fade-in" id="pudian">
+                <div class="district-header" style="background-color: #ff006e;">
+                    <h3>蒲淀区</h3>
+                    <p>文化古镇 · 生态宜居</p>
+                </div>
+                <div class="district-content">
+                    <p>蒲淀区是深南市的历史文化保护区，保留了许多古建筑和传统文化。同时，该区也是重要的生态居住区，拥有多个大型湿地公园和绿色社区。</p>
+                    <ul class="district-features">
+                        <li><i class="fas fa-landmark"></i> 蒲淀古镇历史街区</li>
+                        <li><i class="fas fa-water"></i> 西湖湿地公园</li>
+                        <li><i class="fas fa-utensils"></i> 传统美食文化街</li>
+                        <li><i class="fas fa-home"></i> 生态宜居社区</li>
+                    </ul>
+                </div>
+            </article>
+            
+            <!-- 滨海新区 -->
+            <article class="district-card fade-in" id="binhai">
+                <div class="district-header" style="background-color: #fb5607;">
+                    <h3>滨海新区</h3>
+                    <p>港口枢纽 · 海洋经济</p>
+                </div>
+                <div class="district-content">
+                    <p>滨海新区拥有深南市最大的港口和海洋产业基地，是国际航运中心和海洋经济发展示范区。该区也是深南市自贸试验区的主要承载区。</p>
+                    <ul class="district-features">
+                        <li><i class="fas fa-ship"></i> 深南国际港口</li>
+                        <li><i class="fas fa-fish"></i> 海洋科技产业园</li>
+                        <li><i class="fas fa-umbrella-beach"></i> 金沙湾旅游度假区</li>
+                        <li><i class="fas fa-plane"></i> 深南国际机场</li>
+                    </ul>
+                </div>
+            </article>
+            
+            <!-- 明岚区 -->
+            <article class="district-card fade-in" id="minglan">
+                <div class="district-header" style="background-color: #38b000;">
+                    <h3>明岚区</h3>
+                    <p>行政中心 · 绿色城区</p>
+                </div>
+                <div class="district-content">
+                    <p>明岚区是深南市的行政和文化中心，市政府、市人大等重要机构集中于此。该区绿化覆盖率高，拥有多个大型文化场馆和市政公园。</p>
+                    <ul class="district-features">
+                        <li><i class="fas fa-landmark"></i> 深南市政府</li>
+                        <li><i class="fas fa-theater-masks"></i> 深南大剧院</li>
+                        <li><i class="fas fa-leaf"></i> 明岚山城市绿肺</li>
+                        <li><i class="fas fa-monument"></i> 市政广场</li>
+                    </ul>
+                </div>
+            </article>
+            
+            <!-- 岗华区 -->
+            <article class="district-card fade-in" id="ganghua">
+                <div class="district-header" style="background-color: #ffbe0b;">
+                    <h3>岗华区</h3>
+                    <p>工业基地 · 物流中心</p>
+                </div>
+                <div class="district-content">
+                    <p>岗华区是深南市重要的工业基地和物流枢纽，拥有先进的制造业园区和高效的物流配送网络。该区也是深南市轨道交通装备制造中心。</p>
+                    <ul class="district-features">
+                        <li><i class="fas fa-industry"></i> 先进制造产业园</li>
+                        <li><i class="fas fa-truck"></i> 国际物流枢纽</li>
+                        <li><i class="fas fa-train"></i> 轨道交通产业园</li>
+                        <li><i class="fas fa-warehouse"></i> 保税物流中心</li>
+                    </ul>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <!-- 底部 -->
+    <footer>
+        <div class="container footer-content">
+            <div class="logo">
+                <i class="fas fa-city"></i>
+                <h2>深南市</h2>
+            </div>
+            <p>中国改革开放的窗口，现代化国际化创新城市</p>
+            
+            <div class="footer-links">
+                <a href="#overview">城市概览</a>
+                <a href="#map">区域地图</a>
+                <a href="#districts">行政区介绍</a>
+                <a href="#">政府网站</a>
+                <a href="#">旅游指南</a>
+                <a href="#">投资机会</a>
+            </div>
+            
+            <div class="copyright">
+                <p>© 2025 深南市人民政府. 保留所有权利.</p>
+                <p>本页面为示例页面，内容仅供参考</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 移动端导航菜单切换
+        const navToggle = document.getElementById('navToggle');
+        const mainNav = document.getElementById('mainNav');
+        
+        navToggle.addEventListener('click', function() {
+            mainNav.classList.toggle('active');
+            if (mainNav.classList.contains('active')) {
+                navToggle.innerHTML = '<i class="fas fa-times"></i>';
+            } else {
+                navToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            }
+        });
+        
+        // 点击地图区域跳转到对应行政区介绍
+        const mapAreas = document.querySelectorAll('.map-area');
+        mapAreas.forEach(area => {
+            area.addEventListener('click', function() {
+                const districtId = this.getAttribute('data-district');
+                const targetElement = document.getElementById(districtId);
+                
+                if (targetElement) {
+                    // 如果是移动端，关闭导航菜单
+                    if (window.innerWidth < 768) {
+                        mainNav.classList.remove('active');
+                        navToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                    
+                    // 滚动到目标区域
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // 添加高亮效果
+                    targetElement.style.boxShadow = '0 0 0 3px rgba(26, 109, 204, 0.3)';
+                    setTimeout(() => {
+                        targetElement.style.boxShadow = '';
+                    }, 2000);
+                }
+            });
+        });
+        
+        // 导航链接点击后关闭菜单（移动端）
+        const navLinks = document.querySelectorAll('.nav-links a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 768) {
+                    mainNav.classList.remove('active');
+                    navToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
+        });
+        
+        // 滚动时添加淡入效果
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const fadeInOnScroll = function() {
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.style.opacity = "1";
+                    element.style.transform = "translateY(0)";
+                }
+            });
+        };
+        
+        // 设置初始状态
+        fadeElements.forEach(element => {
+            element.style.opacity = "0";
+            element.style.transform = "translateY(20px)";
+            element.style.transition = "opacity 0.6s ease-out, transform 0.6s ease-out";
+        });
+        
+        // 监听滚动事件
+        window.addEventListener('scroll', fadeInOnScroll);
+        // 初始加载时也执行一次
+        window.addEventListener('load', fadeInOnScroll);
+        fadeInOnScroll();
+    </script>
+</body>
+</html>

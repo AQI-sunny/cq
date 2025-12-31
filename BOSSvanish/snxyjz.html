@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>深南大学 · 杰出校友捐赠鸣谢</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* 官方头部 */
+        .official-header {
+            background: linear-gradient(135deg, #1a3a8f 0%, #2a4db6 100%);
+            color: white;
+            padding: 60px 20px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.2;
+        }
+
+        .university-name {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .university-name::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #ffd700, transparent);
+        }
+
+        .page-subtitle {
+            font-size: 20px;
+            font-weight: 300;
+            margin-bottom: 15px;
+            opacity: 0.95;
+        }
+
+        .official-motto {
+            font-size: 18px;
+            font-weight: 500;
+            color: #ffd700;
+            font-style: italic;
+            margin-top: 15px;
+        }
+
+        /* 感谢信区域 */
+        .gratitude-section {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .gratitude-card {
+            background: white;
+            border-radius: 12px;
+            padding: 50px 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            position: relative;
+            border-top: 6px solid #1a3a8f;
+        }
+
+        .gratitude-title {
+            text-align: center;
+            font-size: 32px;
+            color: #1a3a8f;
+            margin-bottom: 30px;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .gratitude-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #ffd700;
+        }
+
+        .gratitude-content {
+            font-size: 18px;
+            line-height: 2;
+            color: #444;
+            text-align: justify;
+        }
+
+        .gratitude-content p {
+            margin-bottom: 25px;
+            text-indent: 2em;
+        }
+
+        .highlight {
+            color: #1a3a8f;
+            font-weight: 600;
+        }
+
+        .gratitude-footer {
+            text-align: right;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .signature {
+            font-size: 24px;
+            color: #1a3a8f;
+            margin-top: 20px;
+        }
+
+        /* 杰出校友展示区 */
+        .alumni-section {
+            background: white;
+            padding: 80px 20px;
+            margin-top: 60px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            color: #1a3a8f;
+            margin-bottom: 50px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: #ffd700;
+        }
+
+        .alumni-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        .alumni-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .alumni-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .alumni-header {
+            background: linear-gradient(135deg, #1a3a8f, #2a4db6);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .alumni-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: bold;
+            color: white;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .alumni-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .alumni-position {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .alumni-body {
+            padding: 30px;
+        }
+
+        .donation-info {
+            background: linear-gradient(135deg, #fff9e6, #fff3cd);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid #ffd700;
+        }
+
+        .donation-title {
+            font-size: 18px;
+            color: #1a3a8f;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .donation-amount {
+            font-size: 28px;
+            color: #d35400;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .donation-purpose {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .contribution-list {
+            list-style: none;
+        }
+
+        .contribution-item {
+            padding: 12px 0;
+            border-bottom: 1px dashed #dee2e6;
+            font-size: 16px;
+            color: #555;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .contribution-item:last-child {
+            border-bottom: none;
+        }
+
+        .contribution-item::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        /* 捐赠时间轴 */
+        .timeline-section {
+            background: #f0f2f5;
+            padding: 80px 20px;
+            margin-top: 0;
+        }
+
+        .timeline-title {
+            text-align: center;
+            font-size: 32px;
+            color: #1a3a8f;
+            margin-bottom: 50px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .timeline-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: #ffd700;
+        }
+
+        .timeline {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: #1a3a8f;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+            width: 50%;
+            padding: 0 40px;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            width: 16px;
+            height: 16px;
+            background: #ffd700;
+            border-radius: 50%;
+            border: 3px solid #1a3a8f;
+        }
+
+        .timeline-item:nth-child(odd)::before {
+            right: -8px;
+        }
+
+        .timeline-item:nth-child(even)::before {
+            left: -8px;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #1a3a8f;
+        }
+
+        .timeline-year {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a3a8f;
+            margin-bottom: 10px;
+        }
+
+        .timeline-text {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* 官方底部 */
+        .official-footer {
+            background: #1a3a8f;
+            color: white;
+            padding: 60px 20px 40px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            text-align: left;
+        }
+
+        .footer-section h3 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+            color: #ffd700;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .university-name {
+                font-size: 36px;
+            }
+            
+            .gratitude-card {
+                padding: 30px 20px;
+            }
+            
+            .gratitude-title, .section-title, .timeline-title {
+                font-size: 26px;
+            }
+            
+            .gratitude-content {
+                font-size: 16px;
+            }
+            
+            .alumni-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                left: 0 !important;
+                padding-left: 60px;
+                padding-right: 20px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+            
+            .timeline-item::before {
+                left: 12px !important;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .official-header {
+                padding: 40px 15px 30px;
+            }
+            
+            .university-name {
+                font-size: 28px;
+            }
+            
+            .page-subtitle {
+                font-size: 16px;
+            }
+            
+            .donation-amount {
+                font-size: 24px;
+            }
+        }
+    </style>
+  
+<link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
+</head>
+<body>
+    <!-- 官方头部 -->
+    <header class="official-header">
+        <div class="header-pattern"></div>
+        <h1 class="university-name">深南大学</h1>
+        <p class="page-subtitle">杰出校友捐赠鸣谢 · 感恩有您</p>
+        <p class="official-motto">明德至善 · 博学笃行</p>
+    </header>
+
+    <!-- 感谢信区域 -->
+    <section class="gratitude-section">
+        <div class="gratitude-card">
+            <h2 class="gratitude-title">致深南大学杰出校友的感谢信</h2>
+            <div class="gratitude-content">
+                <p>时值深南大学建校<span class="highlight">八十周年</span>之际，我们怀着无比崇敬和感激的心情，向长期以来关心和支持学校发展的各位杰出校友致以最诚挚的感谢和最崇高的敬意！</p>
+                
+                <p>特别感谢<span class="highlight">何安</span>、<span class="highlight">张威</span>、<span class="highlight">文心竹</span>等杰出校友对母校的慷慨捐赠。你们的善举不仅为学校发展注入了强劲动力，更为深南精神注入了新的时代内涵。</p>
+                
+                <p>通过各位校友的大力支持，我们成功设立了<span class="highlight">"未来之星"奖学金</span>、<span class="highlight">"创新科研基金"</span>、<span class="highlight">"医疗健康研究中心"</span>等重要项目。这些善款不仅改善了学校的教学科研条件，更为数千名优秀学子提供了追逐梦想的机会。</p>
+                
+                <p>展望未来，深南大学将继续秉承教育报国的初心，培养更多优秀人才，服务国家发展。我们相信，在广大校友的鼎力支持下，深南大学的明天一定会更加辉煌！</p>
+                
+                <div class="gratitude-footer">
+                    <p>再次衷心感谢所有为深南大学发展做出贡献的校友们！</p>
+                    <p class="signature">深南大学校长办公室<br>深南大学教育发展基金会</p>
+                    <p>2025年11月</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 杰出校友展示区 -->
+    <section class="alumni-section">
+        <h2 class="section-title">杰出校友捐赠事迹</h2>
+        <div class="alumni-grid">
+            <!-- 何安校友 -->
+            <div class="alumni-card">
+                <div class="alumni-header">
+                    <div class="alumni-avatar">何</div>
+                    <h3 class="alumni-name">何安</h3>
+                    <!-- <p class="alumni-position">安盾科技公司创始人兼首席技术官</p> -->
+                </div>
+                <div class="alumni-body">
+                    <div class="donation-info">
+                        <div class="donation-title">累计捐赠总额</div>
+                        <div class="donation-amount">¥5,000万元</div>
+                        <div class="donation-purpose">用于"网络安全创新实验室"建设</div>
+                    </div>
+                    <ul class="contribution-list">
+                        <li class="contribution-item">捐赠3000万元建设"何安网络安全创新中心"</li>
+                        <li class="contribution-item">设立"安盾科技奖学金"，资助网络安全专业学生</li>
+                        <li class="contribution-item">支持学校网络空间安全学院人才培养计划</li>
+                        <li class="contribution-item">捐赠最新网络安全设备，提升教学实践条件</li>
+                        <li class="contribution-item">为毕业生提供实习就业岗位和技术指导</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 张威校友 -->
+            <div class="alumni-card">
+                <div class="alumni-header">
+                    <div class="alumni-avatar">张</div>
+                    <h3 class="alumni-name">张威</h3>
+                    <!-- <p class="alumni-position">兴健科技集团CEO</p> -->
+                </div>
+                <div class="alumni-body">
+                    <div class="donation-info">
+                        <div class="donation-title">累计捐赠总额</div>
+                        <div class="donation-amount">¥4,200万元</div>
+                        <div class="donation-purpose">用于"智慧医疗研究中心"建设</div>
+                    </div>
+                    <ul class="contribution-list">
+                        <li class="contribution-item">捐赠2500万元建设"兴健智慧医疗研究中心"</li>
+                        <li class="contribution-item">设立"张威创新创业基金"，支持学生创业项目</li>
+                        <li class="contribution-item">联合建立生物医药技术联合实验室</li>
+                        <li class="contribution-item">捐赠智能医疗设备，提升医学科研条件</li>
+                        <li class="contribution-item">提供医疗健康领域的产学研合作机会</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 文心竹校友 -->
+            <div class="alumni-card">
+                <div class="alumni-header">
+                    <div class="alumni-avatar">文</div>
+                    <h3 class="alumni-name">文心竹</h3>
+                    <!-- <p class="alumni-position">安心药店创始人</p> -->
+                </div>
+                <div class="alumni-body">
+                    <div class="donation-info">
+                        <div class="donation-title">累计捐赠总额</div>
+                        <div class="donation-amount">¥3,800万元</div>
+                        <div class="donation-purpose">用于"药学与健康研究院"建设</div>
+                    </div>
+                    <ul class="contribution-list">
+                        <li class="contribution-item">捐赠2000万元建设"文心竹药学研究院"</li>
+                        <li class="contribution-item">设立"安心药学奖学金"，激励药学专业学子</li>
+                        <li class="contribution-item">捐赠先进药品检测设备，提升实验条件</li>
+                        <li class="contribution-item">支持中医药现代化研究项目</li>
+                        <li class="contribution-item">提供药店连锁实习基地，促进校企合作</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 捐赠时间轴 -->
+    <section class="timeline-section">
+        <h2 class="timeline-title">校友捐赠发展历程</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year">2018年</div>
+                    <div class="timeline-text">何安校友首次捐赠500万元，支持计算机学院实验室建设</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year">2020年</div>
+                    <div class="timeline-text">张威校友捐赠800万元，设立"兴健科技创新创业基金"</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year">2021年</div>
+                    <div class="timeline-text">文心竹校友捐赠600万元，建设药学实验室并设立奖学金</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year">2022年</div>
+                    <div class="timeline-text">何安校友追加捐赠2000万元，建设"网络安全创新中心"</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year">2023年</div>
+                    <div class="timeline-text">张威、文心竹校友联合捐赠1500万元，支持医疗健康研究</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year">2025年</div>
+                    <div class="timeline-text">三位校友共同捐赠3000万元，庆祝母校建校80周年</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 官方底部 -->
+    <footer class="official-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>联系我们</h3>
+                <ul class="footer-links">
+                    <li>地址：深南市大学路1号</li>
+                    <li>邮编：100000</li>
+                    <li>电话：010-12345678</li>
+                    <li>邮箱：foundation@snu.edu.cn</li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>快速链接</h3>
+                <ul class="footer-links">
+                    <li><a href="#">学校官网</a></li>
+                    <li><a href="#">基金会网站</a></li>
+                    <li><a href="#">捐赠指南</a></li>
+                    <li><a href="#">校友会</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>捐赠方式</h3>
+                <ul class="footer-links">
+                    <li><a href="#">在线捐赠</a></li>
+                    <li><a href="#">银行转账</a></li>
+                    <li><a href="#">项目捐赠</a></li>
+                    <li><a href="#">实物捐赠</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
+        <div class="copyright">
+            <p>© 2025 深南大学教育发展基金会 版权所有</p>
+            <p>深南大学校长办公室 · 教育发展基金会</p>
+        </div>
+    </footer>
+  <script src="scball.js"></script>
+   <script src="pages.js"></script>
+</body>
+</html>

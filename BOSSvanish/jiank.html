@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>监控数据分析</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.5;
+            padding: 0;
+            margin: 0;
+            font-size: 15px;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 16px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            padding: 20px 16px;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header-text h1 {
+            font-size: 20px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        
+        .header-text p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .alert-icon {
+            background-color: rgba(255, 255, 255, 0.2);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        /* 问题概览卡片 */
+        .overview-card {
+            background-color: white;
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #ff6b6b;
+        }
+        
+        .card-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            color: #2c3e50;
+            font-size: 17px;
+            font-weight: 600;
+        }
+        
+        .card-title i {
+            margin-right: 10px;
+            color: #ff6b6b;
+        }
+        
+        .problem-text {
+            background-color: #fff8f8;
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #ffeaea;
+        }
+        
+        .problem-text p {
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        
+        .problem-text p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .time-highlight {
+            background-color: #ffeff0;
+            color: #d32f2f;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 15px;
+        }
+        
+        /* 时间线部分 */
+        .timeline-section {
+            background-color: white;
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .timeline {
+            position: relative;
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: #e0e0e0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: -23px;
+            top: 2px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: #4b6cb7;
+            z-index: 1;
+        }
+        
+        .timeline-dot.warning {
+            background-color: #ff6b6b;
+        }
+        
+        .timeline-content {
+            background-color: #f8fafc;
+            padding: 14px;
+            border-radius: 10px;
+            border-left: 3px solid #4b6cb7;
+        }
+        
+        .timeline-content.warning {
+            border-left-color: #ff6b6b;
+        }
+        
+        .timeline-time {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+        
+        .timeline-desc {
+            color: #5a6c7d;
+            font-size: 14px;
+        }
+        
+        /* 数据详情部分 */
+        .details-section {
+            background-color: white;
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        .details-table th {
+            background-color: #f1f5f9;
+            padding: 12px 10px;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .details-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #475569;
+        }
+        
+        .details-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .status-badge.error {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .status-badge.normal {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        /* 操作按钮 */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: #f1f5f9;
+            color: #475569;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        /* 响应式调整 */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 750px;
+                padding: 20px;
+            }
+            
+            header {
+                padding: 24px 20px;
+                border-radius: 0 0 20px 20px;
+            }
+            
+            .header-text h1 {
+                font-size: 24px;
+            }
+            
+            .action-buttons {
+                gap: 16px;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .overview-card, .timeline-section, .details-section {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .overview-card {
+            animation-delay: 0.1s;
+        }
+        
+        .timeline-section {
+            animation-delay: 0.2s;
+        }
+        
+        .details-section {
+            animation-delay: 0.3s;
+        }
+        
+        /* 底部信息 */
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+    </style>
+    <link rel="stylesheet" href="sc-style.css">
+<link rel="icon" type="image/png" href="dtma.png">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-text">
+                <h1>监控原始数据分析</h1>
+                <p>视频监控系统异常检测报告</p>
+            </div>
+            <div class="alert-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- 问题概览 -->
+        <div class="overview-card">
+            <div class="card-title">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>问题概览</span>
+            </div>
+            <div class="problem-text">
+                <p><strong>发现视频帧被删除...</strong></p>
+                <p>系统检测到监控视频流中存在异常帧删除情况，可能影响监控完整性。</p>
+                <div class="time-highlight">
+                    <i class="fas fa-clock"></i> 删除时间：19:48 - 20:00
+                </div>
+            </div>
+        </div>
+        
+        <!-- 时间线 -->
+        <div class="timeline-section">
+            <div class="card-title">
+                <i class="fas fa-stream"></i>
+                <span>异常时间线</span>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-time">19:40 - 19:48</div>
+                        <div class="timeline-desc">监控视频流正常，帧率稳定在25fps</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot warning"></div>
+                    <div class="timeline-content warning">
+                        <div class="timeline-time">19:48 - 20:00</div>
+                        <div class="timeline-desc">检测到视频帧删除，帧率下降至8-12fps，共计丢失约420帧</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-time">20:00 - 现在</div>
+                        <div class="timeline-desc">视频流恢复正常，帧率稳定在25fps</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 详细数据 -->
+        <div class="details-section">
+            <div class="card-title">
+                <i class="fas fa-table"></i>
+                <span>详细数据</span>
+            </div>
+            
+            <div style="overflow-x: auto;">
+                <table class="details-table">
+                    <thead>
+                        <tr>
+                            <th>时间段</th>
+                            <th>帧率</th>
+                            <th>丢失帧数</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>19:30 - 19:48</td>
+                            <td>25 fps</td>
+                            <td>0</td>
+                            <td><span class="status-badge normal">正常</span></td>
+                        </tr>
+                        <tr>
+                            <td>19:48 - 19:52</td>
+                            <td>12 fps</td>
+                            <td>约 120 帧</td>
+                            <td><span class="status-badge error">异常</span></td>
+                        </tr>
+                        <tr>
+                            <td>19:52 - 19:56</td>
+                            <td>8 fps</td>
+                            <td>约 200 帧</td>
+                            <td><span class="status-badge error">异常</span></td>
+                        </tr>
+                        <tr>
+                            <td>19:56 - 20:00</td>
+                            <td>10 fps</td>
+                            <td>约 100 帧</td>
+                            <td><span class="status-badge error">异常</span></td>
+                        </tr>
+                        <tr>
+                            <td>20:00 - 20:15</td>
+                            <td>25 fps</td>
+                            <td>0</td>
+                            <td><span class="status-badge normal">正常</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- 操作按钮 -->
+        <div class="action-buttons">
+            <button class="btn btn-primary">
+                <i class="fas fa-redo"></i> 重新分析
+            </button>
+            <button class="btn btn-secondary">
+                <i class="fas fa-download"></i> 导出报告
+            </button>
+        </div>
+        
+        <footer>
+            <p>监控系统分析报告 • 生成时间：2025年1月1日 8:30</p>
+        </footer>
+    </div>
+    
+    <script>
+        // 添加按钮交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.btn');
+            
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 添加点击反馈
+                    this.style.transform = 'scale(0.98)';
+                    
+                    setTimeout(() => {
+                        this.style.transform = '';
+                        
+                        // 根据按钮类型执行不同操作
+                        if (this.classList.contains('btn-primary')) {
+                            // 重新分析
+                           /*  alert('正在重新分析监控数据...'); */
+                        } else if (this.classList.contains('btn-secondary')) {
+                            // 导出报告
+                            /* alert('监控分析报告已开始下载'); */
+                        }
+                    }, 150);
+                });
+            });
+            
+            // 添加时间线项的点击交互
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            timelineItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // 简单的高亮效果
+                    this.style.backgroundColor = 'rgba(75, 108, 183, 0.05)';
+                    setTimeout(() => {
+                        this.style.backgroundColor = '';
+                    }, 300);
+                });
+            });
+            
+            // 页面加载后显示提示
+            setTimeout(() => {
+                console.log('监控数据分析页面加载完成');
+            }, 500);
+        });
+    </script>
+    <script src="scball.js"></script>
+<script src="pages.js"></script>
+<script src="visit.js"></script>
+
+</body>
+</html>

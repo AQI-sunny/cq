@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>复古桌面模拟器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #008080;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+            background-image: linear-gradient(to bottom, #008080 0%, #005858 100%);
+        }
+        
+        .desktop {
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            position: relative;
+             background-image: url('zwbz.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .taskbar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background-color: #c0c0c0;
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+            border-top: 2px solid #dfdfdf;
+            box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .start-button {
+            height: 30px;
+            background-color: #c0c0c0;
+            border: 2px solid;
+            border-color: #dfdfdf #404040 #404040 #dfdfdf;
+            padding: 2px 10px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            margin-right: 5px;
+        }
+        
+        .start-button i {
+            margin-right: 5px;
+            color: #000080;
+        }
+        
+        .taskbar-time {
+            margin-left: auto;
+            padding: 0 10px;
+            font-size: 12px;
+            border: 1px inset #c0c0c0;
+            background-color: #c0c0c0;
+            height: 24px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .icons-container {
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: column;
+            height: calc(100% - 50px);
+            align-content: flex-start;
+        }
+        
+        .icon {
+            width: 80px;
+            height: 90px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 15px;
+            padding: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 5px;
+        }
+        
+        .icon:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .icon:active {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .icon-img {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 8px;
+            filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.5));
+        }
+        
+        .icon-name {
+            color: white;
+            font-size: 12px;
+            text-align: center;
+            text-shadow: 1px 1px 2px black;
+            padding: 2px 5px;
+            border-radius: 3px;
+            background-color: rgba(0, 100, 128, 0.5);
+            max-width: 100%;
+            word-break: break-word;
+        }
+        
+        .recycle-bin {
+            color: #2e8b57;
+        }
+        
+        .donut {
+            color: #ff69b4;
+        }
+        
+        .flying-mouse {
+            color: #8a2be2;
+        }
+        
+        .dolphin-email {
+            color: #1e90ff;
+        }
+        
+        .encrypted-folder {
+            color: #ff8c00;
+        }
+        
+        .notification {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            max-width: 300px;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            border-left: 4px solid #008080;
+            z-index: 100;
+        }
+        
+        .notification h3 {
+            margin-bottom: 5px;
+            color: #7fffd4;
+        }
+        
+        .notification p {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .window-frame {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 400px;
+            background-color: #c0c0c0;
+            border: 2px solid;
+            border-color: #dfdfdf #404040 #404040 #dfdfdf;
+            display: none;
+            flex-direction: column;
+            z-index: 50;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        .window-title-bar {
+            background: linear-gradient(90deg, #000080, #1084d0);
+            color: white;
+            padding: 3px 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        
+        .window-close {
+            width: 20px;
+            height: 20px;
+            background-color: #c0c0c0;
+            border: 1px solid;
+            border-color: #dfdfdf #404040 #404040 #dfdfdf;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .window-content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow: auto;
+            font-size: 14px;
+        }
+        
+        .cursor-trail {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        /* 特定图标样式 */
+        .recycle-bin .icon-img {
+            animation: wobble 5s infinite;
+        }
+        
+        .donut .icon-img {
+            animation: spin 8s linear infinite;
+        }
+        
+        .flying-mouse .icon-img {
+            animation: fly 6s ease-in-out infinite;
+        }
+        
+        /* .dolphin-email .icon-img {
+            animation: swim 7s ease-in-out infinite;
+        } */
+        
+        .encrypted-folder .icon-img {
+            animation: pulse 4s ease-in-out infinite;
+        }
+        
+        /* 动画定义 */
+        @keyframes wobble {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes fly {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes swim {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .desktop {
+                padding: 10px;
+            }
+            
+            .icon {
+                width: 70px;
+                height: 80px;
+                margin: 8px 10px;
+            }
+            
+            .window-frame {
+                width: 90%;
+                height: 60%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="desktop">
+        <div class="icons-container">
+            <!-- 回收站图标 -->
+            <div class="icon recycle-bin" data-target="hsz.html">
+                <div class="icon-img">
+                    <i class="fas fa-trash-restore"></i>
+                </div>
+                <div class="icon-name">回收站</div>
+            </div>
+            
+            <!-- 甜甜圈图标 -->
+            <div class="icon donut" data-target="ttq.html">
+                
+                   <svg xmlns="http://www.w3.org/2000/svg" width="100" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chart-donut-3"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3v5m4 4h5" /><path d="M8.929 14.582l-3.429 2.918" /><path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /></svg>
+                
+                <div class="icon-name">甜甜圈</div>
+            </div>
+            
+            <!-- 飞鼠图标 -->
+            <div class="icon flying-mouse" data-target="feishu.html">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-send"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 14l11 -11" /><path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5" /></svg>
+
+                
+                <div class="icon-name">飞鼠</div>
+            </div>
+            
+            <!-- 海豚邮箱图标 -->
+            <div class="icon dolphin-email" data-target="htyx.html">
+                <div class="icon-img">
+                    <i class="fas fa-envelope-open-text"></i>
+                </div>
+                <div class="icon-name">海豚邮箱</div>
+            </div>
+            
+            <!-- 加密文件夹图标 -->
+            <div class="icon encrypted-folder" data-target="wenjj.html">
+                <div class="icon-img">
+                    <i class="fas fa-folder"></i>
+                </div>
+                <div class="icon-name">加密文件夹</div>
+            </div>
+        </div>
+        
+        <!-- 通知区域 -->
+        <div class="notification" id="notification">
+            <h3>桌面模拟器</h3>
+            <p>点击桌面上的图标可以在新窗口中打开对应的页面。</p>
+            <p>每个图标都有独特的动画效果！</p>
+        </div>
+        
+        <!-- 模拟窗口 -->
+        <div class="window-frame" id="infoWindow">
+            <div class="window-title-bar">
+                <span>桌面帮助</span>
+                <div class="window-close" id="closeWindow">×</div>
+            </div>
+            <div class="window-content">
+                <h3>复古桌面模拟器</h3>
+                <p>这是一个模拟经典电脑桌面的网页应用。</p>
+                <p>桌面包含以下图标：</p>
+                <ul>
+                    <li><strong>回收站</strong> - 打开 hsz.html</li>
+                    <li><strong>甜甜圈</strong> - 打开 ttq.html</li>
+                    <li><strong>飞鼠</strong> - 打开 feishu.html</li>
+                    <li><strong>海豚邮箱</strong> - 打开 htyx.html</li>
+                    <li><strong>加密文件夹</strong> - 打开 wenjj.html</li>
+                </ul>
+                <p>点击任意图标将在新窗口打开对应的页面。</p>
+                <p>本页面仅为模拟效果，实际HTML文件需要单独创建。</p>
+            </div>
+        </div>
+        
+        <!-- 任务栏 -->
+        <div class="taskbar">
+            <div class="start-button" id="startButton">
+                <i class="fab fa-windows"></i>
+                开始
+            </div>
+            <div class="taskbar-time" id="clock">12:00 PM</div>
+        </div>
+    </div>
+
+    <script>
+        // 更新时钟
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            
+            hours = hours % 12;
+            hours = hours ? hours : 12; // 将0转换为12
+            
+            const timeString = `${hours}:${minutes} ${ampm}`;
+            document.getElementById('clock').textContent = timeString;
+        }
+        
+        // 初始化时钟
+        updateClock();
+        setInterval(updateClock, 60000); // 每分钟更新一次
+        
+        // 显示通知
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
+        
+        // 图标点击处理
+        document.querySelectorAll('.icon').forEach(icon => {
+            icon.addEventListener('click', function() {
+                const targetFile = this.getAttribute('data-target');
+                
+                // 在实际应用中，这里会打开一个新窗口
+                // window.open(targetFile, '_blank');
+                
+                // 由于这些文件可能不存在，我们显示一个模拟窗口
+                const windowFrame = document.getElementById('infoWindow');
+                const titleBar = windowFrame.querySelector('.window-title-bar span');
+                const content = windowFrame.querySelector('.window-content');
+                
+                // 根据点击的图标更新窗口内容
+                const iconName = this.querySelector('.icon-name').textContent;
+                titleBar.textContent = `打开: ${iconName}`;
+                
+                let contentHTML = `<h3>${iconName}</h3>`;
+                
+                switch(targetFile) {
+                    case 'hsz.html':
+                        contentHTML += `<p>正在打开回收站页面...</p><p>文件位置: ${targetFile}</p><p>回收站用于存放已删除的文件，您可以在这里恢复或永久删除它们。</p>`;
+                        break;
+                    case 'ttq.html':
+                        contentHTML += `<p>正在打开甜甜圈页面...</p><p>文件位置: ${targetFile}</p><p>这里可能有各种美味的甜甜圈信息！小心不要流口水哦。</p>`;
+                        break;
+                    case 'feishu.html':
+                        contentHTML += `<p>正在打开飞鼠页面...</p><p>文件位置: ${targetFile}</p><p>飞鼠是一种可爱的会滑翔的小动物，让我们了解更多关于它们的知识。</p>`;
+                        break;
+                    case 'htyx.html':
+                        contentHTML += `<p>正在打开海豚邮箱页面...</p><p>文件位置: ${targetFile}</p><p>海豚邮箱是一个安全、快速且智能的电子邮件服务，像海豚一样聪明。</p>`;
+                        break;
+                    case 'wenjj.html':
+                        contentHTML += `<p>正在打开加密文件夹页面...</p><p>文件位置: ${targetFile}</p><p>这个文件夹包含加密的敏感文件，需要密码才能访问其中的内容。</p>`;
+                        break;
+                }
+                
+                contentHTML += `<p><em>注意: 这是一个模拟界面。在实际应用中，点击图标会在新窗口中打开 "${targetFile}" 文件。</em></p>`;
+                content.innerHTML = contentHTML;
+                
+                windowFrame.style.display = 'flex';
+            });
+        });
+        
+        // 关闭窗口
+        document.getElementById('closeWindow').addEventListener('click', function() {
+            document.getElementById('infoWindow').style.display = 'none';
+        });
+        
+        // 开始按钮点击
+        document.getElementById('startButton').addEventListener('click', function() {
+            showNotification();
+        });
+        
+        // 鼠标轨迹效果
+        /* document.addEventListener('mousemove', function(e) {
+            // 限制轨迹数量，避免性能问题
+            if (Math.random() > 0.7) {
+                const trail = document.createElement('div');
+                trail.className = 'cursor-trail';
+                trail.style.left = e.pageX - 5 + 'px';
+                trail.style.top = e.pageY - 5 + 'px';
+                
+                document.body.appendChild(trail);
+                
+                // 移除轨迹元素
+                setTimeout(() => {
+                    trail.remove();
+                }, 1000);
+            }
+        });
+         */
+        // 初始显示通知
+        setTimeout(showNotification, 1000);
+        
+        // 双击桌面显示帮助窗口
+        document.querySelector('.desktop').addEventListener('dblclick', function(e) {
+            if (!e.target.closest('.icon') && !e.target.closest('.window-frame')) {
+                document.getElementById('infoWindow').style.display = 'flex';
+            }
+        });
+    </script>
+</body>
+</html>
