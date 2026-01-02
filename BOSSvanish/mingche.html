@@ -251,12 +251,15 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>居民身份证电子扫描件</h1>
-            <p class="scan-note">扫描时间：2023年11月15日 14:30:22 | 分辨率：300dpi</p>
+            <!-- <p class="scan-note">扫描时间：2023年11月15日 14:30:22 | 分辨率：300dpi</p>
+         -->
         </div>
         
         <div class="id-card-container">
@@ -320,10 +323,27 @@
             <p>3. 严禁使用本示意图进行任何非法用途或试图冒充他人身份。</p>
         </div> -->
         
-        <div class="print-info">
+        <!-- <div class="print-info">
             本文件为电子扫描件 | 生成时间：2023年11月15日 | 文件编号：ID-SCAN-20231115-023
-        </div>
+        </div> -->
     </div>
+
+    <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
 
     <script>
         // 添加一些随机扫描线效果
@@ -366,6 +386,7 @@
         });
     </script>
  <script src="pages.js"></script>
-    <script src="scball.js"></script>
+<script src="scball.js"></script>
+<script src="visit.js"></script>
 </body>
 </html>

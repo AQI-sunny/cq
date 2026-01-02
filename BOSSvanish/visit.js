@@ -1,16 +1,19 @@
 /**
  * 蓝白简约风格访问记录管理器
- * 双击展开/收起，按住拖动
+ * 简化版：点击展开/收起，长按拖动
+ * 使用Shadow DOM实现样式隔离
+ * 移动端初始位置固定在底部正中间
  */
 (function () {
     'use strict';
 
-    // 配置常量
     const CONFIG = {
         STORAGE_KEY: 'visited_pages_tracker',
         MAX_RECORDS: 50,
-        COLLAPSED_WIDTH_PC: '120px', // PC端收缩宽度
-        COLLAPSED_WIDTH_MOBILE: '100px' // 移动端收缩宽度
+        COLLAPSED_WIDTH: '100px',
+        MOBILE_BOTTOM: 20,
+        DESKTOP_BOTTOM: 20,
+        DESKTOP_RIGHT: 20
     };
 
     // 工具函数
@@ -82,556 +85,509 @@
             return records;
         },
 
-        // 判断是否为移动端
         isMobile() {
-            return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
-        },
-
-        // 获取收缩宽度
-        getCollapsedWidth() {
-            return this.isMobile() ? CONFIG.COLLAPSED_WIDTH_MOBILE : CONFIG.COLLAPSED_WIDTH_PC;
+            return window.innerWidth <= 768;
         }
     };
 
-    class UIManager {
+    class VisitTracker {
         constructor() {
             this.isExpanded = false;
             this.isDragging = false;
-            this.container = null;
+            this.shadowRoot = null;
             this.dragStartX = 0;
             this.dragStartY = 0;
             this.containerStartX = 0;
             this.containerStartY = 0;
-            this.lastClickTime = 0;
-            this.doubleClickDelay = 300; // 双击延迟（毫秒）
-            this.holdTimer = null;
-            this.holdDelay = 500; // 长按延迟（毫秒）
+            this.pressTimer = null;
             this.init();
         }
 
         init() {
+            this.createShadowDOM();
             this.createUI();
-            this.bindEvents();
             this.loadRecords();
-            this.collapse(); // 默认收起
+            this.collapse();
+            this.setInitialPosition();
+            this.setupResizeListener();
+        }
+
+        createShadowDOM() {
+            // 创建宿主容器
+            this.container = document.createElement('div');
+            this.container.id = 'visit-tracker-container';
+            document.body.appendChild(this.container);
+            
+            // 创建Shadow DOM
+            this.shadowRoot = this.container.attachShadow({ mode: 'open' });
         }
 
         createUI() {
-            this.container = document.createElement('div');
-            this.container.id = 'visit-tracker-container';
-            this.container.innerHTML = `
-                <div id="visit-tracker-header">
-                    <div id="visit-tracker-title">访问记录</div>
-                    <button id="visit-tracker-toggle">▶</button>
+            // 创建样式（在Shadow DOM内部，不会受外部影响）
+            const style = document.createElement('style');
+            style.textContent = `
+                :host {
+                    all: initial !important;
+                    display: block !important;
+                    position: fixed !important;
+                    z-index: 9999 !important;
+                    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+                    box-sizing: border-box !important;
+                }
+                
+                .tracker-container {
+                    all: initial !important;
+                    display: block !important;
+                    background: white !important;
+                    border: 1px solid #d0e7ff !important;
+                    border-radius: 8px !important;
+                    box-shadow: 0 2px 10px rgba(0, 82, 204, 0.15) !important;
+                    overflow: hidden !important;
+                    transition: all 0.3s ease !important;
+                    cursor: default !important;
+                    user-select: none !important;
+                    box-sizing: border-box !important;
+                    width: 100px !important;
+                }
+                
+                .tracker-container.expanded {
+                    width: 280px !important;
+                }
+                
+                .tracker-container.dragging {
+                    cursor: move !important;
+                    opacity: 0.9 !important;
+                    box-shadow: 0 4px 20px rgba(0, 82, 204, 0.3) !important;
+                }
+                
+                .tracker-header {
+                    all: initial !important;
+                    display: flex !important;
+                    padding: 10px 12px !important;
+                    background: #f0f8ff !important;
+                    justify-content: space-between !important;
+                    align-items: center !important;
+                    cursor: pointer !important;
+                    box-sizing: border-box !important;
+                    border-bottom: none !important;
+                }
+                
+                .tracker-title {
+                    all: initial !important;
+                    display: block !important;
+                    font-size: 13px !important;
+                    font-weight: bold !important;
+                    color: #0052cc !important;
+                    white-space: nowrap !important;
+                    overflow: hidden !important;
+                    text-overflow: ellipsis !important;
+                    font-family: inherit !important;
+                }
+                
+                .tracker-toggle {
+                    all: initial !important;
+                    display: flex !important;
+                    background: none !important;
+                    border: none !important;
+                    font-size: 14px !important;
+                    color: #0052cc !important;
+                    cursor: pointer !important;
+                    padding: 2px !important;
+                    width: 20px !important;
+                    height: 20px !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    font-family: inherit !important;
+                }
+                
+                .tracker-content {
+                    all: initial !important;
+                    display: block !important;
+                    max-height: 0 !important;
+                    overflow: hidden !important;
+                    transition: max-height 0.3s ease !important;
+                }
+                
+                .tracker-container.expanded .tracker-content {
+                    max-height: 300px !important;
+                }
+                
+                .tracker-list {
+                    all: initial !important;
+                    display: block !important;
+                    padding: 8px 0 !important;
+                    max-height: 220px !important;
+                    overflow-y: auto !important;
+                    box-sizing: border-box !important;
+                }
+                
+                .visit-record {
+                    all: initial !important;
+                    display: block !important;
+                    padding: 8px 12px !important;
+                    border-bottom: 1px solid #e6f0ff !important;
+                    cursor: pointer !important;
+                    box-sizing: border-box !important;
+                }
+                
+                .visit-record:hover {
+                    background: #f0f8ff !important;
+                }
+                
+                .visit-record-title {
+                    all: initial !important;
+                    display: block !important;
+                    font-size: 12px !important;
+                    color: #003366 !important;
+                    white-space: nowrap !important;
+                    overflow: hidden !important;
+                    text-overflow: ellipsis !important;
+                    margin-bottom: 2px !important;
+                    font-family: inherit !important;
+                }
+                
+                .visit-record-time {
+                    all: initial !important;
+                    display: block !important;
+                    font-size: 10px !important;
+                    color: #6699cc !important;
+                    font-family: inherit !important;
+                }
+                
+                .tracker-controls {
+                    all: initial !important;
+                    display: flex !important;
+                    padding: 8px 12px !important;
+                    gap: 8px !important;
+                    border-top: 1px solid #e6f0ff !important;
+                    box-sizing: border-box !important;
+                }
+                
+                .tracker-btn {
+                    all: initial !important;
+                    display: block !important;
+                    flex: 1 !important;
+                    padding: 6px !important;
+                    background: #e6f0ff !important;
+                    border: 1px solid #b3d1ff !important;
+                    border-radius: 4px !important;
+                    color: #0052cc !important;
+                    cursor: pointer !important;
+                    font-size: 11px !important;
+                    text-align: center !important;
+                    font-family: inherit !important;
+                    box-sizing: border-box !important;
+                }
+                
+                .tracker-btn:hover {
+                    background: #d0e7ff !important;
+                }
+                
+                /* 空状态提示 */
+                .tracker-empty {
+                    all: initial !important;
+                    display: block !important;
+                    text-align: center !important;
+                    color: #999 !important;
+                    padding: 20px !important;
+                    font-size: 11px !important;
+                    font-family: inherit !important;
+                }
+                
+                /* 移动端适配 */
+                @media (max-width: 768px) {
+                    :host {
+                        bottom: ${CONFIG.MOBILE_BOTTOM}px !important;
+                        left: 50% !important;
+                        transform: translateX(-50%) !important;
+                        width: auto !important;
+                    }
+                    
+                    .tracker-container.expanded {
+                        width: calc(100vw - 40px) !important;
+                        max-width: 280px !important;
+                    }
+                }
+                
+                /* 桌面端样式 */
+                @media (min-width: 769px) {
+                    :host {
+                        bottom: ${CONFIG.DESKTOP_BOTTOM}px !important;
+                        right: ${CONFIG.DESKTOP_RIGHT}px !important;
+                        left: auto !important;
+                        transform: none !important;
+                    }
+                }
+                
+                /* 滚动条样式 */
+                .tracker-list::-webkit-scrollbar {
+                    width: 4px !important;
+                }
+                
+                .tracker-list::-webkit-scrollbar-track {
+                    background: #f1f1f1 !important;
+                }
+                
+                .tracker-list::-webkit-scrollbar-thumb {
+                    background: #c1d7ff !important;
+                    border-radius: 2px !important;
+                }
+                
+                .tracker-list::-webkit-scrollbar-thumb:hover {
+                    background: #a3c3ff !important;
+                }
+                
+                /* 拖动时的特殊样式 */
+                .tracker-container.dragging {
+                    transform: none !important;
+                    left: var(--drag-left) !important;
+                    top: var(--drag-top) !important;
+                    right: auto !important;
+                    bottom: auto !important;
+                }
+            `;
+            
+            // 创建容器结构
+            const container = document.createElement('div');
+            container.className = 'tracker-container collapsed';
+            container.innerHTML = `
+                <div class="tracker-header">
+                    <div class="tracker-title">访问记录</div>
+                    <button class="tracker-toggle">▶</button>
                 </div>
-                <div id="visit-tracker-content">
-                    <div id="visit-tracker-list"></div>
-                    <div id="visit-tracker-controls">
-                        <button id="visit-tracker-clear">清空</button>
-                        <button id="visit-tracker-refresh">刷新</button>
+                <div class="tracker-content">
+                    <div class="tracker-list"></div>
+                    <div class="tracker-controls">
+                        <button class="tracker-btn" id="tracker-clear">清空</button>
+                        <button class="tracker-btn" id="tracker-refresh">刷新</button>
                     </div>
                 </div>
             `;
-
-            this.addStyles();
-            document.body.appendChild(this.container);
-            this.setInitialPosition();
+            
+            // 添加到Shadow DOM
+            this.shadowRoot.appendChild(style);
+            this.shadowRoot.appendChild(container);
+            
+            this.bindEvents();
         }
 
-        addStyles() {
-            const style = document.createElement('style');
-            style.textContent = `
-                #visit-tracker-container {
-                    position: fixed;
-                    z-index: 9999;
-                    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-                    background: #ffffff;
-                    border: 1px solid #d0e7ff;
-                    border-radius: 8px;
-                    box-shadow: 0 2px 10px rgba(0, 82, 204, 0.15);
-                    max-width: 280px;
-                    min-width: 100px;
-                    overflow: hidden;
-                    transition: width 0.3s ease-in-out, max-height 0.3s ease-in-out;
-                    user-select: none;
-                    cursor: default;
-                }
+        setInitialPosition() {
+            // 根据设备类型设置初始位置
+            if (Utils.isMobile()) {
+                // 移动端：底部正中间
+                this.container.style.position = 'fixed';
+                this.container.style.left = '50%';
+                this.container.style.top = 'auto';
+                this.container.style.right = 'auto';
+                this.container.style.bottom = `${CONFIG.MOBILE_BOTTOM}px`;
+                this.container.style.transform = 'translateX(-50%)';
+                
+                // 获取并保存初始位置
+                const rect = this.container.getBoundingClientRect();
+                this.containerStartX = (window.innerWidth - rect.width) / 2;
+                this.containerStartY = window.innerHeight - rect.height - CONFIG.MOBILE_BOTTOM;
+            } else {
+                // 桌面端：右下角
+                this.container.style.position = 'fixed';
+                this.container.style.left = 'auto';
+                this.container.style.top = 'auto';
+                this.container.style.right = `${CONFIG.DESKTOP_RIGHT}px`;
+                this.container.style.bottom = `${CONFIG.DESKTOP_BOTTOM}px`;
+                this.container.style.transform = 'none';
+                
+                // 获取并保存初始位置
+                const rect = this.container.getBoundingClientRect();
+                this.containerStartX = window.innerWidth - rect.width - CONFIG.DESKTOP_RIGHT;
+                this.containerStartY = window.innerHeight - rect.height - CONFIG.DESKTOP_BOTTOM;
+            }
+        }
 
-                #visit-tracker-container.collapsed {
-                    width: ${CONFIG.COLLAPSED_WIDTH_PC};
-                    min-width: 100px;
-                }
-
-                #visit-tracker-container.expanded {
-                    width: 280px !important;
-                }
-
-                #visit-tracker-container.dragging {
-                    opacity: 0.9;
-                    box-shadow: 0 4px 20px rgba(0, 82, 204, 0.3);
-                    cursor: move;
-                }
-
-                #visit-tracker-header {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding: 10px 12px;
-                    background: #f0f8ff;
-                    cursor: pointer;
-                    user-select: none;
-                    overflow: hidden;
-                }
-
-                #visit-tracker-header:hover {
-                    background: #e6f0ff;
-                }
-
-                #visit-tracker-title {
-                    font-size: 13px;
-                    font-weight: bold;
-                    color: #0052cc;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    flex: 1;
-                }
-
-                #visit-tracker-toggle {
-                    background: none;
-                    border: none;
-                    font-size: 14px;
-                    color: #0052cc;
-                    cursor: pointer;
-                    padding: 2px;
-                    width: 20px;
-                    height: 20px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    transition: transform 0.3s ease;
-                    flex-shrink: 0;
-                }
-
-                #visit-tracker-toggle:hover {
-                    background-color: rgba(0, 82, 204, 0.1);
-                    border-radius: 4px;
-                }
-
-                #visit-tracker-content {
-                    max-height: 0;
-                    overflow: hidden;
-                    transition: max-height 0.3s ease-in-out;
-                }
-
-                #visit-tracker-container.visit-tracker-expanded #visit-tracker-content {
-                    max-height: 300px;
-                }
-
-                #visit-tracker-list {
-                    padding: 8px 0;
-                    max-height: 220px;
-                    overflow-y: auto;
-                    overflow-x: hidden;
-                }
-
-                .visit-record {
-                    padding: 6px 12px;
-                    border-bottom: 1px solid #e6f0ff;
-                    cursor: pointer;
-                    transition: background-color 0.2s;
-                    overflow: hidden;
-                }
-
-                .visit-record:last-child {
-                    border-bottom: none;
-                }
-
-                .visit-record:hover {
-                    background-color: #f0f8ff;
-                }
-
-                .visit-record-title {
-                    font-size: 12px;
-                    color: #003366;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    width: 100%;
-                }
-
-                .visit-record-time {
-                    font-size: 10px;
-                    color: #6699cc;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    width: 100%;
-                }
-
-                #visit-tracker-controls {
-                    display: flex;
-                    gap: 6px;
-                    padding: 8px 12px 10px;
-                    border-top: 1px solid #e6f0ff;
-                }
-
-                #visit-tracker-controls button {
-                    flex: 1;
-                    padding: 5px 8px;
-                    font-size: 11px;
-                    border: 1px solid #b3d1ff;
-                    border-radius: 4px;
-                    background: #e6f0ff;
-                    color: #0052cc;
-                    cursor: pointer;
-                    transition: all 0.2s;
-                    white-space: nowrap;
-                }
-
-                #visit-tracker-controls button:hover {
-                    background: #cce6ff;
-                }
-
-                /* 移动端适配 */
-                @media (max-width: 768px) {
-                    #visit-tracker-container {
-                        max-width: 280px;
-                        min-width: 100px;
+        setupResizeListener() {
+            // 窗口大小变化时重新定位
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    // 如果当前不是拖动状态，则重新设置位置
+                    if (!this.isDragging) {
+                        this.setInitialPosition();
                     }
-                    
-                    #visit-tracker-container.collapsed {
-                        width: ${CONFIG.COLLAPSED_WIDTH_MOBILE} !important;
-                        min-width: 100px;
-                    }
-                    
-                    #visit-tracker-container.expanded {
-                        width: 90vw !important;
-                        max-width: 280px;
-                    }
-                    
-                    #visit-tracker-container.visit-tracker-expanded.expanded {
-                        left: 5vw !important;
-                        right: auto !important;
-                    }
-                    
-                    #visit-tracker-title {
-                        font-size: 12px;
-                    }
-                    
-                    .visit-record {
-                        padding: 8px 10px;
-                    }
-                    
-                    .visit-record-title {
-                        font-size: 11px;
-                    }
-                    
-                    .visit-record-time {
-                        font-size: 9px;
-                    }
-                    
-                    #visit-tracker-controls button {
-                        font-size: 10px;
-                        padding: 4px 6px;
-                    }
-                    
-                    #visit-tracker-container.visit-tracker-expanded #visit-tracker-content {
-                        max-height: 400px;
-                    }
-                    
-                    #visit-tracker-header {
-                        -webkit-tap-highlight-color: transparent;
-                    }
-                }
-
-                /* 空状态提示 */
-                .visit-tracker-empty {
-                    text-align: center;
-                    color: #999;
-                    padding: 16px;
-                    font-size: 11px;
-                    white-space: nowrap;
-                }
-            `;
-            document.head.appendChild(style);
+                }, 250);
+            });
         }
 
         bindEvents() {
-            const toggleBtn = document.getElementById('visit-tracker-toggle');
-            const clearBtn = document.getElementById('visit-tracker-clear');
-            const refreshBtn = document.getElementById('visit-tracker-refresh');
-            const header = document.getElementById('visit-tracker-header');
-
-            // 绑定折叠/展开事件
-            toggleBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                this.toggle();
-            });
-
-            // 双击事件
-            header.addEventListener('dblclick', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                this.toggle();
-            });
-
-            // 单次点击事件（用于移动端双击检测）
+            const header = this.shadowRoot.querySelector('.tracker-header');
+            const toggleBtn = this.shadowRoot.querySelector('.tracker-toggle');
+            const clearBtn = this.shadowRoot.querySelector('#tracker-clear');
+            const refreshBtn = this.shadowRoot.querySelector('#tracker-refresh');
+            
+            // 点击标题展开/收起
             header.addEventListener('click', (e) => {
+                if (this.isDragging) return;
                 e.stopPropagation();
-                e.preventDefault();
-                this.handleSingleClick();
+                this.toggle();
             });
-
-            // 绑定按钮事件
+            
+            // 点击按钮展开/收起
+            toggleBtn.addEventListener('click', (e) => {
+                if (this.isDragging) return;
+                e.stopPropagation();
+                this.toggle();
+            });
+            
+            // 清空按钮
             clearBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.clearRecords();
             });
-
+            
+            // 刷新按钮
             refreshBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.loadRecords();
             });
-
-            // 绑定拖动事件
-            this.bindDragEvents();
-
-            // 防止内容区域点击影响
-            const content = document.getElementById('visit-tracker-content');
-            if (content) {
-                content.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                });
-            }
-
-            // 窗口大小改变时调整位置
-            window.addEventListener('resize', () => {
-                this.adjustPosition();
-            });
+            
+            // 移动端长按拖动
+            header.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
+            header.addEventListener('touchend', this.handleTouchEnd.bind(this));
+            header.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
+            
+            // PC端拖动
+            header.addEventListener('mousedown', this.handleMouseDown.bind(this));
         }
 
-        bindDragEvents() {
-            const header = document.getElementById('visit-tracker-header');
-            
-            // 鼠标按下 - 开始长按计时
-            header.addEventListener('mousedown', (e) => {
-                e.stopPropagation();
+        handleTouchStart(e) {
+            e.stopPropagation();
+            this.pressTimer = setTimeout(() => {
+                this.startDragging(e.touches[0]);
+            }, 500);
+        }
+
+        handleTouchEnd(e) {
+            clearTimeout(this.pressTimer);
+            if (this.isDragging) {
+                this.stopDragging();
+            }
+        }
+
+        handleTouchMove(e) {
+            if (this.isDragging && e.touches.length === 1) {
                 e.preventDefault();
-                this.startHoldTimer(e);
-            });
-
-            // 鼠标移动 - 拖动（使用箭头函数绑定正确的this）
-            document.addEventListener('mousemove', (e) => {
-                this.handleMouseDrag(e);
-            });
-
-            // 鼠标释放 - 停止拖动
-            document.addEventListener('mouseup', (e) => {
-                this.stopDrag();
-            });
-
-            // 触摸开始 - 移动端长按
-            header.addEventListener('touchstart', (e) => {
-                if (e.touches.length === 1) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    this.startHoldTimer(e.touches[0], true);
-                }
-            }, { passive: false });
-
-            // 触摸移动 - 移动端拖动
-            document.addEventListener('touchmove', (e) => {
-                if (e.touches.length === 1) {
-                    this.handleTouchDrag(e);
-                }
-            }, { passive: false });
-
-            // 触摸结束 - 停止拖动
-            document.addEventListener('touchend', (e) => {
-                this.stopDrag();
-            });
-        }
-
-        handleSingleClick() {
-            const currentTime = Date.now();
-            const timeDiff = currentTime - this.lastClickTime;
-            
-            // 如果是双击
-            if (timeDiff < this.doubleClickDelay) {
-                this.toggle();
-                this.lastClickTime = 0;
-            } else {
-                // 记录第一次点击时间
-                this.lastClickTime = currentTime;
+                this.handleDrag(e.touches[0]);
             }
         }
 
-        startHoldTimer(e, isTouch = false) {
-            // 清除之前的计时器
-            if (this.holdTimer) {
-                clearTimeout(this.holdTimer);
-            }
+        handleMouseDown(e) {
+            e.stopPropagation();
+            e.preventDefault();
             
-            // 记录开始位置
-            const clientX = isTouch ? e.clientX : e.clientX;
-            const clientY = isTouch ? e.clientY : e.clientY;
+            this.pressTimer = setTimeout(() => {
+                this.startDragging(e);
+            }, 500);
             
-            this.dragStartX = clientX;
-            this.dragStartY = clientY;
+            // 添加全局鼠标事件监听
+            const onMouseMove = (moveEvent) => {
+                if (this.isDragging) {
+                    moveEvent.preventDefault();
+                    this.handleDrag(moveEvent);
+                }
+            };
             
+            const onMouseUp = (upEvent) => {
+                clearTimeout(this.pressTimer);
+                if (this.isDragging) {
+                    this.stopDragging();
+                }
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            };
+            
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        }
+
+        startDragging(startEvent) {
+            this.isDragging = true;
+            const container = this.shadowRoot.querySelector('.tracker-container');
+            container.classList.add('dragging');
+            
+            // 获取当前容器位置
             const rect = this.container.getBoundingClientRect();
+            
+            // 记录初始位置
+            this.dragStartX = startEvent.clientX;
+            this.dragStartY = startEvent.clientY;
             this.containerStartX = rect.left;
             this.containerStartY = rect.top;
             
-            // 设置长按计时器
-            this.holdTimer = setTimeout(() => {
-                this.startDragging();
-            }, this.holdDelay);
+            // 切换到left/top定位以便拖动
+            this.container.style.position = 'fixed';
+            this.container.style.left = `${rect.left}px`;
+            this.container.style.top = `${rect.top}px`;
+            this.container.style.right = 'auto';
+            this.container.style.bottom = 'auto';
+            this.container.style.transform = 'none';
+            
+            // 设置CSS自定义属性用于拖动时的样式
+            this.container.style.setProperty('--drag-left', `${rect.left}px`);
+            this.container.style.setProperty('--drag-top', `${rect.top}px`);
         }
 
-        startDragging() {
-            this.isDragging = true;
-            this.container.classList.add('dragging');
-            document.body.style.userSelect = 'none';
-            document.body.style.cursor = 'move';
-        }
-
-        handleMouseDrag(e) {
+        handleDrag(currentEvent) {
             if (!this.isDragging) return;
             
-            if (e && e.preventDefault) {
-                e.preventDefault();
-            }
+            const deltaX = currentEvent.clientX - this.dragStartX;
+            const deltaY = currentEvent.clientY - this.dragStartY;
             
-            this.updatePosition(e.clientX - this.dragStartX, e.clientY - this.dragStartY);
-        }
-
-        handleTouchDrag(e) {
-            if (!this.isDragging || !e.touches || e.touches.length !== 1) return;
-            
-            if (e && e.preventDefault) {
-                e.preventDefault();
-            }
-            
-            const touch = e.touches[0];
-            this.updatePosition(touch.clientX - this.dragStartX, touch.clientY - this.dragStartY);
-        }
-
-        updatePosition(deltaX, deltaY) {
             const newX = this.containerStartX + deltaX;
             const newY = this.containerStartY + deltaY;
             
-            const safeArea = 10;
-            const containerRect = this.container.getBoundingClientRect();
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
+            // 限制在视口内
+            const maxX = window.innerWidth - this.container.offsetWidth;
+            const maxY = window.innerHeight - this.container.offsetHeight;
             
-            // 限制在视口范围内
-            const boundedX = Math.max(safeArea, Math.min(newX, viewportWidth - containerRect.width - safeArea));
-            const boundedY = Math.max(safeArea, Math.min(newY, viewportHeight - containerRect.height - safeArea));
+            const boundedX = Math.max(10, Math.min(newX, maxX - 10));
+            const boundedY = Math.max(10, Math.min(newY, maxY - 10));
             
+            // 更新位置
             this.container.style.left = `${boundedX}px`;
             this.container.style.top = `${boundedY}px`;
-            this.container.style.right = 'auto';
-            this.container.style.bottom = 'auto';
+            this.container.style.setProperty('--drag-left', `${boundedX}px`);
+            this.container.style.setProperty('--drag-top', `${boundedY}px`);
+            
+            // 更新初始位置以便连续拖动
+            this.dragStartX = currentEvent.clientX;
+            this.dragStartY = currentEvent.clientY;
+            this.containerStartX = boundedX;
+            this.containerStartY = boundedY;
         }
 
-        stopDrag() {
-            // 清除长按计时器
-            if (this.holdTimer) {
-                clearTimeout(this.holdTimer);
-                this.holdTimer = null;
+        stopDragging() {
+            this.isDragging = false;
+            const container = this.shadowRoot.querySelector('.tracker-container');
+            container.classList.remove('dragging');
+            
+            // 清除临时定位样式
+            this.container.style.removeProperty('--drag-left');
+            this.container.style.removeProperty('--drag-top');
+            
+            // 如果是在移动端，移除transform以保持拖动后的位置
+            if (!Utils.isMobile()) {
+                this.container.style.transform = 'none';
             }
             
-            // 停止拖动
-            if (this.isDragging) {
-                this.isDragging = false;
-                this.container.classList.remove('dragging');
-                document.body.style.userSelect = '';
-                document.body.style.cursor = '';
-                
-                // 保存位置
-                this.savePosition();
-            }
-            
-            // 重置拖动相关状态
-            this.dragStartX = 0;
-            this.dragStartY = 0;
-            this.containerStartX = 0;
-            this.containerStartY = 0;
-        }
-
-        setInitialPosition() {
-            const savedPosition = this.getSavedPosition();
-            
-            if (savedPosition && savedPosition.x && savedPosition.y) {
-                this.container.style.left = `${savedPosition.x}px`;
-                this.container.style.top = `${savedPosition.y}px`;
-                this.container.style.right = 'auto';
-                this.container.style.bottom = 'auto';
-                
-                // 恢复展开状态
-                if (savedPosition.isExpanded) {
-                    this.expand();
-                }
-            } else {
-                // 默认位置：右下角
-                this.container.style.right = '16px';
-                this.container.style.bottom = '16px';
-                this.collapse();
-            }
-        }
-
-        adjustPosition() {
-            if (this.container.style.left && this.container.style.left !== 'auto') {
-                const rect = this.container.getBoundingClientRect();
-                const viewportWidth = window.innerWidth;
-                const viewportHeight = window.innerHeight;
-                
-                // 检查是否在视口外
-                if (rect.right > viewportWidth || rect.bottom > viewportHeight) {
-                    // 重置到安全位置
-                    this.container.style.right = '16px';
-                    this.container.style.bottom = '16px';
-                    this.container.style.left = 'auto';
-                    this.container.style.top = 'auto';
-                    this.savePosition();
-                }
-            }
-        }
-
-        savePosition() {
+            // 保存当前位置
             const rect = this.container.getBoundingClientRect();
-            const position = {
-                x: rect.left,
-                y: rect.top,
-                isExpanded: this.isExpanded,
-                timestamp: Date.now()
-            };
-            
-            try {
-                localStorage.setItem(`${CONFIG.STORAGE_KEY}_position`, JSON.stringify(position));
-            } catch (e) {
-                console.warn('保存位置失败:', e);
-            }
-        }
-
-        getSavedPosition() {
-            try {
-                const data = localStorage.getItem(`${CONFIG.STORAGE_KEY}_position`);
-                if (!data) return null;
-                
-                const parsed = JSON.parse(data);
-                return parsed;
-            } catch (e) {
-                return null;
-            }
+            this.containerStartX = rect.left;
+            this.containerStartY = rect.top;
         }
 
         toggle() {
+            if (this.isDragging) return;
+            
             this.isExpanded = !this.isExpanded;
+            
             if (this.isExpanded) {
                 this.expand();
             } else {
@@ -640,81 +596,54 @@
         }
 
         expand() {
-            this.isExpanded = true;
+            const container = this.shadowRoot.querySelector('.tracker-container');
+            const toggleBtn = this.shadowRoot.querySelector('.tracker-toggle');
             
-            // 确保移除所有相关类
-            this.container.classList.remove('collapsed');
-            this.container.classList.add('expanded', 'visit-tracker-expanded');
-            
-            // 更新按钮状态
-            const toggleBtn = document.getElementById('visit-tracker-toggle');
-            if (toggleBtn) {
-                toggleBtn.textContent = '▼';
-            }
-            
-            // 移动端展开时居中显示
-            if (Utils.isMobile()) {
-                const viewportWidth = window.innerWidth;
-                const containerWidth = Math.min(280, viewportWidth * 0.9);
-                const left = (viewportWidth - containerWidth) / 2;
-                this.container.style.left = `${left}px`;
-                this.container.style.right = 'auto';
-                this.container.style.width = `${containerWidth}px`;
-            }
-            
-            this.savePosition();
-            this.loadRecords(); // 确保内容加载
+            container.classList.remove('collapsed');
+            container.classList.add('expanded');
+            toggleBtn.textContent = '▼';
+            this.loadRecords(); // 确保内容已加载
         }
 
         collapse() {
-            this.isExpanded = false;
+            const container = this.shadowRoot.querySelector('.tracker-container');
+            const toggleBtn = this.shadowRoot.querySelector('.tracker-toggle');
             
-            // 确保移除所有相关类
-            this.container.classList.remove('expanded', 'visit-tracker-expanded');
-            this.container.classList.add('collapsed');
-            
-            // 更新按钮状态
-            const toggleBtn = document.getElementById('visit-tracker-toggle');
-            if (toggleBtn) {
-                toggleBtn.textContent = '▶';
-            }
-            
-            // 恢复收缩宽度
-            const collapsedWidth = Utils.getCollapsedWidth();
-            this.container.style.width = collapsedWidth;
-            
-            this.savePosition();
+            container.classList.remove('expanded');
+            container.classList.add('collapsed');
+            toggleBtn.textContent = '▶';
         }
 
         loadRecords() {
             const records = Utils.getRecords();
-            const listElement = document.getElementById('visit-tracker-list');
-
+            const listElement = this.shadowRoot.querySelector('.tracker-list');
+            
             if (!listElement) {
-                console.warn('listElement not found');
+                console.warn('列表元素未找到');
                 return;
             }
-
+            
             if (records.length === 0) {
-                listElement.innerHTML = '<div class="visit-tracker-empty">暂无访问记录</div>';
+                listElement.innerHTML = '<div class="tracker-empty">暂无访问记录</div>';
                 return;
             }
-
+            
             listElement.innerHTML = records.map(record => `
                 <div class="visit-record" data-page="${record.page}">
                     <div class="visit-record-title" title="${record.title}">${record.title}</div>
                     <div class="visit-record-time">${record.formattedTime}</div>
                 </div>
             `).join('');
-
-            document.querySelectorAll('.visit-record').forEach(item => {
+            
+            // 绑定记录点击事件
+            this.shadowRoot.querySelectorAll('.visit-record').forEach(item => {
                 item.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const page = item.getAttribute('data-page');
                     this.navigateToPage(page);
                 });
                 
-                // 添加触摸事件支持
+                // 移动端触摸支持
                 item.addEventListener('touchstart', (e) => {
                     e.stopPropagation();
                 });
@@ -726,23 +655,23 @@
             const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
             const targetUrl = basePath + pageName;
 
-            // 使用更可靠的方法检查页面
+            // 检查是否是当前页面
             if (pageName === Utils.getCurrentPagePath()) {
-                return; // 已经是当前页面
+                return;
             }
 
             // 尝试访问页面
-            const link = document.createElement('a');
-            link.href = targetUrl;
-            link.style.display = 'none';
-            document.body.appendChild(link);
-            
-            try {
-                // 使用传统方法跳转
-                window.location.href = targetUrl;
-            } catch (e) {
-                alert('无法访问页面: ' + pageName);
-            }
+            fetch(targetUrl, { method: 'HEAD' })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = targetUrl;
+                    } else {
+                        alert('页面不存在: ' + pageName);
+                    }
+                })
+                .catch(() => {
+                    alert('无法访问页面: ' + pageName);
+                });
         }
 
         clearRecords() {
@@ -753,85 +682,57 @@
         }
     }
 
+    // 初始化
     function init() {
-        console.log('VisitTracker initializing...');
-        
-        // 检查容器是否已存在
+        // 防止重复初始化
         if (document.getElementById('visit-tracker-container')) {
-            console.log('VisitTracker already initialized');
+            console.log('访问记录管理器已存在');
             return;
         }
         
-        const currentPage = Utils.getCurrentPagePath();
-        Utils.addRecord(currentPage);
+        console.log('初始化访问记录管理器...');
         
-        try {
-            new UIManager();
-            console.log('VisitTracker initialized successfully');
-        } catch (error) {
-            console.error('VisitTracker initialization failed:', error);
-        }
-
+        // 添加当前页面记录
+        Utils.addRecord(Utils.getCurrentPagePath());
+        
+        // 创建UI
+        const tracker = new VisitTracker();
+        
+        // 页面切换时添加记录
+        window.addEventListener('pageshow', () => {
+            setTimeout(() => {
+                Utils.addRecord(Utils.getCurrentPagePath());
+                tracker.loadRecords(); // 刷新显示
+            }, 100);
+        });
+        
+        // 页面可见性变化时添加记录
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden) {
                 setTimeout(() => {
                     Utils.addRecord(Utils.getCurrentPagePath());
-                }, 1000);
+                    tracker.loadRecords(); // 刷新显示
+                }, 100);
             }
         });
-
-        if ('onpageshow' in window) {
-            window.addEventListener('pageshow', () => {
-                Utils.addRecord(Utils.getCurrentPagePath());
-            });
-        }
+        
+        // 暴露到全局
+        window.VisitTracker = {
+            toggle: () => tracker.toggle(),
+            addRecord: () => Utils.addRecord(Utils.getCurrentPagePath()),
+            clearRecords: () => tracker.clearRecords(),
+            getRecords: () => Utils.getRecords()
+        };
+        
+        console.log('访问记录管理器初始化完成');
     }
 
-    function isTaptapMiniProgram() {
-        return /TTPWebView/.test(navigator.userAgent) ||
-               (typeof tt !== 'undefined' && tt.miniProgram);
-    }
-
-    function checkCompatibility() {
-        return typeof Storage !== 'undefined' &&
-               typeof localStorage !== 'undefined' &&
-               typeof JSON !== 'undefined';
-    }
-
-    // 等待DOM完全加载
+    // 等待DOM加载完成
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('DOMContentLoaded fired');
-            if (checkCompatibility()) {
-                setTimeout(init, 100); // 稍微延迟确保所有元素加载完成
-            }
+            setTimeout(init, 100);
         });
     } else {
-        console.log('DOM already loaded');
-        if (checkCompatibility()) {
-            setTimeout(init, 100);
-        }
+        setTimeout(init, 100);
     }
-
-    window.VisitTracker = {
-        addRecord: Utils.addRecord,
-        getRecords: Utils.getRecords,
-        clearRecords: () => Utils.saveRecords([]),
-        isTaptapMiniProgram: isTaptapMiniProgram,
-        getContainer: () => document.getElementById('visit-tracker-container'),
-        togglePanel: function() {
-            const container = document.getElementById('visit-tracker-container');
-            if (container) {
-                if (container.classList.contains('expanded')) {
-                    container.classList.remove('expanded', 'visit-tracker-expanded');
-                    container.classList.add('collapsed');
-                    document.getElementById('visit-tracker-toggle').textContent = '▶';
-                } else {
-                    container.classList.remove('collapsed');
-                    container.classList.add('expanded', 'visit-tracker-expanded');
-                    document.getElementById('visit-tracker-toggle').textContent = '▼';
-                }
-            }
-        }
-    };
 })();

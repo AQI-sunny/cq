@@ -727,6 +727,8 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
 </head>
 <body class="no-scroll">
     <!-- 加载界面 -->
@@ -1072,6 +1074,23 @@
         <div class="close-preview" id="closePreviewBtn">×</div>
         <img class="preview-image" id="previewImage" src="" alt="预览图片">
     </div>
+
+    <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
 
     <script>
         // 初始化点赞数据
@@ -1518,5 +1537,8 @@
             }
         });
     </script>
+ <script src="pages.js"></script>
+<script src="scball.js"></script>
+<script src="visit.js"></script>
 </body>
 </html>

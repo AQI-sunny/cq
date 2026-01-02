@@ -444,6 +444,8 @@
         .message.sent { border: 1px dashed purple; }
         */
     </style>
+    <link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
 </head>
 <body>
     <div class="container">
@@ -452,7 +454,7 @@
                 <i class="fas fa-chevron-left"></i>
             </div>
             <div class="contact-info">
-                <div class="contact-name">张明</div>
+                <div class="contact-name">魏警官</div>
                 <div class="contact-status">在线</div>
             </div>
             <div class="header-actions">
@@ -468,7 +470,7 @@
             </div>
 
             <!-- 接收的消息 -->
-            <div class="message received">
+            <!-- <div class="message received">
                 <div class="message-avatar">
                     <i class="fas fa-user"></i>
                 </div>
@@ -479,7 +481,7 @@
                     <div class="message-time">上午 09:15</div>
                 </div>
             </div>
-
+ -->
             <!-- 发送的消息 -->
             <div class="message sent">
                 <div class="message-avatar">
@@ -487,11 +489,11 @@
                 </div>
                 <div>
                     <div class="message-bubble">
-                        我大概6点半左右能到，需要我带点什么吗？
+                        魏警官，我想麻烦您件事
                     </div>
                     <div class="message-time">上午 09:17</div>
                     <div class="message-status">
-                        <i class="fas fa-check-double"></i>
+                        <i class="fas fa-check"></i>
                     </div>
                 </div>
             </div>
@@ -503,7 +505,7 @@
                 </div>
                 <div>
                     <div class="message-bubble">
-                        如果可以的话带些饮料吧，我们这边准备了食物
+                        陈沐？沈小姐跟我说了。
                     </div>
                     <div class="message-time">上午 09:20</div>
                 </div>
@@ -516,11 +518,11 @@
                 </div>
                 <div>
                     <div class="message-bubble">
-                        没问题，我带一箱可乐和一瓶橙汁，够吗？
+                       是的魏警官，我想要洗清我的嫌疑，我这里有一些线索...但是需要警方的权限...您看...
                     </div>
                     <div class="message-time">上午 09:22</div>
                     <div class="message-status">
-                        <i class="fas fa-check-double"></i>
+                        <i class="fas fa-check"></i>
                     </div>
                 </div>
             </div>
@@ -532,7 +534,7 @@
                 </div>
                 <div>
                     <div class="message-bubble">
-                        够了够了，谢谢！到时候见！
+                       行，我给你24h授权码：HJB161C153KEY
                     </div>
                     <div class="message-time">上午 09:23</div>
                 </div>
@@ -545,7 +547,7 @@
                 </div>
                 <div>
                     <div class="message-bubble">
-                        好的，晚上见！
+                        谢谢您！
                     </div>
                     <div class="message-time">上午 09:24</div>
                     <div class="message-status">
@@ -553,6 +555,18 @@
                     </div>
                 </div>
             </div>
+
+           <!--  <div class="message received">
+                <div class="message-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <div class="message-bubble">
+                       行，你去/biao这个网址填表吧。
+                    </div>
+                    <div class="message-time">上午 09:23</div>
+                </div>
+            </div> -->
         </div>
 
         <div class="input-container">
@@ -587,6 +601,23 @@
             </div>
         </div>
     </div>
+
+    <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
 
     <script>
         // 设置视口高度变量
@@ -754,12 +785,23 @@
             }
         });
 
-        document.querySelector('.back-btn').addEventListener('click', async function() {
+        /* document.querySelector('.back-btn').addEventListener('click', async function() {
             const confirmed = await showModal('确认', '确定要返回上一页吗？');
             if (confirmed) {
                 showToast('返回上一页', 'info', 1500);
             }
-        });
+        }); */
+        document.querySelector('.back-btn').addEventListener('click', async function() {
+    const confirmed = await showModal('确认', '确定要返回上一页吗？');
+    if (confirmed) {
+        showToast('返回上一页', 'info', 1500);
+        // 添加跳转逻辑 - 使用相对路径
+        window.location.href = 'todsk.html';
+        
+        // 或者如果需要返回上一页（根据您的需求选择）：
+        // window.history.back();
+    }
+});
 
         document.querySelectorAll('.header-actions i').forEach(icon => {
             icon.addEventListener('click', function() {
@@ -802,7 +844,8 @@
         }, 500);
     </script>
      <script src="pages.js"></script>
-    <script src="scball.js"></script>
+<script src="scball.js"></script>
+<script src="visit.js"></script>
 </body>
 </html>
 <!-- 

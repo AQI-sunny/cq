@@ -1,0 +1,2489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>海豚邮箱</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f6f7;
+            color: #333;
+            line-height: 1.5;
+            overflow-x: hidden;
+            padding-bottom: 60px; /* 为底部导航留空间 */
+        }
+        
+        /* 顶部导航 */
+        .header {
+            background: linear-gradient(135deg, #0077b6, #00b4d8);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 116, 182, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            font-size: 24px;
+        }
+        
+        .logo h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0077b6;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        /* 关闭按钮样式 */
+        .close-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        
+        .close-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .close-btn i {
+            font-size: 16px;
+        }
+        
+        /* 主要内容区域 */
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 130px); /* 减去顶部和底部高度 */
+        }
+        
+        /* 侧边栏 - 移动端默认折叠 */
+        .sidebar {
+            background-color: white;
+            width: 100%;
+            border-bottom: 1px solid #e0e0e0;
+            display: none;
+            flex-direction: column;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: absolute;
+            top: 70px;
+            left: 0;
+            z-index: 99;
+            max-height: calc(100vh - 130px);
+            overflow-y: auto;
+        }
+        
+        .sidebar.active {
+            display: flex;
+        }
+        
+        .menu-item {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .menu-item:hover, .menu-item.active {
+            background-color: #f0f9ff;
+            color: #0077b6;
+            border-left-color: #0077b6;
+        }
+        
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+        
+        .menu-item .badge {
+            margin-left: auto;
+            background-color: #e74c3c;
+            color: white;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            min-width: 20px;
+            text-align: center;
+        }
+        
+        /* 邮件列表区域 */
+        .content {
+            flex: 1;
+            padding: 15px;
+        }
+        
+        .actions-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .actions-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .btn-primary {
+            background-color: #0077b6;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #005a8c;
+        }
+        
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #555;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 100%;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+        
+        /* 邮件列表 */
+        .email-list {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+        }
+        
+        .email-item {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .email-item:last-child {
+            border-bottom: none;
+        }
+        
+        .email-item:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .email-item.unread {
+            background-color: #f0f9ff;
+        }
+        
+        .email-item.selected {
+            background-color: #e6f7ff;
+        }
+        
+        .email-checkbox {
+            width: 20px;
+            height: 20px;
+            accent-color: #0077b6;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+        
+        .email-sender {
+            font-weight: 600;
+            width: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        
+        .email-content {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+        }
+        
+        .email-subject {
+            font-weight: 500;
+            margin-bottom: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .email-preview {
+            color: #666;
+            font-size: 13px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .email-time {
+            color: #888;
+            font-size: 12px;
+            text-align: right;
+            flex-shrink: 0;
+            width: 70px;
+        }
+        
+        .email-attachment {
+            color: #0077b6;
+            font-size: 12px;
+        }
+        
+        /* 底部导航 - 移动端专用 */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: white;
+            padding: 10px 0;
+            border-top: 1px solid #e0e0e0;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #666;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.2s;
+            flex: 1;
+            max-width: 25%;
+        }
+        
+        .nav-item.active, .nav-item:hover {
+            color: #0077b6;
+            background-color: #f0f9ff;
+        }
+        
+        .nav-item i {
+            font-size: 18px;
+            margin-bottom: 3px;
+        }
+        
+        .nav-item span {
+            font-size: 11px;
+        }
+        
+        /* 响应式设计 */
+        @media (min-width: 768px) {
+            body {
+                padding-bottom: 0;
+            }
+            
+            .container {
+                flex-direction: row;
+                min-height: calc(100vh - 70px);
+            }
+            
+            .sidebar {
+                display: flex;
+                width: 250px;
+                height: calc(100vh - 70px);
+                border-right: 1px solid #e0e0e0;
+                border-bottom: none;
+                position: relative;
+                top: 0;
+                max-height: none;
+                overflow-y: visible;
+            }
+            
+            .bottom-nav {
+                display: none;
+            }
+            
+            .content {
+                flex: 1;
+                overflow-y: auto;
+            }
+            
+            .menu-toggle {
+                display: none;
+            }
+            
+            .actions-bar {
+                flex-direction: row;
+            }
+            
+            .search-box {
+                min-width: 200px;
+                flex: none;
+                width: 300px;
+            }
+            
+            .email-sender {
+                width: 120px;
+            }
+        }
+        
+        @media (min-width: 480px) and (max-width: 767px) {
+            .actions-row {
+                flex-wrap: nowrap;
+            }
+            
+            .search-box {
+                min-width: 0;
+            }
+            
+            .email-sender {
+                width: 100px;
+            }
+            
+            .btn-group {
+                gap: 5px;
+            }
+            
+            .btn {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 479px) {
+            .btn-group {
+                gap: 4px;
+            }
+            
+            .btn {
+                padding: 8px 10px;
+                font-size: 13px;
+            }
+            
+            .btn span.desktop-only {
+                display: none;
+            }
+            
+            .email-sender {
+                width: 70px;
+            }
+            
+            .email-time {
+                width: 60px;
+            }
+            
+            .close-btn span {
+                display: none;
+            }
+            
+            .close-btn {
+                padding: 8px;
+            }
+        }
+        
+        /* 邮件详情 */
+        .email-detail {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .email-detail.active {
+            display: block;
+        }
+        
+        .email-header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .email-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .email-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .email-sender-detail {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .email-body {
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        
+        .email-body p {
+            margin-bottom: 15px;
+        }
+        
+        /* 自定义弹窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background-color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            padding: 20px 20px 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #888;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .modal-body {
+            padding: 20px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .modal-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .modal-btn-cancel {
+            background-color: #f0f0f0;
+            color: #555;
+        }
+        
+        .modal-btn-cancel:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .modal-btn-confirm {
+            background-color: #0077b6;
+            color: white;
+        }
+        
+        .modal-btn-confirm:hover {
+            background-color: #005a8c;
+        }
+        
+        /* 通知 */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background-color: #4caf50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            max-width: 300px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background-color: #f44336;
+        }
+        
+        /* 加载动画 */
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 119, 182, 0.2);
+            border-radius: 50%;
+            border-top-color: #0077b6;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* 海豚主题颜色 */
+        .dolphin-theme {
+            color: #0077b6;
+        }
+        
+        .dolphin-bg {
+            background-color: #0077b6;
+        }
+        
+        /* 写邮件界面 */
+        .compose-container {
+            display: none;
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            width: 90%;
+            max-width: 500px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            z-index: 99;
+            max-height: 70vh;
+            overflow: hidden;
+        }
+        
+        .compose-container.active {
+            display: block;
+        }
+        
+        .compose-header {
+            background: linear-gradient(135deg, #0077b6, #00b4d8);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .compose-body {
+            padding: 20px;
+        }
+        
+        .compose-field {
+            margin-bottom: 15px;
+        }
+        
+        .compose-field label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .compose-field input, .compose-field textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .compose-field textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+        
+        .compose-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        /* 移动端优化 */
+        .mobile-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .mobile-only {
+            display: none;
+        }
+        
+        @media (max-width: 767px) {
+            .mobile-only {
+                display: inline;
+            }
+            
+            .desktop-only {
+                display: none !important;
+            }
+            
+            .compose-container {
+                bottom: 60px;
+                right: 10px;
+                width: calc(100% - 20px);
+            }
+            
+            .notification {
+                top: 70px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+        }
+        
+        /* 星标按钮样式 */
+        .star-btn {
+            background: none;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px;
+            transition: all 0.2s;
+        }
+        
+        .star-btn.active {
+            color: #ffc107;
+        }
+        
+        .star-btn:hover {
+            color: #ffc107;
+        }
+        
+        /* 邮件操作按钮组 */
+        .email-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        
+        .email-action-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 3px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .email-action-btn:hover {
+            background-color: #f0f0f0;
+            color: #0077b6;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-dolphin"></i>
+            <h1>海豚邮箱</h1>
+        </div>
+        <div class="user-info">
+            <div class="avatar">叶</div>
+            <span class="desktop-only">叶兰</span>
+            <!-- 关闭按钮 -->
+            <button class="close-btn" id="closeAppBtn">
+                <i class="fas fa-times"></i>
+                <span class="desktop-only">关闭</span>
+            </button>
+            <button class="menu-toggle btn btn-secondary" id="menuToggle">
+                <i class="fas fa-bars"></i>
+                <span class="mobile-only">菜单</span>
+            </button>
+        </div>
+    </header>
+    
+    <!-- 主要内容区域 -->
+    <div class="container">
+        <!-- 侧边栏 -->
+        <nav class="sidebar" id="sidebar">
+            <a href="#" class="menu-item active" data-folder="inbox">
+                <i class="fas fa-inbox"></i>
+                <span>收件箱</span>
+                <span class="badge">5</span>
+            </a>
+            <a href="#" class="menu-item" data-folder="starred">
+                <i class="fas fa-star"></i>
+                <span>星标邮件</span>
+            </a>
+            <a href="#" class="menu-item" data-folder="sent">
+                <i class="fas fa-paper-plane"></i>
+                <span>已发送</span>
+                <!-- <span class="badge">3</span> -->
+            </a>
+            <a href="#" class="menu-item" data-folder="drafts">
+                <i class="fas fa-file-alt"></i>
+                <span>草稿箱</span>
+                <!-- <span class="badge">2</span> -->
+            </a>
+            <a href="#" class="menu-item" data-folder="trash">
+                <i class="fas fa-trash"></i>
+                <span>已删除</span>
+            </a>
+            <a href="#" class="menu-item" data-folder="folders">
+                <i class="fas fa-folder"></i>
+                <span>我的文件夹</span>
+            </a>
+            <a href="#" class="menu-item" data-folder="settings">
+                <i class="fas fa-cog"></i>
+                <span>设置</span>
+            </a>
+        </nav>
+        
+        <!-- 邮件列表区域 -->
+        <main class="content">
+            <div class="actions-bar">
+                <div class="actions-row">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" id="composeBtn">
+                            <i class="fas fa-pencil-alt"></i>
+                            <span class="desktop-only">写邮件</span>
+                            <span class="mobile-only">写</span>
+                        </button>
+                        <button class="btn btn-secondary" id="refreshBtn">
+                            <i class="fas fa-sync-alt"></i>
+                            <span class="desktop-only">刷新</span>
+                            <span class="mobile-only">刷</span>
+                            <span id="refreshCount" style="margin-left: 5px;">(0)</span>
+                        </button>
+                        <button class="btn btn-secondary mobile-only" id="markAllReadBtn">
+                            <i class="fas fa-envelope-open"></i>
+                            <span>标已读</span>
+                        </button>
+                    </div>
+                    
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="搜索邮件...">
+                    </div>
+                </div>
+                
+                <div class="actions-row">
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" id="selectAllBtn">
+                            <i class="fas fa-check-square"></i>
+                            <span>全选</span>
+                        </button>
+                        <button class="btn btn-secondary" id="markAsReadBtn">
+                            <i class="fas fa-envelope-open"></i>
+                            <span class="desktop-only">标记已读</span>
+                            <span class="mobile-only">已读</span>
+                        </button>
+                        <button class="btn btn-secondary" id="deleteBtn">
+                            <i class="fas fa-trash"></i>
+                            <span>删除</span>
+                        </button>
+                        <button class="btn btn-secondary desktop-only" id="starSelectedBtn">
+                            <i class="fas fa-star"></i>
+                            <span>加星标</span>
+                        </button>
+                    </div>
+                    
+                    <div class="mobile-actions mobile-only">
+                        <button class="btn btn-secondary" id="mobileStarBtn">
+                            <i class="fas fa-star"></i>
+                            <span>星标</span>
+                        </button>
+                        <button class="btn btn-secondary" id="mobileMoreBtn">
+                            <i class="fas fa-ellipsis-h"></i>
+                            <span>更多</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 邮件列表 -->
+            <div class="email-list" id="emailList">
+                <!-- 邮件将通过JavaScript动态生成 -->
+            </div>
+            
+            <!-- 邮件详情 -->
+            <div class="email-detail" id="emailDetail">
+                <div class="email-header">
+                    <h2 class="email-title" id="emailDetailTitle">感谢使用海豚邮箱</h2>
+                    <div class="email-meta">
+                        <div class="email-sender-detail">
+                            <span id="emailDetailSender">海豚邮箱团队</span>
+                            <span id="emailDetailAddress">&lt;service@dolphinmail.com&gt;</span>
+                        </div>
+                        <div id="emailDetailTime">2025年12月26日 09:30</div>
+                    </div>
+                </div>
+                <div class="email-body" id="emailDetailBody">
+                    <!-- 邮件内容将通过JavaScript动态生成 -->
+                </div>
+                <div class="email-actions" id="emailDetailActions">
+                    <!-- 邮件操作按钮将通过JavaScript动态生成 -->
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- 写邮件界面 -->
+    <div class="compose-container" id="composeContainer">
+        <div class="compose-header">
+            <h3>写邮件</h3>
+            <button class="btn btn-secondary" id="closeComposeBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="compose-body">
+            <div class="compose-field">
+                <label for="recipient">收件人</label>
+                <input type="text" id="recipient" placeholder="输入收件人邮箱">
+            </div>
+            <div class="compose-field">
+                <label for="subject">主题</label>
+                <input type="text" id="subject" placeholder="邮件主题">
+            </div>
+            <div class="compose-field">
+                <label for="composeBody">内容</label>
+                <textarea id="composeBody" placeholder="输入邮件内容..."></textarea>
+            </div>
+        </div>
+        <div class="compose-footer">
+            <button class="btn btn-secondary" id="saveDraftBtn">存草稿</button>
+            <button class="btn btn-primary" id="sendEmailBtn">发送</button>
+        </div>
+    </div>
+    
+    <!-- 底部导航 - 移动端专用 -->
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active" id="mobileInboxBtn" data-folder="inbox">
+            <i class="fas fa-inbox"></i>
+            <span>收件箱</span>
+        </a>
+        <a href="#" class="nav-item" id="mobileComposeBtn">
+            <i class="fas fa-pencil-alt"></i>
+            <span>写邮件</span>
+        </a>
+        <a href="#" class="nav-item" id="mobileSentBtn" data-folder="sent">
+            <i class="fas fa-paper-plane"></i>
+            <span>已发送</span>
+        </a>
+        <a href="#" class="nav-item" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+            <span>菜单</span>
+        </a>
+    </nav>
+    
+    <!-- 确认弹窗 -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="confirmModalTitle">确认操作</h3>
+                <button class="modal-close" id="confirmModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="confirmModalBody">
+                确定要执行此操作吗？
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-cancel" id="confirmModalCancel">取消</button>
+                <button class="modal-btn modal-btn-confirm" id="confirmModalConfirm">确定</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 更多操作菜单 - 移动端 -->
+    <div class="modal-overlay" id="moreActionsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">更多操作</h3>
+                <button class="modal-close" id="closeMoreActionsBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <button class="btn btn-secondary" id="mobileMarkStarBtn">
+                        <i class="fas fa-star"></i>
+                        <span>标记星标</span>
+                    </button>
+                    <button class="btn btn-secondary" id="mobileMarkImportantBtn">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>标记重要</span>
+                    </button>
+                    <button class="btn btn-secondary" id="mobileMoveToFolderBtn">
+                        <i class="fas fa-folder"></i>
+                        <span>移动到文件夹</span>
+                    </button>
+                    <button class="btn btn-secondary" id="mobileArchiveBtn">
+                        <i class="fas fa-archive"></i>
+                        <span>归档</span>
+                    </button>
+                    <button class="btn btn-secondary" id="mobileReportSpamBtn">
+                        <i class="fas fa-ban"></i>
+                        <span>举报垃圾邮件</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 关闭确认弹窗 -->
+    <div class="modal-overlay" id="closeConfirmModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">关闭海豚邮箱</h3>
+                <button class="modal-close" id="closeCloseConfirmBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>确定要关闭海豚邮箱吗？</p>
+                <!-- <p>关闭后将跳转到MMDN页面。</p> -->
+                <p style="color: #666; font-size: 14px; margin-top: 10px;">
+                    <i class="fas fa-info-circle"></i>
+                    未保存的草稿将自动保存。
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-cancel" id="closeConfirmCancel">取消</button>
+                <button class="modal-btn modal-btn-confirm" id="closeConfirmConfirm">确定关闭</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 通知 -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">操作成功！</span>
+    </div>
+    
+    <script>
+        // 邮件数据
+        let emails = [
+            {
+                id: 1,
+                sender: "海豚邮箱团队",
+                senderEmail: "service@dolphinmail.com",
+                subject: "感谢使用海豚邮箱",
+                preview: "感谢您选择海豚邮箱，我们将为您提供安全、快速、便捷的邮件服务。",
+                time: "08:30",
+                date: "1月1日",
+                read: false,
+                starred: true,
+                hasAttachment: false,
+                folder: "inbox",
+                content: `
+    <p>尊敬的用户：</p>
+    <p>感谢您使用海豚邮箱！我们很高兴为您提供安全、快速、便捷的邮件服务。</p>
+    <p>海豚邮箱拥有以下特色功能：</p>
+    <ul>
+        <li style="margin-left: 20px;">智能邮件分类，让您快速找到重要邮件</li>
+        <li style="margin-left: 20px;">超大附件支持，最高可发送2GB文件</li>
+        <li style="margin-left: 20px;">海豚主题皮肤，给您清新愉悦的使用体验</li>
+        <li style="margin-left: 20px;">多端同步，随时随地处理邮件</li>
+    </ul>
+    <p>如果您有任何问题或建议，请随时联系我们的客服团队。</p>
+    <p>祝您使用愉快！</p>
+    <p><br>海豚邮箱团队<br>service@dolphinmail.com</p>
+`
+            },
+            {
+                id: 2,
+                sender: "海豚云存储",
+                senderEmail: "cloud@dolphin.com",
+                subject: "您的云存储空间即将升级",
+                preview: "为感谢您长期以来的支持，我们将免费为您升级云存储空间至50GB。",
+                time: "14:21",
+                date: "2025年12月31日",
+                read: false,
+                starred: true,
+                hasAttachment: false,
+                folder: "inbox",
+                content: `
+                    <p>尊敬的海豚用户：</p>
+                    <p>为感谢您长期以来的支持，我们将免费为您升级云存储空间至50GB。</p>
+                    <p>升级后，您可以存储更多照片、文档和视频，并方便地在各个设备间同步。</p>
+                    <p>此次升级将自动完成，您无需进行任何操作。升级后，您的存储空间将从当前的15GB扩展至50GB。</p>
+                    <p>如果您不希望升级，请在3天内联系我们。</p>
+                    <p><br>海豚云存储团队<br>cloud@dolphin.com</p>
+                `
+            },
+            {
+                id: 3,
+                sender: "海豚安全中心",
+                senderEmail: "security@dolphin.com",
+                subject: "账户安全提醒",
+                preview: "检测到您的账户在新设备登录，请确认是否为本人操作。",
+                time: "11:24",
+                date: "2025年12月24日",
+                read: false,
+                starred: true,
+                hasAttachment: false,
+                folder: "inbox",
+                content: `
+                    <p>尊敬的用户：</p>
+                    <p>我们在2025年12月24日 14:30检测到您的账户在新设备登录：</p>
+                    <p><strong>设备信息：</strong>iPhone 13 Pro<br>
+                    <strong>登录地点：</strong>深南市<br>
+                    <strong>登录IP：</strong>192.168.1.105</p>
+                    <p>如果这是您本人的操作，请忽略此邮件。</p>
+                    <p>如果您不认识这次登录，请立即：</p>
+                    <ol>
+                        <li style="margin-left: 20px;">修改您的账户密码</li>
+                        <li style="margin-left: 20px;">启用双重验证</li>
+                        <li style="margin-left: 20px;">联系我们的安全团队</li>
+                    </ol>
+                    <p><br>海豚安全中心<br>security@dolphin.com</p>
+                `
+            },
+            {
+                id: 4,
+                sender: "海豚日历",
+                senderEmail: "calendar@dolphin.com",
+                subject: "周末活动邀请：海豚用户见面会",
+                preview: "邀请您参加本周末的海豚用户见面会，与产品团队面对面交流。",
+                time: "12:02",
+                date: "2025年12月23日",
+                read: false,
+                starred: true,
+                hasAttachment: false,
+                folder: "inbox",
+                content: `
+                    <p>尊敬的海豚用户：</p>
+                    <p>我们诚挚地邀请您参加本周末的海豚用户见面会！</p>
+                    <p><strong>时间：</strong>2025年12月28日（周六）14:00-17:00<br>
+                    <strong>地点：</strong>深南市海淀区中关村创业大街海豚大厦3层会议室</p>
+                    <p>届时，海豚邮箱的产品团队将与您面对面交流，听取您的意见和建议，并分享我们未来的产品规划。</p>
+                    <p>活动现场还将提供茶点和精美礼品。</p>
+                    <p>请通过附件中的回执确认您的参与意向。</p>
+                    <p><br>海豚日历团队<br>calendar@dolphin.com</p>
+                `
+            },
+            {
+    id: 5,
+    sender: "真真",
+    senderEmail: "zhen@dolphins.com",
+    subject: "1",
+    preview: "你要的......",
+    time: "22:22",
+    date: "2025年12月25日",
+    read: false,
+                starred: true,
+                hasAttachment: false,
+    folder: "inbox",
+    content: `
+    <p>你要的</p>
+        <p>帮你打听到了！去安心药店找文心竹文店长，报沈笑静沈姐的名字。</p>
+      
+    `
+},
+            // 草稿箱邮件
+           /*  {
+                id: 6,
+                sender: "我",
+                senderEmail: "me@dolphinmail.com",
+                subject: "关于新产品功能建议",
+                preview: "关于海豚邮箱新版本，我有几个功能建议想与团队分享...",
+                time: "12-21",
+                date: "2025年12月21日",
+                read: true,
+                starred: false,
+                hasAttachment: false,
+                folder: "drafts",
+                content: `
+                    <p>尊敬的海豚邮箱产品团队：</p>
+                    <p>我是海豚邮箱的长期用户，首先感谢你们提供了如此优秀的邮件服务！在使用过程中，我有几个关于新功能的想法想与你们分享：</p>
+                    <ol>
+                        <li style="margin-left: 20px;"><strong>邮件定时发送功能：</strong>希望能够设置邮件在特定时间自动发送</li>
+                        <li style="margin-left: 20px;"><strong>邮件撤回功能：</strong>发送邮件后，在一定时间内可以撤回</li>
+                        <li style="margin-left: 20px;"><strong>邮件翻译功能：</strong>自动翻译外文邮件内容</li>
+                        <li style="margin-left: 20px;"><strong>智能回复建议：</strong>根据邮件内容提供回复建议</li>
+                    </ol>
+                    <p>这些功能如果能加入，会让海豚邮箱更加完善和强大。</p>
+                    <p>期待你们的回复！</p>
+                `
+            }, */
+           /* {
+                id: 7,
+                sender: "我",
+                senderEmail: "me@dolphinmail.com",
+                subject: "项目会议记录草稿",
+                preview: "本周项目会议的主要讨论内容和行动计划...",
+                time: "12-20",
+                date: "12月20日",
+                read: true,
+                starred: false,
+                hasAttachment: true,
+                folder: "drafts",
+                content: `
+                    <p><strong>项目会议记录</strong></p>
+                    <p><strong>会议时间：</strong>2025年12月20日 14:00-15:30</p>
+                    <p><strong>参会人员：</strong>张三、李四、王五、赵六</p>
+                    <p><strong>会议主题：</strong>海豚邮箱移动端优化项目进度汇报</p>
+                    
+                    <p><strong>一、上周工作回顾</strong></p>
+                    <ul>
+                        <li style="margin-left: 20px;">完成了移动端UI界面优化</li>
+                        <li style="margin-left: 20px;">修复了邮件加载速度问题</li>
+                        <li style="margin-left: 20px;">优化了附件上传体验</li>
+                    </ul>
+                    
+                    <p><strong>二、下周工作计划</strong></p>
+                    <ul>
+                        <li style="margin-left: 20px;">开始开发邮件智能分类功能</li>
+                        <li style="margin-left: 20px;">优化搜索功能性能</li>
+                        <li style="margin-left: 20px;">准备用户测试</li>
+                    </ul>
+                    
+                    <p><strong>三、待讨论问题</strong></p>
+                    <ol>
+                        <li style="margin-left: 20px;">是否增加邮件已读回执功能？</li>
+                        <li style="margin-left: 20px;">移动端夜间模式开发优先级？</li>
+                        <li style="margin-left: 20px;">如何优化垃圾邮件过滤算法？</li>
+                    </ol>
+                    
+                    <p>详细内容请参见附件中的会议纪要文档。</p>
+                `
+            }, */
+            
+            // 已发送邮件
+          /*     {
+    id: 6,
+    sender: "周于彰",
+    senderEmail: "zyz@xjds.com",
+    subject: "关于大客户参观期间的基础维护工作安排",
+    preview: "周于彰，你好：正如我们之前在聊天中沟通的，我司将在近期安排一次大客户参观活动。为确保参观期间系统与设备运行顺畅，现需贵部门配合进行基础维护工作。...",
+    time: "昨天9:30",
+    date: "12月31日",
+    read: true,
+    starred: true,
+    hasAttachment: true,
+    folder: "sent",
+    content: `
+        <p>周于彰，你好：</p>
+        <p>正如我们之前在聊天中沟通的，我司将在近期安排一次大客户参观活动。为确保参观期间系统与设备运行顺畅，现需贵部门配合进行基础维护工作。</p>
+        <p>相关安排如下：</p>
+        <ul>
+            <li style="margin-left: 20px;"><strong>维护时间：</strong>请提前一小时到达现场进行准备工作；</li>
+            <li style="margin-left: 20px;"><strong>维护内容：</strong>请根据实际情况制定详细的维护方案，确保系统稳定运行；</li>
+        </ul>
+        <p>我已将更具体的细节通过本邮件附件发送，请查收并组织团队执行。</p>
+        <p>如有任何疑问或需要协调之处，请随时与我联系。感谢贵部门的支持与配合！</p>
+        <p>祝工作顺利！</p>
+        <p><br>麦姝冰<br>兴健科技集团公关部</p>
+    `
+}
+         */  /* 
+            {
+                id: 8,
+                sender: "我",
+                senderEmail: "me@dolphinmail.com",
+                recipient: "张经理",
+                recipientEmail: "zhang@example.com",
+                subject: "海豚邮箱合作方案",
+                preview: "关于海豚邮箱企业版合作方案的具体内容和报价...",
+                time: "12-19",
+                date: "12月19日",
+                read: true,
+                starred: true,
+                hasAttachment: true,
+                folder: "sent",
+                content: `
+                    <p>尊敬的张经理：</p>
+                    <p>您好！感谢您对海豚邮箱企业版的关注。</p>
+                    <p>根据我们之前的沟通，我为您准备了详细的企业版合作方案：</p>
+                    
+                    <p><strong>一、核心功能</strong></p>
+                    <ul>
+                        <li style="margin-left: 20px;">企业专属域名邮箱（@您的公司.com）</li>
+                        <li style="margin-left: 20px;">每位用户50GB存储空间</li>
+                        <li style="margin-left: 20px;">支持最大5GB附件发送</li>
+                        <li style="margin-left: 20px;">邮件加密和高级安全防护</li>
+                        <li style="margin-left: 20px;">7×24小时专属技术支持</li>
+                    </ul>
+                    
+                    <p><strong>二、价格方案</strong></p>
+                    <ul>
+                        <li style="margin-left: 20px;">10人以下团队：99元/用户/月</li>
+                        <li style="margin-left: 20px;">12-50人团队：89元/用户/月</li>
+                        <li style="margin-left: 20px;">50人以上团队：79元/用户/月</li>
+                        <li style="margin-left: 20px;">年付享受额外8折优惠</li>
+                    </ul>
+                    
+                    <p><strong>三、实施计划</strong></p>
+                    <ul>
+                        <li style="margin-left: 20px;">域名配置：1-2个工作日</li>
+                        <li style="margin-left: 20px;">数据迁移：根据数据量确定</li>
+                        <li style="margin-left: 20px;">员工培训：提供在线培训课程</li>
+                    </ul>
+                    
+                    <p>详细方案请参见附件中的PDF文档。如果您有任何疑问或需要修改，请随时与我联系。</p>
+                    <p>期待与您的合作！</p>
+                    <p><br>此致<br>敬礼！<br>海豚邮箱商务代表</p>
+                `
+            },
+            {
+                id: 9,
+                sender: "我",
+                senderEmail: "me@dolphinmail.com",
+                recipient: "李老师",
+                recipientEmail: "li@example.com",
+                subject: "感谢您的教学指导",
+                preview: "感谢您在课程中的指导和帮助，让我收获颇丰...",
+                time: "12-18",
+                date: "12月18日",
+                read: true,
+                starred: false,
+                hasAttachment: false,
+                folder: "sent",
+                content: `
+                    <p>尊敬的李老师：</p>
+                    <p>您好！</p>
+                    <p>我是您的学生，刚刚完成了您教授的《前端开发实战》课程。我想借此机会向您表达我最诚挚的感谢。</p>
+                    <p>在您的课程中，我不仅学习了HTML、CSS、JavaScript等前端开发的核心技术，更重要的是，您教会了我如何思考问题和解决问题。您的教学方式生动有趣，案例丰富实用，让我对前端开发有了更深入的理解。</p>
+                    <p>特别是您分享的实际项目经验，让我少走了很多弯路。现在我已经能够独立完成一些前端项目，并且在最近的实习中得到了公司的好评。</p>
+                    <p>再次感谢您的悉心教导！我会继续努力学习，不辜负您的期望。</p>
+                    <p>祝您工作顺利，身体健康！</p>
+                    <p><br>此致<br>敬礼！<br>您的学生</p>
+                `
+            },
+            {
+                id: 10,
+                sender: "我",
+                senderEmail: "me@dolphinmail.com",
+                recipient: "王海涛",
+                recipientEmail: "wanghaitao@example.com",
+                subject: "项目进度报告已收到",
+                preview: "已收到您发送的项目进度报告，有几个建议想与您讨论...",
+                time: "12-17",
+                date: "12月17日",
+                read: true,
+                starred: false,
+                hasAttachment: false,
+                folder: "sent",
+                content: `
+                    <p>王经理：</p>
+                    <p>您好！</p>
+                    <p>已收到您发送的项目进度报告，非常感谢！报告内容详实，数据清晰，让我对项目进展有了全面的了解。</p>
+                    <p>关于报告中的内容，我有几个建议想与您讨论：</p>
+                    <ol>
+                        <li style="margin-left: 20px;">在性能优化方面，是否可以考虑使用Web Workers来进一步优化邮件加载速度？</li>
+                        <li style="margin-left: 20px;">关于邮件智能分类功能，我们可以考虑引入机器学习算法来提高分类准确性</li>
+                        <li style="margin-left: 20px;">建议增加用户使用习惯分析，以便更好地优化产品体验</li>
+                    </ol>
+                    <p>另外，附件上传速度提升30%的成绩非常不错！请继续保持。</p>
+                    <p>我建议我们在下周安排一次简短的会议，详细讨论这些建议。您看什么时间比较方便？</p>
+                    <p>期待您的回复！</p>
+                `
+            }
+        */ ];
+        
+        // 隐藏邮件（刷新后出现）
+        const hiddenEmails = [
+            {
+                id: 1001,
+                sender: "海豚神秘邮件",
+                senderEmail: "mystery@dolphinmail.com",
+                subject: "隐藏邮件1：神秘功能预告",
+                preview: "我们正在开发一项神秘的新功能，将在下个版本中与大家见面...",
+                time: "刚刚",
+                date: "今天",
+                read: false,
+                starred: true,
+                hasAttachment: false,
+                folder: "inbox",
+                hiddenUntil: 1, // 刷新1次后显示
+                content: `
+                    <p>亲爱的海豚邮箱用户：</p>
+                    <p>恭喜您发现了这封隐藏邮件！您的好奇心值得赞赏。</p>
+                    <p>我们正在秘密开发一项全新的功能——<strong>「智能邮件助手」</strong>。</p>
+                    <p>这个功能将具备以下特点：</p>
+                    <ul>
+                        <li style="margin-left: 20px;">智能分析邮件内容，自动提取关键信息</li>
+                        <li style="margin-left: 20px;">根据邮件类型提供智能回复建议</li>
+                        <li style="margin-left: 20px;">自动识别重要邮件并优先提醒</li>
+                        <li style="margin-left: 20px;">学习您的邮件习惯，提供个性化服务</li>
+                    </ul>
+                    <p>该功能预计将在下个版本中与大家见面。作为发现此隐藏邮件的用户，您将有机会优先体验这一功能！</p>
+                    <p>请继续关注我们的更新。更多的隐藏彩蛋等待您来发现！</p>
+                    <p><br>海豚邮箱神秘团队<br>mystery@dolphinmail.com</p>
+                    <p style="font-size: 12px; color: #888; margin-top: 20px;">提示：继续刷新，可能还有更多隐藏邮件...</p>
+                `
+            },
+            {
+                id: 1005,
+                sender: "真真",
+                senderEmail: "真@dolphinmail.com",
+                subject: "文件都在我电脑上",
+                preview: "文件都在我电脑上...你应该用得到...",
+                time: "刚刚",
+                date: "今天",
+                read: false,
+                starred: true,
+                hasAttachment: false,
+                folder: "inbox",
+                hiddenUntil: 5, // 刷新1次后显示
+                content: `
+                    <p>文件都在我电脑上...你应该用得到...</p>
+                    <p>连接码186165</p>
+                    
+                    
+                `
+            },
+            {
+                id: 1002,
+                sender: "海豚彩蛋中心",
+                senderEmail: "easteregg@dolphinmail.com",
+                subject: "隐藏邮件2：开发者的话",
+                preview: "感谢您发现了这封隐藏邮件！开发者有些话想对您说...",
+                time: "刚刚",
+                date: "今天",
+                read: false,
+                starred: true,
+                hasAttachment: false,
+                folder: "inbox",
+                hiddenUntil: 3, // 刷新3次后显示
+                content: `
+                    <p>尊敬的发现者：</p>
+                    <p>您真是太棒了！不仅发现了第一封隐藏邮件，还坚持刷新到了第二封！</p>
+                    <p>我是海豚邮箱的开发者之一。首先，衷心感谢您对海豚邮箱的关注和支持。</p>
+                    <p>开发这个邮箱应用的过程中，我们融入了许多用心的设计：</p>
+                    <ul>
+                        <li style="margin-left: 20px;"><strong>海豚主题：</strong>选择海豚作为主题，是因为海豚聪明、友善、高效，正如我们期望的邮件服务</li>
+                        <li style="margin-left: 20px;"><strong>响应式设计：</strong>确保在手机、平板、电脑上都能获得良好的使用体验</li>
+                        <li style="margin-left: 20px;"><strong>隐藏彩蛋：</strong>添加这些隐藏邮件，是为了给像您这样细心的用户带来惊喜</li>
+                    </ul>
+                    <p>如果您对这个应用有任何建议或想法，欢迎随时告诉我们。您的反馈对我们非常重要！</p>
+                    <p>作为感谢，这里有一个小福利：在下一个版本中，您的账户将获得<strong>「早期发现者」</strong>专属标识。</p>
+                    <p>再次感谢您的支持！愿海豚邮箱能给您带来愉悦的邮件体验。</p>
+                    <p><br>海豚邮箱开发团队<br>easteregg@dolphinmail.com</p>
+                    <p style="font-size: 12px; color: #888; margin-top: 20px;">提示：您已经发现了所有隐藏邮件！感谢您的探索精神！</p>
+                `
+            }
+        ];
+        
+        // DOM元素
+        const emailListElement = document.getElementById('emailList');
+        const emailDetailElement = document.getElementById('emailDetail');
+        const emailDetailTitle = document.getElementById('emailDetailTitle');
+        const emailDetailSender = document.getElementById('emailDetailSender');
+        const emailDetailAddress = document.getElementById('emailDetailAddress');
+        const emailDetailTime = document.getElementById('emailDetailTime');
+        const emailDetailBody = document.getElementById('emailDetailBody');
+        const emailDetailActions = document.getElementById('emailDetailActions');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+        const sidebar = document.getElementById('sidebar');
+        const searchInput = document.getElementById('searchInput');
+        const confirmModal = document.getElementById('confirmModal');
+        const confirmModalTitle = document.getElementById('confirmModalTitle');
+        const confirmModalBody = document.getElementById('confirmModalBody');
+        const confirmModalClose = document.getElementById('confirmModalClose');
+        const confirmModalCancel = document.getElementById('confirmModalCancel');
+        const confirmModalConfirm = document.getElementById('confirmModalConfirm');
+        const composeContainer = document.getElementById('composeContainer');
+        const refreshCountElement = document.getElementById('refreshCount');
+        const moreActionsModal = document.getElementById('moreActionsModal');
+        const closeMoreActionsBtn = document.getElementById('closeMoreActionsBtn');
+        const closeAppBtn = document.getElementById('closeAppBtn');
+        const closeConfirmModal = document.getElementById('closeConfirmModal');
+        const closeCloseConfirmBtn = document.getElementById('closeCloseConfirmBtn');
+        const closeConfirmCancel = document.getElementById('closeConfirmCancel');
+        const closeConfirmConfirm = document.getElementById('closeConfirmConfirm');
+        
+        // 全局变量
+        let currentFolder = 'inbox';
+        let refreshCount = 0;
+        let confirmCallback = null;
+        let cancelCallback = null;
+        
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            updateBadgeCounts();
+            renderEmailList();
+            
+            // 默认显示第一封邮件详情
+            const inboxEmails = emails.filter(email => email.folder === currentFolder);
+            if (inboxEmails.length > 0) {
+                showEmailDetail(inboxEmails[0]);
+                emailDetailElement.classList.add('active');
+            }
+            
+            // 添加事件监听器
+            setupEventListeners();
+        });
+        
+        // 渲染邮件列表
+        function renderEmailList(filteredEmails = null) {
+            let emailsToShow = filteredEmails || emails.filter(email => email.folder === currentFolder);
+            
+            // 检查是否需要显示隐藏邮件
+            if (currentFolder === 'inbox') {
+                hiddenEmails.forEach(hiddenEmail => {
+                    if (refreshCount >= hiddenEmail.hiddenUntil) {
+                        // 检查是否已经添加过
+                        if (!emails.find(e => e.id === hiddenEmail.id)) {
+                            emails.push({...hiddenEmail});
+                            if (!filteredEmails) {
+                                emailsToShow.push({...hiddenEmail});
+                            }
+                        }
+                    }
+                });
+            }
+            
+            emailListElement.innerHTML = '';
+            
+            if (emailsToShow.length === 0) {
+                emailListElement.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: #888;">
+                        <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <p>没有找到相关邮件</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            emailsToShow.forEach(email => {
+                const emailElement = document.createElement('div');
+                emailElement.className = `email-item ${email.read ? '' : 'unread'}`;
+                emailElement.dataset.id = email.id;
+                
+                // 对于已发送邮件，显示收件人而不是发件人
+                const displayName = currentFolder === 'sent' ? 
+                    (email.recipient || email.sender) : email.sender;
+                
+                emailElement.innerHTML = `
+                    <input type="checkbox" class="email-checkbox" data-id="${email.id}">
+                    <div class="email-sender">${displayName}</div>
+                    <div class="email-content">
+                        <div class="email-subject">
+                            ${email.starred ? '<i class="fas fa-star dolphin-theme"></i>' : ''}
+                            ${email.subject}
+                            ${email.hasAttachment ? '<i class="fas fa-paperclip email-attachment"></i>' : ''}
+                        </div>
+                        <div class="email-preview">${email.preview}</div>
+                    </div>
+                    <div class="email-time">
+                        <div>${email.time}</div>
+                        <div>${email.date}</div>
+                    </div>
+                `;
+                
+                // 点击邮件项
+                emailElement.addEventListener('click', function(e) {
+                    if (!e.target.classList.contains('email-checkbox')) {
+                        const emailId = parseInt(this.dataset.id);
+                        const email = emails.find(e => e.id === emailId);
+                        if (email) {
+                            showEmailDetail(email);
+                            email.read = true;
+                            renderEmailList();
+                            showNotification('邮件已标记为已读');
+                        }
+                    }
+                });
+                
+                emailListElement.appendChild(emailElement);
+            });
+        }
+        
+        // 显示邮件详情
+        /* function showEmailDetail(email) {
+            emailDetailTitle.textContent = email.subject;
+            
+            // 对于已发送邮件，显示收件人信息
+            if (currentFolder === 'sent') {
+                emailDetailSender.textContent = `发给：${email.recipient || email.sender}`;
+                emailDetailAddress.textContent = `<${email.recipientEmail || email.senderEmail}>`;
+            } else {
+                emailDetailSender.textContent = email.sender;
+                emailDetailAddress.textContent = `<${email.senderEmail}>`;
+            }
+            
+            emailDetailTime.textContent = `${email.date} ${email.time}`;
+            emailDetailBody.innerHTML = email.content;
+            
+            // 生成邮件操作按钮
+            emailDetailActions.innerHTML = `
+                <button class="email-action-btn" data-action="reply">
+                    <i class="fas fa-reply"></i>
+                    <span>回复</span>
+                </button>
+                <button class="email-action-btn" data-action="forward">
+                    <i class="fas fa-share"></i>
+                    <span>转发</span>
+                </button>
+                <button class="email-action-btn" data-action="star">
+                    <i class="fas fa-star ${email.starred ? 'active' : ''}"></i>
+                    <span>${email.starred ? '取消星标' : '加星标'}</span>
+                </button>
+                <button class="email-action-btn" data-action="delete">
+                    <i class="fas fa-trash"></i>
+                    <span>删除</span>
+                </button>
+            `;
+            
+            // 为邮件操作按钮添加事件监听器
+            document.querySelectorAll('.email-action-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const action = this.dataset.action;
+                    handleEmailAction(action, email);
+                });
+            });
+            
+            // 记录当前显示的邮件ID
+            emailDetailElement.dataset.currentEmailId = email.id;
+            
+            // 显示邮件详情区域
+            emailDetailElement.classList.add('active');
+            
+            // 移动端滚动到邮件详情
+            if (window.innerWidth < 768) {
+                setTimeout(() => {
+                    emailDetailElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        }
+         */
+        // 显示邮件详情
+function showEmailDetail(email) {
+    emailDetailTitle.textContent = email.subject;
+    
+    // 对于已发送邮件，显示收件人信息
+    if (currentFolder === 'sent') {
+        emailDetailSender.textContent = `发给：${email.recipient || email.sender}`;
+        emailDetailAddress.textContent = `<${email.recipientEmail || email.senderEmail}>`;
+    } else {
+        emailDetailSender.textContent = email.sender;
+        emailDetailAddress.textContent = `<${email.senderEmail}>`;
+    }
+
+     // 如果邮件是未读的，标记为已读并更新角标
+    if (!email.read && email.folder === 'inbox') {
+        email.read = true;
+        
+        // 直接更新角标
+        updateBadgeCounts();
+        
+        // 重新渲染邮件列表以更新UI
+        renderEmailList();
+        showNotification('邮件已标记为已读');
+    }
+    
+    emailDetailTime.textContent = `${email.date} ${email.time}`;
+    emailDetailBody.innerHTML = email.content;
+    
+    // 生成邮件操作按钮
+    emailDetailActions.innerHTML = `
+        <button class="email-action-btn" data-action="reply">
+            <i class="fas fa-reply"></i>
+            <span>回复</span>
+        </button>
+        <button class="email-action-btn" data-action="forward">
+            <i class="fas fa-share"></i>
+            <span>转发</span>
+        </button>
+        <button class="email-action-btn" data-action="star">
+            <i class="fas fa-star ${email.starred ? 'active' : ''}"></i>
+            <span>${email.starred ? '取消星标' : '加星标'}</span>
+        </button>
+        <button class="email-action-btn" data-action="delete">
+            <i class="fas fa-trash"></i>
+            <span>删除</span>
+        </button>
+    `;
+    
+    // 为邮件操作按钮添加事件监听器
+    document.querySelectorAll('.email-action-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const action = this.dataset.action;
+            handleEmailAction(action, email);
+        });
+    });
+    
+    // 记录当前显示的邮件ID
+    emailDetailElement.dataset.currentEmailId = email.id;
+    
+    // 显示邮件详情区域
+    emailDetailElement.classList.add('active');
+    
+    // 移动端滚动到邮件详情
+    if (window.innerWidth < 768) {
+        setTimeout(() => {
+            emailDetailElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }
+}
+
+// 点击邮件项的事件处理（在renderEmailList函数中）
+emailElement.addEventListener('click', function(e) {
+    if (!e.target.classList.contains('email-checkbox')) {
+        const emailId = parseInt(this.dataset.id);
+        const email = emails.find(e => e.id === emailId);
+        if (email) {
+            showEmailDetail(email);
+            // 标记为已读并更新UI
+            if (!email.read) {
+                email.read = true;
+                showNotification('邮件已标记为已读');
+                // 重要：更新角标计数
+                updateBadgeCounts();
+            }
+            renderEmailList();
+        }
+    }
+});
+
+// 更新徽章计数函数 - 确保它计算正确的未读邮件数
+function updateBadgeCounts() {
+    const inboxCount = emails.filter(email => email.folder === 'inbox' && !email.read).length;
+    const draftsCount = emails.filter(email => email.folder === 'drafts').length;
+    const sentCount = emails.filter(email => email.folder === 'sent').length;
+    
+    // 更新侧边栏徽章
+    document.querySelectorAll('.menu-item').forEach(item => {
+        const badge = item.querySelector('.badge');
+        if (badge) {
+            if (item.dataset.folder === 'inbox') {
+                badge.textContent = inboxCount > 0 ? inboxCount : '';
+                badge.style.display = inboxCount > 0 ? 'block' : 'none';
+            } else if (item.dataset.folder === 'drafts') {
+                badge.textContent = draftsCount > 0 ? draftsCount : '';
+                badge.style.display = draftsCount > 0 ? 'block' : 'none';
+            } else if (item.dataset.folder === 'sent') {
+                badge.textContent = sentCount > 0 ? sentCount : '';
+                badge.style.display = sentCount > 0 ? 'block' : 'none';
+            }
+        }
+    });
+    
+    // 更新刷新计数显示
+    refreshCountElement.textContent = `(${refreshCount})`;
+}
+
+// 标记选中的邮件为已读 - 同样需要更新角标
+function markSelectedAsRead() {
+    const selectedCheckboxes = document.querySelectorAll('.email-checkbox:checked');
+    
+    if (selectedCheckboxes.length === 0) {
+        showNotification('请先选择要标记为已读的邮件', true);
+        return;
+    }
+    
+    const emailIdsToMark = Array.from(selectedCheckboxes).map(cb => parseInt(cb.dataset.id));
+    let markedCount = 0;
+    
+    emails.forEach(email => {
+        if (emailIdsToMark.includes(email.id)) {
+            if (!email.read) {
+                email.read = true;
+                markedCount++;
+            }
+        }
+    });
+    
+    renderEmailList();
+    showNotification(`已将 ${markedCount} 封邮件标记为已读`);
+    updateBadgeCounts(); // 重要：更新角标
+}
+
+// 标记所有邮件为已读 - 同样需要更新角标
+function markAllAsRead() {
+    const currentFolderEmails = emails.filter(email => email.folder === currentFolder && !email.read);
+    
+    if (currentFolderEmails.length === 0) {
+        showNotification('当前文件夹没有未读邮件', true);
+        return;
+    }
+    
+    showConfirm(
+        '标记所有为已读',
+        `确定要将当前文件夹中的所有未读邮件（${currentFolderEmails.length}封）标记为已读吗？`,
+        function() {
+            emails.forEach(email => {
+                if (email.folder === currentFolder && !email.read) {
+                    email.read = true;
+                }
+            });
+            
+            renderEmailList();
+            showNotification(`已将 ${currentFolderEmails.length} 封邮件标记为已读`);
+            updateBadgeCounts(); // 重要：更新角标
+        }
+    );
+}
+         // 处理邮件操作
+        function handleEmailAction(action, email) {
+            switch(action) {
+                case 'reply':
+                    openCompose();
+                    document.getElementById('recipient').value = email.senderEmail;
+                    document.getElementById('subject').value = `回复：${email.subject}`;
+                    document.getElementById('composeBody').value = `\n\n--- 原邮件 ---\n发件人：${email.sender}\n时间：${email.date} ${email.time}\n主题：${email.subject}\n\n`;
+                    showNotification('正在准备回复...');
+                    break;
+                    
+                case 'forward':
+                    openCompose();
+                    document.getElementById('subject').value = `转发：${email.subject}`;
+                    document.getElementById('composeBody').value = `\n\n--- 转发邮件 ---\n发件人：${email.sender}\n时间：${email.date} ${email.time}\n主题：${email.subject}\n\n${email.content.replace(/<[^>]*>/g, '')}`;
+                    showNotification('正在准备转发...');
+                    break;
+                    
+                case 'star':
+                    email.starred = !email.starred;
+                    renderEmailList();
+                    showEmailDetail(email);
+                    showNotification(email.starred ? '邮件已加星标' : '邮件已取消星标');
+                    break;
+                    
+                case 'delete':
+                    showConfirm(
+                        '删除邮件',
+                        `确定要删除这封邮件吗？删除的邮件将移动到已删除文件夹。`,
+                        function() {
+                            email.folder = 'trash';
+                            renderEmailList();
+                            emailDetailElement.classList.remove('active');
+                            showNotification('邮件已移动到已删除文件夹');
+                            updateBadgeCounts();
+                        }
+                    );
+                    break;
+            }
+        }
+        
+        // 更新徽章计数
+        function updateBadgeCounts() {
+            const inboxCount = emails.filter(email => email.folder === 'inbox' && !email.read).length;
+            const draftsCount = emails.filter(email => email.folder === 'drafts').length;
+            const sentCount = emails.filter(email => email.folder === 'sent').length;
+            
+            // 更新侧边栏徽章
+            document.querySelectorAll('.menu-item').forEach(item => {
+                const badge = item.querySelector('.badge');
+                if (badge) {
+                    if (item.dataset.folder === 'inbox') {
+                        badge.textContent = inboxCount > 0 ? inboxCount : '';
+                        badge.style.display = inboxCount > 0 ? 'block' : 'none';
+                    } else if (item.dataset.folder === 'drafts') {
+                        badge.textContent = draftsCount > 0 ? draftsCount : '';
+                        badge.style.display = draftsCount > 0 ? 'block' : 'none';
+                    } else if (item.dataset.folder === 'sent') {
+                        badge.textContent = sentCount > 0 ? sentCount : '';
+                        badge.style.display = sentCount > 0 ? 'block' : 'none';
+                    }
+                }
+            });
+            
+            // 更新刷新计数显示
+            refreshCountElement.textContent = `(${refreshCount})`;
+        }
+        
+        // 切换到指定文件夹
+        function switchFolder(folder) {
+            currentFolder = folder;
+            
+            // 更新侧边栏活动状态
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.folder === folder) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // 更新底部导航活动状态
+            document.querySelectorAll('.nav-item').forEach(nav => {
+                nav.classList.remove('active');
+                if (nav.dataset.folder === folder) {
+                    nav.classList.add('active');
+                }
+            });
+            
+            // 渲染邮件列表
+            renderEmailList();
+            
+            // 隐藏邮件详情（如果当前显示的邮件不在新文件夹中）
+            const currentEmailId = parseInt(emailDetailElement.dataset.currentEmailId || 0);
+            const currentEmail = emails.find(e => e.id === currentEmailId);
+            if (!currentEmail || currentEmail.folder !== folder) {
+                emailDetailElement.classList.remove('active');
+            }
+            
+            // 显示通知
+            const folderNames = {
+                'inbox': '收件箱',
+                'starred': '星标邮件',
+                'sent': '已发送',
+                'drafts': '草稿箱',
+                'trash': '已删除',
+                'folders': '我的文件夹',
+                'settings': '设置'
+            };
+            
+            showNotification(`已切换到：${folderNames[folder] || folder}`);
+        }
+        
+        // 显示确认弹窗
+        function showConfirm(title, message, onConfirm, onCancel = null) {
+            confirmModalTitle.textContent = title;
+            confirmModalBody.textContent = message;
+            confirmCallback = onConfirm;
+            cancelCallback = onCancel;
+            confirmModal.classList.add('active');
+        }
+        
+        // 隐藏确认弹窗
+        function hideConfirm() {
+            confirmModal.classList.remove('active');
+            confirmCallback = null;
+            cancelCallback = null;
+        }
+        
+        // 显示关闭确认弹窗
+        function showCloseConfirm() {
+            closeConfirmModal.classList.add('active');
+        }
+        
+        // 隐藏关闭确认弹窗
+        function hideCloseConfirm() {
+            closeConfirmModal.classList.remove('active');
+        }
+        
+        // 跳转到MMDN页面
+        function navigateToMMDN() {
+            // 在实际应用中，这里会跳转到指定的页面
+            // 由于这是一个演示，我们只是模拟跳转
+            showNotification('正在关闭邮箱...');
+            
+            setTimeout(() => {
+                // 模拟跳转
+                window.location.href = 'yeldn.html';
+            }, 1000);
+        }
+        
+        // 显示通知
+        function showNotification(message, isError = false) {
+            notificationText.textContent = message;
+            notification.classList.remove('error');
+            
+            if (isError) {
+                notification.classList.add('error');
+            }
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 打开写邮件界面
+        function openCompose() {
+            composeContainer.classList.add('active');
+            
+            // 移动端滚动到顶部
+            if (window.innerWidth < 768) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+        
+        // 关闭写邮件界面
+        function closeCompose() {
+            composeContainer.classList.remove('active');
+            
+            // 清空表单
+            document.getElementById('recipient').value = '';
+            document.getElementById('subject').value = '';
+            document.getElementById('composeBody').value = '';
+        }
+        
+        // 发送邮件
+        function sendEmail() {
+            const recipient = document.getElementById('recipient').value.trim();
+            const subject = document.getElementById('subject').value.trim();
+            const body = document.getElementById('composeBody').value.trim();
+            
+            if (!recipient) {
+                showNotification('请填写收件人', true);
+                return;
+            }
+            
+            if (!subject) {
+                showNotification('请填写邮件主题', true);
+                return;
+            }
+            
+            if (!body) {
+                showNotification('请填写邮件内容', true);
+                return;
+            }
+            
+            // 模拟发送
+            showNotification('邮件发送中...');
+            
+            setTimeout(() => {
+                closeCompose();
+                showNotification('邮件发送成功！');
+                
+                // 添加到已发送列表
+                const newEmail = {
+                    id: emails.length + 1,
+                    sender: "我",
+                    senderEmail: "me@dolphinmail.com",
+                    recipient: recipient.split('@')[0],
+                    recipientEmail: recipient,
+                    subject: subject,
+                    preview: body.substring(0, 50) + (body.length > 50 ? '...' : ''),
+                    time: "刚刚",
+                    date: new Date().toLocaleDateString('zh-CN', { month: 'long', day: 'numeric' }),
+                    read: true,
+                    starred: false,
+                    hasAttachment: false,
+                    folder: "sent",
+                    content: `<p>${body.replace(/\n/g, '</p><p>')}</p>`
+                };
+                
+                emails.push(newEmail);
+                
+                // 如果当前在已发送文件夹，刷新列表
+                if (currentFolder === 'sent') {
+                    renderEmailList();
+                }
+                
+                updateBadgeCounts();
+            }, 1500);
+        }
+        
+        // 标记选中的邮件为已读
+        function markSelectedAsRead() {
+            const selectedCheckboxes = document.querySelectorAll('.email-checkbox:checked');
+            
+            if (selectedCheckboxes.length === 0) {
+                showNotification('请先选择要标记为已读的邮件', true);
+                return;
+            }
+            
+            const emailIdsToMark = Array.from(selectedCheckboxes).map(cb => parseInt(cb.dataset.id));
+            let markedCount = 0;
+            
+            emails.forEach(email => {
+                if (emailIdsToMark.includes(email.id)) {
+                    if (!email.read) {
+                        email.read = true;
+                        markedCount++;
+                    }
+                }
+            });
+            
+            renderEmailList();
+            showNotification(`已将 ${markedCount} 封邮件标记为已读`);
+            updateBadgeCounts();
+        }
+        
+        // 标记所有邮件为已读
+        function markAllAsRead() {
+            const currentFolderEmails = emails.filter(email => email.folder === currentFolder && !email.read);
+            
+            if (currentFolderEmails.length === 0) {
+                showNotification('当前文件夹没有未读邮件', true);
+                return;
+            }
+            
+            showConfirm(
+                '标记所有为已读',
+                `确定要将当前文件夹中的所有未读邮件（${currentFolderEmails.length}封）标记为已读吗？`,
+                function() {
+                    emails.forEach(email => {
+                        if (email.folder === currentFolder && !email.read) {
+                            email.read = true;
+                        }
+                    });
+                    
+                    renderEmailList();
+                    showNotification(`已将 ${currentFolderEmails.length} 封邮件标记为已读`);
+                    updateBadgeCounts();
+                }
+            );
+        }
+        
+        // 为选中的邮件加星标
+        function starSelectedEmails() {
+            const selectedCheckboxes = document.querySelectorAll('.email-checkbox:checked');
+            
+            if (selectedCheckboxes.length === 0) {
+                showNotification('请先选择要加星标的邮件', true);
+                return;
+            }
+            
+            const emailIdsToStar = Array.from(selectedCheckboxes).map(cb => parseInt(cb.dataset.id));
+            let starredCount = 0;
+            
+            emails.forEach(email => {
+                if (emailIdsToStar.includes(email.id)) {
+                    if (!email.starred) {
+                        email.starred = true;
+                        starredCount++;
+                    }
+                }
+            });
+            
+            renderEmailList();
+            showNotification(`已为 ${starredCount} 封邮件添加星标`);
+        }
+        
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 关闭应用按钮
+            closeAppBtn.addEventListener('click', showCloseConfirm);
+            
+            // 关闭确认弹窗事件
+            closeCloseConfirmBtn.addEventListener('click', hideCloseConfirm);
+            closeConfirmCancel.addEventListener('click', hideCloseConfirm);
+            closeConfirmConfirm.addEventListener('click', navigateToMMDN);
+            
+            // 点击弹窗外部关闭关闭确认弹窗
+            closeConfirmModal.addEventListener('click', function(e) {
+                if (e.target === closeConfirmModal) {
+                    hideCloseConfirm();
+                }
+            });
+            
+            // 菜单切换
+            document.getElementById('menuToggle').addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+            
+            // 移动端菜单按钮
+            document.getElementById('mobileMenuBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                sidebar.classList.toggle('active');
+            });
+            
+            // 移动端收件箱按钮
+            document.getElementById('mobileInboxBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                switchFolder('inbox');
+                sidebar.classList.remove('active');
+            });
+            
+            // 移动端已发送按钮
+            document.getElementById('mobileSentBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                switchFolder('sent');
+                sidebar.classList.remove('active');
+            });
+            
+            // 侧边栏菜单项点击
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const folder = this.dataset.folder;
+                    if (folder) {
+                        switchFolder(folder);
+                    }
+                    
+                    // 如果是移动端，点击后隐藏侧边栏
+                    if (window.innerWidth < 768) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            });
+            
+            // 写邮件按钮
+            document.getElementById('composeBtn').addEventListener('click', openCompose);
+            
+            // 移动端写邮件按钮
+            document.getElementById('mobileComposeBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                openCompose();
+            });
+            
+            // 关闭写邮件按钮
+            document.getElementById('closeComposeBtn').addEventListener('click', closeCompose);
+            
+            // 保存草稿按钮
+            document.getElementById('saveDraftBtn').addEventListener('click', function() {
+                const recipient = document.getElementById('recipient').value.trim();
+                const subject = document.getElementById('subject').value.trim();
+                const body = document.getElementById('composeBody').value.trim();
+                
+                if (!subject && !body) {
+                    showNotification('草稿内容为空，未保存', true);
+                    return;
+                }
+                
+                showConfirm('保存草稿', '确定要将此邮件保存为草稿吗？', function() {
+                    // 添加到草稿箱
+                    const newDraft = {
+                        id: emails.length + 1,
+                        sender: "我",
+                        senderEmail: "me@dolphinmail.com",
+                        recipient: recipient.split('@')[0],
+                        recipientEmail: recipient,
+                        subject: subject || "(无主题)",
+                        preview: body.substring(0, 50) + (body.length > 50 ? '...' : '') || "(无内容)",
+                        time: "刚刚",
+                        date: new Date().toLocaleDateString('zh-CN', { month: 'long', day: 'numeric' }),
+                        read: true,
+                        starred: false,
+                        hasAttachment: false,
+                        folder: "drafts",
+                        content: body ? `<p>${body.replace(/\n/g, '</p><p>')}</p>` : "<p>(草稿内容为空)</p>"
+                    };
+                    
+                    emails.push(newDraft);
+                    closeCompose();
+                    showNotification('邮件已保存到草稿箱');
+                    
+                    updateBadgeCounts();
+                    
+                    // 如果当前在草稿箱，刷新列表
+                    if (currentFolder === 'drafts') {
+                        renderEmailList();
+                    }
+                });
+            });
+            
+            // 发送邮件按钮
+            document.getElementById('sendEmailBtn').addEventListener('click', sendEmail);
+            
+            // 刷新按钮
+            document.getElementById('refreshBtn').addEventListener('click', function() {
+                showNotification('正在刷新邮件列表...');
+                refreshCount++;
+                
+                // 模拟加载
+                const originalHTML = this.innerHTML;
+                this.innerHTML = '<span class="loader"></span> <span class="desktop-only">刷新中</span>';
+                
+                setTimeout(() => {
+                    this.innerHTML = originalHTML;
+                    renderEmailList();
+                    
+                    // 检查是否有新的隐藏邮件出现
+                    let newHiddenEmailCount = 0;
+                    hiddenEmails.forEach(hiddenEmail => {
+                        if (refreshCount === hiddenEmail.hiddenUntil) {
+                            newHiddenEmailCount++;
+                        }
+                    });
+                    
+                    if (newHiddenEmailCount > 0) {
+                        showNotification(`邮件列表已刷新！发现了${newHiddenEmailCount}封新的隐藏邮件！`);
+                    } else {
+                        showNotification('邮件列表已刷新');
+                    }
+                    
+                    updateBadgeCounts();
+                }, 1000);
+            });
+            
+            // 全选按钮
+            document.getElementById('selectAllBtn').addEventListener('click', function() {
+                const checkboxes = document.querySelectorAll('.email-checkbox');
+                const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+                
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = !allChecked;
+                });
+                
+                showNotification(allChecked ? '已取消全选' : '已全选所有邮件');
+            });
+            
+            // 标记已读按钮
+            document.getElementById('markAsReadBtn').addEventListener('click', markSelectedAsRead);
+            
+            // 移动端标记所有已读按钮
+            document.getElementById('markAllReadBtn').addEventListener('click', markAllAsRead);
+            
+            // 星标按钮
+            document.getElementById('starSelectedBtn').addEventListener('click', starSelectedEmails);
+            
+            // 删除按钮
+            document.getElementById('deleteBtn').addEventListener('click', function() {
+                const selectedCheckboxes = document.querySelectorAll('.email-checkbox:checked');
+                
+                if (selectedCheckboxes.length === 0) {
+                    showNotification('请先选择要删除的邮件', true);
+                    return;
+                }
+                
+                showConfirm(
+                    '删除邮件',
+                    `确定要删除选中的 ${selectedCheckboxes.length} 封邮件吗？删除的邮件将移动到已删除文件夹。`,
+                    function() {
+                        // 移动到已删除文件夹
+                        const emailIdsToDelete = Array.from(selectedCheckboxes).map(cb => parseInt(cb.dataset.id));
+                        
+                        emails.forEach(email => {
+                            if (emailIdsToDelete.includes(email.id)) {
+                                email.folder = 'trash';
+                            }
+                        });
+                        
+                        renderEmailList();
+                        showNotification(`已将 ${selectedCheckboxes.length} 封邮件移动到已删除文件夹`);
+                        
+                        // 如果删除了当前显示的邮件，隐藏邮件详情
+                        const currentEmailId = parseInt(emailDetailElement.dataset.currentEmailId || 0);
+                        if (emailIdsToDelete.includes(currentEmailId)) {
+                            emailDetailElement.classList.remove('active');
+                        }
+                        
+                        updateBadgeCounts();
+                    }
+                );
+            });
+            
+            // 移动端更多按钮
+            document.getElementById('mobileMoreBtn').addEventListener('click', function() {
+                moreActionsModal.classList.add('active');
+            });
+            
+            // 关闭更多操作菜单
+            closeMoreActionsBtn.addEventListener('click', function() {
+                moreActionsModal.classList.remove('active');
+            });
+            
+            // 点击弹窗外部关闭更多操作菜单
+            moreActionsModal.addEventListener('click', function(e) {
+                if (e.target === moreActionsModal) {
+                    moreActionsModal.classList.remove('active');
+                }
+            });
+            
+            // 移动端星标按钮
+            document.getElementById('mobileStarBtn').addEventListener('click', function() {
+                const selectedCheckboxes = document.querySelectorAll('.email-checkbox:checked');
+                
+                if (selectedCheckboxes.length === 0) {
+                    showNotification('请先选择要加星标的邮件', true);
+                    return;
+                }
+                
+                starSelectedEmails();
+            });
+            
+            // 确认弹窗事件
+            confirmModalClose.addEventListener('click', hideConfirm);
+            confirmModalCancel.addEventListener('click', function() {
+                if (cancelCallback) cancelCallback();
+                hideConfirm();
+            });
+            confirmModalConfirm.addEventListener('click', function() {
+                if (confirmCallback) confirmCallback();
+                hideConfirm();
+            });
+            
+            // 点击弹窗外部关闭
+            confirmModal.addEventListener('click', function(e) {
+                if (e.target === confirmModal) {
+                    hideConfirm();
+                }
+            });
+            
+            // 搜索功能
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                
+                if (searchTerm === '') {
+                    renderEmailList();
+                    return;
+                }
+                
+                const filteredEmails = emails.filter(email => 
+                    email.folder === currentFolder && (
+                        email.subject.toLowerCase().includes(searchTerm) ||
+                        email.sender.toLowerCase().includes(searchTerm) ||
+                        (email.recipient && email.recipient.toLowerCase().includes(searchTerm)) ||
+                        email.preview.toLowerCase().includes(searchTerm)
+                    )
+                );
+                
+                renderEmailList(filteredEmails);
+                
+                if (filteredEmails.length > 0) {
+                    showEmailDetail(filteredEmails[0]);
+                } else {
+                    emailDetailElement.classList.remove('active');
+                }
+            });
+            
+            // 点击外部关闭侧边栏（移动端）
+            document.addEventListener('click', function(e) {
+                if (window.innerWidth < 768 && 
+                    !sidebar.contains(e.target) && 
+                    !e.target.closest('#menuToggle') && 
+                    !e.target.closest('#mobileMenuBtn')) {
+                    sidebar.classList.remove('active');
+                }
+            });
+            
+            // 窗口大小变化时调整侧边栏
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 768) {
+                    sidebar.classList.remove('active');
+                }
+            });
+            
+            // 按ESC键关闭弹窗
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    hideConfirm();
+                    closeCompose();
+                    moreActionsModal.classList.remove('active');
+                    hideCloseConfirm();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -204,17 +204,25 @@ function setupSearchUI() {
             const query = searchInput ? searchInput.value.trim() : '';
             if (query) {
                 performCompleteSearch(query);
+            } else {
+                // ✅ 修复：输入为空时显示提醒
+                showAlert('请输入搜索关键词', 2000);
             }
         });
     }
     
-    // Enter键搜索
+    // ✅ 修复：改进的Enter键搜索处理
     if (searchInput) {
-        searchInput.addEventListener('keypress', function(e) {
+        searchInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
+                e.preventDefault(); // 防止表单提交
+                e.stopPropagation();
                 const query = this.value.trim();
                 if (query) {
                     performCompleteSearch(query);
+                } else {
+                    // ✅ 修复：输入为空时显示提醒
+                    showAlert('请输入搜索关键词', 2000);
                 }
             }
         });
@@ -389,80 +397,6 @@ class SearchEngine {
          this.keywordsData = {
             "version": "3.0",
             "lastUpdated": "2026-01-01",
-           /*  "searchRules": [
-                {
-                    "id": "medical_record",
-                    "keywords": ["5p2O5pif6IqS","5p2O5pif6IqS566A5Y6G"],
-                    "targetUrl": "mi-lxm.html",
-                    "description": "该页面暂无描述..."
-                },
-                {
-                    "id": "jqtjl",
-                    "keywords": ["6JKL5pm05aSp","6JKL5pm05aSp566A5Y6G"],
-                    "targetUrl": "jqt简历.html",
-                    "description": "该页面暂无描述..."
-                },
-                {
-                    "id": "population_flow",
-                    "keywords": ["5aKf5aKD6LCD5ZKM5bGA", "6aaW6aG1"],
-                    "targetUrl": "SY.html",
-                    "description": "该页面暂无描述..."
-                },
-                {
-                    "id": "slot_machine",
-                    "keywords": ["5YmN5Y+w", "N+agizQwMQ=="],
-                    "targetUrl": "qiantai.html",
-                    "description": "该页面暂无描述..."
-                },
-                {
-                    "id": "gkzl",
-                    "keywords": ["6K645p6X5rKF", "6K645Y2a5aOr"],
-                    "targetUrl": "xly.html",
-                    "description": "该页面暂无描述..."
-                },
-                {
-                    "id": "langren",
-                    "keywords": ["6J6C5Lq65rKZ", "5Luj5Y+36J6C5Lq65rKZ", "6J6C5Lq65rKZ5qGj5qGI"],
-                    "targetUrl": "langr.html",
-                    "description": "该页面暂无描述..."
-                },
-                {
-                    "id": "shehjg",
-                    "keywords": ["56S+5Lya57uT5p6E", "57uT5p6E56S+5Lya"],
-                    "targetUrl": "yjyjyjj.html",
-                    "description": "该页面暂无描述..."
-                },
-                {
-                    "id": "langrentu",
-                    "keywords": ["ZXZpZGVuY2VfcGhvdG8xLmh0bWw=", "ZXZpZGVuY2VfcGhvdG8x"],
-                    "targetUrl": "langren.jpg",
-                    "description": "该页面暂无描述..."
-                },
-                {
-                    "id": "chajianli",
-                    "keywords": ["5qGj5qGI566h55CG5a6k5peg6aKE57qm6YCa6YGT", "5qGj5qGI566h55CG5a6k5peg6aKE57qm"],
-                    "targetUrl": "chajlquanxianm.html",
-                    "description": "该页面暂无描述..."
-                },
-                {
-                    "id": "chajianli",
-                    "keywords": ["57mB5q6W6KGM5Li65oql5ZGK", "57mB5q6W6KGM5Li6"],
-                    "targetUrl": "fanzhi.html",
-                    "description": "该页面暂无描述..."
-                }, 
-                {
-                    "id": "chajianli",
-                    "keywords": ["6ZmG5qCW6KiA", "5qGj5qGI566h55CG5a6k5peg6a57qm"],
-                    "targetUrl": "lubos.html",
-                    "description": "该页面暂无描述..."
-                }, 
-                {
-                    "id": "asset_assessment",
-                    "keywords": ["5qmE5YyW5YmC", "6ZiI55WM5qmE5YyW5YmC"],
-                    "targetUrl": "chanpin.html",
-                    "description": "该页面暂无描述..."
-                }
-            ], */
             "searchRules": [
                 {
                     "id": "medical_record",
@@ -488,13 +422,7 @@ class SearchEngine {
                     "targetUrl": "baozha.html",
                     "description": "该页面暂无描述..."
                 },
-               /*  {
-                    "id": "jqtjl",
-                    "keywords": ["6JKL5pm05aSp"],
-                    "targetUrl": "jqtjl.html",
-                    "description": "该页面暂无描述..."
-                }, */
-                 {
+                {
                     "id": "jqtjl",
                     "keywords": ["54mp5Lia566h55CG5aSE", "5YW05YGl5aSn5Y6m54mp5Lia566h55CG5aSE"],
                     "targetUrl": "wyglc.html",
@@ -538,8 +466,8 @@ class SearchEngine {
                 },
                 {
                     "id": "langrentu",
-                    "keywords": ["ZXZpZGVuY2VfcGhvdG8xLmh0bWw=", "ZXZpZGVuY2VfcGhvdG8x"],
-                    "targetUrl": "langren.jpg",
+                    "keywords": ["5Y+25YWw", "ZXZpZGVuY2VfcGhvdG8x"],
+                    "targetUrl": "mishushouze.html",
                     "description": "该页面暂无描述..."
                 },
                 {
@@ -560,10 +488,23 @@ class SearchEngine {
                     "targetUrl": "todsk.html",
                     "description": "该页面暂无描述..."
                 }, 
+
+                {
+                    "id": "chajianli",
+                    "keywords": ["6a2P6K2m5a6Y", "6a2P"],
+                    "targetUrl": "wei.html",
+                    "description": "该页面暂无描述..."
+                }, 
+                {
+                    "id": "chajianli",
+                    "keywords": ["cmVpbg==", "UmVpbg=="],
+                    "targetUrl": "rein.html",
+                    "description": "该页面暂无描述..."
+                }, 
                 {
                     "id": "asset_assessment",
-                    "keywords": ["5qmE5YyW5YmC", "6ZiI55WM5qmE5YyW5YmC"],
-                    "targetUrl": "chanpin.html",
+                    "keywords": ["5byA5aeL", "6ZiI55WM5qmE5YyW5YmC"],
+                    "targetUrl": "begin.html",
                     "description": "该页面暂无描述..."
                 }
             ],
@@ -784,39 +725,86 @@ function initSearchEngine() {
     }, 1000);
 }
 
-// 显示提醒
+// ✅ 修复：改进的显示提醒函数
 function showAlert(message, duration = 2000) {
+    // 移除旧的提醒
     const oldAlert = document.getElementById('customAlert');
-    if (oldAlert) oldAlert.remove();
+    if (oldAlert) {
+        oldAlert.remove();
+    }
     
+    // 创建提醒元素
     const alertDiv = document.createElement('div');
     alertDiv.id = 'customAlert';
     alertDiv.textContent = message;
+    
+    // 添加基本样式确保可见
+    alertDiv.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 8px;
+        z-index: 9999999;
+        font-size: 16px;
+        text-align: center;
+        min-width: 200px;
+        max-width: 80%;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        animation: fadeIn 0.3s ease-in-out;
+    `;
+    
+    // 添加淡入动画
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -60%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+    `;
+    document.head.appendChild(style);
+    
     document.body.appendChild(alertDiv);
     
+    // 自动移除
     setTimeout(() => {
-        if (alertDiv.parentNode) alertDiv.remove();
+        if (alertDiv.parentNode) {
+            alertDiv.style.opacity = '0';
+            alertDiv.style.transition = 'opacity 0.3s ease';
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 300);
+        }
     }, duration);
 }
 
-// 完整搜索函数
+// ✅ 修复：改进的完整搜索函数
 async function performCompleteSearch(keyword) {
     const searchInput = document.getElementById('searchInput');
     
+    // 获取搜索关键词
     if (!keyword && searchInput) {
         keyword = searchInput.value.trim();
     }
     
-    if (!keyword) {
+    // 检查是否为空
+    if (!keyword || keyword === '') {
         showAlert('请输入搜索关键词', 2000);
         return;
     }
 
+    // 确保搜索引擎已初始化
     if (!globalSearchEngine) {
         globalSearchEngine = new SearchEngine();
         await globalSearchEngine.init();
     }
 
+    // 执行搜索
     const result = globalSearchEngine.search(keyword);
     
     if (result.success) {
@@ -832,10 +820,30 @@ async function performCompleteSearch(keyword) {
         
         // 延迟跳转
         setTimeout(() => {
-            window.location.href = rule.targetUrl;
+            if (rule.targetUrl) {
+                window.location.href = rule.targetUrl;
+            } else {
+                showAlert('目标页面地址无效', 2000);
+            }
         }, 1500);
     } else {
+        // ✅ 修复：搜索不到时显示提醒
         showAlert(`未找到与"${keyword}"相关的页面`, 2000);
+        
+        // 保持搜索框打开，让用户继续输入
+        const searchBall = document.getElementById('searchBall');
+        const searchExpanded = document.getElementById('searchExpanded');
+        if (searchBall && searchExpanded) {
+            searchBall.classList.add('active');
+            searchExpanded.classList.add('active');
+            setTimeout(() => {
+                if (searchInput) {
+                    searchInput.focus();
+                    // 选中文本方便用户重新输入
+                    searchInput.select();
+                }
+            }, 100);
+        }
     }
 }
 
@@ -936,3 +944,5 @@ window.searchControl = {
         }
     }
 };
+
+console.log('搜索球完整JS代码已优化加载');

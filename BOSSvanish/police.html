@@ -458,6 +458,8 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
 </head>
 <body>
     <div class="container">
@@ -470,29 +472,30 @@
         </div>
         
         <div class="content">
-            <div class="input-group">
+            <!-- <div class="input-group">
                 <label class="input-label">输入证物编号</label>
                 <div class="input-box">
                     <div class="input-icon">
                         <i class="fas fa-fingerprint"></i>
                     </div>
-                    <input type="text" class="input-field" id="evidenceNum1" placeholder="请输入证物编号，如：ZN20231025001">
+                    <input type="text" class="input-field" id="evidenceNum1" placeholder="请输入证物编号">
                 </div>
                 <button class="jump-btn" id="evidenceBtn1">
                     查询证物信息 <i class="fas fa-external-link-alt"></i>
                 </button>
             </div>
-            
+             -->
             <div class="input-group">
-                <label class="input-label">输入卷宗档案号</label>
+               <!--  <label class="input-label">输入卷宗档案号</label> -->
+                  <label class="input-label">输入档案号</label>
                 <div class="input-box">
                     <div class="input-icon">
                         <i class="fas fa-folder-open"></i>
                     </div>
-                    <input type="text" class="input-field" id="archiveNum" placeholder="请输入卷宗档案号，如：JZ20231015008">
+                    <input type="text" class="input-field" id="archiveNum" placeholder="请输入档案号">
                 </div>
                 <button class="jump-btn" id="archiveBtn">
-                    查询卷宗档案 <i class="fas fa-external-link-alt"></i>
+                    查询档案 <i class="fas fa-external-link-alt"></i>
                 </button>
             </div>
             
@@ -503,7 +506,7 @@
                     <div class="input-icon">
                         <i class="fas fa-vial"></i>
                     </div>
-                    <input type="text" class="input-field" id="evidenceNum2" placeholder="请输入证物编号，如：ZN20231030012">
+                    <input type="text" class="input-field" id="evidenceNum2" placeholder="请输入证物编号">
                 </div>
                 <button class="jump-btn" id="evidenceBtn2">
                     查询证物信息 <i class="fas fa-external-link-alt"></i>
@@ -521,7 +524,7 @@
             
             <div class="notice">
                 <h3><i class="fas fa-exclamation-circle"></i> 使用须知</h3>
-                <p>1. 请输入完整的证物编号或卷宗档案号进行查询</p>
+                <p>1. 请输入完整的证物编号或档案号进行查询</p>
                 <p>2. 查询结果将在新窗口中打开，请确保浏览器允许弹出窗口</p>
                 <p>3. 此系统为内部专用，严禁泄露查询信息</p>
                 <p>4. 点击下方电话图标按钮可"回复魏警官"</p>
@@ -533,8 +536,8 @@
                 <i class="fas fa-gavel logo-icon"></i>
                 <span>深南市公安局刑侦支队</span>
             </div>
-            <p>内部专用系统 | 版本号：v2.5.1 | 最后更新：2023年10月</p>
-            <p>© 2023 深南市公安局 版权所有</p>
+            <p>内部专用系统 | 版本号：v2.5.1 | 最后更新：2025年12月</p>
+            <p>© 2025 深南市公安局 版权所有</p>
         </div>
     </div>
     
@@ -562,7 +565,22 @@
             </div>
         </div>
     </div>
-
+<!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
     <script>
         // 显示加载动画
         function showLoading() {
@@ -770,5 +788,8 @@
             // });
         });
     </script>
+ <script src="pages.js"></script>
+<script src="scball.js"></script>
+<script src="visit.js"></script>
 </body>
 </html>

@@ -544,12 +544,12 @@
         <!-- 通知区域 -->
         <div class="notification" id="notification">
             <div class="close-btn" onclick="closeNotification()">×</div>
-            <h3>今天是2025年12月31日</h3>
+            <h3>今天是2026年1月1日</h3>
             <p>欢迎使用CTHC远程连接！</p>
         </div>
         
         <!-- 回收站窗口 -->
-       <!--  <div class="window-frame" id="recycleBinWindow">
+        <div class="window-frame" id="recycleBinWindow">
             <div class="window-title-bar">
                 <span>回收站</span>
                 <div class="window-controls">
@@ -563,20 +563,20 @@
                 <br>
                 <p>当前状态：<span style="color: #00ff88;">正常</span></p>
                 <br>
-                <p>已使用空间：<span style="color: #ffaa00;">2.4 GB / 10 GB</span></p>
+                <p>已使用空间：<span style="color: #ffaa00;">6.5 GB / 10 GB</span></p>
                 <div style="background: rgba(255,255,255,0.1); height: 10px; border-radius: 5px; margin: 15px 0; overflow: hidden;">
-                    <div style="width: 24%; height: 100%; background: linear-gradient(90deg, #00ff88, #00ccaa); border-radius: 5px;"></div>
+                    <div style="width: 65%; height: 100%; background: linear-gradient(90deg, #00ff88, #00ccaa); border-radius: 5px;"></div>
                 </div>
                 <p>回收站中的项目：</p>
                 <br>
                 <ul>
-                    <li>旧文档.txt - 删除日期: 2025-11-15</li>
-                    <li>临时文件.zip - 删除日期: 2025-11-20</li>
-                    <li>截图.png - 删除日期: 2025-11-25</li>
+                    <li>351565.txt - 删除日期: 2025-12-15</li>
+                    <li>临时文件.zip - 删除日期: 2025-10-20</li>
+                    <li>截图.png - 删除日期: 2025-11-22</li>
                 </ul>
                 <button onclick="emptyRecycleBin()" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: 600;">清空回收站</button>
             </div>
-        </div> -->
+        </div>
         
         <!-- 加密文件夹窗口 -->
         <div class="window-frame" id="encryptedFolderWindow">
@@ -720,7 +720,7 @@
         }
         
         // 显示开始菜单
-        function showStartMenu() {
+        /* function showStartMenu() {
             const notification = document.getElementById('notification');
             notification.innerHTML = `
                 <div class="close-btn" onclick="closeNotification()">×</div>
@@ -734,7 +734,23 @@
                 </div>
             `;
             notification.style.display = 'block';
-        }
+        } */
+       function showStartMenu() {
+    const notification = document.getElementById('notification');
+    notification.innerHTML = `
+        <div class="close-btn" onclick="closeNotification()">×</div>
+        <h3>CTHC远程连接</h3>
+        <p>系统: CTHC远程连接 2025</p>
+        <p>版本: 25H2 (Build 25000)</p>
+        <p>状态: <span style="color: #00ff88;">运行正常</span></p>
+        <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <button onclick="showSystemInfo()" style="flex: 1; min-width: 120px; background: rgba(102,126,234,0.8); color: white; border: none; padding: 8px; border-radius: 8px; cursor: pointer;">系统信息</button>
+            <button onclick="window.location.href='todsk.html'" style="flex: 1; min-width: 120px; background: rgba(234,102,102,0.8); color: white; border: none; padding: 8px; border-radius: 8px; cursor: pointer;">退出连接</button>
+            <button onclick="closeNotification()" style="flex: 1; min-width: 120px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px; border-radius: 8px; cursor: pointer;">关闭</button>
+        </div>
+    `;
+    notification.style.display = 'block';
+}
         
         // 显示系统信息
         function showSystemInfo() {

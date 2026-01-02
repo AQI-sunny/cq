@@ -260,6 +260,15 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        .code-display {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+            border-left: 3px solid #3498db;
+        }
+
         /* 手机横屏优化 */
         @media (max-height: 600px) and (orientation: landscape) {
             .game-container {
@@ -347,11 +356,11 @@
 
     <div class="game-container">
         <h1>物业管理处线索搜寻</h1>
-        <div class="subtitle">这件事肯定跟物业脱不了干系！找找看有没有什么线索...</div>
+        <div class="subtitle">这件事也许有物业的参与......找找看有没有什么线索...</div>
         
         <div class="clue-hint" id="clue-hint">
             <h3>🔍 当前发现</h3>
-            <div id="current-clue">这里看起来有些不太对劲...有些地方异常的整洁，有些地方却又格外凌乱。</div>
+            <div id="current-clue">这里看起来有些不太对劲...</div>
         </div>
         
         <div class="location" id="current-location">
@@ -395,33 +404,27 @@
         let gameState = {
             currentLocation: 'frontDesk',
             foundItems: {
-                item1: false,
-                item2: false,
-                item3: false,
-                item4: false
+                item1: false, // 剪报
+                item2: false, // 纸条代码
+                item3: false, // 信号屏蔽仪
+                item4: false  // 地面异常信息
             },
             clues: [
-                "这里看起来有些不太对劲...有些地方异常的整洁，有些地方却又格外凌乱。",
-                "值班表上的笔迹很新，像是最近才修改过的...",
-                "有些抽屉上了新锁，这在以前是从未有过的...",
-                "储物室里的灰尘分布不太均匀，有些地方明显被翻动过...",
+                "这里看起来有些不太对劲...",
+                "值班表上的日期安排有点奇怪...",
+                "办公室抽屉里藏着什么...",
+                "储物间里有些异常情况...",
                 "所有的线索都指向了一个令人不安的真相..."
             ],
             itemNames: ["???", "???", "???", "???"]
         };
 
-        // 位置配置
+        // 位置配置 - 按照您的要求修改
         const locations = {
             frontDesk: {
                 name: "物业管理处前台",
                 description: "前台区域异常的安静，值班表上的排班似乎被调整过。空气中弥漫着一种说不出的紧张感，你觉得这里一定藏着什么...",
                 options: [
-                    { 
-                        text: "仔细检查前台抽屉", 
-                        target: "checkFrontDesk", 
-                        item: "item1",
-                        hint: "抽屉里似乎有什么东西被刻意藏了起来"
-                    },
                     { 
                         text: "查看值班表", 
                         target: "checkDutyBoard", 
@@ -429,10 +432,10 @@
                         hint: "值班安排看起来有些奇怪"
                     },
                     { 
-                        text: "检查前台角落", 
-                        target: "checkCorner", 
+                        text: "检查前台抽屉", 
+                        target: "checkFrontDesk", 
                         item: null,
-                        hint: "这里什么都没有"
+                        hint: "抽屉里空空如也"
                     },
                     { 
                         text: "进入办公室区域", 
@@ -443,24 +446,28 @@
                         text: "前往储物室", 
                         target: "storage",
                         hint: "储物室的门半掩着..."
+                    },
+                    { 
+                        text: "检查前台角落", 
+                        target: "checkCorner", 
+                        item: null,
+                        hint: "这里什么都没有"
                     }
                 ],
                 image: "frontDesk"
             },
-            checkFrontDesk: {
-                name: "前台抽屉",
-                description: "在抽屉最隐蔽的夹层里，你摸到了一个冷硬的物体...这是一个加密的数据存储设备，上面没有任何标识。",
+            checkDutyBoard: {
+                name: "值班表",
+                description: "值班表显示12月31日晚上是周值班，而且是用红笔特别标注的。这天的记录似乎被修改过多次。",
                 options: [
                     { text: "返回前台", target: "frontDesk" }
                 ],
                 image: "frontDesk",
-                isItemLocation: true,
-                itemId: "item1",
-                foundText: "发现了一个可疑的数据存储设备"
+                isDeadEnd: true
             },
-            checkDutyBoard: {
-                name: "值班表",
-                description: "值班表上，最近几天的夜班都被同一个人承包了。而且笔迹很新，像是刚刚修改过的。",
+            checkFrontDesk: {
+                name: "前台抽屉",
+                description: "抽屉里只有一些办公用品，没有发现什么特别的东西。",
                 options: [
                     { text: "返回前台", target: "frontDesk" }
                 ],
@@ -477,129 +484,160 @@
                 isDeadEnd: true
             },
             office: {
-                name: "办公室",
-                description: "办公室里异常整洁，桌面干净得有些不自然。墙上挂着一幅画，但挂得有些歪斜。书架上的书排列得过于整齐了。",
+                name: "办公室区域",
+                description: "办公室里有A、B、C、D四个办公桌。C办公桌看起来格外整洁，反而让人觉得可疑。其他的办公桌都有正常的使用痕迹。",
                 options: [
                     { 
-                        text: "检查办公桌抽屉", 
-                        target: "checkDeskDrawer", 
-                        item: "item2",
-                        hint: "抽屉上的锁看起来很新",
-                        requires: "item1"
-                    },
-                    { 
-                        text: "查看墙上的画", 
-                        target: "checkPainting", 
+                        text: "检查A办公桌", 
+                        target: "checkDeskA", 
                         item: null,
-                        hint: "画后面好像没什么特别"
+                        hint: "正常的工作文件，没什么特别"
                     },
                     { 
-                        text: "检查书架", 
-                        target: "checkBookshelf", 
-                        item: "item3",
-                        hint: "有本书看起来格外老旧"
+                        text: "检查B办公桌", 
+                        target: "checkDeskB", 
+                        item: null,
+                        hint: "个人物品，没有发现异常"
+                    },
+                    { 
+                        text: "检查C办公桌抽屉", 
+                        target: "checkDeskC", 
+                        item: "item1",
+                        hint: "抽屉里好像有本书"
+                    },
+                    { 
+                        text: "检查D办公桌", 
+                        target: "checkDeskD", 
+                        item: null,
+                        hint: "一些工作记录，很普通"
+                    },
+                    { 
+                        text: "查看C办公桌面", 
+                        target: "checkDeskCSurface", 
+                        item: "item2",
+                        hint: "桌上有张奇怪的纸条"
                     },
                     { 
                         text: "返回前台", 
                         target: "frontDesk"
-                    },
-                    { 
-                        text: "查看通风口", 
-                        target: "checkVent", 
-                        item: null,
-                        hint: "通风口里很干净"
                     }
                 ],
                 image: "officeDesk"
             },
-            checkDeskDrawer: {
-                name: "办公桌抽屉",
-                description: "用之前找到的设备打开了抽屉。里面有一把特殊的钥匙，看起来不是普通的门钥匙。钥匙上贴着一张很小的标签，字迹已经模糊不清。",
+            checkDeskA: {
+                name: "A办公桌",
+                description: "桌面上是正常的工作文件和一些文具，抽屉里也是普通的办公用品。",
+                options: [
+                    { text: "返回办公室", target: "office" }
+                ],
+                image: "officeDesk",
+                isDeadEnd: true
+            },
+            checkDeskB: {
+                name: "B办公桌",
+                description: "有一些个人物品和家庭照片，看起来是个普通员工的工位。",
+                options: [
+                    { text: "返回办公室", target: "office" }
+                ],
+                image: "officeDesk",
+                isDeadEnd: true
+            },
+            checkDeskC: {
+                name: "C办公桌抽屉",
+                description: "抽屉里放着一本《物业管理手册》，翻开书，里面夹着一张泛黄的剪报。剪报是关于2015年兴健大厦坠楼案的，边缘处手写着一个网址：/htyx.html",
+                options: [
+                    { text: "返回办公室", target: "office" }
+                ],
+                image: "officeDesk",
+                isItemLocation: true,
+                itemId: "item1",
+                foundText: "发现了关于2015年兴健大厦坠楼案的剪报"
+            },
+            checkDeskD: {
+                name: "D办公桌",
+                description: "桌上堆满了文件和报表，看起来工作很繁忙。没有发现异常物品。",
+                options: [
+                    { text: "返回办公室", target: "office" }
+                ],
+                image: "officeDesk",
+                isDeadEnd: true
+            },
+            checkDeskCSurface: {
+                name: "C办公桌面",
+                description: "桌面上放着一张纸条，上面写着奇怪的代码：<br><div class='code-display'>8↑2↓4←6→<br>42624, repeat<br>26822<br>426248, 22<br>42624</div>",
                 options: [
                     { text: "返回办公室", target: "office" }
                 ],
                 image: "officeDesk",
                 isItemLocation: true,
                 itemId: "item2",
-                requires: "item1",
-                foundText: "找到了一把特殊的钥匙"
-            },
-            checkPainting: {
-                name: "墙上画作",
-                description: "把画摆正后，后面是普通的墙壁，没有什么特别之处。",
-                options: [
-                    { text: "返回办公室", target: "office" }
-                ],
-                image: "officeDesk",
-                isDeadEnd: true
-            },
-            checkBookshelf: {
-                name: "书架检查",
-                description: "在一本很厚的专业书籍里，你发现了几页手写的笔记。字迹潦草，记录的内容让人不安...",
-                options: [
-                    { text: "返回办公室", target: "office" }
-                ],
-                image: "officeDesk",
-                isItemLocation: true,
-                itemId: "item3",
-                foundText: "发现了手写的笔记"
-            },
-            checkVent: {
-                name: "通风口",
-                description: "通风口的栅栏很牢固，里面除了灰尘什么都没有。",
-                options: [
-                    { text: "返回办公室", target: "office" }
-                ],
-                image: "officeDesk",
-                isDeadEnd: true
+                foundText: "发现了一张写有神秘代码的纸条"
             },
             storage: {
                 name: "储物室",
-                description: "储物室里堆满了各种工具和备用零件。但仔细看，有些地方的灰尘分布不太均匀，像是最近有人动过。角落里有一个老旧的储物柜，上面落满了灰尘。",
+                description: "储物室里堆满了各种工具和备用零件。但地面异常干净，与堆积灰尘的货架形成鲜明对比。角落里有一个小推车。",
                 options: [
                     { 
-                        text: "检查储物柜", 
-                        target: "checkStorageCabinet", 
-                        item: "item4",
-                        hint: "这个柜子看起来有些年头了",
-                        requires: "item2"
+                        text: "查看小推车", 
+                        target: "checkTrolley", 
+                        item: null,
+                        hint: "普通的小推车，但轮子上有新鲜痕迹"
                     },
                     { 
-                        text: "翻找工具箱", 
+                        text: "检查货架上层", 
+                        target: "checkShelfTop", 
+                        item: "item3",
+                        hint: "货架上层有个黑色设备"
+                    },
+                    { 
+                        text: "查看地面", 
+                        target: "checkStorageFloor", 
+                        item: "item4",
+                        hint: "地面干净得不正常"
+                    },
+                    { 
+                        text: "检查工具箱", 
                         target: "checkToolbox", 
                         item: null,
                         hint: "都是普通的工具"
                     },
                     { 
-                        text: "查看货架上层", 
-                        target: "checkShelfTop", 
-                        item: null,
-                        hint: "只有灰尘和蜘蛛网"
-                    },
-                    { 
                         text: "返回前台", 
                         target: "frontDesk"
-                    },
-                    { 
-                        text: "检查地面", 
-                        target: "checkFloor", 
-                        item: null,
-                        hint: "地面很牢固"
                     }
                 ],
                 image: "storageRoom"
             },
-            checkStorageCabinet: {
-                name: "老旧储物柜",
-                description: "用那把特殊的钥匙，你打开了储物柜。里面只有一张照片，拍摄的时间似乎就在最近。照片上的内容...让人不寒而栗。",
+            checkTrolley: {
+                name: "小推车",
+                description: "小推车的轮子上有新鲜的摩擦痕迹，像是最近移动过重物。车上有一些灰尘，但不像是长期放置的。",
+                options: [
+                    { text: "返回储物室", target: "storage" }
+                ],
+                image: "storageRoom",
+                isDeadEnd: true
+            },
+            checkShelfTop: {
+                name: "货架上层",
+                description: "在货架最上层，你发现了一个黑色的设备——信号屏蔽仪。上面有少许灰尘，但指示灯显示它曾经被使用过。",
+                options: [
+                    { text: "返回储物室", target: "storage" }
+                ],
+                image: "storageRoom",
+                isItemLocation: true,
+                itemId: "item3",
+                foundText: "发现了一个信号屏蔽仪"
+            },
+            checkStorageFloor: {
+                name: "储物室地面",
+                description: "地面异常干净，像是最近被彻底清洁过。但周围货架和物品上都积着灰，这种反差很不自然。墙角的排水口附近似乎有淡淡的痕迹。",
                 options: [
                     { text: "返回储物室", target: "storage" }
                 ],
                 image: "storageRoom",
                 isItemLocation: true,
                 itemId: "item4",
-                requires: "item2",
-                foundText: "发现了一张可疑的照片"
+                foundText: "注意到地面被异常彻底地清洁过"
             },
             checkToolbox: {
                 name: "工具箱",
@@ -609,33 +647,15 @@
                 ],
                 image: "storageRoom",
                 isDeadEnd: true
-            },
-            checkShelfTop: {
-                name: "货架上层",
-                description: "货架上层积满了厚厚的灰尘，看起来很久没人碰过了。",
-                options: [
-                    { text: "返回储物室", target: "storage" }
-                ],
-                image: "storageRoom",
-                isDeadEnd: true
-            },
-            checkFloor: {
-                name: "地面检查",
-                description: "地面很平整，没有松动的迹象。",
-                options: [
-                    { text: "返回储物室", target: "storage" }
-                ],
-                image: "storageRoom",
-                isDeadEnd: true
             }
         };
 
-        // 物品揭示顺序
+        // 物品揭示顺序 - 更新为新的线索
         const itemRevealOrder = [
-            "加密的数据设备",
-            "特殊钥匙",
-            "手写笔记",
-            "关键照片"
+            "兴健大厦坠楼案剪报",
+            "神秘代码纸条",
+            "信号屏蔽仪",
+            "异常清洁的地面"
         ];
 
         // 初始化游戏
@@ -714,12 +734,13 @@
                             showResult(`<h3>所有线索都已找到！</h3>
                             <p>你收集到了全部4个关键线索：</p>
                             <ul style="margin: 10px 0; padding-left: 20px;">
-                                <li>加密的数据设备</li>
-                                <li>打开储物柜的特殊钥匙</li>
-                                <li>记录异常的手写笔记</li>
-                                <li>关键证据照片</li>
+                                <li>2015年兴健大厦坠楼案剪报（指向/htyx.html）</li>
+                                <li>C办公桌上的神秘代码纸条</li>
+                                <li>储物间的信号屏蔽仪</li>
+                                <li>异常清洁的地面痕迹</li>
                             </ul>
-                            <p>把这些证据交给相关部门，物业里的问题很快就能查清楚了。</p>`, 'success');
+                            <p>值班表显示12月31日周值班，储物间有小推车移动痕迹...</p>
+                            <p>这些证据暗示着物业可能参与了某些不为人知的事件。</p>`, 'success');
                         }, 1500);
                     }
                 }, 300);

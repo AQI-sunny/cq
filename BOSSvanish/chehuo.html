@@ -228,16 +228,18 @@
             padding: 15px;
         }
     </style>
+    <link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div class="date-location">2015年12月29日 星期一 | 深南市楠山区</div>
+            <div class="date-location">2015年12月29日 | 深南市楠山区</div>
             <h1>成华大道重大交通事故：出租车司机与乘客双亡，警方正全力调查</h1>
-            <p class="subtitle">昨晚22时40分许，一辆出租车在成华大道失控撞向护栏，造成司机严某（38岁）与乘客张某（35岁）当场死亡</p>
+            <p class="subtitle">昨晚22时40分许，一辆出租车在成华大道失控撞向护栏，造成司机叶某（38岁）与乘客张某（35岁）当场死亡</p>
         </div>
         
-        <p class="lead">昨日（15日）晚间，深南市楠山区成华大道发生一起严重交通事故。一辆出租车与道路中央隔离护栏发生猛烈碰撞，造成车内司机严某（男，38岁）与乘客张某（女、35岁）当场死亡。目前事故原因正在进一步调查中。</p>
+        <p class="lead">昨日晚间，深南市楠山区成华大道发生一起严重交通事故。一辆出租车与道路中央隔离护栏发生猛烈碰撞，造成车内司机叶某（男，38岁）与乘客张某（女、35岁）当场死亡。目前事故原因正在进一步调查中。</p>
         
         <div class="section">
             <h2>事故经过</h2>
@@ -245,7 +247,7 @@
             
             <div class="quote">
                 "车速很快，撞上护栏时发出巨大响声，整辆车都变形了。我看到是一辆出租车，车顶的灯牌都飞出去了。"
-                <div class="quote-source">—— 附近便利店员工</div>
+                <div class="quote-source">—— 附近便利店员工蒋先生</div>
             </div>
             
             <p>蒋先生表示，他立即拨打了报警电话。现场图片显示，涉事出租车为深南市常见的黄色涂装，事故后车辆严重损毁，几乎无法辨认原貌。</p>
@@ -255,7 +257,7 @@
             <!-- <h2>遇难者信息</h2> -->
            <!--  <div class="victim-info">
                 <div class="victim-card">
-                    <h3><span class="taxi-icon">🚕</span> 司机：严某（男性）</h3>
+                    <h3><span class="taxi-icon">🚕</span> 司机：叶某（男性）</h3>
                     <div class="victim-details">
                         <p><strong>年龄：</strong>38岁</p>
                         <p><strong>职业：</strong>出租车司机</p>
@@ -274,7 +276,7 @@
                     </div>
                 </div>
             </div> -->
-            <p>据警方初步了解，乘客张某当晚使用打车软件呼叫了涉事出租车，计划从商务中心返回家中。司机严某为深南市某出租车公司员工，从事出租车行业已有12年。</p>
+            <p>据警方初步了解，乘客张某当晚使用打车软件呼叫了涉事出租车，计划从商务中心返回家中。司机叶某为深南市某出租车公司员工，从事出租车行业已有12年。</p>
         </div>
         
         <div class="section">
@@ -316,7 +318,22 @@
             <p style="margin-top: 10px; color: #999; font-size: 12px;">*本文属于boss消失事件宇宙，如有雷同纯属巧合*</p>
         </div>
     </div>
-
+<!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
     <script>
         // 简单的交互效果
         document.addEventListener('DOMContentLoaded', function() {
@@ -353,5 +370,9 @@
             });
         });
     </script>
+ <script src="pages.js"></script>
+<script src="scball.js"></script>
+<script src="visit.js"></script>
+
 </body>
 </html>
