@@ -2,7 +2,6 @@
  * 蓝白简约风格访问记录管理器
  * 简化版：点击展开/收起，长按拖动
  * 使用Shadow DOM实现样式隔离
- * 移动端初始位置固定在底部正中间
  */
 (function () {
     'use strict';
@@ -10,10 +9,7 @@
     const CONFIG = {
         STORAGE_KEY: 'visited_pages_tracker',
         MAX_RECORDS: 50,
-        COLLAPSED_WIDTH: '100px',
-        MOBILE_BOTTOM: 20,
-        DESKTOP_BOTTOM: 20,
-        DESKTOP_RIGHT: 20
+        COLLAPSED_WIDTH: '100px'
     };
 
     // 工具函数
@@ -83,10 +79,6 @@
 
             this.saveRecords(records);
             return records;
-        },
-
-        isMobile() {
-            return window.innerWidth <= 768;
         }
     };
 
@@ -109,13 +101,23 @@
             this.loadRecords();
             this.collapse();
             this.setInitialPosition();
-            this.setupResizeListener();
         }
 
         createShadowDOM() {
             // 创建宿主容器
             this.container = document.createElement('div');
             this.container.id = 'visit-tracker-container';
+            
+            // 直接设置容器样式（不在Shadow DOM内部）
+            this.container.style.cssText = `
+                position: fixed !important;
+                bottom: 20px !important;
+                right: 20px !important;
+                z-index: 9999 !important;
+                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+                box-sizing: border-box !important;
+            `;
+            
             document.body.appendChild(this.container);
             
             // 创建Shadow DOM
@@ -126,15 +128,6 @@
             // 创建样式（在Shadow DOM内部，不会受外部影响）
             const style = document.createElement('style');
             style.textContent = `
-                :host {
-                    all: initial !important;
-                    display: block !important;
-                    position: fixed !important;
-                    z-index: 9999 !important;
-                    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-                    box-sizing: border-box !important;
-                }
-                
                 .tracker-container {
                     all: initial !important;
                     display: block !important;
@@ -296,26 +289,14 @@
                 
                 /* 移动端适配 */
                 @media (max-width: 768px) {
-                    :host {
-                        bottom: ${CONFIG.MOBILE_BOTTOM}px !important;
-                        left: 50% !important;
-                        transform: translateX(-50%) !important;
-                        width: auto !important;
+                    #visit-tracker-container {
+                        bottom: 10px !important;
+                        right: 10px !important;
                     }
                     
                     .tracker-container.expanded {
                         width: calc(100vw - 40px) !important;
                         max-width: 280px !important;
-                    }
-                }
-                
-                /* 桌面端样式 */
-                @media (min-width: 769px) {
-                    :host {
-                        bottom: ${CONFIG.DESKTOP_BOTTOM}px !important;
-                        right: ${CONFIG.DESKTOP_RIGHT}px !important;
-                        left: auto !important;
-                        transform: none !important;
                     }
                 }
                 
@@ -335,15 +316,6 @@
                 
                 .tracker-list::-webkit-scrollbar-thumb:hover {
                     background: #a3c3ff !important;
-                }
-                
-                /* 拖动时的特殊样式 */
-                .tracker-container.dragging {
-                    transform: none !important;
-                    left: var(--drag-left) !important;
-                    top: var(--drag-top) !important;
-                    right: auto !important;
-                    bottom: auto !important;
                 }
             `;
             
@@ -372,48 +344,13 @@
         }
 
         setInitialPosition() {
-            // 根据设备类型设置初始位置
-            if (Utils.isMobile()) {
-                // 移动端：底部正中间
-                this.container.style.position = 'fixed';
-                this.container.style.left = '50%';
-                this.container.style.top = 'auto';
-                this.container.style.right = 'auto';
-                this.container.style.bottom = `${CONFIG.MOBILE_BOTTOM}px`;
-                this.container.style.transform = 'translateX(-50%)';
-                
-                // 获取并保存初始位置
-                const rect = this.container.getBoundingClientRect();
-                this.containerStartX = (window.innerWidth - rect.width) / 2;
-                this.containerStartY = window.innerHeight - rect.height - CONFIG.MOBILE_BOTTOM;
-            } else {
-                // 桌面端：右下角
-                this.container.style.position = 'fixed';
-                this.container.style.left = 'auto';
-                this.container.style.top = 'auto';
-                this.container.style.right = `${CONFIG.DESKTOP_RIGHT}px`;
-                this.container.style.bottom = `${CONFIG.DESKTOP_BOTTOM}px`;
-                this.container.style.transform = 'none';
-                
-                // 获取并保存初始位置
-                const rect = this.container.getBoundingClientRect();
-                this.containerStartX = window.innerWidth - rect.width - CONFIG.DESKTOP_RIGHT;
-                this.containerStartY = window.innerHeight - rect.height - CONFIG.DESKTOP_BOTTOM;
-            }
-        }
-
-        setupResizeListener() {
-            // 窗口大小变化时重新定位
-            let resizeTimeout;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(() => {
-                    // 如果当前不是拖动状态，则重新设置位置
-                    if (!this.isDragging) {
-                        this.setInitialPosition();
-                    }
-                }, 250);
-            });
+            // 计算初始位置
+            const rect = this.container.getBoundingClientRect();
+            const bottom = 20;
+            const right = 20;
+            
+            this.containerStartX = window.innerWidth - rect.width - right;
+            this.containerStartY = window.innerHeight - rect.height - bottom;
         }
 
         bindEvents() {
@@ -459,6 +396,7 @@
 
         handleTouchStart(e) {
             e.stopPropagation();
+            e.preventDefault();
             this.pressTimer = setTimeout(() => {
                 this.startDragging(e.touches[0]);
             }, 500);
@@ -529,9 +467,8 @@
             this.container.style.bottom = 'auto';
             this.container.style.transform = 'none';
             
-            // 设置CSS自定义属性用于拖动时的样式
-            this.container.style.setProperty('--drag-left', `${rect.left}px`);
-            this.container.style.setProperty('--drag-top', `${rect.top}px`);
+            // 强制重绘
+            this.container.getBoundingClientRect();
         }
 
         handleDrag(currentEvent) {
@@ -550,11 +487,18 @@
             const boundedX = Math.max(10, Math.min(newX, maxX - 10));
             const boundedY = Math.max(10, Math.min(newY, maxY - 10));
             
-            // 更新位置
-            this.container.style.left = `${boundedX}px`;
-            this.container.style.top = `${boundedY}px`;
-            this.container.style.setProperty('--drag-left', `${boundedX}px`);
-            this.container.style.setProperty('--drag-top', `${boundedY}px`);
+            // 直接更新位置 - 使用更强制的方法
+            this.container.style.cssText = `
+                position: fixed !important;
+                left: ${boundedX}px !important;
+                top: ${boundedY}px !important;
+                right: auto !important;
+                bottom: auto !important;
+                z-index: 9999 !important;
+                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+                box-sizing: border-box !important;
+                transform: none !important;
+            `;
             
             // 更新初始位置以便连续拖动
             this.dragStartX = currentEvent.clientX;
@@ -568,16 +512,7 @@
             const container = this.shadowRoot.querySelector('.tracker-container');
             container.classList.remove('dragging');
             
-            // 清除临时定位样式
-            this.container.style.removeProperty('--drag-left');
-            this.container.style.removeProperty('--drag-top');
-            
-            // 如果是在移动端，移除transform以保持拖动后的位置
-            if (!Utils.isMobile()) {
-                this.container.style.transform = 'none';
-            }
-            
-            // 保存当前位置
+            // 保持当前位置
             const rect = this.container.getBoundingClientRect();
             this.containerStartX = rect.left;
             this.containerStartY = rect.top;
