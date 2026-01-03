@@ -472,33 +472,6 @@
         </div>
         
         <div class="content">
-            <!-- <div class="input-group">
-                <label class="input-label">输入证物编号</label>
-                <div class="input-box">
-                    <div class="input-icon">
-                        <i class="fas fa-fingerprint"></i>
-                    </div>
-                    <input type="text" class="input-field" id="evidenceNum1" placeholder="请输入证物编号">
-                </div>
-                <button class="jump-btn" id="evidenceBtn1">
-                    查询证物信息 <i class="fas fa-external-link-alt"></i>
-                </button>
-            </div>
-             -->
-            <div class="input-group">
-               <!--  <label class="input-label">输入卷宗档案号</label> -->
-                  <label class="input-label">输入档案号</label>
-                <div class="input-box">
-                    <div class="input-icon">
-                        <i class="fas fa-folder-open"></i>
-                    </div>
-                    <input type="text" class="input-field" id="archiveNum" placeholder="请输入档案号">
-                </div>
-                <button class="jump-btn" id="archiveBtn">
-                    查询档案 <i class="fas fa-external-link-alt"></i>
-                </button>
-            </div>
-            
             <div class="input-group">
                 <label class="input-label">输入证物编号</label>
                 <div class="responsive-adjust"></div>
@@ -557,7 +530,7 @@
             <div class="modal-body">
                 <p>您输入的编号格式不正确或没有访问权限。</p>
                 <p>请输入正确的编号格式：</p>
-                <p><strong>证物编号：</strong>ZN开头+8位数字</p>
+                <p><strong>证物编号：</strong>ZN开头+8位数字 或 特殊编号20251231-WP-007</p>
                 <p><strong>卷宗档案号：</strong>JZ开头+8位数字</p>
             </div>
             <div class="modal-footer">
@@ -565,22 +538,24 @@
             </div>
         </div>
     </div>
-<!-- 搜索球容器 -->
-<div class="floating-search-ball-container">
-    <!-- 搜索球（点击展开） -->
-    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
     
-    <!-- 展开的搜索框 -->
-    <div class="floating-search-expanded" id="searchExpanded">
-        <input type="text" 
-               class="floating-search-input" 
-               id="searchInput" 
-               placeholder="输入关键词搜索..." 
-               aria-label="搜索输入框">
-        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
-        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    <!-- 搜索球容器 -->
+    <div class="floating-search-ball-container">
+        <!-- 搜索球（点击展开） -->
+        <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+        
+        <!-- 展开的搜索框 -->
+        <div class="floating-search-expanded" id="searchExpanded">
+            <input type="text" 
+                   class="floating-search-input" 
+                   id="searchInput" 
+                   placeholder="输入关键词搜索..." 
+                   aria-label="搜索输入框">
+            <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+            <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+        </div>
     </div>
-</div>
+    
     <script>
         // 显示加载动画
         function showLoading() {
@@ -607,6 +582,11 @@
             // 去除空格
             const cleanedValue = inputValue.trim();
             
+            // 特殊处理证物编号 20251231-WP-007
+            if (inputType === 'evidence' && cleanedValue === '20251231-WP-007') {
+                return true; // 直接返回true，不进行格式验证
+            }
+            
             // 证物编号验证：ZN开头，后跟8位数字
             if (inputType === 'evidence') {
                 const evidencePattern = /^ZN\d{8}$/;
@@ -626,19 +606,17 @@
         function validateInput(inputValue, inputType) {
             if (!inputValue || inputValue.trim() === '') {
                 // 使用更友好的提示方式
-                const inputFields = document.querySelectorAll('.input-field');
-                inputFields.forEach(field => {
-                    if (field.value.trim() === '') {
-                        field.style.borderColor = '#e53e3e';
-                        field.style.backgroundColor = '#fff5f5';
-                        
-                        // 3秒后恢复
-                        setTimeout(() => {
-                            field.style.borderColor = '#e2e8f0';
-                            field.style.backgroundColor = '#f8fafc';
-                        }, 3000);
-                    }
-                });
+                const evidenceNum2 = document.getElementById('evidenceNum2');
+                if (evidenceNum2.value.trim() === '') {
+                    evidenceNum2.style.borderColor = '#e53e3e';
+                    evidenceNum2.style.backgroundColor = '#fff5f5';
+                    
+                    // 3秒后恢复
+                    setTimeout(() => {
+                        evidenceNum2.style.borderColor = '#e2e8f0';
+                        evidenceNum2.style.backgroundColor = '#f8fafc';
+                    }, 3000);
+                }
                 return false;
             }
             
@@ -667,37 +645,29 @@
         
         // 页面加载完成后执行
         document.addEventListener('DOMContentLoaded', function() {
-            // 第一个证物编号跳转
-            document.getElementById('evidenceBtn1').addEventListener('click', function() {
-                const evidenceNum1 = document.getElementById('evidenceNum1').value;
-                
-                if (validateInput(evidenceNum1, 'evidence')) {
-                    // 这里应该跳转到证物信息页面，暂时用示例页面代替
-                    handleJump(`evidence.html?num=${encodeURIComponent(evidenceNum1)}`);
-                }
-            });
-            
-            // 卷宗档案号跳转
-            document.getElementById('archiveBtn').addEventListener('click', function() {
-                const archiveNum = document.getElementById('archiveNum').value;
-                
-                if (validateInput(archiveNum, 'archive')) {
-                    // 这里应该跳转到卷宗档案页面，暂时用示例页面代替
-                    handleJump(`archive.html?num=${encodeURIComponent(archiveNum)}`);
-                }
-            });
-            
-            // 第二个证物编号跳转
+            // 证物编号跳转
             document.getElementById('evidenceBtn2').addEventListener('click', function() {
-                const evidenceNum2 = document.getElementById('evidenceNum2').value;
+                const evidenceNum2 = document.getElementById('evidenceNum2').value.trim();
                 
+                // 特殊处理证物编号 20251231-WP-007 - 跳转到zhengwu.html
+                if (evidenceNum2 === '20251231-WP-007') {
+                    showLoading();
+                    
+                    // 模拟加载延迟
+                    setTimeout(() => {
+                        window.open('wuzheng.html', '_blank');
+                        hideLoading();
+                    }, 800);
+                    return;
+                }
+                
+                // 其他有效证物编号 - 跳转到wuzheng.html
                 if (validateInput(evidenceNum2, 'evidence')) {
-                    // 这里应该跳转到证物信息页面，暂时用示例页面代替
-                    handleJump(`evidence.html?num=${encodeURIComponent(evidenceNum2)}`);
+                    handleJump(`wuzheng.html`);
                 }
             });
             
-            // 电话按钮 - 回复魏警官
+            // 电话按钮 - 回复魏警官 - 跳转到tuiliban.html
             document.getElementById('callBtn').addEventListener('click', function() {
                 showLoading();
                 
@@ -705,35 +675,40 @@
                 const dialTone = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAZGF0YQ');
                 
                 setTimeout(() => {
-                    // 跳转到tuilib.html
-                    handleJump('tuilib.html');
+                    // 跳转到tuiliban.html
+                    window.open('tuiliban.html', '_blank');
+                    hideLoading();
                 }, 1200);
             });
             
             // 为输入框添加回车键支持
-            const inputFields = document.querySelectorAll('.input-field');
-            inputFields.forEach((field, index) => {
-                field.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        // 根据输入框索引触发对应的按钮点击
-                        const buttons = [
-                            document.getElementById('evidenceBtn1'),
-                            document.getElementById('archiveBtn'),
-                            document.getElementById('evidenceBtn2')
-                        ];
+            const evidenceNum2Input = document.getElementById('evidenceNum2');
+            evidenceNum2Input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    
+                    const evidenceNum2 = this.value.trim();
+                    
+                    // 特殊处理证物编号 20251231-WP-007
+                    if (evidenceNum2 === '20251231-WP-007') {
+                        showLoading();
                         
-                        if (buttons[index]) {
-                            buttons[index].click();
-                        }
+                        setTimeout(() => {
+                            window.open('zhengwu.html', '_blank');
+                            hideLoading();
+                        }, 800);
+                        return;
                     }
-                });
-                
-                // 输入时清除错误状态
-                field.addEventListener('input', function() {
-                    this.style.borderColor = '#e2e8f0';
-                    this.style.backgroundColor = '#f8fafc';
-                });
+                    
+                    // 其他编号触发按钮点击
+                    document.getElementById('evidenceBtn2').click();
+                }
+            });
+            
+            // 输入时清除错误状态
+            evidenceNum2Input.addEventListener('input', function() {
+                this.style.borderColor = '#e2e8f0';
+                this.style.backgroundColor = '#f8fafc';
             });
             
             // 权限提示弹窗确认按钮
@@ -763,17 +738,15 @@
             // 魏警官关键词检测（可选功能）
             // 检测输入框是否包含"魏警官"关键词
             const checkWeiOfficer = function() {
-                const input1 = document.getElementById('evidenceNum1').value;
-                const input2 = document.getElementById('archiveNum').value;
-                const input3 = document.getElementById('evidenceNum2').value;
+                const evidenceNum2 = document.getElementById('evidenceNum2').value;
                 
-                if (input1.includes('魏警官') || input2.includes('魏警官') || input3.includes('魏警官')) {
+                if (evidenceNum2.includes('魏警官')) {
                     // 显示特殊提示
                     const notice = document.querySelector('.notice');
                     notice.innerHTML = `
                         <h3><i class="fas fa-user-shield"></i> 魏警官指令识别</h3>
                         <p>检测到"魏警官"关键词，点击下方电话图标可快速联系魏警官</p>
-                        <p>如需跳转tuilib.html，请直接点击电话图标</p>
+                        <p>如需跳转tuiliban.html，请直接点击电话图标</p>
                     `;
                     
                     notice.style.backgroundColor = '#e6fffa';
@@ -783,13 +756,13 @@
             };
             
             // 添加魏警官检测事件监听（可选，根据需求开启）
-            // inputFields.forEach(field => {
-            //     field.addEventListener('blur', checkWeiOfficer);
-            // });
+            // evidenceNum2Input.addEventListener('blur', checkWeiOfficer);
         });
     </script>
- <script src="pages.js"></script>
-<script src="scball.js"></script>
-<script src="visit.js"></script>
+    
+    <script src="pages.js"></script>
+    <script src="scball.js"></script>
+    <script src="visit.js"></script>
+
 </body>
 </html>

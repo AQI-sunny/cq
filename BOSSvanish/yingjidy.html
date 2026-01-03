@@ -17,12 +17,12 @@
             background-color: #f5f7fa;
             color: #333;
             line-height: 1.6;
-            padding: 20px;
+            padding: 15px 10px;
             min-height: 100vh;
         }
         
         .container {
-            max-width: 800px;
+            max-width: 100%;
             margin: 0 auto;
             background-color: white;
             border-radius: 12px;
@@ -45,11 +45,22 @@
             align-items: center;
             justify-content: center;
             gap: 12px;
+            flex-wrap: wrap;
         }
         
         header p {
             opacity: 0.9;
             font-size: 0.95rem;
+            margin-top: 5px;
+        }
+        
+        .date-badge {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: inline-block;
         }
         
         .status-indicator {
@@ -70,7 +81,7 @@
         }
         
         .log-container {
-            padding: 20px;
+            padding: 20px 15px;
         }
         
         .time-range {
@@ -88,20 +99,27 @@
         .time-range h2 {
             color: #1a73e8;
             font-size: 1.3rem;
+            margin-bottom: 10px;
+            width: 100%;
         }
         
         .current-time {
             font-weight: 600;
             color: #333;
             background-color: #e8f0fe;
-            padding: 6px 12px;
+            padding: 8px 15px;
             border-radius: 6px;
             font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
         }
         
         .log-timeline {
             position: relative;
             padding-left: 30px;
+            margin-bottom: 20px;
         }
         
         .timeline-line {
@@ -139,6 +157,16 @@
             animation: pulse 2s infinite;
         }
         
+        .log-event.night-event {
+            background-color: #f3e5f5;
+            border-left-color: #9c27b0;
+        }
+        
+        .log-event.date-change {
+            background-color: #e8f5e9;
+            border-left-color: #4caf50;
+        }
+        
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.2); }
             70% { box-shadow: 0 0 0 6px rgba(244, 67, 54, 0); }
@@ -148,19 +176,38 @@
         .event-time {
             font-weight: 600;
             color: #1a73e8;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 8px;
+            flex-wrap: wrap;
         }
         
         .log-event.critical .event-time {
             color: #f44336;
         }
         
+        .log-event.night-event .event-time {
+            color: #9c27b0;
+        }
+        
+        .log-event.date-change .event-time {
+            color: #4caf50;
+        }
+        
+        .event-date {
+            font-size: 0.85rem;
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-left: 5px;
+        }
+        
         .event-desc {
             color: #555;
             margin-bottom: 10px;
+            font-size: 1.05rem;
+            line-height: 1.5;
         }
         
         .event-details {
@@ -169,7 +216,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
-            margin-top: 10px;
+            margin-top: 12px;
         }
         
         .event-details span {
@@ -198,19 +245,70 @@
             background-color: #ff9800;
         }
         
+        .log-event.night-event .timeline-marker {
+            background-color: #9c27b0;
+        }
+        
+        .log-event.date-change .timeline-marker {
+            background-color: #4caf50;
+        }
+        
         footer {
             text-align: center;
-            padding: 20px;
+            padding: 20px 15px;
             color: #777;
             font-size: 0.9rem;
             border-top: 1px solid #eee;
             background-color: #f9f9f9;
         }
         
+        .summary-box {
+            background-color: #e8f4fd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 5px solid #1a73e8;
+        }
+        
+        .summary-title {
+            color: #1a73e8;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .stat-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a73e8;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
         /* 移动端优化 */
         @media (max-width: 768px) {
             body {
-                padding: 10px;
+                padding: 10px 8px;
             }
             
             header {
@@ -219,23 +317,26 @@
             
             header h1 {
                 font-size: 1.5rem;
+                flex-direction: column;
+                gap: 8px;
             }
             
             .status-indicator {
                 position: static;
-                margin-top: 10px;
+                margin-top: 15px;
                 justify-content: center;
                 width: 100%;
+                order: 3;
             }
             
             .time-range {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 10px;
+                gap: 12px;
             }
             
             .log-container {
-                padding: 15px;
+                padding: 15px 12px;
             }
             
             .log-timeline {
@@ -249,24 +350,62 @@
             }
             
             .log-event {
-                padding: 15px;
+                padding: 18px;
+            }
+            
+            .event-desc {
+                font-size: 1rem;
+            }
+            
+            .summary-stats {
+                grid-template-columns: 1fr 1fr;
             }
         }
         
         @media (max-width: 480px) {
             .event-details {
                 flex-direction: column;
-                gap: 8px;
+                gap: 10px;
             }
             
             .log-timeline {
-                padding-left: 20px;
+                padding-left: 22px;
             }
             
             .timeline-marker {
                 left: -18px;
                 width: 16px;
                 height: 16px;
+            }
+            
+            .log-event {
+                padding: 15px;
+            }
+            
+            .summary-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-item {
+                padding: 12px;
+            }
+            
+            .stat-value {
+                font-size: 1.6rem;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            header h1 {
+                font-size: 1.3rem;
+            }
+            
+            header p {
+                font-size: 0.85rem;
+            }
+            
+            .log-container {
+                padding: 12px 10px;
             }
         }
         
@@ -281,110 +420,222 @@
             margin-bottom: 15px;
             color: #ddd;
         }
+        
+        /* 夜间事件特殊样式 */
+        .night-label {
+            background-color: #6a1b9a;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 8px;
+        }
+        
     </style>
+    
+<link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
 </head>
 <body>
     <div class="container">
         <header>
             <h1><i class="fas fa-car-battery"></i> 应急电源监控日志</h1>
-            <p>实时监控系统电源状态与异常事件记录</p>
+            <p>电源异常事件分析报告</p>
+            <div class="date-badge">
+                <i class="far fa-calendar-alt"></i>
+                2025年12月31日 - 2026年1月1日
+            </div>
             <div class="status-indicator">
-                <i class="fas fa-circle"></i>
-                <span>系统运行正常</span>
+                <i class="fas fa-exclamation-circle" style="color: #ff9800;"></i>
+                <span>系统已恢复，存在异常事件记录</span>
             </div>
         </header>
         
         <div class="log-container">
+            <div class="summary-box">
+                <div class="summary-title">
+                    <i class="fas fa-chart-bar"></i>
+                    事件概要
+                </div>
+                <div class="summary-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">异常事件</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">6h 25m</div>
+                        <div class="stat-label">总断电时长</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">人为干预</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">1</div>
+                        <div class="stat-label">日期变更</div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="time-range">
-                <h2>事件时间范围: 18:00 - 19:00</h2>
+                <h2>事件时间线: 2025.12.31 19:00 - 2026.01.01 05:00</h2>
                 <div class="current-time">
                     <i class="far fa-clock"></i>
                     <span id="currentTime">--:--:--</span>
+                    <span id="currentDate">--/--/----</span>
                 </div>
             </div>
             
             <div class="log-timeline">
                 <div class="timeline-line"></div>
                 
-                <!-- 主要事件：监控系统断电 -->
+                <!-- 日期变更事件 -->
+                <div class="log-event date-change">
+                    <div class="timeline-marker"></div>
+                    <div class="event-time">
+                        <i class="fas fa-calendar-day"></i>
+                        <span>00:00:00</span>
+                        <span class="event-date">2026.01.01</span>
+                    </div>
+                    <div class="event-desc">
+                        系统日期变更：2025年12月31日 → 2026年1月1日
+                    </div>
+                    <div class="event-details">
+                        <span><i class="fas fa-sync-alt"></i> 自动日期更新完成</span>
+                        <span><i class="fas fa-check-circle"></i> 系统日志连续</span>
+                    </div>
+                </div>
+                
+                <!-- 凌晨长时间断电事件 -->
+                <div class="log-event critical night-event">
+                    <div class="timeline-marker"></div>
+                    <div class="event-time">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>02:00 - 05:00</span>
+                        <span class="night-label">深夜时段</span>
+                    </div>
+                    <div class="event-desc">
+                        监控系统主电源中断，应急电源启动后被内部后台人为关闭
+                    </div>
+                    <div class="event-details">
+                        <span><i class="fas fa-bolt"></i> 电源类型: 应急电源(被关闭)</span>
+                        <span><i class="fas fa-clock"></i> 持续时间: 3小时</span>
+                        <span><i class="fas fa-user-shield"></i> 操作类型: 内部后台关闭</span>
+                        <span><i class="fas fa-microchip"></i> 影响: 监控系统完全断电</span>
+                    </div>
+                </div>
+                
+                <!-- 应急电源恢复事件 -->
+                <div class="log-event important">
+                    <div class="timeline-marker"></div>
+                    <div class="event-time">
+                        <i class="fas fa-power-off"></i>
+                        <span>20:10</span>
+                        <span class="event-date">12.31</span>
+                    </div>
+                    <div class="event-desc">
+                        应急电源系统恢复供电，监控系统重新上线
+                    </div>
+                    <div class="event-details">
+                        <span><i class="fas fa-plug"></i> 电源状态: 已恢复</span>
+                        <span><i class="fas fa-check"></i> 系统自检: 通过</span>
+                        <span><i class="fas fa-video"></i> 监控摄像头: 全部在线</span>
+                    </div>
+                </div>
+                
+                <!-- 首次断电事件 -->
                 <div class="log-event critical">
                     <div class="timeline-marker"></div>
                     <div class="event-time">
                         <i class="fas fa-exclamation-triangle"></i>
-                        <span>18:05 - 18:06:30</span>
+                        <span>19:45</span>
+                        <span class="event-date">12.31</span>
                     </div>
                     <div class="event-desc">
-                        监控系统断电 - 主电源中断，应急电源已启动
+                        监控系统主电源中断，应急电源启动后被远程人为关闭
                     </div>
                     <div class="event-details">
-                        <span><i class="fas fa-bolt"></i> 电源类型: 应急备用电源</span>
-                        <span><i class="fas fa-clock"></i> 持续时间: 1分30秒</span>
+                        <span><i class="fas fa-bolt"></i> 电源状态: 应急启动→远程关闭</span>
+                        <span><i class="fas fa-user-times"></i> 操作类型: 远程人为干预</span>
+                        <span><i class="fas fa-map-marker-alt"></i> 操作源: 远程管理终端</span>
                         <span><i class="fas fa-microchip"></i> 影响设备: 监控系统</span>
                     </div>
                 </div>
                 
-                <!-- 其他相关事件 -->
+                <!-- 系统正常状态 -->
                 <div class="log-event">
                     <div class="timeline-marker"></div>
                     <div class="event-time">
                         <i class="far fa-check-circle"></i>
-                        <span>18:00</span>
+                        <span>19:30</span>
+                        <span class="event-date">12.31</span>
                     </div>
                     <div class="event-desc">
-                        系统自检完成，所有电源状态正常
+                        系统例行检查，所有电源状态正常
+                    </div>
+                    <div class="event-details">
+                        <span><i class="fas fa-battery-full"></i> 主电源: 正常</span>
+                        <span><i class="fas fa-car-battery"></i> 应急电源: 待机</span>
                     </div>
                 </div>
                 
-                <div class="log-event important">
+                <!-- 系统恢复完成 -->
+                <div class="log-event date-change">
                     <div class="timeline-marker"></div>
                     <div class="event-time">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <span>18:04:45</span>
+                        <i class="fas fa-check-double"></i>
+                        <span>05:05</span>
+                        <span class="event-date">01.01</span>
                     </div>
                     <div class="event-desc">
-                        主电源电压波动检测
+                        系统全面恢复，所有电源恢复正常供电
                     </div>
-                </div>
-                
-                <div class="log-event">
-                    <div class="timeline-marker"></div>
-                    <div class="event-time">
-                        <i class="fas fa-power-off"></i>
-                        <span>18:06:35</span>
-                    </div>
-                    <div class="event-desc">
-                        主电源恢复，应急电源切换完成
-                    </div>
-                </div>
-                
-                <div class="log-event">
-                    <div class="timeline-marker"></div>
-                    <div class="event-time">
-                        <i class="fas fa-check"></i>
-                        <span>18:10</span>
-                    </div>
-                    <div class="event-desc">
-                        系统电源稳定性检查通过
+                    <div class="event-details">
+                        <span><i class="fas fa-shield-alt"></i> 系统状态: 稳定运行</span>
+                        <span><i class="fas fa-history"></i> 日志记录: 恢复连续</span>
                     </div>
                 </div>
             </div>
         </div>
-        
+        <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
         <footer>
-            <p>最后更新: <span id="lastUpdateTime">--:--:--</span> | 应急电源监控系统 © 2023</p>
+            <p>最后更新: <span id="lastUpdateTime">--:--:--</span> | 生成时间: 2026年1月1日 08:00</p>
+            <p style="margin-top: 5px; font-size: 0.85rem; color: #999;">应急电源监控系统 © 2026 - 应急电源监控日志</p>
         </footer>
     </div>
-    
+
     <script>
-        // 更新当前时间
+        // 更新当前时间和日期
         function updateCurrentTime() {
             const now = new Date();
             const timeString = now.toTimeString().split(' ')[0];
-            document.getElementById('currentTime').textContent = timeString;
+            const dateString = now.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
             
-            // 更新最后更新时间（每5分钟更新一次）
+            document.getElementById('currentTime').textContent = timeString;
+            document.getElementById('currentDate').textContent = dateString;
+            
+            // 更新最后更新时间（每分钟更新一次）
             const minutes = now.getMinutes();
-            if (minutes % 5 === 0) {
+            if (minutes % 1 === 0) {
                 document.getElementById('lastUpdateTime').textContent = timeString;
             }
         }
@@ -396,31 +647,69 @@
         // 移动端触摸事件优化
         document.addEventListener('touchstart', function() {}, {passive: true});
         
-        // 添加一些交互效果
+        // 添加事件点击效果
         document.querySelectorAll('.log-event').forEach(event => {
             event.addEventListener('click', function() {
                 this.classList.toggle('expanded');
+            });
+            
+            // 移动端优化：添加触摸反馈
+            event.addEventListener('touchstart', function() {
+                this.style.opacity = '0.9';
+            });
+            
+            event.addEventListener('touchend', function() {
+                this.style.opacity = '1';
             });
         });
         
         // 页面加载时高亮显示关键事件
         window.addEventListener('load', function() {
-            const criticalEvent = document.querySelector('.log-event.critical');
-            if (criticalEvent) {
-                criticalEvent.scrollIntoView({behavior: 'smooth', block: 'center'});
+            const criticalEvents = document.querySelectorAll('.log-event.critical');
+            
+            if (criticalEvents.length > 0) {
+                // 滚动到第一个关键事件
+                criticalEvents[0].scrollIntoView({behavior: 'smooth', block: 'center'});
                 
-                // 添加一个短暂的更明显的高亮效果
-                setTimeout(() => {
-                    criticalEvent.style.backgroundColor = '#ffebee';
+                // 添加高亮效果
+                criticalEvents.forEach(event => {
                     setTimeout(() => {
-                        criticalEvent.style.backgroundColor = '';
-                    }, 1000);
-                }, 500);
+                        event.style.transform = 'scale(1.02)';
+                        event.style.boxShadow = '0 8px 20px rgba(244, 67, 54, 0.2)';
+                        
+                        setTimeout(() => {
+                            event.style.transform = '';
+                            event.style.boxShadow = '';
+                        }, 1500);
+                    }, 500);
+                });
+            }
+            
+            // 移动端优化：调整字体大小
+            if (window.innerWidth <= 480) {
+                document.querySelectorAll('.event-desc').forEach(desc => {
+                    desc.style.fontSize = '0.95rem';
+                });
+            }
+        });
+        
+        // 处理窗口大小变化
+        window.addEventListener('resize', function() {
+            if (window.innerWidth <= 480) {
+                document.querySelectorAll('.event-details').forEach(details => {
+                    details.style.flexDirection = 'column';
+                    details.style.gap = '8px';
+                });
+            } else {
+                document.querySelectorAll('.event-details').forEach(details => {
+                    details.style.flexDirection = 'row';
+                    details.style.gap = '15px';
+                });
             }
         });
     </script>
- <script src="pages.js"></script>
-<script src="scball.js"></script>
+    <script src="scball.js"></script>
+<script src="pages.js"></script>
 <script src="visit.js"></script>
 </body>
 </html>

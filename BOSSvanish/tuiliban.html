@@ -150,6 +150,13 @@
             border-color: #ff6b81;
         }
         
+        /* 多选样式 */
+        .option.multi-selected {
+            background-color: #4ecdc4;
+            color: white;
+            border-color: #6ae9e0;
+        }
+        
         .buttons-container {
             display: flex;
             justify-content: space-between;
@@ -310,6 +317,49 @@
             background-color: #3d5a80;
         }
         
+        /* 多选题提示 */
+        .multi-hint {
+            font-size: 0.9rem;
+            color: #ff9a3c;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding: 5px 10px;
+            background-color: rgba(255, 154, 60, 0.1);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* 答案输入区域样式 */
+        .answer-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            min-height: 40px;
+            padding: 8px;
+            background-color: rgba(13, 41, 80, 0.5);
+            border-radius: 8px;
+        }
+        
+        .answer-tag {
+            background-color: #3d5a80;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .answer-tag .remove {
+            cursor: pointer;
+            font-size: 1.2rem;
+            line-height: 0.8;
+        }
+        
         /* 响应式调整 */
         @media (max-width: 768px) {
             .container {
@@ -336,6 +386,15 @@
             .modal-buttons {
                 flex-direction: column;
             }
+            
+            .options-container {
+                gap: 8px;
+            }
+            
+            .option {
+                padding: 7px 12px;
+                font-size: 0.9rem;
+            }
         }
         
         @media (max-width: 480px) {
@@ -354,7 +413,12 @@
             
             .option {
                 padding: 6px 12px;
-                font-size: 0.9rem;
+                font-size: 0.85rem;
+            }
+            
+            .answer-tag {
+                padding: 4px 10px;
+                font-size: 0.85rem;
             }
         }
         
@@ -381,6 +445,8 @@
             -webkit-tap-highlight-color: transparent;
         }
     </style>
+    <link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
 </head>
 <body>
     <div class="container">
@@ -389,7 +455,7 @@
             <div class="dialogue">
                 <p><i class="fas fa-user"></i> <strong>魏警官：</strong> 你填一下这个表吧。</p>
              <br>
-                <p>     温馨提示：找不到该表？搜索“填表”即可！</p>
+                <p>     温馨提示：找不到该表？搜索"填表"即可！</p>
             </div>
         </div>
         
@@ -444,36 +510,175 @@
     </div>
     
     <script>
-        // 问题数据 - 便于后续增加和修改
+        // 问题数据 - 根据注释优化
         const questionsData = [
-            { id: 1, text: "你认为真凶是：__________", correctAnswer: "杨威", options: ["沈笑静", "李健兴", "麦", "何安", "杨威", "周于彰"] },
-            { id: 2, text: "你认为死者死因是：__________", correctAnswer: "他杀", options: ["自杀", "他杀"] },
-            { id: 3, text: "你认为毒药：__________", correctAnswer: "蓝色领带", options: ["蓝色领带", "圆形袖扣", "安心药店", "何安"] },
-            { id: 4, text: "你认为的毒药增强物：__________", correctAnswer: "圆形袖扣", options: ["蓝色领带", "圆形袖扣", "安心药店", "何安"] },
-            { id: 5, text: "你认为的下毒者：__________", correctAnswer: "安心药店", options: ["蓝色领带", "圆形袖扣", "安心药店", "何安"] },
-            { id: 6, text: "你认为的下毒方式：__________茶", correctAnswer: "蜂蜜柚子茶", options: ["蜂蜜柚子茶", "rein", "张威", "麦麦"] },
-            { id: 7, text: "监控矛盾：__________秒画面被插入", correctAnswer: "3秒", options: ["3秒", "rein", "张威", "麦麦"] },
-            { id: 8, text: "篡改技术：__________公司系统", correctAnswer: "兴建科技集团", options: ["兴建科技集团", "兴盛制造", "张威", "麦麦"] },
-            { id: 9, text: "凶手权限：__________账号", correctAnswer: "兴盛制造", options: ["兴建科技集团", "兴盛制造", "张威", "麦麦"] },
-            { id: 10, text: "抛尸时间掩护：触发__________", correctAnswer: "火警装置", options: ["火警装置", "zh4xj", "张威", "麦麦"] },
-            { id: 11, text: "财务动机：__________万元", correctAnswer: "何安", options: ["何安", "沈", "叶兰", "周于彰"] },
-            { id: 12, text: "境外账户名：__________", correctAnswer: "沈", options: ["何安", "沈", "叶兰", "周于彰"] },
-            { id: 13, text: "关键物证：__________袖扣、麦麦手机证据文件、", correctAnswer: "叶兰", options: ["何安", "沈", "叶兰", "周于彰"] },
-            { id: 14, text: "目击证人拍摄设备：__________", correctAnswer: "周于彰", options: ["何安", "沈", "叶兰", "周于彰"] },
-            { id: 15, text: "毒药来源：__________药店？日期？监控视频文件？", correctAnswer: "zh4xj", options: ["zh4xj", "rein", "张威", "麦麦"] }
-        ];
-        
-        // 可选词语 - 全部选项
-        const allOptions = [
-            "兴建科技集团", "兴盛制造", "张威", "麦麦", "rein", "自杀", "他杀", 
-            "蜂蜜柚子茶", "3秒", "火警装置", "zh4xj", "蓝色领带", "圆形袖扣", 
-            "安心药店", "安泰药店", "何安", "沈", "叶兰", "周于彰"
-        ];
-        
-        // 正确答案顺序
-        const correctOrder = [
-            "蓝色领带", "圆形袖扣", "安心药店", "何安", "沈", "叶兰", "周于彰", 
-            "兴建科技集团", "兴盛制造", "张威", "麦麦", "rein", "他杀", "蜂蜜柚子茶"
+            /* 分割线 - 凶手部分 */
+            { 
+                id: 1, 
+                text: "你认为真凶是：__________", 
+                correctAnswer: "叶兰", 
+                options: ["沈笑静", "李健兴", "麦姝冰", "何安", "杨威", "周于彰", "文心竹", "严真真", "叶兰", "Rein", "卫明澈"],
+                type: "single", // 单选题
+                hint: "" 
+            },
+            { 
+                id: 2, 
+                text: "你认为帮凶是：__________", 
+                correctAnswer: ["卫明澈", "周于彰", "何安", "文心竹"], // 选择其一就对
+                options: ["沈笑静", "李健兴", "麦姝冰", "何安", "杨威", "周于彰", "文心竹", "严真真", "叶兰", "Rein", "卫明澈"],
+                type: "multi-one", // 多选，选择其中任意一个即正确
+                hint: "提示：选择其中一个正确答案即可" 
+            },
+            { 
+                id: 3, 
+                text: "你认为主犯是：__________（ps：整个犯罪的组织者、策划者，在共同犯罪中起主要作用，是主犯。）", 
+                correctAnswer: "张威", 
+                options: ["沈笑静", "李健兴", "麦姝冰", "何安", "杨威", "周于彰", "文心竹", "严真真", "叶兰", "Rein", "卫明澈"],
+                type: "single",
+                hint: "" 
+            },
+            
+            /* 分割线 - 动机部分 */
+            { 
+                id: 4, 
+                text: "你认为真凶的动机是：__________", 
+                correctAnswer: "父亲被害", 
+                options: ["父亲被害", "母亲被害", "公司被抢", "兄弟姐妹被害", "好友被害", "挪用公款被发现", "看李老板不爽", "帮好友忙", "帮喜欢的人的忙"],
+                type: "single",
+                hint: "" 
+            },
+            { 
+                id: 5, 
+                text: "你认为主犯的动机是：__________", 
+                correctAnswer: ["父亲被害", "母亲被害", "公司被抢"], // 三个都选才对
+                options: ["父亲被害", "母亲被害", "公司被抢", "兄弟姐妹被害", "好友被害", "挪用公款被发现", "看李老板不爽", "帮好友忙", "帮喜欢的人的忙"],
+                type: "multi-all", // 多选，需要选择所有正确答案
+                hint: "提示：需要选择所有正确答案" 
+            },
+            { 
+                id: 6, 
+                text: "你认为其他帮凶的动机是：__________", 
+                correctAnswer: "母亲被害", 
+                options: ["父亲被害", "母亲被害", "公司被抢", "兄弟姐妹被害", "好友被害", "挪用公款被发现", "看李老板不爽", "帮好友忙", "帮喜欢的人的忙"],
+                type: "single",
+                hint: "" 
+            },
+            
+            /* 分割线 - 死因部分 */
+            { 
+                id: 7, 
+                text: "你认为死者是：__________", 
+                correctAnswer: "他杀", 
+                options: ["自杀", "他杀"],
+                type: "single",
+                hint: "" 
+            },
+            { 
+                id: 8, 
+                text: "你认为死者死因是：__________", 
+                correctAnswer: ["突发性心脏骤停", "心源性猝死"], // 选哪个都对，可多选，选择两个也对
+                options: ["恶性心律失常", "突发性心脏骤停", "慢性心脏病", "严重低血钾", "心源性猝死", "洋地黄毒苷中毒"],
+                type: "multi-any", // 多选，选择其中任意正确答案
+                hint: "提示：选择其中任意正确答案" 
+            },
+            { 
+                id: 9, 
+                text: "你认为死者死亡时间为：__________", 
+                correctAnswer: ["19:50左右", "22:00前"], // 两个之一就对
+                options: ["19:50左右", "22:00前", "22:00后"],
+                type: "multi-one", // 多选，选择其中一个即正确
+                hint: "提示：选择其中一个正确答案即可" 
+            },
+            
+            /* 分割线 - 毒药部分 */
+            { 
+                id: 10, 
+                text: "你认为毒药是：__________", 
+                correctAnswer: "洋地黄毒苷", 
+                options: ["西柚/葡萄柚", "蜂蜜柚子茶", "洋地黄毒苷", "氢氯噻嗪", "呋喃香豆素"],
+                type: "single",
+                hint: "" 
+            },
+            { 
+                id: 11, 
+                text: "你认为的毒药增强物是：__________", 
+                correctAnswer: ["氢氯噻嗪", "西柚/葡萄柚", "蜂蜜柚子茶"], // 必选氢氯噻嗪，其他两个选其中一个就对
+                options: ["西柚/葡萄柚", "蜂蜜柚子茶", "洋地黄毒苷", "氢氯噻嗪", "呋喃香豆素"],
+                type: "multi-complex", // 复杂多选，需要包含必选项
+                hint: "提示：必须选择氢氯噻嗪，另外可在西柚/葡萄柚和蜂蜜柚子茶中选择一个" 
+            },
+            { 
+                id: 12, 
+                text: "你认为的下毒者有：__________", 
+                correctAnswer: ["卫明澈", "叶兰"], // 多选，选择两个才对
+                options: ["沈笑静", "李健兴", "麦姝冰", "何安", "杨威", "周于彰", "文心竹", "严真真", "叶兰", "Rein", "卫明澈"],
+                type: "multi-all", // 多选，需要选择所有正确答案
+                hint: "提示：需要选择所有正确答案" 
+            },
+            { 
+                id: 13, 
+                text: "你认为的下毒方式是：__________", 
+                correctAnswer: ["蜂蜜柚子茶","送文件"], // 多选，选择两个才对
+                options: ["蜂蜜柚子茶", "送文件", "注射剂", "勾引/使用口红"],
+                type: "multi-all", // 多选，需要选择所有正确答案
+                hint: "提示：需要选择所有正确答案" 
+            },
+            
+            /* 分割线 - 案件细节部分 */
+            { 
+                id: 14, 
+                text: "你认为BOSS晚上七点多消失后会在____________？", 
+                correctAnswer: "物业管理处5楼储物间", 
+                options: ["物业管理处5楼储物间", "电梯厢顶", "电梯井里", "董事长办公室"],
+                type: "single",
+                hint: "" 
+            },
+            { 
+                id: 15, 
+                text: "你认为BOSS目前在____________？", 
+                correctAnswer: "电梯厢顶", 
+                options: ["物业管理处5楼储物间", "电梯厢顶", "电梯井里", "董事长办公室"],
+                type: "single",
+                hint: "" 
+            },
+            { 
+                id: 16, 
+                text: "你认为监控被____________动了手脚？", 
+                correctAnswer: ["何安","周于彰"], // 多选，选择两个才对
+                options: ["沈笑静", "李健兴", "麦姝冰", "何安", "杨威", "周于彰", "文心竹", "严真真", "叶兰", "Rein", "卫明澈"],
+                type: "multi-all", // 多选，需要选择所有正确答案
+                hint: "提示：需要选择所有正确答案" 
+            },
+            { 
+                id: 17, 
+                text: "你认为电梯停运原因是__________？", 
+                correctAnswer: ["火警装置", "周于彰"], // 两个之一就对
+                options: ["火警装置", "周于彰", "电梯故障", "何安", "卫明澈", "叶兰"],
+                type: "multi-one", // 多选，选择其中一个即正确
+                hint: "提示：选择其中一个正确答案即可" 
+            },
+            { 
+                id: 18, 
+                text: "你认为是谁挪用了公款__________", 
+                correctAnswer: ["卫明澈", "严真真", "李健兴"], // 其中之一就对
+                options: ["沈笑静", "李健兴", "麦姝冰", "何安", "杨威", "周于彰", "文心竹", "严真真", "叶兰", "Rein", "卫明澈"],
+                type: "multi-one", // 多选，选择其中一个即正确
+                hint: "提示：选择其中一个正确答案即可" 
+            },
+            { 
+                id: 19, 
+                text: "请提交涉嫌挪用公款的境外账户__________", 
+                correctAnswer: "PTB-ZH-718X-ALPHA9",
+                type: "text", // 文本输入
+                hint: "提示：直接输入正确答案" 
+            },
+            { 
+                id: 20, 
+                text: "请提交原始视频监控数据密钥__________", 
+                correctAnswer: "65aB3$kL9@mZx!pRqW",
+                type: "text", // 文本输入
+                hint: "提示：直接输入正确答案" 
+            }
         ];
         
         // 用户答案存储
@@ -481,6 +686,15 @@
         
         // 初始化函数
         function init() {
+            // 初始化用户答案对象，对于多选题初始化为数组
+            questionsData.forEach(q => {
+                if (q.type.includes("multi") || q.type.includes("complex")) {
+                    userAnswers[q.id] = [];
+                } else {
+                    userAnswers[q.id] = '';
+                }
+            });
+            
             renderQuestions();
             updateProgress();
             
@@ -490,11 +704,6 @@
             document.getElementById('message-ok').addEventListener('click', closeMessageModal);
             document.getElementById('confirm-cancel').addEventListener('click', closeConfirmModal);
             document.getElementById('confirm-ok').addEventListener('click', handleConfirmOk);
-            
-            // 初始化用户答案对象
-            questionsData.forEach(q => {
-                userAnswers[q.id] = '';
-            });
         }
         
         // 渲染问题
@@ -502,77 +711,205 @@
             const container = document.getElementById('questions-container');
             container.innerHTML = '';
             
+            // 更新总数显示
+            document.getElementById('total-count').textContent = questionsData.length;
+            
             questionsData.forEach(question => {
                 const questionEl = document.createElement('div');
                 questionEl.className = 'question-container';
                 questionEl.id = `question-${question.id}`;
+                
+                let answerArea = '';
+                if (question.type.includes("multi") || question.type.includes("complex")) {
+                    // 多选题：显示已选择的标签
+                    answerArea = `
+                        <div class="answer-display" id="answer-display-${question.id}">
+                            ${renderAnswerTags(question.id)}
+                        </div>
+                    `;
+                } else {
+                    // 单选题或文本题：显示输入框
+                    const value = Array.isArray(userAnswers[question.id]) 
+                        ? userAnswers[question.id].join(', ') 
+                        : userAnswers[question.id];
+                    
+                    answerArea = `
+                        <input 
+                            type="text" 
+                            class="answer-input"
+                            id="answer-${question.id}"
+                            placeholder="点击输入答案或从下方选择"
+                            data-id="${question.id}"
+                            value="${value || ''}"
+                        >
+                    `;
+                }
+                
                 questionEl.innerHTML = `
                     <div class="question-title">
                         <span class="number">${question.id}</span>
                         <span>${question.text}</span>
                     </div>
-                    <input 
-                        type="text" 
-                        class="answer-input"
-                        id="answer-${question.id}"
-                        placeholder="点击输入答案或从下方选择"
-                        data-id="${question.id}"
-                        value="${userAnswers[question.id] || ''}"
-                    >
-                    <div class="options-container" id="options-${question.id}">
-                        ${renderOptions(question.options, question.id)}
-                    </div>
+                    ${question.hint ? `<div class="multi-hint"><i class="fas fa-info-circle"></i> ${question.hint}</div>` : ''}
+                    ${answerArea}
+                    ${question.type !== 'text' ? `
+                        <div class="options-container" id="options-${question.id}">
+                            ${renderOptions(question.options, question.id, question.type)}
+                        </div>
+                    ` : ''}
                 `;
                 
                 container.appendChild(questionEl);
                 
-                // 为输入框添加事件
-                const input = document.getElementById(`answer-${question.id}`);
-                input.addEventListener('input', function() {
-                    const id = parseInt(this.dataset.id);
-                    userAnswers[id] = this.value.trim();
-                    updateProgress();
-                });
+                // 为输入框添加事件（单选题）
+                if (!question.type.includes("multi") && !question.type.includes("complex") && question.type !== 'text') {
+                    const input = document.getElementById(`answer-${question.id}`);
+                    input.addEventListener('input', function() {
+                        const id = parseInt(this.dataset.id);
+                        userAnswers[id] = this.value.trim();
+                        updateProgress();
+                        updateOptionSelection(id);
+                    });
+                }
+                
+                // 为文本输入框添加事件
+                if (question.type === 'text') {
+                    const input = document.getElementById(`answer-${question.id}`);
+                    input.addEventListener('input', function() {
+                        const id = parseInt(this.dataset.id);
+                        userAnswers[id] = this.value.trim();
+                        updateProgress();
+                    });
+                }
                 
                 // 为选项添加点击事件
-                const optionsContainer = document.getElementById(`options-${question.id}`);
-                optionsContainer.addEventListener('click', function(e) {
-                    if (e.target.classList.contains('option')) {
-                        const id = parseInt(this.id.split('-')[1]);
-                        const value = e.target.textContent;
-                        
-                        // 更新输入框
-                        const input = document.getElementById(`answer-${id}`);
-                        input.value = value;
-                        input.focus();
-                        
-                        // 更新用户答案
-                        userAnswers[id] = value;
-                        
-                        // 更新选项样式
-                        const allOptions = this.querySelectorAll('.option');
-                        allOptions.forEach(opt => opt.classList.remove('selected'));
-                        e.target.classList.add('selected');
-                        
-                        updateProgress();
+                if (question.type !== 'text') {
+                    const optionsContainer = document.getElementById(`options-${question.id}`);
+                    optionsContainer.addEventListener('click', function(e) {
+                        if (e.target.classList.contains('option')) {
+                            const id = parseInt(this.id.split('-')[1]);
+                            const value = e.target.textContent;
+                            const questionType = questionsData.find(q => q.id === id).type;
+                            
+                            handleOptionClick(id, value, questionType, e.target);
+                        }
+                    });
+                }
+            });
+        }
+        
+        // 渲染答案标签（多选题）
+        function renderAnswerTags(questionId) {
+            const answers = userAnswers[questionId];
+            if (!Array.isArray(answers) || answers.length === 0) {
+                return '<span style="color: #888; font-style: italic;">暂无选择</span>';
+            }
+            
+            return answers.map(answer => `
+                <div class="answer-tag">
+                    ${answer}
+                    <span class="remove" data-id="${questionId}" data-value="${answer}">×</span>
+                </div>
+            `).join('');
+        }
+        
+        // 处理选项点击
+        function handleOptionClick(questionId, value, questionType, targetElement) {
+            const question = questionsData.find(q => q.id === questionId);
+            
+            if (questionType.includes("multi") || questionType.includes("complex")) {
+                // 多选题逻辑
+                if (!Array.isArray(userAnswers[questionId])) {
+                    userAnswers[questionId] = [];
+                }
+                
+                const index = userAnswers[questionId].indexOf(value);
+                
+                if (index === -1) {
+                    // 添加选项
+                    userAnswers[questionId].push(value);
+                    targetElement.classList.add('multi-selected');
+                } else {
+                    // 移除选项
+                    userAnswers[questionId].splice(index, 1);
+                    targetElement.classList.remove('multi-selected');
+                }
+                
+                // 更新答案显示区域
+                updateAnswerDisplay(questionId);
+            } else {
+                // 单选题逻辑
+                userAnswers[questionId] = value;
+                
+                // 更新输入框
+                const input = document.getElementById(`answer-${questionId}`);
+                if (input) {
+                    input.value = value;
+                }
+                
+                // 更新选项样式
+                const allOptions = document.querySelectorAll(`#options-${questionId} .option`);
+                allOptions.forEach(opt => {
+                    if (opt.textContent === value) {
+                        opt.classList.add('selected');
+                    } else {
+                        opt.classList.remove('selected');
                     }
                 });
-            });
+            }
             
-            // 更新选项选择状态
-            updateOptionSelection();
+            updateProgress();
+        }
+        
+        // 更新答案显示区域（多选题）
+        function updateAnswerDisplay(questionId) {
+            const displayEl = document.getElementById(`answer-display-${questionId}`);
+            if (displayEl) {
+                displayEl.innerHTML = renderAnswerTags(questionId);
+                
+                // 为移除按钮添加事件
+                displayEl.querySelectorAll('.remove').forEach(removeBtn => {
+                    removeBtn.addEventListener('click', function() {
+                        const qId = parseInt(this.dataset.id);
+                        const value = this.dataset.value;
+                        
+                        // 从答案数组中移除
+                        const index = userAnswers[qId].indexOf(value);
+                        if (index !== -1) {
+                            userAnswers[qId].splice(index, 1);
+                        }
+                        
+                        // 更新选项样式
+                        const optionEl = document.querySelector(`#options-${qId} .option[data-value="${value}"]`);
+                        if (optionEl) {
+                            optionEl.classList.remove('multi-selected');
+                        }
+                        
+                        // 更新显示
+                        updateAnswerDisplay(qId);
+                        updateProgress();
+                    });
+                });
+            }
         }
         
         // 渲染选项
-        function renderOptions(options, questionId) {
+        function renderOptions(options, questionId, questionType) {
             const currentAnswer = userAnswers[questionId];
             
             return options.map(option => {
                 let selectedClass = '';
                 
-                // 如果用户选择了这个选项，标记为选中
-                if (currentAnswer === option) {
-                    selectedClass = 'selected';
+                if (questionType.includes("multi") || questionType.includes("complex")) {
+                    // 多选题：检查是否在数组中
+                    if (Array.isArray(currentAnswer) && currentAnswer.includes(option)) {
+                        selectedClass = 'multi-selected';
+                    }
+                } else {
+                    // 单选题：检查是否相等
+                    if (currentAnswer === option) {
+                        selectedClass = 'selected';
+                    }
                 }
                 
                 return `<div class="option ${selectedClass}" data-value="${option}">${option}</div>`;
@@ -580,38 +917,90 @@
         }
         
         // 更新选项选择状态
-        function updateOptionSelection() {
-            questionsData.forEach(question => {
-                const optionsContainer = document.getElementById(`options-${question.id}`);
-                const currentAnswer = userAnswers[question.id];
-                
-                if (optionsContainer && currentAnswer) {
-                    const allOptions = optionsContainer.querySelectorAll('.option');
-                    allOptions.forEach(opt => {
+        function updateOptionSelection(questionId) {
+            const question = questionsData.find(q => q.id === questionId);
+            if (!question) return;
+            
+            const optionsContainer = document.getElementById(`options-${questionId}`);
+            const currentAnswer = userAnswers[questionId];
+            
+            if (optionsContainer && currentAnswer) {
+                const allOptions = optionsContainer.querySelectorAll('.option');
+                allOptions.forEach(opt => {
+                    if (question.type.includes("multi") || question.type.includes("complex")) {
+                        // 多选题
+                        if (Array.isArray(currentAnswer) && currentAnswer.includes(opt.textContent)) {
+                            opt.classList.add('multi-selected');
+                        } else {
+                            opt.classList.remove('multi-selected');
+                        }
+                    } else {
+                        // 单选题
                         if (opt.textContent === currentAnswer) {
                             opt.classList.add('selected');
                         } else {
                             opt.classList.remove('selected');
                         }
-                    });
-                }
-            });
+                    }
+                });
+            }
         }
         
-        // 更新进度
-        function updateProgress() {
-            const total = questionsData.length;
-            const completed = Object.values(userAnswers).filter(answer => answer.trim() !== '').length;
-            const completedCountEl = document.getElementById('completed-count');
-            const totalCountEl = document.getElementById('total-count');
-            const progressFillEl = document.getElementById('progress-fill');
+        // 检查答案是否正确
+        function checkAnswer(questionId) {
+            const question = questionsData.find(q => q.id === questionId);
+            const userAnswer = userAnswers[questionId];
             
-            completedCountEl.textContent = completed;
-            totalCountEl.textContent = total;
+            if (!question || (!userAnswer && userAnswer !== '' && (!Array.isArray(userAnswer) || userAnswer.length === 0))) {
+                return false; // 未作答
+            }
             
-            // 计算进度百分比
-            const progressPercent = (completed / total) * 100;
-            progressFillEl.style.width = `${progressPercent}%`;
+            switch (question.type) {
+                case 'single':
+                case 'text':
+                    // 单选题或文本题：直接比较
+                    return userAnswer === question.correctAnswer;
+                    
+                case 'multi-one':
+                    // 多选一：用户答案包含任意一个正确答案即可
+                    if (Array.isArray(userAnswer) && Array.isArray(question.correctAnswer)) {
+                        return question.correctAnswer.some(correct => userAnswer.includes(correct));
+                    }
+                    return false;
+                    
+                case 'multi-any':
+                    // 多选任意：用户答案包含任意正确答案即可，不要求全部
+                    if (Array.isArray(userAnswer) && Array.isArray(question.correctAnswer)) {
+                        return userAnswer.some(answer => question.correctAnswer.includes(answer));
+                    }
+                    return false;
+                    
+                case 'multi-all':
+                    // 多选全部：用户答案必须包含所有正确答案
+                    if (Array.isArray(userAnswer) && Array.isArray(question.correctAnswer)) {
+                        return question.correctAnswer.every(correct => userAnswer.includes(correct)) && 
+                               userAnswer.every(answer => question.correctAnswer.includes(answer));
+                    }
+                    return false;
+                    
+                case 'multi-complex':
+                    // 复杂多选：必须包含必选项，且至少包含一个其他正确选项
+                    if (Array.isArray(userAnswer) && Array.isArray(question.correctAnswer)) {
+                        // 氢氯噻嗪是必选项
+                        const required = "氢氯噻嗪";
+                        if (!userAnswer.includes(required)) {
+                            return false;
+                        }
+                        
+                        // 检查是否包含至少一个其他正确选项
+                        const otherCorrect = question.correctAnswer.filter(item => item !== required);
+                        return userAnswer.some(answer => otherCorrect.includes(answer));
+                    }
+                    return false;
+                    
+                default:
+                    return false;
+            }
         }
         
         // 计算正确答案数量
@@ -619,8 +1008,7 @@
             let correctCount = 0;
             
             questionsData.forEach(question => {
-                const userAnswer = userAnswers[question.id];
-                if (userAnswer && userAnswer.trim() === question.correctAnswer) {
+                if (checkAnswer(question.id)) {
                     correctCount++;
                 }
             });
@@ -628,12 +1016,50 @@
             return correctCount;
         }
         
+        // 更新进度
+        function updateProgress() {
+            const total = questionsData.length;
+            let completed = 0;
+            
+            questionsData.forEach(question => {
+                const answer = userAnswers[question.id];
+                if (question.type.includes("multi") || question.type.includes("complex")) {
+                    // 多选题：只要选择了至少一个选项就算完成
+                    if (Array.isArray(answer) && answer.length > 0) {
+                        completed++;
+                    }
+                } else {
+                    // 单选题或文本题：有内容就算完成
+                    if (answer && answer.trim() !== '') {
+                        completed++;
+                    }
+                }
+            });
+            
+            const completedCountEl = document.getElementById('completed-count');
+            const progressFillEl = document.getElementById('progress-fill');
+            
+            completedCountEl.textContent = completed;
+            
+            // 计算进度百分比
+            const progressPercent = (completed / total) * 100;
+            progressFillEl.style.width = `${progressPercent}%`;
+        }
+        
         // 获取第一个未填写的问题ID
         function getFirstUnansweredQuestionId() {
             for (let i = 0; i < questionsData.length; i++) {
                 const question = questionsData[i];
-                const userAnswer = userAnswers[question.id];
-                if (!userAnswer || userAnswer.trim() === '') {
+                const answer = userAnswers[question.id];
+                
+                let isAnswered = false;
+                if (question.type.includes("multi") || question.type.includes("complex")) {
+                    isAnswered = Array.isArray(answer) && answer.length > 0;
+                } else {
+                    isAnswered = answer && answer.trim() !== '';
+                }
+                
+                if (!isAnswered) {
                     return question.id;
                 }
             }
@@ -643,9 +1069,14 @@
         // 滚动到指定问题并高亮
         function scrollToQuestion(questionId) {
             const questionElement = document.getElementById(`question-${questionId}`);
-            const inputElement = document.getElementById(`answer-${questionId}`);
+            let inputElement = document.getElementById(`answer-${questionId}`);
             
-            if (questionElement && inputElement) {
+            // 对于多选题，没有输入框，直接滚动到问题
+            if (!inputElement) {
+                inputElement = document.getElementById(`answer-display-${questionId}`);
+            }
+            
+            if (questionElement) {
                 // 移除之前的高亮
                 document.querySelectorAll('.answer-input.highlight').forEach(input => {
                     input.classList.remove('highlight');
@@ -658,10 +1089,14 @@
                 });
                 
                 // 添加高亮效果
-                setTimeout(() => {
-                    inputElement.classList.add('highlight');
-                    inputElement.focus();
-                }, 300);
+                if (inputElement) {
+                    setTimeout(() => {
+                        inputElement.classList.add('highlight');
+                        if (inputElement.tagName === 'INPUT') {
+                            inputElement.focus();
+                        }
+                    }, 300);
+                }
             }
         }
         
@@ -669,7 +1104,20 @@
         function submitAnswers() {
             // 检查是否所有问题都已填写
             const total = questionsData.length;
-            const completed = Object.values(userAnswers).filter(answer => answer.trim() !== '').length;
+            let completed = 0;
+            
+            questionsData.forEach(question => {
+                const answer = userAnswers[question.id];
+                if (question.type.includes("multi") || question.type.includes("complex")) {
+                    if (Array.isArray(answer) && answer.length > 0) {
+                        completed++;
+                    }
+                } else {
+                    if (answer && answer.trim() !== '') {
+                        completed++;
+                    }
+                }
+            });
             
             if (completed < total) {
                 // 找到第一个未填写的问题
@@ -746,7 +1194,11 @@
                 .then(result => {
                     if (result) {
                         questionsData.forEach(q => {
-                            userAnswers[q.id] = '';
+                            if (q.type.includes("multi") || q.type.includes("complex")) {
+                                userAnswers[q.id] = [];
+                            } else {
+                                userAnswers[q.id] = '';
+                            }
                         });
                         renderQuestions();
                         updateProgress();
@@ -801,8 +1253,5 @@
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', init);
     </script>
- <script src="pages.js"></script>
-<script src="scball.js"></script>
-<script src="visit.js"></script>
 </body>
 </html>

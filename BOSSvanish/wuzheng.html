@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>物证报告 - 李健兴董事长案件</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding-bottom: 20px;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 15px;
+        }
+        
+        /* 头部样式 */
+        .header {
+            background: linear-gradient(135deg, #1a3a5f 0%, #2c5282 100%);
+            color: white;
+            padding: 20px 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .header h1 i {
+            color: #ffd166;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        /* 案件信息卡片 */
+        .case-info {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .case-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #2c5282;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .case-title i {
+            color: #e53e3e;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .info-value {
+            color: #2c5282;
+            text-align: right;
+            font-weight: 500;
+        }
+        
+        /* 物证检测结果 */
+        .evidence-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #2c5282;
+            margin-bottom: 20px;
+        }
+        
+        .section-title i {
+            color: #38a169;
+        }
+        
+        .evidence-item {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .evidence-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .evidence-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .evidence-name {
+            font-weight: 700;
+            color: #2d3748;
+            font-size: 1.1rem;
+        }
+        
+        .evidence-tag {
+            background-color: #e53e3e;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .evidence-content {
+            color: #4a5568;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        
+        .evidence-details {
+            background-color: #f7fafc;
+            border-left: 4px solid #4299e1;
+            padding: 12px 15px;
+            border-radius: 0 6px 6px 0;
+            margin-top: 10px;
+        }
+        
+        /* 危险性分析 */
+        .danger-analysis {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .danger-title {
+            color: #e53e3e;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .warning-list {
+            list-style-type: none;
+        }
+        
+        .warning-list li {
+            padding: 10px 0 10px 30px;
+            position: relative;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .warning-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .warning-list li i {
+            position: absolute;
+            left: 0;
+            top: 12px;
+            color: #e53e3e;
+        }
+        
+        /* 结论部分 */
+        .conclusion-section {
+            background-color: #1a3a5f;
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .conclusion-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: #ffd166;
+        }
+        
+        .conclusion-content {
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+        
+        /* 操作按钮 */
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: #2c5282;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: #2d3748;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary:hover {
+            background-color: #1a3a5f;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #cbd5e0;
+        }
+        
+        /* 自定义弹窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background-color: white;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1a3a5f;
+            color: white;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .modal-close:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal-content {
+            padding: 20px;
+        }
+        
+        .modal-content p {
+            margin-bottom: 15px;
+        }
+        
+        .modal-content ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        /* 响应式调整 */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 750px;
+                margin: 0 auto;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .container {
+                max-width: 900px;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .delay-3 { animation-delay: 0.3s; opacity: 0; }
+        .delay-4 { animation-delay: 0.4s; opacity: 0; }
+        
+        /* 打印样式 */
+        @media print {
+            .actions, .modal-overlay {
+                display: none;
+            }
+            
+            body {
+                background-color: white;
+            }
+            
+            .container {
+                max-width: 100%;
+                padding: 0;
+            }
+            
+            .header, .case-info, .evidence-section, .danger-analysis, .conclusion-section {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+    
+<link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
+</head>
+<body>
+    <div class="container">
+        <!-- 页面头部 -->
+        <div class="header fade-in">
+            <h1><i class="fas fa-file-medical-alt"></i> 物证检测报告</h1>
+            <p>案件编号：MJ-2025-1231 | 检测机构：法医毒物分析中心</p>
+        </div>
+        
+        <!-- 案件信息 -->
+        <div class="case-info fade-in delay-1">
+            <div class="case-title">
+                <i class="fas fa-user-tie"></i>
+                <h2>案件基本信息</h2>
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">涉案人员：</span>
+                    <span class="info-value">李健兴（董事长）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">检测日期：</span>
+                    <span class="info-value">2026年1月1日</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">送检单位：</span>
+                    <span class="info-value">刑侦支队重案组</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">检测方法：</span>
+                    <span class="info-value">GC-MS / LC-MS/MS</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 物证检测结果 -->
+        <div class="evidence-section fade-in delay-2">
+            <div class="section-title">
+                <i class="fas fa-vial"></i>
+                <h2>物证检测结果</h2>
+            </div>
+            
+            <div class="evidence-item">
+                <div class="evidence-title">
+                    <span class="evidence-name">文件页边残留物检测</span>
+                    <span class="evidence-tag">阳性</span>
+                </div>
+                <div class="evidence-content">
+                    在李健兴董事长相关文件的页边检测出微量药物残留，经质谱分析确认为洋地黄毒苷(Digitoxin)。
+                </div>
+                <div class="evidence-details">
+                    <strong>检测结果：</strong> 洋地黄毒苷浓度 0.08 μg/cm²<br>
+                    <strong>检测部位：</strong> 文件页边（疑似手指接触区域）<br>
+                    <strong>备注：</strong> 洋地黄毒苷为强心苷类药物，治疗剂量与中毒剂量接近
+                </div>
+            </div>
+            
+            <div class="evidence-item">
+                <div class="evidence-title">
+                    <span class="evidence-name">茶杯内壁残留物检测</span>
+                    <span class="evidence-tag">阳性</span>
+                </div>
+                <div class="evidence-content">
+                    在李健兴董事长使用的茶杯内壁检测出呋喃香豆素(Furanocoumarin)和微量氢氯噻嗪(Hydrochlorothiazide)。
+                </div>
+                <div class="evidence-details">
+                    <strong>检测结果：</strong><br>
+                    1. 呋喃香豆素：葡萄柚特征成分，浓度 1.2 μg/mL<br>
+                    2. 氢氯噻嗪：利尿剂，浓度 0.05 μg/mL<br>
+                    <strong>备注：</strong> 葡萄柚成分会显著影响洋地黄类药物代谢
+                </div>
+            </div>
+        </div>
+        
+        <!-- 危险性分析 -->
+        <div class="danger-analysis fade-in delay-3">
+            <div class="section-title danger-title">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h2>毒理学危险性分析</h2>
+            </div>
+            <ul class="warning-list">
+                <li>
+                    <i class="fas fa-skull-crossbones"></i>
+                    <strong>洋地黄毒苷与氢氯噻嗪相互作用：</strong> 氢氯噻嗪作为利尿剂会导致血钾降低，而低血钾会增强洋地黄类药物的毒性。
+                </li>
+                <li>
+                    <i class="fas fa-heartbeat"></i>
+                    <strong>葡萄柚成分的影响：</strong> 呋喃香豆素会抑制肠道和肝脏中的CYP3A4酶，显著提高洋地黄毒苷的生物利用度，导致血液中药物浓度急剧上升。
+                </li>
+                <li>
+                    <i class="fas fa-user-injured"></i>
+                    <strong>对心脏病患者的危害：</strong> 李董事长患有慢性心脏病，高浓度洋地黄毒苷联合低血钾状态极易引发恶性心律失常（如室性心动过速、心室颤动）。
+                </li>
+                <li>
+                    <i class="fas fa-file-medical"></i>
+                    <strong>法医学结论：</strong> 上述药物组合可导致突发性心脏骤停，死亡过程迅速，尸检可能仅显示非特异性心脏改变。
+                </li>
+            </ul>
+        </div>
+        
+        <!-- 结论部分 -->
+        <div class="conclusion-section fade-in delay-4">
+            <div class="conclusion-title">
+                <i class="fas fa-gavel"></i>
+                <h2>综合分析结论</h2>
+            </div>
+            <div class="conclusion-content">
+                <p>根据物证检测结果和毒理学分析，李健兴董事长文件上的洋地黄毒苷残留，结合茶杯中检测到的氢氯噻嗪和葡萄柚成分（呋喃香豆素），构成了极度危险的药物相互作用组合。</p>
+                <p>这种组合可导致洋地黄毒苷血药浓度异常升高并伴有严重低血钾，对慢性心脏病患者可引发突发性恶性心律失常，进而导致心源性猝死。检测结果支持他杀可能性，建议立案侦查。</p>
+            </div>
+        </div>
+        
+        <!-- 操作按钮 -->
+        <div class="actions fade-in delay-4">
+            <button class="btn btn-primary" id="detailBtn">
+                <i class="fas fa-microscope"></i> 查看详细分析
+            </button>
+            <button class="btn btn-secondary" id="printBtn">
+                <i class="fas fa-print"></i> 打印报告
+            </button>
+        </div>
+    </div>
+    
+    <!-- 自定义弹窗 - 详细分析 -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-microscope"></i> 毒理学详细分析
+                </div>
+                <button class="modal-close" id="closeDetailModal">&times;</button>
+            </div>
+            <div class="modal-content">
+                <h3>洋地黄毒苷 (Digitoxin)</h3>
+                <p>一种长效强心苷，主要用于治疗心力衰竭和某些心律失常。治疗窗狭窄，治疗剂量与中毒剂量接近。</p>
+                
+                <h3>氢氯噻嗪 (Hydrochlorothiazide)</h3>
+                <p>噻嗪类利尿剂，用于治疗高血压和水肿。主要副作用是导致钾、钠等电解质丢失，引起低血钾。</p>
+                
+                <h3>呋喃香豆素 (Furanocoumarin)</h3>
+                <p>葡萄柚中的特征性成分，可强烈抑制CYP3A4酶。该酶负责洋地黄毒苷的代谢，抑制后可使洋地黄毒苷的血药浓度提高2-3倍。</p>
+                
+                <h3>危险协同作用机制</h3>
+                <ul>
+                    <li><strong>药代动力学相互作用：</strong> 呋喃香豆素抑制洋地黄毒苷代谢，大幅提高其血药浓度</li>
+                    <li><strong>药效学相互作用：</strong> 氢氯噻嗪引起的低血钾增强洋地黄对心肌细胞Na⁺/K⁺-ATP酶的抑制</li>
+                    <li><strong>心脏毒性增强：</strong> 高浓度洋地黄+低血钾大幅增加迟后除极风险，诱发恶性心律失常</li>
+                </ul>
+                
+                <h3>对李董事长的特定风险</h3>
+                <p>作为慢性心脏病患者，李董事长心脏储备功能差，对洋地黄毒性更为敏感。此种药物组合可在短时间内引发心室颤动，导致猝死，且尸检难以发现特异性改变。</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
+
+    <!-- 自定义弹窗 - 打印提示 -->
+    <div class="modal-overlay" id="printModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-print"></i> 打印报告
+                </div>
+                <button class="modal-close" id="closePrintModal">&times;</button>
+            </div>
+            <div class="modal-content">
+                <p>报告打印准备就绪。请确保：</p>
+                <ul>
+                    <li>连接打印机并确保有足够纸张</li>
+                    <li>使用A4纸张进行打印</li>
+                    <li>打印前预览页面布局</li>
+                    <li>如需彩色打印，请确保打印机有足够墨水</li>
+                </ul>
+                <p>报告包含敏感信息，打印后请妥善保管。</p>
+                <div style="display: flex; gap: 15px; margin-top: 20px;">
+                    <button class="btn btn-primary" id="confirmPrint" style="flex: 1;">
+                        <i class="fas fa-print"></i> 确认打印
+                    </button>
+                    <button class="btn btn-secondary" id="cancelPrint" style="flex: 1;">
+                        取消
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
+            const detailBtn = document.getElementById('detailBtn');
+            const printBtn = document.getElementById('printBtn');
+            const detailModal = document.getElementById('detailModal');
+            const printModal = document.getElementById('printModal');
+            const closeDetailModal = document.getElementById('closeDetailModal');
+            const closePrintModal = document.getElementById('closePrintModal');
+            const confirmPrint = document.getElementById('confirmPrint');
+            const cancelPrint = document.getElementById('cancelPrint');
+            
+            // 显示详细分析弹窗
+            detailBtn.addEventListener('click', function() {
+                detailModal.classList.add('active');
+            });
+            
+            // 关闭详细分析弹窗
+            closeDetailModal.addEventListener('click', function() {
+                detailModal.classList.remove('active');
+            });
+            
+            // 点击弹窗外部关闭弹窗
+            detailModal.addEventListener('click', function(e) {
+                if (e.target === detailModal) {
+                    detailModal.classList.remove('active');
+                }
+            });
+            
+            // 显示打印确认弹窗
+            printBtn.addEventListener('click', function() {
+                printModal.classList.add('active');
+            });
+            
+            // 关闭打印弹窗
+            closePrintModal.addEventListener('click', function() {
+                printModal.classList.remove('active');
+            });
+            
+            // 取消打印
+            cancelPrint.addEventListener('click', function() {
+                printModal.classList.remove('active');
+            });
+            
+            // 确认打印
+            confirmPrint.addEventListener('click', function() {
+                window.print();
+                printModal.classList.remove('active');
+            });
+            
+            // 点击弹窗外部关闭弹窗
+            printModal.addEventListener('click', function(e) {
+                if (e.target === printModal) {
+                    printModal.classList.remove('active');
+                }
+            });
+            
+            // 为关键信息添加点击效果
+            const evidenceTags = document.querySelectorAll('.evidence-tag');
+            evidenceTags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            });
+            
+            // 添加页面加载动画
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach(element => {
+                // 添加延迟类后触发重排以启动动画
+                void element.offsetWidth;
+            });
+            
+            // 兼容TapTap H5小程序的特殊处理
+            if (window.navigator.userAgent.indexOf('TapTap') !== -1) {
+                console.log('检测到TapTap环境，已优化交互体验');
+                // 可以添加TapTap环境的特殊处理
+            }
+        });
+    </script>
+<script src="scball.js"></script>
+<script src="pages.js"></script>
+<script src="visit.js"></script>
+</body>
+</html>

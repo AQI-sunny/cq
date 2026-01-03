@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>真相大白，沉冤得雪</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #0a2342 0%, #1a3a5f 100%);
+            color: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #ffd700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .title:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #ffd700, transparent);
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #aad3ff;
+            margin-top: 10px;
+        }
+        
+        .content-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .content-card h2 {
+            color: #4fc3f7;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .content-card h2 i {
+            color: #ffd700;
+        }
+        
+        .result-list {
+            list-style-type: none;
+            margin: 25px 0;
+        }
+        
+        .result-list li {
+            padding: 15px;
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border-left: 4px solid;
+            transition: transform 0.3s, background 0.3s;
+        }
+        
+        .result-list li:hover {
+            transform: translateX(5px);
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .result-list li:nth-child(1) {
+            border-left-color: #f44336;
+        }
+        
+        .result-list li:nth-child(2) {
+            border-left-color: #ff9800;
+        }
+        
+        .result-list li:nth-child(3) {
+            border-left-color: #2196f3;
+        }
+        
+        .result-list li:nth-child(4) {
+            border-left-color: #9c27b0;
+        }
+        
+        .criminal-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .crime-desc {
+            color: #ccc;
+            font-size: 0.95rem;
+        }
+        
+        .conclusion {
+            text-align: center;
+            font-size: 1.2rem;
+            padding: 20px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            margin-top: 25px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 200px;
+            max-width: 300px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #ffd700, #ffaa00);
+            color: #0a2342;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s, visibility 0.4s;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: linear-gradient(135deg, #1a3a5f 0%, #0a2342 100%);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: scale(0.9);
+            transition: transform 0.4s;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+        
+        .modal-header {
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.3);
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal-header h3 {
+            color: #ffd700;
+            font-size: 1.5rem;
+        }
+        
+        .modal-content {
+            padding: 25px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        
+        .modal-content p {
+            margin-bottom: 15px;
+        }
+        
+        .modal-footer {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-close {
+            background: linear-gradient(to right, #ff5252, #ff1744);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-close:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 82, 82, 0.4);
+        }
+        
+        .icon-large {
+            font-size: 3rem;
+            margin: 20px 0;
+            color: #ffd700;
+        }
+        
+        .justice-icon {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .justice-icon i {
+            font-size: 4rem;
+            color: #ffd700;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+        }
+        
+        @media (max-width: 768px) {
+            .title {
+                font-size: 1.6rem;
+            }
+            
+            .content-card {
+                padding: 20px;
+            }
+            
+            .content-card h2 {
+                font-size: 1.4rem;
+            }
+            
+            .btn {
+                min-width: 100%;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+            
+            .title {
+                font-size: 1.4rem;
+            }
+            
+            .content-card {
+                padding: 15px;
+            }
+            
+            .result-list li {
+                padding: 12px;
+            }
+        }
+        
+        /* 防止长按复制 */
+        .no-select {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* 防止图片拖动 */
+        img {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">恭喜你！真相大白，沉冤得雪</h1>
+            <p class="subtitle">历经波折，你凭借过人的智慧与勇气，成功厘清了所有线索，证明了自己的清白。</p>
+            <div class="justice-icon">
+                <i class="fas fa-scale-balanced"></i>
+            </div>
+        </div>
+        
+        <div class="content-card">
+            <h2><i class="fas fa-gavel"></i> 法律之网已然收紧</h2>
+            <p style="text-align: center; margin-bottom: 20px; color: #aad3ff;">所有涉案者均已伏法，正义得到了彻底的伸张</p>
+            
+            <ul class="result-list">
+                <li>
+                    <div class="criminal-name">主犯 卫明澈</div>
+                    <div class="crime-desc">对其所犯下的罪行供认不讳，被依法判处重刑，正义的铁拳给予了其应有的惩罚。</div>
+                </li>
+                <li>
+                    <div class="criminal-name">从犯 叶兰、周于彰、何安</div>
+                    <div class="crime-desc">在确凿证据面前无从抵赖，均因其在案件中的角色与行为受到了法律的严厉制裁。</div>
+                </li>
+                <li>
+                    <div class="criminal-name">相关人员 严真真</div>
+                    <div class="crime-desc">因涉嫌掩饰、隐瞒犯罪所得、犯罪所得收益罪，同样未能逃脱法网，为其贪婪与侥幸付出了代价。</div>
+                </li>
+            </ul>
+            
+            <div class="conclusion">
+                <p>至此，所有阴霾已然散尽。你不仅为自己赢得了清白，更将一群隐匿于黑暗中的犯罪者绳之以法。</p>
+                <p style="margin-top: 10px; color: #ffd700; font-weight: bold;">恭喜你，正直的探求者，你的名字将与真相一同闪耀。</p>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn btn-primary" id="viewDetailsBtn">
+                返回重新填表
+                <!-- 跳转tuiliban.html -->
+            </button>
+            <button class="btn btn-secondary" id="continueBtn">
+                关注作者
+                 <!-- 跳转https://sylvie-seven-cq.top/ -->
+            </button>
+        </div>
+    </div>
+    
+    <!-- 自定义弹窗 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-file-contract"></i> 最终判决书</h3>
+            </div>
+            <div class="modal-content">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <i class="fas fa-scale-balanced icon-large"></i>
+                </div>
+                <p>经司法机关严格审理，现对"星海集团特大经济犯罪案"作出最终判决：</p>
+                <p><strong>卫明澈</strong>：犯职务侵占罪、金融诈骗罪、行贿罪，数罪并罚，判处有期徒刑25年，没收个人全部财产。</p>
+                <p><strong>叶兰</strong>：犯金融诈骗罪、伪造公文罪，判处有期徒刑12年，并处罚金500万元。</p>
+                <p><strong>周于彰</strong>：犯商业贿赂罪、泄露商业秘密罪，判处有期徒刑8年，并处罚金300万元。</p>
+                <p><strong>何安</strong>：犯伪证罪、妨碍司法公正罪，判处有期徒刑5年，并处罚金100万元。</p>
+                <p><strong>严真真</strong>：犯掩饰、隐瞒犯罪所得、犯罪所得收益罪，判处有期徒刑4年，并处罚金80万元。</p>
+                <p style="margin-top: 20px; color: #aad3ff;">本案所有涉案人员均表示服从判决，不再上诉。至此，本案审理终结。</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-close" id="closeModalBtn">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 防止双击放大
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+        
+        // 禁用右键菜单
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // 弹窗控制
+        const modalOverlay = document.getElementById('modalOverlay');
+        const viewDetailsBtn = document.getElementById('viewDetailsBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const continueBtn = document.getElementById('continueBtn');
+        
+        // 修改：返回重新填表按钮跳转到tuiliban.html
+        viewDetailsBtn.addEventListener('click', function() {
+            window.location.href = 'tuiliban.html';
+        });
+        
+        // 修改：关注作者按钮跳转到指定网站
+        continueBtn.addEventListener('click', function() {
+            window.location.href = 'https://sylvie-seven-cq.top/';
+        });
+        
+        // 关闭弹窗
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        closeModalBtn.addEventListener('click', closeModal);
+        
+        // 点击弹窗外部关闭
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === modalOverlay) {
+                closeModal();
+            }
+        });
+        
+        // 键盘事件支持
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+                closeModal();
+            }
+        });
+        
+        // 添加一些交互效果
+        document.querySelectorAll('.result-list li').forEach(item => {
+            item.addEventListener('click', function() {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+    </script>
+</body>
+</html>

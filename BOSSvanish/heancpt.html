@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2025CTHC远程连接--真真电脑</title>
+    <title>2025CTHC远程连接--何安电脑</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -29,7 +29,7 @@
             padding: 20px;
             position: relative;
             overflow: hidden;
-            background-image: url('./zhenbz.png');
+            background-image: url('./heanbz.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -499,7 +499,7 @@
             </div>
             
             <!-- 甜甜圈图标 - 外部跳转 -->
-            <div class="icon donut" data-target="zzttq.html">
+            <!-- <div class="icon donut" data-target="zzttq.html">
                 <div class="icon-img">
                     <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -510,7 +510,7 @@
                     </svg>
                 </div>
                 <div class="icon-name">甜甜圈</div>
-            </div>
+            </div> -->
             
             <!-- 飞鼠图标 - 外部跳转 -->
             <!-- <div class="icon flying-mouse" data-target="ljxfs.html">
@@ -525,12 +525,12 @@
             </div> -->
             
             <!-- 海豚邮箱图标 - 外部跳转 -->
-            <div class="icon dolphin-email" data-target="zhendyoux.html">
+            <!-- <div class="icon dolphin-email" data-target="zhendyoux.html">
                 <div class="icon-img">
                     <i class="fas fa-envelope-open-text"></i>
                 </div>
                 <div class="icon-name">海豚邮箱</div>
-            </div>
+            </div> -->
             
             <!-- 加密文件夹图标 - 在桌面打开窗口 -->
             <div class="icon encrypted-folder" data-type="desktop-window" data-window="encrypted-folder">
@@ -866,15 +866,15 @@
          function unlockFolder() {
             const password = document.getElementById('folderPassword').value;
             
-                if (password === 'jiajia' || password === 'wangjiajia') {
+                if (password === 'weimingche' || password === 'mingche') {
     showNotification('文件夹已解锁', '加密文件夹已成功解锁！正在跳转到内容页面...');
     
     // 设置一个简短的延迟让用户看到通知
     setTimeout(() => {
-        window.location.href = 'zhenjmwj.html';
+        window.location.href = 'heandjmwj.html';
     }, 1500); // 1.5秒后跳转
             } else {
-                showNotification('解锁失败', '密码错误！提示：闺蜜姓名拼音');
+                showNotification('解锁失败', '密码错误！提示：好兄弟姓名拼音');
             }
         }
          // 防止右键菜单

@@ -75,6 +75,10 @@
             border-left: 5px solid #ff6b6b;
         }
         
+        .overview-card.insertion {
+            border-left: 5px solid #4CAF50;
+        }
+        
         .card-title {
             display: flex;
             align-items: center;
@@ -86,7 +90,14 @@
         
         .card-title i {
             margin-right: 10px;
+        }
+        
+        .overview-card .card-title i {
             color: #ff6b6b;
+        }
+        
+        .overview-card.insertion .card-title i {
+            color: #4CAF50;
         }
         
         .problem-text {
@@ -95,6 +106,11 @@
             border-radius: 10px;
             margin-bottom: 16px;
             border: 1px solid #ffeaea;
+        }
+        
+        .insertion-text {
+            background-color: #f0fff4;
+            border: 1px solid #c8e6c9;
         }
         
         .problem-text p {
@@ -115,6 +131,11 @@
             display: inline-block;
             margin-top: 6px;
             font-size: 15px;
+        }
+        
+        .insertion-highlight {
+            background-color: #e8f5e9;
+            color: #2e7d32;
         }
         
         /* 时间线部分 */
@@ -166,6 +187,10 @@
             background-color: #ff6b6b;
         }
         
+        .timeline-dot.insertion {
+            background-color: #4CAF50;
+        }
+        
         .timeline-content {
             background-color: #f8fafc;
             padding: 14px;
@@ -175,6 +200,10 @@
         
         .timeline-content.warning {
             border-left-color: #ff6b6b;
+        }
+        
+        .timeline-content.insertion {
+            border-left-color: #4CAF50;
         }
         
         .timeline-time {
@@ -240,6 +269,11 @@
         .status-badge.normal {
             background-color: #e8f5e9;
             color: #2e7d32;
+        }
+        
+        .status-badge.insertion {
+            background-color: #e3f2fd;
+            color: #1565c0;
         }
         
         /* 操作按钮 */
@@ -336,6 +370,21 @@
             color: #94a3b8;
             font-size: 13px;
         }
+        
+        /* 技术说明部分 */
+        .tech-note {
+            background-color: #f8fafc;
+            border-left: 4px solid #4b6cb7;
+            padding: 12px 16px;
+            margin-top: 12px;
+            border-radius: 0 8px 8px 0;
+            font-size: 13px;
+            color: #5a6c7d;
+        }
+        
+        .tech-note strong {
+            color: #2c3e50;
+        }
     </style>
     <link rel="stylesheet" href="sc-style.css">
 <link rel="icon" type="image/png" href="dtma.png">
@@ -354,17 +403,35 @@
     </header>
     
     <div class="container">
-        <!-- 问题概览 -->
+        <!-- 问题概览 - 帧删除 -->
         <div class="overview-card">
             <div class="card-title">
                 <i class="fas fa-exclamation-circle"></i>
-                <span>问题概览</span>
+                <span>问题概览：帧删除检测</span>
             </div>
             <div class="problem-text">
                 <p><strong>发现视频帧被删除...</strong></p>
                 <p>系统检测到监控视频流中存在异常帧删除情况，可能影响监控完整性。</p>
                 <div class="time-highlight">
                     <i class="fas fa-clock"></i> 删除时间：19:48 - 20:00
+                </div>
+            </div>
+        </div>
+        
+        <!-- 问题概览 - 帧插入 -->
+        <div class="overview-card insertion">
+            <div class="card-title">
+                <i class="fas fa-plus-circle"></i>
+                <span>问题概览：帧插入检测</span>
+            </div>
+            <div class="problem-text insertion-text">
+                <p><strong>发现视频帧被插入...</strong></p>
+                <p>系统检测到监控视频流中存在帧插入技术使用痕迹，可能用于伪造监控内容。</p>
+                <div class="time-highlight insertion-highlight">
+                    <i class="fas fa-clock"></i> 插入时间：21:55 - 22:05 左右
+                </div>
+                <div class="tech-note">
+                    <strong>技术说明：</strong>帧插入技术通过生成中间帧插入原始视频流，可能导致时间戳异常、运动模糊不连续等问题。
                 </div>
             </div>
         </div>
@@ -395,7 +462,23 @@
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
-                        <div class="timeline-time">20:00 - 现在</div>
+                        <div class="timeline-time">20:00 - 21:55</div>
+                        <div class="timeline-desc">视频流恢复正常，帧率稳定在25fps</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot insertion"></div>
+                    <div class="timeline-content insertion">
+                        <div class="timeline-time">21:55 - 22:05</div>
+                        <div class="timeline-desc">检测到帧插入技术使用痕迹，出现异常时间戳序列和运动模糊不连续</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-time">22:05 - 现在</div>
                         <div class="timeline-desc">视频流恢复正常，帧率稳定在25fps</div>
                     </div>
                 </div>
@@ -415,7 +498,7 @@
                         <tr>
                             <th>时间段</th>
                             <th>帧率</th>
-                            <th>丢失帧数</th>
+                            <th>帧数变化</th>
                             <th>状态</th>
                         </tr>
                     </thead>
@@ -429,23 +512,35 @@
                         <tr>
                             <td>19:48 - 19:52</td>
                             <td>12 fps</td>
-                            <td>约 120 帧</td>
+                            <td>丢失约 120 帧</td>
                             <td><span class="status-badge error">异常</span></td>
                         </tr>
                         <tr>
                             <td>19:52 - 19:56</td>
                             <td>8 fps</td>
-                            <td>约 200 帧</td>
+                            <td>丢失约 200 帧</td>
                             <td><span class="status-badge error">异常</span></td>
                         </tr>
                         <tr>
                             <td>19:56 - 20:00</td>
                             <td>10 fps</td>
-                            <td>约 100 帧</td>
+                            <td>丢失约 100 帧</td>
                             <td><span class="status-badge error">异常</span></td>
                         </tr>
                         <tr>
-                            <td>20:00 - 20:15</td>
+                            <td>20:00 - 21:55</td>
+                            <td>25 fps</td>
+                            <td>0</td>
+                            <td><span class="status-badge normal">正常</span></td>
+                        </tr>
+                        <tr>
+                            <td>21:55 - 22:05</td>
+                            <td>异常波动</td>
+                            <td>插入约 60 帧</td>
+                            <td><span class="status-badge insertion">帧插入</span></td>
+                        </tr>
+                        <tr>
+                            <td>22:05 - 22:30</td>
                             <td>25 fps</td>
                             <td>0</td>
                             <td><span class="status-badge normal">正常</span></td>
@@ -453,20 +548,45 @@
                     </tbody>
                 </table>
             </div>
+            
+            <div class="tech-note" style="margin-top: 16px;">
+                <strong>检测指标：</strong>
+                <ul style="margin-top: 8px; padding-left: 20px;">
+                    <li>帧删除：通过时间戳间隔和帧率异常检测</li>
+                    <li>帧插入：通过运动向量分析、图像重影检测和时间戳连续性检测</li>
+                    <li>数据完整性：MD5哈希校验和帧序列验证</li>
+                </ul>
+            </div>
         </div>
         
         <!-- 操作按钮 -->
         <div class="action-buttons">
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" onclick="reanalyzeData()">
                 <i class="fas fa-redo"></i> 重新分析
             </button>
-            <button class="btn btn-secondary">
+            <button class="btn btn-secondary" onclick="exportReport()">
                 <i class="fas fa-download"></i> 导出报告
             </button>
         </div>
-        
+        <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
         <footer>
             <p>监控系统分析报告 • 生成时间：2025年1月1日 8:30</p>
+            <p style="margin-top: 5px; font-size: 12px;">检测到异常：帧删除(19:48-20:00) | 帧插入(21:55-22:05)</p>
         </footer>
     </div>
     
@@ -482,15 +602,6 @@
                     
                     setTimeout(() => {
                         this.style.transform = '';
-                        
-                        // 根据按钮类型执行不同操作
-                        if (this.classList.contains('btn-primary')) {
-                            // 重新分析
-                           /*  alert('正在重新分析监控数据...'); */
-                        } else if (this.classList.contains('btn-secondary')) {
-                            // 导出报告
-                            /* alert('监控分析报告已开始下载'); */
-                        }
                     }, 150);
                 });
             });
@@ -509,13 +620,83 @@
             
             // 页面加载后显示提示
             setTimeout(() => {
-                console.log('监控数据分析页面加载完成');
+                console.log('监控数据分析页面加载完成 - 检测到帧删除和帧插入异常');
             }, 500);
         });
+        
+        // 重新分析功能
+        function reanalyzeData() {
+            const btn = document.querySelector('.btn-primary');
+            const originalHTML = btn.innerHTML;
+            
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 分析中...';
+            btn.disabled = true;
+            
+            // 模拟分析过程
+            setTimeout(() => {
+               /*  alert('重新分析完成！\n确认发现：\n1. 19:48-20:00 帧删除异常\n2. 21:55-22:05 帧插入异常');
+                */ btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            }, 1500);
+        }
+        
+        // 导出报告功能
+        function exportReport() {
+            const btn = document.querySelector('.btn-secondary');
+            const originalHTML = btn.innerHTML;
+            
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 生成中...';
+            btn.disabled = true;
+            
+            // 模拟导出过程
+            setTimeout(() => {
+                const reportContent = `
+监控系统异常分析报告
+================================
+生成时间: ${new Date().toLocaleString('zh-CN')}
+
+检测结果:
+1. 帧删除异常
+   时间段: 19:48 - 20:00
+   丢失帧数: 约420帧
+   影响: 监控内容不完整
+
+2. 帧插入异常
+   时间段: 21:55 - 22:05
+   插入帧数: 约60帧
+   技术: 帧插入技术
+   影响: 可能伪造监控内容
+
+详细数据:
+- 19:48-20:00 帧率异常下降至8-12fps
+- 21:55-22:05 检测到时间戳异常和运动模糊不连续
+
+建议措施:
+1. 检查监控设备日志
+2. 备份原始视频数据
+3. 联系安全团队进一步调查
+                `;
+                
+                // 创建下载链接
+                const blob = new Blob([reportContent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `监控异常报告_${new Date().toISOString().split('T')[0]}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+                
+                /* alert('报告已导出为文本文件！'); */
+            }, 1000);
+        }
     </script>
     <script src="scball.js"></script>
 <script src="pages.js"></script>
 <script src="visit.js"></script>
-
 </body>
 </html>

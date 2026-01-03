@@ -468,6 +468,8 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
 </head>
 <body>
     <!-- 顶部导航 -->
@@ -636,7 +638,22 @@
                     </ul>
                 </div>
             </div>
-            
+            <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
             <div class="copyright">
                 <p>© 2020 深南新闻网 版权所有 | 许可证编号：深ICP备2020001234号</p>
                 <p>地址：深南市楠山区新闻大厦 电话：0755-12345678</p>

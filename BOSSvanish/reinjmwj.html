@@ -6,31 +6,26 @@
     <title>加密文件夹</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* 重置样式 - 确保跨浏览器兼容 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent; /* 移除移动端点击高亮 */
+            -webkit-tap-highlight-color: transparent; 
         }
-        
         html, body {
             height: 100%;
             overflow: hidden;
             font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
         }
-        
         body {
-            background-color: #f0f0f0;
+            background-color: #f5f5f5;
             color: #333;
             display: flex;
             flex-direction: column;
             transition: opacity 0.3s ease;
         }
-        
-        /* Windows风格标题栏 */
         .title-bar {
-            background: linear-gradient(to right, #0a5eb7, #0a5eb7);
+            background: linear-gradient(to right, #0078d4, #005a9e);
             color: white;
             padding: 0;
             display: flex;
@@ -41,18 +36,14 @@
             user-select: none;
             -webkit-user-select: none;
         }
-        
         .title-text {
             padding-left: 12px;
             font-weight: 500;
         }
-        
-        /* Windows标准窗口控制按钮 */
         .window-controls {
             display: flex;
             height: 100%;
         }
-        
         .window-btn {
             width: 46px;
             height: 30px;
@@ -66,31 +57,24 @@
             font-size: 10px;
             transition: background-color 0.2s;
         }
-        
         .window-btn:hover {
             background-color: rgba(255, 255, 255, 0.1);
         }
-        
         .window-btn.minimize:hover {
             background-color: rgba(255, 255, 255, 0.2);
         }
-        
         .window-btn.maximize:hover {
             background-color: rgba(255, 255, 255, 0.2);
         }
-        
         .window-btn.close:hover {
-            background-color: #e81123;
+            background-color: #c42b1c;
         }
-        
         .window-btn.close:active {
-            background-color: #f1707a;
+            background-color: #a6261a;
         }
-        
-        /* 工具栏样式 */
         .toolbar {
-            background-color: #f8f8f8;
-            border-bottom: 1px solid #dcdcdc;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ddd;
             padding: 6px 12px;
             display: flex;
             align-items: center;
@@ -99,9 +83,8 @@
             font-size: 14px;
             overflow-x: auto;
             white-space: nowrap;
-            -webkit-overflow-scrolling: touch; /* iOS滚动优化 */
+            -webkit-overflow-scrolling: touch; 
         }
-        
         .toolbar-button {
             background: none;
             border: none;
@@ -113,17 +96,14 @@
             cursor: pointer;
             flex-shrink: 0;
         }
-        
         .toolbar-button:hover {
-            background-color: #e8e8e8;
+            background-color: #e0e0e0;
         }
-        
-        /* 地址栏样式 */
         .address-bar {
             display: flex;
             align-items: center;
             background-color: white;
-            border: 1px solid #dcdcdc;
+            border: 1px solid #ccc;
             border-radius: 3px;
             margin: 0 12px;
             padding: 4px 8px;
@@ -132,25 +112,20 @@
             min-width: 100px;
             overflow: hidden;
         }
-        
-        /* 主内容区域 */
         .main-content {
             flex: 1;
             display: flex;
             overflow: hidden;
             background-color: white;
         }
-        
-        /* 侧边栏 */
         .sidebar {
             width: 200px;
             background-color: #f8f8f8;
-            border-right: 1px solid #dcdcdc;
+            border-right: 1px solid #ddd;
             padding: 10px 0;
             overflow-y: auto;
             flex-shrink: 0;
         }
-        
         .sidebar-item {
             padding: 8px 15px;
             display: flex;
@@ -159,16 +134,12 @@
             cursor: pointer;
             min-height: 36px;
         }
-        
         .sidebar-item:hover {
             background-color: #e8e8e8;
         }
-        
         .sidebar-item.active {
-            background-color: #e1effd;
+            background-color: #e1e1e1;
         }
-        
-        /* 文件区域 */
         .file-area {
             flex: 1;
             padding: 20px;
@@ -178,10 +149,8 @@
             grid-auto-rows: 120px;
             gap: 20px;
             align-content: start;
-            -webkit-overflow-scrolling: touch; /* iOS滚动优化 */
+            -webkit-overflow-scrolling: touch; 
         }
-        
-        /* 文件项样式 */
         .file-item {
             display: flex;
             flex-direction: column;
@@ -194,15 +163,12 @@
             transition: all 0.2s;
             text-align: center;
         }
-        
         .file-item:hover {
-            background-color: #f0f7ff;
+            background-color: #f0f0f0;
         }
-        
         .file-item.selected {
-            background-color: #e1effd;
+            background-color: #e3f2fd;
         }
-        
         .file-icon {
             width: 60px;
             height: 60px;
@@ -211,17 +177,18 @@
             justify-content: center;
             margin-bottom: 8px;
         }
-        
         .pdf-icon {
-            color: #e74c3c;
+            color: #f40f02;
             font-size: 50px;
         }
-        
         .txt-icon {
-            color: #3498db;
+            color: #555;
             font-size: 50px;
         }
-        
+        .html-icon {
+            color: #e44d26;
+            font-size: 50px;
+        }
         .file-name {
             font-size: 12px;
             text-align: center;
@@ -234,11 +201,9 @@
             -webkit-box-orient: vertical;
             line-height: 1.3;
         }
-        
-        /* 状态栏 */
         .status-bar {
             background-color: #f0f0f0;
-            border-top: 1px solid #dcdcdc;
+            border-top: 1px solid #ddd;
             height: 24px;
             display: flex;
             align-items: center;
@@ -247,8 +212,6 @@
             font-size: 12px;
             color: #666;
         }
-        
-        /* 弹窗遮罩 */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -265,13 +228,10 @@
             transition: opacity 0.3s, visibility 0.3s;
             padding: 20px;
         }
-        
         .modal-overlay.active {
             visibility: visible;
             opacity: 1;
         }
-        
-        /* 弹窗内容 */
         .modal {
             background-color: white;
             border-radius: 8px;
@@ -284,26 +244,26 @@
             max-height: 80vh;
             display: flex;
             flex-direction: column;
+            display: none;
         }
-        
+        .modal.active {
+            display: flex;
+        }
         .modal-overlay.active .modal {
             transform: translateY(0);
         }
-        
         .modal-header {
-            background: linear-gradient(to right, #0a5eb7, #0a5eb7);
+            background: linear-gradient(to right, #0078d4, #005a9e);
             color: white;
             padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
         .modal-title {
             font-size: 18px;
             font-weight: 500;
         }
-        
         .modal-close {
             background: none;
             border: none;
@@ -317,26 +277,22 @@
             justify-content: center;
             border-radius: 3px;
         }
-        
         .modal-close:hover {
             background-color: rgba(255, 255, 255, 0.2);
         }
-        
         .modal-body {
             padding: 20px;
             overflow-y: auto;
             flex: 1;
         }
-        
         .modal-footer {
             padding: 15px 20px;
             background-color: #f8f8f8;
-            border-top: 1px solid #e0e0e0;
+            border-top: 1px solid #ddd;
             display: flex;
             justify-content: flex-end;
             gap: 10px;
         }
-        
         .btn {
             padding: 8px 16px;
             border-radius: 4px;
@@ -345,26 +301,20 @@
             font-size: 14px;
             font-weight: 500;
         }
-        
         .btn-primary {
-            background-color: #0a5eb7;
+            background-color: #0078d4;
             color: white;
         }
-        
         .btn-primary:hover {
-            background-color: #094d9b;
+            background-color: #106ebe;
         }
-        
         .btn-secondary {
             background-color: #e0e0e0;
             color: #333;
         }
-        
         .btn-secondary:hover {
             background-color: #d0d0d0;
         }
-        
-        /* 弹窗内容样式 */
         .txt-content {
             font-family: 'Courier New', Courier, monospace;
             font-size: 14px;
@@ -372,71 +322,96 @@
             white-space: pre-line;
             word-break: break-word;
         }
-        
-        .pdf-preview {
+        .html-modal-content {
             text-align: center;
             padding: 20px;
         }
-        
-        .pdf-preview i {
+        .html-modal-content i {
             font-size: 80px;
-            color: #e74c3c;
+            color: #e44d26;
             margin-bottom: 20px;
         }
-        
-        .pdf-link {
+        .html-link {
             display: inline-block;
             margin-top: 15px;
             padding: 10px 20px;
-            background-color: #0a5eb7;
+            background-color: #0078d4;
             color: white;
             text-decoration: none;
             border-radius: 4px;
             font-size: 14px;
+            border: none;
+            cursor: pointer;
         }
-        
-        .pdf-link:hover {
-            background-color: #094d9b;
+        .html-link:hover {
+            background-color: #106ebe;
         }
-        
-        /* ========== 移动端适配 ========== */
-        
-        /* 平板设备 (768px以下) */
+        .links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .link-item:hover {
+            background-color: #e8e8e8;
+        }
+        .link-icon {
+            font-size: 20px;
+            color: #e44d26;
+        }
+        .link-text {
+            flex: 1;
+            font-size: 14px;
+        }
         @media (max-width: 768px) {
             .sidebar {
-                display: none; /* 小屏幕隐藏侧边栏 */
+                display: none; 
             }
-            
             .file-area {
                 grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
                 grid-auto-rows: 100px;
                 gap: 15px;
                 padding: 15px;
             }
-            
             .file-icon {
                 width: 50px;
                 height: 50px;
             }
-            
-            .pdf-icon, .txt-icon {
+            .pdf-icon, .txt-icon, .html-icon {
                 font-size: 40px;
             }
-            
             .toolbar-button span {
-                display: none; /* 小屏幕隐藏按钮文字 */
+                display: none; 
             }
-            
             .modal {
                 width: 95%;
+                max-height: 70vh;
             }
-            
             .window-btn {
                 width: 40px;
             }
+            .modal-header {
+                padding: 12px 15px;
+            }
+            .modal-title {
+                font-size: 16px;
+            }
+            .modal-body {
+                padding: 15px;
+            }
+            .modal-footer {
+                padding: 12px 15px;
+            }
         }
-        
-        /* 手机设备 (480px以下) */
         @media (max-width: 480px) {
             .file-area {
                 grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
@@ -444,61 +419,56 @@
                 gap: 10px;
                 padding: 10px;
             }
-            
             .file-icon {
                 width: 40px;
                 height: 40px;
             }
-            
-            .pdf-icon, .txt-icon {
+            .pdf-icon, .txt-icon, .html-icon {
                 font-size: 35px;
             }
-            
             .file-name {
                 font-size: 11px;
                 max-width: 70px;
             }
-            
             .title-bar {
                 height: 28px;
                 font-size: 11px;
             }
-            
             .window-btn {
                 height: 28px;
                 width: 36px;
             }
-            
             .toolbar {
                 height: 36px;
                 padding: 4px 8px;
                 gap: 10px;
             }
-            
             .address-bar {
                 height: 26px;
                 padding: 2px 6px;
                 font-size: 12px;
                 margin: 0 8px;
             }
-            
+            .modal {
+                width: 95%;
+                max-height: 65vh;
+            }
             .modal-title {
                 font-size: 16px;
             }
-            
             .modal-body, .modal-footer {
                 padding: 15px;
             }
-            
             .btn {
                 padding: 6px 12px;
                 font-size: 13px;
                 min-height: 36px;
                 min-width: 60px;
             }
+            .txt-content {
+                font-size: 13px;
+            }
         }
-        
-        /* 超小屏幕手机 (320px以下) */
         @media (max-width: 320px) {
             .file-area {
                 grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
@@ -506,94 +476,77 @@
                 gap: 8px;
                 padding: 8px;
             }
-            
             .file-icon {
                 width: 35px;
                 height: 35px;
             }
-            
-            .pdf-icon, .txt-icon {
+            .pdf-icon, .txt-icon, .html-icon {
                 font-size: 30px;
             }
-            
             .file-name {
                 font-size: 10px;
                 max-width: 60px;
             }
-            
             .title-bar {
                 padding: 0 8px;
             }
-            
             .window-btn {
                 width: 32px;
             }
+            .modal {
+                width: 98%;
+                max-height: 60vh;
+            }
         }
-        
-        /* 横屏模式 */
         @media (max-height: 480px) and (orientation: landscape) {
             .title-bar {
                 height: 28px;
             }
-            
             .toolbar {
                 height: 32px;
                 padding: 2px 8px;
             }
-            
             .file-area {
                 grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
                 grid-auto-rows: 80px;
                 padding: 10px;
             }
-            
             .modal {
                 max-height: 85vh;
             }
         }
-        
-        /* 触摸设备优化 */
         @media (hover: none) and (pointer: coarse) {
             .file-item:hover {
-                background-color: inherit; /* 移除触摸设备的悬停效果 */
+                background-color: inherit; 
             }
-            
             .file-item:active {
-                background-color: #e1effd;
+                background-color: #e0e0e0;
             }
-            
             .toolbar-button:hover, .btn:hover, .modal-close:hover {
                 background-color: inherit;
             }
-            
             .toolbar-button:active, .btn:active, .modal-close:active {
-                background-color: #d8d8d8;
+                background-color: #d0d0d0;
             }
-            
             .window-btn:hover {
                 background-color: transparent;
             }
-            
             .window-btn.close:active {
-                background-color: #f1707a;
+                background-color: #a6261a;
             }
         }
-        
-        /* 滚动条样式优化 */
         .sidebar::-webkit-scrollbar,
         .file-area::-webkit-scrollbar,
         .modal-body::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
-        
         .sidebar::-webkit-scrollbar-track,
         .file-area::-webkit-scrollbar-track,
         .modal-body::-webkit-scrollbar-track {
             background: #f1f1f1;
             border-radius: 3px;
         }
-        
         .sidebar::-webkit-scrollbar-thumb,
         .file-area::-webkit-scrollbar-thumb,
         .modal-body::-webkit-scrollbar-thumb {
@@ -618,7 +571,6 @@
             </button>
         </div>
     </div>
-    
     <!-- 工具栏 -->
     <div class="toolbar">
         <button class="toolbar-button">
@@ -633,18 +585,15 @@
             <i class="fas fa-arrow-up"></i>
             <span>向上</span>
         </button>
-        
         <div class="address-bar">
             <i class="fas fa-folder" style="margin-right: 8px; color: #666;"></i>
             <span>此电脑 > 文档</span>
         </div>
-        
         <button class="toolbar-button">
             <i class="fas fa-search"></i>
             <span>搜索</span>
         </button>
     </div>
-    
     <!-- 主内容区域 -->
     <div class="main-content">
         <!-- 侧边栏 -->
@@ -670,7 +619,6 @@
                 <span>图片</span>
             </div>
         </div>
-        
         <!-- 文件区域 -->
         <div class="file-area" id="fileArea">
             <!-- important.txt 文件 -->
@@ -678,73 +626,76 @@
                 <div class="file-icon">
                     <i class="fas fa-file-alt txt-icon"></i>
                 </div>
-                <div class="file-name">与Rein的协议.txt</div>
+                <div class="file-name">一些密言.txt</div>
             </div>
-
-            <!-- <div class="file-item" data-file-type="txt" data-file-name="fcjh.txt">
+            <!-- 新增的HTML文件 -->
+            <div class="file-item" data-file-type="html" data-file-name="协议草案.html">
                 <div class="file-icon">
-                    <i class="fas fa-file-alt txt-icon"></i>
+                    <i class="fab fa-html5 html-icon"></i>
                 </div>
-                <div class="file-name">复仇计划.txt</div>
-            </div> -->
-            
-            <!-- 其他示例文件 -->
-            <!-- <div class="file-item">
-                <div class="file-icon">
-                    <i class="fas fa-folder" style="color: #ffb300; font-size: 50px;"></i>
-                </div>
-                <div class="file-name">1228李健兴sha人证据</div>
+                <div class="file-name">协议草案.html</div>
             </div>
-
-             <div class="file-item">
+            <div class="file-item" data-file-type="html" data-file-name="商业档案.html">
                 <div class="file-icon">
-                    <i class="fas fa-folder" style="color: #ffb300; font-size: 50px;"></i>
+                    <i class="fab fa-html5 html-icon"></i>
                 </div>
-                <div class="file-name">张帅哥喜好</div>
-            </div> -->
-            
+                <div class="file-name">商业档案.html</div>
+            </div>
+            <div class="file-item" data-file-type="html" data-file-name="police.html">
+                <div class="file-icon">
+                    <i class="fab fa-html5 html-icon"></i>
+                </div>
+                <div class="file-name">police.html</div>
+            </div>
+            <div class="file-item" data-file-type="html" data-file-name="监控分析报告.html">
+                <div class="file-icon">
+                    <i class="fab fa-html5 html-icon"></i>
+                </div>
+                <div class="file-name">监控分析报告.html</div>
+            </div>
+            <div class="file-item" data-file-type="html" data-file-name="物业维护日志系统.html">
+                <div class="file-icon">
+                    <i class="fab fa-html5 html-icon"></i>
+                </div>
+                <div class="file-name">物业维护日志系统.html</div>
+            </div>
+            <!-- 原有文件夹 -->
             <div class="file-item">
                 <div class="file-icon">
                     <i class="fas fa-folder" style="color: #ffb300; font-size: 50px;"></i>
                 </div>
-                <div class="file-name">委托文件</div>
+                <div class="file-name">ljx策划爆炸案证据</div>
             </div>
-
             <div class="file-item">
                 <div class="file-icon">
                     <i class="fas fa-folder" style="color: #ffb300; font-size: 50px;"></i>
                 </div>
-                <div class="file-name">财务部异常记录</div>
+                <div class="file-name">李健兴pc相关图片</div>
             </div>
-
-            <div class="file-item">
-                <div class="file-icon">
-                    <i class="fas fa-folder" style="color: #ffb300; font-size: 50px;"></i>
-                </div>
-                <div class="file-name">zw挪用公款证据</div>
-            </div>
-
         </div>
     </div>
-    
     <!-- 状态栏 -->
     <div class="status-bar">
-        <div>3 个对象</div>
+        <div>8 个对象</div>
         <div>已选择 0 个项目</div>
     </div>
-    
-    <!-- 弹窗遮罩 - 第一个弹窗 -->
+    <!-- 弹窗遮罩 -->
     <div class="modal-overlay" id="modalOverlay">
         <!-- important.txt 弹窗 -->
         <div class="modal" id="importantModal">
             <div class="modal-header">
-                <div class="modal-title">与Rein的协议.txt</div>
+                <div class="modal-title">一些密言.txt</div>
                 <button class="modal-close" id="closeImportantModal">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="txt-content">
-                协议暗号：
-                急急如玉令
+                    调查发现物业管理处的周于彰在12.31日行迹可疑，我黑进了物业管理系统。
+                    <br>
+鉴于严小姐只让我调查李先生的相关黑料，这部分内容我未做深入调查。
+<br>
+police系统及其物证编号都是魏警官提供的，至于为什么通过我，这我便不得而知了。我只知道，魏警官并不希望真凶潜逃，无论真相是什么。
+<br>
+本次调查的酬金沈小姐已支付，关于李先生的相关资料都在这个文件夹里了，我只做调查，至于是否上交魏警官...这便不关我事了，剩下的由你们决定。
                 </div>
             </div>
             <div class="modal-footer">
@@ -752,109 +703,83 @@
             </div>
         </div>
         
-        <!-- fcjh.txt 弹窗 - 修复后的 -->
-        <!-- <div class="modal" id="fcjhModal">
+        <!-- HTML文件弹窗 -->
+        <div class="modal" id="htmlModal">
             <div class="modal-header">
-                <div class="modal-title">复仇计划.txt</div>
-                <button class="modal-close" id="closeFcjhModal">&times;</button>
+                <div class="modal-title" id="htmlModalTitle">HTML文件</div>
+                <button class="modal-close" id="closeHtmlModal">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="txt-content">
-                12.31日，送"董事会年度会议材料"
+                <div class="html-modal-content" id="htmlModalContent">
+                    <i class="fab fa-html5"></i>
+                    <h3 id="htmlFileName">协议草案.html</h3>
+                    <p>此文件为HTML格式，点击下方按钮打开查看内容</p>
+                    <button class="html-link" id="openHtmlBtn">打开HTML文件</button>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" id="closeFcjhBtn">关闭</button>
+                <button class="btn btn-secondary" id="cancelHtmlBtn">取消</button>
+                <button class="btn btn-primary" id="confirmHtmlBtn">打开</button>
             </div>
-        </div> -->
+        </div>
     </div>
-    
     <script>
-        // 设备检测
         const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-        
-        // 获取DOM元素
         const closeWindowBtn = document.getElementById('closeWindowBtn');
         const fileArea = document.getElementById('fileArea');
         const modalOverlay = document.getElementById('modalOverlay');
-        
-        // important弹窗元素
         const importantModal = document.getElementById('importantModal');
+        const htmlModal = document.getElementById('htmlModal');
         const closeImportantModal = document.getElementById('closeImportantModal');
         const closeImportantBtn = document.getElementById('closeImportantBtn');
+        const closeHtmlModal = document.getElementById('closeHtmlModal');
+        const cancelHtmlBtn = document.getElementById('cancelHtmlBtn');
+        const confirmHtmlBtn = document.getElementById('confirmHtmlBtn');
+        const openHtmlBtn = document.getElementById('openHtmlBtn');
+        const htmlModalTitle = document.getElementById('htmlModalTitle');
+        const htmlFileName = document.getElementById('htmlFileName');
+        const htmlModalContent = document.getElementById('htmlModalContent');
         
-        // fcjh弹窗元素
-        const fcjhModal = document.getElementById('fcjhModal');
-        const closeFcjhModal = document.getElementById('closeFcjhModal');
-        const closeFcjhBtn = document.getElementById('closeFcjhBtn');
-        
-        // 当前选中的文件
         let selectedFile = null;
         let isMaximized = false;
+        let currentHtmlFile = '';
         
-        // 确保所有关闭按钮都能正常工作
-        function initializeModalButtons() {
-            // 为 important.txt 弹窗的关闭按钮绑定事件
-            if (closeImportantModal) {
-                closeImportantModal.onclick = closeModal;
-            }
-            
-            if (closeImportantBtn) {
-                closeImportantBtn.onclick = closeModal;
-            }
-            
-            // 为 fcjh.txt 弹窗的关闭按钮绑定事件
-            if (closeFcjhModal) {
-                closeFcjhModal.onclick = closeModal;
-            }
-            
-            if (closeFcjhBtn) {
-                closeFcjhBtn.onclick = closeModal;
-            }
-            
-            // 点击遮罩层关闭弹窗
-            modalOverlay.onclick = function(e) {
-                if (e.target === modalOverlay) {
-                    closeModal();
-                }
-            };
-        }
+        // HTML文件映射（你可以在这里修改跳转链接）
+        const htmlFiles = {
+            '协议草案.html': 'xieyicaoan.html',
+            '商业档案.html': 'shangyda.html',
+            'police.html': 'shouquanma.html',
+            '监控分析报告.html': 'jiank.html',
+            '物业维护日志系统.html': 'wuyeriz.html'
+        };
         
-        // 关闭窗口按钮 - 直接跳转到 yeldn.html
+        // 关闭窗口按钮事件
         closeWindowBtn.addEventListener('click', function() {
-            // 添加淡出效果
             document.body.style.opacity = '0';
             document.body.style.transition = 'opacity 0.3s ease';
-            
-            // 延迟跳转以显示动画效果
             setTimeout(() => {
-                window.location.href = 'zhendcpt.html';
+                window.location.href = './reindn.html';
             }, 300);
         });
         
-        // 最小化按钮功能
+        // 最小化按钮事件
         document.querySelector('.window-btn.minimize').addEventListener('click', function() {
-            // 最小化效果
             document.body.style.transform = 'scale(0.95)';
             document.body.style.opacity = '0.8';
             document.body.style.transition = 'all 0.3s ease';
-            
-            // 触摸设备优化
             if (isTouchDevice) {
                 this.style.transform = 'scale(0.9)';
                 setTimeout(() => {
                     this.style.transform = '';
                 }, 200);
             }
-            
-            // 1.5秒后恢复
             setTimeout(() => {
                 document.body.style.transform = '';
                 document.body.style.opacity = '';
             }, 1500);
         });
         
-        // 最大化按钮功能
+        // 最大化按钮事件
         const originalBodyStyle = {
             margin: document.body.style.margin,
             borderRadius: document.body.style.borderRadius,
@@ -864,7 +789,6 @@
         
         document.querySelector('.window-btn.maximize').addEventListener('click', function() {
             if (!isMaximized) {
-                // 最大化
                 document.body.style.margin = '0';
                 document.body.style.borderRadius = '0';
                 document.body.style.maxWidth = '100%';
@@ -873,7 +797,6 @@
                 this.title = '还原';
                 isMaximized = true;
             } else {
-                // 还原
                 document.body.style.margin = originalBodyStyle.margin || '';
                 document.body.style.borderRadius = originalBodyStyle.borderRadius || '';
                 document.body.style.maxWidth = originalBodyStyle.maxWidth || '';
@@ -884,9 +807,8 @@
             }
         });
         
-        // 文件点击事件 - 触摸设备优化
+        // 文件点击事件
         fileArea.addEventListener(isTouchDevice ? 'touchstart' : 'click', function(e) {
-            // 防止触摸设备上的双击缩放
             if (isTouchDevice && e.cancelable) {
                 e.preventDefault();
             }
@@ -894,77 +816,123 @@
             let fileItem = e.target.closest('.file-item');
             if (!fileItem) return;
             
-            // 移除所有文件项的选中状态
+            // 移除所有选中状态
             document.querySelectorAll('.file-item').forEach(item => {
                 item.classList.remove('selected');
             });
             
-            // 添加当前文件项的选中状态
+            // 添加选中状态
             fileItem.classList.add('selected');
             selectedFile = fileItem;
             
             // 更新状态栏
             document.querySelector('.status-bar div:last-child').textContent = '已选择 1 个项目';
             
-            // 获取文件信息
+            // 获取文件类型和名称
             const fileType = fileItem.getAttribute('data-file-type');
             const fileName = fileItem.getAttribute('data-file-name');
             
-            // 根据文件名打开对应的弹窗
+            // 打开对应模态框
             if (fileName === 'important.txt') {
                 openModal(importantModal);
-            } else if (fileName === 'fcjh.txt') {
-                openModal(fcjhModal);
+            } else if (fileType === 'html' && fileName) {
+                currentHtmlFile = fileName;
+                htmlModalTitle.textContent = fileName;
+                htmlFileName.textContent = fileName;
+                openModal(htmlModal);
             }
         });
         
-        // 打开弹窗函数
+        // 打开模态框函数
         function openModal(modal) {
-            // 隐藏所有弹窗
+            // 隐藏所有模态框
             document.querySelectorAll('.modal').forEach(m => {
                 m.style.display = 'none';
             });
             
-            // 显示指定的弹窗
-            if (modal) {
-                modal.style.display = 'flex';
-                modal.style.flexDirection = 'column';
-                modalOverlay.classList.add('active');
-                
-                // 阻止背景滚动
-                document.body.style.overflow = 'hidden';
-                
-                // 触摸设备优化：禁止背景滚动
-                if (isTouchDevice) {
-                    document.addEventListener('touchmove', preventScroll, { passive: false });
-                }
+            // 显示指定的模态框
+            modal.style.display = 'flex';
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // 触摸设备防止滚动
+            if (isTouchDevice) {
+                document.addEventListener('touchmove', preventScroll, { passive: false });
             }
         }
         
-        // 关闭弹窗函数
+        // 关闭模态框函数
         function closeModal() {
             modalOverlay.classList.remove('active');
-            
-            // 恢复背景滚动
+            document.querySelectorAll('.modal').forEach(m => {
+                m.style.display = 'none';
+            });
             document.body.style.overflow = '';
             
-            // 触摸设备优化：恢复滚动
             if (isTouchDevice) {
                 document.removeEventListener('touchmove', preventScroll);
             }
+            
+            // 清除文件选中状态
+            if (selectedFile) {
+                selectedFile.classList.remove('selected');
+                selectedFile = null;
+            }
+            
+            // 更新状态栏
+            document.querySelector('.status-bar div:last-child').textContent = '已选择 0 个项目';
+            
+            // 重置当前HTML文件
+            currentHtmlFile = '';
         }
         
-        // 阻止滚动的函数
+        // 防止滚动函数
         function preventScroll(e) {
             if (modalOverlay.classList.contains('active')) {
                 e.preventDefault();
             }
         }
         
-        // 工具栏按钮交互
+        // 重要文件模态框关闭按钮事件
+        closeImportantModal.addEventListener('click', closeModal);
+        closeImportantBtn.addEventListener('click', closeModal);
+        
+        // HTML模态框关闭按钮事件
+        closeHtmlModal.addEventListener('click', closeModal);
+        cancelHtmlBtn.addEventListener('click', closeModal);
+        
+        // 打开HTML文件函数
+        function openHtmlFile() {
+            if (currentHtmlFile && htmlFiles[currentHtmlFile]) {
+                const targetFile = htmlFiles[currentHtmlFile];
+                // 添加加载效果
+                document.body.style.opacity = '0.7';
+                document.body.style.transition = 'opacity 0.3s ease';
+                
+                // 设置一个短暂延迟让用户看到变化
+                setTimeout(() => {
+                    window.location.href = targetFile;
+                }, 300);
+            } else {
+                alert('找不到对应的HTML文件！');
+                closeModal();
+            }
+        }
+        
+        // HTML文件确认打开按钮
+        confirmHtmlBtn.addEventListener('click', openHtmlFile);
+        openHtmlBtn.addEventListener('click', openHtmlFile);
+        
+        // 点击遮罩层关闭模态框
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === modalOverlay) {
+                closeModal();
+            }
+        });
+        
+        // 工具栏按钮点击效果
         document.querySelectorAll('.toolbar-button').forEach(button => {
             button.addEventListener('click', function() {
-                // 触摸设备优化
                 if (isTouchDevice) {
                     this.style.backgroundColor = '#d8d8d8';
                     setTimeout(() => {
@@ -974,7 +942,7 @@
             });
         });
         
-        // 侧边栏交互
+        // 侧边栏点击事件
         document.querySelectorAll('.sidebar-item').forEach(item => {
             item.addEventListener('click', function() {
                 document.querySelectorAll('.sidebar-item').forEach(i => {
@@ -984,7 +952,7 @@
             });
         });
         
-        // 双击打开文件（桌面端）
+        // 非触摸设备双击事件
         if (!isTouchDevice) {
             fileArea.addEventListener('dblclick', function(e) {
                 let fileItem = e.target.closest('.file-item');
@@ -995,27 +963,27 @@
                 
                 if (fileName === 'important.txt') {
                     openModal(importantModal);
-                } else if (fileName === 'fcjh.txt') {
-                    openModal(fcjhModal);
+                } else if (fileType === 'html' && fileName) {
+                    currentHtmlFile = fileName;
+                    htmlModalTitle.textContent = fileName;
+                    htmlFileName.textContent = fileName;
+                    openModal(htmlModal);
                 }
             });
         }
         
-        // 键盘快捷键支持
+        // 键盘快捷键
         document.addEventListener('keydown', function(e) {
-            // Alt+F4 关闭窗口
             if (e.altKey && e.key === 'F4') {
                 e.preventDefault();
                 closeWindowBtn.click();
             }
-            
-            // Esc 关闭弹窗
             if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
                 closeModal();
             }
         });
         
-        // iOS Safari 100vh修复
+        // 设置真实视口高度（iOS设备）
         function setRealViewportHeight() {
             if (isTouchDevice && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
                 const vh = window.innerHeight * 0.01;
@@ -1024,32 +992,49 @@
             }
         }
         
-        // 防止右键菜单
+        setRealViewportHeight();
+        window.addEventListener('resize', setRealViewportHeight);
+        window.addEventListener('orientationchange', function() {
+            setTimeout(setRealViewportHeight, 100);
+        });
+        
+        // 禁用右键菜单
         document.addEventListener('contextmenu', function(e) {
             if (e.target.closest('.file-item') || e.target.closest('.title-bar')) {
                 e.preventDefault();
             }
         });
         
-        // 页面加载完成
+        // 页面加载动画
         window.addEventListener('load', function() {
             document.body.style.opacity = '0';
             document.body.style.transition = 'opacity 0.3s ease';
-            
-            // 初始化所有按钮
-            initializeModalButtons();
-            
             setTimeout(() => {
                 document.body.style.opacity = '1';
             }, 50);
         });
         
-        // 初始设置
-        setRealViewportHeight();
-        window.addEventListener('resize', setRealViewportHeight);
-        window.addEventListener('orientationchange', function() {
-            setTimeout(setRealViewportHeight, 100);
-        });
+        // 触摸设备防止快速点击
+        if (isTouchDevice) {
+            let lastTouchTime = 0;
+            fileArea.addEventListener('touchend', function(e) {
+                const currentTime = new Date().getTime();
+                const timeDiff = currentTime - lastTouchTime;
+                if (timeDiff < 300) {
+                    e.preventDefault();
+                }
+                lastTouchTime = currentTime;
+            });
+        }
+        
+        // 更新对象数量
+        function updateObjectCount() {
+            const fileItems = document.querySelectorAll('.file-item').length;
+            document.querySelector('.status-bar div:first-child').textContent = `${fileItems} 个对象`;
+        }
+        
+        // 初始化更新对象数量
+        updateObjectCount();
     </script>
 </body>
 </html>

@@ -282,6 +282,8 @@
             }
         }
     </style>
+<link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
 </head>
 <body>
     <div class="container">
@@ -335,7 +337,7 @@
                 
                 <div class="record-item">
                     <div class="record-time">12月29日 09:15</div>
-                    <div class="record-desc">应急照明系统测试完成，所有灯具正常工作。</div>
+                    <div class="record-desc"><strong>应急电源</strong>系统测试完成，所有<strong>监控系统</strong>正常工作。</div>
                     <span class="record-tag">设备测试</span>
                 </div>
                 
@@ -362,7 +364,22 @@
             <p class="last-update">最后更新: 12月31日 20:15</p>
         </footer>
     </div>
-
+<!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
     <script>
         // 简单的交互功能：点击记录项显示更多信息
         document.addEventListener('DOMContentLoaded', function() {

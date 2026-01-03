@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>你已挣脱泥沼，独善其身</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #2d1b3d 0%, #4a2c5d 100%);
+            color: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #b39ddb, transparent);
+        }
+        
+        .title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #b39ddb;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .title:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 10%;
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #b39ddb, transparent);
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #d1c4e9;
+            margin-top: 10px;
+        }
+        
+        .content-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        
+        .content-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(179, 157, 219, 0.5), transparent);
+        }
+        
+        .content-card h2 {
+            color: #b39ddb;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .content-card h2 i {
+            color: #b39ddb;
+        }
+        
+        .result-list {
+            list-style-type: none;
+            margin: 25px 0;
+        }
+        
+        .result-list li {
+            padding: 15px;
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border-left: 4px solid;
+            transition: transform 0.3s, background 0.3s;
+            position: relative;
+        }
+        
+        .result-list li:hover {
+            transform: translateX(5px);
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .result-list li:nth-child(1) {
+            border-left-color: #9575cd;
+        }
+        
+        .result-list li:nth-child(2) {
+            border-left-color: #9575cd;
+        }
+        
+        .escape-tag {
+            display: inline-block;
+            background: rgba(100, 100, 100, 0.3);
+            color: #aaaaaa;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 8px;
+            border: 1px solid rgba(100, 100, 100, 0.5);
+        }
+        
+        .criminal-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .crime-desc {
+            color: #ccc;
+            font-size: 0.95rem;
+        }
+        
+        .conclusion {
+            text-align: center;
+            font-size: 1.2rem;
+            padding: 20px;
+            background: rgba(179, 157, 219, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(179, 157, 219, 0.3);
+            margin-top: 25px;
+            position: relative;
+        }
+        
+        .conclusion:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(179, 157, 219, 0.5), transparent);
+        }
+        
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 200px;
+            max-width: 300px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #b39ddb, #9575cd);
+            color: #2d1b3d;
+            box-shadow: 0 4px 15px rgba(179, 157, 219, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(179, 157, 219, 0.6);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s, visibility 0.4s;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: linear-gradient(135deg, #2d1b3d 0%, #1d0b2d 100%);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(179, 157, 219, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.4s;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+        
+        .modal-header {
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.3);
+            text-align: center;
+            border-bottom: 1px solid rgba(179, 157, 219, 0.2);
+        }
+        
+        .modal-header h3 {
+            color: #b39ddb;
+            font-size: 1.5rem;
+        }
+        
+        .modal-content {
+            padding: 25px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        
+        .modal-content p {
+            margin-bottom: 15px;
+        }
+        
+        .modal-footer {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid rgba(179, 157, 219, 0.2);
+        }
+        
+        .btn-close {
+            background: linear-gradient(to right, #b39ddb, #9575cd);
+            color: #2d1b3d;
+            padding: 12px 30px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-close:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(179, 157, 219, 0.4);
+        }
+        
+        .icon-large {
+            font-size: 3rem;
+            margin: 20px 0;
+            color: #b39ddb;
+        }
+        
+        .solitude-icon {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .solitude-icon i {
+            font-size: 4rem;
+            color: #b39ddb;
+            filter: drop-shadow(0 0 10px rgba(179, 157, 219, 0.3));
+        }
+        
+        .escape-list {
+            background: rgba(100, 100, 100, 0.1);
+            border: 1px solid rgba(100, 100, 100, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #aaaaaa;
+        }
+        
+        .escape-list h4 {
+            color: #aaaaaa;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .escape-list ul {
+            list-style-type: none;
+            padding-left: 10px;
+        }
+        
+        .escape-list li {
+            padding: 8px 0;
+            color: #bbbbbb;
+            border-bottom: 1px solid rgba(100, 100, 100, 0.1);
+        }
+        
+        .escape-list li:last-child {
+            border-bottom: none;
+        }
+        
+        @media (max-width: 768px) {
+            .title {
+                font-size: 1.6rem;
+            }
+            
+            .content-card {
+                padding: 20px;
+            }
+            
+            .content-card h2 {
+                font-size: 1.4rem;
+            }
+            
+            .btn {
+                min-width: 100%;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+            
+            .title {
+                font-size: 1.4rem;
+            }
+            
+            .content-card {
+                padding: 15px;
+            }
+            
+            .result-list li {
+                padding: 12px;
+            }
+        }
+        
+        /* 防止长按复制 */
+        .no-select {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* 防止图片拖动 */
+        img {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">恭喜你！你已挣脱泥沼，独善其身</h1>
+            <p class="subtitle">这是一场极其艰难的战斗。最终，你凭借无可辩驳的证据和坚定的意志，成功地在法律面前证明了自己的绝对清白</p>
+            <div class="solitude-icon">
+                <i class="fas fa-user-shield"></i>
+            </div>
+        </div>
+        
+        <div class="content-card">
+            <h2><i class="fas fa-user-check"></i> 你的清白已证，但...</h2>
+            <p style="text-align: center; margin-bottom: 20px; color: #d1c4e9;">由于种种复杂的原因，司法追诉未能成功启动</p>
+            
+            <ul class="result-list">
+                <li>
+                    <div class="criminal-name">卫明澈、叶兰、周于彰、何安 <span class="escape-tag">未受起诉</span></div>
+                    <div class="crime-desc">由于种种复杂的原因——或许是证据的巧妙隐藏，或许是幕后力量的干预——针对他们的司法追诉未能成功启动。</div>
+                </li>
+                <li>
+                    <div class="criminal-name">相关人员 严真真 <span class="escape-tag">未受起诉</span></div>
+                    <div class="crime-desc">同样逃脱了法律的制裁。</div>
+                </li>
+            </ul>
+            
+           
+            
+            <div class="conclusion">
+                <p>你的胜利是纯粹且个人的。你从巨大的漩涡中全身而退，守住了自己的底线与清白。</p>
+                <p>至于那些阴影中的人，或许命运自有其漫长的账单要清算，但那已不是你此刻需要面对的战场。</p>
+                <p style="margin-top: 10px; color: #b39ddb; font-weight: bold;">请珍惜这用智慧换来的自由，远离风暴，继续你的人生。</p>
+            </div>
+        </div>
+        
+         <div class="action-buttons">
+            <button class="btn btn-primary" id="viewDetailsBtn">
+                返回重新填表
+                <!-- 跳转tuiliban.html -->
+            </button>
+            <button class="btn btn-secondary" id="continueBtn">
+                关注作者
+                 <!-- 跳转https://sylvie-seven-cq.top/ -->
+            </button>
+        </div>
+    </div>
+    
+    <!-- 自定义弹窗 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-certificate"></i> 清白证明文件</h3>
+            </div>
+            <div class="modal-content">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <i class="fas fa-user-shield icon-large"></i>
+                </div>
+                <div style="background: rgba(179, 157, 219, 0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: center;">
+                    <h4 style="color: #b39ddb;">正式清白声明</h4>
+                    <p>经司法机关严格审查，现正式确认：</p>
+                    <p style="color: #b39ddb; font-weight: bold; font-size: 1.2rem; margin: 10px 0;">你对所有指控均无责任，是完全清白的。</p>
+                    <p>所有对你的指控已被彻底驳回，记录已清除。</p>
+                </div>
+                
+                <p><strong>案件编号</strong>：XS-2023-8742</p>
+                <p><strong>审查结果</strong>：完全无罪，所有指控不成立</p>
+                <p><strong>生效日期</strong>：永久有效</p>
+                
+                <div style="background: rgba(100, 100, 100, 0.1); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                    <h4 style="color: #aaaaaa;">其他涉案人员状态</h4>
+                    <p>由于以下原因，对其他人员的追诉未能继续：</p>
+                    <ul style="padding-left: 20px; color: #bbbbbb;">
+                        <li>关键证据在调查过程中意外损毁</li>
+                        <li>部分证人撤回证词或失联</li>
+                        <li>法律程序上的技术性问题</li>
+                        <li>案件超出诉讼时效</li>
+                    </ul>
+                    <p style="margin-top: 10px; color: #aaaaaa; font-style: italic;">司法并非万能，有时真相只能等待时间的审判。</p>
+                </div>
+                
+                <p><strong>你的权利</strong>：凭此证明，你的所有社会权利将完全恢复，任何因本案造成的负面影响将被消除。</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-close" id="closeModalBtn">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 防止双击放大
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+        
+        // 禁用右键菜单
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // 弹窗控制
+        const modalOverlay = document.getElementById('modalOverlay');
+        const viewDetailsBtn = document.getElementById('viewDetailsBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const continueBtn = document.getElementById('continueBtn');
+        
+        // 打开弹窗
+        viewDetailsBtn.addEventListener('click', function() {
+            modalOverlay.classList.add('active');
+            // 阻止背景滚动
+            document.body.style.overflow = 'hidden';
+        });
+        
+        // 关闭弹窗
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        closeModalBtn.addEventListener('click', closeModal);
+        
+        // 点击弹窗外部关闭
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === modalOverlay) {
+                closeModal();
+            }
+        });
+        
+        // 开启新人生按钮
+        continueBtn.addEventListener('click', function() {
+            const modalContent = document.querySelector('.modal-content');
+            const modalHeader = document.querySelector('.modal-header h3');
+            
+            modalHeader.innerHTML = '<i class="fas fa-road"></i> 开启新人生';
+            modalContent.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <i class="fas fa-seedling icon-large"></i>
+                </div>
+                <p style="text-align: center; color: #b39ddb; font-weight: bold;">风暴已过，新生开始</p>
+                
+                <div style="background: rgba(179, 157, 219, 0.1); padding: 20px; border-radius: 10px; margin: 20px 0; text-align: center;">
+                    <h4 style="color: #b39ddb; margin-bottom: 15px;">新生活建议</h4>
+                    <ul style="padding-left: 0; list-style-type: none;">
+                        <li style="padding: 8px 0;">🏝️ 进行一次长途旅行，放松身心</li>
+                        <li style="padding: 8px 0;">📚 学习新技能，开拓新领域</li>
+                        <li style="padding: 8px 0;">🤝 结识新朋友，建立新社交圈</li>
+                        <li style="padding: 8px 0;">🎯 设定新目标，追求新梦想</li>
+                    </ul>
+                </div>
+                
+                <p>这段经历虽然艰难，但也让你变得更加坚强和智慧。现在，是时候将目光投向未来了。</p>
+                <p style="margin-top: 15px; color: #d1c4e9; font-style: italic;">"最黑暗的夜晚之后，总是最明亮的黎明。"</p>
+                
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button id="travelBtn" style="flex:1; padding:12px; background:linear-gradient(to right, #b39ddb, #9575cd); border:none; border-radius:5px; color:#2d1b3d; font-weight:bold;">计划旅行</button>
+                    <button id="studyBtn" style="flex:1; padding:12px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.3); border-radius:5px; color:white;">学习新技能</button>
+                </div>
+            `;
+            
+            // 更改关闭按钮文本
+            closeModalBtn.textContent = '返回';
+            
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // 为弹窗内的按钮添加事件
+            setTimeout(() => {
+                document.getElementById('travelBtn').addEventListener('click', function() {
+                    showCustomAlert('已为您生成旅行计划！愿旅途带给您宁静与新生。');
+                });
+                
+                document.getElementById('studyBtn').addEventListener('click', function() {
+                    showCustomAlert('学习之旅开始！知识将为您开启全新的可能性。');
+                });
+            }, 100);
+        });
+        
+        // 键盘事件支持
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+                closeModal();
+            }
+        });
+        
+        // 添加一些交互效果
+        document.querySelectorAll('.result-list li').forEach(item => {
+            item.addEventListener('click', function() {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+        
+// 修改：返回重新填表按钮跳转到tuiliban.html
+        viewDetailsBtn.addEventListener('click', function() {
+            window.location.href = 'tuiliban.html';
+        });
+        
+        // 修改：关注作者按钮跳转到指定网站
+        continueBtn.addEventListener('click', function() {
+            window.location.href = 'https://sylvie-seven-cq.top/';
+        });
+
+        // 自定义提示函数
+        function showCustomAlert(message) {
+            const alertModal = document.createElement('div');
+            alertModal.className = 'modal-overlay active';
+            alertModal.innerHTML = `
+                <div class="modal" style="max-width: 400px;">
+                    <div class="modal-header">
+                        <h3><i class="fas fa-check-circle"></i> 已确认</h3>
+                    </div>
+                    <div class="modal-content">
+                        <div style="text-align: center; margin: 20px 0;">
+                            <i class="fas fa-seedling" style="font-size: 3rem; color: #b39ddb;"></i>
+                        </div>
+                        <p style="text-align: center;">${message}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-close" onclick="this.closest('.modal-overlay').remove()">确定</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(alertModal);
+        }
+    </script>
+</body>
+</html>

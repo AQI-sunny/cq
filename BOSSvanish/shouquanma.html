@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>授权码验证</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            padding: 40px 30px;
+            position: relative;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header-icon {
+            font-size: 48px;
+            color: #283593;
+            margin-bottom: 15px;
+        }
+        
+        h1 {
+            color: #1a237e;
+            font-size: 28px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .auth-form {
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 15px;
+        }
+        
+        .input-container {
+            position: relative;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: #f9f9f9;
+            letter-spacing: 2px;
+        }
+        
+        input:focus {
+            border-color: #3949ab;
+            background-color: #fff;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(57, 73, 171, 0.2);
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 18px;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(to right, #283593, #3949ab);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .submit-btn:hover {
+            background: linear-gradient(to right, #1a237e, #283593);
+            transform: translateY(-2px);
+            box-shadow: 0 7px 15px rgba(26, 35, 126, 0.25);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .hint {
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .hint strong {
+            color: #3949ab;
+            font-weight: 600;
+        }
+        
+        /* 自定义弹窗样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background-color: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 420px;
+            overflow: hidden;
+            transform: translateY(30px);
+            transition: transform 0.4s ease;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            background-color: #d32f2f;
+            color: white;
+            padding: 22px 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .modal-header-icon {
+            font-size: 28px;
+        }
+        
+        .modal-header h2 {
+            font-size: 22px;
+            font-weight: 600;
+        }
+        
+        .modal-body {
+            padding: 30px 25px;
+            color: #333;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        
+        .modal-footer {
+            padding: 0 25px 25px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .modal-btn {
+            padding: 12px 30px;
+            background-color: #d32f2f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .modal-btn:hover {
+            background-color: #b71c1c;
+            transform: translateY(-2px);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #888;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 576px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .header-icon {
+                font-size: 42px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h1>授权码验证</h1>
+            <p class="subtitle">请输入您的授权码以访问受限内容。如果您没有授权码，请联系系统管理员获取。</p>
+        </div>
+        
+        <form id="authForm" class="auth-form">
+            <div class="form-group">
+                <label for="authCode">授权码</label>
+                <div class="input-container">
+                    <i class="fas fa-key input-icon"></i>
+                    <input type="password" id="authCode" placeholder="请输入您的授权码" required autocomplete="off">
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-unlock-alt"></i>
+                验证授权码
+            </button>
+        </form>
+        
+        <!-- <p class="hint">提示：有效授权码为 <strong>POLICE2024</strong>（仅用于演示）</p>
+         -->
+        <div class="footer">
+            <p>© 2025 安全验证系统 | 仅限授权用户访问</p>
+        </div>
+    </div>
+    
+    <!-- 自定义弹窗 -->
+    <div class="modal-overlay" id="errorModal">
+        <div class="modal">
+            <div class="modal-header">
+                <i class="fas fa-exclamation-triangle modal-header-icon"></i>
+                <h2>授权码错误</h2>
+            </div>
+            <div class="modal-body">
+                <p>您输入的授权码不正确，无法跳转到目标页面。</p>
+                <p>请检查授权码是否正确，或联系系统管理员获取有效的授权码。</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn" id="closeModal">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const authForm = document.getElementById('authForm');
+            const authCodeInput = document.getElementById('authCode');
+            const errorModal = document.getElementById('errorModal');
+            const closeModalBtn = document.getElementById('closeModal');
+            
+            // 正确的授权码（在实际应用中，应该从服务器验证）
+            const CORRECT_AUTH_CODE = "HJB161C153KEY";
+            
+            // 表单提交事件
+            authForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const userInput = authCodeInput.value.trim();
+                
+                // 验证授权码
+                if (userInput === CORRECT_AUTH_CODE) {
+                    // 验证成功 - 跳转到police.html
+                    showSuccessMessage();
+                    
+                    // 模拟短暂延迟后跳转
+                    setTimeout(() => {
+                        window.location.href = "police.html";
+                    }, 800);
+                } else {
+                    // 验证失败 - 显示错误弹窗
+                    showErrorModal();
+                    // 清空输入框
+                    authCodeInput.value = '';
+                    // 聚焦到输入框
+                    authCodeInput.focus();
+                }
+            });
+            
+            // 显示错误弹窗
+            function showErrorModal() {
+                errorModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            // 隐藏错误弹窗
+            function hideErrorModal() {
+                errorModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+            
+            // 关闭弹窗事件
+            closeModalBtn.addEventListener('click', hideErrorModal);
+            
+            // 点击模态框外部关闭
+            errorModal.addEventListener('click', function(e) {
+                if (e.target === errorModal) {
+                    hideErrorModal();
+                }
+            });
+            
+            // 显示成功消息
+            function showSuccessMessage() {
+                // 临时改变按钮样式和文本
+                const submitBtn = authForm.querySelector('.submit-btn');
+                const originalHTML = submitBtn.innerHTML;
+                
+                submitBtn.innerHTML = '<i class="fas fa-check"></i> 验证成功，正在跳转...';
+                submitBtn.style.background = 'linear-gradient(to right, #2e7d32, #4caf50)';
+                
+                // 2秒后恢复按钮样式（如果跳转失败）
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalHTML;
+                    submitBtn.style.background = 'linear-gradient(to right, #283593, #3949ab)';
+                }, 2000);
+            }
+            
+            // 添加键盘事件监听
+            document.addEventListener('keydown', function(e) {
+                // 按ESC关闭弹窗
+                if (e.key === 'Escape' && errorModal.classList.contains('active')) {
+                    hideErrorModal();
+                }
+                
+                // 按Enter提交表单（如果弹窗未显示）
+                if (e.key === 'Enter' && !errorModal.classList.contains('active') && 
+                    document.activeElement !== authCodeInput) {
+                    authCodeInput.focus();
+                }
+            });
+            
+            // 显示密码功能（通过双击输入框图标）
+            const inputIcon = document.querySelector('.input-icon');
+            inputIcon.addEventListener('dblclick', function() {
+                if (authCodeInput.type === 'password') {
+                    authCodeInput.type = 'text';
+                    inputIcon.classList.remove('fa-key');
+                    inputIcon.classList.add('fa-eye');
+                } else {
+                    authCodeInput.type = 'password';
+                    inputIcon.classList.remove('fa-eye');
+                    inputIcon.classList.add('fa-key');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

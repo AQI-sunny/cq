@@ -175,7 +175,6 @@
             transition: all 0.3s;
             white-space: nowrap;
             cursor: pointer;
-            position: relative;
         }
         
         .tab.active {
@@ -186,19 +185,6 @@
         
         .tab:hover {
             background-color: #f8f9fa;
-        }
-        
-        .tab-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background-color: #ff5722;
-            color: white;
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 10px;
-            min-width: 18px;
-            text-align: center;
         }
         
         /* 侧边栏导航（移动端） */
@@ -545,6 +531,34 @@
             color: #3a5a80;
         }
         
+        /* 屏蔽内容样式 */
+        .censored-content {
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .censored-title {
+            font-weight: 600;
+            color: #f44336;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .censored-text {
+            color: #888;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+            background-color: #fafafa;
+            border-radius: 6px;
+        }
+        
         /* 表单样式 */
         .form-container {
             background-color: white;
@@ -846,6 +860,22 @@
             color: #999;
         }
         
+        /* 禁用表单样式 */
+        .form-disabled .form-input,
+        .form-disabled .form-select,
+        .form-disabled .form-textarea {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .btn-disabled {
+            background-color: #cccccc !important;
+            color: #666666 !important;
+            cursor: not-allowed !important;
+            opacity: 0.7;
+        }
+        
         /* 响应式设计 */
         @media (max-width: 768px) {
             .mobile-nav-toggle {
@@ -933,6 +963,11 @@
             .log-action-btn {
                 justify-content: flex-start;
             }
+            
+            .censored-content {
+                padding: 12px;
+                font-size: 13px;
+            }
         }
         
         @media (min-width: 1024px) {
@@ -1002,8 +1037,27 @@
             .sidebar-tab.active {
                 background-color: rgba(74, 111, 165, 0.2);
             }
+            
+            .censored-content {
+                background-color: #2d2d2d;
+                border-color: #444;
+            }
+            
+            .censored-text {
+                background-color: #1a1a1a;
+                color: #aaa;
+            }
+            
+            .form-disabled .form-input,
+            .form-disabled .form-select,
+            .form-disabled .form-textarea {
+                background-color: #2a2a2a;
+            }
         }
     </style>
+    
+<link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
 </head>
 <body>
     <!-- 顶部导航栏 -->
@@ -1038,29 +1092,18 @@
             <div class="sidebar-tab active" data-tab="dashboard">
                 <i class="fas fa-tachometer-alt"></i>
                 <span>工作台</span>
-                <span class="tab-badge" id="mobileTotalBadge">0</span>
             </div>
             <div class="sidebar-tab" data-tab="elevator">
                 <i class="fas fa-elevator"></i>
                 <span>电梯维护</span>
-                <span class="tab-badge" id="mobileElevatorBadge">0</span>
             </div>
             <div class="sidebar-tab" data-tab="logs">
                 <i class="fas fa-clipboard-list"></i>
                 <span>维护日志</span>
-                <span class="tab-badge" id="mobileLogsBadge">0</span>
             </div>
             <div class="sidebar-tab" data-tab="new-log">
                 <i class="fas fa-plus-circle"></i>
                 <span>新建日志</span>
-            </div>
-            <div class="sidebar-tab" data-tab="profile">
-                <i class="fas fa-user"></i>
-                <span>个人中心</span>
-            </div>
-            <div class="sidebar-tab" data-tab="settings">
-                <i class="fas fa-cog"></i>
-                <span>系统设置</span>
             </div>
         </div>
     </div>
@@ -1082,25 +1125,18 @@
             <div class="tab active" data-tab="dashboard">
                 <i class="fas fa-tachometer-alt"></i>
                 <span>工作台</span>
-                <span class="tab-badge" id="desktopTotalBadge">0</span>
             </div>
             <div class="tab" data-tab="elevator">
                 <i class="fas fa-elevator"></i>
                 <span>电梯维护</span>
-                <span class="tab-badge" id="desktopElevatorBadge">0</span>
             </div>
             <div class="tab" data-tab="logs">
                 <i class="fas fa-clipboard-list"></i>
                 <span>维护日志</span>
-                <span class="tab-badge" id="desktopLogsBadge">0</span>
             </div>
             <div class="tab" data-tab="new-log">
                 <i class="fas fa-plus-circle"></i>
                 <span>新建日志</span>
-            </div>
-            <div class="tab" data-tab="profile">
-                <i class="fas fa-user"></i>
-                <span>个人中心</span>
             </div>
         </div>
     </div>
@@ -1143,6 +1179,42 @@
                 </div>
             </div>
             
+            <!-- 消防系统修改记录（屏蔽内容） -->
+            <div class="form-container">
+                <div class="form-title">系统重要记录</div>
+                <div class="censored-content">
+                    <div class="censored-title">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>消防系统修改记录</span>
+                    </div>
+                    <div class="censored-text">
+                        <i class="fas fa-lock"></i><br>
+                        该记录已被系统屏蔽<br>
+                        <small>仅限授权人员查看</small>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 12px; color: #888;">
+                        <i class="far fa-calendar"></i> 最近修改时间：2025年12月31日
+                    </div>
+                </div>
+                
+                <!-- 消防系统多次修改的屏蔽记录 -->
+                <div class="censored-content" style="margin-top: 15px;">
+                    <div class="censored-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>多次系统修改记录</span>
+                    </div>
+                    <div class="censored-text">
+                        <i class="fas fa-ban"></i><br>
+                        记录包含多次系统修改，内容已被屏蔽<br>
+                        <small>访问权限：管理员级别</small>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 12px; color: #888; display: flex; justify-content: space-between;">
+                        <span><i class="far fa-clock"></i> 操作次数：多次</span>
+                        <span><i class="far fa-calendar"></i> 最后更新：2025年12月31日</span>
+                    </div>
+                </div>
+            </div>
+            
             <!-- 今日任务 -->
             <div class="form-container">
                 <div class="form-title">今日待办任务</div>
@@ -1153,7 +1225,7 @@
             
             <!-- 近期电梯维护记录 -->
             <div class="form-container">
-                <div class="form-title">我的电梯维护记录</div>
+                <div class="form-title">电梯维护记录</div>
                 <div id="myElevatorLogs">
                     <!-- 动态生成的内容 -->
                 </div>
@@ -1197,7 +1269,7 @@
             <div class="empty-state" id="elevatorEmptyState" style="display: none;">
                 <i class="fas fa-elevator"></i>
                 <p>暂无电梯维护记录</p>
-                <small>点击下方按钮添加电梯维护记录</small>
+                <small>仅可查看已有记录</small>
             </div>
         </div>
         
@@ -1208,7 +1280,7 @@
                 <div class="form-group search-box">
                     <label class="form-label">搜索</label>
                     <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="form-input search-input" id="searchInput" placeholder="搜索标题、位置或报告人">
+                    <!-- <input type="text" class="form-input search-input" id="searchInput" placeholder="搜索标题、位置或报告人"> -->
                 </div>
                 <div class="form-group">
                     <label class="form-label">状态筛选</label>
@@ -1243,179 +1315,86 @@
             <div class="empty-state" id="emptyState" style="display: none;">
                 <i class="fas fa-clipboard-list"></i>
                 <p>暂无维护日志</p>
-                <small>点击下方按钮创建第一个维护日志</small>
+                <small>仅可查看已有记录</small>
             </div>
         </div>
         
-        <!-- 新建日志标签页 -->
+        <!-- 新建日志标签页 - 已禁用 -->
         <div id="new-log" class="tab-content">
-            <div class="form-container">
-                <div class="form-title">新建维护工单</div>
+            <div class="form-container form-disabled">
+                <div class="form-title">新建维护工单 <span style="color: #ff5722; font-size: 14px;">(功能已禁用)</span></div>
                 <form id="maintenanceForm">
                     <div class="form-group">
-                        <label class="form-label" for="issueTitle">问题标题 *</label>
-                        <input type="text" class="form-input" id="issueTitle" placeholder="例如：A栋电梯故障" required>
+                        <label class="form-label" for="issueTitle">问题标题</label>
+                        <input type="text" class="form-input" id="issueTitle" placeholder="功能已禁用，仅可查看已有记录" disabled>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label" for="location">位置/单元 *</label>
-                        <input type="text" class="form-input" id="location" placeholder="例如：A栋12层1201室" required>
+                        <label class="form-label" for="location">位置/单元</label>
+                        <input type="text" class="form-input" id="location" placeholder="功能已禁用，仅可查看已有记录" disabled>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label" for="category">问题分类 *</label>
-                        <select class="form-select" id="category" required>
-                            <option value="">请选择分类</option>
-                            <option value="electrical">电气维修</option>
-                            <option value="plumbing">管道维修</option>
-                            <option value="elevator">电梯维修</option>
-                            <option value="structural">结构维修</option>
-                            <option value="cleaning">清洁服务</option>
-                            <option value="security">安防维修</option>
-                            <option value="other">其他</option>
+                        <label class="form-label" for="category">问题分类</label>
+                        <select class="form-select" id="category" disabled>
+                            <option value="">功能已禁用</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label" for="priority">优先级 *</label>
-                        <select class="form-select" id="priority" required>
-                            <option value="">请选择优先级</option>
-                            <option value="low">低优先级</option>
-                            <option value="medium">中优先级</option>
-                            <option value="high">高优先级</option>
-                            <option value="emergency">紧急</option>
+                        <label class="form-label" for="priority">优先级</label>
+                        <select class="form-select" id="priority" disabled>
+                            <option value="">功能已禁用</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label" for="description">问题描述 *</label>
-                        <textarea class="form-textarea" id="description" placeholder="请详细描述问题..." required></textarea>
+                        <label class="form-label" for="description">问题描述</label>
+                        <textarea class="form-textarea" id="description" placeholder="功能已禁用，仅可查看已有记录" disabled></textarea>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label" for="reporter">报告人 *</label>
-                        <input type="text" class="form-input" id="reporter" placeholder="报告人姓名" required value="周于彰">
+                        <label class="form-label" for="reporter">报告人</label>
+                        <input type="text" class="form-input" id="reporter" placeholder="功能已禁用" disabled value="周于彰">
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label" for="phone">联系电话</label>
-                        <input type="tel" class="form-input" id="phone" placeholder="报告人联系电话">
+                        <input type="tel" class="form-input" id="phone" placeholder="功能已禁用" disabled>
                     </div>
                     
                     <div class="action-buttons">
-                        <button type="submit" class="btn btn-primary">提交维护工单</button>
-                        <button type="button" id="resetForm" class="btn btn-secondary">重置</button>
+                        <button type="button" class="btn btn-primary btn-disabled" disabled>提交功能已禁用</button>
+                        <button type="button" id="resetForm" class="btn btn-secondary btn-disabled" disabled>重置</button>
                     </div>
                 </form>
                 
                 <div style="margin-top: 30px; text-align: center;">
-                    <button type="button" class="btn btn-elevator" id="newElevatorBtn">
-                        <i class="fas fa-elevator"></i> 新建电梯维护记录
+                    <button type="button" class="btn btn-elevator btn-disabled" id="newElevatorBtn" disabled>
+                        <i class="fas fa-elevator"></i> 新建功能已禁用
                     </button>
                 </div>
             </div>
-        </div>
-        
-        <!-- 个人中心标签页 -->
-        <div id="profile" class="tab-content">
-            <div class="form-container">
-                <div class="form-title">个人中心 - 周于彰</div>
-                <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 30px;">
-                    <div style="width: 100px; height: 100px; border-radius: 50%; background-color: #ff5722; display: flex; align-items: center; justify-content: center; font-size: 40px; color: white; font-weight: bold; margin-bottom: 15px;">周</div>
-                    <h3 style="margin-bottom: 5px;">周于彰</h3>
-                    <p style="color: #666; margin-bottom: 20px;">电梯维护专员</p>
+            
+            <div class="form-container" style="margin-top: 20px; background-color: #fff8e1; border-left: 5px solid #ff9800;">
+                <div class="form-title" style="color: #ff9800;">
+                    <i class="fas fa-info-circle"></i> 系统提示
                 </div>
-                
-                <div class="form-group">
-                    <label class="form-label">员工编号</label>
-                    <div class="form-input" style="background-color: #f8f9fa;">EMP2023001</div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">所属部门</label>
-                    <div class="form-input" style="background-color: #f8f9fa;">物业维修部 - 电梯组</div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">入职日期</label>
-                    <div class="form-input" style="background-color: #f8f9fa;">2023年3月15日</div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">本月完成工单</label>
-                    <div class="form-input" style="background-color: #f8f9fa; font-size: 24px; font-weight: bold; text-align: center; color: #4a6fa5;" id="monthlyCompleted">0</div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">电梯维护记录数</label>
-                    <div class="form-input" style="background-color: #f8f9fa; font-size: 24px; font-weight: bold; text-align: center; color: #ff5722;" id="personalElevatorCount">0</div>
-                </div>
-                
-                <div class="action-buttons">
-                    <button class="btn btn-primary" id="editProfileBtn">编辑个人信息</button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 系统设置标签页 -->
-        <div id="settings" class="tab-content">
-            <div class="form-container">
-                <div class="form-title">系统设置</div>
-                
-                <div class="form-group">
-                    <label class="form-label">界面主题</label>
-                    <select class="form-select" id="themeSelect">
-                        <option value="auto">自动（跟随系统）</option>
-                        <option value="light">浅色模式</option>
-                        <option value="dark">深色模式</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">默认报告人</label>
-                    <input type="text" class="form-input" id="defaultReporter" value="周于彰">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">通知设置</label>
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <label style="display: flex; align-items: center; gap: 8px;">
-                            <input type="checkbox" id="notifyNewTask" checked>
-                            <span>新任务通知</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 8px;">
-                            <input type="checkbox" id="notifyTaskUpdate" checked>
-                            <span>任务状态更新通知</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 8px;">
-                            <input type="checkbox" id="notifyElevator" checked>
-                            <span>电梯维护提醒</span>
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">数据管理</label>
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <button class="btn btn-secondary" id="exportDataBtn">导出数据</button>
-                        <button class="btn btn-secondary" id="importDataBtn">导入数据</button>
-                        <button class="btn btn-secondary" id="clearDataBtn" style="color: #f44336;">清空本地数据</button>
-                    </div>
-                </div>
-                
-                <div class="action-buttons">
-                    <button class="btn btn-primary" id="saveSettingsBtn">保存设置</button>
-                </div>
+                <p style="color: #666; line-height: 1.6;">
+                    当前系统为<b>只读模式</b>，所有表单提交功能已禁用。<br>
+                    您可以查看已有记录，但无法创建新的维护工单或电梯维护记录。<br>
+                    <small>如需启用提交功能，请联系系统管理员。</small>
+                </p>
             </div>
         </div>
     </div>
     
-    <!-- 浮动操作按钮 -->
+    <!-- 浮动操作按钮 - 已禁用 -->
     <div class="fab-container">
-        <button class="fab fab-elevator" id="quickElevatorBtn" title="新建电梯记录">
+        <button class="fab fab-elevator btn-disabled" id="quickElevatorBtn" title="功能已禁用" disabled>
             <i class="fas fa-elevator"></i>
         </button>
-        <button class="fab" id="quickAddBtn" title="新建维护工单">
+        <button class="fab btn-disabled" id="quickAddBtn" title="功能已禁用" disabled>
             <i class="fas fa-plus"></i>
         </button>
     </div>
@@ -1433,81 +1412,98 @@
         </div>
     </div>
     
-    <!-- 电梯维护表单模态框 -->
+    <!-- 电梯维护表单模态框 - 已禁用 -->
     <div class="modal" id="elevatorModal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title">电梯维护记录</div>
+                <div class="modal-title">电梯维护记录 <span style="color: #ff5722; font-size: 14px;">(功能已禁用)</span></div>
                 <button class="modal-close" id="closeElevatorModal">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="elevatorForm">
+                <div class="form-disabled">
                     <div class="form-group">
-                        <label class="form-label" for="elevatorNumber">电梯编号 *</label>
-                        <input type="text" class="form-input" id="elevatorNumber" placeholder="例如：A栋-01" required>
+                        <label class="form-label">电梯编号</label>
+                        <input type="text" class="form-input" placeholder="功能已禁用" disabled>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label" for="elevatorLocation">安装位置 *</label>
-                        <input type="text" class="form-input" id="elevatorLocation" placeholder="例如：A栋大堂" required>
+                        <label class="form-label">安装位置</label>
+                        <input type="text" class="form-input" placeholder="功能已禁用" disabled>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label" for="maintenanceType">维护类型 *</label>
-                        <select class="form-select" id="maintenanceType" required>
-                            <option value="">请选择维护类型</option>
-                            <option value="routine">例行维护</option>
-                            <option value="emergency">紧急维修</option>
-                            <option value="inspection">定期检查</option>
-                            <option value="parts">部件更换</option>
-                            <option value="test">压力测试</option>
+                        <label class="form-label">维护类型</label>
+                        <select class="form-select" disabled>
+                            <option value="">功能已禁用</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label" for="elevatorStatus">维护状态</label>
-                        <select class="form-select" id="elevatorStatus">
+                        <label class="form-label">维护状态</label>
+                        <select class="form-select" disabled>
                             <option value="normal">正常</option>
-                            <option value="abnormal">异常</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label" for="maintenanceDate">维护日期 *</label>
-                        <input type="date" class="form-input" id="maintenanceDate" required value="">
+                        <label class="form-label">维护日期</label>
+                        <input type="date" class="form-input" value="2025-12-31" disabled>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label" for="maintenanceTime">维护时间</label>
-                        <input type="text" class="form-input" id="maintenanceTime" placeholder="例如：09:00-11:00">
+                        <label class="form-label">维护时间</label>
+                        <input type="text" class="form-input" placeholder="功能已禁用" disabled>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label" for="elevatorDescription">维护内容描述 *</label>
-                        <textarea class="form-textarea" id="elevatorDescription" placeholder="请详细描述维护内容..." required></textarea>
+                        <label class="form-label">维护内容描述</label>
+                        <textarea class="form-textarea" placeholder="功能已禁用" disabled></textarea>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label" for="executor">执行人 *</label>
-                        <input type="text" class="form-input" id="executor" placeholder="执行人姓名" required value="周于彰">
+                        <label class="form-label">执行人</label>
+                        <input type="text" class="form-input" value="周于彰" disabled>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label" for="elevatorNotes">备注</label>
-                        <textarea class="form-textarea" id="elevatorNotes" placeholder="其他备注信息..."></textarea>
+                        <label class="form-label">备注</label>
+                        <textarea class="form-textarea" placeholder="功能已禁用" disabled></textarea>
                     </div>
                     
                     <div class="action-buttons">
-                        <button type="submit" class="btn btn-primary">保存记录</button>
-                        <button type="button" class="btn btn-secondary" id="cancelElevatorForm">取消</button>
+                        <button type="button" class="btn btn-primary btn-disabled" disabled>保存功能已禁用</button>
+                        <button type="button" class="btn btn-secondary" id="cancelElevatorForm">关闭</button>
                     </div>
-                </form>
+                </div>
+                
+                <div style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 8px; border-left: 4px solid #ff9800;">
+                    <p style="color: #666; margin: 0; font-size: 14px;">
+                        <i class="fas fa-exclamation-triangle" style="color: #ff9800;"></i>
+                        当前系统为<b>只读模式</b>，无法创建新的电梯维护记录。
+                    </p>
+                </div>
             </div>
         </div>
     </div>
+    <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
     
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
+
     <script>
-        // 模拟数据
+        // 模拟数据 - 日期全部改为2025年12月底
         const mockElevatorLogs = [
             {
                 id: 1001,
@@ -1515,7 +1511,7 @@
                 location: "A栋大堂",
                 maintenanceType: "压力测试",
                 status: "abnormal",
-                date: "2023-12-31",
+                date: "2025-12-31",
                 time: "19:30-20:30",
                 description: "年度压力测试，发现运行时有轻微异响",
                 executor: "周于彰",
@@ -1527,7 +1523,7 @@
                 location: "B栋负一层",
                 maintenanceType: "例行维护",
                 status: "normal",
-                date: "2023-12-30",
+                date: "2025-12-30",
                 time: "14:00-15:30",
                 description: "每月例行保养，清洁导轨、检查安全装置",
                 executor: "周于彰",
@@ -1539,7 +1535,7 @@
                 location: "C栋8层",
                 maintenanceType: "紧急维修",
                 status: "abnormal",
-                date: "2023-12-28",
+                date: "2025-12-31",
                 time: "10:00-12:00",
                 description: "电梯门无法正常关闭，经检查为门传感器故障",
                 executor: "张师傅",
@@ -1551,11 +1547,23 @@
                 location: "A栋12层",
                 maintenanceType: "定期检查",
                 status: "normal",
-                date: "2023-12-25",
+                date: "2025-12-29",
                 time: "09:00-10:00",
                 description: "季度安全检查，测试紧急制动和报警系统",
                 executor: "周于彰",
                 notes: "所有安全系统功能正常"
+            },
+            {
+                id: 1005,
+                elevatorNumber: "A栋-03",
+                location: "A栋15层",
+                maintenanceType: "定期检查",
+                status: "normal",
+                date: "2025-12-28",
+                time: "18:00-19:30",
+                description: "月度安全检查，运行平稳无异常",
+                executor: "周于彰",
+                notes: "运行正常，无异常报告"
             }
         ];
 
@@ -1570,7 +1578,7 @@
                 description: "电梯运行时出现异响，偶尔会卡在楼层之间",
                 reporter: "周于彰",
                 phone: "138****5678",
-                date: "2023-12-31",
+                date: "2025-12-31",
                 assignedTo: "张师傅",
                 notes: "已安排检修，需要更换部分零件",
                 completedDate: ""
@@ -1585,7 +1593,7 @@
                 description: "地下车库东北角有漏水现象，地面有积水",
                 reporter: "物业办公室",
                 phone: "87654321",
-                date: "2023-12-30",
+                date: "2025-12-30",
                 assignedTo: "周于彰",
                 notes: "",
                 completedDate: ""
@@ -1600,18 +1608,95 @@
                 description: "C栋8层楼道有三个照明灯不亮，影响夜间通行",
                 reporter: "李女士",
                 phone: "139****1234",
-                date: "2023-12-28",
+                date: "2025-12-29",
                 assignedTo: "电工刘师傅",
                 notes: "已更换损坏的LED灯管",
-                completedDate: "2023-12-29"
+                completedDate: "2025-12-29"
+            },
+            {
+                id: 4,
+                title: "单元门禁故障",
+                location: "B栋大堂",
+                category: "安防维修",
+                priority: "high",
+                status: "in-progress",
+                description: "B栋大堂门禁系统无法正常刷卡开门",
+                reporter: "保安室",
+                phone: "内部",
+                date: "2025-12-28",
+                assignedTo: "李师傅",
+                notes: "已联系厂家维修",
+                completedDate: ""
+            },
+            {
+                id: 5,
+                title: "公共区域清洁",
+                location: "D栋楼梯间",
+                category: "清洁服务",
+                priority: "low",
+                status: "completed",
+                description: "D栋楼梯间需要深度清洁，有异味",
+                reporter: "清洁部",
+                phone: "内部",
+                date: "2025-12-27",
+                assignedTo: "清洁王阿姨",
+                notes: "已完成清洁和消毒",
+                completedDate: "2025-12-27"
+            }
+        ];
+        
+        // 添加消防系统修改记录
+        const fireSystemLogs = [
+            {
+                id: 9991,
+                title: "消防系统参数调整",
+                location: "B栋消防控制室",
+                category: "安防维修",
+                priority: "emergency",
+                status: "completed",
+                description: "消防系统参数多次调整，具体内容已屏蔽",
+                reporter: "管理员",
+                phone: "内部",
+                date: "2025-12-31",
+                assignedTo: "系统管理员",
+                notes: "该记录包含多次系统修改，内容已被屏蔽",
+                completedDate: "2025-12-31"
+            },
+            {
+                id: 9992,
+                title: "消防报警系统维护",
+                location: "全楼宇",
+                category: "安防维修",
+                priority: "high",
+                status: "completed",
+                description: "消防报警系统全面检查和维护",
+                reporter: "安全部",
+                phone: "内部",
+                date: "2025-12-30",
+                assignedTo: "安全专员",
+                notes: "系统运行正常，完成年度检查",
+                completedDate: "2025-12-30"
+            },
+            {
+                id: 9993,
+                title: "消防水泵检修",
+                location: "地下室水泵房",
+                category: "安防维修",
+                priority: "high",
+                status: "completed",
+                description: "消防水泵年度检修和测试",
+                reporter: "工程部",
+                phone: "内部",
+                date: "2025-12-28",
+                assignedTo: "工程技术人员",
+                notes: "水泵运行正常，压力符合标准",
+                completedDate: "2025-12-28"
             }
         ];
         
         // 初始化数据
-        let maintenanceLogs = JSON.parse(localStorage.getItem('maintenanceLogs')) || mockLogs;
+        let maintenanceLogs = JSON.parse(localStorage.getItem('maintenanceLogs')) || [...mockLogs, ...fireSystemLogs];
         let elevatorLogs = JSON.parse(localStorage.getItem('elevatorLogs')) || mockElevatorLogs;
-        let nextLogId = maintenanceLogs.length > 0 ? Math.max(...maintenanceLogs.map(log => log.id)) + 1 : 4;
-        let nextElevatorId = elevatorLogs.length > 0 ? Math.max(...elevatorLogs.map(log => log.id)) + 1 : 1005;
         
         // 设置默认用户为周于彰
         const currentUser = "周于彰";
@@ -1626,15 +1711,13 @@
         const elevatorLogList = document.getElementById('elevatorLogList');
         const statusFilter = document.getElementById('statusFilter');
         const categoryFilter = document.getElementById('categoryFilter');
-        const searchInput = document.getElementById('searchInput');
+       /*  const searchInput = document.getElementById('searchInput'); */
         const maintenanceForm = document.getElementById('maintenanceForm');
-        const resetFormBtn = document.getElementById('resetForm');
         const quickAddBtn = document.getElementById('quickAddBtn');
         const quickElevatorBtn = document.getElementById('quickElevatorBtn');
         const newElevatorBtn = document.getElementById('newElevatorBtn');
         const logDetailModal = document.getElementById('logDetailModal');
         const elevatorModal = document.getElementById('elevatorModal');
-        const elevatorForm = document.getElementById('elevatorForm');
         const closeModalBtn = document.getElementById('closeModal');
         const closeElevatorModalBtn = document.getElementById('closeElevatorModal');
         const cancelElevatorFormBtn = document.getElementById('cancelElevatorForm');
@@ -1652,13 +1735,10 @@
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         
-        // 设置今日日期
-        const today = new Date();
+        // 设置今日日期为2025年12月底
+        const today = new Date('2025-12-31');
         const formattedDate = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
         document.getElementById('currentDate').textContent = formattedDate;
-        
-        // 设置今日日期为默认值
-        document.getElementById('maintenanceDate').value = today.toISOString().split('T')[0];
         
         // 标签页切换（桌面端）
         tabs.forEach(tab => {
@@ -1716,9 +1796,6 @@
                 case 'logs':
                     renderLogList();
                     break;
-                case 'profile':
-                    updateProfileStats();
-                    break;
             }
             
             // 如果是移动端，滚动到顶部
@@ -1774,11 +1851,6 @@
             renderMyElevatorLogs();
             renderLogList();
             renderElevatorLogs();
-            updateProfileStats();
-            
-            // 保存数据到本地存储
-            localStorage.setItem('maintenanceLogs', JSON.stringify(maintenanceLogs));
-            localStorage.setItem('elevatorLogs', JSON.stringify(elevatorLogs));
         }
         
         // 更新统计卡片
@@ -1801,15 +1873,6 @@
             document.getElementById('elevatorCount').textContent = elevator;
             document.getElementById('totalCount').textContent = total;
             document.getElementById('todayTasks').textContent = todayTasks;
-            
-            // 更新标签页徽章
-            document.getElementById('desktopTotalBadge').textContent = total;
-            document.getElementById('desktopElevatorBadge').textContent = elevator;
-            document.getElementById('desktopLogsBadge').textContent = total;
-            
-            document.getElementById('mobileTotalBadge').textContent = total;
-            document.getElementById('mobileElevatorBadge').textContent = elevator;
-            document.getElementById('mobileLogsBadge').textContent = total;
         }
         
         // 渲染今日任务
@@ -1897,7 +1960,7 @@
             
             const statusValue = statusFilter.value;
             const categoryValue = categoryFilter.value;
-            const searchValue = searchInput.value.toLowerCase();
+            /* const searchValue = searchInput.value.toLowerCase(); */
             
             let filteredLogs = maintenanceLogs;
             
@@ -1942,6 +2005,9 @@
             logItem.className = 'log-item';
             logItem.dataset.id = log.id;
             
+            // 检查是否是消防系统记录
+            const isFireSystemLog = log.id >= 9990;
+            
             // 状态文本映射
             const statusText = {
                 'pending': '待处理',
@@ -1965,9 +2031,13 @@
                 'emergency': '#d32f2f'
             };
             
+            // 如果是消防系统记录，显示特殊样式
+            const title = isFireSystemLog ? `${log.title} 🔒` : log.title;
+            const description = isFireSystemLog ? '内容已屏蔽' : log.description;
+            
             logItem.innerHTML = `
                 <div class="log-header">
-                    <div class="log-title">${log.title}</div>
+                    <div class="log-title">${title}</div>
                     <div class="log-status status-${log.status}">${statusText[log.status]}</div>
                 </div>
                 <div class="log-details">
@@ -1990,10 +2060,6 @@
                         <i class="fas fa-eye"></i>
                         <span>查看详情</span>
                     </button>
-                    <button class="log-action-btn update-status" data-id="${log.id}">
-                        <i class="fas fa-edit"></i>
-                        <span>更新状态</span>
-                    </button>
                 </div>
                 ` : ''}
             `;
@@ -2004,12 +2070,6 @@
                 logItem.querySelector('.view-detail').addEventListener('click', (e) => {
                     e.stopPropagation();
                     showLogDetail(log.id);
-                });
-                
-                // 添加更新状态事件
-                logItem.querySelector('.update-status').addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    updateLogStatus(log.id);
                 });
             }
             
@@ -2076,6 +2136,9 @@
             const log = maintenanceLogs.find(log => log.id === id);
             if (!log) return;
             
+            // 检查是否是消防系统记录
+            const isFireSystemLog = log.id >= 9990;
+            
             // 状态文本映射
             const statusText = {
                 'pending': '待处理',
@@ -2098,10 +2161,14 @@
                 'completed': '#4caf50'
             };
             
+            // 如果是消防系统记录，显示屏蔽内容
+            const description = isFireSystemLog ? '该记录内容已被系统屏蔽，仅限授权人员查看。' : log.description;
+            const notes = isFireSystemLog ? '此记录包含多次系统修改操作，访问权限受限。' : (log.notes || '暂无备注');
+            
             modalBody.innerHTML = `
                 <div class="detail-item">
                     <div class="detail-label">问题标题</div>
-                    <div class="detail-value">${log.title}</div>
+                    <div class="detail-value">${log.title} ${isFireSystemLog ? '🔒' : ''}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">位置/单元</div>
@@ -2121,7 +2188,7 @@
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">问题描述</div>
-                    <div class="detail-value">${log.description}</div>
+                    <div class="detail-value">${description}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">报告人</div>
@@ -2141,7 +2208,7 @@
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">处理备注</div>
-                    <div class="detail-value">${log.notes || '暂无备注'}</div>
+                    <div class="detail-value">${notes}</div>
                 </div>
                 ${log.completedDate ? `
                 <div class="detail-item">
@@ -2149,19 +2216,26 @@
                     <div class="detail-value">${log.completedDate}</div>
                 </div>
                 ` : ''}
+                ${isFireSystemLog ? `
+                <div class="censored-content" style="margin-top: 20px;">
+                    <div class="censored-title">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>访问权限说明</span>
+                    </div>
+                    <div class="censored-text">
+                        <i class="fas fa-lock"></i><br>
+                        此记录包含系统多次修改操作<br>
+                        <small>需要管理员权限才能查看完整内容</small>
+                    </div>
+                </div>
+                ` : ''}
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button class="btn btn-primary" id="changeStatusBtn" style="flex: 1;">更改状态</button>
                     <button class="btn btn-secondary" id="closeDetailBtn" style="flex: 1;">关闭</button>
                 </div>
             `;
             
             // 显示模态框
             logDetailModal.style.display = 'block';
-            
-            // 添加更改状态按钮事件
-            document.getElementById('changeStatusBtn').addEventListener('click', () => {
-                updateLogStatus(id);
-            });
             
             // 添加关闭按钮事件
             document.getElementById('closeDetailBtn').addEventListener('click', () => {
@@ -2229,184 +2303,35 @@
             });
         }
         
-        // 更新日志状态
-        function updateLogStatus(id) {
-            const log = maintenanceLogs.find(log => log.id === id);
-            if (!log) return;
-            
-            // 状态顺序: pending -> in-progress -> completed
-            const statusOrder = ['pending', 'in-progress', 'completed'];
-            const currentIndex = statusOrder.indexOf(log.status);
-            const nextIndex = (currentIndex + 1) % statusOrder.length;
-            
-            log.status = statusOrder[nextIndex];
-            
-            // 如果状态变为已完成，设置完成日期
-            if (log.status === 'completed' && !log.completedDate) {
-                log.completedDate = today.toISOString().split('T')[0];
-            }
-            
-            // 如果状态从已完成变为其他，清除完成日期
-            if (log.status !== 'completed' && log.completedDate) {
-                log.completedDate = '';
-            }
-            
-            // 保存到本地存储
-            localStorage.setItem('maintenanceLogs', JSON.stringify(maintenanceLogs));
-            
-            // 刷新显示
-            updateStats();
-            renderTodayTasks();
-            renderLogList();
-            
-            // 如果模态框打开，更新内容
-            if (logDetailModal.style.display === 'block') {
-                showLogDetail(id);
-            }
-            
-            // 显示成功消息
-            showMessage('状态更新成功！', 'success');
-        }
+        // 筛选事件监听
+        statusFilter.addEventListener('change', renderLogList);
+        categoryFilter.addEventListener('change', renderLogList);
+       /*  searchInput.addEventListener('input', renderLogList); */
+        elevatorNumberFilter.addEventListener('input', renderElevatorLogs);
+        elevatorStatusFilter.addEventListener('change', renderElevatorLogs);
+        elevatorExecutorFilter.addEventListener('change', renderElevatorLogs);
         
-        // 更新个人中心统计
-        function updateProfileStats() {
-            // 本月完成工单
-            const currentMonth = today.getMonth() + 1;
-            const currentYear = today.getFullYear();
-            
-            const monthlyCompleted = maintenanceLogs.filter(log => {
-                if (!log.completedDate) return false;
-                const logDate = new Date(log.completedDate);
-                return logDate.getMonth() + 1 === currentMonth && 
-                       logDate.getFullYear() === currentYear;
-            }).length;
-            
-            // 个人电梯维护记录数
-            const personalElevatorCount = elevatorLogs.filter(log => 
-                log.executor === currentUser
-            ).length;
-            
-            document.getElementById('monthlyCompleted').textContent = monthlyCompleted;
-            document.getElementById('personalElevatorCount').textContent = personalElevatorCount;
-        }
-        
-        // 表单提交
-        maintenanceForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // 获取表单数据
-            const formData = {
-                id: nextLogId++,
-                title: document.getElementById('issueTitle').value,
-                location: document.getElementById('location').value,
-                category: document.getElementById('category').value,
-                priority: document.getElementById('priority').value,
-                description: document.getElementById('description').value,
-                reporter: document.getElementById('reporter').value || currentUser,
-                phone: document.getElementById('phone').value,
-                date: today.toISOString().split('T')[0],
-                status: 'pending',
-                assignedTo: '',
-                notes: '',
-                completedDate: ''
-            };
-            
-            // 添加到日志数组
-            maintenanceLogs.push(formData);
-            
-            // 保存到本地存储
-            localStorage.setItem('maintenanceLogs', JSON.stringify(maintenanceLogs));
-            
-            // 重置表单
-            maintenanceForm.reset();
-            document.getElementById('reporter').value = currentUser;
-            
-            // 更新显示
-            init();
-            
-            // 切换到日志标签页
-            switchTab('logs');
-            
-            // 显示成功消息
-            showMessage('维护工单已成功提交！', 'success');
-        });
-        
-        // 电梯表单提交
-        elevatorForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // 获取表单数据
-            const formData = {
-                id: nextElevatorId++,
-                elevatorNumber: document.getElementById('elevatorNumber').value,
-                location: document.getElementById('elevatorLocation').value,
-                maintenanceType: document.getElementById('maintenanceType').value,
-                status: document.getElementById('elevatorStatus').value,
-                date: document.getElementById('maintenanceDate').value,
-                time: document.getElementById('maintenanceTime').value,
-                description: document.getElementById('elevatorDescription').value,
-                executor: document.getElementById('executor').value || currentUser,
-                notes: document.getElementById('elevatorNotes').value
-            };
-            
-            // 添加到电梯日志数组
-            elevatorLogs.push(formData);
-            
-            // 保存到本地存储
-            localStorage.setItem('elevatorLogs', JSON.stringify(elevatorLogs));
-            
-            // 重置表单
-            elevatorForm.reset();
-            document.getElementById('maintenanceDate').value = today.toISOString().split('T')[0];
-            document.getElementById('executor').value = currentUser;
-            
-            // 隐藏模态框
-            elevatorModal.style.display = 'none';
-            
-            // 更新显示
-            init();
-            
-            // 切换到电梯标签页
-            switchTab('elevator');
-            
-            // 显示成功消息
-            showMessage('电梯维护记录已保存！', 'success');
-        });
-        
-        // 重置表单
-        resetFormBtn.addEventListener('click', () => {
-            if (confirm('确定要重置表单吗？所有已填写的内容将会丢失。')) {
-                maintenanceForm.reset();
-                document.getElementById('reporter').value = currentUser;
-            }
-        });
-        
-        // 快速添加按钮
+        // 快速添加按钮 - 已禁用
         quickAddBtn.addEventListener('click', () => {
             // 切换到新建日志标签页
             switchTab('new-log');
             
             // 滚动到顶部
             window.scrollTo(0, 0);
+            
+            // 显示提示
+            showMessage('提交功能已禁用，系统为只读模式', 'info');
         });
         
-        // 快速添加电梯记录按钮
+        // 快速添加电梯记录按钮 - 已禁用
         quickElevatorBtn.addEventListener('click', () => {
             elevatorModal.style.display = 'block';
         });
         
-        // 新建电梯记录按钮
+        // 新建电梯记录按钮 - 已禁用
         newElevatorBtn.addEventListener('click', () => {
             elevatorModal.style.display = 'block';
         });
-        
-        // 筛选事件监听
-        statusFilter.addEventListener('change', renderLogList);
-        categoryFilter.addEventListener('change', renderLogList);
-        searchInput.addEventListener('input', renderLogList);
-        elevatorNumberFilter.addEventListener('input', renderElevatorLogs);
-        elevatorStatusFilter.addEventListener('change', renderElevatorLogs);
-        elevatorExecutorFilter.addEventListener('change', renderElevatorLogs);
         
         // 关闭模态框
         closeModalBtn.addEventListener('click', () => {
@@ -2450,7 +2375,7 @@
                 top: 100px;
                 left: 50%;
                 transform: translateX(-50%);
-                background-color: ${type === 'success' ? '#4caf50' : '#f44336'};
+                background-color: ${type === 'success' ? '#4caf50' : type === 'info' ? '#2196f3' : '#f44336'};
                 color: white;
                 padding: 12px 24px;
                 border-radius: 8px;
@@ -2487,9 +2412,31 @@
                 closeSidebar();
             }
         });
+        
+        // 移动端优化：防止点击穿透
+        document.addEventListener('touchstart', function() {}, {passive: true});
+    
+
+   /*  0104修改 */
+    // 在页面加载完成后添加这段代码
+document.addEventListener('DOMContentLoaded', function() {
+  // 更新当前日期显示
+  const today = new Date('2025-12-31');
+  const formattedDate = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
+  
+  const currentDateElement = document.getElementById('currentDate');
+  if (currentDateElement) {
+    currentDateElement.textContent = formattedDate;
+  }
+  
+  // 更新其他可能显示2023的地方
+  document.body.innerHTML = document.body.innerHTML.replace(/2023/g, '2025');
+});
     </script>
- <script src="pages.js"></script>
+
 <script src="scball.js"></script>
+<script src="pages.js"></script>
 <script src="visit.js"></script>
+
 </body>
 </html>
