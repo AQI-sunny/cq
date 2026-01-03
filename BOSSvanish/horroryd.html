@@ -364,6 +364,44 @@
             color: #8B0000;
             border-color: #ffd700;
         }
+        .high-risk-drug {
+    background-color: #040404;
+    border-left: 3px solid #dc3545;
+}
+
+.warning-badge {
+    font-size: 0.75rem;
+    background-color: #060606;
+    color: #856404;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.warning-badge i {
+    font-size: 0.7rem;
+}
+
+.action-icons a.disabled {
+    color: #0c0000;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.action-icons a.warning-action {
+    color: #dc3545;
+}
+
+.status.out-of-stock {
+    color: #dc3545;
+    background-color: #030303;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-weight: 500;
+}
         
         /* 响应式设计 */
         @media (max-width: 768px) {
@@ -401,6 +439,8 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
 </head>
 <body>
     <!-- 头部 -->
@@ -490,10 +530,10 @@
                     <i class="fas fa-truck"></i>
                     <span>配送管理</span>
                 </a>
-                <a href="lxxinz.html" class="action-btn">
+               <!--  <a href="lxxinz.html" class="action-btn">
                     <i class="fas fa-phone-alt"></i>
                     <span>联系我</span>
-                </a>
+                </a> -->
                 <a href="#" class="action-btn">
                     <i class="fas fa-cog"></i>
                     <span>系统设置</span>
@@ -557,6 +597,37 @@
                             <a href="#" title="调整库存"><i class="fas fa-boxes"></i></a>
                         </td>
                     </tr>
+                    <tr class="high-risk-drug">
+    <td>
+        地高辛
+        <span class="warning-badge"><i class="fas fa-exclamation-triangle"></i> 高危药品</span>
+    </td>
+    <td>0.25mg×60片</td>
+    <td>华康药业</td>
+    <td>0</td>
+    <td><span class="status out-of-stock">缺货</span></td>
+    <td class="action-icons">
+        <a href="#" title="编辑"><i class="fas fa-edit"></i></a>
+        <a href="#" title="查看详情"><i class="fas fa-eye"></i></a>
+        <a href="#" class="disabled" title="缺货状态下无法调整库存"><i class="fas fa-boxes"></i></a>
+        <a href="#" class="warning-action" title="紧急补货"><i class="fas fa-exclamation-circle"></i></a>
+    </td>
+</tr>
+<tr>
+    <td>氢氯噻嗪</td>
+    <td>25mg×60片</td>
+    <td>华康药业</td>
+    <td>0</td>
+    <td><span class="status out-of-stock">缺货</span></td>
+    <td class="action-icons">
+        <a href="#" title="编辑"><i class="fas fa-edit"></i></a>
+        <a href="#" title="查看详情"><i class="fas fa-eye"></i></a>
+        <a href="#" class="disabled" title="缺货状态下无法调整库存"><i class="fas fa-boxes"></i></a>
+        <a href="#" title="补货申请"><i class="fas fa-shopping-cart"></i></a>
+    </td>
+</tr>
+
+
                     <tr>
                         <td>布洛芬缓释胶囊</td>
                         <td>0.3g*20粒</td>
