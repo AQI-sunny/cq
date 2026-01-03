@@ -564,7 +564,7 @@
             <!-- 提示区域（玩家需要输入"急急如玉令"） -->
             <div class="hint-container">
                 <div class="hint-message">
-                    <i class="fas fa-lightbulb"></i> 提示：输入暗号"急急如玉令"来确认身份
+                    <i class="fas fa-lightbulb"></i> 提示：输入暗号来确认身份
                 </div>
             </div>
 
@@ -745,7 +745,7 @@
                 }, 1500);
             } else if (awaitingPlayerInput && text !== "急急如玉令") {
                 // 玩家输入了错误的暗号
-                showToast('暗号错误，请重新输入"急急如玉令"', 'warning', 2000);
+                showToast('暗号错误，请重新输入', 'warning', 2000);
                 
                 // 延迟显示Rein的提示
                 setTimeout(() => {
@@ -910,7 +910,7 @@
 
         // 页面加载完成提示
         setTimeout(() => {
-            showToast('等待输入暗号"急急如玉令"', 'warning', 3000);
+            showToast('等待输入暗号', 'warning', 3000);
         }, 500);
 
         // 自动聚焦到输入框
