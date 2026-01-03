@@ -464,11 +464,13 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-user-secret"></i> 与文心竹的对话</h1>
+            <h1><!-- <i class="fas fa-user-secret"></i>  -->与文心竹的对话</h1>
             <p class="subtitle">加密通信 · 实时对话 · 端到端保护</p>
         </header>
         
@@ -499,7 +501,22 @@
             </div>
         </div>
     </div>
-
+<!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
     <script>
         // 对话数据 - 初始对话内容
         let messages = [
@@ -535,7 +552,7 @@
             },
             {
                 sender: "sent",
-                text: "我想知道你丈夫是不是",
+                text: "我想知道你丈夫是不是曾问你要某种药品...",
                 time: "21:03",
                 avatar: "我"
             },
@@ -565,7 +582,7 @@
             },
             {
                 sender: "sent",
-                text: "我知道这很难，但你也知道他做了什么。我不是在求你背叛他，只是求你给我一个机会解释。",
+                text: "我知道这很难，但你也知道他做了什么。我不是在求你背叛他，也不是求你帮我，只是你真的忍心看他走错路吗？",
                 time: "21:06",
                 avatar: "我"
             }
@@ -590,9 +607,9 @@
             "你有什么计划？",
             "这不可能",
             "我为什么要冒这个险？",
-            "你当初离开的时候，想过今天吗？"
+            
         ];
-        
+        /* "你当初离开的时候，想过今天吗？" */
         // 消息计数器 - 用于控制连接码出现时机
         let messageCounter = messages.length;
         let connectionCodeSent = false;
@@ -658,12 +675,15 @@
         
         // 模拟文心竹的回复
         function simulateWenResponse() {
-            // 如果已经发送过连接码，就不再发送
+            // 如果已经发送过连接码，就不再发送任何回复
             if (connectionCodeSent) return;
             
             // 根据最后一条消息的内容选择回复
             const lastMessage = messages[messages.length - 1];
             let response;
+            
+            // 记录上一次的回复，避免重复
+            let lastResponse = messages.length > 1 ? messages[messages.length - 2]?.text : "";
             
             // 根据用户的消息内容选择上下文相关的回复
             if (lastMessage.sender === 'sent') {
@@ -674,14 +694,18 @@
                 } else if (lastMessage.text.includes("证据") || lastMessage.text.includes("证明")) {
                     response = "你有证据吗？没有证据说什么都没用";
                 } else if (lastMessage.text.includes("信任") || lastMessage.text.includes("相信")) {
-                    response = "你让我怎么相信你？你当初一走了之的时候，想过我的感受吗？";
+                    response = "你让我怎么相信你？";
                 } else if (lastMessage.text.includes("计划") || lastMessage.text.includes("安排")) {
                     response = "告诉我你的计划，每一个细节";
                 } else if (lastMessage.text.includes("对不起") || lastMessage.text.includes("抱歉")) {
                     response = "现在说这些太晚了，但...我还是想听你说完";
                 } else {
-                    // 随机选择一个回复
-                    response = wenResponses[Math.floor(Math.random() * wenResponses.length)];
+                    // 随机选择一个回复，避免与上一次相同
+                    let availableResponses = wenResponses.filter(res => res !== lastResponse);
+                    if (availableResponses.length === 0) {
+                        availableResponses = wenResponses; // 如果所有回复都用过了，重新使用所有回复
+                    }
+                    response = availableResponses[Math.floor(Math.random() * availableResponses.length)];
                 }
                 
                 // 添加"正在输入"效果
@@ -700,7 +724,7 @@
                     typingIndicator.remove();
                     addMessage('received', response, '文');
                     
-                    // 检查是否需要发送连接码
+                    // 检查是否需要发送连接码（基于消息计数器）
                     checkForConnectionCode();
                     
                 }, 1000 + Math.random() * 2000);
@@ -710,9 +734,21 @@
         // 检查是否需要发送连接码
         function checkForConnectionCode() {
             // 只有当消息总数达到一定数量，并且还没有发送过连接码时才发送
-            if (messageCounter >= 18 && !connectionCodeSent && Math.random() > 0.3) {
+            if (messageCounter >= 14 && !connectionCodeSent && Math.random() > 0.3) {
+                // 添加"正在输入"效果
+                const typingIndicator = document.createElement('div');
+                typingIndicator.className = 'typing-indicator';
+                typingIndicator.innerHTML = `
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                `;
+                chatMessages.appendChild(typingIndicator);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
                 setTimeout(() => {
-                    addMessage('received', '连接码是123123', '文', true);
+                    typingIndicator.remove();
+                    addMessage('received', '连接码是641565', '文', true);
                     updateStatus('已连接');
                     connectionCodeSent = true;
                 }, 2000);
