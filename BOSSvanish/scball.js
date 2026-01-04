@@ -1,5 +1,7 @@
 // search-ball-complete.js - 纯JS版本（无CSS依赖）
-//居中的搜索球代码参考！
+// 居中的搜索球代码参考！
+// 修改：使其初始位置靠移动端右边，垂直居中，水平靠右
+// 修改：搜索到内容在新标签页打开窗口
 // ============================================
 // 第一部分：搜索框UI控制（移动端兼容）
 // ============================================
@@ -8,9 +10,9 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('搜索框完整JS加载...');
     initCompleteSearchSystem();
     
-    // ✅ 新增：强制居中初始化
+    // ✅ 修改：初始位置调整为右边居中
     setTimeout(() => {
-        centerSearchBall();
+        positionSearchBallRight();
     }, 100);
 });
 
@@ -18,8 +20,8 @@ function initCompleteSearchSystem() {
     // 确保搜索球元素存在
     ensureSearchElements();
     
-    // ✅ 新增：立即居中
-    centerSearchBall();
+    // ✅ 修改：初始位置调整为右边居中
+    positionSearchBallRight();
     
     // 初始化UI交互
     setupSearchUI();
@@ -51,13 +53,13 @@ function ensureSearchElements() {
     searchContainer.style.zIndex = '999999';
 }
 
-// ✅ 核心居中函数
-function centerSearchBall() {
+// ✅ 修改：新的右边居中函数
+function positionSearchBallRight() {
     const searchContainer = document.querySelector('.floating-search-ball-container');
     const searchBall = document.getElementById('searchBall');
     
     if (!searchContainer || !searchBall) {
-        console.warn('居中失败：元素未找到');
+        console.warn('定位失败：元素未找到');
         return;
     }
     
@@ -67,7 +69,7 @@ function centerSearchBall() {
     searchContainer.style.opacity = '1';
     searchContainer.style.zIndex = '999999';
     
-    // 2. 计算居中位置
+    // 2. 计算右边居中位置
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
     
@@ -75,27 +77,32 @@ function centerSearchBall() {
     const ballWidth = searchBall.offsetWidth || 56;
     const ballHeight = searchBall.offsetHeight || 56;
     
-    // 3. 设置居中位置
-    const centerLeft = (viewportWidth / 2) - (ballWidth / 2);
+    // 3. 设置右边居中位置
+    // 距离右边20px，垂直居中
+    const rightMargin = 20;
+    const rightPosition = viewportWidth - ballWidth - rightMargin;
     const centerTop = (viewportHeight / 2) - (ballHeight / 2);
     
     // 4. 应用位置
     searchContainer.style.position = 'fixed';
-    searchContainer.style.left = centerLeft + 'px';
+    searchContainer.style.left = 'auto';  // 清除左对齐
+    searchContainer.style.right = rightMargin + 'px';
     searchContainer.style.top = centerTop + 'px';
-    searchContainer.style.right = 'auto';  // 清除右对齐
     
-    console.log('✅ 搜索球已居中:', {
-        left: centerLeft + 'px',
+    console.log('✅ 搜索球已定位到右边居中:', {
+        right: rightMargin + 'px',
         top: centerTop + 'px',
         viewport: `${viewportWidth}x${viewportHeight}`,
         ball: `${ballWidth}x${ballHeight}`
     });
     
-    // 5. 标记已居中
-    searchContainer.setAttribute('data-centered', 'true');
+    // 5. 标记初始位置已设置
+    searchContainer.setAttribute('data-initial-position', 'right-center');
     
-    // 6. 移除保存的位置（防止冲突）
+    // 6. 清除之前的居中标记
+    searchContainer.removeAttribute('data-centered');
+    
+    // 7. 移除保存的位置（防止冲突）
     try {
         localStorage.removeItem('searchBallPosition');
     } catch (e) {
@@ -103,19 +110,68 @@ function centerSearchBall() {
     }
 }
 
-// ✅ 修改重置位置函数
+// ✅ 修改：重置位置函数（改为右边居中）
 function resetSearchBallPosition() {
     const searchContainer = document.querySelector('.floating-search-ball-container');
     if (!searchContainer) return;
     
-    // ✅ 直接调用居中函数
-    centerSearchBall();
+    // ✅ 直接调用右边居中函数
+    positionSearchBallRight();
     
     try {
         localStorage.removeItem('searchBallPosition');
     } catch (e) {
         // 忽略错误
     }
+}
+
+// ✅ 新增：检查是否是移动端或TapTap环境
+function isMobileOrTapTap() {
+    // 移动端检测
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    // TapTap小程序H5环境检测（常见特征）
+    const isTapTap = /TAPTAP/i.test(navigator.userAgent) || 
+                    window.__TAURI__ || // Tauri环境
+                    window.tt || // TapTap小程序环境
+                    document.referrer.includes('taptap');
+    
+    return isMobile || isTapTap;
+}
+
+// ✅ 新增：TapTap环境适配
+function adaptForTapTap() {
+    if (!isMobileOrTapTap()) return;
+    
+    // 添加TapTap环境特定样式
+    const style = document.createElement('style');
+    style.textContent = `
+        /* TapTap环境优化 */
+        .floating-search-ball-container {
+            -webkit-tap-highlight-color: transparent !important;
+            touch-action: manipulation !important;
+        }
+        
+        .floating-search-ball {
+            -webkit-tap-highlight-color: transparent !important;
+            touch-action: manipulation !important;
+        }
+        
+        /* 防止TapTap环境下的点击穿透 */
+        @media (max-width: 768px) {
+            .floating-search-expanded {
+                touch-action: pan-y !important;
+            }
+            
+            .floating-search-input {
+                -webkit-user-select: text !important;
+                user-select: text !important;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    console.log('✅ TapTap/移动端环境适配已启用');
 }
 
 // 创建搜索元素（如果不存在）
@@ -138,15 +194,25 @@ function createSearchElements() {
     input.id = 'searchInput';
     input.placeholder = '输入关键词搜索...';
     
+    // ✅ 修改：为移动端优化输入体验
+    if (isMobileOrTapTap()) {
+        input.setAttribute('autocapitalize', 'off');
+        input.setAttribute('autocomplete', 'off');
+        input.setAttribute('autocorrect', 'off');
+        input.setAttribute('spellcheck', 'false');
+    }
+    
     const closeBtn = document.createElement('button');
     closeBtn.className = 'floating-search-close';
     closeBtn.id = 'searchClose';
     closeBtn.innerHTML = '×';
+    closeBtn.setAttribute('aria-label', '关闭搜索');
     
     const submitBtn = document.createElement('button');
     submitBtn.className = 'floating-search-submit';
     submitBtn.id = 'searchSubmit';
     submitBtn.innerHTML = '搜';
+    submitBtn.setAttribute('aria-label', '搜索');
     
     expanded.appendChild(input);
     expanded.appendChild(closeBtn);
@@ -154,6 +220,9 @@ function createSearchElements() {
     container.appendChild(ball);
     container.appendChild(expanded);
     document.body.appendChild(container);
+    
+    // ✅ 新增：TapTap环境适配
+    adaptForTapTap();
     
     console.log('搜索框元素创建完成');
 }
@@ -168,9 +237,17 @@ function setupSearchUI() {
     
     if (!searchBall) return;
     
-    // 点击搜索球
-    searchBall.addEventListener('click', function(e) {
+    // ✅ 修改：优化点击事件处理（移动端兼容）
+    const handleBallClick = function(e) {
+        // 阻止事件冒泡和默认行为
+        e.preventDefault();
         e.stopPropagation();
+        
+        // 如果是拖动状态，不触发点击
+        if (this.classList.contains('dragging')) {
+            return;
+        }
+        
         const isActive = this.classList.contains('active');
         
         if (isActive) {
@@ -181,51 +258,109 @@ function setupSearchUI() {
             if (searchExpanded) searchExpanded.classList.add('active');
             this.classList.add('pulse');
             setTimeout(() => this.classList.remove('pulse'), 500);
+            
+            // ✅ 重要：输入时保持当前位置不变
+            // 不需要调整位置，保持用户拖动后的位置
+            
             setTimeout(() => {
-                if (searchInput) searchInput.focus();
+                if (searchInput) {
+                    searchInput.focus();
+                    // 移动端优化：触发虚拟键盘
+                    if (isMobileOrTapTap()) {
+                        searchInput.click();
+                    }
+                }
             }, 300);
         }
-    });
+    };
+    
+    // 点击搜索球
+    searchBall.addEventListener('click', handleBallClick);
+    
+    // ✅ 新增：Touch事件优化（防止双击缩放干扰）
+    searchBall.addEventListener('touchstart', function(e) {
+        // 阻止默认行为防止双击缩放
+        e.preventDefault();
+    }, { passive: false });
     
     // 关闭按钮
     if (searchClose) {
         searchClose.addEventListener('click', function(e) {
+            e.preventDefault();
             e.stopPropagation();
             searchBall.classList.remove('active');
             searchExpanded.classList.remove('active');
             if (searchInput) searchInput.value = '';
         });
+        
+        // Touch事件
+        searchClose.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            searchBall.classList.remove('active');
+            searchExpanded.classList.remove('active');
+            if (searchInput) searchInput.value = '';
+        }, { passive: false });
     }
     
     // 搜索按钮
     if (searchSubmit) {
-        searchSubmit.addEventListener('click', function(e) {
-            e.stopPropagation();
+        const handleSubmit = function(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
             const query = searchInput ? searchInput.value.trim() : '';
             if (query) {
                 performCompleteSearch(query);
             } else {
-                // ✅ 修复：输入为空时显示提醒
                 showAlert('请输入搜索关键词', 2000);
             }
-        });
+        };
+        
+        searchSubmit.addEventListener('click', handleSubmit);
+        searchSubmit.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            handleSubmit();
+        }, { passive: false });
     }
     
     // ✅ 修复：改进的Enter键搜索处理
     if (searchInput) {
         searchInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
-                e.preventDefault(); // 防止表单提交
+                e.preventDefault();
                 e.stopPropagation();
                 const query = this.value.trim();
                 if (query) {
                     performCompleteSearch(query);
                 } else {
-                    // ✅ 修复：输入为空时显示提醒
                     showAlert('请输入搜索关键词', 2000);
                 }
             }
         });
+        
+        // ✅ 新增：移动端输入优化
+        if (isMobileOrTapTap()) {
+            searchInput.addEventListener('focus', function() {
+                // 保持当前位置不变
+                const searchContainer = document.querySelector('.floating-search-ball-container');
+                if (searchContainer) {
+                    // 记录当前位置，确保不会跳动
+                    const rect = searchContainer.getBoundingClientRect();
+                    searchContainer.style.left = rect.left + 'px';
+                    searchContainer.style.right = 'auto';
+                    searchContainer.style.top = rect.top + 'px';
+                }
+            });
+            
+            searchInput.addEventListener('blur', function() {
+                // 修复iOS虚拟键盘收起后的位置问题
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                }, 100);
+            });
+        }
     }
     
     // 点击其他地方关闭
@@ -240,6 +375,19 @@ function setupSearchUI() {
             searchExpanded.classList.remove('active');
         }
     });
+    
+    // ✅ 新增：Touch事件处理点击外部关闭
+    document.addEventListener('touchstart', function(e) {
+        if (!searchBall || !searchExpanded) return;
+        
+        const isTouchInside = searchBall.contains(e.target) || 
+                              searchExpanded.contains(e.target);
+        
+        if (!isTouchInside && searchExpanded.classList.contains('active')) {
+            searchBall.classList.remove('active');
+            searchExpanded.classList.remove('active');
+        }
+    }, { passive: true });
 }
 
 // 设置拖动功能
@@ -270,9 +418,12 @@ function setupDragFunction() {
         const rect = searchContainer.getBoundingClientRect();
         initialLeft = rect.left;
         initialTop = rect.top;
+        
+        // ✅ 修改：拖动时移除初始位置标记
+        searchContainer.removeAttribute('data-initial-position');
     });
     
-    // 移动端拖动（简化版）
+    // 移动端拖动（优化版）
     searchBall.addEventListener('touchstart', function(e) {
         if (searchBall.classList.contains('active')) return;
         
@@ -284,10 +435,16 @@ function setupDragFunction() {
         initialLeft = rect.left;
         initialTop = rect.top;
         
+        // ✅ 修改：拖动时移除初始位置标记
+        searchContainer.removeAttribute('data-initial-position');
+        
+        // 短时间后开始拖动（防止误触）
         setTimeout(() => {
-            isDragging = true;
-            searchBall.classList.add('dragging');
-        }, 100);
+            if (!searchBall.classList.contains('active')) {
+                isDragging = true;
+                searchBall.classList.add('dragging');
+            }
+        }, 150);
     }, { passive: true });
     
     // 移动处理
@@ -300,6 +457,7 @@ function setupDragFunction() {
             const touch = e.touches[0];
             currentX = touch.clientX;
             currentY = touch.clientY;
+            e.preventDefault(); // 阻止滚动
         } else {
             currentX = e.clientX;
             currentY = e.clientY;
@@ -311,15 +469,23 @@ function setupDragFunction() {
         const newLeft = initialLeft + deltaX;
         const newTop = initialTop + deltaY;
         
+        // 边界检查
         const maxX = window.innerWidth - searchContainer.offsetWidth;
         const maxY = window.innerHeight - searchContainer.offsetHeight;
         
         const safeLeft = Math.max(10, Math.min(newLeft, maxX - 10));
         const safeTop = Math.max(10, Math.min(newTop, maxY - 10));
         
+        // ✅ 重要：应用新位置，保持拖动后的位置
         searchContainer.style.left = safeLeft + 'px';
         searchContainer.style.top = safeTop + 'px';
-        searchContainer.style.right = 'auto';
+        searchContainer.style.right = 'auto'; // 清除右对齐
+        
+        // 更新初始位置为当前位置（用于连续拖动）
+        initialLeft = safeLeft;
+        initialTop = safeTop;
+        startX = currentX;
+        startY = currentY;
     }
     
     // 结束拖动
@@ -336,6 +502,7 @@ function setupDragFunction() {
         if (!isNaN(left) && !isNaN(top)) {
             try {
                 localStorage.setItem('searchBallPosition', JSON.stringify({ left, top }));
+                console.log('位置已保存:', { left, top });
             } catch (e) {
                 // 忽略错误
             }
@@ -345,10 +512,11 @@ function setupDragFunction() {
     // 事件监听
     document.addEventListener('mousemove', handleMove);
     document.addEventListener('mouseup', handleEnd);
-    document.addEventListener('touchmove', handleMove, { passive: true });
+    document.addEventListener('touchmove', handleMove, { passive: false });
     document.addEventListener('touchend', handleEnd, { passive: true });
+    document.addEventListener('touchcancel', handleEnd, { passive: true });
     
-    // 重置位置功能
+    // 设置位置重置
     setupPositionReset();
 }
 
@@ -361,25 +529,48 @@ function setupPositionReset() {
     
     // 双击重置
     searchBall.addEventListener('dblclick', function(e) {
+        e.preventDefault();
         e.stopPropagation();
         resetSearchBallPosition();
     });
     
-    // 长按重置（移动端）
+    // 长按重置（移动端优化）
     let longPressTimer;
-    searchBall.addEventListener('touchstart', function() {
+    let isLongPress = false;
+    
+    const handleTouchStart = function() {
+        if (searchBall.classList.contains('active')) return;
+        
+        isLongPress = false;
         longPressTimer = setTimeout(() => {
+            isLongPress = true;
             resetSearchBallPosition();
-        }, 1000);
-    });
+            showAlert('位置已重置到右边', 1500);
+        }, 800); // 800ms长按
+    };
     
-    searchBall.addEventListener('touchend', function() {
+    const handleTouchEnd = function() {
         clearTimeout(longPressTimer);
-    });
+        
+        // 如果长按触发，阻止后续的点击事件
+        if (isLongPress) {
+            const handler = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                searchBall.removeEventListener('click', handler);
+            };
+            searchBall.addEventListener('click', handler);
+            setTimeout(() => {
+                searchBall.removeEventListener('click', handler);
+            }, 100);
+        }
+    };
     
+    searchBall.addEventListener('touchstart', handleTouchStart, { passive: true });
+    searchBall.addEventListener('touchend', handleTouchEnd, { passive: true });
     searchBall.addEventListener('touchmove', function() {
         clearTimeout(longPressTimer);
-    });
+    }, { passive: true });
 }
 
 // ============================================
@@ -769,25 +960,48 @@ function showAlert(message, duration = 2000) {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.85);
         color: white;
-        padding: 15px 25px;
-        border-radius: 8px;
-        z-index: 9999999;
+        padding: 16px 24px;
+        border-radius: 10px;
+        z-index: 10000000;
         font-size: 16px;
         text-align: center;
         min-width: 200px;
         max-width: 80%;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        animation: fadeIn 0.3s ease-in-out;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        animation: customAlertFadeIn 0.3s ease-out;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.5;
+        word-break: break-word;
     `;
     
     // 添加淡入动画
     const style = document.createElement('style');
     style.textContent = `
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translate(-50%, -60%); }
-            to { opacity: 1; transform: translate(-50%, -50%); }
+        @keyframes customAlertFadeIn {
+            from { 
+                opacity: 0; 
+                transform: translate(-50%, -60%) scale(0.95); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1); 
+            }
+        }
+        
+        @keyframes customAlertFadeOut {
+            from { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1); 
+            }
+            to { 
+                opacity: 0; 
+                transform: translate(-50%, -40%) scale(0.95); 
+            }
         }
     `;
     document.head.appendChild(style);
@@ -797,8 +1011,7 @@ function showAlert(message, duration = 2000) {
     // 自动移除
     setTimeout(() => {
         if (alertDiv.parentNode) {
-            alertDiv.style.opacity = '0';
-            alertDiv.style.transition = 'opacity 0.3s ease';
+            alertDiv.style.animation = 'customAlertFadeOut 0.3s ease-in forwards';
             setTimeout(() => {
                 if (alertDiv.parentNode) {
                     alertDiv.remove();
@@ -806,9 +1019,36 @@ function showAlert(message, duration = 2000) {
             }, 300);
         }
     }, duration);
+    
+    return alertDiv;
 }
 
-// ✅ 修复：改进的完整搜索函数
+// ✅ 修改：新增函数 - 在新标签页打开URL
+function openInNewTab(url, name = '_blank') {
+    // 检查是否为TapTap环境
+    if (isMobileOrTapTap()) {
+        try {
+            // 尝试使用标准方式打开
+            const newWindow = window.open(url, name);
+            if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+                // 如果被阻止，显示提示
+                showAlert('新窗口被阻止，请手动复制链接打开：' + url, 3000);
+                return null;
+            }
+            return newWindow;
+        } catch (error) {
+            console.error('打开新标签页失败:', error);
+            // 显示提示让用户手动操作
+            showAlert('无法自动打开，请手动复制链接：' + url, 3000);
+            return null;
+        }
+    } else {
+        // 桌面端使用标准方式
+        return window.open(url, name);
+    }
+}
+
+// ✅ 修改：改进的完整搜索函数 - 支持新标签页打开
 async function performCompleteSearch(keyword) {
     const searchInput = document.getElementById('searchInput');
     
@@ -834,7 +1074,14 @@ async function performCompleteSearch(keyword) {
     
     if (result.success) {
         const rule = result.rule;
-        showAlert(`找到"${keyword}"相关页面，即将跳转...`, 1500);
+        
+        // 显示找到结果的提示
+        const alertDiv = showAlert(`找到"${keyword}"相关页面`, 1000);
+        
+        // 添加新标签页打开的提示
+        setTimeout(() => {
+            const newAlert = showAlert(`正在新标签页中打开`, 2000);
+        }, 1000);
         
         // 关闭搜索框
         const searchBall = document.getElementById('searchBall');
@@ -843,16 +1090,73 @@ async function performCompleteSearch(keyword) {
         if (searchExpanded) searchExpanded.classList.remove('active');
         if (searchInput) searchInput.value = '';
         
-        // 延迟跳转
+        // ✅ 修改：在新标签页中打开
         setTimeout(() => {
             if (rule.targetUrl) {
-                window.location.href = rule.targetUrl;
+                try {
+                    // 在新标签页中打开
+                    const newWindow = openInNewTab(rule.targetUrl, '_blank');
+                    
+                    // 如果无法打开新标签页，提供备选方案
+                    if (!newWindow) {
+                        // 显示包含链接的自制弹窗
+                        const linkAlert = showAlert('点击下面的链接在新标签页中打开', 0);
+                        
+                        const linkContainer = document.createElement('div');
+                        linkContainer.style.cssText = `
+                            margin-top: 15px;
+                            padding: 12px;
+                            background: rgba(255, 255, 255, 0.1);
+                            border-radius: 6px;
+                            word-break: break-all;
+                        `;
+                        
+                        const link = document.createElement('a');
+                        link.href = rule.targetUrl;
+                        link.textContent = rule.targetUrl;
+                        link.target = '_blank';
+                        link.rel = 'noopener noreferrer';
+                        link.style.cssText = `
+                            color: #4fc3f7;
+                            text-decoration: none;
+                            font-size: 14px;
+                            display: block;
+                            padding: 5px;
+                        `;
+                        
+                        const copyBtn = document.createElement('button');
+                        copyBtn.textContent = '复制链接';
+                        copyBtn.style.cssText = `
+                            width: 100%;
+                            padding: 10px;
+                            margin-top: 10px;
+                            background: #2196F3;
+                            color: white;
+                            border: none;
+                            border-radius: 5px;
+                            font-size: 14px;
+                            cursor: pointer;
+                        `;
+                        
+                        copyBtn.addEventListener('click', function() {
+                            navigator.clipboard.writeText(rule.targetUrl).then(() => {
+                                showAlert('链接已复制到剪贴板', 1500);
+                            });
+                        });
+                        
+                        linkContainer.appendChild(link);
+                        linkAlert.appendChild(linkContainer);
+                        linkAlert.appendChild(copyBtn);
+                    }
+                } catch (error) {
+                    console.error('打开页面失败:', error);
+                    showAlert('打开页面失败，请检查链接', 2000);
+                }
             } else {
                 showAlert('目标页面地址无效', 2000);
             }
-        }, 1500);
+        }, 500); // 稍微延迟，让用户看到提示
     } else {
-        // ✅ 修复：搜索不到时显示提醒
         showAlert(`未找到与"${keyword}"相关的页面`, 2000);
         
         // 保持搜索框打开，让用户继续输入
@@ -879,20 +1183,66 @@ async function performCompleteSearch(keyword) {
 // 搜索函数（供外部调用）
 window.performSearch = performCompleteSearch;
 
-// 测试函数
+// 测试函数（修改为在新标签页打开）
 window.testSearch = function(keyword) {
-    if (!keyword) keyword = prompt('输入测试关键词:');
-    if (keyword) {
-        const result = globalSearchEngine ? globalSearchEngine.search(keyword) : { success: false };
-        if (result.success) {
-            showAlert(`测试成功！匹配到: ${result.rule.description}`, 3000);
-        } else {
-            showAlert(`测试失败！未找到匹配`, 3000);
-        }
+    if (!keyword) {
+        // 使用自制弹窗获取输入
+        const inputAlert = showAlert('输入测试关键词:', 0);
+        
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.style.cssText = `
+            width: 100%;
+            padding: 10px;
+            margin: 12px 0;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px;
+            box-sizing: border-box;
+        `;
+        
+        const button = document.createElement('button');
+        button.textContent = '测试搜索';
+        button.style.cssText = `
+            width: 100%;
+            padding: 10px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        `;
+        
+        inputAlert.appendChild(input);
+        inputAlert.appendChild(button);
+        
+        input.focus();
+        
+        button.addEventListener('click', function() {
+            const value = input.value.trim();
+            if (value) {
+                if (inputAlert.parentNode) inputAlert.remove();
+                performCompleteSearch(value);
+            }
+        });
+        
+        // 回车键支持
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                button.click();
+            }
+        });
+        
+        return;
     }
+    
+    performCompleteSearch(keyword);
 };
 
-// 显示所有关键词
+// 显示所有关键词（修改为在新标签页中打开链接）
 window.showAllKeywords = function() {
     if (!globalSearchEngine) {
         showAlert('搜索引擎未初始化', 2000);
@@ -900,45 +1250,329 @@ window.showAllKeywords = function() {
     }
     
     const keywords = globalSearchEngine.getAllKeywords();
-    alert(`共有 ${keywords.length} 个关键词:\n\n` + 
-          keywords.map(k => `${k.keyword} -> ${k.targetUrl}`).join('\n'));
+    
+    // 使用自制弹窗显示
+    const alertDiv = showAlert(`共有 ${keywords.length} 个关键词`, 0);
+    
+    // 添加关键词列表
+    const listDiv = document.createElement('div');
+    listDiv.style.cssText = `
+        max-height: 400px;
+        overflow-y: auto;
+        margin-top: 12px;
+        text-align: left;
+        font-size: 14px;
+        line-height: 1.4;
+        padding-right: 5px;
+    `;
+    
+    // 添加滚动条样式
+    const style = document.createElement('style');
+    style.textContent = `
+        .keywords-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .keywords-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        .keywords-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+    `;
+    document.head.appendChild(style);
+    listDiv.className = 'keywords-list';
+    
+    keywords.slice(0, 30).forEach(k => {
+        const item = document.createElement('div');
+        item.style.cssText = `
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        `;
+        
+        const keywordSpan = document.createElement('span');
+        keywordSpan.textContent = k.keyword;
+        keywordSpan.style.cssText = `
+            flex: 1;
+            margin-right: 10px;
+            word-break: break-all;
+        `;
+        
+        const linkBtn = document.createElement('button');
+        linkBtn.textContent = '打开';
+        linkBtn.style.cssText = `
+            padding: 4px 8px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+            flex-shrink: 0;
+        `;
+        
+        linkBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            openInNewTab(k.targetUrl, '_blank');
+            showAlert(`正在打开: ${k.targetUrl}`, 1500);
+        });
+        
+        item.appendChild(keywordSpan);
+        item.appendChild(linkBtn);
+        listDiv.appendChild(item);
+    });
+    
+    if (keywords.length > 30) {
+        const more = document.createElement('div');
+        more.style.cssText = `
+            padding: 10px 0;
+            font-style: italic;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+        `;
+        more.textContent = `... 还有 ${keywords.length - 30} 个关键词`;
+        listDiv.appendChild(more);
+    }
+    
+    alertDiv.appendChild(listDiv);
+    
+    // 添加关闭按钮
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '关闭';
+    closeBtn.style.cssText = `
+        width: 100%;
+        padding: 10px;
+        margin-top: 15px;
+        background: #f44336;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+    `;
+    
+    closeBtn.addEventListener('click', function() {
+        if (alertDiv.parentNode) alertDiv.remove();
+    });
+    
+    alertDiv.appendChild(closeBtn);
 };
 
 // 编码工具
 window.encodeKeyword = function(text) {
-    if (!text) text = prompt('输入要编码的关键词:');
-    if (text) {
-        const engine = globalSearchEngine || new SearchEngine();
-        const encoded = engine.base64Encode(text);
-        prompt('编码结果（复制使用）:', encoded);
-        return encoded;
+    if (!text) {
+        // 使用自制弹窗获取输入
+        const inputAlert = showAlert('请输入要编码的关键词:', 0);
+        
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.style.cssText = `
+            width: 100%;
+            padding: 10px;
+            margin: 12px 0;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px;
+            box-sizing: border-box;
+        `;
+        
+        const button = document.createElement('button');
+        button.textContent = '编码';
+        button.style.cssText = `
+            width: 100%;
+            padding: 10px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        `;
+        
+        inputAlert.appendChild(input);
+        inputAlert.appendChild(button);
+        
+        input.focus();
+        
+        button.addEventListener('click', function() {
+            const value = input.value.trim();
+            if (value) {
+                const engine = globalSearchEngine || new SearchEngine();
+                const encoded = engine.base64Encode(value);
+                
+                // 显示编码结果
+                const resultAlert = showAlert('编码结果:', 0);
+                
+                const resultDiv = document.createElement('div');
+                resultDiv.textContent = encoded;
+                resultDiv.style.cssText = `
+                    background: rgba(255, 255, 255, 0.1);
+                    padding: 12px;
+                    margin: 12px 0;
+                    border-radius: 5px;
+                    word-break: break-all;
+                    font-family: monospace;
+                    font-size: 12px;
+                    max-height: 200px;
+                    overflow-y: auto;
+                `;
+                
+                const copyBtn = document.createElement('button');
+                copyBtn.textContent = '复制结果';
+                copyBtn.style.cssText = button.style.cssText;
+                copyBtn.style.background = '#2196F3';
+                copyBtn.style.marginTop = '10px';
+                
+                copyBtn.addEventListener('click', function() {
+                    navigator.clipboard.writeText(encoded).then(() => {
+                        showAlert('已复制到剪贴板', 1500);
+                        setTimeout(() => {
+                            if (resultAlert.parentNode) resultAlert.remove();
+                        }, 1000);
+                    });
+                });
+                
+                resultAlert.appendChild(resultDiv);
+                resultAlert.appendChild(copyBtn);
+                
+                // 移除输入弹窗
+                if (inputAlert.parentNode) inputAlert.remove();
+            }
+        });
+        
+        // 回车键支持
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                button.click();
+            }
+        });
+        
+        return;
     }
+    
+    const engine = globalSearchEngine || new SearchEngine();
+    const encoded = engine.base64Encode(text);
+    
+    // 显示编码结果
+    const alertDiv = showAlert('编码结果:', 0);
+    
+    const resultDiv = document.createElement('div');
+    resultDiv.textContent = encoded;
+    resultDiv.style.cssText = `
+        background: rgba(255, 255, 255, 0.1);
+        padding: 12px;
+        margin: 12px 0;
+        border-radius: 5px;
+        word-break: break-all;
+        font-family: monospace;
+        font-size: 12px;
+        max-height: 200px;
+        overflow-y: auto;
+    `;
+    
+    const copyBtn = document.createElement('button');
+    copyBtn.textContent = '复制结果';
+    copyBtn.style.cssText = `
+        width: 100%;
+        padding: 10px;
+        background: #2196F3;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+    `;
+    
+    copyBtn.addEventListener('click', function() {
+        navigator.clipboard.writeText(encoded).then(() => {
+            showAlert('已复制到剪贴板', 1500);
+            setTimeout(() => {
+                if (alertDiv.parentNode) alertDiv.remove();
+            }, 1000);
+        });
+    });
+    
+    alertDiv.appendChild(resultDiv);
+    alertDiv.appendChild(copyBtn);
 };
 
 // ============================================
-// 第四部分：事件监听
+// 第四部分：事件监听和优化
 // ============================================
 
 // 页面加载完成后的额外检查
 window.addEventListener('load', function() {
-    console.log('页面完全加载，执行保障居中');
+    console.log('页面完全加载，执行保障定位');
     
-    // 延迟居中，确保所有资源加载完成
+    // 延迟定位，确保所有资源加载完成
     setTimeout(() => {
-        centerSearchBall();
+        positionSearchBallRight();
+        
+        // 加载保存的位置（如果用户拖动过）
+        try {
+            const savedPos = localStorage.getItem('searchBallPosition');
+            if (savedPos) {
+                const { left, top } = JSON.parse(savedPos);
+                const searchContainer = document.querySelector('.floating-search-ball-container');
+                if (searchContainer && !isNaN(left) && !isNaN(top)) {
+                    // 应用保存的位置
+                    searchContainer.style.left = left + 'px';
+                    searchContainer.style.top = top + 'px';
+                    searchContainer.style.right = 'auto';
+                    searchContainer.removeAttribute('data-initial-position');
+                    console.log('已加载保存的位置:', { left, top });
+                }
+            }
+        } catch (e) {
+            // 忽略错误
+        }
     }, 500);
 });
 
-// ✅ 窗口大小变化时重新居中
+// ✅ 窗口大小变化时重新定位
 window.addEventListener('resize', function() {
     const container = document.querySelector('.floating-search-ball-container');
-    if (container && container.hasAttribute('data-centered')) {
-        setTimeout(centerSearchBall, 100);
+    
+    // 只有在初始位置（未拖动）时才重新定位
+    if (container && container.hasAttribute('data-initial-position')) {
+        setTimeout(positionSearchBallRight, 100);
+    } else {
+        // 如果用户拖动过，确保不会超出边界
+        setTimeout(() => {
+            if (container) {
+                const rect = container.getBoundingClientRect();
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+                
+                // 边界检查
+                if (rect.left < 10) {
+                    container.style.left = '10px';
+                }
+                if (rect.top < 10) {
+                    container.style.top = '10px';
+                }
+                if (rect.right > viewportWidth - 10) {
+                    container.style.left = (viewportWidth - rect.width - 10) + 'px';
+                }
+                if (rect.bottom > viewportHeight - 10) {
+                    container.style.top = (viewportHeight - rect.height - 10) + 'px';
+                }
+            }
+        }, 100);
     }
 });
 
-// ✅ 导出居中函数供外部调用
-window.centerSearchBall = centerSearchBall;
+// ✅ 导出函数供外部调用
+window.positionSearchBallRight = positionSearchBallRight;
+window.centerSearchBall = positionSearchBallRight; // 保持向后兼容
+window.openInNewTab = openInNewTab; // 导出新标签页打开函数
 
 // ✅ 定时检查保障
 setInterval(() => {
@@ -948,20 +1582,50 @@ setInterval(() => {
     if (container && ball) {
         const rect = container.getBoundingClientRect();
         const isVisible = rect.width > 0 && rect.height > 0;
-        const isCentered = container.hasAttribute('data-centered');
+        const hasInitialPosition = container.hasAttribute('data-initial-position');
         
-        if (isVisible && !isCentered) {
-            console.log('定时检查：重新居中');
-            centerSearchBall();
+        // 如果不可见但有初始位置标记，重新定位
+        if (!isVisible && hasInitialPosition) {
+            console.log('定时检查：重新定位搜索球');
+            positionSearchBallRight();
+        }
+        
+        // 检查是否在可视区域内
+        if (isVisible) {
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            
+            // 如果完全不可见，重置到右边
+            if (rect.right < 0 || rect.left > viewportWidth || 
+                rect.bottom < 0 || rect.top > viewportHeight) {
+                console.log('搜索球超出视窗，重置位置');
+                positionSearchBallRight();
+            }
         }
     }
-}, 3000);
+}, 5000); // 5秒检查一次
+
+// ✅ 新增：移动端键盘事件处理
+if (isMobileOrTapTap()) {
+    window.addEventListener('resize', function() {
+        // 处理虚拟键盘弹出/收起
+        const activeElement = document.activeElement;
+        const isSearchInput = activeElement && activeElement.id === 'searchInput';
+        
+        if (isSearchInput) {
+            // 保持当前位置，不需要调整
+            console.log('搜索输入激活，保持当前位置');
+        }
+    });
+}
 
 // 导出控制函数
 window.searchControl = {
     init: initCompleteSearchSystem,
     search: performCompleteSearch,
     resetPosition: resetSearchBallPosition,
+    positionRight: positionSearchBallRight,
+    openInNewTab: openInNewTab,
     showAllKeywords: function() {
         if (globalSearchEngine) {
             const keywords = globalSearchEngine.getAllKeywords();
@@ -970,4 +1634,4 @@ window.searchControl = {
     }
 };
 
-console.log('搜索球完整JS代码已优化加载');
+console.log('搜索球完整JS代码已优化加载（右边居中版 + 新标签页打开）');

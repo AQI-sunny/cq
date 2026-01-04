@@ -20,8 +20,8 @@ const SimplePageCounter = {
 'chehuo.html',
 'mm-feis.html',
 'mmdn.html',
-'mmfeis.html',
-'mmfeishu.html',
+/* 'mmfeis.html',
+'mmfeishu.html', */
 'mmttq.html',
 'wyglc.html',
 'todsk.html',
@@ -64,7 +64,7 @@ const SimplePageCounter = {
 'zhenjmwj.html',
 'zhuilou.html',
 'zw-cpt.html',
-'zw-fs.html',
+/* 'zw-fs.html', */
 'zw-htyx.html',
 'zw-ttq.html',
 'zwjiamwj.html',

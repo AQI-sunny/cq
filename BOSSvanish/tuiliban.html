@@ -508,7 +508,22 @@
             </div>
         </div>
 </div>
+    <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
     
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
     <script>
         // 问题数据 - 根据注释优化
         const questionsData = [
@@ -1305,5 +1320,9 @@
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', init);
     </script>
+    <script src="scball.js"></script>
+<script src="pages.js"></script>
+<script src="visit.js"></script>
+<script src="jinzhi.js"></script>
 </body>
 </html>
