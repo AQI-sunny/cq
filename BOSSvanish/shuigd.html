@@ -61,14 +61,15 @@
             padding: 0 20px;
         }
         
-        .search-container {
+        /* 修改搜索容器类名，避免冲突 */
+        .fruit-search-box {
             margin-bottom: 30px;
             display: flex;
             justify-content: center;
             gap: 10px;
         }
         
-        .search-container input {
+        .fruit-search-box input {
             flex: 1;
             max-width: 500px;
             padding: 15px 20px;
@@ -79,13 +80,13 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         
-        .search-container input:focus {
+        .fruit-search-box input:focus {
             border-color: #ff7f50;
             outline: none;
             box-shadow: 0 4px 12px rgba(255, 127, 80, 0.2);
         }
         
-        .search-container button {
+        .fruit-search-box button {
             padding: 15px 25px;
             background: linear-gradient(to right, #ff7f50, #ff6347);
             color: white;
@@ -100,7 +101,7 @@
             gap: 8px;
         }
         
-        .search-container button:hover {
+        .fruit-search-box button:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(255, 127, 80, 0.4);
         }
@@ -570,12 +571,12 @@
                 margin: 20px auto;
             }
             
-            .search-container {
+            .fruit-search-box {
                 flex-direction: column;
                 align-items: center;
             }
             
-            .search-container input {
+            .fruit-search-box input {
                 max-width: 100%;
                 margin-bottom: 10px;
             }
@@ -594,11 +595,48 @@
             
             .product-actions {
                 align-self: flex-end;
+                margin-top: 10px;
             }
             
             .modal-content {
                 width: 95%;
                 padding: 20px;
+                margin: 10% auto;
+            }
+            
+            .fruit-search-box button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 26px;
+            }
+            
+            .fruit-search-box input {
+                font-size: 14px;
+                padding: 12px 18px;
+            }
+            
+            .fruit-search-box button {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+            
+            .inventory {
+                padding: 15px;
+            }
+            
+            .product-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .detail-btn {
+                padding: 8px 15px;
+                font-size: 13px;
             }
         }
         
@@ -609,8 +647,14 @@
         .status-icon {
             font-size: 14px;
         }
+        
+        /* 为搜索球容器添加样式，确保不冲突 */
+        .floating-search-ball-container {
+            position: fixed;
+            z-index: 9999;
+        }
     </style>
-<link rel="stylesheet" href="sc-style.css">
+    <link rel="stylesheet" href="sc-style.css">
     <link rel="icon" type="image/png" href="dtma.png">
 </head>
 <body>
@@ -620,10 +664,10 @@
     </header>
     
     <div class="container">
-        <!-- 搜索框 -->
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="搜索水果或商品号..." onkeypress="handleKeyPress(event)">
-            <button onclick="searchNotices()"><i class="fas fa-search"></i> 搜索</button>
+        <!-- 修改搜索框ID，避免与搜索球冲突 -->
+        <div class="fruit-search-box">
+            <input type="text" id="fruitSearchInput" placeholder="搜索水果或商品号..." onkeypress="handleFruitKeyPress(event)">
+            <button onclick="searchFruitNotices()"><i class="fas fa-search"></i> 搜索</button>
         </div>
         
         <!-- 关于水果店 -->
@@ -844,143 +888,97 @@
         <p><i class="fas fa-copyright"></i> 果多多7天鲜果店 &copy; 2025 - 您的24小时新鲜水果管家</p>
         <p><i class="fas fa-map-marker-alt"></i> 地址：旺达商圈A座F1层 | <i class="fas fa-clock"></i> 营业时间：24小时营业 | <i class="fas fa-phone"></i> 联系电话：138-XXXX-9131</p>
     </div>
-    <!-- 搜索球容器 -->
-<div class="floating-search-ball-container">
-    <!-- 搜索球（点击展开） -->
-    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
-    
-    <!-- 展开的搜索框 -->
-    <div class="floating-search-expanded" id="searchExpanded">
-        <input type="text" 
-               class="floating-search-input" 
-               id="searchInput" 
-               placeholder="输入关键词搜索..." 
-               aria-label="搜索输入框">
-        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
-        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
-    </div>
-</div>
 
-    <!-- JavaScript部分保持不变 -->
+    <!-- 搜索球容器 -->
+    <div class="floating-search-ball-container">
+        <!-- 搜索球（点击展开） -->
+        <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+        
+        <!-- 展开的搜索框 -->
+        <div class="floating-search-expanded" id="searchExpanded">
+            <input type="text" 
+                   class="floating-search-input" 
+                   id="searchInput" 
+                   placeholder="输入关键词搜索..." 
+                   aria-label="搜索输入框">
+            <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+            <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+        </div>
+    </div>
+
+    <!-- 优化后的JavaScript部分 -->
     <script>
-        // 这里保留原JavaScript代码，所有功能不变
-        function searchNotices() {
-            const keyword = document.getElementById('searchInput').value.toLowerCase();
+        // 修改函数名和变量名，避免与外部搜索球冲突
+        function searchFruitNotices() {
+            const keyword = document.getElementById('fruitSearchInput').value.toLowerCase();
             const warning3306 = document.getElementById('warning3306');
-            const warning3306Purchase = document.getElementById('warning3306Purchase');
+            
+            // 处理3306警告逻辑
             if (keyword.includes('3306') || keyword.includes('警告') || keyword.includes('安全隐患')) {
                 warning3306.style.fontWeight = 'bold';
                 warning3306.style.color = 'red';
-                warning3306Purchase.style.fontWeight = 'bold';
-                warning3306Purchase.style.color = 'red';
             } else {
                 warning3306.style.fontWeight = 'normal';
                 warning3306.style.color = '#777';
-                warning3306Purchase.style.fontWeight = 'normal';
-                warning3306Purchase.style.color = '#777';
             }
-            const searchInput = document.getElementById('searchInput').value;
-            if (searchInput.trim() !== '') {
-                performSearch();
+            
+            // 执行水果搜索
+            if (keyword.trim() !== '') {
+                performFruitSearch();
             }
         }
-        function performSearch() {
-            const keyword = document.getElementById('searchInput').value.toLowerCase();
+        
+        function performFruitSearch() {
+            const keyword = document.getElementById('fruitSearchInput').value.toLowerCase();
             const inventoryList = document.getElementById('inventoryList');
             let found = false;
+            
+            // 移除之前的结果
             const existingResult = document.querySelector('.search-result');
             if (existingResult) {
                 existingResult.remove();
             }
+            
+            // 重置所有项目显示状态
             const allItems = document.querySelectorAll('.inventory li');
             allItems.forEach(item => {
                 item.style.display = '';
                 item.classList.remove('search-highlight');
+                
+                // 隐藏隐藏项目（除非被搜索到）
                 if (item.classList.contains('hidden-item')) {
                     item.style.display = 'none';
                 }
             });
+            
+            // 特殊水果搜索逻辑
             const hiddenItems = document.querySelectorAll('.hidden-item');
-            if (keyword.includes('车厘子') || keyword.includes('che-503') || keyword.includes('进口车厘子')) {
-                hiddenItems.forEach(item => {
-                    if (item.textContent.toLowerCase().includes('车厘子')) {
-                        item.style.display = 'flex';
-                        item.classList.remove('hidden-item'); 
-                        inventoryList.prepend(item);
-                        found = true;
-                    }
-                });
-            }
-            if (keyword.includes('榴莲') || keyword.includes('dur-852') || keyword.includes('金枕榴莲')) {
-                hiddenItems.forEach(item => {
-                    if (item.textContent.toLowerCase().includes('榴莲')) {
-                        item.style.display = 'flex';
-                        item.classList.remove('hidden-item'); 
-                        inventoryList.prepend(item);
-                        found = true;
-                    }
-                });
-            }
-            if (keyword.includes('石榴') || keyword.includes('pom-593') || keyword.includes('以色列石榴')) {
-                hiddenItems.forEach(item => {
-                    if (item.textContent.toLowerCase().includes('石榴')) {
-                        item.style.display = 'flex';
-                        item.classList.remove('hidden-item'); 
-                        inventoryList.prepend(item);
-                        found = true;
-                    }
-                });
-            }
-            if (keyword.includes('木瓜') || keyword.includes('pap-212') || keyword.includes('海南木瓜')) {
-                hiddenItems.forEach(item => {
-                    if (item.textContent.toLowerCase().includes('木瓜')) {
-                        item.style.display = 'flex';
-                        item.classList.remove('hidden-item'); 
-                        inventoryList.prepend(item);
-                        found = true;
-                    }
-                });
-            }
-            if (keyword.includes('葡萄') || keyword.includes('gra-325') || keyword.includes('新疆葡萄')) {
-                hiddenItems.forEach(item => {
-                    if (item.textContent.toLowerCase().includes('葡萄')) {
-                        item.style.display = 'flex';
-                        item.classList.remove('hidden-item'); 
-                        inventoryList.prepend(item);
-                        found = true;
-                    }
-                });
-            }
-            if (keyword.includes('山竹') || keyword.includes('pit-385') || keyword.includes('泰国山竹')) {
-                hiddenItems.forEach(item => {
-                    if (item.textContent.toLowerCase().includes('山竹')) {
-                        item.style.display = 'flex';
-                        item.classList.remove('hidden-item'); 
-                        inventoryList.prepend(item);
-                        found = true;
-                    }
-                });
-            }
-            if (keyword.includes('荔枝') || keyword.includes('lyc-263') || keyword.includes('广东荔枝')) {
-                hiddenItems.forEach(item => {
-                    if (item.textContent.toLowerCase().includes('荔枝')) {
-                        item.style.display = 'flex';
-                        item.classList.remove('hidden-item'); 
-                        inventoryList.prepend(item);
-                        found = true;
-                    }
-                });
-            }
-            if (keyword.includes('无花果') || keyword.includes('fig-187') || keyword.includes('无花果')) {
-                hiddenItems.forEach(item => {
-                    if (item.textContent.toLowerCase().includes('无花果')) {
-                        item.style.display = 'flex';
-                        item.classList.remove('hidden-item'); 
-                        inventoryList.prepend(item);
-                        found = true;
-                    }
-                });
-            }
+            const specialSearches = [
+                { keywords: ['车厘子', 'che-503', '进口车厘子'], fruit: '车厘子' },
+                { keywords: ['榴莲', 'dur-852', '金枕榴莲'], fruit: '榴莲' },
+                { keywords: ['石榴', 'pom-593', '以色列石榴'], fruit: '石榴' },
+                { keywords: ['木瓜', 'pap-212', '海南木瓜'], fruit: '木瓜' },
+                { keywords: ['葡萄', 'gra-325', '新疆葡萄'], fruit: '葡萄' },
+                { keywords: ['山竹', 'pit-385', '泰国山竹'], fruit: '山竹' },
+                { keywords: ['荔枝', 'lyc-263', '广东荔枝'], fruit: '荔枝' },
+                { keywords: ['无花果', 'fig-187'], fruit: '无花果' }
+            ];
+            
+            specialSearches.forEach(search => {
+                if (search.keywords.some(kw => keyword.includes(kw))) {
+                    hiddenItems.forEach(item => {
+                        if (item.textContent.toLowerCase().includes(search.fruit)) {
+                            item.style.display = 'flex';
+                            item.classList.remove('hidden-item');
+                            // 移动到列表顶部
+                            inventoryList.prepend(item);
+                            found = true;
+                        }
+                    });
+                }
+            });
+            
+            // 常规搜索逻辑
             const visibleItems = document.querySelectorAll('.inventory li:not(.hidden-item)');
             visibleItems.forEach(item => {
                 const itemText = item.textContent.toLowerCase();
@@ -989,34 +987,43 @@
                     found = true;
                 }
             });
+            
+            // 显示搜索结果
             if (!found && keyword.trim() !== '') {
                 const resultDiv = document.createElement('div');
                 resultDiv.className = 'search-result';
-                resultDiv.innerHTML = '<i class="fas fa-search"></i> 找不到该水果';
+                resultDiv.innerHTML = '<i class="fas fa-search"></i> 未找到相关水果';
                 document.querySelector('.inventory').insertBefore(resultDiv, inventoryList);
             }
         }
+        
+        // 处理水果搜索输入框的Enter键
+        function handleFruitKeyPress(event) {
+            if (event.key === 'Enter') {
+                searchFruitNotices();
+            }
+        }
+        
+        // 其他原有函数（保持不变）
         function resetSearch() {
             document.getElementById('dateInput').value = '';
             document.getElementById('userInput').value = '';
             document.getElementById('productInput').value = '';
             document.getElementById('orderList').innerHTML = '';
         }
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                searchNotices();
-            }
-        }
+        
         function handleLoginEnter(event) {
             if (event.key === 'Enter') {
                 login();
             }
         }
+        
         function handleOrderEnter(event) {
             if (event.key === 'Enter') {
                 searchOrders();
             }
         }
+        
         function showMoreItems() {
             const hiddenItems = document.querySelectorAll('.hidden-item');
             hiddenItems.forEach(item => {
@@ -1024,12 +1031,15 @@
             });
             document.querySelector('.more-btn').style.display = 'none';
         }
+        
         function showLoginModal() {
             document.getElementById('loginModal').style.display = 'block';
         }
+        
         function closeLoginModal() {
             document.getElementById('loginModal').style.display = 'none';
         }
+        
         function login() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
@@ -1042,12 +1052,15 @@
                 alert('用户名或密码错误！提示：姓名拼音~ all~ ');
             }
         }
+        
         function showHistoryModal() {
             document.getElementById('historyModal').style.display = 'block';
         }
+        
         function closeHistoryModal() {
             document.getElementById('historyModal').style.display = 'none';
         }
+        
         function searchOrders() {
             const date = document.getElementById('dateInput').value;
             const user = document.getElementById('userInput').value;
@@ -1068,10 +1081,11 @@
                 { user: '许琳宛', product: '海南木瓜（2个装）', date: '2024-12-17', productCode: 'PAP-212' },
                 { user: '顾青娥', product: '泰国金枕榴莲（整颗）', date: '2025-03-17', productCode: 'DUR-852' },
                 { user: '王素锦', product: '红富士苹果', date: '2025-08-20', productCode: 'APP-001' },
-                 { user: '张威', product: '西柚（1个）', date: '2025-12-30', productCode: 'GRA-128' },
+                { user: '张威', product: '西柚（1个）', date: '2025-12-30', productCode: 'GRA-128' },
                 { user: '许琳宛', product: '麒麟西瓜（1个）', date: '2025-12-06', productCode: 'WAT-129' },
                 { user: '王素锦', product: '麒麟西瓜（1个）', date: '2013-05-19', productCode: 'WAT-129' }
             ];
+            
             let html = '';
             if (user && product && !date) {
                 const filteredOrders = orders.filter(order => {
@@ -1080,6 +1094,7 @@
                                        order.productCode.toLowerCase().includes(product.toLowerCase());
                     return userMatch && productMatch;
                 });
+                
                 if (filteredOrders.length > 0) {
                     filteredOrders.forEach(order => {
                         html += `<div class="order-item">
@@ -1103,6 +1118,7 @@
                 const filteredOrders = orders.filter(order => {
                     return order.date === date && order.user === user;
                 });
+                
                 if (filteredOrders.length > 0) {
                     filteredOrders.forEach(order => {
                         html += `<div class="order-item">
@@ -1122,6 +1138,7 @@
                         order.productCode.toLowerCase().includes(product.toLowerCase());
                     return order.date === date && productMatch;
                 });
+                
                 if (filteredOrders.length > 0) {
                     filteredOrders.forEach(order => {
                         html += `<div class="order-item">
@@ -1138,51 +1155,40 @@
             else {
                 html = '<div class="order-item"><i class="fas fa-exclamation-circle"></i> 订单太多辣！找不到你想要的订单~请同时输入日期和购买人姓名或日期和水果/商品号哦</div>';
             }
+            
             orderList.innerHTML = html;
         }
+        
         function showProductDetail(productName) {
             const detailModal = document.getElementById('detailModal');
             const detailTitle = document.getElementById('detailTitle');
             const detailContent = document.getElementById('detailContent');
-            switch (productName) {
-                case '泰国金枕榴莲（整颗）':
-                    detailTitle.textContent = '泰国金枕榴莲 - 水果详情';
-                    detailContent.textContent = '产自泰国东部，果肉金黄饱满，口感绵密香甜，香味浓郁。';
-                    break;
-                case '海南木瓜（2个装）':
-                case '海南木瓜':
-                    detailTitle.textContent = '海南木瓜 - 水果详情';
-                    detailContent.textContent = '海南产红心木瓜，果肉橙红细腻，汁多味甜，富含木瓜酵素和维生素C。';
-                    break;
-                case '泰国山竹（1kg）':
-                    detailTitle.textContent = '泰国山竹 - 水果详情';
-                    detailContent.textContent = '泰国进口山竹，果壳深紫，果肉雪白，口感酸甜清爽，被称为"水果皇后"。';
-                    break;
-                case '进口车厘子（2kg礼盒）':
-                    detailTitle.textContent = '进口车厘子 - 水果详情';
-                    detailContent.textContent = '智利进口车厘子，果径28-30mm，果肉紧实脆甜，颜色深红，适合送礼。';
-                    break;
-                case '以色列石榴（1kg）':
-                    detailTitle.textContent = '以色列石榴 - 水果详情';
-                    detailContent.textContent = '以色列进口软籽石榴，籽粒深红饱满，汁多味甜，可直接食用无需吐籽。';
-                    break;
-                case '无花果（500g）':
-                    detailTitle.textContent = '无花果 - 水果详情';
-                    detailContent.textContent = '新鲜无花果，果肉软糯香甜，富含膳食纤维和矿物质。';
-                    break;
-                default:
-                    detailTitle.textContent = productName + ' - 水果详情';
-                    detailContent.textContent = '该水果暂无详细信息';
-            }
+            
+            const detailMap = {
+                '泰国金枕榴莲（整颗）': '产自泰国东部，果肉金黄饱满，口感绵密香甜，香味浓郁。',
+                '海南木瓜（2个装）': '海南产红心木瓜，果肉橙红细腻，汁多味甜，富含木瓜酵素和维生素C。',
+                '海南木瓜': '海南产红心木瓜，果肉橙红细腻，汁多味甜，富含木瓜酵素和维生素C。',
+                '泰国山竹（1kg）': '泰国进口山竹，果壳深紫，果肉雪白，口感酸甜清爽，被称为"水果皇后"。',
+                '进口车厘子（2kg礼盒）': '智利进口车厘子，果径28-30mm，果肉紧实脆甜，颜色深红，适合送礼。',
+                '以色列石榴（1kg）': '以色列进口软籽石榴，籽粒深红饱满，汁多味甜，可直接食用无需吐籽。',
+                '无花果（500g）': '新鲜无花果，果肉软糯香甜，富含膳食纤维和矿物质。'
+            };
+            
+            detailTitle.textContent = productName + ' - 水果详情';
+            detailContent.textContent = detailMap[productName] || '该水果暂无详细信息';
             detailModal.style.display = 'block';
         }
+        
         function closeDetailModal() {
             document.getElementById('detailModal').style.display = 'none';
         }
+        
+        // 点击外部关闭模态框
         window.onclick = function (event) {
             const loginModal = document.getElementById('loginModal');
             const historyModal = document.getElementById('historyModal');
             const detailModal = document.getElementById('detailModal');
+            
             if (event.target === loginModal) {
                 loginModal.style.display = 'none';
             }
@@ -1193,17 +1199,26 @@
                 detailModal.style.display = 'none';
             }
         }
+        
+        // 页面加载时隐藏隐藏项目
         document.addEventListener('DOMContentLoaded', function () {
             const hiddenItems = document.querySelectorAll('.hidden-item');
             hiddenItems.forEach(item => {
                 item.style.display = 'none';
             });
+            
+            // 确保搜索球脚本能正常运行
+            console.log('水果店搜索功能已初始化，搜索球功能保持原状');
         });
+        
+        // 移动端触摸优化
+        document.addEventListener('touchstart', function() {}, {passive: true});
     </script>
-<script src="scball.js"></script>
-<script src="pages.js"></script>
-<script src="visit.js"></script>
-
-<script src="jinzhi.js"></script>
+    
+    <!-- 外部JS文件 -->
+    <script src="scball.js"></script>
+    <script src="pages.js"></script>
+    <script src="visit.js"></script>
+    <script src="jinzhi.js"></script>
 </body>
 </html>
