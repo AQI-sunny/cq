@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成华大道重大交通事故：出租车司机与乘客双亡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* 头部样式 */
+        .header {
+            border-bottom: 1px solid #eaeaea;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .date-location {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        h1 {
+            font-size: 26px;
+            color: #c00;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 20px;
+            font-weight: normal;
+        }
+        
+        /* 主要内容样式 */
+        .lead {
+            font-size: 18px;
+            color: #222;
+            margin-bottom: 25px;
+            padding-left: 10px;
+            border-left: 4px solid #c00;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section h2 {
+            font-size: 20px;
+            color: #333;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #eee;
+            margin-bottom: 15px;
+        }
+        
+        .section p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .quote {
+            background-color: #f8f8f8;
+            border-left: 4px solid #ccc;
+            padding: 15px;
+            margin: 20px 0;
+            font-style: italic;
+            color: #555;
+        }
+        
+        .quote-source {
+            text-align: right;
+            font-style: normal;
+            color: #777;
+            margin-top: 5px;
+        }
+        
+        .victim-info {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        .victim-card {
+            flex-basis: 48%;
+            margin-bottom: 15px;
+        }
+        
+        .victim-card h3 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .victim-details {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .taxi-icon {
+            color: #c00;
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        
+        /* 安全提醒样式 */
+        .safety-reminder {
+            background-color: #fff9e6;
+            border-left: 5px solid #ffcc00;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .safety-reminder h3 {
+            color: #e6a700;
+            margin-bottom: 15px;
+        }
+        
+        .reminder-list {
+            list-style-type: none;
+        }
+        
+        .reminder-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .reminder-list li:before {
+            content: "•";
+            color: #e6a700;
+            font-size: 20px;
+            position: absolute;
+            left: 0;
+            top: 5px;
+        }
+        
+        /* 底部样式 */
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #777;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .update-time {
+            font-weight: bold;
+            color: #555;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 0;
+            }
+            
+            h1 {
+                font-size: 22px;
+            }
+            
+            .subtitle {
+                font-size: 14px;
+            }
+            
+            .victim-card {
+                flex-basis: 100%;
+            }
+            
+            .lead {
+                font-size: 16px;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .container {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        /* 交互效果 */
+        .section h2:hover {
+            color: #c00;
+            transition: color 0.3s;
+        }
+        
+        .victim-card:hover {
+            transform: translateY(-3px);
+            transition: transform 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 15px;
+        }
+    </style>
+    <link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="date-location">2015年12月29日 | 深南市楠山区</div>
+            <h1>成华大道重大交通事故：出租车司机与乘客双亡，警方正全力调查</h1>
+            <p class="subtitle">昨晚22时40分许，一辆出租车在成华大道失控撞向护栏，造成司机叶某（38岁）与乘客张某（35岁）当场死亡</p>
+        </div>
+        
+        <p class="lead">昨日晚间，深南市楠山区成华大道发生一起严重交通事故。一辆出租车与道路中央隔离护栏发生猛烈碰撞，造成车内司机叶某（男，38岁）与乘客张某（女、35岁）当场死亡。目前事故原因正在进一步调查中。</p>
+        
+        <div class="section">
+            <h2>事故经过</h2>
+            <p>据现场目击者描述，事故发生于昨晚22时40分左右。一辆出租车在成华大道南行方向行驶时，突然失控撞向道路中央隔离护栏，车辆在连续翻滚后最终侧翻在路面上。</p>
+            
+            <div class="quote">
+                "车速很快，撞上护栏时发出巨大响声，整辆车都变形了。我看到是一辆出租车，车顶的灯牌都飞出去了。"
+                <div class="quote-source">—— 附近便利店员工蒋先生</div>
+            </div>
+            
+            <p>蒋先生表示，他立即拨打了报警电话。现场图片显示，涉事出租车为深南市常见的黄色涂装，事故后车辆严重损毁，几乎无法辨认原貌。</p>
+        </div>
+        
+        <div class="section">
+            <!-- <h2>遇难者信息</h2> -->
+           <!--  <div class="victim-info">
+                <div class="victim-card">
+                    <h3><span class="taxi-icon">🚕</span> 司机：叶某（男性）</h3>
+                    <div class="victim-details">
+                        <p><strong>年龄：</strong>38岁</p>
+                        <p><strong>职业：</strong>出租车司机</p>
+                        <p><strong>驾龄：</strong>12年</p>
+                        <p><strong>备注：</strong>深南市本地人，事发时正在工作中</p>
+                    </div>
+                </div>
+                
+                <div class="victim-card">
+                    <h3><span class="taxi-icon">👤</span> 乘客：张某（女性）</h3>
+                    <div class="victim-details">
+                        <p><strong>年龄：</strong>35岁</p>
+                        <p><strong>关系：</strong>出租车乘客</p>
+                        <p><strong>出发地：</strong>楠山区商务中心</p>
+                        <p><strong>目的地：</strong>楠山区锦绣花园小区</p>
+                    </div>
+                </div>
+            </div> -->
+            <p>据警方初步了解，乘客张某当晚使用打车软件呼叫了涉事出租车，计划从商务中心返回家中。司机叶某为深南市某出租车公司员工，从事出租车行业已有12年。</p>
+        </div>
+        
+        <div class="section">
+            <h2>紧急救援与交通影响</h2>
+            <p>接到报警后，交警、消防和急救人员迅速赶到现场。由于车辆严重变形，救援人员使用专业工具破拆车体，耗时近一小时才将两人救出。经现场医护人员确认，两人已无生命体征。</p>
+            <p>事故导致成华大道南行方向交通中断近三小时，直至今日凌晨2时许才逐步恢复通行。交警部门在周边道路设置了临时绕行标志，疏导交通。</p>
+        </div>
+        
+        <div class="section">
+            <h2>调查进展</h2>
+            <p>深南市交警部门今日上午发布通报称，已初步排除其他车辆涉案可能，正对车辆技术状况、司机身体状况及当时路况进行全方位调查。</p>
+            
+            <div class="quote">
+                "我们在现场进行了详细勘查，已提取相关物证。目前需要确定的是车辆失控的具体原因，是否涉及超速、酒驾、疲劳驾驶或车辆机械故障等因素。"
+                <div class="quote-source">—— 事故处理中队负责人</div>
+            </div>
+            
+            <p>据了解，警方已调取事故路段监控录像，并对出租车公司进行走访。出租车公司负责人表示，将全力配合调查，并对遇难司机家属提供必要协助。</p>
+        </div>
+        
+        <div class="safety-reminder">
+            <h3>交警部门安全提醒</h3>
+            <ul class="reminder-list">
+                <li><strong>夜间行车需特别警惕：</strong>夜间能见度较低，应适当降低车速，保持安全距离</li>
+                <li><strong>出租车司机注意劳逸结合：</strong>长时间驾驶容易疲劳，应合理安排休息时间</li>
+                <li><strong>定期检查车辆状况：</strong>营运车辆尤其要重视日常维护，特别是制动系统和轮胎</li>
+                <li><strong>乘客也应提高安全意识：</strong>乘车时系好安全带，发现司机有异常驾驶行为应及时提醒</li>
+                <li><strong>遇紧急情况保持冷静：</strong>车辆失控时，应紧握方向盘，逐步降低车速</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <p>此次事故的具体原因和责任认定，警方表示将在完成技术鉴定后向社会公布。目前，遇难者家属已接到通知，善后工作正在开展中。本报将持续关注事件进展。</p>
+        </div>
+        
+        <div class="footer">
+            <p class="update-time">最后更新：2015年12月29日 15:30</p>
+            <p>深南市新闻中心 记者报道</p>
+            <p style="margin-top: 10px; color: #999; font-size: 12px;">*本文属于boss消失事件宇宙，如有雷同纯属巧合*</p>
+        </div>
+    </div>
+<!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
+    <script>
+        // 简单的交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为每个部分添加点击效果
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.addEventListener('click', function() {
+                    this.style.backgroundColor = '#f9f9f9';
+                    setTimeout(() => {
+                        this.style.backgroundColor = '';
+                    }, 300);
+                });
+            });
+            
+            // 更新时间显示
+            const updateTime = document.querySelector('.update-time');
+            const now = new Date();
+            const formattedTime = now.getFullYear() + '年' + 
+                                 (now.getMonth() + 1) + '月' + 
+                                 now.getDate() + '日 ' + 
+                                 now.getHours() + ':' + 
+                                 (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+            updateTime.textContent = '最后更新：' + formattedTime;
+            
+            // 安全提醒项点击效果
+            const reminderItems = document.querySelectorAll('.reminder-list li');
+            reminderItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    this.style.backgroundColor = '#fff3cd';
+                    setTimeout(() => {
+                        this.style.backgroundColor = '';
+                    }, 500);
+                });
+            });
+        });
+    </script>
+ <script src="pages.js"></script>
+<script src="scball.js"></script>
+<script src="visit.js"></script>
+
+</body>
+</html>

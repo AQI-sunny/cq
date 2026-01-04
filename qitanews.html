@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2015年兴盛大厦女清洁工坠楼事件报道 - 深南市楠山区</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            font-size: 16px;
+            padding-bottom: 30px;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        /* 头部样式 */
+        header {
+            background: linear-gradient(to right, #1a3a5f, #2c5a8a);
+            color: white;
+            padding: 20px 15px;
+            position: relative;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .date-location {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 15px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        /* 标题区域 */
+        .article-header {
+            padding: 20px 15px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .article-title {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 10px;
+            color: #1a3a5f;
+        }
+        
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* 内容区域 */
+        .article-content {
+            padding: 20px 15px;
+        }
+        
+        .lead-text {
+            font-size: 18px;
+            color: #2c5a8a;
+            font-weight: 500;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .content-img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .content-text {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        
+        .content-text p {
+            margin-bottom: 15px;
+        }
+        
+        .highlight {
+            background-color: #f0f7ff;
+            padding: 15px;
+            border-left: 4px solid #2c5a8a;
+            margin: 20px 0;
+            font-size: 15px;
+        }
+        
+        /* 相关报道 */
+        .related-news {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .related-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1a3a5f;
+        }
+        
+        .related-list {
+            list-style: none;
+        }
+        
+        .related-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .related-item:last-child {
+            border-bottom: none;
+        }
+        
+        .related-item i {
+            color: #2c5a8a;
+            margin-right: 10px;
+        }
+        
+        /* 交互按钮 */
+        .interaction-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin: 25px 0;
+            padding: 0 10px;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: none;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .btn-comment {
+            background-color: #f0f7ff;
+            color: #2c5a8a;
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        .btn-report {
+            background-color: #2c5a8a;
+            color: white;
+            flex: 1;
+            margin-left: 10px;
+        }
+        
+        .btn:hover, .btn:active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* 弹窗样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background-color: white;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9f9f9;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a3a5f;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #666;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+        
+        .modal-close:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-text {
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+        
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .modal-input:focus {
+            outline: none;
+            border-color: #2c5a8a;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .modal-btn.cancel {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .modal-btn.submit {
+            background-color: #2c5a8a;
+            color: white;
+        }
+        
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* 评论区域 */
+        .comments-section {
+            margin-top: 30px;
+        }
+        
+        .comment {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .comment-user {
+            font-weight: 600;
+            color: #2c5a8a;
+        }
+        
+        .comment-content {
+            line-height: 1.5;
+        }
+        
+        /* 底部信息 */
+        footer {
+            text-align: center;
+            padding: 20px 15px;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #eee;
+            margin-top: 30px;
+        }
+        
+        /* TapTap H5 兼容性优化 */
+        @media (max-width: 768px) {
+            body {
+                font-size: 15px;
+            }
+            
+            .article-title {
+                font-size: 22px;
+            }
+            
+            .btn {
+                padding: 10px 16px;
+                font-size: 15px;
+            }
+            
+            .container {
+                border-radius: 0;
+            }
+        }
+        
+        /* 防止TapTap内滚动问题 */
+        html, body {
+            overflow-x: hidden;
+        }
+        
+        /* 防止点击高亮 */
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* 加载动画 */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .loading-spinner {
+            border: 3px solid #f0f0f0;
+            border-top: 3px solid #2c5a8a;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 页面头部 -->
+        <header>
+            <div class="back-btn" id="backBtn">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+            <div class="header-content">
+                <div class="logo">深南新闻网</div>
+                <div class="date-location">
+                    <div>2015年7月23日</div>
+                    <div>楠山区 · 兴盛大厦</div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- 文章标题区域 -->
+        <section class="article-header">
+            <h1 class="article-title">兴盛大厦女清洁工坠楼事件调查：安全管理漏洞引发悲剧</h1>
+            <div class="article-meta">
+                <span>记者：王明 | 编辑：李华</span>
+                <span>阅读量：2.3万</span>
+            </div>
+        </section>
+        
+        <!-- 文章内容 -->
+        <article class="article-content">
+            <div class="lead-text">
+                2015年7月22日上午，深南市楠山区兴盛大厦发生一起坠楼事故，一名48岁的女清洁工从12楼坠落，经抢救无效身亡。事故引发社会对高楼清洁作业安全管理的关注。
+            </div>
+            
+            <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="兴盛大厦外观" class="content-img">
+            
+            <div class="content-text">
+                <p>7月22日上午9时许，深南市楠山区兴盛大厦发生一起坠楼事故。据现场目击者称，一名女清洁工在12楼进行外墙清洁作业时，安全绳索突然断裂，导致其从高处坠落。</p>
+                
+                <p>事故发生后，大厦物业立即拨打120急救电话，医护人员迅速赶到现场，将伤者送往附近的深南市人民医院抢救。据医院方面消息，伤者因伤势过重，抢救无效于当日上午11时宣告死亡。</p>
+                
+                <div class="highlight">
+                    <p><strong>事故基本信息：</strong></p>
+                    <p>时间：2015年7月22日 上午9:15左右</p>
+                    <p>地点：深南市楠山区兴盛大厦（商业办公大楼）</p>
+                    <p>遇难者：张桂花，女，48岁，湖南籍，从事清洁工作3年</p>
+                    <p>事故原因：初步调查为安全绳索老化断裂</p>
+                </div>
+                
+                <p>记者调查发现，事故发生时，张桂花正在进行大厦外墙的定期清洁工作。据其同事反映，张桂花使用的安全绳索已经超过使用年限，但物业公司为了节省成本，未及时更换。</p>
+                
+                <p>兴盛大厦物业管理公司负责人表示，公司对此次事故深感痛心，已成立专门小组处理善后事宜，并对大厦内所有高空作业设备进行全面检查。</p>
+                
+                <p>深南市安监部门已介入调查，初步认定事故原因为安全设备老化及作业流程不规范。安监部门已责令兴盛大厦暂停所有高空作业，并对全市类似作业进行安全排查。</p>
+            </div>
+            
+            <!-- 交互按钮 -->
+            <div class="interaction-buttons">
+                <button class="btn btn-comment" id="commentBtn">
+                    <i class="fas fa-comment"></i> 发表评论
+                </button>
+                <button class="btn btn-report" id="reportBtn">
+                    <i class="fas fa-exclamation-circle"></i> 事件报告
+                </button>
+            </div>
+            
+            <!-- 相关报道 -->
+            <div class="related-news">
+                <h3 class="related-title">相关报道</h3>
+                <ul class="related-list">
+                    <li class="related-item">
+                        <i class="fas fa-chevron-right"></i>
+                        <span>市安监局启动全市高空作业安全专项检查</span>
+                    </li>
+                    <li class="related-item">
+                        <i class="fas fa-chevron-right"></i>
+                        <span>清洁工权益保障：行业安全标准亟待完善</span>
+                    </li>
+                    <li class="related-item">
+                        <i class="fas fa-chevron-right"></i>
+                        <span>兴盛大厦物业公司被立案调查，或面临重罚</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- 评论区域 -->
+            <div class="comments-section" id="commentsSection">
+                <h3 class="related-title">网友评论 (3)</h3>
+                <div class="comment">
+                    <div class="comment-header">
+                        <span class="comment-user">正义市民</span>
+                        <span>2015-07-23 10:15</span>
+                    </div>
+                    <div class="comment-content">
+                        太痛心了！物业公司为了省钱不顾工人安全，必须严惩！
+                    </div>
+                </div>
+                <div class="comment">
+                    <div class="comment-header">
+                        <span class="comment-user">安全第一</span>
+                        <span>2015-07-23 11:30</span>
+                    </div>
+                    <div class="comment-content">
+                        高空作业安全绳必须定期检查更换，这是基本常识。希望这次事故能引起全行业的重视。
+                    </div>
+                </div>
+                <div class="comment">
+                    <div class="comment-header">
+                        <span class="comment-user">建筑工人</span>
+                        <span>2015-07-23 14:45</span>
+                    </div>
+                    <div class="comment-content">
+                        我也是做高空作业的，看到这样的新闻很心痛。我们工人都希望公司能提供合格的安全设备。
+                    </div>
+                </div>
+            </div>
+        </article>
+        
+        <!-- 底部信息 -->
+        <footer>
+            <p>深南新闻网 版权所有 © 2015</p>
+            <p>本文为新闻报道，转载请注明出处</p>
+        </footer>
+    </div>
+    
+    <!-- 弹窗 - 发表评论 -->
+    <div class="modal-overlay" id="commentModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">发表评论</h3>
+                <button class="modal-close" id="closeCommentModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-text">请理性发言，遵守相关法律法规。您的评论将在审核后显示。</p>
+                <textarea class="modal-input" id="commentInput" placeholder="请输入您的评论..."></textarea>
+                <div class="modal-buttons">
+                    <button class="modal-btn cancel" id="cancelComment">取消</button>
+                    <button class="modal-btn submit" id="submitComment">提交评论</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 弹窗 - 事件报告 -->
+    <div class="modal-overlay" id="reportModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">事件详情报告</h3>
+                <button class="modal-close" id="closeReportModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-text">
+                    <p><strong>事件概要：</strong>2015年7月22日，深南市楠山区兴盛大厦发生清洁工坠楼事故，致1人死亡。</p>
+                    <p><strong>遇难者信息：</strong>张桂花，女，48岁，湖南籍，从事清洁工作3年。</p>
+                    <p><strong>事故原因：</strong>初步调查为安全绳索老化断裂，安全设备检查不到位。</p>
+                    <p><strong>当前进展：</strong>安监部门已介入调查，兴盛大厦物业公司被立案调查，全市开展高空作业安全专项检查。</p>
+                    <p><strong>最新消息：</strong>遇难者家属已抵达深南市，与物业公司协商赔偿事宜。</p>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn cancel" id="closeReport">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 弹窗 - 提交成功 -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">提交成功</h3>
+                <button class="modal-close" id="closeSuccessModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-text" style="text-align: center;">
+                    <i class="fas fa-check-circle" style="font-size: 48px; color: #4CAF50; margin-bottom: 15px;"></i>
+                    <p>您的评论已提交成功！</p>
+                    <p>评论将在审核通过后显示，感谢您的参与。</p>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn submit" id="closeSuccess">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 加载动画 -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <p>正在提交，请稍候...</p>
+    </div>
+
+    <script>
+        // DOM元素引用
+        const commentBtn = document.getElementById('commentBtn');
+        const reportBtn = document.getElementById('reportBtn');
+        const backBtn = document.getElementById('backBtn');
+        
+        // 弹窗元素
+        const commentModal = document.getElementById('commentModal');
+        const reportModal = document.getElementById('reportModal');
+        const successModal = document.getElementById('successModal');
+        const loading = document.getElementById('loading');
+        
+        // 关闭按钮
+        const closeCommentModal = document.getElementById('closeCommentModal');
+        const closeReportModal = document.getElementById('closeReportModal');
+        const closeSuccessModal = document.getElementById('closeSuccessModal');
+        
+        // 取消和提交按钮
+        const cancelComment = document.getElementById('cancelComment');
+        const submitComment = document.getElementById('submitComment');
+        const closeReport = document.getElementById('closeReport');
+        const closeSuccess = document.getElementById('closeSuccess');
+        
+        // 评论输入框
+        const commentInput = document.getElementById('commentInput');
+        const commentsSection = document.getElementById('commentsSection');
+        
+        // 显示弹窗函数
+        function showModal(modal) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // 防止背景滚动
+        }
+        
+        // 隐藏弹窗函数
+        function hideModal(modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto'; // 恢复背景滚动
+        }
+        
+        // 显示加载动画
+        function showLoading() {
+            loading.classList.add('active');
+        }
+        
+        // 隐藏加载动画
+        function hideLoading() {
+            loading.classList.remove('active');
+        }
+        
+        // 添加新评论
+        function addComment(commentText) {
+            const commentDiv = document.createElement('div');
+            commentDiv.className = 'comment';
+            
+            const now = new Date();
+            const dateStr = `2015-07-23 ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            
+            commentDiv.innerHTML = `
+                <div class="comment-header">
+                    <span class="comment-user">网友</span>
+                    <span>${dateStr}</span>
+                </div>
+                <div class="comment-content">
+                    ${commentText}
+                </div>
+            `;
+            
+            // 插入到评论区域顶部
+            commentsSection.insertBefore(commentDiv, commentsSection.children[1]);
+            
+            // 更新评论数量
+            const commentTitle = document.querySelector('.comments-section .related-title');
+            const match = commentTitle.textContent.match(/\((\d+)\)/);
+            if (match) {
+                const count = parseInt(match[1]) + 1;
+                commentTitle.textContent = commentTitle.textContent.replace(/\(\d+\)/, `(${count})`);
+            }
+        }
+        
+        // 事件监听器
+        
+        // 打开评论弹窗
+        commentBtn.addEventListener('click', () => {
+            showModal(commentModal);
+            commentInput.focus();
+        });
+        
+        // 打开报告弹窗
+        reportBtn.addEventListener('click', () => {
+            showModal(reportModal);
+        });
+        
+        // 返回按钮
+        backBtn.addEventListener('click', () => {
+            // 模拟返回上一页
+            const modalActive = document.querySelector('.modal-overlay.active');
+            if (modalActive) {
+                hideModal(modalActive);
+            } else {
+                // 在实际应用中，这里可能是返回上一页
+                alertInfo("返回新闻列表");
+            }
+        });
+        
+        // 关闭评论弹窗
+        closeCommentModal.addEventListener('click', () => hideModal(commentModal));
+        cancelComment.addEventListener('click', () => hideModal(commentModal));
+        
+        // 关闭报告弹窗
+        closeReportModal.addEventListener('click', () => hideModal(reportModal));
+        closeReport.addEventListener('click', () => hideModal(reportModal));
+        
+        // 关闭成功弹窗
+        closeSuccessModal.addEventListener('click', () => hideModal(successModal));
+        closeSuccess.addEventListener('click', () => hideModal(successModal));
+        
+        // 提交评论
+        submitComment.addEventListener('click', () => {
+            const commentText = commentInput.value.trim();
+            
+            if (!commentText) {
+                // 显示错误提示（不使用alert）
+                commentInput.style.borderColor = '#ff4444';
+                commentInput.placeholder = '评论内容不能为空！';
+                setTimeout(() => {
+                    commentInput.style.borderColor = '#ddd';
+                    commentInput.placeholder = '请输入您的评论...';
+                }, 2000);
+                return;
+            }
+            
+            // 显示加载动画
+            showLoading();
+            hideModal(commentModal);
+            
+            // 模拟网络请求延迟
+            setTimeout(() => {
+                // 隐藏加载动画
+                hideLoading();
+                
+                // 清空输入框
+                commentInput.value = '';
+                
+                // 显示成功弹窗
+                showModal(successModal);
+                
+                // 添加评论到页面
+                addComment(commentText);
+            }, 1500);
+        });
+        
+        // 点击弹窗外部关闭弹窗
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    hideModal(overlay);
+                }
+            });
+        });
+        
+        // 模拟alert功能的自制提示
+        function alertInfo(message) {
+            // 创建一个临时弹窗显示信息
+            const tempModal = document.createElement('div');
+            tempModal.className = 'modal-overlay';
+            tempModal.innerHTML = `
+                <div class="modal" style="max-width: 300px;">
+                    <div class="modal-header">
+                        <h3 class="modal-title">提示</h3>
+                        <button class="modal-close" id="closeTempModal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="modal-text" style="text-align: center; padding: 20px 0;">
+                            <p>${message}</p>
+                        </div>
+                        <div class="modal-buttons">
+                            <button class="modal-btn submit" id="confirmTempModal">确定</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(tempModal);
+            showModal(tempModal);
+            
+            // 添加关闭事件
+            const closeBtn = tempModal.querySelector('#closeTempModal');
+            const confirmBtn = tempModal.querySelector('#confirmTempModal');
+            
+            const closeTempModal = () => {
+                hideModal(tempModal);
+                setTimeout(() => {
+                    document.body.removeChild(tempModal);
+                }, 300);
+            };
+            
+            closeBtn.addEventListener('click', closeTempModal);
+            confirmBtn.addEventListener('click', closeTempModal);
+        }
+        
+        // 模拟相关报道的点击
+        document.querySelectorAll('.related-item').forEach(item => {
+            item.addEventListener('click', () => {
+                alertInfo("正在加载相关报道...");
+            });
+        });
+        
+        // 页面加载完成后初始化
+        window.addEventListener('DOMContentLoaded', () => {
+            // 添加TapTap H5环境检测（模拟）
+            const isTapTap = navigator.userAgent.toLowerCase().includes('taptap');
+            if (isTapTap) {
+                console.log("检测到TapTap H5环境，已优化交互体验");
+            }
+        });
+    </script>
+</body>
+</html>

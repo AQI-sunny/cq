@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>安盾科技 - 智能监控，安全守护</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            font-size: 32px;
+            color: #4fc3f7;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .logo-text span {
+            color: #4fc3f7;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.3s;
+            padding: 5px 0;
+            position: relative;
+        }
+        
+        nav a:hover, nav a.active {
+            color: #4fc3f7;
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #4fc3f7;
+            transition: width 0.3s;
+        }
+        
+        nav a:hover::after, nav a.active::after {
+            width: 100%;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* 英雄区域 */
+        .hero {
+            background: linear-gradient(rgba(26, 35, 126, 0.9), rgba(26, 35, 126, 0.8)), url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: #4fc3f7;
+            color: white;
+            padding: 15px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .cta-button:hover {
+            background-color: #29b6f6;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 主要内容区域 */
+        section {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .section-title h2 {
+            font-size: 36px;
+            color: #1a237e;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: #4fc3f7;
+            border-radius: 2px;
+        }
+        
+        .section-title p {
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* 公司介绍 */
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .about-text h3 {
+            font-size: 28px;
+            color: #283593;
+            margin-bottom: 20px;
+        }
+        
+        .about-text p {
+            margin-bottom: 20px;
+            font-size: 17px;
+            color: #555;
+        }
+        
+        .about-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s;
+        }
+        
+        .about-image:hover img {
+            transform: scale(1.05);
+        }
+        
+        /* 何安介绍 */
+        .he-an-section {
+            background-color: #f1f8fe;
+        }
+        
+        .he-an-card {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            background-color: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+        
+        .he-an-image {
+            flex: 0 0 200px;
+        }
+        
+        .he-an-image img {
+            width: 100%;
+            border-radius: 50%;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .he-an-info h3 {
+            font-size: 32px;
+            color: #1a237e;
+            margin-bottom: 10px;
+        }
+        
+        .he-an-info .title {
+            color: #4fc3f7;
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        
+        .he-an-info p {
+            margin-bottom: 15px;
+            font-size: 17px;
+            color: #555;
+        }
+        
+        /* 产品展示 */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .product-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+        
+        .product-content {
+            padding: 25px;
+        }
+        
+        .product-icon {
+            font-size: 40px;
+            color: #4fc3f7;
+            margin-bottom: 15px;
+        }
+        
+        .product-card h3 {
+            font-size: 22px;
+            color: #283593;
+            margin-bottom: 15px;
+        }
+        
+        .product-card p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .product-features {
+            text-align: left;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .product-features li {
+            margin-bottom: 8px;
+            color: #666;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .product-features i {
+            color: #4fc3f7;
+            font-size: 12px;
+        }
+        
+        /* 应用场景 */
+        .applications-section {
+            background-color: #f1f8fe;
+        }
+        
+        .applications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .application-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+        
+        .application-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .application-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #4fc3f7 0%, #1a237e 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 30px;
+        }
+        
+        .application-card h3 {
+            font-size: 20px;
+            color: #283593;
+            margin-bottom: 15px;
+        }
+        
+        .application-card p {
+            color: #666;
+            font-size: 15px;
+        }
+        
+        /* 页脚 */
+        footer {
+            background-color: #1a237e;
+            color: white;
+            padding: 60px 0 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 20px;
+            margin-bottom: 25px;
+            color: #4fc3f7;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-column ul li a {
+            color: #e0e0e0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: #4fc3f7;
+        }
+        
+        .contact-info li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .contact-icon {
+            color: #4fc3f7;
+            margin-top: 4px;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #b0b0b0;
+            font-size: 14px;
+        }
+        
+        /* 搜索球样式 */
+       /*  .floating-search-ball-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+        
+        .floating-search-ball {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4fc3f7 0%, #1a237e 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .floating-search-ball:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+        
+        .floating-search-ball::before {
+            content: "🔍";
+            font-size: 24px;
+        }
+        
+        .floating-search-expanded {
+            display: none;
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            width: 300px;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .floating-search-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        
+        .floating-search-input:focus {
+            outline: none;
+            border-color: #4fc3f7;
+        }
+        
+        .floating-search-close, .floating-search-submit {
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: 5px;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+        
+        .floating-search-close:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .floating-search-submit {
+            background-color: #4fc3f7;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .floating-search-submit:hover {
+            background-color: #29b6f6;
+        } */
+        
+        /* 移动端响应式 */
+        @media (max-width: 992px) {
+            .about-content, .he-an-card {
+                flex-direction: column;
+            }
+            
+            .he-an-image {
+                flex: 0 0 150px;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                position: relative;
+            }
+            
+            nav {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background-color: #1a237e;
+                padding: 20px;
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s;
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+                z-index: 99;
+            }
+            
+            nav.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            nav ul li {
+                width: 100%;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            nav ul li:last-child {
+                border-bottom: none;
+            }
+            
+            nav a {
+                display: block;
+                padding: 15px 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero {
+                padding: 80px 0;
+            }
+            
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            .section-title h2 {
+                font-size: 30px;
+            }
+            
+            /* .floating-search-expanded {
+                width: calc(100vw - 60px);
+                right: -15px;
+            } */
+        }
+        
+        @media (max-width: 480px) {
+            .hero {
+                padding: 60px 0;
+            }
+            
+            .hero h1 {
+                font-size: 28px;
+            }
+            
+            .cta-button {
+                padding: 12px 25px;
+                font-size: 16px;
+            }
+            
+            section {
+                padding: 60px 0;
+            }
+            
+            .he-an-card {
+                padding: 25px;
+            }
+            
+            /* .floating-search-ball {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .floating-search-ball-container {
+                bottom: 20px;
+                right: 20px;
+            } */
+        }
+        
+        /* TapTap小程序兼容性 */
+        @media (max-width: 1024px) and (orientation: portrait) {
+            /* 针对移动端竖屏优化 */
+            .container {
+                padding: 0 20px;
+            }
+        }
+        
+        /* 防止移动端点击延迟 */
+        /* a, button, input, .floating-search-ball {
+            touch-action: manipulation;
+        } */
+    </style>
+   
+<link rel="stylesheet" href="sc-style.css">
+<link rel="icon" type="image/png" href="dtma.png">
+</head>
+<body>
+    
+
+    <!-- 头部 -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon"><i class="fas fa-video"></i></div>
+                    <div class="logo-text">安<span>盾</span>科技</div>
+                </div>
+                
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="菜单">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <nav id="mainNav">
+                    <ul>
+                        <li><a href="#home" class="active">首页</a></li>
+                        <li><a href="#about">关于我们</a></li>
+                        <li><a href="#he-an">创始人</a></li>
+                        <li><a href="#products">产品中心</a></li>
+                        <li><a href="#applications">应用场景</a></li>
+                        <li><a href="#contact">联系我们</a></li>
+                        <!-- <li><a href="hhez.html">后台登录</a></li> -->
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>智能监控，安全守护</h1>
+            <p>安盾科技专注于智能监控设备研发与制造，提供全方位安防解决方案。从家庭到企业，从城市到乡村，我们用科技守护每一寸安全。</p>
+            <a href="#products" class="cta-button">查看产品</a>
+        </div>
+    </section>
+
+    <!-- 关于我们 -->
+    <section id="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>关于安盾科技</h2>
+                <p>我们是一家专注于智能监控设备研发与制造的高新技术企业，致力于为客户提供全方位的安防解决方案。</p>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>我们的使命与愿景</h3>
+                    <p>安盾科技成立于2015年，由监控安防行业资深专家创立。我们坚信，安全是每个人、每个家庭、每个企业的基本需求。</p>
+                    <p>我们的使命是通过创新技术，让高质量的安防监控设备更加普及，让安全守护无处不在。我们的产品覆盖家庭、商业、工业、城市管理等多个领域。</p>
+                    <p>凭借自主研发的高清图像处理技术和智能分析算法，我们的产品已广泛应用于全国30多个省市，服务超过10万客户，守护着千万家庭和企业的安全。</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="安盾科技监控设备生产线">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 何安介绍 -->
+    <section id="he-an" class="he-an-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>创始人介绍</h2>
+                <p>认识我们的创始人兼首席技术官——何安</p>
+            </div>
+            
+            <div class="he-an-card">
+                <div class="he-an-image">
+                    <img src="hean.jpg" alt="何安">
+                </div>
+                <div class="he-an-info">
+                    <h3>何安</h3>
+                    <div class="title">创始人兼首席技术官</div>
+                    <p>何安先生是安防监控领域的资深专家，拥有超过10年的行业经验。在创立安盾科技之前，他曾在多家国际知名安防企业担任技术总监。</p>
+                    <p>他主导研发了多项获得专利的监控技术，包括"夜视增强算法"和"智能行为识别系统"，这些技术已成为行业标杆。</p>
+                    <p>何安先生坚信"科技守护安全，创新引领未来"，他的愿景是通过技术创新，让高质量安防监控设备更加普及，守护更多人的安全。</p>
+                    <p>在他的领导下，安盾科技研发团队已获得30多项技术专利，产品远销海外20多个国家和地区。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 产品中心 -->
+    <section id="products">
+        <div class="container">
+            <div class="section-title">
+                <h2>产品中心</h2>
+                <p>全面覆盖各类安防监控需求的高质量产品</p>
+            </div>
+            
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="智能家居摄像头">
+                    </div>
+                    <div class="product-content">
+                        <div class="product-icon"><i class="fas fa-home"></i></div>
+                        <h3>智能家居摄像头</h3>
+                        <p>专为家庭安全设计，支持1080P高清录像、双向语音、移动侦测和夜视功能。</p>
+                        <ul class="product-features">
+                            <li><i class="fas fa-check-circle"></i> 1080P高清分辨率</li>
+                            <li><i class="fas fa-check-circle"></i> 红外夜视功能</li>
+                            <li><i class="fas fa-check-circle"></i> 移动侦测报警</li>
+                            <li><i class="fas fa-check-circle"></i> 双向语音对讲</li>
+                            <li><i class="fas fa-check-circle"></i> 云存储/本地存储</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="商用监控系统">
+                    </div>
+                    <div class="product-content">
+                        <div class="product-icon"><i class="fas fa-building"></i></div>
+                        <h3>商用监控系统</h3>
+                        <p>适用于商场、办公楼、工厂等场所，支持多路监控、智能分析和集中管理。</p>
+                        <ul class="product-features">
+                            <li><i class="fas fa-check-circle"></i> 4K超高清画质</li>
+                            <li><i class="fas fa-check-circle"></i> 人脸识别技术</li>
+                            <li><i class="fas fa-check-circle"></i> 行为分析预警</li>
+                            <li><i class="fas fa-check-circle"></i> 多路同时监控</li>
+                            <li><i class="fas fa-check-circle"></i> 远程集中管理</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="户外防水摄像机">
+                    </div>
+                    <div class="product-content">
+                        <div class="product-icon"><i class="fas fa-cloud-sun"></i></div>
+                        <h3>户外防水摄像机</h3>
+                        <p>IP68级防水防尘，适应各种恶劣天气，适用于小区、停车场、仓库等户外场所。</p>
+                        <ul class="product-features">
+                            <li><i class="fas fa-check-circle"></i> IP68级防水防尘</li>
+                            <li><i class="fas fa-check-circle"></i> 宽动态范围(WDR)</li>
+                            <li><i class="fas fa-check-circle"></i> 防暴防破坏设计</li>
+                            <li><i class="fas fa-check-circle"></i> 超强夜视能力</li>
+                            <li><i class="fas fa-check-circle"></i> 智能报警联动</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="NVR录像系统">
+                    </div>
+                    <div class="product-content">
+                        <div class="product-icon"><i class="fas fa-server"></i></div>
+                        <h3>NVR录像系统</h3>
+                        <p>专业的网络视频录像系统，支持大容量存储、多路高清视频录制和智能检索。</p>
+                        <ul class="product-features">
+                            <li><i class="fas fa-check-circle"></i> 支持16路同时录制</li>
+                            <li><i class="fas fa-check-circle"></i> 智能视频检索</li>
+                            <li><i class="fas fa-check-circle"></i> RAID数据保护</li>
+                            <li><i class="fas fa-check-circle"></i> 远程访问控制</li>
+                            <li><i class="fas fa-check-circle"></i> 自动备份功能</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 应用场景 -->
+    <section id="applications" class="applications-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>应用场景</h2>
+                <p>我们的产品广泛应用于各个领域，提供全方位的安全守护</p>
+            </div>
+            
+            <div class="applications-grid">
+                <div class="application-card">
+                    <div class="application-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h3>家庭安防</h3>
+                    <p>守护家人安全，远程看护老人儿童，防止入室盗窃，智能家居联动。</p>
+                </div>
+                
+                <div class="application-card">
+                    <div class="application-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <h3>商业零售</h3>
+                    <p>店铺安全监控，防止商品盗窃，客流分析，员工行为管理。</p>
+                </div>
+                
+                <div class="application-card">
+                    <div class="application-icon">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <h3>工业制造</h3>
+                    <p>工厂安全监控，生产过程监督，设备状态监测，危险区域预警。</p>
+                </div>
+                
+                <div class="application-card">
+                    <div class="application-icon">
+                        <i class="fas fa-school"></i>
+                    </div>
+                    <h3>教育机构</h3>
+                    <p>校园安全监控，课堂纪律管理，考试监控，出入口管控。</p>
+                </div>
+                
+                <div class="application-card">
+                    <div class="application-icon">
+                        <i class="fas fa-city"></i>
+                    </div>
+                    <h3>智慧城市</h3>
+                    <p>交通监控，公共安全，环境监测，智能路灯，城市管理。</p>
+                </div>
+                
+                <div class="application-card">
+                    <div class="application-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3>交通管理</h3>
+                    <p>道路监控，违章抓拍，停车场管理，车辆识别，交通流量分析。</p>
+                </div>
+            </div>
+        </div>
+        
+    </section>
+
+
+<!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
+
+
+    <!-- 页脚 -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>安盾科技</h3>
+                    <p>专注于智能监控设备研发与制造，用科技守护安全，让生活更安心。</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>快速链接</h3>
+                    <ul>
+                        <li><a href="#home">首页</a></li>
+                        <li><a href="#about">关于我们</a></li>
+                        <li><a href="#he-an">创始人</a></li>
+                        <li><a href="#products">产品中心</a></li>
+                        <li><a href="#applications">应用场景</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>联系我们</h3>
+                    <ul class="contact-info">
+                        <li>
+                            <span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span>
+                            <span>广东省深南市楠山区科技园创新大厦B座15楼</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon"><i class="fas fa-phone"></i></span>
+                            <span>400-888-5678</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon"><i class="fas fa-envelope"></i></span>
+                            <span>contact@anduntech.com</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon"><i class="fas fa-globe"></i></span>
+                            <span>www.anduntech.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 安盾科技有限公司 版权所有</p>
+                <p style="font-size: 12px; color: #999; margin-top: 5px;">注：此页面属于Boss消失事件宇宙，如有雷同纯属巧合</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 引用外部JS文件 -->
+    <script src="pages.js"></script>
+    
+    <!-- 页面内JS（基本交互） -->
+    <script>
+        // 移动端菜单切换
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mainNav = document.getElementById('mainNav');
+            
+            if (mobileMenuBtn && mainNav) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mainNav.classList.toggle('active');
+                    // 切换菜单图标
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('fa-bars')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            }
+            
+            // 平滑滚动
+            document.querySelectorAll('nav a').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId.startsWith('#')) {
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            // 关闭移动端菜单
+                            if (mainNav) mainNav.classList.remove('active');
+                            if (mobileMenuBtn) {
+                                const icon = mobileMenuBtn.querySelector('i');
+                                icon.classList.remove('fa-times');
+                                icon.classList.add('fa-bars');
+                            }
+                            
+                            // 平滑滚动到目标
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 80,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+            
+            // 更新导航链接激活状态
+            function updateActiveNavLink() {
+                const sections = document.querySelectorAll('section');
+                const navLinks = document.querySelectorAll('nav a');
+                
+                let currentSectionId = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 100;
+                    const sectionHeight = section.clientHeight;
+                    if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                        currentSectionId = '#' + section.id;
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === currentSectionId) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', updateActiveNavLink);
+            updateActiveNavLink(); // 初始化
+        });
+    </script>
+ <script src="scball.js"></script>
+ <script src="visit.js"></script>
+</body>
+</html>

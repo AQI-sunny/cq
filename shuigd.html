@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>果多多7天鲜果店</title>
+    <link rel="icon" type="image/jpeg" href="hlj.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #ff7f50, #ff6347, #ff4757);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none" opacity="0.1"><path d="M0,50 Q25,40 50,50 T100,50 L100,100 L0,100 Z" fill="white"/></svg>');
+            background-size: cover;
+        }
+        
+        header h1 {
+            margin-bottom: 10px;
+            font-size: 32px;
+            font-weight: 700;
+            position: relative;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+        
+        header p {
+            font-size: 16px;
+            opacity: 0.9;
+            position: relative;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .search-container input {
+            flex: 1;
+            max-width: 500px;
+            padding: 15px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 50px;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .search-container input:focus {
+            border-color: #ff7f50;
+            outline: none;
+            box-shadow: 0 4px 12px rgba(255, 127, 80, 0.2);
+        }
+        
+        .search-container button {
+            padding: 15px 25px;
+            background: linear-gradient(to right, #ff7f50, #ff6347);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(255, 127, 80, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .search-container button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(255, 127, 80, 0.4);
+        }
+        
+        .notice {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border-top: 4px solid #ff7f50;
+        }
+        
+        .notice:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .notice h3 {
+            margin-top: 0;
+            color: #ff6347;
+            margin-bottom: 15px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .notice h3 i {
+            font-size: 22px;
+        }
+        
+        .notice p {
+            margin: 12px 0;
+            color: #555;
+        }
+        
+        .small-gray {
+            font-size: 13px;
+            color: #888;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .promo {
+            background: linear-gradient(135deg, #ff9f43, #ff7f00);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 25px 0;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 159, 67, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .promo::before {
+            content: "🔥";
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-size: 24px;
+        }
+        
+        .promo::after {
+            content: "🍉";
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+        }
+        
+        .inventory {
+            background-color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .inventory h3 {
+            margin-top: 0;
+            color: #ff6347;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f3f5;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .inventory ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .inventory li {
+            padding: 18px 0;
+            border-bottom: 1px solid #f1f3f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        
+        .inventory li:last-child {
+            border-bottom: none;
+        }
+        
+        .inventory li:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .product-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .product-code {
+            font-weight: 600;
+            color: #495057;
+            background: #f1f3f5;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .product-name {
+            font-weight: 500;
+            color: #212529;
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .login-btn, .history-btn {
+            display: block;
+            width: 220px;
+            margin: 25px auto;
+            padding: 16px;
+            background: linear-gradient(to right, #ff7f50, #ff6347);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 127, 80, 0.3);
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 127, 80, 0.4);
+        }
+        
+        .history-btn {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .history-btn:hover {
+            background: linear-gradient(to right, #2980b9, #1c6ea4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        .more-btn {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .more-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        .hidden-item {
+            display: none !important;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+            backdrop-filter: blur(4px);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideIn 0.3s;
+            max-height: 85vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .login-input {
+            width: 100%;
+            padding: 15px;
+            margin: 12px 0;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .login-input:focus {
+            border-color: #ff7f50;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 127, 80, 0.2);
+        }
+        
+        .history-content {
+            max-width: 600px;
+            width: 90%;
+        }
+        
+        .order-list {
+            text-align: left;
+            margin-top: 20px;
+            flex: 1;
+            overflow-y: auto;
+            max-height: 50vh;
+            padding-right: 5px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            padding: 15px;
+        }
+        
+        .order-item {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            transition: all 0.2s;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .order-item:hover {
+            background-color: #f1f3f5;
+            transform: translateX(5px);
+        }
+        
+        .stock-status {
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .stock-status.充足 {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .stock-status.少量 {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .stock-status.售罄 {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .detail-btn {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 3px 8px rgba(52, 152, 219, 0.3);
+        }
+        
+        .detail-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .warning-icon {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+        
+        .search-result {
+            color: #721c24;
+            font-weight: 600;
+            text-align: center;
+            padding: 18px;
+            background-color: #f8d7da;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .highlight {
+            background-color: #fff3cd;
+            padding: 3px 6px;
+            border-radius: 4px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #e9ecef;
+            margin-top: 40px;
+            background-color: #fff;
+        }
+        
+        .footer p {
+            margin: 8px 0;
+        }
+        
+        .search-highlight {
+            background-color: #fff3cd;
+            animation: pulse 1s;
+            border-radius: 8px;
+            padding: 5px 10px;
+        }
+        
+        @keyframes pulse {
+            0% { background-color: #fff3cd; }
+            50% { background-color: #ffeaa7; }
+            100% { background-color: #fff3cd; }
+        }
+        
+        .order-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .order-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        .order-list::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+        
+        .order-list::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #888;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-btn:hover {
+            color: #ff4757;
+        }
+        
+        .modal-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f3f5;
+        }
+        
+        .modal-title {
+            font-size: 22px;
+            color: #ff6347;
+            margin: 0;
+        }
+        
+        .reset-btn {
+            padding: 12px;
+            background: linear-gradient(to right, #6c757d, #5a6268);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+                margin: 20px auto;
+            }
+            
+            .search-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .search-container input {
+                max-width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .product-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .inventory li {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .product-actions {
+                align-self: flex-end;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+        
+        .fruit-icon {
+            font-size: 20px;
+        }
+        
+        .status-icon {
+            font-size: 14px;
+        }
+    </style>
+<link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
+</head>
+<body>
+    <header>
+        <h1><i class="fas fa-apple-alt"></i> 果多多7天鲜果店</h1>
+        <p>您的24小时新鲜水果管家</p>
+    </header>
+    
+    <div class="container">
+        <!-- 搜索框 -->
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="搜索水果或商品号..." onkeypress="handleKeyPress(event)">
+            <button onclick="searchNotices()"><i class="fas fa-search"></i> 搜索</button>
+        </div>
+        
+        <!-- 关于水果店 -->
+        <div class="notice" id="about">
+            <h3><i class="fas fa-store"></i> 关于果多多7天鲜果店</h3>
+            <p>便民新服务上线！购买前先查库存，省时又省心！咱们家的水果都是7天保鲜的哦~</p>
+            <p>为了让大家购买水果更方便、更省心，我们的小店正式推出了 "线上水果库存查询平台"！还在为下楼买水果却发现没货而烦恼吗？想做水果拼盘，不确定店里有没有您要的那款进口水果？现在，您只需动动手指，就能提前知道！在输入框输入您想找的水果名称（比如"进口车厘子"、"泰国金枕榴莲"、"澳洲橙子"等），系统就会立即告诉您店里是否有货，以及大概的库存情况哦！这个平台会与我们店里的收银系统实时同步，确保信息的准确性。我们每周的特价水果也会在平台首页进行更新哦！未来我们还计划开通线上预订、线下取货的功能，敬请期待！希望这个小小的改变，能给大家的生活带来多一点便利。感谢大家一直以来对我们小店的支持！</p>
+            <p class="small-gray" id="warning3306"><i class="fas fa-info-circle"></i> 温馨提示：水果有问题都可以拿到店里免费换的哦~</p>
+        </div>
+        
+        <!-- 优惠活动 -->
+        <div class="promo">
+            🍉 周六下午三点西瓜打折！仅限当日15:00-17:00，每人限购2个。
+        </div>
+        
+        <!-- 库存查询 -->
+        <div class="inventory">
+            <h3><i class="fas fa-clipboard-list"></i> 水果库存列表</h3>
+            <ul id="inventoryList">
+                <li>
+                    <div class="product-info">
+                        <span class="product-code">APP-001</span>
+                        <span class="product-name">红富士苹果（5kg装）</span>
+                        <span class="stock-status 充足"><i class="fas fa-check-circle status-icon"></i> 库存充足</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('红富士苹果（5kg装）')"><i class="fas fa-info-circle"></i> 详情</button>
+                    </div>
+                </li>
+                <li>
+                    <div class="product-info">
+                        <span class="product-code">BAN-005</span>
+                        <span class="product-name">菲律宾香蕉（1把）</span>
+                        <span class="stock-status 充足"><i class="fas fa-check-circle status-icon"></i> 库存充足</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('菲律宾香蕉（1把）')"><i class="fas fa-info-circle"></i> 详情</button>
+                    </div>
+                </li>
+                <li>
+                    <div class="product-info">
+                        <span class="product-code">ORA-088</span>
+                        <span class="product-name">澳洲脐橙（2kg）</span>
+                        <span class="stock-status 充足"><i class="fas fa-check-circle status-icon"></i> 库存充足</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('澳洲脐橙（2kg）')"><i class="fas fa-info-circle"></i> 详情</button>
+                    </div>
+                </li>
+                <li>
+                    <div class="product-info">
+                        <span class="product-code">STR-112</span>
+                        <span class="product-name">新鲜草莓（500g）</span>
+                        <span class="stock-status 少量"><i class="fas fa-exclamation-triangle status-icon"></i> 仅剩少量</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('新鲜草莓（500g）')"><i class="fas fa-info-circle"></i> 详情</button>
+                    </div>
+                </li>
+                <li>
+                    <div class="product-info">
+                        <span class="product-code">WAT-129</span>
+                        <span class="product-name">麒麟西瓜（1个）</span>
+                        <span class="stock-status 充足"><i class="fas fa-check-circle status-icon"></i> 库存充足</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('麒麟西瓜（1个）')"><i class="fas fa-info-circle"></i> 详情</button>
+                    </div>
+                </li>
+                <li>
+                    <div class="product-info">
+                        <span class="product-code">MAN-135</span>
+                        <span class="product-name">台湾芒果（1kg）</span>
+                        <span class="stock-status 少量"><i class="fas fa-exclamation-triangle status-icon"></i> 仅剩少量</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('台湾芒果（1kg）')"><i class="fas fa-info-circle"></i> 详情</button>
+                    </div>
+                </li>
+                <!-- 隐藏水果 -->
+                <li class="hidden-item" id="hiddenItem1">
+                    <div class="product-info">
+                        <span class="product-code">CHE-503</span>
+                        <span class="product-name">进口车厘子（2kg礼盒）</span>
+                        <span class="stock-status 少量"><i class="fas fa-exclamation-triangle status-icon"></i> 仅剩少量</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('进口车厘子（2kg礼盒）')"><i class="fas fa-info-circle"></i> 详情</button>
+                    </div>
+                </li>
+                <li class="hidden-item" id="hiddenItem2">
+                    <div class="product-info">
+                        <span class="product-code">DUR-852</span>
+                        <span class="product-name">泰国金枕榴莲（整颗）</span>
+                        <span class="stock-status 少量"><i class="fas fa-exclamation-triangle status-icon"></i> 仅剩少量</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('泰国金枕榴莲（整颗）')"><i class="fas fa-info-circle"></i> 详情</button>
+                    </div>
+                </li>
+                <li class="hidden-item" id="hiddenItem3">
+                    <div class="product-info">
+                        <span class="product-code">POM-593</span>
+                        <span class="product-name">以色列石榴（1kg）</span>
+                        <span class="stock-status 少量"><i class="fas fa-exclamation-triangle status-icon"></i> 仅剩少量</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('以色列石榴（1kg）')"><i class="fas fa-info-circle"></i> 详情</button>
+                    </div>
+                </li>
+                <li class="hidden-item" id="hiddenItem4">
+                    <div class="product-info">
+                        <span class="product-code">PAP-212</span>
+                        <span class="product-name">海南木瓜（2个装）</span>
+                        <span class="stock-status 少量"><i class="fas fa-exclamation-triangle status-icon"></i> 仅剩少量</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('海南木瓜（2个装）')"><i class="fas fa-info-circle"></i> 详情</button>
+                    </div>
+                </li>
+                <li class="hidden-item" id="hiddenItem5">
+                    <div class="product-info">
+                        <span class="product-code">GRA-325</span>
+                        <span class="product-name">新疆葡萄（1kg）</span>
+                        <span class="stock-status 少量"><i class="fas fa-exclamation-triangle status-icon"></i> 仅剩少量</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('新疆葡萄（1kg）')"><i class="fas fa-info-circle"></i> 详情</button>
+                    </div>
+                </li>
+                <li class="hidden-item" id="hiddenItem6">
+                    <div class="product-info">
+                        <span class="product-code">PIT-385</span>
+                        <span class="product-name">泰国山竹（1kg）</span>
+                        <span class="stock-status 少量"><i class="fas fa-exclamation-triangle status-icon"></i> 仅剩少量</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('泰国山竹（1kg）')"><i class="fas fa-info-circle"></i> 详情</button>
+                    </div>
+                </li>
+                <li class="hidden-item" id="hiddenItem7">
+                    <div class="product-info">
+                        <span class="product-code">LYC-263</span>
+                        <span class="product-name">广东荔枝（2kg）</span>
+                        <span class="stock-status 少量"><i class="fas fa-exclamation-triangle status-icon"></i> 仅剩少量</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('广东荔枝（2kg）')"><i class="fas fa-info-circle"></i> 详情</button>
+                    </div>
+                </li>
+                <li class="hidden-item" id="hiddenItem8">
+                    <div class="product-info">
+                        <span class="product-code">FIG-187</span>
+                        <span class="product-name">无花果（500g）</span>
+                        <span class="stock-status 少量"><i class="fas fa-exclamation-triangle status-icon"></i> 仅剩少量</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="detail-btn" onclick="showProductDetail('无花果（500g）')"><i class="fas fa-info-circle"></i> 详情</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- 登录按钮 -->
+        <button class="login-btn" onclick="showLoginModal()"><i class="fas fa-sign-in-alt"></i> 登录</button>
+        <p style="text-align: center; font-size: 14px; color: #666; margin-top: -10px;">登录后可查看您的历史订单</p>
+        
+        <!-- 历史订单按钮 -->
+        <button class="history-btn" id="historyBtn" style="display:none;" onclick="showHistoryModal()"><i class="fas fa-history"></i> 历史订单</button>
+        
+        <!-- 登录模态框 -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <button class="close-btn" onclick="closeLoginModal()">&times;</button>
+                <div class="modal-header">
+                    <h3 class="modal-title"><i class="fas fa-user-circle"></i> 登录后台</h3>
+                </div>
+                <input type="text" id="username" class="login-input" placeholder="用户名" onkeypress="handleLoginEnter(event)">
+                <input type="password" id="password" class="login-input" placeholder="密码" onkeypress="handleLoginEnter(event)">
+                <button class="login-btn" onclick="login()" style="width:100%; margin:10px 0;"><i class="fas fa-sign-in-alt"></i> 登录</button>
+                <button onclick="closeLoginModal()" style="width:100%; padding:12px; background:linear-gradient(to right, #f44336, #d32f2f); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:500;">取消</button>
+            </div>
+        </div>
+        
+        <!-- 历史订单模态框 -->
+        <div id="historyModal" class="modal">
+            <div class="modal-content history-content">
+                <button class="close-btn" onclick="closeHistoryModal()">&times;</button>
+                <div class="modal-header">
+                    <h3 class="modal-title"><i class="fas fa-history"></i> 历史订单查询</h3>
+                </div>
+                <input type="date" id="dateInput" class="login-input" onkeypress="handleOrderEnter(event)">
+                <input type="text" id="userInput" class="login-input" placeholder="输入购买人姓名" onkeypress="handleOrderEnter(event)">
+                <input type="text" id="productInput" class="login-input" placeholder="输入水果名称或商品号" onkeypress="handleOrderEnter(event)">
+                <button class="login-btn" onclick="searchOrders()" style="width:100%; margin:10px 0;"><i class="fas fa-search"></i> 查询订单</button>
+                <button class="reset-btn" onclick="resetSearch()"><i class="fas fa-redo"></i> 重置</button>
+                <div class="order-list" id="orderList">
+                    <!-- 订单列表将在这里显示 -->
+                </div>
+                <button onclick="closeHistoryModal()" style="width:100%; padding:12px; background:linear-gradient(to right, #f44336, #d32f2f); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:500; margin-top:15px;">关闭</button>
+            </div>
+        </div>
+        
+        <!-- 水果详情模态框 -->
+        <div id="detailModal" class="modal">
+            <div class="modal-content">
+                <button class="close-btn" onclick="closeDetailModal()">&times;</button>
+                <div class="modal-header">
+                    <h3 class="modal-title" id="detailTitle"><i class="fas fa-info-circle"></i> 水果详情</h3>
+                </div>
+                <p id="detailContent" style="text-align: left; line-height: 1.8; font-size: 16px; color: #555;"></p>
+                <button onclick="closeDetailModal()" style="width:100%; padding:12px; background:linear-gradient(to right, #f44336, #d32f2f); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:500; margin-top:20px;">关闭</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p><i class="fas fa-copyright"></i> 果多多7天鲜果店 &copy; 2025 - 您的24小时新鲜水果管家</p>
+        <p><i class="fas fa-map-marker-alt"></i> 地址：旺达商圈A座F1层 | <i class="fas fa-clock"></i> 营业时间：24小时营业 | <i class="fas fa-phone"></i> 联系电话：138-XXXX-9131</p>
+    </div>
+    <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
+
+    <!-- JavaScript部分保持不变 -->
+    <script>
+        // 这里保留原JavaScript代码，所有功能不变
+        function searchNotices() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
+            const warning3306 = document.getElementById('warning3306');
+            const warning3306Purchase = document.getElementById('warning3306Purchase');
+            if (keyword.includes('3306') || keyword.includes('警告') || keyword.includes('安全隐患')) {
+                warning3306.style.fontWeight = 'bold';
+                warning3306.style.color = 'red';
+                warning3306Purchase.style.fontWeight = 'bold';
+                warning3306Purchase.style.color = 'red';
+            } else {
+                warning3306.style.fontWeight = 'normal';
+                warning3306.style.color = '#777';
+                warning3306Purchase.style.fontWeight = 'normal';
+                warning3306Purchase.style.color = '#777';
+            }
+            const searchInput = document.getElementById('searchInput').value;
+            if (searchInput.trim() !== '') {
+                performSearch();
+            }
+        }
+        function performSearch() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
+            const inventoryList = document.getElementById('inventoryList');
+            let found = false;
+            const existingResult = document.querySelector('.search-result');
+            if (existingResult) {
+                existingResult.remove();
+            }
+            const allItems = document.querySelectorAll('.inventory li');
+            allItems.forEach(item => {
+                item.style.display = '';
+                item.classList.remove('search-highlight');
+                if (item.classList.contains('hidden-item')) {
+                    item.style.display = 'none';
+                }
+            });
+            const hiddenItems = document.querySelectorAll('.hidden-item');
+            if (keyword.includes('车厘子') || keyword.includes('che-503') || keyword.includes('进口车厘子')) {
+                hiddenItems.forEach(item => {
+                    if (item.textContent.toLowerCase().includes('车厘子')) {
+                        item.style.display = 'flex';
+                        item.classList.remove('hidden-item'); 
+                        inventoryList.prepend(item);
+                        found = true;
+                    }
+                });
+            }
+            if (keyword.includes('榴莲') || keyword.includes('dur-852') || keyword.includes('金枕榴莲')) {
+                hiddenItems.forEach(item => {
+                    if (item.textContent.toLowerCase().includes('榴莲')) {
+                        item.style.display = 'flex';
+                        item.classList.remove('hidden-item'); 
+                        inventoryList.prepend(item);
+                        found = true;
+                    }
+                });
+            }
+            if (keyword.includes('石榴') || keyword.includes('pom-593') || keyword.includes('以色列石榴')) {
+                hiddenItems.forEach(item => {
+                    if (item.textContent.toLowerCase().includes('石榴')) {
+                        item.style.display = 'flex';
+                        item.classList.remove('hidden-item'); 
+                        inventoryList.prepend(item);
+                        found = true;
+                    }
+                });
+            }
+            if (keyword.includes('木瓜') || keyword.includes('pap-212') || keyword.includes('海南木瓜')) {
+                hiddenItems.forEach(item => {
+                    if (item.textContent.toLowerCase().includes('木瓜')) {
+                        item.style.display = 'flex';
+                        item.classList.remove('hidden-item'); 
+                        inventoryList.prepend(item);
+                        found = true;
+                    }
+                });
+            }
+            if (keyword.includes('葡萄') || keyword.includes('gra-325') || keyword.includes('新疆葡萄')) {
+                hiddenItems.forEach(item => {
+                    if (item.textContent.toLowerCase().includes('葡萄')) {
+                        item.style.display = 'flex';
+                        item.classList.remove('hidden-item'); 
+                        inventoryList.prepend(item);
+                        found = true;
+                    }
+                });
+            }
+            if (keyword.includes('山竹') || keyword.includes('pit-385') || keyword.includes('泰国山竹')) {
+                hiddenItems.forEach(item => {
+                    if (item.textContent.toLowerCase().includes('山竹')) {
+                        item.style.display = 'flex';
+                        item.classList.remove('hidden-item'); 
+                        inventoryList.prepend(item);
+                        found = true;
+                    }
+                });
+            }
+            if (keyword.includes('荔枝') || keyword.includes('lyc-263') || keyword.includes('广东荔枝')) {
+                hiddenItems.forEach(item => {
+                    if (item.textContent.toLowerCase().includes('荔枝')) {
+                        item.style.display = 'flex';
+                        item.classList.remove('hidden-item'); 
+                        inventoryList.prepend(item);
+                        found = true;
+                    }
+                });
+            }
+            if (keyword.includes('无花果') || keyword.includes('fig-187') || keyword.includes('无花果')) {
+                hiddenItems.forEach(item => {
+                    if (item.textContent.toLowerCase().includes('无花果')) {
+                        item.style.display = 'flex';
+                        item.classList.remove('hidden-item'); 
+                        inventoryList.prepend(item);
+                        found = true;
+                    }
+                });
+            }
+            const visibleItems = document.querySelectorAll('.inventory li:not(.hidden-item)');
+            visibleItems.forEach(item => {
+                const itemText = item.textContent.toLowerCase();
+                if (itemText.includes(keyword) && keyword.trim() !== '') {
+                    item.classList.add('search-highlight');
+                    found = true;
+                }
+            });
+            if (!found && keyword.trim() !== '') {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'search-result';
+                resultDiv.innerHTML = '<i class="fas fa-search"></i> 找不到该水果';
+                document.querySelector('.inventory').insertBefore(resultDiv, inventoryList);
+            }
+        }
+        function resetSearch() {
+            document.getElementById('dateInput').value = '';
+            document.getElementById('userInput').value = '';
+            document.getElementById('productInput').value = '';
+            document.getElementById('orderList').innerHTML = '';
+        }
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                searchNotices();
+            }
+        }
+        function handleLoginEnter(event) {
+            if (event.key === 'Enter') {
+                login();
+            }
+        }
+        function handleOrderEnter(event) {
+            if (event.key === 'Enter') {
+                searchOrders();
+            }
+        }
+        function showMoreItems() {
+            const hiddenItems = document.querySelectorAll('.hidden-item');
+            hiddenItems.forEach(item => {
+                item.style.display = 'flex';
+            });
+            document.querySelector('.more-btn').style.display = 'none';
+        }
+        function showLoginModal() {
+            document.getElementById('loginModal').style.display = 'block';
+        }
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === 'wangqingru' && password === 'xiaoguang') {
+                alert('登录成功！');
+                document.getElementById('historyBtn').style.display = 'block';
+                closeLoginModal();
+            } else {
+                alert('用户名或密码错误！提示：姓名拼音~ all~ ');
+            }
+        }
+        function showHistoryModal() {
+            document.getElementById('historyModal').style.display = 'block';
+        }
+        function closeHistoryModal() {
+            document.getElementById('historyModal').style.display = 'none';
+        }
+        function searchOrders() {
+            const date = document.getElementById('dateInput').value;
+            const user = document.getElementById('userInput').value;
+            const product = document.getElementById('productInput').value;
+            const orderList = document.getElementById('orderList');
+            const orders = [
+                { user: '张三', product: '红富士苹果（5kg装）', date: '2023-05-15', productCode: 'APP-001' },
+                { user: '许琳宛', product: '红富士苹果（5kg装）', date: '2025-12-06', productCode: 'APP-001' },
+                { user: '林墨', product: '海南木瓜（2个装）', date: '2024-09-20', productCode: 'PAP-212' },
+                { user: '许琳宛', product: '广东荔枝（2kg）', date: '2025-12-06', productCode: 'LYC-263' },
+                { user: '林墨', product: '广东荔枝（2kg）', date: '2024-09-20', productCode: 'LYC-263' },
+                { user: '吴能', product: '澳洲脐橙（2kg）', date: '2025-12-06', productCode: 'ORA-088' },
+                { user: '吴能', product: '海南木瓜（2个装）', date: '2022-03-04', productCode: 'PAP-212' },
+                { user: '周哲叙', product: '进口车厘子（2kg礼盒）', date: '2025-08-10', productCode: 'CHE-503' },
+                { user: '周哲叙', product: '泰国山竹（1kg）', date: '2025-05-16', productCode: 'PIT-385' },
+                { user: '周哲叙', product: '泰国山竹（1kg）', date: '2025-08-10', productCode: 'PIT-385' },
+                { user: '周哲叙', product: '海南木瓜（2个装）', date: '2023-04-28', productCode: 'PAP-212' },
+                { user: '许琳宛', product: '海南木瓜（2个装）', date: '2024-12-17', productCode: 'PAP-212' },
+                { user: '顾青娥', product: '泰国金枕榴莲（整颗）', date: '2025-03-17', productCode: 'DUR-852' },
+                { user: '王素锦', product: '红富士苹果', date: '2025-08-20', productCode: 'APP-001' },
+                 { user: '张威', product: '西柚（1个）', date: '2025-12-30', productCode: 'GRA-128' },
+                { user: '许琳宛', product: '麒麟西瓜（1个）', date: '2025-12-06', productCode: 'WAT-129' },
+                { user: '王素锦', product: '麒麟西瓜（1个）', date: '2013-05-19', productCode: 'WAT-129' }
+            ];
+            let html = '';
+            if (user && product && !date) {
+                const filteredOrders = orders.filter(order => {
+                    const userMatch = order.user.includes(user);
+                    const productMatch = order.product.toLowerCase().includes(product.toLowerCase()) ||
+                                       order.productCode.toLowerCase().includes(product.toLowerCase());
+                    return userMatch && productMatch;
+                });
+                if (filteredOrders.length > 0) {
+                    filteredOrders.forEach(order => {
+                        html += `<div class="order-item">
+                            <strong><i class="fas fa-user"></i> 购买人：</strong>${order.user}<br>
+                            <strong><i class="fas fa-apple-alt"></i> 购买水果：</strong>${order.product}<br>
+                            <strong><i class="fas fa-barcode"></i> 商品号：</strong>${order.productCode}<br>
+                            <strong><i class="fas fa-calendar-alt"></i> 购买日期：</strong>${order.date}
+                        </div>`;
+                    });
+                } else {
+                    html = '<div class="order-item"><i class="fas fa-exclamation-circle"></i> 未找到匹配的订单</div>';
+                }
+            }
+            else if (user && !date && !product) {
+                html = '<div class="order-item"><i class="fas fa-exclamation-circle"></i> 订单太多辣！找不到你想要的订单~请同时输入日期和购买人姓名哦</div>';
+            }
+            else if ((date && !user && !product) || (!date && !user && product)) {
+                html = '<div class="order-item"><i class="fas fa-exclamation-circle"></i> 订单太多辣！找不到你想要的订单~请同时输入日期和水果/商品号哦</div>';
+            }
+            else if (date && user) {
+                const filteredOrders = orders.filter(order => {
+                    return order.date === date && order.user === user;
+                });
+                if (filteredOrders.length > 0) {
+                    filteredOrders.forEach(order => {
+                        html += `<div class="order-item">
+                            <strong><i class="fas fa-user"></i> 购买人：</strong>${order.user}<br>
+                            <strong><i class="fas fa-apple-alt"></i> 购买水果：</strong>${order.product}<br>
+                            <strong><i class="fas fa-barcode"></i> 商品号：</strong>${order.productCode}<br>
+                            <strong><i class="fas fa-calendar-alt"></i> 购买日期：</strong>${order.date}
+                        </div>`;
+                    });
+                } else {
+                    html = '<div class="order-item"><i class="fas fa-exclamation-circle"></i> 未找到匹配的订单（需同时匹配日期和购买人姓名）</div>';
+                }
+            }
+            else if (date && product) {
+                const filteredOrders = orders.filter(order => {
+                    const productMatch = order.product.toLowerCase().includes(product.toLowerCase()) ||
+                        order.productCode.toLowerCase().includes(product.toLowerCase());
+                    return order.date === date && productMatch;
+                });
+                if (filteredOrders.length > 0) {
+                    filteredOrders.forEach(order => {
+                        html += `<div class="order-item">
+                            <strong><i class="fas fa-user"></i> 购买人：</strong>${order.user}<br>
+                            <strong><i class="fas fa-apple-alt"></i> 购买水果：</strong>${order.product}<br>
+                            <strong><i class="fas fa-barcode"></i> 商品号：</strong>${order.productCode}<br>
+                            <strong><i class="fas fa-calendar-alt"></i> 购买日期：</strong>${order.date}
+                        </div>`;
+                    });
+                } else {
+                    html = '<div class="order-item"><i class="fas fa-exclamation-circle"></i> 未找到匹配的订单（需同时匹配日期和水果/商品号）</div>';
+                }
+            }
+            else {
+                html = '<div class="order-item"><i class="fas fa-exclamation-circle"></i> 订单太多辣！找不到你想要的订单~请同时输入日期和购买人姓名或日期和水果/商品号哦</div>';
+            }
+            orderList.innerHTML = html;
+        }
+        function showProductDetail(productName) {
+            const detailModal = document.getElementById('detailModal');
+            const detailTitle = document.getElementById('detailTitle');
+            const detailContent = document.getElementById('detailContent');
+            switch (productName) {
+                case '泰国金枕榴莲（整颗）':
+                    detailTitle.textContent = '泰国金枕榴莲 - 水果详情';
+                    detailContent.textContent = '产自泰国东部，果肉金黄饱满，口感绵密香甜，香味浓郁。';
+                    break;
+                case '海南木瓜（2个装）':
+                case '海南木瓜':
+                    detailTitle.textContent = '海南木瓜 - 水果详情';
+                    detailContent.textContent = '海南产红心木瓜，果肉橙红细腻，汁多味甜，富含木瓜酵素和维生素C。';
+                    break;
+                case '泰国山竹（1kg）':
+                    detailTitle.textContent = '泰国山竹 - 水果详情';
+                    detailContent.textContent = '泰国进口山竹，果壳深紫，果肉雪白，口感酸甜清爽，被称为"水果皇后"。';
+                    break;
+                case '进口车厘子（2kg礼盒）':
+                    detailTitle.textContent = '进口车厘子 - 水果详情';
+                    detailContent.textContent = '智利进口车厘子，果径28-30mm，果肉紧实脆甜，颜色深红，适合送礼。';
+                    break;
+                case '以色列石榴（1kg）':
+                    detailTitle.textContent = '以色列石榴 - 水果详情';
+                    detailContent.textContent = '以色列进口软籽石榴，籽粒深红饱满，汁多味甜，可直接食用无需吐籽。';
+                    break;
+                case '无花果（500g）':
+                    detailTitle.textContent = '无花果 - 水果详情';
+                    detailContent.textContent = '新鲜无花果，果肉软糯香甜，富含膳食纤维和矿物质。';
+                    break;
+                default:
+                    detailTitle.textContent = productName + ' - 水果详情';
+                    detailContent.textContent = '该水果暂无详细信息';
+            }
+            detailModal.style.display = 'block';
+        }
+        function closeDetailModal() {
+            document.getElementById('detailModal').style.display = 'none';
+        }
+        window.onclick = function (event) {
+            const loginModal = document.getElementById('loginModal');
+            const historyModal = document.getElementById('historyModal');
+            const detailModal = document.getElementById('detailModal');
+            if (event.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+            if (event.target === historyModal) {
+                historyModal.style.display = 'none';
+            }
+            if (event.target === detailModal) {
+                detailModal.style.display = 'none';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            const hiddenItems = document.querySelectorAll('.hidden-item');
+            hiddenItems.forEach(item => {
+                item.style.display = 'none';
+            });
+        });
+    </script>
+<script src="scball.js"></script>
+<script src="pages.js"></script>
+<script src="visit.js"></script>
+
+</body>
+</html>

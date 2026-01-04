@@ -1,0 +1,2354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>飞鼠 - 企业协作平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: #F2F3F5;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+            touch-action: manipulation;
+        }
+        
+        /* 飞鼠全屏界面 */
+        .feishu-fullscreen {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            position: relative;
+            background: #FFFFFF;
+        }
+        
+        /* 侧边栏 */
+        .feishu-sidebar {
+            width: 72px;
+            background: #1A1D29;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px 0;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 100;
+        }
+        
+        .feishu-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #00B2FF, #0066FF);
+            border-radius: 8px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            box-shadow: 0 2px 8px rgba(0, 178, 255, 0.3);
+        }
+        
+        .feishu-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            align-items: center;
+            flex-grow: 1;
+        }
+        
+        .feishu-nav-item {
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        .feishu-nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .feishu-nav-item.active {
+            background: rgba(0, 178, 255, 0.15);
+            color: #00B2FF;
+        }
+        
+        .feishu-nav-item.active::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 20px;
+            background: #00B2FF;
+            border-radius: 0 3px 3px 0;
+        }
+        
+        .nav-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #FF4757;
+            color: white;
+            font-size: 10px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .sidebar-bottom {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00B2FF, #0066FF);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* 主内容区 */
+        .feishu-main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background: #F7F8FA;
+        }
+        
+        /* 顶部标题栏 */
+        .feishu-header {
+            height: 60px;
+            background: #FFFFFF;
+            border-bottom: 1px solid #E5E5E5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 50;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1A1D29;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .header-title i {
+            color: #00B2FF;
+        }
+        
+        .header-tabs {
+            display: flex;
+            gap: 32px;
+        }
+        
+        .header-tab {
+            padding: 8px 0;
+            color: #666;
+            cursor: pointer;
+            position: relative;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+        
+        .header-tab:hover {
+            color: #333;
+        }
+        
+        .header-tab.active {
+            color: #00B2FF;
+            font-weight: 600;
+        }
+        
+        .header-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #00B2FF;
+            border-radius: 2px;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .header-search {
+            width: 240px;
+            background: #F2F3F5;
+            border-radius: 8px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #999;
+            font-size: 14px;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .header-action {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .header-action:hover {
+            background: #F2F3F5;
+            color: #333;
+        }
+        
+        /* 关闭按钮样式 */
+        .close-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+            background: #F2F3F5;
+        }
+        
+        .close-btn:hover {
+            background: #FF4757;
+            color: white;
+            transform: rotate(90deg);
+        }
+        
+        /* 内容区域 */
+        .feishu-content {
+            flex-grow: 1;
+            display: flex;
+            overflow: hidden;
+        }
+        
+        /* 左侧消息栏 */
+        .message-sidebar {
+            width: 320px;
+            background: #FFFFFF;
+            border-right: 1px solid #E5E5E5;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .message-header {
+            padding: 20px;
+            border-bottom: 1px solid #E5E5E5;
+        }
+        
+        .message-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1A1D29;
+            margin-bottom: 16px;
+        }
+        
+        .message-filter {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .filter-btn {
+            padding: 6px 12px;
+            border-radius: 16px;
+            background: #F2F3F5;
+            color: #666;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .filter-btn:hover {
+            background: #E5E5E5;
+        }
+        
+        .filter-btn.active {
+            background: #00B2FF;
+            color: white;
+        }
+        
+        .message-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+        
+        .message-item {
+            padding: 16px 20px;
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            border-bottom: 1px solid #F7F8FA;
+        }
+        
+        .message-item:hover {
+            background: #F7F8FA;
+        }
+        
+        .message-item.active {
+            background: #E8F7FF;
+            border-left: 3px solid #00B2FF;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #00B2FF, #0066FF);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .message-info {
+            flex-grow: 1;
+            min-width: 0;
+        }
+        
+        .message-sender {
+            font-weight: 600;
+            color: #1A1D29;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+        
+        .message-preview {
+            color: #666;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .message-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 4px;
+        }
+        
+        .message-time {
+            color: #999;
+            font-size: 12px;
+        }
+        
+        .message-unread {
+            background: #FF4757;
+            color: white;
+            font-size: 11px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* 聊天主区域 */
+        .chat-main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background: #FFFFFF;
+        }
+        
+        .chat-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid #E5E5E5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #FFFFFF;
+        }
+        
+        .chat-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .chat-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1A1D29;
+        }
+        
+        .chat-status {
+            color: #00B2FF;
+            font-size: 12px;
+            background: #E8F7FF;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        
+        .chat-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .chat-action {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .chat-action:hover {
+            background: #F2F3F5;
+            color: #333;
+        }
+        
+        .chat-messages {
+            flex-grow: 1;
+            padding: 24px;
+            overflow-y: auto;
+            background: #F7F8FA;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .message-bubble {
+            max-width: 70%;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .message-bubble.sent {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+        
+        .message-bubble.sent .message-content {
+            background: #00B2FF;
+            color: white;
+            border-radius: 16px 16px 4px 16px;
+        }
+        
+        .message-bubble.received .message-content {
+            background: #FFFFFF;
+            color: #333;
+            border-radius: 16px 16px 16px 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        
+        .message-content {
+            padding: 12px 16px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .message-time-small {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .message-bubble.sent .message-time-small {
+            justify-content: flex-end;
+        }
+        
+        .chat-input {
+            padding: 20px 24px;
+            background: #FFFFFF;
+            border-top: 1px solid #E5E5E5;
+        }
+        
+        .input-container {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+        
+        .input-actions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .input-action {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .input-action:hover {
+            background: #F2F3F5;
+            color: #333;
+        }
+        
+        .message-input {
+            flex-grow: 1;
+            background: #F2F3F5;
+            border-radius: 8px;
+            padding: 12px 16px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: none;
+            min-height: 40px;
+            max-height: 120px;
+        }
+        
+        .message-input::placeholder {
+            color: #999;
+        }
+        
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: #00B2FF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            margin-bottom: 12px;
+        }
+        
+        .send-btn:hover {
+            background: #0099E6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 178, 255, 0.3);
+        }
+        
+        /* 右侧信息栏 */
+        .info-sidebar {
+            width: 280px;
+            background: #FFFFFF;
+            border-left: 1px solid #E5E5E5;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .info-header {
+            padding: 20px;
+            border-bottom: 1px solid #E5E5E5;
+        }
+        
+        .info-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1A1D29;
+        }
+        
+        .info-content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .member-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .member-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+        }
+        
+        .member-item:hover {
+            background: #F7F8FA;
+        }
+        
+        .member-name {
+            font-weight: 500;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .member-role {
+            color: #00B2FF;
+            font-size: 12px;
+            background: #E8F7FF;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .info-section {
+            margin-top: 24px;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        
+        .file-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+        }
+        
+        .file-item:hover {
+            background: #F7F8FA;
+        }
+        
+        .file-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: #E8F7FF;
+            color: #00B2FF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .file-info {
+            flex-grow: 1;
+        }
+        
+        .file-name {
+            font-size: 13px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .file-size {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 178, 255, 0.3);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 178, 255, 0.5);
+        }
+
+        .external-tag {
+    display: inline-block;
+    background-color: #e8f4ff;
+    color: #1a73e8;
+    border: 1px solid #1a73e8;
+    border-radius: 3px;
+    font-size: 12px;
+    padding: 0px 4px;
+    margin-left: 8px;
+    vertical-align: middle;
+    line-height: 1.2;
+}
+.avatar-container {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* 控制头像和标签的间距 */
+}
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .info-sidebar {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .message-sidebar {
+                width: 280px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .message-sidebar {
+                display: none;
+            }
+            
+            .feishu-sidebar {
+                width: 60px;
+            }
+            
+            .header-search {
+                width: 180px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .feishu-sidebar {
+                width: 50px;
+            }
+            
+            .header-title {
+                font-size: 16px;
+            }
+            
+            .header-tabs {
+                gap: 16px;
+            }
+            
+            .header-search {
+                width: 140px;
+            }
+        }
+        
+        /* 动画 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .message-bubble {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* 以下为1230新增移动端优化 */
+         /* 新增移动端兼容样式 */
+        :root {
+            --safe-area-inset-top: env(safe-area-inset-top, 0px);
+            --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-area-inset-left: env(safe-area-inset-left, 0px);
+            --safe-area-inset-right: env(safe-area-inset-right, 0px);
+        }
+        
+        /* 原有的所有样式保持不变，这里不重复显示 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        }
+        
+        /* 保留原有的所有CSS样式... */
+        
+        /* 新增：移动端触摸优化 */
+        @media (hover: none) and (pointer: coarse) {
+            .feishu-nav-item,
+            .header-action,
+            .close-btn,
+            .filter-btn,
+            .message-item,
+            .chat-action,
+            .input-action,
+            .send-btn,
+            .member-item,
+            .file-item {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            
+            .message-input,
+            .header-search {
+                font-size: 16px !important; /* 防止iOS缩放 */
+            }
+            
+            .send-btn {
+                width: 44px;
+                height: 44px;
+            }
+            
+            /* 改善移动端点击反馈 */
+            .feishu-nav-item:active,
+            .header-action:active,
+            .filter-btn:active,
+            .message-item:active,
+            .chat-action:active,
+            .input-action:active,
+            .member-item:active,
+            .file-item:active {
+                background-color: rgba(0, 0, 0, 0.1) !important;
+                transition: background-color 0.1s;
+            }
+            
+            /* 移动端更明显的按下效果 */
+            .close-btn:active {
+                transform: scale(0.95);
+            }
+            
+            .send-btn:active {
+                transform: translateY(0) scale(0.95);
+            }
+        }
+        
+        /* 新增：移动端适配 */
+        @media (max-width: 768px) {
+            body {
+                overflow: auto;
+                height: auto;
+                min-height: 100vh;
+                padding-bottom: var(--safe-area-inset-bottom);
+                background: #FFFFFF;
+            }
+            
+            .feishu-fullscreen {
+                flex-direction: column;
+                min-height: 100vh;
+            }
+            
+            .feishu-sidebar {
+                display: none; /* 移动端隐藏侧边栏 */
+            }
+            
+            .feishu-main {
+                width: 100%;
+                min-height: 100vh;
+            }
+            
+            .feishu-header {
+                height: auto;
+                min-height: 50px;
+                padding: 8px 12px;
+                flex-wrap: wrap;
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+                padding-top: calc(8px + var(--safe-area-inset-top));
+            }
+            
+            .header-left {
+                width: 100%;
+                justify-content: space-between;
+                margin-bottom: 8px;
+            }
+            
+            .header-title {
+                font-size: 16px;
+            }
+            
+            .header-tabs {
+                display: none; /* 移动端隐藏标签页 */
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .header-search {
+                flex-grow: 1;
+                max-width: none;
+                width: auto;
+            }
+            
+            .header-actions {
+                flex-shrink: 0;
+            }
+            
+            /* 移动端菜单按钮 */
+            .mobile-menu-btn {
+                display: flex !important;
+                width: 44px;
+                height: 44px;
+                align-items: center;
+                justify-content: center;
+                color: #666;
+                cursor: pointer;
+            }
+            
+            .feishu-content {
+                flex-direction: column;
+            }
+            
+            .message-sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 40vh;
+                border-right: none;
+                border-bottom: 1px solid #E5E5E5;
+                display: none; /* 默认隐藏，通过按钮切换 */
+            }
+            
+            .message-sidebar.active {
+                display: flex;
+            }
+            
+            .chat-main {
+                flex-grow: 1;
+                min-height: 60vh;
+            }
+            
+            .info-sidebar {
+                position: fixed;
+                right: -100%;
+                top: 0;
+                bottom: 0;
+                width: 85%;
+                max-width: 320px;
+                z-index: 1001;
+                transition: right 0.3s ease;
+                box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            }
+            
+            .info-sidebar.active {
+                right: 0;
+            }
+            
+            .overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 1000;
+            }
+            
+            .overlay.active {
+                display: block;
+            }
+            
+            .message-bubble {
+                max-width: 85%;
+            }
+            
+            .chat-input {
+                padding: 12px;
+                position: sticky;
+                bottom: 0;
+                background: #FFFFFF;
+            }
+            
+            .input-container {
+                gap: 8px;
+            }
+            
+            .message-input {
+                font-size: 16px; /* iOS不缩放 */
+            }
+            
+            /* 移动端底部导航 */
+            .mobile-bottom-nav {
+                display: flex !important;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 56px;
+                background: #FFFFFF;
+                border-top: 1px solid #E5E5E5;
+                padding-bottom: var(--safe-area-inset-bottom);
+                z-index: 999;
+            }
+            
+            .mobile-nav-item {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                color: #666;
+                font-size: 12px;
+                cursor: pointer;
+                padding: 8px 0;
+            }
+            
+            .mobile-nav-item.active {
+                color: #00B2FF;
+            }
+            
+            .mobile-nav-item i {
+                font-size: 20px;
+                margin-bottom: 4px;
+            }
+            
+            /* 移动端返回按钮 */
+            .mobile-back-btn {
+                display: flex !important;
+                width: 44px;
+                height: 44px;
+                align-items: center;
+                justify-content: center;
+                color: #00B2FF;
+                cursor: pointer;
+                margin-right: 8px;
+            }
+            
+            .chat-header {
+                padding: 12px 16px;
+                position: sticky;
+                top: 0;
+                background: #FFFFFF;
+                z-index: 99;
+            }
+            
+            .chat-messages {
+                padding: 16px;
+                min-height: calc(100vh - 200px);
+            }
+        }
+        
+        /* 小屏幕手机 */
+        @media (max-width: 375px) {
+            .header-title {
+                font-size: 15px;
+            }
+            
+            .header-search {
+                width: 150px;
+            }
+            
+            .message-bubble {
+                max-width: 90%;
+            }
+            
+            .chat-messages {
+                padding: 12px;
+            }
+        }
+        
+        /* 横屏模式 */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .feishu-header {
+                height: 44px;
+                padding: 4px 12px;
+                padding-top: calc(4px + var(--safe-area-inset-top));
+            }
+            
+            .mobile-bottom-nav {
+                display: none !important;
+            }
+            
+            .chat-input {
+                padding: 8px 12px;
+            }
+            
+            .message-input {
+                min-height: 32px;
+            }
+        }
+        
+        /* TaTap小程序H5特定优化 */
+        @media (max-width: 768px) {
+            /* 防止TaTap内置浏览器的一些问题 */
+            html, body {
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .chat-messages {
+                -webkit-overflow-scrolling: touch;
+                overflow-y: scroll;
+            }
+            
+            /* 修复iOS输入框被键盘遮挡问题 */
+            .message-input:focus {
+                position: relative;
+                z-index: 1002;
+            }
+            
+            /* 确保按钮在移动端有足够的点击区域 */
+            button, 
+            .feishu-nav-item,
+            .header-action,
+            .mobile-nav-item {
+                cursor: pointer;
+            }
+        }
+        
+        /* 新增移动端组件样式 */
+        .mobile-menu-btn,
+        .mobile-bottom-nav,
+        .mobile-back-btn,
+        .overlay {
+            display: none;
+        }
+        
+        /* 保持原有的大屏幕样式不变 */
+        @media (min-width: 769px) {
+            body {
+                overflow: hidden;
+            }
+            
+            .feishu-fullscreen {
+                height: 100vh;
+            }
+        }
+
+
+
+    </style>
+    <link rel="stylesheet" href="sc-style.css">
+<link rel="icon" type="image/png" href="dtma.png">
+</head>
+
+
+
+
+
+
+
+
+<body>
+    <!-- 遮罩层 -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- 飞鼠全屏界面 -->
+    <div class="feishu-fullscreen">
+        <!-- 左侧导航栏（桌面端显示） -->
+        <div class="feishu-sidebar">
+            <div class="feishu-logo">飞</div>
+            
+            <div class="feishu-nav">
+                <div class="feishu-nav-item active">
+                    <i class="fas fa-comments"></i>
+                    <div class="nav-badge">3</div>
+                </div>
+                <div class="feishu-nav-item">
+                    <i class="fas fa-address-book"></i>
+                </div>
+                <div class="feishu-nav-item">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="feishu-nav-item">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="feishu-nav-item">
+                    <i class="fas fa-cloud"></i>
+                </div>
+                <div class="feishu-nav-item">
+                    <i class="fas fa-video"></i>
+                </div>
+            </div>
+            
+            <div class="sidebar-bottom">
+                <div class="feishu-nav-item">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <div class="user-avatar">麦</div>
+            </div>
+        </div>
+        
+        <!-- 主内容区 -->
+        <div class="feishu-main">
+            <!-- 顶部标题栏 -->
+            <div class="feishu-header">
+                <div class="header-left">
+                    <!-- 移动端返回按钮 -->
+                    <div class="mobile-back-btn" id="mobileBackBtn">
+                        <i class="fas fa-chevron-left"></i>
+                    </div>
+                    
+                    <!-- 移动端菜单按钮 -->
+                    <div class="mobile-menu-btn" id="mobileMenuBtn">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                    
+                    <div class="header-title">
+                        <i class="fas fa-comments"></i>
+                        <span class="header-title-text">飞鼠 - 团队协作</span>
+                    </div>
+                    
+                    <div class="header-tabs">
+                        <div class="header-tab active">消息</div>
+                        <div class="header-tab">通讯录</div>
+                        <div class="header-tab">日历</div>
+                        <div class="header-tab">文档</div>
+                        <div class="header-tab">工作台</div>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="header-search">
+                        <i class="fas fa-search"></i>
+                        <span>搜索</span>
+                    </div>
+                    
+                    <div class="header-actions">
+                        <div class="header-action">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="header-action">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <!-- 关闭按钮 -->
+                        <div class="close-btn" id="close-btn">
+                            <i class="fas fa-times"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 内容区域 -->
+            <div class="feishu-content">
+                <!-- 移动端侧边栏（全屏覆盖） -->
+                <div class="mobile-sidebar" id="mobileSidebar">
+                    <div class="mobile-sidebar-header">
+                        <div class="mobile-sidebar-user">
+                            <div class="mobile-user-avatar">
+                                <div class="user-avatar">麦</div>
+                            </div>
+                            <div class="mobile-user-info">
+                                <div class="mobile-user-name">麦姝冰</div>
+                                <div class="mobile-user-status">在线</div>
+                            </div>
+                        </div>
+                        <div class="mobile-sidebar-close" id="mobileSidebarClose">
+                            <i class="fas fa-times"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="mobile-sidebar-nav">
+                        <div class="mobile-nav-section">
+                            <div class="mobile-nav-title">工作区</div>
+                            <div class="mobile-nav-item active">
+                                <i class="fas fa-comments"></i>
+                                <span class="mobile-nav-text">消息</span>
+                                <div class="mobile-nav-badge">3</div>
+                            </div>
+                            <div class="mobile-nav-item">
+                                <i class="fas fa-address-book"></i>
+                                <span class="mobile-nav-text">通讯录</span>
+                            </div>
+                            <div class="mobile-nav-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span class="mobile-nav-text">日历</span>
+                            </div>
+                            <div class="mobile-nav-item">
+                                <i class="fas fa-tasks"></i>
+                                <span class="mobile-nav-text">任务</span>
+                            </div>
+                            <div class="mobile-nav-item">
+                                <i class="fas fa-cloud"></i>
+                                <span class="mobile-nav-text">云文档</span>
+                            </div>
+                            <div class="mobile-nav-item">
+                                <i class="fas fa-video"></i>
+                                <span class="mobile-nav-text">会议</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mobile-nav-section">
+                            <div class="mobile-nav-title">工具</div>
+                            <div class="mobile-nav-item">
+                                <i class="fas fa-file-export"></i>
+                                <span class="mobile-nav-text">审批</span>
+                            </div>
+                            <div class="mobile-nav-item">
+                                <i class="fas fa-chart-bar"></i>
+                                <span class="mobile-nav-text">报表</span>
+                            </div>
+                            <div class="mobile-nav-item">
+                                <i class="fas fa-wrench"></i>
+                                <span class="mobile-nav-text">管理后台</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mobile-nav-section">
+                            <div class="mobile-nav-title">设置</div>
+                            <div class="mobile-nav-item">
+                                <i class="fas fa-cog"></i>
+                                <span class="mobile-nav-text">设置</span>
+                            </div>
+                            <div class="mobile-nav-item">
+                                <i class="fas fa-moon"></i>
+                                <span class="mobile-nav-text">夜间模式</span>
+                            </div>
+                            <div class="mobile-nav-item">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span class="mobile-nav-text">退出登录</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 左侧消息栏（桌面端保留） -->
+                <div class="message-sidebar" id="messageSidebar">
+                    <div class="message-header">
+                        <div class="message-title">消息</div>
+                        <div class="message-filter">
+                            <div class="filter-btn active">全部</div>
+                            <div class="filter-btn">未读</div>
+                            <div class="filter-btn">@麦姝冰</div>
+                        </div>
+                    </div>
+                    
+                    <div class="message-list">
+                        <!-- 消息项1 -->
+                        <div class="message-item active">
+                            <div class="avatar-container">
+                                <div class="message-avatar">于彰</div>
+                            </div>
+                            <div class="message-info">
+                                <div class="message-sender">周于彰<div class="external-tag">外部</div></div>
+                                <div class="message-preview">好的</div>
+                                <div class="message-meta">
+                                    <div class="message-time">09:30</div>
+                                    <div class="message-unread">2</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 消息项2 -->
+                        <div class="message-item">
+                            <div class="message-avatar">叶兰</div>
+                            <div class="message-info">
+                                <div class="message-sender">叶兰</div>
+                                <div class="message-preview">提前同步：经董事会决议，公司下周一起将启动一轮涉及中层10%的"组织优化"。下周一上午10点全员邮件通知。请公关部准备：</div>
+                                <div class="message-meta">
+                                    <div class="message-time">前天</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 消息项3 -->
+                        <div class="message-item">
+                            <div class="message-avatar">真真</div>
+                            <div class="message-info">
+                                <div class="message-sender">严真真</div>
+                                <div class="message-preview">2025年度年终奖发放安排及个税计算说明.pdf</div>
+                                <div class="message-meta">
+                                    <div class="message-time">昨天</div>
+                                    <div class="message-unread">1</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 聊天主区域 -->
+                <div class="chat-main" id="chatMain">
+                    <div class="chat-header">
+                        <div class="chat-info">
+                            <div class="chat-title">周于彰</div>
+                            <div class="chat-status">在线</div>
+                        </div>
+                        
+                        <div class="chat-actions">
+                            <!-- 移动端信息按钮 -->
+                            <div class="chat-action" id="infoToggleBtn">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="chat-action">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div class="chat-action">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <div class="chat-action">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages" id="chatMessages">
+                        <!-- 发送的消息 -->
+                        <div class="message-bubble sent">
+                            <div class="message-avatar">姝冰</div>
+                            <div>
+                                <div class="message-content">
+                                    在吗？下周三上午，公司大堂有重要客户参观，需要你们配合做一下基础维护。
+                                </div>
+                                <div class="message-time-small">09:45</div>
+                            </div>
+                        </div>
+                        
+                        <!-- 收到的消息 -->
+                        <div class="message-bubble received">
+                            <div class="message-avatar">张</div>
+                            <div>
+                                <div class="message-content">
+                                    太好了！我刚刚更新了项目进度表，已经上传到云文档了。大家有空可以看一下，如果有问题我们下午会上讨论。
+                                </div>
+                                <div class="message-time-small">10:15</div>
+                            </div>
+                        </div>
+                        
+                        <!-- 发送的消息 -->
+                        <div class="message-bubble sent">
+                            <div class="message-avatar">我</div>
+                            <div>
+                                <div class="message-content">
+                                    好的，我已经查看了进度表，数据很清晰。关于下午的会议，我已经预定好了3号会议室。
+                                </div>
+                                <div class="message-time-small">10:30</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input">
+                        <div class="input-actions">
+                            <div class="input-action">
+                                <i class="fas fa-smile"></i>
+                            </div>
+                            <div class="input-action">
+                                <i class="fas fa-paperclip"></i>
+                            </div>
+                            <div class="input-action">
+                                <i class="fas fa-image"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="input-container">
+                            <textarea class="message-input" placeholder="输入消息..." rows="1"></textarea>
+                            <button class="send-btn">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 右侧信息栏 -->
+                <div class="info-sidebar" id="infoSidebar">
+                    <div class="info-header">
+                        <div class="info-title">聊天信息</div>
+                    </div>
+                    
+                    <div class="info-content">
+                        <div class="member-list">
+                            <div class="member-item">
+                                <div class="message-avatar">张</div>
+                                <div class="member-name">张威</div>
+                                <div class="member-role">创建者</div>
+                            </div>
+                            <div class="member-item">
+                                <div class="message-avatar">我</div>
+                                <div class="member-name">我</div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-section">
+                            <div class="section-title">共享文件</div>
+                            <div class="file-list">
+                                <div class="file-item">
+                                    <div class="file-icon">
+                                        <i class="fas fa-file-word"></i>
+                                    </div>
+                                    <div class="file-info">
+                                        <div class="file-name">项目会议纪要.docx</div>
+                                        <div class="file-size">2.4 MB</div>
+                                    </div>
+                                </div>
+                                <div class="file-item">
+                                    <div class="file-icon">
+                                        <i class="fas fa-file-excel"></i>
+                                    </div>
+                                    <div class="file-info">
+                                        <div class="file-name">项目进度表.xlsx</div>
+                                        <div class="file-size">1.8 MB</div>
+                                    </div>
+                                </div>
+                                <div class="file-item">
+                                    <div class="file-icon">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </div>
+                                    <div class="file-info">
+                                        <div class="file-name">设计方案.pdf</div>
+                                        <div class="file-size">5.2 MB</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 移动端底部导航 -->
+        <div class="mobile-bottom-nav" id="mobileBottomNav">
+            <div class="mobile-nav-item active" data-page="message">
+                <i class="fas fa-comments"></i>
+                <span>消息</span>
+            </div>
+            <div class="mobile-nav-item" data-page="contacts">
+                <i class="fas fa-address-book"></i>
+                <span>通讯录</span>
+            </div>
+            <div class="mobile-nav-item" data-page="chat">
+                <i class="fas fa-comment-dots"></i>
+                <span>聊天</span>
+            </div>
+            <div class="mobile-nav-item" data-page="calendar">
+                <i class="fas fa-calendar-alt"></i>
+                <span>日历</span>
+            </div>
+            <div class="mobile-nav-item" data-page="me">
+                <i class="fas fa-user"></i>
+                <span>我</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 搜索球容器 -->
+    <div class="floating-search-ball-container">
+        <!-- 搜索球（点击展开） -->
+        <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+        
+        <!-- 展开的搜索框 -->
+        <div class="floating-search-expanded" id="searchExpanded">
+            <input type="text" 
+                   class="floating-search-input" 
+                   id="searchInput" 
+                   placeholder="输入关键词搜索..." 
+                   aria-label="搜索输入框">
+            <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+            <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+        </div>
+    </div>
+    
+    <style>
+        /* 新增移动端侧边栏样式 */
+        .mobile-sidebar {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 85%;
+            max-width: 320px;
+            height: 100%;
+            background: #1A1D29;
+            z-index: 1002;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .mobile-sidebar.active {
+            left: 0;
+        }
+        
+        .mobile-sidebar-header {
+            padding: calc(20px + var(--safe-area-inset-top)) 20px 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .mobile-sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .mobile-user-avatar .user-avatar {
+            width: 48px;
+            height: 48px;
+            font-size: 20px;
+        }
+        
+        .mobile-user-info {
+            color: white;
+        }
+        
+        .mobile-user-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        
+        .mobile-user-status {
+            color: #00B2FF;
+            font-size: 12px;
+            background: rgba(0, 178, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        .mobile-sidebar-close {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .mobile-sidebar-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .mobile-sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 0;
+            padding-bottom: calc(20px + var(--safe-area-inset-bottom));
+        }
+        
+        .mobile-nav-section {
+            margin-bottom: 24px;
+        }
+        
+        .mobile-nav-title {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 20px;
+            margin-bottom: 12px;
+        }
+        
+        .mobile-nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        .mobile-nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .mobile-nav-item.active {
+            background: rgba(0, 178, 255, 0.15);
+            color: #00B2FF;
+        }
+        
+        .mobile-nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #00B2FF;
+        }
+        
+        .mobile-nav-item i {
+            width: 24px;
+            font-size: 18px;
+            margin-right: 12px;
+        }
+        
+        .mobile-nav-text {
+            flex: 1;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .mobile-nav-badge {
+            background: #FF4757;
+            color: white;
+            font-size: 11px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* 移动端优化 */
+        @media (max-width: 768px) {
+            .mobile-sidebar {
+                display: flex;
+            }
+            
+            .header-title-text {
+                flex: 1;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                margin-right: 10px;
+            }
+            
+            .feishu-header {
+                padding-left: 0;
+            }
+            
+            .header-left {
+                gap: 8px;
+            }
+            
+            .mobile-menu-btn {
+                margin-left: 12px;
+            }
+            
+            /* 移动端消息侧边栏优化 */
+            .message-sidebar {
+                position: fixed;
+                left: -100%;
+                top: 0;
+                bottom: 0;
+                width: 100%;
+                max-width: 380px;
+                z-index: 1001;
+                transition: left 0.3s ease;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+                background: #FFFFFF;
+                border-right: none;
+                max-height: none;
+            }
+            
+            .message-sidebar.active {
+                left: 0;
+            }
+            
+            /* 改善聊天区域 */
+            .chat-main {
+                width: 100%;
+                transition: transform 0.3s ease;
+            }
+            
+            .message-sidebar.active ~ .chat-main {
+                transform: translateX(380px);
+            }
+            
+            /* 改善遮罩层 */
+            .overlay.active {
+                z-index: 1000;
+                background: rgba(0, 0, 0, 0.5);
+            }
+            
+            .mobile-back-btn {
+                display: flex;
+                margin-right: 0;
+            }
+            
+            /* 优化消息列表项 */
+            .message-item {
+                padding: 14px 16px;
+            }
+            
+            .message-preview {
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: normal;
+            }
+            
+            /* 改善输入框在移动端的显示 */
+            .chat-input {
+                padding-bottom: calc(12px + var(--safe-area-inset-bottom));
+            }
+            
+            /* 消息气泡优化 */
+            .message-bubble {
+                max-width: 88%;
+            }
+        }
+        
+        /* 小屏幕手机优化 */
+        @media (max-width: 375px) {
+            .mobile-sidebar {
+                width: 90%;
+            }
+            
+            .message-sidebar {
+                max-width: 340px;
+            }
+            
+            .message-item {
+                padding: 12px 14px;
+            }
+        }
+        
+        /* 横屏模式优化 */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .mobile-sidebar-nav {
+                padding: 10px 0;
+            }
+            
+            .mobile-nav-item {
+                padding: 8px 20px;
+            }
+            
+            .message-list {
+                max-height: 60vh;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .mobile-nav-item {
+            animation: slideIn 0.3s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .mobile-nav-item:nth-child(1) { animation-delay: 0.05s; }
+        .mobile-nav-item:nth-child(2) { animation-delay: 0.1s; }
+        .mobile-nav-item:nth-child(3) { animation-delay: 0.15s; }
+        .mobile-nav-item:nth-child(4) { animation-delay: 0.2s; }
+        .mobile-nav-item:nth-child(5) { animation-delay: 0.25s; }
+        .mobile-nav-item:nth-child(6) { animation-delay: 0.3s; }
+        
+        /* 防止滚动传播 */
+        .mobile-sidebar-nav {
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+    
+    <script>
+        // 检测是否为移动设备
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const isTaTap = /TaTap/i.test(navigator.userAgent) || /MicroMessenger/i.test(navigator.userAgent);
+        
+        // 移动端初始化
+        function initMobileFeatures() {
+            if (isMobile) {
+                // 设置视口高度变量，解决移动端100vh问题
+                const setVH = () => {
+                    const vh = window.innerHeight * 0.01;
+                    document.documentElement.style.setProperty('--vh', `${vh}px`);
+                };
+                setVH();
+                window.addEventListener('resize', setVH);
+                
+                // 初始化移动端布局
+                initMobileLayout();
+                
+                // TaTap特定优化
+                if (isTaTap) {
+                    document.body.classList.add('tatap-h5');
+                    // 防止双击缩放
+                    let lastTouchEnd = 0;
+                    document.addEventListener('touchend', (event) => {
+                        const now = Date.now();
+                        if (now - lastTouchEnd <= 300) {
+                            event.preventDefault();
+                        }
+                        lastTouchEnd = now;
+                    }, false);
+                }
+            }
+        }
+        
+        // 初始化移动端布局
+        function initMobileLayout() {
+            const mobileSidebar = document.getElementById('mobileSidebar');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileSidebarClose = document.getElementById('mobileSidebarClose');
+            const overlay = document.getElementById('overlay');
+            const messageSidebar = document.getElementById('messageSidebar');
+            const infoSidebar = document.getElementById('infoSidebar');
+            const chatMain = document.getElementById('chatMain');
+            const mobileBackBtn = document.getElementById('mobileBackBtn');
+            const mobileBottomNav = document.getElementById('mobileBottomNav');
+            const chatMessages = document.getElementById('chatMessages');
+            
+            // 移动端菜单按钮点击 - 打开完整侧边栏
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileSidebar.classList.add('active');
+                    overlay.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // 防止背景滚动
+                });
+            }
+            
+            // 移动端侧边栏关闭按钮
+            if (mobileSidebarClose) {
+                mobileSidebarClose.addEventListener('click', () => {
+                    mobileSidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = ''; // 恢复滚动
+                });
+            }
+            
+            // 移动端侧边栏导航项点击
+            const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+            mobileNavItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const text = this.querySelector('.mobile-nav-text').textContent;
+                    
+                    // 更新激活状态
+                    mobileNavItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 根据点击的项目执行相应操作
+                    switch(text) {
+                        case '消息':
+                            // 关闭侧边栏，打开消息列表
+                            mobileSidebar.classList.remove('active');
+                            messageSidebar.classList.add('active');
+                            chatMain.style.display = 'none';
+                            updateBottomNav('message');
+                            break;
+                        case '聊天':
+                            // 关闭侧边栏，显示聊天界面
+                            mobileSidebar.classList.remove('active');
+                            messageSidebar.classList.remove('active');
+                            chatMain.style.display = 'flex';
+                            updateBottomNav('chat');
+                            break;
+                        case '通讯录':
+                        case '日历':
+                        case '任务':
+                        case '云文档':
+                        case '会议':
+                            // 显示提示信息
+                            showToast(`打开${text}功能`);
+                            mobileSidebar.classList.remove('active');
+                            overlay.classList.remove('active');
+                            break;
+                        default:
+                            mobileSidebar.classList.remove('active');
+                            overlay.classList.remove('active');
+                    }
+                    
+                    document.body.style.overflow = ''; // 恢复滚动
+                });
+            });
+            
+            // 遮罩层点击
+            if (overlay) {
+                overlay.addEventListener('click', () => {
+                    mobileSidebar.classList.remove('active');
+                    messageSidebar.classList.remove('active');
+                    infoSidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = ''; // 恢复滚动
+                });
+            }
+            
+            // 移动端返回按钮
+            if (mobileBackBtn) {
+                mobileBackBtn.addEventListener('click', () => {
+                    if (messageSidebar.classList.contains('active')) {
+                        messageSidebar.classList.remove('active');
+                        chatMain.style.display = 'flex';
+                        updateBottomNav('chat');
+                    } else if (infoSidebar.classList.contains('active')) {
+                        infoSidebar.classList.remove('active');
+                    }
+                    overlay.classList.remove('active');
+                });
+                
+                // 监听侧边栏状态显示/隐藏返回按钮
+                const observer = new MutationObserver(() => {
+                    if (messageSidebar.classList.contains('active') || 
+                        infoSidebar.classList.contains('active')) {
+                        mobileBackBtn.style.display = 'flex';
+                    } else {
+                        mobileBackBtn.style.display = 'none';
+                    }
+                });
+                
+                observer.observe(messageSidebar, { attributes: true });
+                observer.observe(infoSidebar, { attributes: true });
+            }
+            
+            // 信息侧边栏切换
+            const infoToggleBtn = document.getElementById('infoToggleBtn');
+            if (infoToggleBtn) {
+                infoToggleBtn.addEventListener('click', () => {
+                    infoSidebar.classList.toggle('active');
+                    overlay.classList.toggle('active');
+                });
+            }
+            
+            // 移动端底部导航
+            if (mobileBottomNav) {
+                const navItems = mobileBottomNav.querySelectorAll('.mobile-nav-item');
+                
+                // 更新底部导航状态函数
+                window.updateBottomNav = function(page) {
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    const activeNav = mobileBottomNav.querySelector(`[data-page="${page}"]`);
+                    if (activeNav) {
+                        activeNav.classList.add('active');
+                    }
+                };
+                
+                navItems.forEach(item => {
+                    item.addEventListener('click', function() {
+                        const page = this.getAttribute('data-page');
+                        
+                        // 更新激活状态
+                        updateBottomNav(page);
+                        
+                        // 切换页面
+                        switch(page) {
+                            case 'message':
+                                messageSidebar.classList.add('active');
+                                chatMain.style.display = 'none';
+                                overlay.classList.add('active');
+                                break;
+                            case 'chat':
+                                messageSidebar.classList.remove('active');
+                                chatMain.style.display = 'flex';
+                                overlay.classList.remove('active');
+                                break;
+                            case 'contacts':
+                            case 'calendar':
+                            case 'me':
+                                showToast(`打开${this.querySelector('span').textContent}页面`);
+                                break;
+                        }
+                    });
+                });
+            }
+            
+            // 消息项点击（移动端）
+            const messageItems = document.querySelectorAll('.message-item');
+            messageItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    if (isMobile) {
+                        // 在移动端，点击消息项切换到聊天界面
+                        messageSidebar.classList.remove('active');
+                        chatMain.style.display = 'flex';
+                        overlay.classList.remove('active');
+                        
+                        // 更新底部导航激活状态
+                        if (mobileBottomNav) {
+                            updateBottomNav('chat');
+                        }
+                    }
+                    
+                    // 原有的激活状态切换
+                    messageItems.forEach(msg => msg.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // 改善移动端输入体验
+            const messageInput = document.querySelector('.message-input');
+            if (messageInput && isMobile) {
+                // 输入时自动滚动到可视区域
+                messageInput.addEventListener('focus', () => {
+                    setTimeout(() => {
+                        messageInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 300);
+                });
+                
+                // 防止键盘弹出时页面布局错乱
+                window.addEventListener('resize', () => {
+                    if (document.activeElement === messageInput) {
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }
+                });
+            }
+            
+            // 阻止移动端滚动传播
+            document.addEventListener('touchmove', (e) => {
+                if (e.target.closest('.chat-messages') || 
+                    e.target.closest('.mobile-sidebar-nav') ||
+                    e.target.closest('.message-list')) {
+                    e.stopPropagation();
+                }
+            }, { passive: true });
+            
+            // 添加滑动关闭功能
+            let touchStartX = 0;
+            document.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+            }, { passive: true });
+            
+            document.addEventListener('touchend', (e) => {
+                const touchEndX = e.changedTouches[0].clientX;
+                const diffX = touchEndX - touchStartX;
+                
+                // 从左向右滑动关闭消息侧边栏
+                if (messageSidebar.classList.contains('active') && diffX > 50) {
+                    messageSidebar.classList.remove('active');
+                    chatMain.style.display = 'flex';
+                    updateBottomNav('chat');
+                }
+                
+                // 从左向右滑动关闭移动侧边栏
+                if (mobileSidebar.classList.contains('active') && diffX > 50) {
+                    mobileSidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            }, { passive: true });
+        }
+        
+        // 显示提示信息
+        function showToast(message) {
+            // 移除旧的提示
+            const oldToast = document.querySelector('.mobile-toast');
+            if (oldToast) oldToast.remove();
+            
+            // 创建新的提示
+            const toast = document.createElement('div');
+            toast.className = 'mobile-toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            // 显示提示
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // 3秒后隐藏
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+        
+        // 添加提示样式
+        const toastStyle = document.createElement('style');
+        toastStyle.textContent = `
+            .mobile-toast {
+                position: fixed;
+                bottom: 80px;
+                left: 50%;
+                transform: translateX(-50%) translateY(100px);
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 24px;
+                font-size: 14px;
+                z-index: 2000;
+                transition: transform 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                max-width: 80%;
+                text-align: center;
+            }
+            
+            .mobile-toast.show {
+                transform: translateX(-50%) translateY(0);
+            }
+        `;
+        document.head.appendChild(toastStyle);
+        
+        // 原有的JavaScript代码保持不变...
+        // ... 这里是你原有的所有JavaScript代码 ...
+        
+        window.addEventListener('load', () => {
+            const chatMessages = document.querySelector('.chat-messages');
+            if (chatMessages) {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            // 初始化移动端功能
+            initMobileFeatures();
+        });
+    </script>
+    
+    <!-- 原有的JavaScript代码从这里继续 -->
+    <script>
+        // 原有的JavaScript代码保持不变
+        document.getElementById('close-btn').addEventListener('click', () => {
+            window.location.href = 'zw-cpt.html';
+        });
+        
+        const navItems = document.querySelectorAll('.feishu-nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+        
+        const tabs = document.querySelectorAll('.header-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+        
+        const messageItems = document.querySelectorAll('.message-item');
+        messageItems.forEach(item => {
+            item.addEventListener('click', () => {
+                messageItems.forEach(msg => msg.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+        
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(filter => filter.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+        
+        const messageInput = document.querySelector('.message-input');
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+        
+        const sendBtn = document.querySelector('.send-btn');
+        sendBtn.addEventListener('click', function() {
+            const message = messageInput.value.trim();
+            if (message) {
+                const chatMessages = document.querySelector('.chat-messages');
+                const newMessage = document.createElement('div');
+                newMessage.className = 'message-bubble sent';
+                newMessage.innerHTML = `
+                    <div class="message-avatar">我</div>
+                    <div>
+                        <div class="message-content">${message}</div>
+                        <div class="message-time-small">${new Date().toLocaleTimeString('zh-CN', {hour: '2-digit', minute:'2-digit'})}</div>
+                    </div>
+                `;
+                chatMessages.appendChild(newMessage);
+                
+                messageInput.value = '';
+                messageInput.style.height = 'auto';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                setTimeout(() => {
+                    const replyMessage = document.createElement('div');
+                    replyMessage.className = 'message-bubble received';
+                    replyMessage.innerHTML = `
+                        <div class="message-avatar">张</div>
+                        <div>
+                            <div class="message-content">收到，感谢您的反馈。</div>
+                            <div class="message-time-small">${new Date().toLocaleTimeString('zh-CN', {hour: '2-digit', minute:'2-digit'})}</div>
+                        </div>
+                    `;
+                    chatMessages.appendChild(replyMessage);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 1000);
+            }
+        });
+        
+        messageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey) {
+                e.preventDefault();
+                sendBtn.click();
+            }
+        });
+        
+        // 防止页面滚动（移动端）
+        if (isMobile) {
+            document.addEventListener('touchmove', (e) => {
+                if (e.target === document.documentElement || e.target === document.body) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            
+            // 修复iOS橡皮筋效果
+            document.body.addEventListener('touchstart', () => {}, { passive: true });
+        }
+    </script>
+    <script src="scball.js"></script>
+    <script src="pages.js"></script>
+    <script src="visit.js"></script>
+</body>
+
+</html>

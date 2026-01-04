@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>真相已明，责任已定</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #4a6572 100%);
+            color: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #4fc3f7, transparent);
+        }
+        
+        .title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #4fc3f7;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .title:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #4fc3f7, transparent);
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #aad3ff;
+            margin-top: 10px;
+        }
+        
+        .content-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        
+        .content-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(79, 195, 247, 0.5), transparent);
+        }
+        
+        .content-card h2 {
+            color: #4fc3f7;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .content-card h2 i {
+            color: #4fc3f7;
+        }
+        
+        .result-list {
+            list-style-type: none;
+            margin: 25px 0;
+        }
+        
+        .result-list li {
+            padding: 15px;
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border-left: 4px solid;
+            transition: transform 0.3s, background 0.3s;
+            position: relative;
+        }
+        
+        .result-list li:hover {
+            transform: translateX(5px);
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .result-list li:nth-child(1) {
+            border-left-color: #ff4444;
+        }
+        
+        .result-list li:nth-child(2) {
+            border-left-color: #ff7700;
+        }
+        
+        .result-list li:nth-child(3) {
+            border-left-color: #ffaa00;
+        }
+        
+        .result-list li:nth-child(4) {
+            border-left-color: #999999;
+        }
+        
+        .result-list li:nth-child(5) {
+            border-left-color: #888888;
+        }
+        
+        .role-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+            border: 1px solid;
+            font-weight: bold;
+        }
+        
+        .tag-mastermind {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff9999;
+            border-color: rgba(255, 68, 68, 0.3);
+        }
+        
+        .tag-poisoner {
+            background: rgba(255, 119, 0, 0.2);
+            color: #ffbb66;
+            border-color: rgba(255, 119, 0, 0.3);
+        }
+        
+        .tag-disposer {
+            background: rgba(255, 170, 0, 0.2);
+            color: #ffcc77;
+            border-color: rgba(255, 170, 0, 0.3);
+        }
+        
+        .tag-helper {
+            background: rgba(153, 153, 153, 0.2);
+            color: #cccccc;
+            border-color: rgba(153, 153, 153, 0.3);
+        }
+        
+        .tag-escape {
+            background: rgba(136, 136, 136, 0.2);
+            color: #bbbbbb;
+            border-color: rgba(136, 136, 136, 0.3);
+        }
+        
+        .criminal-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .crime-desc {
+            color: #ccc;
+            font-size: 0.95rem;
+        }
+        
+        .timeline {
+            background: rgba(79, 195, 247, 0.05);
+            border: 1px solid rgba(79, 195, 247, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .timeline h4 {
+            color: #4fc3f7;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .timeline-item {
+            display: flex;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(79, 195, 247, 0.1);
+        }
+        
+        .timeline-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .timeline-number {
+            width: 24px;
+            height: 24px;
+            background: #4fc3f7;
+            color: #1a2c3d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        
+        .timeline-content {
+            flex: 1;
+        }
+        
+        .conclusion {
+            text-align: center;
+            font-size: 1.2rem;
+            padding: 20px;
+            background: rgba(79, 195, 247, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(79, 195, 247, 0.3);
+            margin-top: 25px;
+            position: relative;
+        }
+        
+        .conclusion:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(79, 195, 247, 0.5), transparent);
+        }
+        
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 200px;
+            max-width: 300px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #4fc3f7, #2196f3);
+            color: #1a2c3d;
+            box-shadow: 0 4px 15px rgba(79, 195, 247, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(79, 195, 247, 0.6);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s, visibility 0.4s;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a2c3d 100%);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(79, 195, 247, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.4s;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+        
+        .modal-header {
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.3);
+            text-align: center;
+            border-bottom: 1px solid rgba(79, 195, 247, 0.2);
+        }
+        
+        .modal-header h3 {
+            color: #4fc3f7;
+            font-size: 1.5rem;
+        }
+        
+        .modal-content {
+            padding: 25px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        
+        .modal-content p {
+            margin-bottom: 15px;
+        }
+        
+        .modal-footer {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid rgba(79, 195, 247, 0.2);
+        }
+        
+        .btn-close {
+            background: linear-gradient(to right, #4fc3f7, #2196f3);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-close:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 195, 247, 0.4);
+        }
+        
+        .icon-large {
+            font-size: 3rem;
+            margin: 20px 0;
+            color: #4fc3f7;
+        }
+        
+        .truth-icon {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .truth-icon i {
+            font-size: 4rem;
+            color: #4fc3f7;
+            filter: drop-shadow(0 0 10px rgba(79, 195, 247, 0.5));
+        }
+        
+        @media (max-width: 768px) {
+            .title {
+                font-size: 1.6rem;
+            }
+            
+            .content-card {
+                padding: 20px;
+            }
+            
+            .content-card h2 {
+                font-size: 1.4rem;
+            }
+            
+            .btn {
+                min-width: 100%;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .timeline-item {
+                flex-direction: column;
+            }
+            
+            .timeline-number {
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+            
+            .title {
+                font-size: 1.4rem;
+            }
+            
+            .content-card {
+                padding: 15px;
+            }
+            
+            .result-list li {
+                padding: 12px;
+            }
+        }
+        
+        /* 防止长按复制 */
+        .no-select {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* 防止图片拖动 */
+        img {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">恭喜你！真相已明，责任已定</h1>
+            <p class="subtitle">你凭借智慧与勇气，成功揭示了李死亡的真相，证明了自己的清白</p>
+            <div class="truth-icon">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+        
+        <div class="content-card">
+            <h2><i class="fas fa-scale-balanced"></i> 案件真相与责任认定</h2>
+            <p style="text-align: center; margin-bottom: 20px; color: #aad3ff;">李老板的死亡由多个复杂因素共同导致</p>
+            
+            <div class="timeline">
+                <h4><i class="fas fa-history"></i> 案件时间线</h4>
+                <div class="timeline-item">
+                    <div class="timeline-number">1</div>
+                    <div class="timeline-content">叶兰下毒，直接导致李的死亡</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-number">2</div>
+                    <div class="timeline-content">周于彰最先转移尸体，并对监控做了手脚</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-number">3</div>
+                    <div class="timeline-content">卫明澈策划整个过程，并在李的蜂蜜柚子茶中增加毒药增强剂，且负责最终抛尸</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-number">4</div>
+                    <div class="timeline-content">何安对监控做了手脚并帮忙处理监控录像，掩盖证据</div>
+                </div>
+            </div>
+            
+            <ul class="result-list">
+                <li>
+                    <div class="criminal-name">卫明澈 <span class="role-tag tag-mastermind">主谋</span></div>
+                    <div class="crime-desc">案件策划者与实施者，且负责最终抛尸。因故意杀人罪（主犯）被判处无期徒刑。</div>
+                </li>
+                <li>
+                    <div class="criminal-name">叶兰 <span class="role-tag tag-poisoner">下毒者</span></div>
+                    <div class="crime-desc">直接下毒导致李的死亡。因故意杀人罪被判处有期徒刑20年。</div>
+                </li>
+                <li>
+                    <div class="criminal-name">周于彰 <span class="role-tag tag-disposer">转移尸体</span></div>
+                    <div class="crime-desc">因帮助毁灭证据罪、妨碍司法公正罪被判处有期徒刑10年。</div>
+                </li>
+                <li>
+                    <div class="criminal-name">何安 <span class="role-tag tag-helper">处理监控</span></div>
+                    <div class="crime-desc">因帮助毁灭证据罪被判处有期徒刑5年。</div>
+                </li>
+                <li>
+                    <div class="criminal-name">严真真 <span class="role-tag tag-escape">证据不足</span></div>
+                    <div class="crime-desc">虽与李有矛盾，但其行为与李的死亡无直接法律因果关系。因证据不足，检察机关决定不起诉。</div>
+                </li>
+                <li>
+                    <div class="criminal-name">文心竹<span class="role-tag tag-escape">证据不足</span></div>
+                    <div class="crime-desc">对其他人的犯罪意图和行为不知情。因证据不足，检察机关决定不起诉。</div>
+                </li>
+            </ul>
+            
+            <div class="conclusion">
+                <p>你成功揭示了兴健大厦电梯谜案背后的完整真相。每个参与者在案件中扮演了不同的角色，</p>
+                <p>从策划、下毒、转移尸体到掩盖证据，形成了一个完整的犯罪链条。</p>
+                <p style="margin-top: 10px; color: #4fc3f7; font-weight: bold;">正义虽未完全伸张，但真相已经大白。你证明了清白，也让主要责任者受到了法律制裁。</p>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn btn-primary" id="viewDetailsBtn">
+                返回重新填表
+            </button>
+            <button class="btn btn-secondary" id="continueBtn">
+                关注作者
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 防止双击放大
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+        
+        // 禁用右键菜单
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // 按钮跳转功能
+        const viewDetailsBtn = document.getElementById('viewDetailsBtn');
+        const continueBtn = document.getElementById('continueBtn');
+        
+        // 返回重新填表按钮跳转到tuiliban.html
+        viewDetailsBtn.addEventListener('click', function() {
+            window.location.href = 'tuiliban.html';
+        });
+        
+        // 关注作者按钮跳转到指定网站
+        continueBtn.addEventListener('click', function() {
+            window.location.href = 'https://sylvie-seven-cq.top/';
+        });
+        
+        // 添加一些交互效果
+        document.querySelectorAll('.result-list li').forEach(item => {
+            item.addEventListener('click', function() {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+        
+        // TapTap小程序H5兼容处理
+        if (typeof window.TapTap !== 'undefined') {
+            // 如果在TapTap环境中
+            document.addEventListener('DOMContentLoaded', function() {
+                // 确保所有点击事件都能正常触发
+                document.body.style.cursor = 'pointer';
+            });
+        }
+        
+        // 移动端兼容性处理
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+        
+        if (isMobileDevice()) {
+            // 为移动端优化点击体验
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.style.minHeight = '44px'; // 苹果建议的最小点击区域
+            });
+            
+            // 防止滚动时的问题
+            document.body.style.webkitOverflowScrolling = 'touch';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>消防系统记录</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 15px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding-bottom: 20px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background: linear-gradient(to right, #d32f2f, #b71c1c);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #ff9800;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h1 i {
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        /* 系统状态卡片 */
+        .status-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #4caf50;
+        }
+        
+        .status-card.warning {
+            border-left-color: #ff9800;
+        }
+        
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .status-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #222;
+        }
+        
+        .status-badge {
+            background-color: #4caf50;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .status-badge.warning {
+            background-color: #ff9800;
+        }
+        
+        .status-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .status-item {
+            flex: 1 1 140px;
+            background-color: #f9f9f9;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border-left: 3px solid #d32f2f;
+        }
+        
+        .status-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 3px;
+        }
+        
+        .status-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #222;
+        }
+        
+        /* 记录列表 */
+        .records-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .record-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .record-item {
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #d32f2f;
+            position: relative;
+        }
+        
+        .record-item.recent {
+            border-left-color: #ff9800;
+            background-color: #fff8e1;
+        }
+        
+        .record-time {
+            font-size: 15px;
+            font-weight: 600;
+            color: #d32f2f;
+            margin-bottom: 5px;
+        }
+        
+        .record-time.recent {
+            color: #ff9800;
+        }
+        
+        .record-desc {
+            font-size: 15px;
+            color: #444;
+            margin-bottom: 8px;
+        }
+        
+        .record-tag {
+            display: inline-block;
+            background-color: #e0e0e0;
+            color: #555;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        /* 功能说明卡片 */
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #2196f3;
+        }
+        
+        .feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .feature-desc {
+            font-size: 15px;
+            color: #444;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+        
+        /* 底部信息 */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #eee;
+            margin-top: 20px;
+        }
+        
+        .last-update {
+            display: inline-block;
+            background-color: #f0f0f0;
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 22px;
+            }
+            
+            .status-details {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .status-item {
+                flex: 1 1 auto;
+            }
+            
+            .status-card, .records-section, .feature-card {
+                padding: 15px;
+            }
+            
+            .record-item {
+                padding: 12px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 20px;
+            }
+            
+            .status-title, .section-title, .feature-title {
+                font-size: 17px;
+            }
+        }
+    </style>
+<link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-fire-extinguisher"></i> 消防系统记录</h1>
+            <p class="subtitle">消防安全监控与事件记录系统</p>
+        </header>
+        
+        <div class="status-card warning">
+            <div class="status-header">
+                <div class="status-title">系统状态监控</div>
+                <div class="status-badge warning">运行正常</div>
+            </div>
+            <p>所有消防设备处于正常工作状态，系统运行正常。</p>
+            
+            <div class="status-details">
+                <div class="status-item">
+                    <div class="status-label">火警探测器</div>
+                    <div class="status-value">正常</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">喷淋系统</div>
+                    <div class="status-value">正常</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">排烟系统</div>
+                    <div class="status-value">正常</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">应急广播</div>
+                    <div class="status-value">正常</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="records-section">
+            <div class="section-title"><i class="fas fa-history"></i> 近期事件记录</div>
+            
+            <div class="record-list">
+                <div class="record-item recent">
+                    <div class="record-time recent">12月31日 19:50</div>
+                    <div class="record-desc">火警系统被触发，3号楼5层烟感探测器报警。</div>
+                    <span class="record-tag">火警报警</span>
+                </div>
+                
+                <div class="record-item">
+                    <div class="record-time">12月31日 14:20</div>
+                    <div class="record-desc">定期系统自检完成，所有设备功能正常。</div>
+                    <span class="record-tag">系统自检</span>
+                </div>
+                
+                <div class="record-item">
+                    <div class="record-time">12月29日 09:15</div>
+                    <div class="record-desc"><strong>应急电源</strong>系统测试完成，所有<strong>监控系统</strong>正常工作。</div>
+                    <span class="record-tag">设备测试</span>
+                </div>
+                
+                <div class="record-item">
+                    <div class="record-time">12月28日 16:40</div>
+                    <div class="record-desc">消防水泵月度检查完成，运行参数正常。</div>
+                    <span class="record-tag">设备检查</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-title"><i class="fas fa-elevator"></i> 系统功能说明</div>
+            <div class="feature-desc">
+                火警系统可强制启动停运电梯，确保在火灾紧急情况下，电梯能够自动返回首层并开门，便于人员疏散和消防救援。
+            </div>
+            <div class="feature-desc">
+                系统同时具备自动喷淋启动、应急广播播报、排烟系统联动等功能，全面保障建筑消防安全。
+            </div>
+        </div>
+        
+        <footer>
+            <p>消防系统监控中心</p>
+            <p class="last-update">最后更新: 12月31日 20:15</p>
+        </footer>
+    </div>
+<!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
+    <script>
+        // 简单的交互功能：点击记录项显示更多信息
+        document.addEventListener('DOMContentLoaded', function() {
+            const recordItems = document.querySelectorAll('.record-item');
+            
+            recordItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // 切换激活状态
+                    const isActive = this.classList.contains('active');
+                    
+                    // 移除所有项目的active类
+                    recordItems.forEach(el => el.classList.remove('active'));
+                    
+                    // 如果当前项目未激活，则添加active类
+                    if (!isActive) {
+                        this.classList.add('active');
+                    }
+                });
+            });
+            
+            // 更新最后更新时间
+            function updateTime() {
+                const now = new Date();
+                const month = now.getMonth() + 1;
+                const date = now.getDate();
+                const hours = now.getHours().toString().padStart(2, '0');
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                
+                document.querySelector('.last-update').textContent = 
+                    `最后更新: ${month}月${date}日 ${hours}:${minutes}`;
+            }
+            
+            // 初始更新时间
+            updateTime();
+            
+            // 每分钟更新时间
+            setInterval(updateTime, 60000);
+        });
+    </script>
+ <script src="pages.js"></script>
+<script src="scball.js"></script>
+<script src="visit.js"></script>
+</body>
+</html>

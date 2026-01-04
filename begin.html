@@ -1,0 +1,404 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电梯谜案·消失的老板</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #0f1419;
+            color: #d8dee9;
+            line-height: 1.6;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 15% 25%, rgba(30, 40, 60, 0.7) 0%, transparent 25%),
+                radial-gradient(circle at 85% 75%, rgba(20, 30, 50, 0.6) 0%, transparent 25%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: rgba(22, 27, 34, 0.9);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            border: 1px solid #2d3746;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #5c7cfa, #364fc7);
+        }
+
+        h1 {
+            color: #74c0fc;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 2.2rem;
+            text-shadow: 0 0 12px rgba(116, 192, 252, 0.4);
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            display: block;
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #5c7cfa, transparent);
+            margin: 12px auto;
+        }
+
+        .story-text {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            text-align: justify;
+            padding: 25px;
+            background-color: rgba(30, 36, 45, 0.5);
+            border-radius: 8px;
+            border-left: 3px solid #5c7cfa;
+            line-height: 1.8;
+        }
+
+        .highlight {
+            color: #91a7ff;
+            font-weight: bold;
+            text-shadow: 0 0 6px rgba(92, 124, 250, 0.3);
+        }
+
+        .character-name {
+            color: #ff8787;
+            font-weight: bold;
+        }
+
+        .choices {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 35px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-width: 200px;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4263eb, #364fc7);
+            color: white;
+            box-shadow: 0 5px 18px rgba(54, 79, 199, 0.5);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 22px rgba(54, 79, 199, 0.7);
+            background: linear-gradient(135deg, #4d6efb, #3b5bdb);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #495057, #343a40);
+            color: #ced4da;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, #555e66, #3d444b);
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #868e96;
+        }
+
+        .pulse {
+            animation: pulse 2.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(92, 124, 250, 0.6);
+            }
+            70% {
+                box-shadow: 0 0 0 12px rgba(92, 124, 250, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(92, 124, 250, 0);
+            }
+        }
+
+        /* 悬疑氛围装饰 */
+        .elevator-icon {
+            display: block;
+            margin: 0 auto 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #495057, #343a40);
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .elevator-icon::before {
+            content: '▼';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #adb5bd;
+            font-size: 24px;
+        }
+
+        /* 自定义弹窗样式 */
+        .custom-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #1a1d23;
+            color: #ff6b6b;
+            padding: 30px;
+            border: 2px solid #ff6b6b;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: bold;
+            min-width: 350px;
+            max-width: 500px;
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.4);
+            line-height: 1.5;
+        }
+
+        .close-modal {
+            margin-top: 20px;
+            padding: 8px 20px;
+            background: #495057;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        /* 响应式设计优化 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 1.9rem;
+            }
+            
+            .story-text {
+                font-size: 1.05rem;
+                padding: 20px;
+            }
+            
+            .btn {
+                min-width: 170px;
+                padding: 12px 24px;
+            }
+            
+            .choices {
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .story-text {
+                padding: 18px;
+                font-size: 1rem;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 280px;
+                padding: 14px;
+            }
+            
+            .choices {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .elevator-icon {
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        /* iOS优化 */
+        @supports (-webkit-touch-callout: none) {
+            .btn {
+                -webkit-appearance: none;
+                border-radius: 8px;
+                padding: 16px 28px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
+</head>
+<body>
+    <div class="container">
+        <!-- <div class="elevator-icon"></div> -->
+        <h1>BOSS消失事件·兴健大厦谜案</h1>
+
+        <div class="story-text">
+           <!--  <p>你是<span class="character-name">陈沐</span>，<span class="highlight">兴健科技集团</span>的一名新员工。</p>
+            <p>12月31日那天晚上，你下班时被迫和老板乘坐同一个<span class="highlight">电梯</span>。电梯平稳下降至第<span class="highlight">4层</span>时，他突然捂住胸口，脸色煞白，在短短几秒内——<span class="highlight">离奇死亡</span>。</p>
+            <p>你尚未从震惊中回过神，电梯骤停，灯光闪烁。等门再次打开时，<span class="highlight">老板的尸体竟凭空消失</span>，电梯内只剩下你一人。</p>
+              <p>作为唯一的目击者，你试图向警方说明真相，可<span class="highlight">所有证据都指向你</span>——监控显示只有你和老板进入电梯，而尸体不翼而飞。</p>
+            <p>人们认定你在说谎，怀疑你为了掩盖罪行而编造离奇故事。</p>
+            <p>现在，你必须在这座高科技大楼里，<span class="highlight">洗清嫌疑，揭开这场迷雾背后的真相</span>。</p>
+         -->
+           <!--  <p>你是<span class="character-name">陈沐</span>，<span class="highlight">兴健科技集团</span>的一名新员工。</p>
+<p>12月31日晚约19:45，你下班时在大厦4号电梯中遇到了<span class="highlight">董事长</span>。电梯在运行过程中突然停运，李董事长脸色苍白的死死捂住胸口，随后<span class="highlight">突然倒地不起</span>。</p>
+<p>你立即尝试施救，却发现手机关机，无法立即呼叫救援。电梯恢复运行后，你急忙离开电梯前往一楼大堂拨打救援电话求救。</p>
+<p>然而，当<span class="highlight">医护人员到达时，电梯内竟空无一人</span>——李董事长就这样神秘消失了。</p>
+<p>作为唯一的目击者，你向警方说明了这一切，可<span class="highlight">目前所有证据都对你极为不利</span>。</p>
+<p>人们怀疑你在说谎，认为你为了掩盖对董事长不利的行为而编造了这个离奇的故事。</p> -->
+<p>你是<span class="character-name">陈沐</span>，<span class="highlight">兴健科技集团</span>的一名新员工。</p>
+<p>12月31日晚约19:45，你刚结束加班，在4号电梯中遇到了<span class="highlight">董事长李总</span>。电梯下行时突然停住，灯光闪烁，李总脸色瞬间苍白，一手死死按住胸口，随后<span class="highlight">身子一晃，倒在了电梯角落</span>。</p>
+<p>你试图呼救，却发现手机没有信号。紧急呼叫按钮也只传来沙沙电流声。电梯很快恢复运行，停在了四楼。你立即冲出电梯，奔向消防楼梯，一路跑到一楼大厅求救。</p>
+<p>然而，当<span class="highlight">急救人员随你赶回四楼时，电梯门打开，里面空无一人</span>——李总就这样神秘消失了。</p>
+<p>当晚监控显示，李总于十点独自快步离开大厦。作为最后与他共处一室的人，<span class="highlight">你的每一句陈述都显得可疑，所有证据都对你极为不利</span>。</p>
+<p>警方对你充满审视，同事议论纷纷。你知道自己没有说谎，也知道这场消失绝不简单。</p>
+<!-- <p>现在，你必须在这座布满摄像头、智能门禁与自动化系统的大楼里，<span class="highlight">寻找被所有人忽略的线索，在彻底成为嫌疑人之前，揭开这场迷雾背后的真相</span>。</p> -->
+<p>现在，你必须在这座充满高科技设备的大楼里，<span class="highlight">寻找被忽略的线索，洗清嫌疑，揭开这场迷雾背后的真相</span>。</p>
+        </div>
+        <div class="story-text">
+        <p>温馨提示：本游戏<span class="character-name">不需要返回键</span>！你需要记住每个页面的<span class="character-name">关键词</span>！推荐做笔记哦~
+            <br>
+        ps：搜索<span class="character-name">开始</span>可返回本页面
+        </p>
+        </div>
+
+       <!--  <div class="choices">
+            <button id="investigate-btn" class="btn btn-primary pulse">【搜寻证据，自证清白】</button>
+            <button id="hide-btn" class="btn btn-secondary">【保持沉默，暗中调查】</button>
+        </div> -->
+    </div>
+
+    <!-- 自定义弹窗 -->
+    <div id="customModal" class="custom-modal">
+        <div class="modal-content">
+            选择沉默？<br>警方已将你列为头号嫌疑人！<br>
+            <button class="close-modal" onclick="closeModal()">继续调查</button>
+        </div>
+
+        
+    </div>
+<!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
+    <script>
+        // 按钮事件处理
+        document.getElementById('investigate-btn').addEventListener('click', function () {
+            // 这里可以替换为实际调查页面的链接
+            window.location.href = 'investigation.html';
+            // 暂时用alert代替
+            // alert('你决定主动出击，在办公楼内寻找被忽略的线索……');
+        });
+
+        document.getElementById('hide-btn').addEventListener('click', function () {
+            const modal = document.getElementById('customModal');
+            modal.style.display = 'block';
+        });
+
+        function closeModal() {
+            document.getElementById('customModal').style.display = 'none';
+        }
+
+        // 点击弹窗外区域关闭弹窗
+        window.onclick = function (event) {
+            const modal = document.getElementById('customModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // 添加键盘支持
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+            if (event.key === '1' || event.key === 'Enter') {
+                document.getElementById('investigate-btn').click();
+            }
+            if (event.key === '2') {
+                document.getElementById('hide-btn').click();
+            }
+        });
+    </script>
+    <script src="scball.js"></script>
+
+</body>
+</html>

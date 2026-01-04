@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>兴盛制造工厂爆炸事故 - 新闻报道</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 重置和基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-text-size-adjust: 100%;
+        }
+        
+        body {
+            font-family: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* 容器 */
+        .container {
+            max-width: 100%;
+            padding: 0 15px;
+            margin: 0 auto;
+        }
+        
+        /* 头部 */
+        header {
+            background-color: #1a365d;
+            color: white;
+            padding: 20px 0;
+            border-bottom: 4px solid #e53e3e;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            color: #e53e3e;
+        }
+        
+        .date {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        /* 主要内容 */
+        main {
+            padding: 25px 0;
+            background-color: white;
+        }
+        
+        .article-header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 28px;
+            line-height: 1.3;
+            margin-bottom: 15px;
+            color: #1a365d;
+        }
+        
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            color: #718096;
+            font-size: 14px;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* 图片 */
+        .article-image {
+            width: 100%;
+            margin: 25px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .article-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .image-caption {
+            font-size: 14px;
+            color: #718096;
+            text-align: center;
+            padding: 10px;
+            background-color: #f7fafc;
+        }
+        
+        /* 文章内容 */
+        .article-content {
+            font-size: 17px;
+            line-height: 1.7;
+        }
+        
+        .article-content p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        
+        .article-content h2 {
+            font-size: 22px;
+            margin: 30px 0 15px;
+            color: #2d3748;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e53e3e;
+        }
+        
+        /* 引用和重点 */
+        .quote {
+            background-color: #f7fafc;
+            border-left: 4px solid #e53e3e;
+            padding: 20px;
+            margin: 25px 0;
+            font-style: italic;
+            color: #4a5568;
+        }
+        
+        .highlight {
+            background-color: #fff5f5;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 25px 0;
+            border-left: 4px solid #e53e3e;
+        }
+        
+        .highlight h3 {
+            color: #c53030;
+            margin-bottom: 10px;
+        }
+        
+        /* 时间线 */
+        .timeline {
+            margin: 30px 0;
+        }
+        
+        .timeline-item {
+            padding: 15px 0 15px 20px;
+            border-left: 2px solid #e53e3e;
+            position: relative;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: -7px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #e53e3e;
+        }
+        
+        .timeline-time {
+            font-weight: bold;
+            color: #e53e3e;
+            margin-bottom: 5px;
+        }
+        
+        /* 页脚 */
+        footer {
+            background-color: #2d3748;
+            color: #cbd5e0;
+            padding: 30px 0;
+            margin-top: 40px;
+            font-size: 14px;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .footer-links a {
+            color: #cbd5e0;
+            text-decoration: none;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 24px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .article-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .article-content {
+                font-size: 16px;
+            }
+            
+            .article-content h2 {
+                font-size: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 22px;
+            }
+            
+            .container {
+                padding: 0 10px;
+            }
+            
+            .logo {
+                font-size: 20px;
+            }
+        }
+        
+        /* 打印样式 */
+        @media print {
+            header, footer {
+                display: none;
+            }
+            
+            body {
+                background-color: white;
+                font-size: 12pt;
+            }
+            
+            .container {
+                max-width: 100%;
+                padding: 0;
+            }
+            
+            .article-image {
+                break-inside: avoid;
+            }
+        }
+    </style>
+
+<link rel="stylesheet" href="sc-style.css">
+<link rel="icon" type="image/png" href="dtma.png">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-newspaper"></i>
+                    <span>安全新闻在线</span>
+                </div>
+                <div class="date">
+                    <i class="far fa-calendar"></i>
+                    2014年9月15日
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container">
+        <article>
+            <div class="article-header">
+                <h1>兴盛制造郊区工厂发生严重爆炸事故，董事长卫某不幸遇难</h1>
+                <div class="article-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-user-edit"></i>
+                        <span>记者：张明</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>深南市蒲淀区报道</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>发布时间：2014年9月15日 下午4:30</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="article-image">
+    <!-- 将占位符替换为实际图片 -->
+    <img src="baoz.jpg" alt="兴盛制造工厂爆炸事故现场" style="width: 100%; height: 300px; object-fit: cover;">
+    <div class="image-caption">
+        图：兴盛制造工厂爆炸事故现场，消防人员正在全力扑救
+    </div>
+</div>
+            
+            <div class="article-content">
+                <p><strong>【本网讯】</strong> 昨日（9月14日）下午3时20分许，位于深南市蒲淀区工业园区的兴盛制造工厂发生特大爆炸事故，造成至少12人死亡，36人受伤。据悉，该厂董事长卫某在事故中不幸遇难。</p>
+                
+                <h2>事故经过</h2>
+                <p>据现场目击者描述，爆炸发生时伴随着巨大的轰鸣声，工厂主厂房瞬间被火焰吞没，浓烟滚滚。爆炸冲击波导致周边建筑物玻璃破碎，数公里外都能感受到震动。</p>
+                
+                <p>消防部门在接到报警后，迅速调派了15辆消防车和80余名消防员赶赴现场。经过近6个小时的扑救，大火于当晚9时许被基本扑灭。救援人员连夜在废墟中搜索幸存者。</p>
+                
+                <div class="quote">
+                    "当时我正在隔壁车间工作，突然听到一声巨响，整个地面都在震动。我立即往外跑，看到主厂房已经被火焰包围，黑烟冲天。" —— 事故幸存者王先生
+                </div>
+                 <div class="quote">
+                    "卫董事长很久不来这个郊区工厂视察一次......没想到这一来就出事了......虽然听说卫家挺有钱的，但是留下一双妻儿也实在是可悲。" —— 事故幸存者董小姐
+                </div>
+                
+                <h2>伤亡情况</h2>
+                <p>根据深南市应急管理局今天上午发布的最新通报，此次事故已确认造成12人死亡，36人受伤，其中8人伤势严重。令人震惊的是，工厂董事长卫某也在遇难者名单中。</p>
+                
+                <p>卫某，56岁，是兴盛制造工厂的创始人和主要股东。据工厂员工透露，事故发生前，卫某正在主厂房内检查新安装的生产设备。</p>
+                
+                <div class="highlight">
+                    <h3><i class="fas fa-exclamation-triangle"></i> 重要信息</h3>
+                    <p>事故发生后，深南市政府立即启动了重大事故应急响应机制，成立了由市长任组长的事故调查组。目前，所有伤者已被送往市内多家医院救治，市政府已安排心理专家对遇难者家属和幸存员工进行心理疏导。</p>
+                </div>
+                
+                <h2>事故原因初步调查</h2>
+                <p>据事故调查组初步分析，爆炸可能是由于化学原料存储不当引发的。兴盛制造工厂主要生产工业涂料和粘合剂，使用大量易燃易爆化学品。</p>
+                
+                <p>有内部员工反映，工厂最近为了扩大产能，违规在通风不良的仓库内存放了过量化学原料。安全监管部门曾在今年6月对该厂发出过整改通知，但工厂未完全落实整改措施。</p>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-time">9月14日 下午3:20</div>
+                        <div>兴盛制造工厂发生首次爆炸</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">下午3:25</div>
+                        <div>消防部门接到报警，首批救援力量出动</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">下午3:45</div>
+                        <div>发生二次爆炸，火势迅速蔓延</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">晚上9:10</div>
+                        <div>明火被基本扑灭，救援人员进入现场搜救</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">9月15日 上午10:00</div>
+                        <div>市政府召开新闻发布会，通报事故情况</div>
+                    </div>
+                </div>
+                
+                <h2>后续处理</h2>
+                <p>深南市市长在今天的新闻发布会上表示，市政府将全力做好伤员救治和善后工作，并对全市化工企业开展安全生产大检查，坚决防止类似事故再次发生。</p>
+                
+                <p>目前，兴盛制造工厂已被责令停产整顿，工厂其他高管正在配合调查。事故具体原因仍在进一步调查中，相关责任认定后将依法严肃处理。</p>
+                
+                <p>本网将持续关注事故调查进展和善后处理情况。</p>
+            </div>
+        </article>
+    </main>
+    <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="#"><i class="fas fa-shield-alt"></i> 安全生产举报</a>
+                    <a href="#"><i class="fas fa-phone-alt"></i> 紧急联系电话</a>
+                    <a href="#"><i class="fas fa-history"></i> 过往事故回顾</a>
+                    <a href="#"><i class="fas fa-file-contract"></i> 隐私政策</a>
+                </div>
+                <div>
+                    <p>© 2014 安全新闻在线 版权所有</p>
+                    <p>本报道旨在提醒公众重视安全生产，防止类似悲剧再次发生</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // 简单的脚本增强用户体验
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为所有外部链接添加提示
+            const externalLinks = document.querySelectorAll('a[href^="http"]');
+            externalLinks.forEach(link => {
+                link.setAttribute('target', '_blank');
+                link.setAttribute('rel', 'noopener noreferrer');
+            });
+            
+            // 打印按钮功能（模拟）
+            const printButton = document.createElement('button');
+            printButton.innerHTML = '<i class="fas fa-print"></i> 打印本文';
+            printButton.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background-color: #1a365d;
+                color: white;
+                border: none;
+                border-radius: 50px;
+                padding: 12px 20px;
+                font-size: 16px;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                z-index: 99;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            `;
+            
+            printButton.addEventListener('click', function() {
+                window.print();
+            });
+            
+            document.body.appendChild(printButton);
+            
+            // 响应式调整
+            function adjustLayout() {
+                if (window.innerWidth < 768) {
+                    // 移动端特定调整
+                }
+            }
+            
+            window.addEventListener('resize', adjustLayout);
+            adjustLayout();
+        });
+    </script>
+<script src="scball.js"></script>
+<script src="pages.js"></script>
+<script src="visit.js"></script>
+</body>
+</html>

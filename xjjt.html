@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>兴健科技集团 - 集团简介</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            margin-right: 15px;
+            color: #4fc3f7;
+        }
+        
+        .logo-text {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .logo-text span {
+            color: #4fc3f7;
+        }
+        
+        .tagline {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin-top: 10px;
+        }
+        
+        /* 导航 */
+        nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+        
+        /* 主内容区 */
+        .content-section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section-title {
+            color: #1a2980;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eef2ff;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            color: #26d0ce;
+        }
+        
+        /* 历史部分 */
+        .history-timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-top: 25px;
+        }
+        
+        .history-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, #1a2980, #26d0ce);
+            border-radius: 2px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 25px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -33px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #26d0ce;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #1a2980;
+        }
+        
+        .timeline-year {
+            font-weight: 700;
+            color: #1a2980;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .timeline-content {
+            background-color: #f8fafd;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #4fc3f7;
+        }
+        
+        /* 合作亮点 */
+        .cooperation-highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        .highlight-card {
+            background: linear-gradient(135deg, #f8fafd, #eef2ff);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e0e7ff;
+        }
+        
+        .highlight-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .highlight-icon {
+            font-size: 2.5rem;
+            color: #1a2980;
+            margin-bottom: 15px;
+        }
+        
+        .highlight-title {
+            font-size: 1.3rem;
+            color: #1a2980;
+            margin-bottom: 10px;
+        }
+        
+        /* 董事长介绍 */
+        .chairman-profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .chairman-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 4rem;
+            color: white;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chairman-name {
+            font-size: 1.8rem;
+            color: #1a2980;
+            margin-bottom: 5px;
+        }
+        
+        .chairman-title {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+        
+        .chairman-quote {
+            font-style: italic;
+            color: #555;
+            max-width: 700px;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8fafd;
+            border-radius: 10px;
+            border-left: 4px solid #26d0ce;
+        }
+        
+        /* 业务领域 */
+        .business-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        .business-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border-top: 5px solid #1a2980;
+        }
+        
+        .business-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .business-icon {
+            font-size: 2.5rem;
+            color: #1a2980;
+            margin-bottom: 15px;
+        }
+        
+        /* 页脚 */
+        footer {
+            background: linear-gradient(135deg, #1a2980, #0d1b5c);
+            color: white;
+            padding: 40px 20px;
+            margin-top: 40px;
+            border-radius: 20px 20px 0 0;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #4fc3f7;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #4fc3f7;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        /* 浮动搜索球样式 */
+        /* .floating-search-ball-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+        
+        .floating-search-ball {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .floating-search-ball:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .floating-search-expanded {
+            display: none;
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            width: 320px;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .floating-search-input {
+            padding: 12px 15px;
+            border: 2px solid #e0e7ff;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        
+        .floating-search-input:focus {
+            border-color: #1a2980;
+        } */
+        
+        /* .floating-search-close, .floating-search-submit {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .floating-search-close {
+            background-color: #f5f7fa;
+            color: #666;
+        }
+        
+        .floating-search-submit {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: white;
+        }
+        
+        .floating-search-close:hover {
+            background-color: #e0e7ff;
+        }
+        
+        .floating-search-submit:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        } */
+        
+        /* 新增样式：安盾科技标红 */
+        .andun-tech {
+            color: #e53935;
+            font-weight: bold;
+            background-color: rgba(229, 57, 53, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header-content {
+                padding: 0 10px;
+            }
+            
+            .logo-text {
+                font-size: 1.8rem;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .cooperation-highlights, .business-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            /* .floating-search-ball-container {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .floating-search-ball {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .floating-search-expanded {
+                width: 280px;
+                bottom: 70px;
+                right: -10px;
+            } */
+        }
+        
+        @media (max-width: 480px) {
+            .logo-text {
+                font-size: 1.5rem;
+            }
+            
+            .tagline {
+                font-size: 0.95rem;
+            }
+            
+            .nav-link {
+                padding: 6px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .chairman-avatar {
+                width: 120px;
+                height: 120px;
+                font-size: 3rem;
+            }
+            
+            /* .floating-search-expanded {
+                width: 260px;
+                right: -20px;
+            } */
+        }
+    </style>
+    <link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
+</head>
+<body>
+    <!-- 头部区域 -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-microchip"></i>
+                </div>
+                <h1 class="logo-text">兴健<span>科技</span>集团</h1>
+            </div>
+            <p class="tagline">创新驱动未来，科技引领发展 - 从"兴盛制造"到科技集团的华丽蜕变</p>
+            
+            <nav>
+                <a href="#" class="nav-link active">集团简介</a>
+                <a href="#" class="nav-link">业务领域</a>
+                <a href="#" class="nav-link">创新成果</a>
+                <a href="#" class="nav-link">新闻动态</a>
+                <a href="#" class="nav-link">加入我们</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <div class="container">
+        <!-- 集团简介 -->
+        <section class="content-section">
+            <h2 class="section-title"><i class="fas fa-landmark"></i> 集团简介</h2>
+            <p>兴健科技集团是一家以创新科技为核心驱动力的综合性高科技企业集团。集团前身为创立于2005年的"兴盛制造"，最初专注于精密制造和工业设备生产。经过近二十年的发展壮大，集团已成功转型为涵盖智能制造、人工智能、新能源技术和信息安全等多领域的科技巨头。</p>
+            <p>目前，集团在全球拥有超过5000名员工，研发人员占比达35%，在15个国家和地区设有分支机构，年产值突破200亿元。我们始终坚持以科技创新为引擎，以市场需求为导向，致力于为客户提供全方位的科技解决方案。</p>
+            
+            <div class="history-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">2005年</div>
+                    <div class="timeline-content">
+                        <p>集团前身<span class="andun-tech">"兴盛制造"</span>成立，专注于精密零部件制造和工业设备生产。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2015年</div>
+                    <div class="timeline-content">
+                        <p>启动战略转型，成立兴健科技集团，开始向高科技领域进军。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2020年</div>
+                    <div class="timeline-content">
+                        <p>集团在深交所成功上市，市值突破100亿元，标志着企业进入全新发展阶段。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2023年</div>
+                    <div class="timeline-content">
+                        <p>与<span class="andun-tech">安盾科技公司</span>达成战略合作，共同开拓智能安防与信息安全市场。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 战略合作 -->
+        <section class="content-section">
+            <h2 class="section-title"><i class="fas fa-handshake"></i> 战略合作</h2>
+            <p>2023年，兴健科技集团与业界领先的<span class="andun-tech">安盾科技公司</span>达成深度战略合作，这一合作由集团董事长李健兴先生亲自促成。此次合作标志着双方在智能安防、网络安全和物联网技术领域的强强联合，将为全球客户提供更加全面、安全的科技解决方案。</p>
+            
+            <div class="cooperation-highlights">
+                <div class="highlight-card">
+                    <div class="highlight-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="highlight-title">智能安防系统</h3>
+                    <p>结合双方技术优势，开发新一代智能安防系统，提供从硬件到软件的全方位安全保护。</p>
+                </div>
+                
+                <div class="highlight-card">
+                    <div class="highlight-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3 class="highlight-title">网络安全解决方案</h3>
+                    <p>共同研发企业级网络安全解决方案，为各类企业提供定制化的信息安全防护。</p>
+                </div>
+                
+                <div class="highlight-card">
+                    <div class="highlight-icon">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h3 class="highlight-title">物联网安全平台</h3>
+                    <p>打造安全可靠的物联网平台，确保智能设备在连接环境中的安全稳定运行。</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 董事长介绍 -->
+        <section class="content-section">
+            <h2 class="section-title"><i class="fas fa-user-tie"></i> 领导团队</h2>
+            <div class="chairman-profile">
+                <div class="chairman-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h3 class="chairman-name">李健兴 先生</h3>
+                <p class="chairman-title">集团创始人、董事长兼首席执行官</p>
+                <p>李健兴先生是兴健科技集团的创始人和掌舵人。他于2005年创立"兴盛制造"，凭借卓越的战略眼光和领导能力，带领企业从一家小型制造工厂发展成为今天的高科技集团。李健兴先生注重技术创新和人才培养，始终坚持"科技改变生活，创新引领未来"的理念。</p>
+                <p>在李健兴先生的领导下，集团在2023年成功促成了与<span class="andun-tech">安盾科技公司</span>的战略合作，进一步巩固了集团在科技领域的领先地位。</p>
+                <p class="chairman-quote">"与<span class="andun-tech">安盾科技</span>的合作是我们集团发展历程中的重要里程碑。我们相信，通过双方的资源整合和技术互补，将为全球客户创造更大价值，共同推动智能安全技术的发展。"</p>
+            </div>
+        </section>
+        
+        <!-- 业务领域 -->
+        <section class="content-section">
+            <h2 class="section-title"><i class="fas fa-briefcase"></i> 核心业务</h2>
+            <div class="business-grid">
+                <div class="business-card">
+                    <div class="business-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>智能制造</h3>
+                    <p>工业机器人、自动化生产线、智能工厂解决方案</p>
+                </div>
+                
+                <div class="business-card">
+                    <div class="business-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>人工智能</h3>
+                    <p>机器学习算法、计算机视觉、自然语言处理应用</p>
+                </div>
+                
+                <div class="business-card">
+                    <div class="business-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>新能源技术</h3>
+                    <p>太阳能发电、储能系统、电动汽车充电技术</p>
+                </div>
+                
+                <div class="business-card">
+                    <div class="business-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>信息安全</h3>
+                    <p>网络安全防护、数据加密、安全咨询与审计</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>兴健科技集团</h3>
+                <p>创新驱动未来，科技引领发展。我们致力于成为全球领先的科技解决方案提供商。</p>
+                <p><i class="fas fa-map-marker-alt"></i> 中国 · 深南市楠山区科技园</p>
+                <p><i class="fas fa-phone"></i> 400-123-4567</p>
+                <p><i class="fas fa-envelope"></i> contact@xingjian-tech.com</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>快速链接</h3>
+                <ul class="footer-links">
+                    <li><a href="#">关于我们</a></li>
+                    <li><a href="#">业务领域</a></li>
+                    <li><a href="#">创新研发</a></li>
+                    <li><a href="#">投资者关系</a></li>
+                    <li><a href="#">可持续发展</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>关注我们</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fab fa-weixin"></i> 微信公众号</a></li>
+                    <li><a href="#"><i class="fab fa-weibo"></i> 新浪微博</a></li>
+                    <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                    <li><a href="#"><i class="fab fa-github"></i> GitHub开源项目</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>© 2025 兴健科技集团 版权所有 | 联系电话：400-XXX-XXXX</p>
+           <!--  <p>前身"兴盛制造" | 与<span class="andun-tech">安盾科技</span>达成战略合作</p> -->
+        </div>
+    </footer>
+
+   
+    <!-- 引用外部JS -->
+ <script src="pages.js"></script>
+<script src="scball.js"></script>
+<script src="visit.js"></script>
+
+</body>
+
+</html>

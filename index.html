@@ -1,649 +1,403 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AQI Game - 网页解谜与工具平台</title>
+    <title>电梯谜案·消失的老板</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        :root {
-            /* 亮色主题变量 */
-            --bg-primary: linear-gradient(135deg, #e3f2fd, #bbdefb, #90caf9, #64b5f6);
-            --bg-secondary: rgba(255, 255, 255, 0.85);
-            --bg-card: rgba(255, 255, 255, 0.85);
-            --text-primary: #1a237e;
-            --text-secondary: #1565c0;
-            --text-title: #0d47a1;
-            --accent-color: #1976d2;
-            --border-color: rgba(13, 71, 161, 0.2);
-            --shadow-color: rgba(13, 71, 161, 0.1);
-            --hover-shadow-color: rgba(13, 71, 161, 0.2);
-            --button-bg: #1976d2;
-            --button-hover-bg: #0d47a1;
-            --mode-toggle-bg: #0d47a1;
-            --mode-toggle-icon: "🌙";
-        }
-
-        body.dark-mode {
-            /* 暗色主题变量 */
-            --bg-primary: linear-gradient(135deg, #0a1929, #0d1b2a, #1b263b, #415a77);
-            --bg-secondary: rgba(13, 27, 42, 0.85);
-            --bg-card: rgba(20, 30, 48, 0.85);
-            --text-primary: #e3f2fd;
-            --text-secondary: #90caf9;
-            --text-title: #bbdefb;
-            --accent-color: #64b5f6;
-            --border-color: rgba(100, 181, 246, 0.2);
-            --shadow-color: rgba(13, 27, 42, 0.3);
-            --hover-shadow-color: rgba(100, 181, 246, 0.2);
-            --button-bg: #1565c0;
-            --button-hover-bg: #1976d2;
-            --mode-toggle-bg: #bbdefb;
-            --mode-toggle-icon: "☀️";
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
+            background-color: #0f1419;
+            color: #d8dee9;
+            line-height: 1.6;
             padding: 20px;
-            transition: all 0.5s ease;
+            background-image: 
+                radial-gradient(circle at 15% 25%, rgba(30, 40, 60, 0.7) 0%, transparent 25%),
+                radial-gradient(circle at 85% 75%, rgba(20, 30, 50, 0.6) 0%, transparent 25%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* 模式切换按钮 */
-        .mode-toggle-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 100;
-        }
-
-        .mode-toggle {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--mode-toggle-bg);
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 1.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .mode-toggle:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .mode-toggle::after {
-            content: var(--mode-toggle-icon);
-        }
-
-        header {
-            text-align: center;
-            padding: 40px 0;
-            margin-bottom: 40px;
-        }
-
-        h1 {
-            font-size: 3.5rem;
-            margin-bottom: 15px;
-            color: var(--text-title);
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-        }
-
-        .subtitle {
-            font-size: 1.5rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .nav-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-
-        .nav-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
+            max-width: 800px;
+            width: 100%;
+            background-color: rgba(22, 27, 34, 0.9);
+            border-radius: 12px;
             padding: 30px;
-            text-align: center;
-            transition: all 0.3s ease;
-            border: 1px solid var(--border-color);
-            cursor: pointer;
-            box-shadow: 0 4px 15px var(--shadow-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            border: 1px solid #2d3746;
             position: relative;
             overflow: hidden;
         }
 
-        /* 游戏背景图片功能 */
-        .nav-card.with-bg {
-            position: relative;
-            isolation: isolate;
-        }
-
-        .nav-card.with-bg::before {
+        .container::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            filter: blur(8px) brightness(0.7);
-            z-index: -1;
-            opacity: 0.7;
-            transition: opacity 0.5s ease;
+            height: 3px;
+            background: linear-gradient(90deg, #5c7cfa, #364fc7);
         }
 
-        .nav-card.with-bg:hover::before {
-            opacity: 0.85;
-            filter: blur(5px) brightness(0.8);
-        }
-
-        .nav-card.with-bg .nav-icon,
-        .nav-card.with-bg .nav-title,
-        .nav-card.with-bg .nav-description,
-        .nav-card.with-bg .nav-link {
+        h1 {
+            color: #74c0fc;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 2.2rem;
+            text-shadow: 0 0 12px rgba(116, 192, 252, 0.4);
             position: relative;
-            z-index: 2;
         }
 
-        .nav-card.with-bg .nav-title,
-        .nav-card.with-bg .nav-description {
-            color: white;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
-        }
-
-        .nav-card.with-bg .nav-icon {
-            color: white;
-        }
-
-        .nav-card:hover {
-            transform: translateY(-10px);
-            background: var(--bg-secondary);
-            box-shadow: 0 15px 30px var(--hover-shadow-color);
-        }
-
-        .nav-card.with-bg:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .nav-icon {
-            font-size: 3rem;
-            margin-bottom: 20px;
+        h1::after {
+            content: '';
             display: block;
-            color: var(--accent-color);
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #5c7cfa, transparent);
+            margin: 12px auto;
         }
 
-        .nav-title {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
+        .story-text {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            text-align: justify;
+            padding: 25px;
+            background-color: rgba(30, 36, 45, 0.5);
+            border-radius: 8px;
+            border-left: 3px solid #5c7cfa;
+            line-height: 1.8;
+        }
+
+        .highlight {
+            color: #91a7ff;
             font-weight: bold;
-            color: var(--text-title);
+            text-shadow: 0 0 6px rgba(92, 124, 250, 0.3);
         }
 
-        .nav-description {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-
-        .nav-link {
-            display: inline-block;
-            background: var(--button-bg);
-            color: white;
-            padding: 12px 30px;
-            border-radius: 25px;
-            text-decoration: none;
+        .character-name {
+            color: #ff8787;
             font-weight: bold;
-            transition: all 0.3s ease;
-            border: 1px solid var(--accent-color);
-            margin: 5px;
         }
 
-            .nav-link:hover {
-                background: var(--button-hover-bg);
-                transform: scale(1.05);
-            }
-
-        .features {
-            background: var(--bg-secondary);
-            border-radius: 15px;
-            padding: 30px;
-            margin: 40px 0;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 15px var(--shadow-color);
-        }
-
-            .features h2 {
-                text-align: center;
-                font-size: 2.2rem;
-                margin-bottom: 30px;
-                color: var(--text-title);
-            }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .feature-item {
-            text-align: center;
-            padding: 20px;
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            display: block;
-            color: var(--accent-color);
-        }
-
-        .feature-title {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: var(--text-title);
-        }
-
-        .feature-desc {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-        }
-
-        footer {
-            text-align: center;
-            padding: 30px 0;
-            margin-top: 40px;
-            border-top: 1px solid var(--border-color);
-            color: var(--text-secondary);
-        }
-
-        .welcome-section {
-            background: var(--bg-secondary);
-            border-radius: 15px;
-            padding: 30px;
-            margin: 30px 0;
-            text-align: center;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 15px var(--shadow-color);
-        }
-
-            .welcome-section h2 {
-                font-size: 2rem;
-                margin-bottom: 20px;
-                color: var(--text-title);
-            }
-
-            .welcome-section p {
-                font-size: 1.1rem;
-                line-height: 1.7;
-                max-width: 800px;
-                margin: 0 auto;
-                color: var(--text-secondary);
-            }
-
-        /* 新增页脚样式 */
-        .footer-container {
-            background: var(--bg-secondary);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 40px 30px;
-            margin-top: 40px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 15px var(--shadow-color);
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-
-        .footer-section {
-            padding: 15px;
-        }
-
-        .footer-title {
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            color: var(--text-title);
-            font-weight: bold;
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 10px;
-            display: inline-block;
-        }
-
-        .contact-info {
-            list-style: none;
-        }
-
-            .contact-info li {
-                margin-bottom: 12px;
-                display: flex;
-                align-items: center;
-            }
-
-        .contact-icon {
-            font-size: 1.2rem;
-            margin-right: 10px;
-            color: var(--accent-color);
-            width: 25px;
-            text-align: center;
-        }
-
-        .contact-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-            .contact-link:hover {
-                color: var(--text-title);
-                text-decoration: underline;
-            }
-
-        .qrcode-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .qrcode-row {
+        .choices {
             display: flex;
             justify-content: center;
-            gap: 30px;
+            gap: 20px;
+            margin-top: 35px;
             flex-wrap: wrap;
         }
 
-        .qrcode-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .qrcode {
-            width: 150px;
-            height: 150px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 10px var(--shadow-color);
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-        }
-
-            .qrcode img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-
-        .qrcode-label {
-            font-size: 0.9rem;
-            color: var(--text-title);
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.05rem;
             font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
             text-align: center;
+            min-width: 200px;
+            letter-spacing: 1px;
         }
 
-        .qrcode-text {
+        .btn-primary {
+            background: linear-gradient(135deg, #4263eb, #364fc7);
+            color: white;
+            box-shadow: 0 5px 18px rgba(54, 79, 199, 0.5);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 22px rgba(54, 79, 199, 0.7);
+            background: linear-gradient(135deg, #4d6efb, #3b5bdb);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #495057, #343a40);
+            color: #ced4da;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, #555e66, #3d444b);
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
             font-size: 0.9rem;
-            color: var(--text-secondary);
-            text-align: center;
-            margin-top: 10px;
+            color: #868e96;
         }
 
-        .footer-bottom {
+        .pulse {
+            animation: pulse 2.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(92, 124, 250, 0.6);
+            }
+            70% {
+                box-shadow: 0 0 0 12px rgba(92, 124, 250, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(92, 124, 250, 0);
+            }
+        }
+
+        /* 悬疑氛围装饰 */
+        .elevator-icon {
+            display: block;
+            margin: 0 auto 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #495057, #343a40);
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .elevator-icon::before {
+            content: '▼';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #adb5bd;
+            font-size: 24px;
+        }
+
+        /* 自定义弹窗样式 */
+        .custom-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #1a1d23;
+            color: #ff6b6b;
+            padding: 30px;
+            border: 2px solid #ff6b6b;
+            border-radius: 10px;
             text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
-            color: var(--text-secondary);
+            font-size: 1.6rem;
+            font-weight: bold;
+            min-width: 350px;
+            max-width: 500px;
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.4);
+            line-height: 1.5;
+        }
+
+        .close-modal {
+            margin-top: 20px;
+            padding: 8px 20px;
+            background: #495057;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
             font-size: 0.9rem;
         }
 
+        /* 响应式设计优化 */
         @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+            
             h1 {
-                font-size: 2.5rem;
+                font-size: 1.9rem;
             }
-
-            .subtitle {
-                font-size: 1.2rem;
-            }
-
-            .nav-card {
+            
+            .story-text {
+                font-size: 1.05rem;
                 padding: 20px;
             }
-
-            .nav-title {
-                font-size: 1.5rem;
+            
+            .btn {
+                min-width: 170px;
+                padding: 12px 24px;
             }
-
-            .footer-content {
-                grid-template-columns: 1fr;
+            
+            .choices {
+                gap: 15px;
             }
+        }
 
-            .qrcode-row {
-                gap: 20px;
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
             }
-
-            .qrcode {
-                width: 130px;
-                height: 130px;
+            
+            .container {
+                padding: 20px;
             }
-
-            .mode-toggle {
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .story-text {
+                padding: 18px;
+                font-size: 1rem;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 280px;
+                padding: 14px;
+            }
+            
+            .choices {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .elevator-icon {
                 width: 50px;
                 height: 50px;
-                font-size: 1.5rem;
+            }
+        }
+
+        /* iOS优化 */
+        @supports (-webkit-touch-callout: none) {
+            .btn {
+                -webkit-appearance: none;
+                border-radius: 8px;
+                padding: 16px 28px;
             }
         }
     </style>
+    <link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
 </head>
 <body>
-    <!-- 暗夜模式切换按钮 -->
-    <div class="mode-toggle-container">
-        <button class="mode-toggle" id="modeToggle" aria-label="切换暗夜模式"></button>
-    </div>
-
     <div class="container">
-        <header>
-            <h1>🎮 AQI Game</h1>
-            <p class="subtitle">网页游戏与实用工具平台 - 探索与创造的数字世界</p>
-        </header>
+        <!-- <div class="elevator-icon"></div> -->
+        <h1>BOSS消失事件·兴健大厦谜案</h1>
 
-        <div class="welcome-section">
-            <h2>欢迎来到AQI Game平台</h2>
-            <p>这里是一个集网页游戏与实用工具于一体的数字空间。无论你是喜欢挑战智力的网页解谜游戏，还是喜欢摸鱼事件放松的休闲小游戏，或是需要便捷的网页工具，这里都能满足你的需求。探索隐藏的秘密，享受解谜的乐趣，或使用作者精心设计的实用工具提升效率。</p>
-            <p>
-                作者阿柒的个人介绍：
-            </p>
-            <p>
-                一个为了摸鱼什么事情都能做的出来的people！（除了高数）
-                <!--梦想是做一名牛掰的独立游戏制作银（参与牛掰游戏开发也行。。我不挑orz）敬请期待！（删去）-->
-                梦想是能做出一款火爆的游戏0v0！
-            </p>
+        <div class="story-text">
+           <!--  <p>你是<span class="character-name">陈沐</span>，<span class="highlight">兴健科技集团</span>的一名新员工。</p>
+            <p>12月31日那天晚上，你下班时被迫和老板乘坐同一个<span class="highlight">电梯</span>。电梯平稳下降至第<span class="highlight">4层</span>时，他突然捂住胸口，脸色煞白，在短短几秒内——<span class="highlight">离奇死亡</span>。</p>
+            <p>你尚未从震惊中回过神，电梯骤停，灯光闪烁。等门再次打开时，<span class="highlight">老板的尸体竟凭空消失</span>，电梯内只剩下你一人。</p>
+              <p>作为唯一的目击者，你试图向警方说明真相，可<span class="highlight">所有证据都指向你</span>——监控显示只有你和老板进入电梯，而尸体不翼而飞。</p>
+            <p>人们认定你在说谎，怀疑你为了掩盖罪行而编造离奇故事。</p>
+            <p>现在，你必须在这座高科技大楼里，<span class="highlight">洗清嫌疑，揭开这场迷雾背后的真相</span>。</p>
+         -->
+           <!--  <p>你是<span class="character-name">陈沐</span>，<span class="highlight">兴健科技集团</span>的一名新员工。</p>
+<p>12月31日晚约19:45，你下班时在大厦4号电梯中遇到了<span class="highlight">董事长</span>。电梯在运行过程中突然停运，李董事长脸色苍白的死死捂住胸口，随后<span class="highlight">突然倒地不起</span>。</p>
+<p>你立即尝试施救，却发现手机关机，无法立即呼叫救援。电梯恢复运行后，你急忙离开电梯前往一楼大堂拨打救援电话求救。</p>
+<p>然而，当<span class="highlight">医护人员到达时，电梯内竟空无一人</span>——李董事长就这样神秘消失了。</p>
+<p>作为唯一的目击者，你向警方说明了这一切，可<span class="highlight">目前所有证据都对你极为不利</span>。</p>
+<p>人们怀疑你在说谎，认为你为了掩盖对董事长不利的行为而编造了这个离奇的故事。</p> -->
+<p>你是<span class="character-name">陈沐</span>，<span class="highlight">兴健科技集团</span>的一名新员工。</p>
+<p>12月31日晚约19:45，你刚结束加班，在4号电梯中遇到了<span class="highlight">董事长李总</span>。电梯下行时突然停住，灯光闪烁，李总脸色瞬间苍白，一手死死按住胸口，随后<span class="highlight">身子一晃，倒在了电梯角落</span>。</p>
+<p>你试图呼救，却发现手机没有信号。紧急呼叫按钮也只传来沙沙电流声。电梯很快恢复运行，停在了四楼。你立即冲出电梯，奔向消防楼梯，一路跑到一楼大厅求救。</p>
+<p>然而，当<span class="highlight">急救人员随你赶回四楼时，电梯门打开，里面空无一人</span>——李总就这样神秘消失了。</p>
+<p>当晚监控显示，李总于十点独自快步离开大厦。作为最后与他共处一室的人，<span class="highlight">你的每一句陈述都显得可疑，所有证据都对你极为不利</span>。</p>
+<p>警方对你充满审视，同事议论纷纷。你知道自己没有说谎，也知道这场消失绝不简单。</p>
+<!-- <p>现在，你必须在这座布满摄像头、智能门禁与自动化系统的大楼里，<span class="highlight">寻找被所有人忽略的线索，在彻底成为嫌疑人之前，揭开这场迷雾背后的真相</span>。</p> -->
+<p>现在，你必须在这座充满高科技设备的大楼里，<span class="highlight">寻找被忽略的线索，洗清嫌疑，揭开这场迷雾背后的真相</span>。</p>
+        </div>
+        <div class="story-text">
+        <p>温馨提示：本游戏<span class="character-name">不需要返回键</span>！你需要记住每个页面的<span class="character-name">关键词</span>！推荐做笔记哦~
+         <br>
+        ps：搜索<span class="character-name">开始</span>可返回本页面</p>
         </div>
 
-        <div class="nav-container">
-            <div class="nav-card with-bg" style="--card-bg-image: url('./gallery/bjb.jpg')">
-                <span class="nav-icon">🗝️</span>
-                <h3 class="nav-title">网页解谜游戏-神秘的失物招领事件！</h3>
-                <p class="nav-description">进入阿七创造的静乔宇宙，登录静乔公寓论坛，挑战你的耐心和观察力！</p>
-                <a href="https://sylvie-seven-cq.top/Syzygy/begin.html" class="nav-link">开始解谜</a>
-            </div>
-
-            <div class="nav-card with-bg" style="--card-bg-image: url('./gallery/gy2.png')">
-                <span class="nav-icon">🗝️</span>
-                <h3 class="nav-title">网页解谜游戏-静乔公寓番外篇~</h3>
-                <p class="nav-description">进入阿七创造的静乔宇宙，登录静乔公寓论坛，挑战你的耐心和观察力！</p>
-                <a href="./jqgy30day/search.html" class="nav-link">开始解谜</a>
-            </div>
-        </div>
-
-         <div class="nav-container">
-            <!-- 这个卡片有背景图片 -->
-            <div class="nav-card with-bg" style="--card-bg-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80')">
-                <span class="nav-icon">🗝️</span>
-                <h3 class="nav-title">网页解谜游戏-BOSS消失事件！</h3>
-                <p class="nav-description">和boss坐同一个电梯他突然倒地！求援后boss却消失了？！你被列为重大嫌疑人！快来洗清嫌疑</p>
-                <a href="https://sylvie-seven-cq.top/BOSSvanish/begin.html" class="nav-link">开始解谜</a>
-            </div>
-
-            <!-- 这个卡片没有背景图片，保持原样 -->
-            <!-- <div class="nav-card">
-                <span class="nav-icon">🗝️</span>
-                <h3 class="nav-title">网页解谜游戏-静乔公寓番外篇~</h3>
-                <p class="nav-description">进入阿七创造的静乔宇宙，登录静乔公寓论坛，挑战你的耐心和观察力！</p>
-                <a href="./jqgy30day/search.html" class="nav-link">开始解谜</a>
-            </div> -->
-        </div>
-
-        <div class="nav-container">
-            <div class="nav-card with-bg" style="--card-bg-image: url('./xjthj/bgs0.jpg')">
-                <span class="nav-icon">🗝️</span>
-                <h3 class="nav-title">网页解谜游戏-墟境调和局！</h3>
-                <p class="nav-description">游玩作者新创作的网页解谜游戏~感受墟境调和局的魅力~！</p>
-                <a href="https://sylvie-seven-cq.top/xjthj/begin.html" class="nav-link">开始解谜</a>
-            </div>
-
-            <div class="nav-card">
-                <span class="nav-icon">📖</span>
-                <h3 class="nav-title">小说阅读器</h3>
-                <p class="nav-description">方便快捷隐蔽的txt小说阅读工具，支持上传背景、单行阅读、双击消失的个性化设置！</p>
-                <a href="https://sylvie-seven-cq.top/reader/1.0" class="nav-link">开始阅读</a>
-                 <a href="https://sylvie-seven-cq.top/reader/2.0" class="nav-link">使用2.0版本</a>
-            </div>
-        </div>
-
-        <div class="features">
-            <h2>🌟 平台特色</h2>
-            <div class="features-grid">
-                <div class="feature-item">
-                    <span class="feature-icon">🎮</span>
-                    <h4 class="feature-title">互动解谜</h4>
-                    <p class="feature-desc">精心设计的解谜关卡，每一步都充满惊喜与挑战</p>
-                </div>
-
-                <div class="feature-item">
-                    <span class="feature-icon">⚡</span>
-                    <h4 class="feature-title">即时工具</h4>
-                    <p class="feature-desc">无需下载，即开即用的网页工具，摸鱼的绝佳选择！0v0</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- 新增页脚部分 -->
-        <div class="footer-container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3 class="footer-title">关注作者</h3>
-                    <div class="qrcode-container">
-                        <div class="qrcode-row">
-                            <div class="qrcode-item">
-                                <div class="qrcode">
-                                    <img src="./gallery/vx.jpg" alt="微信公众号二维码">
-                                </div>
-                                <div class="qrcode-label">微信公众号</div>
-                            </div>
-                            <div class="qrcode-item">
-                                <div class="qrcode">
-                                    <img src="./gallery/xhs.jpg" alt="小红薯二维码">
-                                </div>
-                                <div class="qrcode-label">小红薯</div>
-                            </div>
-                        </div>
-                        <p class="qrcode-text">扫描二维码关注公众号和小红书<br>获取最新游戏资讯</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>© 2025 AQI Game Platform - 网页游戏与工具平台 | 探索数字世界的无限可能</p>
-                <p>Made with ❤️ by 阿柒</p>
-            </div>
-        </div>
+       <!--  <div class="choices">
+            <button id="investigate-btn" class="btn btn-primary pulse">【搜寻证据，自证清白】</button>
+            <button id="hide-btn" class="btn btn-secondary">【保持沉默，暗中调查】</button>
+        </div> -->
     </div>
 
+    <!-- 自定义弹窗 -->
+    <div id="customModal" class="custom-modal">
+        <div class="modal-content">
+            选择沉默？<br>警方已将你列为头号嫌疑人！<br>
+            <button class="close-modal" onclick="closeModal()">继续调查</button>
+        </div>
+
+        
+    </div>
+<!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
     <script>
-        // 暗夜模式切换功能
-        const modeToggle = document.getElementById('modeToggle');
-        const body = document.body;
-        
-        // 检查本地存储中是否有模式偏好
-        const savedMode = localStorage.getItem('themeMode');
-        if (savedMode === 'dark') {
-            body.classList.add('dark-mode');
+        // 按钮事件处理
+        document.getElementById('investigate-btn').addEventListener('click', function () {
+            // 这里可以替换为实际调查页面的链接
+            window.location.href = 'investigation.html';
+            // 暂时用alert代替
+            // alert('你决定主动出击，在办公楼内寻找被忽略的线索……');
+        });
+
+        document.getElementById('hide-btn').addEventListener('click', function () {
+            const modal = document.getElementById('customModal');
+            modal.style.display = 'block';
+        });
+
+        function closeModal() {
+            document.getElementById('customModal').style.display = 'none';
         }
-        
-        // 切换模式
-        modeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            
-            // 保存用户偏好到本地存储
-            if (body.classList.contains('dark-mode')) {
-                localStorage.setItem('themeMode', 'dark');
-            } else {
-                localStorage.setItem('themeMode', 'light');
+
+        // 点击弹窗外区域关闭弹窗
+        window.onclick = function (event) {
+            const modal = document.getElementById('customModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // 添加键盘支持
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+            if (event.key === '1' || event.key === 'Enter') {
+                document.getElementById('investigate-btn').click();
+            }
+            if (event.key === '2') {
+                document.getElementById('hide-btn').click();
             }
         });
-        
-        // 为带有背景的卡片设置背景图片
-        document.addEventListener('DOMContentLoaded', function() {
-            const cardsWithBg = document.querySelectorAll('.nav-card.with-bg');
-            
-            cardsWithBg.forEach(card => {
-                // 获取通过CSS变量设置的背景图片URL
-                const style = getComputedStyle(card);
-                const bgImage = style.getPropertyValue('--card-bg-image').trim();
-                
-                // 如果找到了背景图片URL，则应用为伪元素的背景
-                if (bgImage && bgImage !== 'none') {
-                    // 移除url()包装和引号
-                    const cleanUrl = bgImage.replace(/^url\(["']?|["']?\)$/g, '');
-                    
-                    // 设置伪元素背景
-                    card.style.setProperty('--card-bg-image-value', `url(${cleanUrl})`);
-                    
-                    // 添加CSS规则到伪元素
-                    const styleSheet = document.createElement('style');
-                    styleSheet.textContent = `
-                        .nav-card.with-bg[style*="${cleanUrl}"]::before {
-                            background-image: var(--card-bg-image-value);
-                        }
-                    `;
-                    document.head.appendChild(styleSheet);
-                }
-            });
-        });
     </script>
+    <script src="scball.js"></script>
+
 </body>
 </html>
