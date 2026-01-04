@@ -666,11 +666,11 @@
                     if (response.ok) {
                         window.location.href = targetUrl;
                     } else {
-                        alert('页面不存在: ' + pageName);
+                        console.warn('页面不存在: ' + pageName);
                     }
                 })
                 .catch(() => {
-                    alert('无法访问页面: ' + pageName);
+                    console.warn('无法访问页面: ' + pageName);
                 });
         }
 
