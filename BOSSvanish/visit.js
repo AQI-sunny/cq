@@ -390,9 +390,9 @@
                 // 桌面端：右下角
                 this.container.style.position = 'fixed';
                 this.container.style.left = '50%';
-                this.container.style.top = 'auto';
-                this.container.style.right = `${CONFIG.DESKTOP_RIGHT}px`;
-                this.container.style.bottom = `${CONFIG.DESKTOP_BOTTOM}px`;
+                this.container.style.top = '90%';
+                this.container.style.right = `auto`;
+                this.container.style.bottom = `auto`;
                 this.container.style.transform = 'none';
                 
                 // 获取并保存初始位置
