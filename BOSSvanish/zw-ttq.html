@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>甜甜圈 - 威猛先生</title>
+    <title>甜甜圈 - 威霸震天</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* 全局重置 */
@@ -804,7 +804,7 @@
                             <img src="weitoux.jpg" alt="威猛头像">
                         </div>
                         <div>
-                            <div class="user-name">威猛先生</div>
+                            <div class="user-name">威霸震天</div>
                             <div class="user-signature">威者不怒，猛者不惧✨</div>
                         </div>
                     </div>
@@ -877,7 +877,7 @@
                             <!-- 点赞区域 -->
                             <div class="likes-section">
                                 <span class="likes-icon"><i class="fas fa-thumbs-up"></i></span>
-                                <span class="like-user">威猛先生</span>
+                                <span class="like-user">威霸震天</span>
                                 <span class="like-user">文心竹（安妻子）</span>
                                 <!-- <span class="like-user">甜甜圈爱好者</span> -->
                             </div>
@@ -885,7 +885,7 @@
                             <!-- 评论区域 -->
                             <div class="comments-section">
                                  <div class="comment-item">
-                                    <span class="comment-user">威猛先生：</span>
+                                    <span class="comment-user">威霸震天：</span>
                                     <span class="comment-text">可以！好玩！</span>
                                     <span class="comment-time">1小时前</span>
                                 </div>
@@ -946,7 +946,7 @@
                             <!-- 点赞区域 -->
                             <div class="likes-section">
                                 <span class="likes-icon"><i class="fas fa-thumbs-up"></i></span>
-                                <span class="like-user">威猛先生</span>
+                                <span class="like-user">威霸震天</span>
                                 <span class="like-user">安🐕</span>
                                 <!-- <span class="like-user"></span>
                                 <span class="like-user">小甜甜</span>
@@ -964,7 +964,7 @@
                                     <span class="comment-time">昨天 22:15</span>
                                 </div>
                                 <!--<div class="comment-item">
-                                    <span class="comment-user">威猛先生：</span>
+                                    <span class="comment-user">威霸震天：</span>
                                     <span class="comment-text">竹姐，帮我留两盒降压药！我爸的药快吃完了</span>
                                     <span class="comment-time">21:45</span>
                                 </div>
@@ -974,7 +974,7 @@
                                     <span class="comment-time">20:30</span>
                                 </div>
                                 <div class="comment-item">
-                                    <span class="comment-user">文心竹（安妻子）<span class="comment-reply"> 回复</span> 威猛先生：</span>
+                                    <span class="comment-user">文心竹（安妻子）<span class="comment-reply"> 回复</span> 威霸震天：</span>
                                     <span class="comment-text">好的威哥，给你留着！明天来拿就行</span>
                                     <span class="comment-time">22:05</span>
                                 </div>
@@ -1039,7 +1039,7 @@
                             <!-- 点赞区域 -->
                             <div class="likes-section">
                                 <span class="likes-icon"><i class="fas fa-thumbs-up"></i></span>
-                                <span class="like-user">威猛先生</span>
+                                <span class="like-user">威霸震天</span>
                                 <!-- <span class="like-user">小甜甜</span>
                                 <span class="like-user">邻居王阿姨</span> -->
                             </div>
@@ -1102,13 +1102,13 @@
         // 初始化点赞数据 - 修复：移除注释符号，使其成为有效代码
         const likesData = {
             // 动态1的点赞列表
-            moment1: ['威猛先生', '文心竹（安妻子）'],
+            moment1: ['威霸震天', '文心竹（安妻子）'],
             
             // 动态2的点赞列表
-            moment2: ['威猛先生', '安🐕'],
+            moment2: ['威霸震天', '安🐕'],
             
             // 动态3的点赞列表
-            moment3: ['威猛先生']
+            moment3: ['威霸震天']
         };
 
         // 页面加载完成后初始化
@@ -1163,7 +1163,7 @@
             if (!likeBtn || !likesSection) return;
             
             // 初始化点赞状态和数据
-            let isLiked = likesData[momentId] && likesData[momentId].includes('威猛先生');
+            let isLiked = likesData[momentId] && likesData[momentId].includes('威霸震天');
             let likes = likesData[momentId] ? [...likesData[momentId]] : [];
             
             // 设置初始点赞图标状态
@@ -1187,8 +1187,8 @@
                     icon.classList.add('far');
                     this.style.color = '#8a8a8a';
                     
-                    // 从点赞列表中移除威猛先生
-                    const index = likes.indexOf('威猛先生');
+                    // 从点赞列表中移除威霸震天
+                    const index = likes.indexOf('威霸震天');
                     if (index !== -1) {
                         likes.splice(index, 1);
                     }
@@ -1201,8 +1201,8 @@
                     this.style.color = '#07c160';
                     
                     // 添加到点赞列表
-                    if (!likes.includes('威猛先生')) {
-                        likes.unshift('威猛先生'); // 添加到最前面
+                    if (!likes.includes('威霸震天')) {
+                        likes.unshift('威霸震天'); // 添加到最前面
                     }
                     
                     showToast(`已点赞 ${userName} 的动态`);
@@ -1277,7 +1277,7 @@
             const newComment = document.createElement('div');
             newComment.className = 'comment-item';
             newComment.innerHTML = `
-                <span class="comment-user">威猛先生：</span>
+                <span class="comment-user">威霸震天：</span>
                 <span class="comment-text">${commentText}</span>
                 <span class="comment-time">${timeStr}</span>
             `;
