@@ -11,17 +11,87 @@
             box-sizing: border-box;
         }
 
+        :root {
+            /* 亮色主题变量 */
+            --bg-primary: linear-gradient(135deg, #e3f2fd, #bbdefb, #90caf9, #64b5f6);
+            --bg-secondary: rgba(255, 255, 255, 0.85);
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --text-primary: #1a237e;
+            --text-secondary: #1565c0;
+            --text-title: #0d47a1;
+            --accent-color: #1976d2;
+            --border-color: rgba(13, 71, 161, 0.2);
+            --shadow-color: rgba(13, 71, 161, 0.1);
+            --hover-shadow-color: rgba(13, 71, 161, 0.2);
+            --button-bg: #1976d2;
+            --button-hover-bg: #0d47a1;
+            --mode-toggle-bg: #0d47a1;
+            --mode-toggle-icon: "🌙";
+        }
+
+        body.dark-mode {
+            /* 暗色主题变量 */
+            --bg-primary: linear-gradient(135deg, #0a1929, #0d1b2a, #1b263b, #415a77);
+            --bg-secondary: rgba(13, 27, 42, 0.85);
+            --bg-card: rgba(20, 30, 48, 0.85);
+            --text-primary: #e3f2fd;
+            --text-secondary: #90caf9;
+            --text-title: #bbdefb;
+            --accent-color: #64b5f6;
+            --border-color: rgba(100, 181, 246, 0.2);
+            --shadow-color: rgba(13, 27, 42, 0.3);
+            --hover-shadow-color: rgba(100, 181, 246, 0.2);
+            --button-bg: #1565c0;
+            --button-hover-bg: #1976d2;
+            --mode-toggle-bg: #bbdefb;
+            --mode-toggle-icon: "☀️";
+        }
+
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #e3f2fd, #bbdefb, #90caf9, #64b5f6);
-            color: #1a237e;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100vh;
             padding: 20px;
+            transition: all 0.5s ease;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
+        }
+
+        /* 模式切换按钮 */
+        .mode-toggle-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .mode-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--mode-toggle-bg);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .mode-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .mode-toggle::after {
+            content: var(--mode-toggle-icon);
         }
 
         header {
@@ -33,13 +103,13 @@
         h1 {
             font-size: 3.5rem;
             margin-bottom: 15px;
-            color: #0d47a1;
+            color: var(--text-title);
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
         .subtitle {
             font-size: 1.5rem;
-            color: #1565c0;
+            color: var(--text-secondary);
             max-width: 600px;
             margin: 0 auto;
         }
@@ -52,75 +122,127 @@
         }
 
         .nav-card {
-            background: rgba(255, 255, 255, 0.85);
+            background: var(--bg-card);
             backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 30px;
             text-align: center;
             transition: all 0.3s ease;
-            border: 1px solid rgba(13, 71, 161, 0.2);
+            border: 1px solid var(--border-color);
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(13, 71, 161, 0.1);
+            box-shadow: 0 4px 15px var(--shadow-color);
+            position: relative;
+            overflow: hidden;
         }
 
-            .nav-card:hover {
-                transform: translateY(-10px);
-                background: rgba(255, 255, 255, 0.95);
-                box-shadow: 0 15px 30px rgba(13, 71, 161, 0.2);
-            }
+        /* 游戏背景图片功能 */
+        .nav-card.with-bg {
+            position: relative;
+            isolation: isolate;
+        }
+
+        .nav-card.with-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: blur(8px) brightness(0.7);
+            z-index: -1;
+            opacity: 0.7;
+            transition: opacity 0.5s ease;
+        }
+
+        .nav-card.with-bg:hover::before {
+            opacity: 0.85;
+            filter: blur(5px) brightness(0.8);
+        }
+
+        .nav-card.with-bg .nav-icon,
+        .nav-card.with-bg .nav-title,
+        .nav-card.with-bg .nav-description,
+        .nav-card.with-bg .nav-link {
+            position: relative;
+            z-index: 2;
+        }
+
+        .nav-card.with-bg .nav-title,
+        .nav-card.with-bg .nav-description {
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
+
+        .nav-card.with-bg .nav-icon {
+            color: white;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-10px);
+            background: var(--bg-secondary);
+            box-shadow: 0 15px 30px var(--hover-shadow-color);
+        }
+
+        .nav-card.with-bg:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
 
         .nav-icon {
             font-size: 3rem;
             margin-bottom: 20px;
             display: block;
-            color: #1976d2;
+            color: var(--accent-color);
         }
 
         .nav-title {
             font-size: 1.8rem;
             margin-bottom: 15px;
             font-weight: bold;
-            color: #0d47a1;
+            color: var(--text-title);
         }
 
         .nav-description {
             font-size: 1rem;
-            color: #1565c0;
+            color: var(--text-secondary);
             margin-bottom: 20px;
             line-height: 1.6;
         }
 
         .nav-link {
             display: inline-block;
-            background: #1976d2;
+            background: var(--button-bg);
             color: white;
             padding: 12px 30px;
             border-radius: 25px;
             text-decoration: none;
             font-weight: bold;
             transition: all 0.3s ease;
-            border: 1px solid #1565c0;
+            border: 1px solid var(--accent-color);
+            margin: 5px;
         }
 
             .nav-link:hover {
-                background: #0d47a1;
+                background: var(--button-hover-bg);
                 transform: scale(1.05);
             }
 
         .features {
-            background: rgba(255, 255, 255, 0.8);
+            background: var(--bg-secondary);
             border-radius: 15px;
             padding: 30px;
             margin: 40px 0;
-            border: 1px solid rgba(13, 71, 161, 0.2);
-            box-shadow: 0 4px 15px rgba(13, 71, 161, 0.1);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px var(--shadow-color);
         }
 
             .features h2 {
                 text-align: center;
                 font-size: 2.2rem;
                 margin-bottom: 30px;
-                color: #0d47a1;
+                color: var(--text-title);
             }
 
         .features-grid {
@@ -138,43 +260,43 @@
             font-size: 2.5rem;
             margin-bottom: 15px;
             display: block;
-            color: #1976d2;
+            color: var(--accent-color);
         }
 
         .feature-title {
             font-size: 1.3rem;
             margin-bottom: 10px;
             font-weight: bold;
-            color: #0d47a1;
+            color: var(--text-title);
         }
 
         .feature-desc {
             font-size: 0.95rem;
-            color: #1565c0;
+            color: var(--text-secondary);
         }
 
         footer {
             text-align: center;
             padding: 30px 0;
             margin-top: 40px;
-            border-top: 1px solid rgba(13, 71, 161, 0.2);
-            color: #1565c0;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
         }
 
         .welcome-section {
-            background: rgba(255, 255, 255, 0.85);
+            background: var(--bg-secondary);
             border-radius: 15px;
             padding: 30px;
             margin: 30px 0;
             text-align: center;
-            border: 1px solid rgba(13, 71, 161, 0.2);
-            box-shadow: 0 4px 15px rgba(13, 71, 161, 0.1);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px var(--shadow-color);
         }
 
             .welcome-section h2 {
                 font-size: 2rem;
                 margin-bottom: 20px;
-                color: #0d47a1;
+                color: var(--text-title);
             }
 
             .welcome-section p {
@@ -182,18 +304,18 @@
                 line-height: 1.7;
                 max-width: 800px;
                 margin: 0 auto;
-                color: #1565c0;
+                color: var(--text-secondary);
             }
 
         /* 新增页脚样式 */
         .footer-container {
-            background: rgba(255, 255, 255, 0.85);
+            background: var(--bg-secondary);
             backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 40px 30px;
             margin-top: 40px;
-            border: 1px solid rgba(13, 71, 161, 0.2);
-            box-shadow: 0 4px 15px rgba(13, 71, 161, 0.1);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px var(--shadow-color);
         }
 
         .footer-content {
@@ -210,9 +332,9 @@
         .footer-title {
             font-size: 1.4rem;
             margin-bottom: 20px;
-            color: #0d47a1;
+            color: var(--text-title);
             font-weight: bold;
-            border-bottom: 2px solid #1976d2;
+            border-bottom: 2px solid var(--accent-color);
             padding-bottom: 10px;
             display: inline-block;
         }
@@ -230,19 +352,19 @@
         .contact-icon {
             font-size: 1.2rem;
             margin-right: 10px;
-            color: #1976d2;
+            color: var(--accent-color);
             width: 25px;
             text-align: center;
         }
 
         .contact-link {
-            color: #1565c0;
+            color: var(--text-secondary);
             text-decoration: none;
             transition: color 0.3s ease;
         }
 
             .contact-link:hover {
-                color: #0d47a1;
+                color: var(--text-title);
                 text-decoration: underline;
             }
 
@@ -271,8 +393,8 @@
             width: 150px;
             height: 150px;
             border-radius: 10px;
-            border: 1px solid rgba(13, 71, 161, 0.2);
-            box-shadow: 0 4px 10px rgba(13, 71, 161, 0.1);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 10px var(--shadow-color);
             overflow: hidden;
             display: flex;
             align-items: center;
@@ -288,14 +410,14 @@
 
         .qrcode-label {
             font-size: 0.9rem;
-            color: #0d47a1;
+            color: var(--text-title);
             font-weight: bold;
             text-align: center;
         }
 
         .qrcode-text {
             font-size: 0.9rem;
-            color: #1565c0;
+            color: var(--text-secondary);
             text-align: center;
             margin-top: 10px;
         }
@@ -303,8 +425,8 @@
         .footer-bottom {
             text-align: center;
             padding-top: 20px;
-            border-top: 1px solid rgba(13, 71, 161, 0.2);
-            color: #1565c0;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
             font-size: 0.9rem;
         }
 
@@ -337,10 +459,21 @@
                 width: 130px;
                 height: 130px;
             }
+
+            .mode-toggle {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- 暗夜模式切换按钮 -->
+    <div class="mode-toggle-container">
+        <button class="mode-toggle" id="modeToggle" aria-label="切换暗夜模式"></button>
+    </div>
+
     <div class="container">
         <header>
             <h1>🎮 AQI Game</h1>
@@ -361,46 +494,41 @@
         </div>
 
         <div class="nav-container">
-            <div class="nav-card">
+            <div class="nav-card with-bg" style="--card-bg-image: url('./gallery/bjb.jpg')">
                 <span class="nav-icon">🗝️</span>
                 <h3 class="nav-title">网页解谜游戏-神秘的失物招领事件！</h3>
                 <p class="nav-description">进入阿七创造的静乔宇宙，登录静乔公寓论坛，挑战你的耐心和观察力！</p>
                 <a href="https://sylvie-seven-cq.top/Syzygy/begin.html" class="nav-link">开始解谜</a>
             </div>
 
-            <div class="nav-card">
+            <div class="nav-card with-bg" style="--card-bg-image: url('./gallery/gy2.png')">
                 <span class="nav-icon">🗝️</span>
                 <h3 class="nav-title">网页解谜游戏-静乔公寓番外篇~</h3>
                 <p class="nav-description">进入阿七创造的静乔宇宙，登录静乔公寓论坛，挑战你的耐心和观察力！</p>
                 <a href="./jqgy30day/search.html" class="nav-link">开始解谜</a>
             </div>
-
-           
         </div>
 
          <div class="nav-container">
-            <div class="nav-card">
+            <!-- 这个卡片有背景图片 -->
+            <div class="nav-card with-bg" style="--card-bg-image: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80')">
                 <span class="nav-icon">🗝️</span>
                 <h3 class="nav-title">网页解谜游戏-BOSS消失事件！</h3>
                 <p class="nav-description">和boss坐同一个电梯他突然倒地！求援后boss却消失了？！你被列为重大嫌疑人！快来洗清嫌疑</p>
                 <a href="https://sylvie-seven-cq.top/BOSSvanish/begin.html" class="nav-link">开始解谜</a>
             </div>
 
-           <!--  <div class="nav-card">
+            <!-- 这个卡片没有背景图片，保持原样 -->
+            <!-- <div class="nav-card">
                 <span class="nav-icon">🗝️</span>
                 <h3 class="nav-title">网页解谜游戏-静乔公寓番外篇~</h3>
                 <p class="nav-description">进入阿七创造的静乔宇宙，登录静乔公寓论坛，挑战你的耐心和观察力！</p>
                 <a href="./jqgy30day/search.html" class="nav-link">开始解谜</a>
             </div> -->
-
-           
         </div>
 
-
         <div class="nav-container">
-            
-
-            <div class="nav-card">
+            <div class="nav-card with-bg" style="--card-bg-image: url('https://images.unsplash.com/photo-1552820728-8b83bb6b773f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80')">
                 <span class="nav-icon">🗝️</span>
                 <h3 class="nav-title">网页解谜游戏-墟境调和局！</h3>
                 <p class="nav-description">游玩作者新创作的网页解谜游戏~感受墟境调和局的魅力~！</p>
@@ -464,6 +592,58 @@
             </div>
         </div>
     </div>
-</body>
 
+    <script>
+        // 暗夜模式切换功能
+        const modeToggle = document.getElementById('modeToggle');
+        const body = document.body;
+        
+        // 检查本地存储中是否有模式偏好
+        const savedMode = localStorage.getItem('themeMode');
+        if (savedMode === 'dark') {
+            body.classList.add('dark-mode');
+        }
+        
+        // 切换模式
+        modeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            // 保存用户偏好到本地存储
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('themeMode', 'dark');
+            } else {
+                localStorage.setItem('themeMode', 'light');
+            }
+        });
+        
+        // 为带有背景的卡片设置背景图片
+        document.addEventListener('DOMContentLoaded', function() {
+            const cardsWithBg = document.querySelectorAll('.nav-card.with-bg');
+            
+            cardsWithBg.forEach(card => {
+                // 获取通过CSS变量设置的背景图片URL
+                const style = getComputedStyle(card);
+                const bgImage = style.getPropertyValue('--card-bg-image').trim();
+                
+                // 如果找到了背景图片URL，则应用为伪元素的背景
+                if (bgImage && bgImage !== 'none') {
+                    // 移除url()包装和引号
+                    const cleanUrl = bgImage.replace(/^url\(["']?|["']?\)$/g, '');
+                    
+                    // 设置伪元素背景
+                    card.style.setProperty('--card-bg-image-value', `url(${cleanUrl})`);
+                    
+                    // 添加CSS规则到伪元素
+                    const styleSheet = document.createElement('style');
+                    styleSheet.textContent = `
+                        .nav-card.with-bg[style*="${cleanUrl}"]::before {
+                            background-image: var(--card-bg-image-value);
+                        }
+                    `;
+                    document.head.appendChild(styleSheet);
+                }
+            });
+        });
+    </script>
+</body>
 </html>
