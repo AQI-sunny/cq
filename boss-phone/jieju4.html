@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>你已挣脱泥沼，独善其身</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #2d1b3d 0%, #4a2c5d 100%);
+            color: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #b39ddb, transparent);
+        }
+        
+        .title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #b39ddb;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            position: relative;
+            display: inline-block;
+            word-break: break-word;
+        }
+        
+        .title:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 10%;
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #b39ddb, transparent);
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #d1c4e9;
+            margin-top: 10px;
+            word-break: break-word;
+        }
+        
+        .content-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            flex: 1;
+        }
+        
+        .content-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(179, 157, 219, 0.5), transparent);
+        }
+        
+        .content-card h2 {
+            color: #b39ddb;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            word-break: break-word;
+        }
+        
+        .content-card h2 i {
+            color: #b39ddb;
+        }
+        
+        .result-list {
+            list-style-type: none;
+            margin: 25px 0;
+        }
+        
+        .result-list li {
+            padding: 15px;
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border-left: 4px solid;
+            transition: transform 0.3s, background 0.3s;
+            position: relative;
+        }
+        
+        .result-list li:active {
+            transform: translateX(5px);
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .result-list li:nth-child(1) {
+            border-left-color: #9575cd;
+        }
+        
+        .result-list li:nth-child(2) {
+            border-left-color: #9575cd;
+        }
+        
+        .escape-tag {
+            display: inline-block;
+            background: rgba(100, 100, 100, 0.3);
+            color: #aaaaaa;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 8px;
+            border: 1px solid rgba(100, 100, 100, 0.5);
+            white-space: nowrap;
+        }
+        
+        .criminal-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            word-break: break-word;
+        }
+        
+        .crime-desc {
+            color: #ccc;
+            font-size: 0.95rem;
+            word-break: break-word;
+        }
+        
+        .conclusion {
+            text-align: center;
+            font-size: 1.2rem;
+            padding: 20px;
+            background: rgba(179, 157, 219, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(179, 157, 219, 0.3);
+            margin-top: 25px;
+            position: relative;
+        }
+        
+        .conclusion:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(179, 157, 219, 0.5), transparent);
+        }
+        
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: auto;
+            padding-top: 20px;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 200px;
+            max-width: 300px;
+            text-decoration: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #b39ddb, #9575cd);
+            color: #2d1b3d;
+            box-shadow: 0 4px 15px rgba(179, 157, 219, 0.4);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(179, 157, 219, 0.6);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-secondary:active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s, visibility 0.4s;
+            padding: 20px;
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: linear-gradient(135deg, #2d1b3d 0%, #1d0b2d 100%);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(179, 157, 219, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.4s;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+        
+        .modal-header {
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.3);
+            text-align: center;
+            border-bottom: 1px solid rgba(179, 157, 219, 0.2);
+            flex-shrink: 0;
+        }
+        
+        .modal-header h3 {
+            color: #b39ddb;
+            font-size: 1.5rem;
+            word-break: break-word;
+        }
+        
+        .modal-content {
+            padding: 25px;
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .modal-content p {
+            margin-bottom: 15px;
+            word-break: break-word;
+        }
+        
+        .modal-footer {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid rgba(179, 157, 219, 0.2);
+            flex-shrink: 0;
+        }
+        
+        .btn-close {
+            background: linear-gradient(to right, #b39ddb, #9575cd);
+            color: #2d1b3d;
+            padding: 12px 30px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        .btn-close:active {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(179, 157, 219, 0.4);
+        }
+        
+        .icon-large {
+            font-size: 3rem;
+            margin: 20px 0;
+            color: #b39ddb;
+        }
+        
+        .solitude-icon {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .solitude-icon i {
+            font-size: 4rem;
+            color: #b39ddb;
+            filter: drop-shadow(0 0 10px rgba(179, 157, 219, 0.3));
+        }
+        
+        .escape-list {
+            background: rgba(100, 100, 100, 0.1);
+            border: 1px solid rgba(100, 100, 100, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #aaaaaa;
+        }
+        
+        .escape-list h4 {
+            color: #aaaaaa;
+            margin-bottom: 10px;
+            text-align: center;
+            word-break: break-word;
+        }
+        
+        .escape-list ul {
+            list-style-type: none;
+            padding-left: 10px;
+        }
+        
+        .escape-list li {
+            padding: 8px 0;
+            color: #bbbbbb;
+            border-bottom: 1px solid rgba(100, 100, 100, 0.1);
+            word-break: break-word;
+        }
+        
+        .escape-list li:last-child {
+            border-bottom: none;
+        }
+        
+        /* 弹窗动画 */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-content-inner {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        /* 移动端优化 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .title {
+                font-size: 1.6rem;
+            }
+            
+            .content-card {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .content-card h2 {
+                font-size: 1.4rem;
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .btn {
+                min-width: 100%;
+                max-width: 100%;
+                padding: 16px 28px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .modal-header {
+                padding: 20px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+            
+            .modal-footer {
+                padding: 15px;
+            }
+            
+            .result-list li {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+            
+            .criminal-name {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .escape-tag {
+                margin-left: 0;
+                align-self: flex-start;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .title {
+                font-size: 1.4rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .content-card {
+                padding: 15px;
+            }
+            
+            .result-list li {
+                padding: 10px;
+            }
+            
+            .conclusion {
+                padding: 15px;
+                font-size: 1.1rem;
+            }
+            
+            .solitude-icon i {
+                font-size: 3rem;
+            }
+            
+            .icon-large {
+                font-size: 2.5rem;
+            }
+        }
+        
+        /* TapTap H5 环境优化 */
+        @supports (padding: max(0px)) {
+            .container {
+                padding-left: max(20px, env(safe-area-inset-left));
+                padding-right: max(20px, env(safe-area-inset-right));
+                padding-top: max(20px, env(safe-area-inset-top));
+                padding-bottom: max(20px, env(safe-area-inset-bottom));
+            }
+        }
+        
+        /* 防止文本选择 */
+        .no-select {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* 防止图片拖动 */
+        img {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+        }
+        
+        /* 优化滚动条 */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #b39ddb;
+            border-radius: 10px;
+        }
+        
+        /* 防止输入框缩放 */
+        input, textarea, select {
+            font-size: 16px;
+            -webkit-text-size-adjust: 100%;
+        }
+        
+        /* 优化按钮点击反馈 */
+        .btn:active {
+            opacity: 0.9;
+        }
+        
+        /* 修复iOS点击延迟 */
+        * {
+            touch-action: manipulation;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">恭喜你！你已挣脱泥沼，独善其身</h1>
+            <p class="subtitle">这是一场极其艰难的战斗。最终，你凭借无可辩驳的证据和坚定的意志，成功地在法律面前证明了自己的绝对清白</p>
+            <div class="solitude-icon">
+                <i class="fas fa-user-shield"></i>
+            </div>
+        </div>
+        
+        <div class="content-card">
+            <h2><i class="fas fa-user-check"></i> 你的清白已证，但...</h2>
+            <p style="text-align: center; margin-bottom: 20px; color: #d1c4e9;">由于种种复杂的原因，司法追诉未能成功启动</p>
+            
+            <ul class="result-list">
+                <li>
+                    <div class="criminal-name">
+                        卫明澈、叶兰、周于彰、何安 
+                        <span class="escape-tag">未受起诉</span>
+                    </div>
+                    <div class="crime-desc">由于种种复杂的原因——或许是证据的巧妙隐藏，或许是幕后力量的干预——针对他们的司法追诉未能成功启动。</div>
+                </li>
+                <li>
+                    <div class="criminal-name">
+                        相关人员 严真真、文心竹
+                        <span class="escape-tag">未受起诉</span>
+                    </div>
+                    <div class="crime-desc">同样逃脱了法律的制裁。</div>
+                </li>
+            </ul>
+            
+            <div class="conclusion">
+                <p>你的胜利是纯粹且个人的。你从巨大的漩涡中全身而退，守住了自己的底线与清白。</p>
+                <p>至于那些阴影中的人，或许命运自有其漫长的账单要清算，但那已不是你此刻需要面对的战场。</p>
+                <p style="margin-top: 10px; color: #b39ddb; font-weight: bold;">请珍惜这用智慧换来的自由，远离风暴，继续你的人生。</p>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="tuiliban.html" class="btn btn-primary">
+                <i class="fas fa-redo"></i>
+                返回重新填表
+            </a>
+            <a href="https://sylvie-seven-cq.top/" class="btn btn-secondary" target="_blank" rel="noopener">
+                <i class="fas fa-user-circle"></i>
+                关注作者
+            </a>
+        </div>
+    </div>
+    
+    <!-- 自定义弹窗容器 -->
+    <div id="customModalOverlay" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-info-circle"></i> 提示</h3>
+            </div>
+            <div class="modal-content">
+                <div class="modal-content-inner">
+                    <!-- 动态内容会在这里插入 -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-close" onclick="closeCustomModal()">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 防止双击放大
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+        
+        // 禁用右键菜单
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // 自定义弹窗函数
+        function showCustomModal(title, content) {
+            const modalOverlay = document.getElementById('customModalOverlay');
+            const modalHeader = modalOverlay.querySelector('.modal-header h3');
+            const modalContent = modalOverlay.querySelector('.modal-content-inner');
+            
+            modalHeader.innerHTML = title;
+            modalContent.innerHTML = content;
+            
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // 添加关闭键盘的监听
+            document.addEventListener('keydown', handleEscapeKey);
+        }
+        
+        function closeCustomModal() {
+            const modalOverlay = document.getElementById('customModalOverlay');
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            
+            // 移除键盘监听
+            document.removeEventListener('keydown', handleEscapeKey);
+        }
+        
+        function handleEscapeKey(e) {
+            if (e.key === 'Escape' || e.keyCode === 27) {
+                closeCustomModal();
+            }
+        }
+        
+        // 点击弹窗外部关闭
+        document.getElementById('customModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCustomModal();
+            }
+        });
+        
+        // 添加一些交互效果
+        document.querySelectorAll('.result-list li').forEach(item => {
+            item.addEventListener('touchstart', function() {
+                this.style.transform = 'translateX(5px)';
+                this.style.background = 'rgba(0, 0, 0, 0.3)';
+            });
+            
+            item.addEventListener('touchend', function() {
+                setTimeout(() => {
+                    this.style.transform = '';
+                    this.style.background = '';
+                }, 150);
+            });
+            
+            // 添加点击示例效果
+            item.addEventListener('click', function() {
+                showCustomModal(
+                    '<i class="fas fa-search"></i> 详细信息',
+                    `<div style="text-align: center; margin-bottom: 20px;">
+                        <i class="fas fa-user-secret" style="font-size: 3rem; color: #b39ddb;"></i>
+                    </div>
+                    <p>这些相关人员虽然逃脱了法律制裁，但您的清白已经得到证明。</p>
+                    <div style="background: rgba(179, 157, 219, 0.1); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <p style="color: #b39ddb; font-weight: bold;">重要提醒：</p>
+                        <p>正义的实现有多种形式，法律制裁只是其中之一。您的胜利在于保持了内心的清白和正直。</p>
+                    </div>`
+                );
+            });
+        });
+        
+        // 优化按钮点击效果
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('touchstart', function() {
+                this.style.opacity = '0.9';
+            });
+            
+            btn.addEventListener('touchend', function() {
+                setTimeout(() => {
+                    this.style.opacity = '';
+                }, 150);
+            });
+        });
+        
+        // 防止滚动穿透
+        let modalOverlay = document.getElementById('customModalOverlay');
+        modalOverlay.addEventListener('touchmove', function(e) {
+            if (e.target === this) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        // 页面加载完成的提示
+        window.addEventListener('load', function() {
+            // 可以添加一些初始化操作
+            console.log('页面加载完成');
+        });
+        
+        // 处理可能的错误
+        window.addEventListener('error', function(e) {
+            console.error('页面错误:', e.error);
+        });
+        
+        // 防止页面滚动（在弹窗打开时）
+        function preventDefault(e) {
+            e.preventDefault();
+        }
+        
+        // 优化移动端体验
+        if ('ontouchstart' in window) {
+            // 添加触摸优化
+            document.documentElement.style.cursor = 'pointer';
+        }
+        
+        // 修复 iOS 100vh 问题
+        function setVH() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+        
+        setVH();
+        window.addEventListener('resize', setVH);
+        window.addEventListener('orientationchange', setVH);
+    </script>
+</body>
+</html>

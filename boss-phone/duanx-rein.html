@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+    <title>短信对话--rein</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0084ff;
+            --received-bg: #f0f0f0;
+            --sent-bg: #0084ff;
+            --text-dark: #333;
+            --text-light: #fff;
+            --border-color: #e0e0e0;
+            --input-bg: #f8f8f8;
+            --toast-bg: rgba(0, 0, 0, 0.8);
+            --success-color: #4CAF50;
+            --info-color: #2196F3;
+            --warning-color: #ff9800;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: white;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-dark);
+            line-height: 1.4;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 主容器 - 100%宽度和高度 */
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            position: relative;
+        }
+
+        /* 顶部栏 */
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: white;
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            color: var(--primary-color);
+            margin-right: 12px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .contact-info {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .contact-name {
+            font-weight: 600;
+            font-size: 18px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .contact-status {
+            font-size: 13px;
+            color: #666;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+            color: var(--primary-color);
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        /* 消息区域 */
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 消息气泡 */
+        .message {
+            display: flex;
+            margin-bottom: 16px;
+            width: auto;
+            max-width: none;
+        }
+
+        .message.received {
+            align-self: flex-start;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin: 0 8px;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .message-bubble {
+            padding: 10px 14px;
+            border-radius: 18px;
+            position: relative;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: calc(100vw - 100px);
+        }
+
+        .message.received .message-bubble {
+            background-color: var(--received-bg);
+            color: var(--text-dark);
+            border-top-left-radius: 4px;
+        }
+
+        .message.sent .message-bubble {
+            background-color: var(--sent-bg);
+            color: var(--text-light);
+            border-top-right-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .message.sent .message-time {
+            text-align: right;
+        }
+
+        /* 状态指示器 */
+        .message-status {
+            font-size: 12px;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            justify-content: flex-end;
+        }
+
+        /* 日期分隔线 */
+        .date-divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+            width: 100%;
+        }
+
+        .date-divider span {
+            background-color: #e0e0e0;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* 特殊指令提示 */
+        .hint-container {
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .hint-message {
+            background-color: rgba(255, 152, 0, 0.1);
+            border: 1px dashed var(--warning-color);
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-size: 13px;
+            color: #e67e22;
+            display: inline-block;
+            max-width: 80%;
+            margin: 0 auto;
+        }
+
+        /* 输入区域 */
+        .input-container {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-top: 1px solid var(--border-color);
+            background-color: white;
+            gap: 10px;
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            background-color: var(--input-bg);
+            border-radius: 20px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            min-width: 0;
+        }
+
+        .message-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 16px;
+            color: var(--text-dark);
+            resize: none;
+            max-height: 100px;
+            font-family: inherit;
+            line-height: 1.4;
+            width: 100%;
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 12px;
+            font-size: 22px;
+            color: #666;
+            flex-shrink: 0;
+        }
+
+        .send-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .send-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Toast通知 */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .toast {
+            background-color: var(--toast-bg);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            max-width: 80%;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success {
+            background-color: var(--success-color);
+        }
+
+        .toast.info {
+            background-color: var(--info-color);
+        }
+
+        .toast.warning {
+            background-color: var(--warning-color);
+        }
+
+        /* 模态层 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 300px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.show .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .modal-content {
+            padding: 20px 16px;
+            text-align: center;
+        }
+
+        .modal-actions {
+            display: flex;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            background: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .modal-btn.cancel {
+            color: #666;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .modal-btn.confirm {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 480px) {
+            .messages-container {
+                padding: 12px;
+            }
+            
+            .header {
+                padding: 12px;
+            }
+            
+            .input-container {
+                padding: 10px 12px;
+            }
+            
+            .input-wrapper {
+                padding: 6px 12px;
+            }
+            
+            .header-actions {
+                gap: 12px;
+            }
+            
+            .message-avatar {
+                width: 32px;
+                height: 32px;
+                margin: 0 6px;
+            }
+            
+            .message-bubble {
+                max-width: calc(100vw - 80px);
+                padding: 8px 12px;
+            }
+            
+            .hint-message {
+                max-width: 90%;
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .message-bubble {
+                max-width: calc(100vw - 70px);
+            }
+            
+            .header-actions {
+                gap: 10px;
+            }
+        }
+
+        /* 滚动条样式 */
+        .messages-container::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .messages-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .messages-container::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 2px;
+        }
+    </style>
+    <link rel="icon" type="image/png" href="dtma.png">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="back-btn">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="contact-info">
+                <div class="contact-name">Rein</div>
+                <div class="contact-status">在线</div>
+            </div>
+            <div class="header-actions">
+                <i class="fas fa-phone-alt"></i>
+                <i class="fas fa-video"></i>
+                <i class="fas fa-info-circle"></i>
+            </div>
+        </div>
+
+        <div class="messages-container" id="messagesContainer">
+            <div class="date-divider">
+                <span>今天</span>
+            </div>
+
+            <!-- 发送的消息 -->
+            <div class="message sent">
+                <div class="message-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <div class="message-bubble">
+                        您好
+                    </div>
+                    <div class="message-time">下午 06:17</div>
+                    <div class="message-status">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message sent">
+                <div class="message-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <div class="message-bubble">
+                        我是陈沐，真真的同事，我想询问您一些事情
+                    </div>
+                    <div class="message-time">下午 06:17</div>
+                    <div class="message-status">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 接收的消息 -->
+            <div class="message received">
+                <div class="message-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <div class="message-bubble">
+                        什么事
+                    </div>
+                    <div class="message-time">下午 06:20</div>
+                </div>
+            </div>
+
+            <!-- 发送的消息 -->
+            <div class="message sent">
+                <div class="message-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <div class="message-bubble">
+                       真真和我说了一切，我想知道您调查的怎么样了
+                    </div>
+                    <div class="message-time">下午 06:22</div>
+                    <div class="message-status">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 接收的消息 -->
+            <div class="message received">
+                <div class="message-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <div class="message-bubble">
+                       哦？是吗
+                    </div>
+                    <div class="message-time">下午 06:23</div>
+                </div>
+            </div>
+
+            <!-- 提示区域（玩家需要输入"急急如玉令"） -->
+            <div class="hint-container">
+                <div class="hint-message">
+                    <i class="fas fa-lightbulb"></i> 提示：输入暗号来确认身份
+                </div>
+            </div>
+
+            <!-- 这里原本的"急急如玉令"消息被移除，将由玩家输入生成 -->
+        </div>
+
+        <div class="input-container">
+            <div class="input-actions">
+                <i class="fas fa-plus-circle"></i>
+            </div>
+            <div class="input-wrapper">
+                <textarea 
+                    class="message-input" 
+                    id="messageInput" 
+                    placeholder="输入消息..."
+                    rows="1"
+                ></textarea>
+            </div>
+            <button class="send-btn" id="sendBtn" disabled>
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast通知容器 -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- 模态对话框 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header" id="modalHeader">提示</div>
+            <div class="modal-content" id="modalContent"></div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" id="modalCancel">取消</button>
+                <button class="modal-btn confirm" id="modalConfirm">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 设置视口高度变量
+        function setVH() {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+
+        // 初始化
+        setVH();
+        window.addEventListener('resize', setVH);
+        window.addEventListener('orientationchange', setVH);
+
+        // DOM元素
+        const messagesContainer = document.getElementById('messagesContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const toastContainer = document.getElementById('toastContainer');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalHeader = document.getElementById('modalHeader');
+        const modalContent = document.getElementById('modalContent');
+        const modalCancel = document.getElementById('modalCancel');
+        const modalConfirm = document.getElementById('modalConfirm');
+
+        // 游戏状态变量
+        let specialCodeSent = false; // 是否已发送特殊暗号
+        let awaitingPlayerInput = true; // 是否等待玩家输入
+
+        // Toast通知系统
+        function showToast(message, type = 'info', duration = 3000) {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            
+            toastContainer.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toastContainer.removeChild(toast);
+                    }
+                }, 300);
+            }, duration);
+        }
+
+        // 模态对话框系统
+        let currentModalResolve;
+        
+        function showModal(title, message) {
+            modalHeader.textContent = title;
+            modalContent.textContent = message;
+            modalOverlay.classList.add('show');
+            
+            return new Promise((resolve) => {
+                currentModalResolve = resolve;
+            });
+        }
+        
+        modalCancel.addEventListener('click', () => {
+            modalOverlay.classList.remove('show');
+            if (currentModalResolve) {
+                currentModalResolve(false);
+                currentModalResolve = null;
+            }
+        });
+        
+        modalConfirm.addEventListener('click', () => {
+            modalOverlay.classList.remove('show');
+            if (currentModalResolve) {
+                currentModalResolve(true);
+                currentModalResolve = null;
+            }
+        });
+
+        // 自动调整输入框高度
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+            sendBtn.disabled = this.value.trim() === '';
+        });
+
+        // 发送消息
+        async function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text) return;
+
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+            
+            // 创建并显示玩家发送的消息
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message sent';
+            messageElement.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <div class="message-bubble">
+                        ${text}
+                    </div>
+                    <div class="message-time">${timeString}</div>
+                    <div class="message-status">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+            `;
+
+            messagesContainer.appendChild(messageElement);
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+            sendBtn.disabled = true;
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // 检查是否是特殊暗号
+            if (awaitingPlayerInput && text === "急急如玉令") {
+                specialCodeSent = true;
+                awaitingPlayerInput = false;
+                showToast('暗号确认成功！', 'success', 2000);
+                
+                // 移除提示
+                const hintContainer = document.querySelector('.hint-container');
+                if (hintContainer) {
+                    hintContainer.style.opacity = '0';
+                    hintContainer.style.transition = 'opacity 0.5s';
+                    setTimeout(() => {
+                        if (hintContainer.parentNode) {
+                            hintContainer.parentNode.removeChild(hintContainer);
+                        }
+                    }, 500);
+                }
+                
+                // 延迟显示Rein的回复
+                setTimeout(() => {
+                    showReinReply();
+                }, 1500);
+            } else if (awaitingPlayerInput && text !== "急急如玉令") {
+                // 玩家输入了错误的暗号
+                showToast('暗号错误，请重新输入', 'warning', 2000);
+                
+                // 延迟显示Rein的提示
+                setTimeout(() => {
+                    showReinHint();
+                }, 1000);
+            } else {
+                // 普通消息
+                showToast('消息已发送', 'success', 1500);
+                
+                setTimeout(() => {
+                    simulateReply();
+                }, 2000 + Math.random() * 2000);
+            }
+        }
+
+        // 显示Rein的回复（发送特殊暗号后的回复）
+        function showReinReply() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+            
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message received';
+            messageElement.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <div class="message-bubble">
+                        看来严小姐很信任你，连接码879155。还有，police系统里也能查到你想要的，证物编号20251231-WP-007
+                    </div>
+                    <div class="message-time">${timeString}</div>
+                </div>
+            `;
+
+            messagesContainer.appendChild(messageElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // 显示成功提示
+            showToast('获得重要线索：连接码和证物编号', 'success', 3000);
+            
+            // 标记游戏进度完成
+            localStorage.setItem('rein_conversation_complete', 'true');
+        }
+
+        // 显示Rein的提示（当玩家输入错误时）
+        function showReinHint() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+            
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message received';
+            messageElement.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <div class="message-bubble">
+                        你不是陈沐？我需要确认你的身份。请使用正确的暗号。
+                    </div>
+                    <div class="message-time">${timeString}</div>
+                </div>
+            `;
+
+            messagesContainer.appendChild(messageElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // 模拟对方回复（普通对话）
+        function simulateReply() {
+            if (specialCodeSent) return; // 如果已经发送了特殊暗号，不再模拟普通回复
+            
+            const replies = [
+                "好的，收到",
+                "明白了",
+                "谢谢",
+                "没问题",
+                "我考虑一下",
+                "一会儿见",
+                "OK",
+                "可以",
+                "行"
+            ];
+            
+            const replyText = replies[Math.floor(Math.random() * replies.length)];
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+            
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message received';
+            messageElement.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <div class="message-bubble">
+                        ${replyText}
+                    </div>
+                    <div class="message-time">${timeString}</div>
+                </div>
+            `;
+
+            messagesContainer.appendChild(messageElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            showToast('收到新消息', 'info', 1500);
+        }
+
+        // 事件监听
+        sendBtn.addEventListener('click', sendMessage);
+
+        messageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // 返回按钮功能
+        document.querySelector('.back-btn').addEventListener('click', async function() {
+            const confirmed = await showModal('确认', '确定要返回上一页吗？');
+            if (confirmed) {
+                showToast('返回上一页', 'info', 1500);
+                window.location.href = 'todsk.html';
+            }
+        });
+
+        // 顶部栏图标功能
+        document.querySelectorAll('.header-actions i').forEach(icon => {
+            icon.addEventListener('click', function() {
+                const action = this.className.split(' ')[1];
+                const actionMap = {
+                    'fa-phone-alt': {title: '打电话', message: '是否要拨打Rein的电话？'},
+                    'fa-video': {title: '视频通话', message: '是否要发起视频通话？'},
+                    'fa-info-circle': {title: '联系人信息', message: '查看联系人信息'}
+                };
+                
+                const actionInfo = actionMap[action];
+                if (actionInfo) {
+                    if (action === 'fa-info-circle') {
+                        showToast(actionInfo.message, 'info', 2000);
+                    } else {
+                        showModal(actionInfo.title, actionInfo.message).then(confirmed => {
+                            if (confirmed) {
+                                showToast(`${actionInfo.title}已发起`, 'success', 2000);
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
+        // 添加附件功能
+        document.querySelector('.fa-plus-circle').addEventListener('click', function() {
+            showModal('添加附件', '选择要添加的附件类型').then(confirmed => {
+                if (confirmed) {
+                    showToast('打开附件选择器', 'info', 1500);
+                }
+            });
+        });
+
+        // 初始滚动到底部
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        // 页面加载完成提示
+        setTimeout(() => {
+            showToast('等待输入暗号', 'warning', 3000);
+        }, 500);
+
+        // 自动聚焦到输入框
+        setTimeout(() => {
+            messageInput.focus();
+        }, 800);
+    </script>
+</body>
+</html>
