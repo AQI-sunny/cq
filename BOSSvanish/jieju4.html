@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>你已挣脱泥沼，独善其身</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -11,6 +11,13 @@
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
         }
         
         body {
@@ -20,12 +27,17 @@
             min-height: 100vh;
             padding: 20px;
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         
         .header {
@@ -57,6 +69,7 @@
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
             position: relative;
             display: inline-block;
+            word-break: break-word;
         }
         
         .title:after {
@@ -73,6 +86,7 @@
             font-size: 1.1rem;
             color: #d1c4e9;
             margin-top: 10px;
+            word-break: break-word;
         }
         
         .content-card {
@@ -84,6 +98,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             position: relative;
+            flex: 1;
         }
         
         .content-card:before {
@@ -105,6 +120,7 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
+            word-break: break-word;
         }
         
         .content-card h2 i {
@@ -126,7 +142,7 @@
             position: relative;
         }
         
-        .result-list li:hover {
+        .result-list li:active {
             transform: translateX(5px);
             background: rgba(0, 0, 0, 0.3);
         }
@@ -148,6 +164,7 @@
             font-size: 0.8rem;
             margin-left: 8px;
             border: 1px solid rgba(100, 100, 100, 0.5);
+            white-space: nowrap;
         }
         
         .criminal-name {
@@ -156,11 +173,14 @@
             margin-bottom: 5px;
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
+            word-break: break-word;
         }
         
         .crime-desc {
             color: #ccc;
             font-size: 0.95rem;
+            word-break: break-word;
         }
         
         .conclusion {
@@ -189,7 +209,8 @@
             flex-wrap: wrap;
             gap: 15px;
             justify-content: center;
-            margin-top: 30px;
+            margin-top: auto;
+            padding-top: 20px;
         }
         
         .btn {
@@ -207,6 +228,9 @@
             flex: 1;
             min-width: 200px;
             max-width: 300px;
+            text-decoration: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
         
         .btn-primary {
@@ -215,7 +239,7 @@
             box-shadow: 0 4px 15px rgba(179, 157, 219, 0.4);
         }
         
-        .btn-primary:hover {
+        .btn-primary:active {
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(179, 157, 219, 0.6);
         }
@@ -226,7 +250,7 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
         
-        .btn-secondary:hover {
+        .btn-secondary:active {
             background: rgba(255, 255, 255, 0.2);
             transform: translateY(-3px);
         }
@@ -246,6 +270,8 @@
             visibility: hidden;
             transition: opacity 0.4s, visibility 0.4s;
             padding: 20px;
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
         }
         
         .modal-overlay.active {
@@ -263,6 +289,9 @@
             border: 1px solid rgba(179, 157, 219, 0.2);
             transform: scale(0.9);
             transition: transform 0.4s;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
         }
         
         .modal-overlay.active .modal {
@@ -274,27 +303,32 @@
             background: rgba(0, 0, 0, 0.3);
             text-align: center;
             border-bottom: 1px solid rgba(179, 157, 219, 0.2);
+            flex-shrink: 0;
         }
         
         .modal-header h3 {
             color: #b39ddb;
             font-size: 1.5rem;
+            word-break: break-word;
         }
         
         .modal-content {
             padding: 25px;
-            max-height: 60vh;
+            flex: 1;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
         
         .modal-content p {
             margin-bottom: 15px;
+            word-break: break-word;
         }
         
         .modal-footer {
             padding: 20px;
             text-align: center;
             border-top: 1px solid rgba(179, 157, 219, 0.2);
+            flex-shrink: 0;
         }
         
         .btn-close {
@@ -306,9 +340,11 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            -webkit-user-select: none;
+            user-select: none;
         }
         
-        .btn-close:hover {
+        .btn-close:active {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(179, 157, 219, 0.4);
         }
@@ -344,6 +380,7 @@
             color: #aaaaaa;
             margin-bottom: 10px;
             text-align: center;
+            word-break: break-word;
         }
         
         .escape-list ul {
@@ -355,45 +392,106 @@
             padding: 8px 0;
             color: #bbbbbb;
             border-bottom: 1px solid rgba(100, 100, 100, 0.1);
+            word-break: break-word;
         }
         
         .escape-list li:last-child {
             border-bottom: none;
         }
         
+        /* 弹窗动画 */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-content-inner {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        /* 移动端优化 */
         @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
             .title {
                 font-size: 1.6rem;
             }
             
             .content-card {
                 padding: 20px;
+                margin-bottom: 20px;
             }
             
             .content-card h2 {
                 font-size: 1.4rem;
+                flex-direction: column;
+                gap: 5px;
             }
             
             .btn {
                 min-width: 100%;
+                max-width: 100%;
+                padding: 16px 28px;
             }
             
             .action-buttons {
                 flex-direction: column;
+                gap: 12px;
+            }
+            
+            .modal-header {
+                padding: 20px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+            
+            .modal-footer {
+                padding: 15px;
+            }
+            
+            .result-list li {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+            
+            .criminal-name {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .escape-tag {
+                margin-left: 0;
+                align-self: flex-start;
             }
         }
         
         @media (max-width: 480px) {
-            .container {
-                padding: 10px;
-            }
-            
             .header {
                 padding: 15px;
+                margin-bottom: 20px;
             }
             
             .title {
                 font-size: 1.4rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
             }
             
             .content-card {
@@ -401,11 +499,34 @@
             }
             
             .result-list li {
-                padding: 12px;
+                padding: 10px;
+            }
+            
+            .conclusion {
+                padding: 15px;
+                font-size: 1.1rem;
+            }
+            
+            .solitude-icon i {
+                font-size: 3rem;
+            }
+            
+            .icon-large {
+                font-size: 2.5rem;
             }
         }
         
-        /* 防止长按复制 */
+        /* TapTap H5 环境优化 */
+        @supports (padding: max(0px)) {
+            .container {
+                padding-left: max(20px, env(safe-area-inset-left));
+                padding-right: max(20px, env(safe-area-inset-right));
+                padding-top: max(20px, env(safe-area-inset-top));
+                padding-bottom: max(20px, env(safe-area-inset-bottom));
+            }
+        }
+        
+        /* 防止文本选择 */
         .no-select {
             -webkit-user-select: none;
             -moz-user-select: none;
@@ -420,6 +541,36 @@
             -moz-user-drag: none;
             -o-user-drag: none;
             user-drag: none;
+        }
+        
+        /* 优化滚动条 */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #b39ddb;
+            border-radius: 10px;
+        }
+        
+        /* 防止输入框缩放 */
+        input, textarea, select {
+            font-size: 16px;
+            -webkit-text-size-adjust: 100%;
+        }
+        
+        /* 优化按钮点击反馈 */
+        .btn:active {
+            opacity: 0.9;
+        }
+        
+        /* 修复iOS点击延迟 */
+        * {
+            touch-action: manipulation;
         }
     </style>
 </head>
@@ -439,16 +590,20 @@
             
             <ul class="result-list">
                 <li>
-                    <div class="criminal-name">卫明澈、叶兰、周于彰、何安 <span class="escape-tag">未受起诉</span></div>
+                    <div class="criminal-name">
+                        卫明澈、叶兰、周于彰、何安 
+                        <span class="escape-tag">未受起诉</span>
+                    </div>
                     <div class="crime-desc">由于种种复杂的原因——或许是证据的巧妙隐藏，或许是幕后力量的干预——针对他们的司法追诉未能成功启动。</div>
                 </li>
                 <li>
-                    <div class="criminal-name">相关人员 严真真 <span class="escape-tag">未受起诉</span></div>
+                    <div class="criminal-name">
+                        相关人员 严真真、沈心竹
+                        <span class="escape-tag">未受起诉</span>
+                    </div>
                     <div class="crime-desc">同样逃脱了法律的制裁。</div>
                 </li>
             </ul>
-            
-           
             
             <div class="conclusion">
                 <p>你的胜利是纯粹且个人的。你从巨大的漩涡中全身而退，守住了自己的底线与清白。</p>
@@ -457,55 +612,31 @@
             </div>
         </div>
         
-         <div class="action-buttons">
-            <button class="btn btn-primary" id="viewDetailsBtn">
+        <div class="action-buttons">
+            <a href="tuiliban.html" class="btn btn-primary">
+                <i class="fas fa-redo"></i>
                 返回重新填表
-                <!-- 跳转tuiliban.html -->
-            </button>
-            <button class="btn btn-secondary" id="continueBtn">
+            </a>
+            <a href="https://sylvie-seven-cq.top/" class="btn btn-secondary" target="_blank" rel="noopener">
+                <i class="fas fa-user-circle"></i>
                 关注作者
-                 <!-- 跳转https://sylvie-seven-cq.top/ -->
-            </button>
+            </a>
         </div>
     </div>
     
-    <!-- 自定义弹窗 -->
-    <div class="modal-overlay" id="modalOverlay">
+    <!-- 自定义弹窗容器 -->
+    <div id="customModalOverlay" class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
-                <h3><i class="fas fa-certificate"></i> 清白证明文件</h3>
+                <h3><i class="fas fa-info-circle"></i> 提示</h3>
             </div>
             <div class="modal-content">
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <i class="fas fa-user-shield icon-large"></i>
+                <div class="modal-content-inner">
+                    <!-- 动态内容会在这里插入 -->
                 </div>
-                <div style="background: rgba(179, 157, 219, 0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: center;">
-                    <h4 style="color: #b39ddb;">正式清白声明</h4>
-                    <p>经司法机关严格审查，现正式确认：</p>
-                    <p style="color: #b39ddb; font-weight: bold; font-size: 1.2rem; margin: 10px 0;">你对所有指控均无责任，是完全清白的。</p>
-                    <p>所有对你的指控已被彻底驳回，记录已清除。</p>
-                </div>
-                
-                <p><strong>案件编号</strong>：XS-2023-8742</p>
-                <p><strong>审查结果</strong>：完全无罪，所有指控不成立</p>
-                <p><strong>生效日期</strong>：永久有效</p>
-                
-                <div style="background: rgba(100, 100, 100, 0.1); padding: 15px; border-radius: 10px; margin: 15px 0;">
-                    <h4 style="color: #aaaaaa;">其他涉案人员状态</h4>
-                    <p>由于以下原因，对其他人员的追诉未能继续：</p>
-                    <ul style="padding-left: 20px; color: #bbbbbb;">
-                        <li>关键证据在调查过程中意外损毁</li>
-                        <li>部分证人撤回证词或失联</li>
-                        <li>法律程序上的技术性问题</li>
-                        <li>案件超出诉讼时效</li>
-                    </ul>
-                    <p style="margin-top: 10px; color: #aaaaaa; font-style: italic;">司法并非万能，有时真相只能等待时间的审判。</p>
-                </div>
-                
-                <p><strong>你的权利</strong>：凭此证明，你的所有社会权利将完全恢复，任何因本案造成的负面影响将被消除。</p>
             </div>
             <div class="modal-footer">
-                <button class="btn-close" id="closeModalBtn">关闭</button>
+                <button class="btn-close" onclick="closeCustomModal()">确定</button>
             </div>
         </div>
     </div>
@@ -527,132 +658,126 @@
             return false;
         });
         
-        // 弹窗控制
-        const modalOverlay = document.getElementById('modalOverlay');
-        const viewDetailsBtn = document.getElementById('viewDetailsBtn');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const continueBtn = document.getElementById('continueBtn');
-        
-        // 打开弹窗
-        viewDetailsBtn.addEventListener('click', function() {
+        // 自定义弹窗函数
+        function showCustomModal(title, content) {
+            const modalOverlay = document.getElementById('customModalOverlay');
+            const modalHeader = modalOverlay.querySelector('.modal-header h3');
+            const modalContent = modalOverlay.querySelector('.modal-content-inner');
+            
+            modalHeader.innerHTML = title;
+            modalContent.innerHTML = content;
+            
             modalOverlay.classList.add('active');
-            // 阻止背景滚动
             document.body.style.overflow = 'hidden';
-        });
-        
-        // 关闭弹窗
-        function closeModal() {
-            modalOverlay.classList.remove('active');
-            document.body.style.overflow = 'auto';
+            
+            // 添加关闭键盘的监听
+            document.addEventListener('keydown', handleEscapeKey);
         }
         
-        closeModalBtn.addEventListener('click', closeModal);
+        function closeCustomModal() {
+            const modalOverlay = document.getElementById('customModalOverlay');
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            
+            // 移除键盘监听
+            document.removeEventListener('keydown', handleEscapeKey);
+        }
+        
+        function handleEscapeKey(e) {
+            if (e.key === 'Escape' || e.keyCode === 27) {
+                closeCustomModal();
+            }
+        }
         
         // 点击弹窗外部关闭
-        modalOverlay.addEventListener('click', function(e) {
-            if (e.target === modalOverlay) {
-                closeModal();
-            }
-        });
-        
-        // 开启新人生按钮
-        continueBtn.addEventListener('click', function() {
-            const modalContent = document.querySelector('.modal-content');
-            const modalHeader = document.querySelector('.modal-header h3');
-            
-            modalHeader.innerHTML = '<i class="fas fa-road"></i> 开启新人生';
-            modalContent.innerHTML = `
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <i class="fas fa-seedling icon-large"></i>
-                </div>
-                <p style="text-align: center; color: #b39ddb; font-weight: bold;">风暴已过，新生开始</p>
-                
-                <div style="background: rgba(179, 157, 219, 0.1); padding: 20px; border-radius: 10px; margin: 20px 0; text-align: center;">
-                    <h4 style="color: #b39ddb; margin-bottom: 15px;">新生活建议</h4>
-                    <ul style="padding-left: 0; list-style-type: none;">
-                        <li style="padding: 8px 0;">🏝️ 进行一次长途旅行，放松身心</li>
-                        <li style="padding: 8px 0;">📚 学习新技能，开拓新领域</li>
-                        <li style="padding: 8px 0;">🤝 结识新朋友，建立新社交圈</li>
-                        <li style="padding: 8px 0;">🎯 设定新目标，追求新梦想</li>
-                    </ul>
-                </div>
-                
-                <p>这段经历虽然艰难，但也让你变得更加坚强和智慧。现在，是时候将目光投向未来了。</p>
-                <p style="margin-top: 15px; color: #d1c4e9; font-style: italic;">"最黑暗的夜晚之后，总是最明亮的黎明。"</p>
-                
-                <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button id="travelBtn" style="flex:1; padding:12px; background:linear-gradient(to right, #b39ddb, #9575cd); border:none; border-radius:5px; color:#2d1b3d; font-weight:bold;">计划旅行</button>
-                    <button id="studyBtn" style="flex:1; padding:12px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.3); border-radius:5px; color:white;">学习新技能</button>
-                </div>
-            `;
-            
-            // 更改关闭按钮文本
-            closeModalBtn.textContent = '返回';
-            
-            modalOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            
-            // 为弹窗内的按钮添加事件
-            setTimeout(() => {
-                document.getElementById('travelBtn').addEventListener('click', function() {
-                    showCustomAlert('已为您生成旅行计划！愿旅途带给您宁静与新生。');
-                });
-                
-                document.getElementById('studyBtn').addEventListener('click', function() {
-                    showCustomAlert('学习之旅开始！知识将为您开启全新的可能性。');
-                });
-            }, 100);
-        });
-        
-        // 键盘事件支持
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
-                closeModal();
+        document.getElementById('customModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCustomModal();
             }
         });
         
         // 添加一些交互效果
         document.querySelectorAll('.result-list li').forEach(item => {
-            item.addEventListener('click', function() {
-                this.style.transform = 'scale(0.98)';
+            item.addEventListener('touchstart', function() {
+                this.style.transform = 'translateX(5px)';
+                this.style.background = 'rgba(0, 0, 0, 0.3)';
+            });
+            
+            item.addEventListener('touchend', function() {
                 setTimeout(() => {
                     this.style.transform = '';
+                    this.style.background = '';
+                }, 150);
+            });
+            
+            // 添加点击示例效果
+            item.addEventListener('click', function() {
+                showCustomModal(
+                    '<i class="fas fa-search"></i> 详细信息',
+                    `<div style="text-align: center; margin-bottom: 20px;">
+                        <i class="fas fa-user-secret" style="font-size: 3rem; color: #b39ddb;"></i>
+                    </div>
+                    <p>这些相关人员虽然逃脱了法律制裁，但您的清白已经得到证明。</p>
+                    <div style="background: rgba(179, 157, 219, 0.1); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <p style="color: #b39ddb; font-weight: bold;">重要提醒：</p>
+                        <p>正义的实现有多种形式，法律制裁只是其中之一。您的胜利在于保持了内心的清白和正直。</p>
+                    </div>`
+                );
+            });
+        });
+        
+        // 优化按钮点击效果
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('touchstart', function() {
+                this.style.opacity = '0.9';
+            });
+            
+            btn.addEventListener('touchend', function() {
+                setTimeout(() => {
+                    this.style.opacity = '';
                 }, 150);
             });
         });
         
-// 修改：返回重新填表按钮跳转到tuiliban.html
-        viewDetailsBtn.addEventListener('click', function() {
-            window.location.href = 'tuiliban.html';
+        // 防止滚动穿透
+        let modalOverlay = document.getElementById('customModalOverlay');
+        modalOverlay.addEventListener('touchmove', function(e) {
+            if (e.target === this) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        // 页面加载完成的提示
+        window.addEventListener('load', function() {
+            // 可以添加一些初始化操作
+            console.log('页面加载完成');
         });
         
-        // 修改：关注作者按钮跳转到指定网站
-        continueBtn.addEventListener('click', function() {
-            window.location.href = 'https://sylvie-seven-cq.top/';
+        // 处理可能的错误
+        window.addEventListener('error', function(e) {
+            console.error('页面错误:', e.error);
         });
-
-        // 自定义提示函数
-        function showCustomAlert(message) {
-            const alertModal = document.createElement('div');
-            alertModal.className = 'modal-overlay active';
-            alertModal.innerHTML = `
-                <div class="modal" style="max-width: 400px;">
-                    <div class="modal-header">
-                        <h3><i class="fas fa-check-circle"></i> 已确认</h3>
-                    </div>
-                    <div class="modal-content">
-                        <div style="text-align: center; margin: 20px 0;">
-                            <i class="fas fa-seedling" style="font-size: 3rem; color: #b39ddb;"></i>
-                        </div>
-                        <p style="text-align: center;">${message}</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn-close" onclick="this.closest('.modal-overlay').remove()">确定</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(alertModal);
+        
+        // 防止页面滚动（在弹窗打开时）
+        function preventDefault(e) {
+            e.preventDefault();
         }
+        
+        // 优化移动端体验
+        if ('ontouchstart' in window) {
+            // 添加触摸优化
+            document.documentElement.style.cursor = 'pointer';
+        }
+        
+        // 修复 iOS 100vh 问题
+        function setVH() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+        
+        setVH();
+        window.addEventListener('resize', setVH);
+        window.addEventListener('orientationchange', setVH);
     </script>
 </body>
 </html>
