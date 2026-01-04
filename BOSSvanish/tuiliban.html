@@ -605,7 +605,7 @@
                 correctAnswer: ["氢氯噻嗪", "西柚/葡萄柚", "蜂蜜柚子茶"], // 必选氢氯噻嗪，其他两个选其中一个就对
                 options: ["西柚/葡萄柚", "蜂蜜柚子茶", "洋地黄毒苷", "氢氯噻嗪", "呋喃香豆素"],
                 type: "multi-complex", // 复杂多选，需要包含必选项
-                hint: "提示：必须选择氢氯噻嗪，另外可在西柚/葡萄柚和蜂蜜柚子茶中选择一个" 
+                hint: "提示：多选题" 
             },
             { 
                 id: 12, 
@@ -1180,11 +1180,13 @@
         function jumpToResult(correctCount, wrongCount) {
             // 根据错误数量跳转到不同页面
             if (wrongCount === 0) {
-                window.location.href = 'hejieju.html';
+                window.location.href = 'jieju1.html';
             } else if (wrongCount <= 5) {
-                window.location.href = 'jiejub.html';
+                window.location.href = 'jieju2222.html';
+                } else if (wrongCount <= 10) {
+                window.location.href = 'jieju333.html';
             } else {
-                window.location.href = 'jieju3.html';
+                window.location.href = 'jieju4.html';
             }
         }
         
