@@ -615,7 +615,7 @@ class SearchEngine {
                 },
                 {
                     "id": "jqtj2",
-                    "keywords": ["LzIwMTVuZXdz","5Z2g5qW85qGICg=="],
+                    "keywords": ["5YW05YGl5aSn5Y6m5Z2g5qW85qGI","5Z2g5qW85qGI"],
                     "targetUrl": "zhuilou.html",
                     "description": "该页面暂无描述..."
                 },
