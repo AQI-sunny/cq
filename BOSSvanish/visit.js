@@ -13,7 +13,7 @@
         COLLAPSED_WIDTH: '100px',
         MOBILE_BOTTOM: 20,
         DESKTOP_BOTTOM: 20,
-        DESKTOP_RIGHT: 20
+        DESKTOP_LEFT: 20
     };
 
     // 工具函数
@@ -313,8 +313,8 @@
                 @media (min-width: 769px) {
                     :host {
                         bottom: ${CONFIG.DESKTOP_BOTTOM}px !important;
-                        right: ${CONFIG.DESKTOP_RIGHT}px !important;
-                        left: auto !important;
+                        left: ${CONFIG.DESKTOP_LEFT}px !important;
+                        right: auto !important;
                         transform: none !important;
                     }
                 }
@@ -387,17 +387,17 @@
                 this.containerStartX = (window.innerWidth - rect.width) / 2;
                 this.containerStartY = window.innerHeight - rect.height - CONFIG.MOBILE_BOTTOM;
             } else {
-                // 桌面端：右下角
+                // 桌面端：左下角
                 this.container.style.position = 'fixed';
-                this.container.style.left = '50%';
-                this.container.style.top = '90%';
-                this.container.style.right = `auto`;
-                this.container.style.bottom = `auto`;
+                this.container.style.left = `${CONFIG.DESKTOP_LEFT}px`;
+                this.container.style.top = 'auto';
+                this.container.style.right = 'auto';
+                this.container.style.bottom = `${CONFIG.DESKTOP_BOTTOM}px`;
                 this.container.style.transform = 'none';
                 
                 // 获取并保存初始位置
                 const rect = this.container.getBoundingClientRect();
-                this.containerStartX = window.innerWidth - rect.width - CONFIG.DESKTOP_RIGHT;
+                this.containerStartX = CONFIG.DESKTOP_LEFT;
                 this.containerStartY = window.innerHeight - rect.height - CONFIG.DESKTOP_BOTTOM;
             }
         }
@@ -736,3 +736,6 @@
         setTimeout(init, 100);
     }
 })();
+
+
+
