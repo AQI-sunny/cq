@@ -1219,8 +1219,10 @@
                 return '即将跳转到结局页面...';
             } else if (wrongCount <= 5) {
                 return '即将跳转到结局B...';
-            } else {
+                } else if (wrongCount <= 10) {
                 return '即将跳转到结局C...';
+            } else {
+                return '即将跳转到结局D...';
             }
         }
         
@@ -1228,7 +1230,7 @@
         function jumpToResult(correctCount, wrongCount) {
             // 根据错误数量跳转到不同页面
             if (wrongCount === 0) {
-                window.location.href = 'jieju1.html';
+                window.location.href = 'jieju01.html';
             } else if (wrongCount <= 5) {
                 window.location.href = 'jieju2222.html';
                 } else if (wrongCount <= 10) {
