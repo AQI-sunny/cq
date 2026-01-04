@@ -507,7 +507,7 @@
                 <button class="modal-btn confirm" id="confirm-ok">确定</button>
             </div>
         </div>
-    </div>
+</div>
     
     <script>
         // 问题数据 - 根据注释优化
@@ -532,7 +532,7 @@
             { 
                 id: 3, 
                 text: "你认为主犯是：__________（ps：整个犯罪的组织者、策划者，在共同犯罪中起主要作用，是主犯。）", 
-                correctAnswer: "张威", 
+                correctAnswer: "卫明澈", 
                 options: ["沈笑静", "李健兴", "麦姝冰", "何安", "张威", "周于彰", "文心竹", "严真真", "叶兰", "Rein", "卫明澈"],
                 type: "single",
                 hint: "" 
@@ -579,7 +579,7 @@
                 correctAnswer: ["突发性心脏骤停", "心源性猝死"], // 选哪个都对，可多选，选择两个也对
                 options: ["恶性心律失常", "突发性心脏骤停", "慢性心脏病", "严重低血钾", "心源性猝死", "洋地黄毒苷中毒"],
                 type: "multi-any", // 多选，选择其中任意正确答案
-                hint: "提示：选择其中任意正确答案" 
+                hint: "提示：选择其中一个正确答案即可" 
             },
             { 
                 id: 9, 
@@ -1016,6 +1016,17 @@
             return correctCount;
         }
         
+        // 获取错误题号列表
+        function getWrongQuestionIds() {
+            const wrongIds = [];
+            questionsData.forEach(question => {
+                if (!checkAnswer(question.id)) {
+                    wrongIds.push(question.id);
+                }
+            });
+            return wrongIds;
+        }
+        
         // 更新进度
         function updateProgress() {
             const total = questionsData.length;
@@ -1135,8 +1146,23 @@
             // 计算结果
             const correctCount = calculateCorrectAnswers();
             const wrongCount = total - correctCount;
+            const wrongQuestionIds = getWrongQuestionIds();
             
-            // 显示简要结果，然后自动跳转
+            // 生成错误题号显示文本
+            let wrongQuestionsText = '';
+            if (wrongQuestionIds.length > 0) {
+                wrongQuestionsText = `
+                    <div style="margin-top: 15px; padding: 10px; background-color: rgba(228, 63, 90, 0.1); border-radius: 8px;">
+                        <p style="margin-bottom: 8px; color: #ff9a3c;"><strong>错误题号：</strong></p>
+                        <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+                            ${wrongQuestionIds.map(id => `<span style="background-color: #e43f5a; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.9rem;">第${id}题</span>`).join(' ')}
+                        </div>
+                        <p style="margin-top: 8px; font-size: 0.95rem;">提示：点击确定后可以重新查看和修改这些题目</p>
+                    </div>
+                `;
+            }
+            
+            // 显示结果，不自动跳转，让用户查看错误题号
             const resultText = getResultText(correctCount, wrongCount);
             const jumpInfo = getJumpInfo(correctCount, wrongCount);
             
@@ -1145,13 +1171,35 @@
                 <p><strong>正确：${correctCount} 题</strong></p>
                 <p><strong>错误：${wrongCount} 题</strong></p>
                 <p>${resultText}</p>
-                <p>${jumpInfo}</p>
+                ${wrongQuestionsText}
+                <p style="margin-top: 15px;">${jumpInfo}</p>
+                <p style="font-size: 0.95rem; color: #ff9a3c;">提示：点击确定后将根据正确率自动跳转到对应结局</p>
             `);
             
-            // 2秒后自动跳转
-            setTimeout(() => {
-                jumpToResult(correctCount, wrongCount);
-            }, 2000);
+            // 修改确定按钮的行为，让用户先查看错误题号
+            const messageOkBtn = document.getElementById('message-ok');
+            const originalHandler = messageOkBtn.onclick;
+            
+            messageOkBtn.onclick = function() {
+                closeMessageModal();
+                // 如果有错误题目，滚动到第一个错误题目
+                if (wrongQuestionIds.length > 0) {
+                    setTimeout(() => {
+                        scrollToQuestion(wrongQuestionIds[0]);
+                        // 2秒后跳转到结果页面
+                        setTimeout(() => {
+                            jumpToResult(correctCount, wrongCount);
+                        }, 2000);
+                    }, 500);
+                } else {
+                    // 如果全对，直接跳转
+                    setTimeout(() => {
+                        jumpToResult(correctCount, wrongCount);
+                    }, 500);
+                }
+                // 恢复原来的事件处理
+                messageOkBtn.onclick = originalHandler;
+            };
         }
         
         // 获取结果文本
