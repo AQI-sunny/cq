@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CTHC网页版 - 远程控制</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a237e 0%, #311b92 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            width: 100%;
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo i {
+            font-size: 32px;
+            color: #5c6bc0;
+        }
+        
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(to right, #8c9eff, #5c6bc0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        nav a {
+            color: #c5cae9;
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: #8c9eff;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 40px 20px;
+        }
+        
+        .login-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        
+        .login-card h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #e8eaf6;
+        }
+        
+        .login-card p {
+            color: #c5cae9;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #c5cae9;
+            font-size: 15px;
+        }
+        
+        .code-input {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .code-input input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            font-size: 18px;
+            text-align: center;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        .code-input input:focus {
+            outline: none;
+            border-color: #5c6bc0;
+            box-shadow: 0 0 0 2px rgba(92, 107, 192, 0.3);
+        }
+        
+        .connect-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(to right, #5c6bc0, #3949ab);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            touch-action: manipulation;
+        }
+        
+        .connect-btn:hover {
+            background: linear-gradient(to right, #3949ab, #303f9f);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .connect-btn:active {
+            transform: translateY(0);
+        }
+        
+        .hint {
+            margin-top: 25px;
+            color: #c5cae9;
+            font-size: 14px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+        
+        .hint strong {
+            color: #8c9eff;
+        }
+        
+        .remote-control-page {
+            width: 100%;
+            display: none;
+        }
+        
+        .control-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .device-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .device-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(92, 107, 192, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .device-details h3 {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        
+        .device-details p {
+            color: #c5cae9;
+            font-size: 14px;
+        }
+        
+        .disconnect-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            touch-action: manipulation;
+        }
+        
+        .disconnect-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .remote-screen {
+            width: 100%;
+            height: 500px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .screen-placeholder {
+            text-align: center;
+            color: #c5cae9;
+        }
+        
+        .screen-placeholder i {
+            font-size: 80px;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .control-tools {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        
+        .tool-btn {
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            touch-action: manipulation;
+            user-select: none;
+        }
+        
+        .tool-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+        
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #af5c4c;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #8c9eff;
+            text-decoration: none;
+            font-size: 15px;
+            touch-action: manipulation;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #c5cae9;
+            font-size: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+        }
+        
+        /* 自定义弹窗样式 */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(3px);
+        }
+        
+        .custom-modal {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            animation: modalSlideIn 0.3s ease;
+        }
+        
+        .custom-modal-content {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .custom-modal-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #e8eaf6;
+        }
+        
+        .custom-modal-message {
+            font-size: 16px;
+            color: #c5cae9;
+            line-height: 1.5;
+        }
+        
+        .custom-modal-close {
+            background: linear-gradient(to right, #5c6bc0, #3949ab);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            touch-action: manipulation;
+        }
+        
+        .custom-modal-close:hover {
+            background: linear-gradient(to right, #3949ab, #303f9f);
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 移动端优化 */
+        @media (max-width: 768px) {
+            .login-card {
+                padding: 30px 20px;
+            }
+            
+            .logo h1 {
+                font-size: 24px;
+            }
+            
+            .control-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .remote-screen {
+                height: 350px;
+            }
+            
+            .tool-btn {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .custom-modal {
+                width: 85%;
+                padding: 25px 20px;
+            }
+            
+            .custom-modal-title {
+                font-size: 18px;
+            }
+            
+            .custom-modal-message {
+                font-size: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .code-input {
+                flex-direction: column;
+            }
+            
+            nav {
+                display: none;
+            }
+            
+            .control-tools {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .status-bar {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            /* 移动端输入框优化 */
+            input[type="text"] {
+                font-size: 16px; /* 防止iOS缩放 */
+            }
+            
+            /* 按钮点击区域优化 */
+            .connect-btn, 
+            .tool-btn, 
+            .disconnect-btn, 
+            .custom-modal-close {
+                min-height: 44px; /* iOS最小点击区域 */
+            }
+        }
+        
+        /* taptap小程序兼容 */
+        @media (hover: none) {
+            .connect-btn:hover,
+            .tool-btn:hover,
+            .disconnect-btn:hover,
+            .custom-modal-close:hover {
+                transform: none;
+            }
+        }
+        
+        /* 防止双击缩放 */
+        html {
+            touch-action: manipulation;
+        }
+        
+        /* 优化滚动体验 */
+        body {
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+    <link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
+</head>
+<body>
+    <!-- 自定义弹窗 -->
+    <div class="custom-modal-overlay" id="custom-modal">
+        <div class="custom-modal">
+            <div class="custom-modal-content">
+                <h3 class="custom-modal-title" id="modal-title">提示</h3>
+                <p class="custom-modal-message" id="modal-message"></p>
+            </div>
+            <button class="custom-modal-close" id="modal-close-btn">确定</button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-desktop"></i>
+                <h1>CTHC网页版</h1>
+            </div>
+            <nav>
+                <a href="#"><i class="fas fa-home"></i> 首页</a>
+                <a href="#"><i class="fas fa-download"></i> 下载客户端</a>
+                <a href="#"><i class="fas fa-question-circle"></i> 帮助中心</a>
+            </nav>
+        </header>
+        
+        <div class="main-content">
+            <!-- 登录/连接页面 -->
+            <div class="login-card" id="login-page">
+                <h2>远程设备连接</h2>
+                <p>输入设备连接码，远程控制另一台计算机</p>
+                
+                <div class="input-group">
+                    <label for="connection-code">连接码</label>
+                    <div class="code-input">
+                        <input type="text" id="connection-code" maxlength="6" placeholder="输入6位连接码" inputmode="numeric">
+                    </div>
+                </div>
+                
+                <button class="connect-btn" id="connect-btn">
+                    <i class="fas fa-plug"></i> 立即连接
+                </button>
+                
+                <div class="hint">
+                    <p><strong>提示：</strong> 这是一个网页版的CTHC远程连接控制页面</p>
+                    <p>尝试输入不同的连接码体验不同设备的远程控制</p>
+                    <!-- <p><strong>123456</strong> - 连接至 zw-cpt.html (张伟的计算机)</p>
+                    <p><strong>234567</strong> - 连接至 lijx-cpt.html (李建新的计算机)</p> -->
+                   <!--  <p><strong>若为随机任意6位数字</strong> - 连接至默认远程控制页面</p> -->
+                </div>
+            </div>
+            
+            <!-- 远程控制页面 - 张伟的计算机 -->
+            <div class="remote-control-page" id="zw-cpt-page">
+                <div class="control-header">
+                    <div class="device-info">
+                        <div class="device-icon">
+                            <i class="fas fa-laptop"></i>
+                        </div>
+                        <div class="device-details">
+                            <h3>张威的计算机 (ZW-CPT)</h3>
+                            <p>Windows 11 专业版 • 连接码: 123456</p>
+                        </div>
+                    </div>
+                    <button class="disconnect-btn" id="disconnect-btn-1">
+                        <i class="fas fa-sign-out-alt"></i> 断开连接
+                    </button>
+                </div>
+                
+                <div class="remote-screen">
+                    <div class="screen-placeholder">
+                        <i class="fas fa-desktop"></i>
+                        <h3>远程桌面连接建立失败</h3>
+                        <p>计算机: ZW-CPT • 分辨率: 1920x1080</p>
+                        <!-- <p>这是一个模拟远程控制界面，实际功能需要CTHC客户端支持</p> -->
+                    </div>
+                </div>
+                
+                <div class="control-tools">
+                    <div class="tool-btn">
+                        <i class="fas fa-exchange-alt"></i> 切换显示模式
+                    </div>
+                    <div class="tool-btn">
+                        <i class="fas fa-keyboard"></i> 发送Ctrl+Alt+Del
+                    </div>
+                    <div class="tool-btn">
+                        <i class="fas fa-file-upload"></i> 文件传输
+                    </div>
+                    <div class="tool-btn">
+                        <i class="fasfa-volume-up"></i> 远程音频
+                    </div>
+                    <div class="tool-btn">
+                        <i class="fas fa-cog"></i> 设置
+                    </div>
+                </div>
+                
+                <div class="status-bar">
+                    <div class="connection-status">
+                        <div class="status-indicator"></div>
+                        <span>未连接 • 延迟: 28ms • 速度: 高速</span>
+                    </div>
+                    <!-- <div>
+                        会话开始时间: 10:25 AM
+                    </div> -->
+                </div>
+                
+                <a href="#" class="back-link" id="back-link-1">
+                    <i class="fas fa-arrow-left"></i> 返回连接页面
+                </a>
+            </div>
+            
+            <!-- 远程控制页面 - 李建新的计算机 -->
+            <div class="remote-control-page" id="lijx-cpt-page">
+                <div class="control-header">
+                    <div class="device-info">
+                        <div class="device-icon">
+                            <i class="fas fa-desktop"></i>
+                        </div>
+                        <div class="device-details">
+                            <h3>李建新的计算机 (LIJX-CPT)</h3>
+                            <p>macOS Ventura • 连接码: 234567</p>
+                        </div>
+                    </div>
+                    <button class="disconnect-btn" id="disconnect-btn-2">
+                        <i class="fas fa-sign-out-alt"></i> 断开连接
+                    </button>
+                </div>
+                
+                <div class="remote-screen">
+                    <div class="screen-placeholder">
+                        <i class="fas fa-desktop"></i>
+                        <h3>远程桌面连接建立失败</h3>
+                        <p>计算机: LIJX-CPT • 分辨率: 2560x1600</p>
+                        <!-- <p>这是一个模拟远程控制界面，实际功能需要CTHC客户端支持</p> -->
+                    </div>
+                </div>
+                
+                <div class="control-tools">
+                    <div class="tool-btn">
+                        <i class="fas fa-exchange-alt"></i> 切换显示模式
+                    </div>
+                    <div class="tool-btn">
+                        <i class="fas fa-keyboard"></i> 发送Ctrl+Alt+Del
+                    </div>
+                    <div class="tool-btn">
+                        <i class="fas fa-file-upload"></i> 文件传输
+                    </div>
+                    <div class="tool-btn">
+                        <i class="fas fa-volume-up"></i> 远程音频
+                    </div>
+                    <div class="tool-btn">
+                        <i class="fas fa-cog"></i> 设置
+                    </div>
+                </div>
+                
+                <div class="status-bar">
+                    <div class="connection-status">
+                        <div class="status-indicator"></div>
+                        <!-- <span>已连接 • 延迟: 35ms • 速度: 高速</span> -->
+                         <span>未连接</span>
+                    </div>
+                    <!-- <div>
+                        会话开始时间: 10:30 AM
+                    </div> -->
+                </div>
+                
+                <a href="#" class="back-link" id="back-link-2">
+                    <i class="fas fa-arrow-left"></i> 返回连接页面
+                </a>
+            </div>
+            
+            <!-- 远程控制页面 - 默认 -->
+            <div class="remote-control-page" id="default-page">
+                <div class="control-header">
+                    <div class="device-info">
+                        <div class="device-icon">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <div class="device-details">
+                            <h3>远程计算机</h3>
+                            <p>连接码: <span id="current-code"></span></p>
+                        </div>
+                    </div>
+                    <button class="disconnect-btn" id="disconnect-btn-3">
+                        <i class="fas fa-sign-out-alt"></i> 断开连接
+                    </button>
+                </div>
+                
+                <div class="remote-screen">
+                    <div class="screen-placeholder">
+                        <i class="fas fa-desktop"></i>
+                        <h3>远程桌面连接建立失败</h3>
+                        <p>连接码: <span id="current-code-2"></span></p>
+                        <!-- <p>这是一个模拟远程控制界面，实际功能需要CTHC客户端支持</p> -->
+                    </div>
+                </div>
+                
+                <div class="control-tools">
+                    <div class="tool-btn">
+                        <i class="fas fa-exchange-alt"></i> 切换显示模式
+                    </div>
+                    <div class="tool-btn">
+                        <i class="fas fa-keyboard"></i> 发送Ctrl+Alt+Del
+                    </div>
+                    <div class="tool-btn">
+                        <i class="fas fa-file-upload"></i> 文件传输
+                    </div>
+                    <div class="tool-btn">
+                        <i class="fas fa-volume-up"></i> 远程音频
+                    </div>
+                    <div class="tool-btn">
+                        <i class="fas fa-cog"></i> 设置
+                    </div>
+                </div>
+                
+                <div class="status-bar">
+                    <div class="connection-status">
+                        <div class="status-indicator"></div>
+                        <!-- <span>已连接 • 延迟: 42ms • 速度: 中速</span> -->
+                        <span>未连接</span>
+                    </div>
+                   <!--  <div>
+                        会话开始时间: 10:35 AM
+                    </div> -->
+                </div>
+                
+                <a href="#" class="back-link" id="back-link-3">
+                    <i class="fas fa-arrow-left"></i> 返回连接页面
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
+    
+    <footer>
+        <p>© 2025 Connect to his computer | 本页面仅用于内部连接测试，非官方产品</p>
+    </footer>
+
+    <script>
+    // 页面元素
+    const loginPage = document.getElementById('login-page');
+    const zwPage = document.getElementById('zw-cpt-page');
+    const lijxPage = document.getElementById('lijx-cpt-page');
+    const defaultPage = document.getElementById('default-page');
+    const connectBtn = document.getElementById('connect-btn');
+    const connectionCodeInput = document.getElementById('connection-code');
+    
+    // 弹窗元素
+    const customModal = document.getElementById('custom-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalMessage = document.getElementById('modal-message');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    
+    // 连接码到页面的映射
+    const codeMapping = {
+        '554615': 'zw-cpt.html',
+        '654146': 'mmdn.html',
+        '351565': 'yeldn.html',
+     '541545': 'shenxj-cpt.html',
+     '186165': 'zhendcpt.html',
+     '641565': 'heancpt.html',
+     '879155': 'reindn.html'
+        /* '164231': 'lijx-cpt.html' */
+    };
+    
+    // 当前连接码
+    let currentConnectionCode = '';
+    
+    // 显示自定义弹窗
+    function showModal(title, message) {
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+        customModal.style.display = 'flex';
+        
+        // 确保弹窗在移动端正确显示
+        setTimeout(() => {
+            customModal.style.opacity = '1';
+        }, 10);
+    }
+    
+    // 隐藏自定义弹窗
+    function hideModal() {
+        customModal.style.opacity = '0';
+        setTimeout(() => {
+            customModal.style.display = 'none';
+        }, 300);
+    }
+    
+    // 弹窗关闭按钮事件
+    modalCloseBtn.addEventListener('click', hideModal);
+    
+    // 点击弹窗背景也可以关闭
+    customModal.addEventListener('click', function(e) {
+        if (e.target === customModal) {
+            hideModal();
+        }
+    });
+    
+    // 连接按钮点击事件
+    connectBtn.addEventListener('click', function() {
+        const code = connectionCodeInput.value.trim();
+        
+        if (!code) {
+            showModal('提示', '请输入连接码');
+            connectionCodeInput.focus();
+            return;
+        }
+        
+        if (code.length !== 6 || !/^\d+$/.test(code)) {
+            showModal('提示', '连接码必须是6位数字');
+            connectionCodeInput.focus();
+            return;
+        }
+        
+        currentConnectionCode = code;
+        
+        // 检查是否需要跳转到外部页面
+        if (codeMapping[code]) {
+            // 在新窗口打开对应的HTML文件
+            window.open(codeMapping[code], '_blank');
+            return; // 直接返回，不显示本地页面
+        }
+        
+        // 如果是其他连接码，显示默认页面
+        // 隐藏登录页面
+        loginPage.style.display = 'none';
+        
+        // 更新默认页面的连接码显示
+        document.getElementById('current-code').textContent = code;
+        document.getElementById('current-code-2').textContent = code;
+        
+        // 显示默认远程控制页面
+        defaultPage.style.display = 'block';
+    });
+    
+    // 断开连接按钮事件
+    document.getElementById('disconnect-btn-1').addEventListener('click', goBackToLogin);
+    document.getElementById('disconnect-btn-2').addEventListener('click', goBackToLogin);
+    document.getElementById('disconnect-btn-3').addEventListener('click', goBackToLogin);
+    
+    // 返回链接事件
+    document.getElementById('back-link-1').addEventListener('click', goBackToLogin);
+    document.getElementById('back-link-2').addEventListener('click', goBackToLogin);
+    document.getElementById('back-link-3').addEventListener('click', goBackToLogin);
+    
+    // 返回登录页面函数
+    function goBackToLogin(e) {
+        if (e) e.preventDefault();
+        
+        // 隐藏所有远程控制页面
+        zwPage.style.display = 'none';
+        lijxPage.style.display = 'none';
+        defaultPage.style.display = 'none';
+        
+        // 清空输入框
+        connectionCodeInput.value = '';
+        
+        // 显示登录页面
+        loginPage.style.display = 'block';
+    }
+    
+    // 允许按Enter键连接
+    connectionCodeInput.addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') {
+            connectBtn.click();
+        }
+    });
+    
+    // 模拟连接码输入
+    document.addEventListener('DOMContentLoaded', function() {
+        // 聚焦到连接码输入框
+        connectionCodeInput.focus();
+        
+        // 添加示例连接码点击功能
+        const hintElements = document.querySelectorAll('.hint strong');
+        hintElements.forEach(el => {
+            el.style.cursor = 'pointer';
+            el.addEventListener('click', function() {
+                const code = this.textContent;
+                connectionCodeInput.value = code;
+                connectBtn.click();
+            });
+        });
+        
+        // 移动端输入优化
+        connectionCodeInput.addEventListener('touchstart', function(e) {
+            // 防止移动端点击输入框时的默认行为
+            e.stopPropagation();
+        }, { passive: true });
+        
+        // 防止移动端双击缩放
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(e) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+        
+        // 移动端输入框聚焦时禁止页面滚动
+        let inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                // 在移动端，聚焦输入框时滚动到可视区域
+                setTimeout(() => {
+                    this.scrollIntoView({behavior: 'smooth', block: 'center'});
+                }, 300);
+            });
+        });
+    });
+    
+    // 防止表单提交刷新页面
+    document.addEventListener('submit', function(e) {
+        e.preventDefault();
+    });
+</script>
+ <script src="pages.js"></script>
+    <script src="scball.js"></script>
+<script src="visit.js"></script>
+
+</body>
+</html>

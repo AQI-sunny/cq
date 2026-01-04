@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发送短信给......</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .header h1 i {
+            font-size: 1.5rem;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        
+        .form-container {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-label {
+            display: block;
+            color: #555;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+        
+        .input-wrapper:focus-within {
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+        
+        .country-code {
+            padding: 0 15px;
+            background: #f8f9fa;
+            border-right: 2px solid #e1e5e9;
+            color: #333;
+            font-weight: 500;
+            height: 56px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .phone-input {
+            flex: 1;
+            border: none;
+            padding: 15px;
+            font-size: 1.1rem;
+            outline: none;
+            color: #333;
+        }
+        
+        .phone-input::placeholder {
+            color: #aaa;
+        }
+        
+        .clear-btn {
+            position: absolute;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: none;
+        }
+        
+        .clear-btn.show {
+            display: block;
+        }
+        
+        .message-area {
+            margin-bottom: 25px;
+        }
+        
+        .message-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .message-label span:last-child {
+            color: #666;
+            font-size: 0.85rem;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 1rem;
+            resize: vertical;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        textarea:focus {
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+        
+        .target-number {
+            background: #f0f7ff;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .target-number i {
+            color: #4facfe;
+            font-size: 1.2rem;
+        }
+        
+        .target-number span {
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .target-number .number {
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .error-message {
+            background: #fee;
+            color: #e74c3c;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: flex;
+            animation: fadeIn 0.3s;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        /* 数字键盘样式 */
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .keypad-btn {
+            padding: 15px;
+            background: #f8f9fa;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .keypad-btn:hover {
+            background: #e9ecef;
+        }
+        
+        .keypad-btn:active {
+            transform: scale(0.95);
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                max-width: 100%;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <i class="fas fa-sms"></i>
+                发送短信
+            </h1>
+            <p>输入完整手机号码后发送短信</p>
+        </div>
+        
+        <div class="form-container">
+            <form id="smsForm">
+                <div class="form-group">
+                    <label class="form-label">收件人手机号码</label>
+                    <div class="input-wrapper">
+                        <div class="country-code">+86</div>
+                        <input 
+                            type="tel" 
+                            id="phoneNumber" 
+                            class="phone-input" 
+                            placeholder="请输入11位手机号码"
+                            maxlength="11"
+                            required
+                            autofocus
+                        >
+                        <button type="button" class="clear-btn" id="clearBtn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="target-number">
+                    <i class="fas fa-phone"></i>
+                    <span>目标号码：</span>
+                    
+                    <span class="pulse">123 1234 </span>
+                    <span class="number">________</span>
+                </div>
+                
+                <div class="form-group message-area">
+                    <div class="message-label">
+                        <span class="form-label">短信内容</span>
+                        <span id="charCount">0/200</span>
+                    </div>
+                    <textarea 
+                        id="messageContent" 
+                        placeholder="请输入短信内容...例如:您好"
+                        maxlength="200"
+                        required
+                    ></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i>
+                    发送短信到......
+                </button>
+                
+                <div class="error-message" id="errorMessage">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>请输入正确的11位手机号码</span>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>短信发送系统 | 请确保号码正确后再发送</p>
+    </div>
+    
+    <script>
+        // DOM元素
+        const phoneInput = document.getElementById('phoneNumber');
+        const clearBtn = document.getElementById('clearBtn');
+        const messageContent = document.getElementById('messageContent');
+        const charCount = document.getElementById('charCount');
+        const smsForm = document.getElementById('smsForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        // 清空输入框
+        clearBtn.addEventListener('click', function() {
+            phoneInput.value = '';
+            phoneInput.focus();
+            clearBtn.classList.remove('show');
+        });
+        
+        // 显示/隐藏清空按钮
+        phoneInput.addEventListener('input', function() {
+            if (phoneInput.value.length > 0) {
+                clearBtn.classList.add('show');
+            } else {
+                clearBtn.classList.remove('show');
+            }
+        });
+        
+        // 字符计数
+        messageContent.addEventListener('input', function() {
+            const length = messageContent.value.length;
+            charCount.textContent = `${length}/200`;
+            
+            if (length > 180) {
+                charCount.style.color = '#e74c3c';
+            } else if (length > 150) {
+                charCount.style.color = '#f39c12';
+            } else {
+                charCount.style.color = '#666';
+            }
+        });
+        
+        // 表单提交
+        smsForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const phone = phoneInput.value.trim();
+            const message = messageContent.value.trim();
+            
+            // 验证手机号码
+            if (!isValidPhone(phone)) {
+                showError('请输入正确的11位手机号码');
+                phoneInput.focus();
+                return;
+            }
+            
+            // 验证短信内容
+            if (message.length === 0) {
+                showError('请输入短信内容');
+                messageContent.focus();
+                return;
+            }
+            
+            // 检查是否以6153结尾
+            if (!phone.endsWith('6153')) {
+                showError('手机号错误');
+                return;
+            }
+            
+            // 禁用提交按钮，防止重复提交
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 发送中...';
+            
+            // 模拟发送过程
+            setTimeout(() => {
+                // 存储数据到本地存储（用于在duanx.html中显示）
+                localStorage.setItem('smsData', JSON.stringify({
+                    phone: phone,
+                    message: message,
+                    time: new Date().toLocaleString('zh-CN'),
+                    status: '已发送'
+                }));
+                
+                // 跳转到短信详情页
+                window.location.href = 'duanx-rein.html';
+            }, 1500);
+        });
+        
+        // 验证手机号码格式
+        function isValidPhone(phone) {
+            const phoneRegex = /^1[0-9]\d{9}$/;
+            return phoneRegex.test(phone);
+        }
+        
+        // 显示错误信息
+        function showError(msg) {
+            errorMessage.querySelector('span').textContent = msg;
+            errorMessage.classList.add('show');
+            
+            setTimeout(() => {
+                errorMessage.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 自动填写8715的演示
+        setTimeout(() => {
+            if (phoneInput.value === '1231234xxxx') {
+                phoneInput.placeholder = "例如：1231234XXXX";
+            }
+        }, 2000);
+        
+        // 键盘快捷键支持
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+Enter 发送
+            if (e.ctrlKey && e.key === 'Enter') {
+                smsForm.dispatchEvent(new Event('submit'));
+            }
+            
+            // Esc 清空手机号
+            if (e.key === 'Escape' && document.activeElement === phoneInput) {
+                phoneInput.value = '';
+            }
+        });
+        
+        // 初始聚焦
+        phoneInput.focus();
+    </script>
+ <script src="pages.js"></script>
+<script src="scball.js"></script>
+<script src="visit.js"></script>
+</body>
+</html>

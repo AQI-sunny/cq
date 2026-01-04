@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>甜甜圈 - 兰花香</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 全局重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans CN", sans-serif;
+        }
+        
+        body {
+            background-color: #f0f0f0;
+            color: #333;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+            touch-action: manipulation;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* 全屏朋友圈容器 */
+        .wechat-moments-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f0f0f0;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        /* 顶部导航栏 - 模拟微信PC端顶部 */
+        .moments-header {
+            height: 60px;
+            background-color: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            justify-content: space-between;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .wechat-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #c107a5, #f009ae);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .header-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .header-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: #666;
+        }
+        
+        .header-btn:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .close-btn {
+            color: #ff4d4d;
+            font-size: 20px;
+            font-weight: 300;
+        }
+        
+        /* 内容区域 */
+        .moments-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* 左侧边栏 - 模拟微信PC端左侧 */
+        .moments-sidebar {
+            width: 260px;
+            background-color: #fff;
+            border-right: 1px solid #e5e5e5;
+            padding-top: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: #333;
+        }
+        
+        .sidebar-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .sidebar-item.active {
+            background-color: #f0f0f0;
+            border-left: 3px solid #07c160;
+        }
+        
+        .sidebar-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+        
+        .sidebar-text {
+            font-size: 15px;
+            font-weight: 400;
+        }
+        
+        /* 右侧主内容区 */
+        .moments-main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 40px;
+            background-color: #fafafa;
+        }
+        
+        /* 朋友圈封面区域 */
+        .moments-cover {
+            height: 360px;
+            background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5)), url('./beij1.png');
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+        }
+        
+        .cover-user-info {
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            color: white;
+        }
+        
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            margin-right: 20px;
+        }
+        
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-name {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .user-signature {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        /* 朋友圈动态区域 */
+        .moments-list {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .moment-item {
+            padding: 20px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+        }
+        
+        .moment-item:last-child {
+            border-bottom: none;
+        }
+        
+        .moment-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .moment-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .moment-content {
+            flex: 1;
+        }
+        
+        .moment-user {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .moment-text {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .moment-images {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+            max-width: 500px;
+        }
+        
+        .moment-image {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 6px;
+            overflow: hidden;
+            cursor: pointer;
+            background-color: #f5f5f5;
+        }
+        
+        .moment-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .moment-image:hover img {
+            transform: scale(1.05);
+        }
+        
+        .moment-info {
+            display: flex;
+            align-items: center;
+            color: #8a8a8a;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+        
+        .moment-time {
+            margin-right: 15px;
+        }
+        
+        .moment-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .moment-action {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #8a8a8a;
+            cursor: pointer;
+            transition: color 0.2s;
+            font-size: 14px;
+        }
+        
+        .moment-action:hover {
+            color: #07c160;
+        }
+        
+        /* 发布新动态区域 */
+        .post-moment {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+        }
+        
+        .post-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .post-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .post-input {
+            flex: 1;
+        }
+        
+        .post-textarea {
+            width: 100%;
+            min-height: 80px;
+            border: none;
+            resize: none;
+            font-size: 15px;
+            line-height: 1.5;
+            color: #333;
+            outline: none;
+            font-family: inherit;
+        }
+        
+        .post-textarea::placeholder {
+            color: #999;
+        }
+        
+        .post-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .post-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .post-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #8a8a8a;
+            transition: background-color 0.2s;
+        }
+        
+        .post-icon:hover {
+            background-color: #f5f5f5;
+            color: #07c160;
+        }
+        
+        .post-button {
+            background-color: #07c160;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .post-button:hover {
+            background-color: #06ad56;
+        }
+        
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .moments-header {
+                height: 50px;
+                padding: 0 15px;
+            }
+            
+            .wechat-logo {
+                width: 32px;
+                height: 32px;
+                font-size: 18px;
+            }
+            
+            .header-title {
+                font-size: 16px;
+            }
+            
+            .moments-sidebar {
+                display: none; /* 移动端隐藏侧边栏 */
+            }
+            
+            .moments-main {
+                padding: 15px;
+            }
+            
+            .moments-cover {
+                height: 240px;
+                border-radius: 0;
+                margin: -15px -15px 15px -15px;
+                width: calc(100% + 30px);
+            }
+            
+            .cover-user-info {
+                padding: 15px;
+            }
+            
+            .user-avatar {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .user-name {
+                font-size: 20px;
+            }
+            
+            .moment-images {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .moments-cover {
+                height: 200px;
+            }
+            
+            .user-avatar {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .user-name {
+                font-size: 18px;
+            }
+            
+            .moment-images {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* 防止页面滚动 */
+        .no-scroll {
+            overflow: hidden;
+        }
+        
+        /* 图片预览模态框 */
+        .image-preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .preview-image {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+        
+        .close-preview {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 32px;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: background-color 0.2s;
+        }
+        
+        .close-preview:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* 加载动画 */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f0f0f0;
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(7, 193, 96, 0.2);
+            border-radius: 50%;
+            border-top-color: #07c160;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        .loading-text {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 确保兼容H5环境 */
+        @media (max-aspect-ratio: 3/4) {
+            /* 特别针对竖屏H5环境优化 */
+            .moments-cover {
+                height: 35vh;
+            }
+            
+            .moments-list, .post-moment {
+                padding: 15px;
+            }
+        }
+        
+        /* 防止文本选择 */
+        .no-select {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        /* 确保按钮在移动端有足够的点击区域 */
+        button, .header-btn, .moment-action, .post-icon {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        
+        /* ========== 新增：评论和点赞区域样式 ========== */
+        
+        /* 点赞区域 */
+        .likes-section {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 12px;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #ff6b6b;
+        }
+        
+        .likes-icon {
+            color: #ff6b6b;
+            margin-right: 5px;
+            font-size: 14px;
+        }
+        
+        .like-user {
+            color: #07c160;
+            font-weight: 500;
+            font-size: 13px;
+            padding: 2px 6px;
+            background-color: rgba(7, 193, 96, 0.1);
+            border-radius: 12px;
+        }
+        
+        /* 评论区域 */
+        .comments-section {
+            margin-top: 10px;
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #4dabf7;
+        }
+        
+        .comment-item {
+            display: flex;
+            margin-bottom: 8px;
+            padding: 5px 0;
+            border-bottom: 1px dashed #dee2e6;
+        }
+        
+        .comment-item:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .comment-user {
+            font-weight: 600;
+            color: #07c160;
+            font-size: 13px;
+            margin-right: 5px;
+            flex-shrink: 0;
+        }
+        
+        .comment-reply {
+            color: #4dabf7;
+            font-weight: 600;
+        }
+        
+        .comment-text {
+            font-size: 13px;
+            line-height: 1.4;
+            color: #333;
+        }
+        
+        .comment-time {
+            color: #8a8a8a;
+            font-size: 11px;
+            margin-left: auto;
+            flex-shrink: 0;
+            align-self: flex-start;
+        }
+        
+        /* 发布评论区域 */
+        .add-comment {
+            display: flex;
+            margin-top: 15px;
+            gap: 8px;
+        }
+        
+        .comment-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 20px;
+            font-size: 13px;
+            outline: none;
+            background-color: white;
+            transition: border-color 0.2s;
+        }
+        
+        .comment-input:focus {
+            border-color: #07c160;
+        }
+        
+        .send-comment-btn {
+            background-color: #07c160;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 0 15px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            flex-shrink: 0;
+        }
+        
+        .send-comment-btn:hover {
+            background-color: #06ad56;
+        }
+        
+        /* 评论区域响应式 */
+        @media (max-width: 768px) {
+            .comments-section, .likes-section {
+                padding: 10px;
+            }
+            
+            .comment-input {
+                padding: 6px 10px;
+            }
+            
+            .send-comment-btn {
+                padding: 0 12px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
+</head>
+<body class="no-scroll">
+    <!-- 加载界面 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">加载甜甜圈中...</div>
+    </div>
+    
+    <!-- 全屏朋友圈界面 -->
+    <div class="wechat-moments-container" id="momentsContainer" style="display: none;">
+        <!-- 顶部导航栏 -->
+        <div class="moments-header">
+            <div class="header-left">
+                <div class="wechat-logo">T</div>
+                <div class="header-title">甜甜圈</div>
+            </div>
+            <div class="header-right">
+                <div class="header-btn">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="header-btn">
+                    <i class="fas fa-ellipsis-v"></i>
+                </div>
+                <div class="header-btn close-btn" id="closeBtn">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 内容区域 -->
+        <div class="moments-content">
+            <!-- 左侧边栏 -->
+            <div class="moments-sidebar">
+                <div class="sidebar-item active">
+                    <div class="sidebar-icon">
+                        <i class="far fa-newspaper"></i>
+                    </div>
+                    <div class="sidebar-text">盆U圈</div>
+                </div>
+                <div class="sidebar-item">
+                    <div class="sidebar-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <div class="sidebar-text">盆U列表</div>
+                </div>
+                <div class="sidebar-item">
+                    <div class="sidebar-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <div class="sidebar-text">照片墙</div>
+                </div>
+                <div class="sidebar-item">
+                    <div class="sidebar-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="sidebar-text">我的收藏</div>
+                </div>
+                <div class="sidebar-item">
+                    <div class="sidebar-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div class="sidebar-text">盆U圈设置</div>
+                </div>
+            </div>
+            
+            <!-- 右侧主内容区 -->
+            <div class="moments-main">
+                <!-- 封面区域 -->
+                <div class="moments-cover">
+                    <div class="cover-user-info">
+                        <div class="user-avatar">
+                            <img src="yltx.jpg" alt="薯饼头像">
+                        </div>
+                        <div>
+                            <div class="user-name">兰花香</div>
+                            <div class="user-signature">等雨过天晴。</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 发布新动态区域 -->
+                <div class="post-moment">
+                    <div class="post-avatar">
+                        <img src="yltx.jpg" alt="用户头像">
+                    </div>
+                    <div class="post-input">
+                        <textarea class="post-textarea" placeholder="分享新鲜事..."></textarea>
+                        <div class="post-actions">
+                            <div class="post-icons">
+                                <div class="post-icon" title="添加照片">
+                                    <i class="fas fa-image"></i>
+                                </div>
+                                <div class="post-icon" title="添加表情">
+                                    <i class="far fa-smile"></i>
+                                </div>
+                                <div class="post-icon" title="@好友">
+                                    <i class="fas fa-at"></i>
+                                </div>
+                                <div class="post-icon" title="添加位置">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                            </div>
+                            <button class="post-button">发布</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 朋友圈动态列表 -->
+                <div class="moments-list">
+                    <!-- 动态1 - 小甜甜 --
+                    <- <div class="moment-item" id="moment1">
+                        <div class="moment-avatar">
+                            <img src="zyztx.jpg" alt="用户头像">
+                        </div>
+                        <div class="moment-content">
+                            <div class="moment-user">周于彰（兴健大厦物业管理处）</div>
+                            <div class="moment-text">
+                                天一定会亮的。
+                            </div>
+                            <div class="moment-images">
+                                <div class="moment-image">
+                                    <img src="./yandi.png" alt="照片">
+                                </div>
+                                <!- <div class="moment-image">
+                                    <img src="https://images.unsplash.com/photo-1579761314336-f6ea7b68e0d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2067&q=80" alt="甜甜圈照片">
+                                </div>
+                                <div class="moment-image">
+                                    <img src="https://images.unsplash.com/photo-1508736793126-08c6f81d47c0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2064&q=80" alt="甜甜圈照片">
+                                </div> ->
+                            </div>
+                            <div class="moment-info">
+                                <div class="moment-time">2小时前</div>
+                                <div class="moment-actions">
+                                    <div class="moment-action like-btn">
+                                        <i class="fas fa-thumbs-up"></i> 赞
+                                    </div>
+                                    <div class="moment-action comment-btn">
+                                        <i class="far fa-comment"></i> 评论
+                                    </div>
+                                    <div class="moment-action">
+                                        <i class="fas fa-share"></i> 分享
+                                    </div>
+                                </div>
+                            </div>
+                            -- 点赞区域 --
+                            <div class="likes-section">
+                                <span class="likes-icon"><i class="fas fa-thumbs-up"></i></span>
+                                <span class="like-user">上校鸡块（网友）</span>
+                                <span class="like-user">兰花香</span>
+                                <-- <span class="like-user">我爱柚子</span> --
+                            </div>
+                            
+                            <- 评论区域 --
+                            <div class="comments-section">
+                                <div class="comment-item">
+                                    <span class="comment-user">上校鸡块（网友）：</span>
+                                    <span class="comment-text">要注意身体健康呀！</span>
+                                    <span class="comment-time">1小时前</span>
+                                </div>
+                                <div class="comment-item">
+                                    <span class="comment-user">兰花香：</span>
+                                    <span class="comment-text">智齿！</span>
+                                    <span class="comment-time">1小时前</span>
+                                </div>
+                                <-- <div class="comment-item">
+                                    <span class="comment-user">兰花香：</span>
+                                    <span class="comment-text">哇，看起来好好吃！周末我也要去！</span>
+                                    <span class="comment-time">45分钟前</span>
+                                </div> --
+                            </div>
+                            
+                            <-- 发布评论区域 --
+                            <div class="add-comment">
+                                <input type="text" class="comment-input" placeholder="评论...">
+                                <button class="send-comment-btn">发送</button>
+                            </div>
+                        </div>
+                    </div> -->
+                    
+                    
+                    <!-- 动态3 - 我爱柚子 -->
+                    <div class="moment-item" id="moment3">
+                        <div class="moment-avatar">
+                            <img src="./mmtx.jpg" alt="麦麦头像">
+                        </div>
+                        <div class="moment-content">
+                            <div class="moment-user">麦麦脆脆薯饼</div>
+                            <div class="moment-text">
+                                没想到CEO也会喝蜂蜜柚子茶这种东西阿！好接地气的感觉！
+                            <!-- </div>
+                             <div class="moment-images">
+                                <div class="moment-image">
+                                    <img src="./fmyzc.png" alt="照片">
+                                </div>
+                                
+                            </div> -->
+                            <div class="moment-info">
+                                <div class="moment-time">昨天</div>
+                                <div class="moment-actions">
+                                    <div class="moment-action like-btn">
+                                        <i class="far fa-thumbs-up"></i> 赞
+                                    </div>
+                                    <div class="moment-action comment-btn">
+                                        <i class="far fa-comment"></i> 评论
+                                    </div>
+                                    <div class="moment-action">
+                                        <i class="fas fa-share"></i> 分享
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 点赞区域 -->
+                            <div class="likes-section">
+                                <span class="likes-icon"><i class="fas fa-thumbs-up"></i></span>
+                                <span class="like-user">兰花香</span>
+                                <span class="like-user">Rjo（同事甲）</span>
+                                <span class="like-user">芒果绵绵冰（同事乙）</span>
+                            </div>
+                            
+                            <!-- 评论区域 -->
+                            <div class="comments-section">
+                                <div class="comment-item">
+                                    <span class="comment-user">兰花香：</span>
+                                    <span class="comment-text">嗷！记住了！张帅哥爱喝蜂蜜柚子茶！</span>
+                                    <span class="comment-time">昨天</span>
+                                </div>
+                               <!--  <div class="comment-item">
+                                    <span class="comment-user">我爱柚子：</span>
+                                    <span class="comment-text">在美食街的"甜蜜厨房"，每周六下午都有课</span>
+                                    <span class="comment-time">2天前</span>
+                                </div> -->
+                               <!--  <div class="comment-item">
+                                    <span class="comment-user">假假真真：</span>
+                                    <span class="comment-text">阿！小光真的很乖~</span>
+                                    <span class="comment-time">2天前</span>
+                                </div>
+                                <div class="comment-item">
+                                    <span class="comment-user">兰花香：</span>
+                                    <span class="comment-text">我也喜欢！下次一起去买！</span>
+                                    <span class="comment-time">1天前</span>
+                                </div> -->
+                            </div>
+                            
+                            <!-- 发布评论区域 -->
+                            <div class="add-comment">
+                                <input type="text" class="comment-input" placeholder="评论...">
+                                <button class="send-comment-btn">发送</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 图片预览模态框 -->
+    <div class="image-preview-modal" id="imagePreviewModal">
+        <div class="close-preview" id="closePreviewBtn">×</div>
+        <img class="preview-image" id="previewImage" src="" alt="预览图片">
+    </div>
+
+    <!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
+
+    <script>
+        // 初始化点赞数据
+        const likesData = {
+            //  动态1的点赞列表
+            moment1: ['兰花香', '兰花香', '我爱柚子（可以传八卦的同事）'],
+            
+            //  动态2的点赞列表
+            moment2: ['兰花香', '兰花香', '我爱柚子（可以传八卦的同事）', 'Rjo（同事甲）', '药店推销的', '保洁阿姨', '张宇宙（同事丙）'],
+            
+            //  动态3的点赞列表
+            moment3: ['兰花香', 'Rjo（同事甲）', '邻居王阿姨']
+        };
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initMoments();
+        });
+        
+        function initMoments() {
+            // 模拟加载过程
+            setTimeout(function() {
+                document.getElementById('loadingOverlay').style.display = 'none';
+                document.getElementById('momentsContainer').style.display = 'flex';
+                
+                // 初始化事件监听
+                initEventListeners();
+                
+                // 初始化所有动态的点赞和评论功能
+                initAllMomentsLikes();
+                initAllMomentsComments();
+                
+                // 添加触觉反馈支持
+                if (navigator.vibrate) {
+                    // 为重要交互添加轻微震动
+                    document.querySelectorAll('.header-btn, .moment-action, .post-icon, .post-button').forEach(element => {
+                        element.addEventListener('click', function() {
+                            navigator.vibrate(10);
+                        });
+                    });
+                }
+                
+                // 适配移动端H5环境
+                adaptForH5Environment();
+            }, 800);
+        }
+        
+        // 初始化所有动态的点赞功能
+        function initAllMomentsLikes() {
+            // 获取所有动态
+            const moments = document.querySelectorAll('.moment-item');
+            
+            moments.forEach((moment, index) => {
+                const momentId = `moment${index + 1}`;
+                initMomentLikes(moment, momentId);
+            });
+        }
+        
+        // 初始化单个动态的点赞功能
+        function initMomentLikes(momentElement, momentId) {
+            const likeBtn = momentElement.querySelector('.like-btn');
+            const likesSection = momentElement.querySelector('.likes-section');
+            
+            if (!likeBtn || !likesSection) return;
+            
+            // 初始化点赞状态和数据
+            let isLiked = likesData[momentId] && likesData[momentId].includes('兰花香');
+            let likes = likesData[momentId] ? [...likesData[momentId]] : [];
+            
+            // 设置初始点赞图标状态
+            const icon = likeBtn.querySelector('i');
+            if (isLiked) {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                likeBtn.style.color = '#07c160';
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                likeBtn.style.color = '#8a8a8a';
+            }
+            
+            likeBtn.addEventListener('click', function() {
+                const userName = momentElement.querySelector('.moment-user').textContent;
+                
+                if (isLiked) {
+                    // 取消点赞
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    this.style.color = '#8a8a8a';
+                    
+                    // 从点赞列表中移除麦麦脆脆
+                    const index = likes.indexOf('兰花香');
+                    if (index !== -1) {
+                        likes.splice(index, 1);
+                    }
+                    
+                    showToast(`已取消点赞 ${userName} 的动态`);
+                } else {
+                    // 点赞
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    this.style.color = '#07c160';
+                    
+                    // 添加到点赞列表
+                    if (!likes.includes('兰花香')) {
+                        likes.unshift('兰花香'); // 添加到最前面
+                    }
+                    
+                    showToast(`已点赞 ${userName} 的动态`);
+                }
+                
+                // 更新点赞列表显示
+                updateLikesList(likesSection, likes);
+                isLiked = !isLiked;
+            });
+            
+            // 初始化点赞列表显示
+            updateLikesList(likesSection, likes);
+        }
+        
+        function updateLikesList(likesSection, likesArray) {
+            // 更新点赞列表显示
+            if (!likesSection || likesArray.length === 0) {
+                if (likesSection) likesSection.innerHTML = '';
+                return;
+            }
+            
+            let html = '<span class="likes-icon"><i class="fas fa-thumbs-up"></i></span>';
+            likesArray.forEach(user => {
+                html += `<span class="like-user">${user}</span>`;
+            });
+            likesSection.innerHTML = html;
+        }
+        
+        // 初始化所有动态的评论功能
+        function initAllMomentsComments() {
+            // 为每个动态初始化评论功能
+            const moments = document.querySelectorAll('.moment-item');
+            
+            moments.forEach((moment, index) => {
+                const commentInput = moment.querySelector('.comment-input');
+                const sendCommentBtn = moment.querySelector('.send-comment-btn');
+                const commentsSection = moment.querySelector('.comments-section');
+                const commentBtn = moment.querySelector('.comment-btn');
+                
+                if (commentInput && sendCommentBtn && commentsSection) {
+                    sendCommentBtn.addEventListener('click', function() {
+                        addCommentToMoment(commentInput, commentsSection, index + 1);
+                    });
+                    
+                    commentInput.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter') {
+                            addCommentToMoment(commentInput, commentsSection, index + 1);
+                        }
+                    });
+                    
+                    if (commentBtn) {
+                        commentBtn.addEventListener('click', function() {
+                            commentInput.focus();
+                            commentInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        });
+                    }
+                }
+            });
+        }
+        
+        function addCommentToMoment(input, commentsSection, momentIndex) {
+            const commentText = input.value.trim();
+            if (!commentText) {
+                showToast('请输入评论内容');
+                return;
+            }
+            
+            // 创建新评论
+            const now = new Date();
+            const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            
+            const newComment = document.createElement('div');
+            newComment.className = 'comment-item';
+            newComment.innerHTML = `
+                <span class="comment-user">兰花香：</span>
+                <span class="comment-text">${commentText}</span>
+                <span class="comment-time">${timeStr}</span>
+            `;
+            
+            // 添加到评论区域最前面
+            const addCommentDiv = commentsSection.querySelector('.add-comment');
+            commentsSection.insertBefore(newComment, addCommentDiv);
+            
+            // 清空输入框
+            input.value = '';
+            
+            showToast('评论成功！');
+            
+            // 如果有触觉反馈
+            if (navigator.vibrate) {
+                navigator.vibrate(30);
+            }
+        }
+        
+        function initEventListeners() {
+            // 关闭按钮点击事件
+            document.getElementById('closeBtn').addEventListener('click', function() {
+                closeMomentsAndRedirect();
+            });
+            
+            // 图片点击预览
+            document.querySelectorAll('.moment-image img').forEach(img => {
+                img.addEventListener('click', function() {
+                    openImagePreview(this.src);
+                });
+            });
+            
+            // 关闭图片预览
+            document.getElementById('closePreviewBtn').addEventListener('click', closeImagePreview);
+            
+            // 图片预览模态框点击关闭
+            document.getElementById('imagePreviewModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeImagePreview();
+                }
+            });
+            
+            // 分享按钮交互
+            document.querySelectorAll('.moment-action:has(.fa-share)').forEach(action => {
+                action.addEventListener('click', function() {
+                    const userName = this.closest('.moment-item').querySelector('.moment-user').textContent;
+                    showToast(`分享 ${userName} 的动态`);
+                });
+            });
+            
+            // 发布按钮点击
+            document.querySelector('.post-button').addEventListener('click', function() {
+                const textarea = document.querySelector('.post-textarea');
+                if (textarea.value.trim()) {
+                    showToast('动态发布成功！');
+                    textarea.value = '';
+                } else {
+                    showToast('请输入要分享的内容');
+                }
+            });
+            
+            // 侧边栏项目点击
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const itemText = this.querySelector('.sidebar-text').textContent;
+                    showToast(`切换到: ${itemText}`);
+                });
+            });
+            
+            // 键盘快捷键支持
+            document.addEventListener('keydown', function(e) {
+                // ESC键关闭朋友圈
+                if (e.key === 'Escape') {
+                    closeMomentsAndRedirect();
+                }
+                
+                // Ctrl+Enter 或 Cmd+Enter 发布动态
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    document.querySelector('.post-button').click();
+                }
+            });
+            
+            // 防止页面滚动
+            document.addEventListener('touchmove', function(e) {
+                // 允许在滚动区域内滚动
+                const scrollableElements = document.querySelectorAll('.moments-main, .moments-sidebar');
+                let isScrollable = false;
+                
+                scrollableElements.forEach(element => {
+                    if (element.contains(e.target)) {
+                        isScrollable = true;
+                    }
+                });
+                
+                // 如果不是在可滚动元素内，阻止默认滚动
+                if (!isScrollable) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        }
+        
+        // 关闭朋友圈并跳转
+        function closeMomentsAndRedirect() {
+            // 添加关闭动画
+            const container = document.getElementById('momentsContainer');
+            container.style.opacity = '0';
+            container.style.transition = 'opacity 0.3s ease';
+            
+            setTimeout(function() {
+                // 跳转到指定页面
+                window.location.href = 'yeldn.html';
+            }, 300);
+        }
+        
+        // 打开图片预览
+        function openImagePreview(src) {
+            document.getElementById('previewImage').src = src;
+            document.getElementById('imagePreviewModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // 关闭图片预览
+        function closeImagePreview() {
+            document.getElementById('imagePreviewModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // 显示Toast提示
+        function showToast(message) {
+            // 移除现有的toast
+            const existingToast = document.querySelector('.toast-message');
+            if (existingToast) {
+                existingToast.remove();
+            }
+            
+            // 创建新的toast
+            const toast = document.createElement('div');
+            toast.className = 'toast-message';
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 30px;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 25px;
+                font-size: 14px;
+                z-index: 10002;
+                animation: fadeInOut 3s ease;
+                max-width: 80%;
+                text-align: center;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            `;
+            
+            // 添加动画样式
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeInOut {
+                    0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+                    10% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                    90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                    100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(toast);
+            
+            // 3秒后自动移除
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+                if (style.parentNode) {
+                    style.remove();
+                }
+            }, 3000);
+        }
+        
+        // 适配H5环境
+        function adaptForH5Environment() {
+            // 检测是否在微信或H5环境中
+            const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            // 如果是移动端，调整一些样式
+            if (isMobile) {
+                // 增加点击区域大小
+                document.querySelectorAll('.moment-action, .post-icon, .header-btn, .send-comment-btn').forEach(element => {
+                    element.style.minHeight = '44px';
+                    element.style.minWidth = '44px';
+                    element.style.display = 'flex';
+                    element.style.alignItems = 'center';
+                    element.style.justifyContent = 'center';
+                });
+                
+                // 优化长按行为
+                document.querySelectorAll('img').forEach(img => {
+                    img.addEventListener('contextmenu', function(e) {
+                        e.preventDefault();
+                        showToast('长按可以保存图片');
+                    });
+                });
+                
+                // 评论输入框优化
+                document.querySelectorAll('.comment-input').forEach(input => {
+                    input.style.minHeight = '44px';
+                });
+            }
+            
+            // 防止H5环境中的下拉刷新
+            let startY = 0;
+            document.addEventListener('touchstart', function(e) {
+                startY = e.touches[0].clientY;
+            }, { passive: true });
+            
+            document.addEventListener('touchmove', function(e) {
+                // 如果在顶部且向下拉，阻止默认行为
+                if (window.scrollY === 0 && e.touches[0].clientY > startY) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            
+            // 针对TapTap等H5游戏平台优化
+            if (window.parent !== window) {
+                // 如果在iframe中，通知父窗口调整高度
+                setTimeout(() => {
+                    const height = document.documentElement.scrollHeight;
+                    window.parent.postMessage({ type: 'resize', height: height }, '*');
+                }, 500);
+            }
+            
+            // 处理返回按钮（移动端）
+            if (window.history && isMobile) {
+                window.history.pushState(null, null, window.location.href);
+                window.addEventListener('popstate', function() {
+                    showToast('再次点击返回将退出朋友圈');
+                    setTimeout(() => {
+                        window.history.pushState(null, null, window.location.href);
+                    }, 100);
+                });
+            }
+        }
+        
+        // 错误处理
+        window.addEventListener('error', function(e) {
+            console.error('页面错误:', e.error);
+            showToast('页面加载出现问题，请刷新重试');
+        });
+        
+        // 页面可见性变化处理
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                // 页面被隐藏，暂停可能的多媒体
+            } else {
+                // 页面恢复显示
+            }
+        });
+    </script>
+ <script src="pages.js"></script>
+<script src="scball.js"></script>
+<script src="visit.js"></script>
+</body>
+</html>

@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>秘书守则 - 董事长健康提醒</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 10px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding-bottom: 80px;
+        }
+        
+        /* 头部样式 */
+        .header {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        
+        /* 卡片样式 */
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #1a237e;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .card-title i {
+            color: #3f51b5;
+        }
+        
+        /* 重要提醒卡片 */
+        .important-card {
+            border-left: 5px solid #ff5252;
+            background-color: #fff5f5;
+        }
+        
+        .important-title {
+            color: #d32f2f;
+        }
+        
+        /* 药物信息样式 */
+        .medication-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .med-item {
+            flex: 1 1 200px;
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e0e0ff;
+        }
+        
+        .med-name {
+            font-weight: bold;
+            color: #1a237e;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .warning {
+            color: #d32f2f;
+            background-color: #ffebee;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* 习惯冲突部分 */
+        .habit-conflict {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .habit-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #f5f5f5;
+        }
+        
+        .doctor-advice {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .habit-practice {
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+        }
+        
+        .icon-container {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .doctor-icon {
+            background-color: #4caf50;
+            color: white;
+        }
+        
+        .habit-icon {
+            background-color: #ff9800;
+            color: white;
+        }
+        
+        /* 秘书备注 */
+        .secretary-note {
+            background-color: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            position: relative;
+        }
+        
+        .secretary-note:before {
+            content: "秘书备注";
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #e3f2fd;
+            padding: 0 10px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #1976d2;
+        }
+        
+        /* 按钮区域 */
+        .button-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            flex: 1;
+            min-width: 150px;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: #3f51b5;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #303f9f;
+        }
+        
+        .btn-secondary {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .btn-warning {
+            background-color: #ff9800;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #f57c00;
+        }
+        
+        /* 自定义弹窗样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background-color: white;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .modal-header h3 {
+            color: #1a237e;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #777;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .modal-close:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .modal-content {
+            padding: 20px;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .card-title {
+                font-size: 1.1rem;
+            }
+            
+            .btn {
+                min-width: 100%;
+            }
+            
+            .medication-info {
+                flex-direction: column;
+            }
+            
+            .med-item {
+                flex: 1 1 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                padding: 15px;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .habit-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .icon-container {
+                margin-bottom: 10px;
+            }
+            
+            .modal-header, .modal-content, .modal-footer {
+                padding: 15px;
+            }
+        }
+        
+        /* 底部固定栏 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            padding: 15px 20px;
+            box-shadow: 0 -3px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-around;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #666;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav-item.active, .nav-item:hover {
+            color: #3f51b5;
+        }
+        
+        .nav-item i {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        /* 时间提醒 */
+        .time-reminder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f0f4ff;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+    </style>
+<link rel="stylesheet" href="sc-style.css">
+    <link rel="icon" type="image/png" href="dtma.png">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1><i class="fas fa-user-tie"></i> 董事长健康提醒系统</h1>
+            <p>秘书守则 - 重要健康信息与用药提醒</p>
+        </div>
+        
+        <!-- 重要提醒卡片 -->
+        <div class="card important-card">
+            <div class="card-title important-title">
+                <i class="fas fa-exclamation-triangle"></i> 重要健康提醒
+            </div>
+            <p>董事长患有慢性心脏病，正在服用<strong>地高辛</strong>。请注意以下药物相互作用与习惯冲突。</p>
+            <div class="warning">
+                <i class="fas fa-info-circle"></i> 地高辛与某些食物/饮料同时服用可能影响药效或增加副作用风险
+            </div>
+        </div>
+        
+        <!-- 药物信息卡片 -->
+        <div class="card">
+            <div class="card-title">
+                <i class="fas fa-pills"></i> 当前用药信息
+            </div>
+            <div class="medication-info">
+                <div class="med-item">
+                    <div class="med-name">
+                        <i class="fas fa-heartbeat"></i> 地高辛 (Digoxin)
+                    </div>
+                    <p><strong>用途：</strong>治疗慢性心力衰竭、控制心房颤动</p>
+                    <p><strong>剂量：</strong>每日一次，遵医嘱服用</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 医嘱与习惯冲突 -->
+        <div class="card">
+            <div class="card-title">
+                <i class="fas fa-stethoscope"></i> 医嘱建议与习惯冲突
+            </div>
+            <div class="habit-conflict">
+                <div class="habit-item doctor-advice">
+                    <div class="icon-container doctor-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <div>
+                        <strong>医嘱建议：</strong>服用地高辛期间应<strong>避免饮用浓茶、咖啡及含酒精饮料</strong>，这些可能影响药效或增加心脏负担。
+                    </div>
+                </div>
+                
+                <div class="habit-item habit-practice">
+                    <div class="icon-container habit-icon">
+                        <i class="fas fa-coffee"></i>
+                    </div>
+                    <div>
+                        <strong>但李总习惯：</strong>每日下午喝<strong>浓咖啡或浓茶</strong>，已持续多年。
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 秘书备注 -->
+            <div class="secretary-note">
+                "提醒过李总多次，他说'喝习惯了，没事'。"
+            </div>
+        </div>
+        
+        <!-- 交互按钮 -->
+        <div class="button-container">
+            <button class="btn btn-primary" id="remindBtn">
+                <i class="fas fa-bell"></i> 发送今日提醒
+            </button>
+            <button class="btn btn-secondary" id="detailsBtn">
+                <i class="fas fa-info-circle"></i> 查看详细信息
+            </button>
+            <button class="btn btn-warning" id="recordBtn">
+                <i class="fas fa-book-medical"></i> 记录提醒情况
+            </button>
+        </div>
+        
+        <!-- 时间提醒 -->
+        <div class="time-reminder">
+            <i class="far fa-clock"></i>
+            <span>今日提醒时间：下午 3:00（咖啡/茶时间前）</span>
+        </div>
+    </div>
+    
+    <!-- 底部导航 -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span>首页</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-bell"></i>
+            <span>提醒</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-history"></i>
+            <span>记录</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>我的</span>
+        </a>
+    </div>
+    
+    <!-- 自定义弹窗 - 详细信息 -->
+    <div class="modal-overlay" id="detailsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-info-circle"></i> 地高辛用药注意事项</h3>
+                <button class="modal-close" id="closeDetails">&times;</button>
+            </div>
+            <div class="modal-content">
+                <p><strong>地高辛 (Digoxin) 是一种强心苷类药物，用于治疗心力衰竭和某些心律不齐。</strong></p>
+                
+                <div class="warning" style="margin: 15px 0;">
+                    <i class="fas fa-exclamation-triangle"></i> 与咖啡/茶的相互作用：
+                </div>
+                
+                <ul style="padding-left: 20px; margin-bottom: 20px;">
+                    <li>咖啡因可能增加地高辛的心脏兴奋作用，导致心悸或心律不齐</li>
+                    <li>浓茶中的鞣酸可能影响药物吸收，降低疗效</li>
+                    <li>两者都可能增加心脏负担，与地高辛的治疗目的相悖</li>
+                </ul>
+                
+                <p><strong>建议替代方案：</strong></p>
+                <ul style="padding-left: 20px;">
+                    <li>建议改用低咖啡因饮料或花草茶</li>
+                    <li>如果无法完全戒除，至少确保服药后2小时内不饮用</li>
+                    <li>考虑将咖啡/茶稀释，减少浓度</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeDetailsBtn">关闭</button>
+                <button class="btn btn-primary" id="remindFromModal">
+                    <i class="fas fa-bell"></i> 发送提醒
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 自定义弹窗 - 记录提醒 -->
+    <div class="modal-overlay" id="recordModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-book-medical"></i> 记录提醒情况</h3>
+                <button class="modal-close" id="closeRecord">&times;</button>
+            </div>
+            <div class="modal-content">
+                <p>请记录您今日对董事长的提醒情况：</p>
+                
+                <div style="margin: 20px 0;">
+                    <label style="display: block; margin-bottom: 10px; font-weight: bold;">提醒结果：</label>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="radio" name="reminderResult" value="accepted" checked>
+                            <span>已接受建议，今日不喝咖啡/茶</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="radio" name="reminderResult" value="reduced">
+                            <span>同意减少饮用量或浓度</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="radio" name="reminderResult" value="ignored">
+                            <span>仍坚持习惯，未接受建议</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <label style="display: block; margin-bottom: 10px; font-weight: bold;">备注：</label>
+                    <textarea id="recordNotes" placeholder="可记录具体情况或董事长的反馈..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; min-height: 100px; resize: vertical;"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeRecordBtn">取消</button>
+                <button class="btn btn-primary" id="saveRecord">保存记录</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 自定义弹窗 - 提醒发送确认 -->
+    <div class="modal-overlay" id="reminderModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-paper-plane"></i> 发送提醒</h3>
+                <button class="modal-close" id="closeReminder">&times;</button>
+            </div>
+            <div class="modal-content">
+                <p>请选择提醒方式：</p>
+                
+                <div style="display: flex; flex-direction: column; gap: 15px; margin: 20px 0;">
+                    <button class="btn btn-secondary" id="messageReminder">
+                        <i class="fas fa-comment"></i> 发送即时消息
+                    </button>
+                    <button class="btn btn-secondary" id="callReminder">
+                        <i class="fas fa-phone"></i> 电话提醒
+                    </button>
+                    <button class="btn btn-secondary" id="scheduleReminder">
+                        <i class="fas fa-clock"></i> 设置定时提醒
+                    </button>
+                </div>
+                
+                <div class="warning">
+                    <i class="fas fa-lightbulb"></i> 建议：下午3点前发送提醒，此时李总通常还未喝咖啡/茶。
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeReminderBtn">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM元素引用
+        const detailsBtn = document.getElementById('detailsBtn');
+        const recordBtn = document.getElementById('recordBtn');
+        const remindBtn = document.getElementById('remindBtn');
+        const detailsModal = document.getElementById('detailsModal');
+        const recordModal = document.getElementById('recordModal');
+        const reminderModal = document.getElementById('reminderModal');
+        
+        // 关闭按钮引用
+        const closeDetails = document.getElementById('closeDetails');
+        const closeDetailsBtn = document.getElementById('closeDetailsBtn');
+        const closeRecord = document.getElementById('closeRecord');
+        const closeRecordBtn = document.getElementById('closeRecordBtn');
+        const closeReminder = document.getElementById('closeReminder');
+        const closeReminderBtn = document.getElementById('closeReminderBtn');
+        
+        // 从模态框内发送提醒的按钮
+        const remindFromModal = document.getElementById('remindFromModal');
+        
+        // 记录保存按钮
+        const saveRecord = document.getElementById('saveRecord');
+        
+        // 提醒方式按钮
+        const messageReminder = document.getElementById('messageReminder');
+        const callReminder = document.getElementById('callReminder');
+        const scheduleReminder = document.getElementById('scheduleReminder');
+        
+        // 显示模态框的函数
+        function showModal(modal) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // 隐藏模态框的函数
+        function hideModal(modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // 显示成功消息的函数
+        function showSuccessMessage(message) {
+            // 创建消息元素
+            const messageEl = document.createElement('div');
+            messageEl.className = 'card';
+            messageEl.style.backgroundColor = '#e8f5e9';
+            messageEl.style.borderLeft = '5px solid #4caf50';
+            messageEl.style.position = 'fixed';
+            messageEl.style.top = '20px';
+            messageEl.style.right = '20px';
+            messageEl.style.zIndex = '1001';
+            messageEl.style.maxWidth = '300px';
+            messageEl.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
+            messageEl.style.transform = 'translateX(150%)';
+            messageEl.style.transition = 'transform 0.5s ease';
+            
+            messageEl.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-check-circle" style="color: #4caf50; font-size: 1.2rem;"></i>
+                    <div>
+                        <strong style="color: #2e7d32;">操作成功</strong>
+                        <p style="margin-top: 5px; font-size: 0.9rem;">${message}</p>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(messageEl);
+            
+            // 显示消息
+            setTimeout(() => {
+                messageEl.style.transform = 'translateX(0)';
+            }, 10);
+            
+            // 3秒后隐藏并移除消息
+            setTimeout(() => {
+                messageEl.style.transform = 'translateX(150%)';
+                setTimeout(() => {
+                    if (messageEl.parentNode) {
+                        messageEl.parentNode.removeChild(messageEl);
+                    }
+                }, 500);
+            }, 3000);
+        }
+        
+        // 事件监听器
+        detailsBtn.addEventListener('click', () => showModal(detailsModal));
+        recordBtn.addEventListener('click', () => showModal(recordModal));
+        remindBtn.addEventListener('click', () => showModal(reminderModal));
+        remindFromModal.addEventListener('click', () => {
+            hideModal(detailsModal);
+            setTimeout(() => showModal(reminderModal), 300);
+        });
+        
+        // 关闭模态框事件
+        closeDetails.addEventListener('click', () => hideModal(detailsModal));
+        closeDetailsBtn.addEventListener('click', () => hideModal(detailsModal));
+        closeRecord.addEventListener('click', () => hideModal(recordModal));
+        closeRecordBtn.addEventListener('click', () => hideModal(recordModal));
+        closeReminder.addEventListener('click', () => hideModal(reminderModal));
+        closeReminderBtn.addEventListener('click', () => hideModal(reminderModal));
+        
+        // 点击模态框外部关闭
+        [detailsModal, recordModal, reminderModal].forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    hideModal(modal);
+                }
+            });
+        });
+        
+        // 保存记录
+        saveRecord.addEventListener('click', () => {
+            const result = document.querySelector('input[name="reminderResult"]:checked').value;
+            const notes = document.getElementById('recordNotes').value;
+            
+            // 在实际应用中，这里应该将数据发送到服务器
+            console.log('记录保存:', { result, notes });
+            
+            // 显示成功消息
+            let resultText = '';
+            switch(result) {
+                case 'accepted':
+                    resultText = '已接受建议';
+                    break;
+                case 'reduced':
+                    resultText = '同意减少饮用量';
+                    break;
+                case 'ignored':
+                    resultText = '未接受建议';
+                    break;
+            }
+            
+            showSuccessMessage(`提醒记录已保存：${resultText}`);
+            
+            // 清空表单
+            document.getElementById('recordNotes').value = '';
+            
+            // 关闭模态框
+            hideModal(recordModal);
+        });
+        
+        // 提醒方式按钮事件
+        messageReminder.addEventListener('click', () => {
+            showSuccessMessage('已发送即时消息提醒董事长');
+            hideModal(reminderModal);
+        });
+        
+        callReminder.addEventListener('click', () => {
+            showSuccessMessage('电话提醒已安排（下午3点）');
+            hideModal(reminderModal);
+        });
+        
+        scheduleReminder.addEventListener('click', () => {
+            showSuccessMessage('已设置每日下午2:45定时提醒');
+            hideModal(reminderModal);
+        });
+        
+        // 模拟当前时间
+        function updateTime() {
+            const timeElement = document.querySelector('.time-reminder span');
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            
+            // 如果当前时间接近下午3点，显示特殊提示
+            if (hours >= 14 && hours < 15) {
+                timeElement.innerHTML = `今日提醒时间：<strong>下午 3:00（即将到来）</strong>`;
+                timeElement.parentElement.style.backgroundColor = '#fff8e1';
+            } else {
+                timeElement.innerHTML = `今日提醒时间：下午 3:00（咖啡/茶时间前）`;
+                timeElement.parentElement.style.backgroundColor = '#f0f4ff';
+            }
+        }
+        
+        // 初始化时间显示
+        updateTime();
+        setInterval(updateTime, 60000); // 每分钟更新一次
+    </script>
+    <script src="scball.js"></script>
+<script src="pages.js"></script>
+<script src="visit.js"></script>
+</body>
+</html>

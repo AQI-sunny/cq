@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>商业档案记录 - 旺达智慧商圈项目</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            background-color: #f5f1e8;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px 15px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.05"><path d="M0,0 L100,0 L100,100 L0,100 Z" fill="none" stroke="gray" stroke-width="1"/></svg>');
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        /* 档案页面样式 */
+        .archive-page {
+            background-color: #fffef7;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            padding: 25px 20px;
+            margin-bottom: 30px;
+            position: relative;
+            border: 1px solid #e6dcc3;
+        }
+        
+        .archive-page::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(to right, #8b7355, #c0a377, #8b7355);
+            border-radius: 8px 8px 0 0;
+        }
+        
+        /* 档案标题 */
+        .archive-header {
+            text-align: center;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #d4c9a9;
+            position: relative;
+        }
+        
+        .archive-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #5d4c3a;
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+        
+        .archive-subtitle {
+            font-size: 16px;
+            color: #8c7b69;
+            font-weight: normal;
+        }
+        
+        /* 档案编号和印章 */
+        .archive-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #d4c9a9;
+            flex-wrap: wrap;
+        }
+        
+        .archive-id {
+            font-size: 14px;
+            color: #777;
+            background-color: #f9f5ed;
+            padding: 5px 12px;
+            border-radius: 4px;
+            border-left: 3px solid #8b7355;
+        }
+        
+        .archive-stamp {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            margin-top: 10px;
+        }
+        
+        .stamp-circle {
+            width: 100%;
+            height: 100%;
+            border: 3px solid #c33;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .stamp-text {
+            font-size: 14px;
+            font-weight: bold;
+            color: #c33;
+            text-align: center;
+            transform: rotate(-15deg);
+            letter-spacing: 2px;
+        }
+        
+        /* 档案内容 */
+        .archive-content {
+            margin-bottom: 30px;
+        }
+        
+        .content-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #5d4c3a;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #e6dcc3;
+            position: relative;
+        }
+        
+        .section-title::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -1px;
+            width: 60px;
+            height: 2px;
+            background-color: #8b7355;
+        }
+        
+        .section-content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.8;
+        }
+        
+        .highlight {
+            background-color: rgba(255, 243, 205, 0.5);
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #856404;
+        }
+        
+        .important-note {
+            background-color: #f8f9fa;
+            border-left: 4px solid #8b7355;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        /* 档案表格 */
+        .archive-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 15px;
+        }
+        
+        .archive-table th {
+            background-color: #f5f1e8;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: bold;
+            color: #5d4c3a;
+            border-bottom: 2px solid #d4c9a9;
+        }
+        
+        .archive-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eae2d0;
+        }
+        
+        .archive-table tr:hover {
+            background-color: #fcf9f3;
+        }
+        
+        /* 操作按钮 */
+        .archive-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .action-btn i {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        
+        .btn-primary {
+            background-color: #8b7355;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #7a6347;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: #f5f1e8;
+            color: #5d4c3a;
+            border: 1px solid #d4c9a9;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e6dcc3;
+            transform: translateY(-2px);
+        }
+        
+        .btn-warning {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+        
+        /* 自制弹窗系统 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .modal-container {
+            background-color: #fffef7;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            border: 1px solid #e6dcc3;
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #e6dcc3;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9f5ed;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #5d4c3a;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #8c7b69;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            background-color: #e6dcc3;
+            color: #5d4c3a;
+        }
+        
+        .modal-body {
+            padding: 25px 20px;
+            font-size: 16px;
+            line-height: 1.7;
+            color: #333;
+        }
+        
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #e6dcc3;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            background-color: #f9f5ed;
+            border-radius: 0 0 10px 10px;
+        }
+        
+        .modal-btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-btn-confirm {
+            background-color: #8b7355;
+            color: white;
+        }
+        
+        .modal-btn-confirm:hover {
+            background-color: #7a6347;
+        }
+        
+        .modal-btn-cancel {
+            background-color: #f5f1e8;
+            color: #5d4c3a;
+            border: 1px solid #d4c9a9;
+        }
+        
+        .modal-btn-cancel:hover {
+            background-color: #e6dcc3;
+        }
+        
+        /* 档案脚注 */
+        .archive-footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px dashed #d4c9a9;
+            font-size: 14px;
+            color: #8c7b69;
+            text-align: center;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .archive-meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .archive-stamp {
+                align-self: center;
+                margin-top: 20px;
+            }
+            
+            .archive-title {
+                font-size: 20px;
+            }
+            
+            .action-btn {
+                min-width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .archive-actions {
+                flex-direction: column;
+            }
+            
+            .modal-container {
+                max-height: 90vh;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 15px 10px;
+            }
+            
+            .archive-page {
+                padding: 20px 15px;
+            }
+            
+            .section-content {
+                font-size: 15px;
+            }
+            
+            .archive-table {
+                font-size: 14px;
+            }
+            
+            .archive-table th, 
+            .archive-table td {
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 档案页面 -->
+        <div class="archive-page">
+            <div class="archive-header">
+                <h1 class="archive-title">商业档案记录</h1>
+                <h2 class="archive-subtitle">旺达智慧商圈项目档案</h2>
+            </div>
+            
+            <div class="archive-meta">
+                <div class="archive-id">
+                    <strong>档案编号：</strong> WD-ZHQ-2025-014
+                </div>
+                <div class="archive-stamp">
+                    <div class="stamp-circle">
+                        <div class="stamp-text">商业机密<br>内部档案</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="archive-content">
+                <div class="content-section">
+                    <h3 class="section-title">项目概述</h3>
+                    <div class="section-content">
+                        <p><span class="highlight">旺达智慧商圈项目</span>是一个综合性商业开发项目，旨在打造一个集购物、娱乐、办公于一体的现代化智能商圈。项目位于城市核心商业区，总占地面积约15万平方米。</p>
+                        <p>根据最新评估，<span class="highlight">项目总价值为2.3亿元</span>，预计建设周期为3年。项目建成后将成为本地区最大的综合性商业地标，预计每年可吸引客流超过500万人次。</p>
+                        
+                        <div class="important-note">
+                            <strong>重要提示：</strong> 该项目目前由李健兴（项目总监）负责推进，近期有迹象表明其准备将项目权益转移给关联公司。
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-section">
+                    <h3 class="section-title">关键信息</h3>
+                    <table class="archive-table">
+                        <thead>
+                            <tr>
+                                <th>项目要素</th>
+                                <th>详细信息</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>项目名称</td>
+                                <td>旺达智慧商圈</td>
+                            </tr>
+                            <tr>
+                                <td>项目估值</td>
+                                <td><span class="highlight">2.3亿元人民币</span></td>
+                            </tr>
+                            <tr>
+                                <td>项目负责人</td>
+                                <td>李健兴</td>
+                            </tr>
+                            <tr>
+                                <td>关联公司</td>
+                                <td>瞰世商业控股有限公司</td>
+                            </tr>
+                            <tr>
+                                <td>项目状态</td>
+                                <td>进行中</td>
+                            </tr>
+                            <tr>
+                                <td>档案等级</td>
+                                <td>机密（内部查阅）</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="content-section">
+                    <h3 class="section-title">近期动态</h3>
+                    <div class="section-content">
+                        <p>根据内部消息，<span class="highlight">李健兴近期频繁与瞰世商业控股有限公司接触</span>，并已开始准备相关转让文件。据悉，双方已就项目转让进行多轮洽谈，初步达成转让意向。</p>
+                        <p>转让方案涉及将项目核心权益以协议方式转移至瞰世商业控股有限公司名下，而该公司实际控制人与李健兴存在密切关联关系。</p>
+                        <p>此转让行为可能涉及利益冲突，已引起内部审计部门关注。根据公司规定，重大项目权益转让需经董事会批准并公示，目前该转让流程尚未启动正式审批程序。</p>
+                    </div>
+                </div>
+                
+                <div class="content-section">
+                    <h3 class="section-title">风险提示</h3>
+                    <div class="section-content">
+                        <ul style="padding-left: 20px; margin-top: 10px;">
+                            <li style="margin-bottom: 10px;">项目权益转让可能存在利益输送风险</li>
+                            <li style="margin-bottom: 10px;">未经董事会批准的转让行为违反公司治理规定</li>
+                            <li style="margin-bottom: 10px;">关联交易需按规范披露，否则可能涉及违规</li>
+                            <li>项目估值2.3亿元，涉及重大资产变动</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="archive-actions">
+                <button class="action-btn btn-primary" id="viewDetailsBtn">
+                    <i class="fas fa-file-alt"></i> 查看详细资料
+                </button>
+                <button class="action-btn btn-secondary" id="relatedDocsBtn">
+                    <i class="fas fa-folder-open"></i> 相关文件
+                </button>
+                <button class="action-btn btn-warning" id="reportBtn">
+                    <i class="fas fa-flag"></i> 报告异常
+                </button>
+            </div>
+            
+            <div class="archive-footer">
+                <p>本档案仅供内部查阅，未经许可不得复制、传播或用于其他用途</p>
+                <p>档案更新时间：2025年12月15日 | 查阅次数：47次</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 详细资料弹窗 -->
+    <div class="modal-overlay" id="detailsModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">项目详细资料</h3>
+                <button class="modal-close" id="closeDetailsModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p><strong>项目全称：</strong>旺达智慧商圈综合开发项目</p>
+                <p><strong>项目地址：</strong>市中心商业区解放路与中山路交汇处</p>
+                <p><strong>占地面积：</strong>152,000平方米</p>
+                <p><strong>建筑面积：</strong>约450,000平方米</p>
+                <p><strong>投资总额：</strong>18.5亿元</p>
+                <p><strong>当前估值：</strong>23亿元</p>
+                <p><strong>项目组成：</strong></p>
+                <ul style="padding-left: 20px; margin-top: 10px;">
+                    <li>智能购物中心（8层，约12万㎡）</li>
+                    <li>甲级写字楼（2栋，约15万㎡）</li>
+                    <li>智慧停车场（约5万㎡）</li>
+                    <li>文化娱乐区（约8万㎡）</li>
+                    <li>休闲景观区（约5万㎡）</li>
+                </ul>
+                <p><strong>项目进度：</strong></p>
+                <ul style="padding-left: 20px; margin-top: 10px;">
+                    <li>已完成：项目规划、土地获取、设计方案</li>
+                    <li>进行中：施工图设计、招标准备</li>
+                    <li>待开始：工程施工、招商运营</li>
+                </ul>
+                <div class="important-note" style="margin-top: 20px;">
+                    <strong>内部备注：</strong>李健兴自2025年9月起开始与瞰世商业控股有限公司接洽，讨论项目权益转让事宜。双方已就转让框架达成初步意向，但尚未签署正式协议。
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-cancel" id="cancelDetailsBtn">关闭</button>
+                <button class="modal-btn modal-btn-confirm" id="downloadDetailsBtn">下载资料</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 相关文件弹窗 -->
+    <div class="modal-overlay" id="docsModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">相关文件列表</h3>
+                <button class="modal-close" id="closeDocsModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 20px;">
+                    <p>以下是"旺达智慧商圈项目"的相关文件：</p>
+                </div>
+                
+                <div style="background-color: #f9f5ed; border-radius: 6px; padding: 15px; margin-bottom: 15px;">
+                    <h4 style="color: #5d4c3a; margin-bottom: 10px;">项目文件</h4>
+                    <ul style="list-style-type: none; padding-left: 0;">
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e6dcc3;">
+                            <i class="fas fa-file-pdf" style="color: #d33; margin-right: 10px;"></i>
+                            <strong>旺达智慧商圈项目可行性研究报告.pdf</strong>
+                            <span style="float: right; color: #8c7b69;">2.4MB</span>
+                        </li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e6dcc3;">
+                            <i class="fas fa-file-word" style="color: #2b579a; margin-right: 10px;"></i>
+                            <strong>项目规划方案.docx</strong>
+                            <span style="float: right; color: #8c7b69;">1.8MB</span>
+                        </li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e6dcc3;">
+                            <i class="fas fa-file-excel" style="color: #217346; margin-right: 10px;"></i>
+                            <strong>项目财务预算表.xlsx</strong>
+                            <span style="float: right; color: #8c7b69;">3.2MB</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div style="background-color: #f9f5ed; border-radius: 6px; padding: 15px;">
+                    <h4 style="color: #5d4c3a; margin-bottom: 10px;">相关函件</h4>
+                    <ul style="list-style-type: none; padding-left: 0;">
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e6dcc3;">
+                            <i class="fas fa-envelope" style="color: #8b7355; margin-right: 10px;"></i>
+                            <strong>关于项目权益转移的内部备忘录</strong>
+                            <span style="float: right; color: #8c7b69;">2025-09-15</span>
+                        </li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e6dcc3;">
+                            <i class="fas fa-envelope" style="color: #8b7355; margin-right: 10px;"></i>
+                            <strong>李健兴与瞰世公司会议纪要</strong>
+                            <span style="float: right; color: #8c7b69;">2025-10-08</span>
+                        </li>
+                        <li style="padding: 8px 0;">
+                            <i class="fas fa-file-contract" style="color: #8b7355; margin-right: 10px;"></i>
+                            <strong>关联交易初步意向书草案</strong>
+                            <span style="float: right; color: #8c7b69;">2025-10-12</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="important-note" style="margin-top: 20px;">
+                    <strong>注意：</strong>部分文件涉及商业机密，仅限授权人员查阅。未经批准不得下载或传播。
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-cancel" id="cancelDocsBtn">关闭</button>
+                <button class="modal-btn modal-btn-confirm" id="requestAccessBtn">申请查阅权限</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 报告异常弹窗 -->
+    <div class="modal-overlay" id="reportModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">报告异常情况</h3>
+                <button class="modal-close" id="closeReportModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>请描述您在查阅"旺达智慧商圈项目档案"时发现的异常情况：</p>
+                
+                <div style="margin-top: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #5d4c3a;">异常类型</label>
+                    <select id="reportType" style="width: 100%; padding: 12px; border: 1px solid #d4c9a9; border-radius: 6px; background-color: #fff; font-size: 16px;">
+                        <option value="">请选择异常类型</option>
+                        <option value="data_error">数据错误或不一致</option>
+                        <option value="conflict_interest">潜在利益冲突</option>
+                        <option value="policy_violation">违反政策或规定</option>
+                        <option value="security_issue">安全隐患</option>
+                        <option value="other">其他问题</option>
+                    </select>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #5d4c3a;">详细描述</label>
+                    <textarea id="reportDescription" rows="5" placeholder="请详细描述您发现的异常情况..." style="width: 100%; padding: 12px; border: 1px solid #d4c9a9; border-radius: 6px; background-color: #fff; font-size: 16px; resize: vertical;"></textarea>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #5d4c3a;">相关证据（可选）</label>
+                    <input type="file" id="reportEvidence" style="width: 100%; padding: 10px; border: 1px dashed #d4c9a9; border-radius: 6px; background-color: #f9f5ed;">
+                </div>
+                
+                <div class="important-note" style="margin-top: 20px;">
+                    <strong>提交说明：</strong>您的报告将直接发送至内部审计部门，所有报告将严格保密。请确保提供的信息准确客观。
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-cancel" id="cancelReportBtn">取消</button>
+                <button class="modal-btn modal-btn-confirm" id="submitReportBtn">提交报告</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 反馈弹窗 -->
+    <div class="modal-overlay" id="feedbackModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">操作反馈</h3>
+                <button class="modal-close" id="closeFeedbackModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="feedbackContent">
+                    <!-- 反馈内容会动态填充 -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-confirm" id="closeFeedbackBtn">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM元素获取
+        const viewDetailsBtn = document.getElementById('viewDetailsBtn');
+        const relatedDocsBtn = document.getElementById('relatedDocsBtn');
+        const reportBtn = document.getElementById('reportBtn');
+        
+        // 弹窗元素
+        const detailsModal = document.getElementById('detailsModal');
+        const docsModal = document.getElementById('docsModal');
+        const reportModal = document.getElementById('reportModal');
+        const feedbackModal = document.getElementById('feedbackModal');
+        
+        // 关闭按钮
+        const closeDetailsModal = document.getElementById('closeDetailsModal');
+        const closeDocsModal = document.getElementById('closeDocsModal');
+        const closeReportModal = document.getElementById('closeReportModal');
+        const closeFeedbackModal = document.getElementById('closeFeedbackModal');
+        
+        // 取消按钮
+        const cancelDetailsBtn = document.getElementById('cancelDetailsBtn');
+        const cancelDocsBtn = document.getElementById('cancelDocsBtn');
+        const cancelReportBtn = document.getElementById('cancelReportBtn');
+        
+        // 确认按钮
+        const downloadDetailsBtn = document.getElementById('downloadDetailsBtn');
+        const requestAccessBtn = document.getElementById('requestAccessBtn');
+        const submitReportBtn = document.getElementById('submitReportBtn');
+        const closeFeedbackBtn = document.getElementById('closeFeedbackBtn');
+        
+        // 打开详细资料弹窗
+        viewDetailsBtn.addEventListener('click', function() {
+            detailsModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+        
+        // 打开相关文件弹窗
+        relatedDocsBtn.addEventListener('click', function() {
+            docsModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+        
+        // 打开报告弹窗
+        reportBtn.addEventListener('click', function() {
+            reportModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+        
+        // 关闭弹窗函数
+        function closeModal(modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // 绑定关闭事件
+        closeDetailsModal.addEventListener('click', () => closeModal(detailsModal));
+        cancelDetailsBtn.addEventListener('click', () => closeModal(detailsModal));
+        
+        closeDocsModal.addEventListener('click', () => closeModal(docsModal));
+        cancelDocsBtn.addEventListener('click', () => closeModal(docsModal));
+        
+        closeReportModal.addEventListener('click', () => closeModal(reportModal));
+        cancelReportBtn.addEventListener('click', () => closeModal(reportModal));
+        
+        closeFeedbackModal.addEventListener('click', () => closeModal(feedbackModal));
+        closeFeedbackBtn.addEventListener('click', () => closeModal(feedbackModal));
+        
+        // 点击弹窗外部关闭弹窗
+        window.addEventListener('click', function(event) {
+            if (event.target === detailsModal) closeModal(detailsModal);
+            if (event.target === docsModal) closeModal(docsModal);
+            if (event.target === reportModal) closeModal(reportModal);
+            if (event.target === feedbackModal) closeModal(feedbackModal);
+        });
+        
+        // 下载资料按钮
+        downloadDetailsBtn.addEventListener('click', function() {
+            closeModal(detailsModal);
+            showFeedback('资料下载请求已提交，系统将开始准备文件并发送至您的邮箱。');
+        });
+        
+        // 申请查阅权限按钮
+        requestAccessBtn.addEventListener('click', function() {
+            closeModal(docsModal);
+            showFeedback('权限申请已提交至管理员，审批结果将在1-3个工作日内通知您。');
+        });
+        
+        // 提交报告按钮
+        submitReportBtn.addEventListener('click', function() {
+            const reportType = document.getElementById('reportType').value;
+            const reportDescription = document.getElementById('reportDescription').value;
+            
+            if (!reportType) {
+                showFeedback('请选择异常类型！', true);
+                return;
+            }
+            
+            if (!reportDescription.trim()) {
+                showFeedback('请详细描述异常情况！', true);
+                return;
+            }
+            
+            closeModal(reportModal);
+            
+            // 清空表单
+            document.getElementById('reportType').value = '';
+            document.getElementById('reportDescription').value = '';
+            document.getElementById('reportEvidence').value = '';
+            
+            showFeedback('异常报告已成功提交至内部审计部门，感谢您的关注。相关部门将在5个工作日内处理。');
+        });
+        
+        // 显示反馈弹窗
+        function showFeedback(message, isError = false) {
+            const feedbackContent = document.getElementById('feedbackContent');
+            if (isError) {
+                feedbackContent.innerHTML = `<div style="color: #dc3545; text-align: center; padding: 20px 0;"><i class="fas fa-exclamation-circle" style="font-size: 48px; margin-bottom: 15px;"></i><p>${message}</p></div>`;
+            } else {
+                feedbackContent.innerHTML = `<div style="color: #28a745; text-align: center; padding: 20px 0;"><i class="fas fa-check-circle" style="font-size: 48px; margin-bottom: 15px;"></i><p>${message}</p></div>`;
+            }
+            feedbackModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // 移动端触摸优化
+        document.addEventListener('touchstart', function() {}, {passive: true});
+        
+        // 防止iOS橡皮筋效果
+        document.body.addEventListener('touchmove', function(e) {
+            if (e.target === detailsModal || e.target === docsModal || 
+                e.target === reportModal || e.target === feedbackModal) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+    </script>
+</body>
+</html>

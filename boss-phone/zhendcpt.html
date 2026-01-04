@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2025CTHC远程连接--真真电脑</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+            touch-action: manipulation;
+        }
+        
+        .desktop {
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            background-image: url('./zhenbz.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        .taskbar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: rgba(25, 25, 40, 0.95);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .start-button {
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 20px;
+            padding: 0 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .start-button i {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        
+        .taskbar-time {
+            margin-left: auto;
+            padding: 8px 16px;
+            font-size: 14px;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .icons-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 20px;
+            height: calc(100% - 80px);
+            padding: 20px;
+            z-index: 10;
+            position: relative;
+        }
+        
+        .icon {
+            width: 100px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .icon:hover::before,
+        .icon.active::before {
+            opacity: 1;
+        }
+        
+        .icon:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .icon:active {
+            transform: translateY(-5px) scale(1.02);
+        }
+        
+        .icon-img {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .icon-img i, .icon-img svg {
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+        
+        .icon-name {
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            max-width: 100%;
+            word-break: break-word;
+            position: relative;
+            z-index: 2;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 移除回收站和文件夹的动态背景动画 */
+        .recycle-bin .icon-img {
+            color: #00ff88;
+            /* 移除原来的pulseGlow动画 */
+        }
+        
+        .donut .icon-img {
+            color: #ff69b4;
+            animation: spin 8s linear infinite;
+        }
+        
+        .flying-mouse .icon-img {
+            color: #8a2be2;
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        .dolphin-email .icon-img {
+            color: #1e90ff;
+            animation: swim 6s ease-in-out infinite;
+        }
+        
+        .encrypted-folder .icon-img {
+            color: #ff8c00;
+            /* 移除原来的pulseGlow动画 */
+        }
+        
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(25, 25, 40, 0.95);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            max-width: 350px;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-left: 4px solid #667eea;
+            z-index: 2000;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: slideInRight 0.5s ease-out;
+        }
+        
+        .notification h3 {
+            margin-bottom: 8px;
+            color: #00ffea;
+            font-size: 16px;
+        }
+        
+        .notification p {
+            font-size: 14px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+        
+        .notification .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .window-frame {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 600px;
+            height: 70%;
+            max-height: 500px;
+            background: rgba(30, 30, 45, 0.95);
+            border-radius: 20px;
+            display: none;
+            flex-direction: column;
+            z-index: 1001;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+        
+        .window-title-bar {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9));
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .window-control {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .window-control:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .window-content {
+            flex-grow: 1;
+            padding: 24px;
+            overflow: auto;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+        }
+        
+        .window-content h3 {
+            margin-bottom: 16px;
+            color: #00ffea;
+        }
+        
+        .window-content ul {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .window-content li {
+            margin-bottom: 8px;
+            padding-left: 8px;
+        }
+        
+        /* 移动端优化 */
+        @media (max-width: 768px) {
+            .desktop {
+                padding: 10px;
+            }
+            
+            .icons-container {
+                grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+                gap: 15px;
+                padding: 15px;
+                height: calc(100% - 70px);
+            }
+            
+            .icon {
+                width: 90px;
+                height: 110px;
+            }
+            
+            .icon-img {
+                width: 56px;
+                height: 56px;
+                font-size: 32px;
+            }
+            
+            .taskbar {
+                height: 55px;
+                padding: 0 15px;
+            }
+            
+            .start-button {
+                height: 36px;
+                padding: 0 16px;
+                font-size: 14px;
+            }
+            
+            .taskbar-time {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+            
+            .window-frame {
+                width: 95%;
+                height: 80%;
+            }
+            
+            .notification {
+                top: 20px;
+                right: 20px;
+                left: 20px;
+                max-width: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .icons-container {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 12px;
+            }
+            
+            .icon {
+                width: 80px;
+                height: 100px;
+            }
+            
+            .icon-img {
+                width: 48px;
+                height: 48px;
+                font-size: 28px;
+            }
+            
+            .icon-name {
+                font-size: 12px;
+                padding: 4px 8px;
+            }
+        }
+        
+        /* 动画定义 */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        @keyframes swim {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(10px) rotate(5deg); }
+            75% { transform: translateX(-10px) rotate(-5deg); }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        /* 触控优化 */
+        @media (hover: none) and (pointer: coarse) {
+            .icon:hover {
+                transform: none;
+            }
+            
+            .icon:active {
+                transform: scale(0.95);
+                background: rgba(255, 255, 255, 0.15);
+            }
+        }
+        
+        /* 窗口动画 */
+        .window-frame.active {
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        /* 暗色滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(102, 126, 234, 0.6);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(102, 126, 234, 0.8);
+        }
+        
+        /* 禁用文本选择 */
+        .icon, .start-button, .window-control {
+            user-select: none;
+            -webkit-user-select: none;
+        }
+    </style>
+
+<link rel="stylesheet" href="sc-style.css">
+<link rel="icon" type="image/png" href="dtma.png">
+</head>
+<body>
+    <div class="desktop">
+        <div class="icons-container">
+            <!-- 回收站图标 - 在桌面打开窗口 -->
+            <!-- <div class="icon recycle-bin" data-type="desktop-window" data-window="recycle-bin">
+                <div class="icon-img">
+                    <i class="fas fa-trash-restore"></i>
+                </div>
+                <div class="icon-name">回收站</div>
+            </div> -->
+            <div class="icon recycle-bin" data-type="desktop-window" data-window="recycle-bin">
+                <div class="icon-img">
+                    <i class="fas fa-trash-restore"></i>
+                </div>
+                <div class="icon-name">回收站</div>
+            </div>
+            
+            <!-- 甜甜圈图标 - 外部跳转 -->
+            <div class="icon donut" data-target="zzttq.html">
+                <div class="icon-img">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M12 3v5m4 4h5" />
+                        <path d="M8.929 14.582l-3.429 2.918" />
+                        <path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                        <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                    </svg>
+                </div>
+                <div class="icon-name">甜甜圈</div>
+            </div>
+            
+            <!-- 飞鼠图标 - 外部跳转 -->
+            <!-- <div class="icon flying-mouse" data-target="ljxfs.html">
+                <div class="icon-img">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M10 14l11 -11" />
+                        <path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5" />
+                    </svg>
+                </div>
+                <div class="icon-name">飞鼠</div>
+            </div> -->
+            
+            <!-- 海豚邮箱图标 - 外部跳转 -->
+            <div class="icon dolphin-email" data-target="zhendyoux.html">
+                <div class="icon-img">
+                    <i class="fas fa-envelope-open-text"></i>
+                </div>
+                <div class="icon-name">海豚邮箱</div>
+            </div>
+            
+            <!-- 加密文件夹图标 - 在桌面打开窗口 -->
+            <div class="icon encrypted-folder" data-type="desktop-window" data-window="encrypted-folder">
+                <div class="icon-img">
+                    <i class="fas fa-folder"></i>
+                </div>
+                <div class="icon-name">加密文件夹</div>
+            </div>
+        </div>
+        
+        <!-- 通知区域 -->
+        <div class="notification" id="notification">
+            <div class="close-btn" onclick="closeNotification()">×</div>
+            <h3>今天是2026年1月1日</h3>
+            <p>欢迎使用CTHC远程连接！</p>
+        </div>
+        
+        <!-- 回收站窗口 -->
+       <!--  <div class="window-frame" id="recycleBinWindow">
+            <div class="window-title-bar">
+                <span>回收站</span>
+                <div class="window-controls">
+                    <div class="window-control" onclick="minimizeWindow('recycleBinWindow')">−</div>
+                    <div class="window-control" onclick="closeWindow('recycleBinWindow')">×</div>
+                </div>
+            </div>
+            <div class="window-content">
+                <h3><i class="fas fa-trash-restore"></i> 回收站</h3>
+                <p>已删除的项目将暂时存放在这里。</p>
+                <br>
+                <p>当前状态：<span style="color: #00ff88;">正常</span></p>
+                <br>
+                <p>已使用空间：<span style="color: #ffaa00;">2.4 GB / 10 GB</span></p>
+                <div style="background: rgba(255,255,255,0.1); height: 10px; border-radius: 5px; margin: 15px 0; overflow: hidden;">
+                    <div style="width: 24%; height: 100%; background: linear-gradient(90deg, #00ff88, #00ccaa); border-radius: 5px;"></div>
+                </div>
+                <p>回收站中的项目：</p>
+                <br>
+                <ul>
+                    <li>旧文档.txt - 删除日期: 2025-11-15</li>
+                    <li>临时文件.zip - 删除日期: 2025-11-20</li>
+                    <li>截图.png - 删除日期: 2025-11-25</li>
+                </ul>
+                <button onclick="emptyRecycleBin()" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: 600;">清空回收站</button>
+            </div>
+        </div> -->
+        
+        <!-- 加密文件夹窗口 -->
+        <div class="window-frame" id="encryptedFolderWindow">
+            <div class="window-title-bar">
+                <span>加密文件夹</span>
+                <div class="window-controls">
+                    <div class="window-control" onclick="minimizeWindow('encryptedFolderWindow')">−</div>
+                    <div class="window-control" onclick="closeWindow('encryptedFolderWindow')">×</div>
+                </div>
+            </div>
+            <div class="window-content">
+                <h3><i class="fas fa-folder"></i> 加密文件夹</h3>
+                <p>此文件夹使用 AES-256 加密保护。</p>
+                <p>状态：<span style="color: #00ffea;">已锁定</span></p>
+                
+                <div style="margin: 20px 0; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);">
+                    <p style="margin-bottom: 10px;">请输入密码访问：</p>
+                    <input type="password" id="folderPassword" placeholder="输入密码..." style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); color: white; margin-bottom: 15px;">
+                    <button onclick="unlockFolder()" style="background: linear-gradient(135deg, #00ff88, #00ccaa); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%;">解锁文件夹</button>
+                </div>
+                
+               <!--  <p>文件夹内容：</p>
+                <ul>
+                    <li>重要文档.pdf <span style="color: #aaa; font-size: 12px;">[加密]</span></li>
+                    <li>财务数据.xlsx <span style="color: #aaa; font-size: 12px;">[加密]</span></li>
+                    <li>个人照片 <span style="color: #aaa; font-size: 12px;">[加密]</span></li>
+                </ul> -->
+            </div>
+        </div>
+        
+        <!-- 任务栏 -->
+        <div class="taskbar">
+            <div class="start-button" id="startButton">
+                <i class="fab fa-windows"></i>
+                开始
+            </div>
+            <div class="taskbar-time" id="clock">12:00:00</div>
+        </div>
+    </div>
+<!-- 搜索球容器 -->
+<div class="floating-search-ball-container">
+    <!-- 搜索球（点击展开） -->
+    <div class="floating-search-ball" id="searchBall" aria-label="打开搜索"></div>
+    
+    <!-- 展开的搜索框 -->
+    <div class="floating-search-expanded" id="searchExpanded">
+        <input type="text" 
+               class="floating-search-input" 
+               id="searchInput" 
+               placeholder="输入关键词搜索..." 
+               aria-label="搜索输入框">
+        <button class="floating-search-close" id="searchClose" aria-label="关闭搜索">×</button>
+        <button class="floating-search-submit" id="searchSubmit" aria-label="执行搜索">搜索</button>
+    </div>
+</div>
+    <script>
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initDesktop();
+            showWelcomeNotification();
+        });
+        
+        // 初始化桌面
+        function initDesktop() {
+            updateClock();
+            setInterval(updateClock, 1000);
+            
+            // 图标点击处理
+            document.querySelectorAll('.icon').forEach(icon => {
+                // 直接绑定点击事件
+                icon.addEventListener('click', handleIconClick);
+                
+                // 移动端触摸反馈
+                icon.addEventListener('touchstart', function() {
+                    this.classList.add('active');
+                }, { passive: true });
+                
+                icon.addEventListener('touchend', function() {
+                    this.classList.remove('active');
+                }, { passive: true });
+            });
+            
+            // 开始按钮点击
+            document.getElementById('startButton').addEventListener('click', showStartMenu);
+            
+            // 添加触摸支持
+            if ('ontouchstart' in window) {
+                document.body.classList.add('touch-device');
+            }
+        }
+        
+        // 图标点击处理函数
+        function handleIconClick() {
+            const targetFile = this.getAttribute('data-target');
+            const windowType = this.getAttribute('data-type');
+            const windowId = this.getAttribute('data-window');
+            const iconName = this.querySelector('.icon-name').textContent;
+            
+            // 不同类型的图标处理
+            if (windowType === 'desktop-window' && windowId) {
+                // 桌面窗口类型（回收站、加密文件夹）
+                openDesktopWindow(windowId, iconName);
+            } else if (targetFile) {
+                // 外部跳转类型
+                openExternalLink(targetFile, iconName);
+            }
+            
+            // 触觉反馈（如果支持）
+            if (navigator.vibrate) {
+                navigator.vibrate(30);
+            }
+        }
+        
+        // 更新时钟
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            
+            const timeString = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('clock').textContent = timeString;
+        }
+        
+        // 显示欢迎通知
+        function showWelcomeNotification() {
+            setTimeout(() => {
+                const notification = document.getElementById('notification');
+                notification.style.display = 'block';
+                
+                setTimeout(() => {
+                    closeNotification();
+                }, 5000);
+            }, 1000);
+        }
+        
+        // 关闭通知
+        function closeNotification() {
+            const notification = document.getElementById('notification');
+            notification.style.display = 'none';
+        }
+        
+        // 显示开始菜单
+        function showStartMenu() {
+    const notification = document.getElementById('notification');
+    notification.innerHTML = `
+        <div class="close-btn" onclick="closeNotification()">×</div>
+        <h3>CTHC远程连接</h3>
+        <p>系统: CTHC远程连接 2025</p>
+        <p>版本: 25H2 (Build 25000)</p>
+        <p>状态: <span style="color: #00ff88;">运行正常</span></p>
+        <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <button onclick="showSystemInfo()" style="flex: 1; min-width: 120px; background: rgba(102,126,234,0.8); color: white; border: none; padding: 8px; border-radius: 8px; cursor: pointer;">系统信息</button>
+            <button onclick="window.location.href='todsk.html'" style="flex: 1; min-width: 120px; background: rgba(234,102,102,0.8); color: white; border: none; padding: 8px; border-radius: 8px; cursor: pointer;">退出连接</button>
+            <button onclick="closeNotification()" style="flex: 1; min-width: 120px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px; border-radius: 8px; cursor: pointer;">关闭</button>
+        </div>
+    `;
+    notification.style.display = 'block';
+}
+        
+        // 显示系统信息
+        function showSystemInfo() {
+            const notification = document.getElementById('notification');
+            notification.innerHTML = `
+                <div class="close-btn" onclick="closeNotification()">×</div>
+                <h3>系统信息</h3>
+                <p><strong>操作系统:</strong> XiangLiOS 2025</p>
+                <p><strong>版本:</strong> 25H2 专业版</p>
+                <p><strong>处理器:</strong> 量子处理器 Q-25</p>
+                <p><strong>内存:</strong> 64 GB 光子内存</p>
+                <p><strong>存储:</strong> 2 TB 全息存储</p>
+                <p><strong>显卡:</strong> 神经渲染 RTX 5050</p>
+                <button onclick="showStartMenu()" style="margin-top: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 8px; cursor: pointer;">返回</button>
+            `;
+        }
+        
+        // 打开桌面窗口（回收站、加密文件夹）- 修复版
+        function openDesktopWindow(windowId, iconName) {
+            // 获取正确的窗口ID
+            const correctWindowId = windowId === 'recycle-bin' ? 'recycleBinWindow' : 'encryptedFolderWindow';
+            
+            // 获取窗口元素
+            const windowElement = document.getElementById(correctWindowId);
+            
+            if (windowElement) {
+                // 关闭所有其他窗口
+                document.querySelectorAll('.window-frame').forEach(window => {
+                    window.style.display = 'none';
+                    window.classList.remove('active');
+                });
+                
+                // 显示当前窗口
+                windowElement.style.display = 'flex';
+                setTimeout(() => {
+                    windowElement.classList.add('active');
+                }, 10);
+                
+                // 显示通知
+                showNotification(`已打开: ${iconName}`, `正在桌面窗口中查看 ${iconName} 内容。`);
+            } else {
+                console.error('找不到窗口元素:', correctWindowId);
+            }
+        }
+        
+        // 打开外部链接
+        function openExternalLink(targetFile, iconName) {
+            // 在实际环境中，这里会跳转到外部页面
+            // 为了演示，我们显示一个通知
+            /* showNotification(`打开外部应用: ${iconName}`, `正在尝试打开: ${targetFile}<br><small>（演示环境，实际会跳转到对应页面）</small>`);
+             */
+            // 如果是真实环境，取消下面这行的注释
+            window.open(targetFile, '_blank');
+        }
+        
+        // 显示通知
+        function showNotification(title, message) {
+            const notification = document.getElementById('notification');
+            notification.innerHTML = `
+                <div class="close-btn" onclick="closeNotification()">×</div>
+                <h3>${title}</h3>
+                <p>${message}</p>
+            `;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                closeNotification();
+            }, 4000);
+        }
+        
+        // 关闭窗口
+        function closeWindow(windowId) {
+            const windowElement = document.getElementById(windowId);
+            if (windowElement) {
+                windowElement.classList.remove('active');
+                setTimeout(() => {
+                    windowElement.style.display = 'none';
+                }, 300);
+            }
+        }
+        
+        // 最小化窗口
+        function minimizeWindow(windowId) {
+            const windowElement = document.getElementById(windowId);
+            if (windowElement) {
+                windowElement.style.transform = 'translate(-50%, -50%) scale(0.5)';
+                windowElement.style.opacity = '0';
+                setTimeout(() => {
+                    windowElement.classList.remove('active');
+                    windowElement.style.display = 'none';
+                    windowElement.style.transform = '';
+                    windowElement.style.opacity = '';
+                }, 300);
+                
+                showNotification('窗口已最小化', '窗口已最小化到后台。');
+            }
+        }
+        
+        // 清空回收站
+        function emptyRecycleBin() {
+            showNotification('清空回收站', '回收站清空失败！请检查文件是否在原处！可通过万知搜索球查询文件位置！');
+            closeWindow('recycleBinWindow');
+        }
+        
+        // 解锁文件夹
+       /*  function unlockFolder() {
+            const password = document.getElementById('folderPassword').value;
+            if (password === '2025' || password === 'future') {
+                showNotification('文件夹已解锁', '加密文件夹已成功解锁！现在可以访问其中的内容。');
+                // 这里可以添加解锁后的UI更新
+                const windowContent = document.querySelector('#encryptedFolderWindow .window-content');
+                windowContent.innerHTML += `
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(0,255,136,0.1); border-radius: 10px; border: 1px solid rgba(0,255,136,0.3);">
+                        <p style="color: #00ff88;"><i class="fas fa-lock-open"></i> 文件夹已解锁</p>
+                        <p>您现在可以访问以下文件：</p>
+                        <ul>
+                            <li><i class="fas fa-file-pdf"></i> 重要文档.pdf</li>
+                            <li><i class="fas fa-file-excel"></i> 财务数据.xlsx</li>
+                            <li><i class="fas fa-folder"></i> 个人照片 (48个文件)</li>
+                        </ul>
+                    </div>
+                `;
+            } else {
+                showNotification('解锁失败', '密码错误！请尝试密码 "2025" 或 "future"。');
+            }
+        }
+         */
+         function unlockFolder() {
+            const password = document.getElementById('folderPassword').value;
+            
+                if (password === 'jiajia' || password === 'wangjiajia') {
+    showNotification('文件夹已解锁', '加密文件夹已成功解锁！正在跳转到内容页面...');
+    
+    // 设置一个简短的延迟让用户看到通知
+    setTimeout(() => {
+        window.location.href = 'zhenjmwj.html';
+    }, 1500); // 1.5秒后跳转
+            } else {
+                showNotification('解锁失败', '密码错误！提示：闺蜜姓名拼音');
+            }
+        }
+         // 防止右键菜单
+        document.addEventListener('contextmenu', function(e) {
+            if (e.target.closest('.icon') || e.target.closest('.desktop')) {
+                e.preventDefault();
+                showNotification('桌面右键', '这是CTHC远程连接环境。<br>右键功能已禁用。');
+            }
+        });
+        
+        // 双击桌面显示系统信息
+        let lastTap = 0;
+        document.querySelector('.desktop').addEventListener('click', function(e) {
+            if (!e.target.closest('.icon') && !e.target.closest('.window-frame')) {
+                const currentTime = new Date().getTime();
+                const tapLength = currentTime - lastTap;
+                
+                if (tapLength < 500 && tapLength > 0) {
+                    // 双击事件
+                    showSystemInfo();
+                }
+                lastTap = currentTime;
+            }
+        });
+    </script>
+    <script src="scball.js"></script>
+<script src="pages.js"></script>
+<script src="visit.js"></script>
+</body>
+</html>
