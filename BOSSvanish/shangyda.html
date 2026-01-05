@@ -165,9 +165,70 @@
             color: #856404;
         }
         
+        .highlight-red {
+            background-color: rgba(220, 53, 69, 0.1);
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #dc3545;
+            border: 1px dashed #dc3545;
+        }
+        
+        .value-comparison {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f8f9fa;
+            border: 1px solid #e6dcc3;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .value-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .value-label {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        
+        .value-amount {
+            font-size: 22px;
+            font-weight: bold;
+        }
+        
+        .real-value {
+            color: #28a745;
+        }
+        
+        .transfer-value {
+            color: #dc3545;
+        }
+        
+        .value-difference {
+            font-size: 16px;
+            color: #dc3545;
+            background-color: rgba(220, 53, 69, 0.1);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
         .important-note {
             background-color: #f8f9fa;
             border-left: 4px solid #8b7355;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .warning-note {
+            background-color: rgba(220, 53, 69, 0.05);
+            border-left: 4px solid #dc3545;
             padding: 15px;
             margin: 20px 0;
             border-radius: 0 4px 4px 0;
@@ -407,6 +468,15 @@
             .modal-container {
                 max-height: 90vh;
             }
+            
+            .value-comparison {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .value-item {
+                width: 100%;
+            }
         }
         
         @media (max-width: 480px) {
@@ -458,10 +528,26 @@
                     <h3 class="section-title">项目概述</h3>
                     <div class="section-content">
                         <p><span class="highlight">旺达智慧商圈项目</span>是一个综合性商业开发项目，旨在打造一个集购物、娱乐、办公于一体的现代化智能商圈。项目位于城市核心商业区，总占地面积约15万平方米。</p>
-                        <p>根据最新评估，<span class="highlight">项目总价值为23亿元</span>，预计建设周期为3年。项目建成后将成为本地区最大的综合性商业地标，预计每年可吸引客流超过500万人次。</p>
+                        
+                        <div class="value-comparison">
+                            <div class="value-item">
+                                <div class="value-label">项目市场公允价值</div>
+                                <div class="value-amount real-value">23亿元</div>
+                            </div>
+                            <div class="value-item">
+                                <div class="value-label">意向转让价格</div>
+                                <div class="value-amount transfer-value">2.3亿元</div>
+                            </div>
+                            <div class="value-item">
+                                <div class="value-label">价值差异</div>
+                                <div class="value-difference">-20.7亿元</div>
+                            </div>
+                        </div>
+                        
+                        <p>根据最新评估，<span class="highlight">项目市场公允价值为23亿元</span>，预计建设周期为3年。项目建成后将成为本地区最大的综合性商业地标，预计每年可吸引客流超过500万人次。</p>
                         
                         <div class="important-note">
-                            <strong>重要提示：</strong> 该项目目前由李健兴（项目总监）负责推进，近期有迹象表明其准备将项目权益转移给关联公司。
+                            <strong>重要提示：</strong> 该项目目前由李健兴（项目总监）负责推进，<span class="highlight-red">近期有迹象表明其准备以2.3亿元的低价将项目权益转让给关联公司</span>，此价格仅为市场价值的10%。
                         </div>
                     </div>
                 </div>
@@ -481,8 +567,16 @@
                                 <td>旺达智慧商圈</td>
                             </tr>
                             <tr>
-                                <td>项目估值</td>
+                                <td>市场公允价值</td>
                                 <td><span class="highlight">23亿元人民币</span></td>
+                            </tr>
+                            <tr>
+                                <td>意向转让价格</td>
+                                <td><span class="highlight-red">2.3亿元人民币</span></td>
+                            </tr>
+                            <tr>
+                                <td>价值差异率</td>
+                                <td><span class="highlight-red">-90% (仅为市场价的10%)</span></td>
                             </tr>
                             <tr>
                                 <td>项目负责人</td>
@@ -508,8 +602,12 @@
                     <h3 class="section-title">近期动态</h3>
                     <div class="section-content">
                         <p>根据内部消息，<span class="highlight">李健兴近期频繁与瞰世商业控股有限公司接触</span>，并已开始准备相关转让文件。据悉，双方已就项目转让进行多轮洽谈，初步达成转让意向。</p>
-                        <p>转让方案涉及将项目核心权益以协议方式转移至瞰世商业控股有限公司名下，而该公司实际控制人与李健兴存在密切关联关系。</p>
-                        <p>此转让行为可能涉及利益冲突，已引起内部审计部门关注。根据公司规定，重大项目权益转让需经董事会批准并公示，目前该转让流程尚未启动正式审批程序。</p>
+                        <p>转让方案涉及将项目核心权益以<span class="highlight-red">2.3亿元的低价</span>转移至瞰世商业控股有限公司名下，而该公司实际控制人与李健兴存在密切关联关系。此价格仅为项目市场公允价值的10%。</p>
+                        <p>此转让行为可能涉及重大利益冲突和国有资产流失风险，已引起内部审计部门高度关注。根据公司规定，重大项目权益转让需经董事会批准并公示，目前该转让流程尚未启动正式审批程序。</p>
+                        
+                        <div class="warning-note">
+                            <strong><i class="fas fa-exclamation-triangle"></i> 严重警告：</strong> 初步调查发现，瞰世商业控股有限公司近期注册资本大幅增加，资金来源不明，存在洗钱或利益输送的潜在风险。
+                        </div>
                     </div>
                 </div>
                 
@@ -517,10 +615,11 @@
                     <h3 class="section-title">风险提示</h3>
                     <div class="section-content">
                         <ul style="padding-left: 20px; margin-top: 10px;">
-                            <li style="margin-bottom: 10px;">项目权益转让可能存在利益输送风险</li>
-                            <li style="margin-bottom: 10px;">未经董事会批准的转让行为违反公司治理规定</li>
-                            <li style="margin-bottom: 10px;">关联交易需按规范披露，否则可能涉及违规</li>
-                            <li>项目估值23亿元，涉及重大资产变动</li>
+                            <li style="margin-bottom: 10px;"><span class="highlight-red">项目权益以市场价10%的低价转让，涉嫌巨额利益输送和国有资产流失</span></li>
+                            <li style="margin-bottom: 10px;">未经董事会批准的转让行为严重违反公司治理规定</li>
+                            <li style="margin-bottom: 10px;">关联交易未按规范披露，涉嫌违规操作</li>
+                            <li style="margin-bottom: 10px;">项目估值23亿元，以2.3亿元转让，涉及20.7亿元的重大资产损失风险</li>
+                            <li>受让方资金来源可疑，存在洗钱风险</li>
                         </ul>
                     </div>
                 </div>
@@ -558,7 +657,14 @@
                 <p><strong>占地面积：</strong>152,000平方米</p>
                 <p><strong>建筑面积：</strong>约450,000平方米</p>
                 <p><strong>投资总额：</strong>18.5亿元</p>
-                <p><strong>当前估值：</strong>23亿元</p>
+                <p><strong>当前市场公允价值：</strong>23亿元</p>
+                <p><strong>意向转让价格：</strong><span class="highlight-red">2.3亿元</span></p>
+                <p><strong>价值差异：</strong><span class="highlight-red">-20.7亿元（仅为市场价值的10%）</span></p>
+                
+                <div class="warning-note">
+                    <strong>价格异常提示：</strong> 意向转让价格2.3亿元严重低于市场公允价值，此价格水平在同类商业地产项目中极为罕见，存在重大利益输送嫌疑。
+                </div>
+                
                 <p><strong>项目组成：</strong></p>
                 <ul style="padding-left: 20px; margin-top: 10px;">
                     <li>智能购物中心（8层，约12万㎡）</li>
@@ -574,7 +680,7 @@
                     <li>待开始：工程施工、招商运营</li>
                 </ul>
                 <div class="important-note" style="margin-top: 20px;">
-                    <strong>内部备注：</strong>李健兴自2025年9月起开始与瞰世商业控股有限公司接洽，讨论项目权益转让事宜。双方已就转让框架达成初步意向，但尚未签署正式协议。
+                    <strong>内部备注：</strong>李健兴自2025年9月起开始与瞰世商业控股有限公司接洽，讨论项目权益转让事宜。双方已就转让框架达成初步意向，转让价格定为2.3亿元，仅为项目市场公允价值的10%。此价格远低于行业平均水平，已触发内部审计预警。
                 </div>
             </div>
             <div class="modal-footer">
@@ -617,8 +723,29 @@
                     </ul>
                 </div>
                 
+                <div style="background-color: #f9f5ed; border-radius: 6px; padding: 15px; margin-bottom: 15px;">
+                    <h4 style="color: #5d4c3a; margin-bottom: 10px;">评估与估值文件</h4>
+                    <ul style="list-style-type: none; padding-left: 0;">
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e6dcc3;">
+                            <i class="fas fa-balance-scale" style="color: #28a745; margin-right: 10px;"></i>
+                            <strong>市场公允价值评估报告.pdf</strong>
+                            <span style="float: right; color: #8c7b69;">4.1MB</span>
+                        </li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e6dcc3;">
+                            <i class="fas fa-chart-line" style="color: #28a745; margin-right: 10px;"></i>
+                            <strong>同类项目市场比较分析.docx</strong>
+                            <span style="float: right; color: #8c7b69;">2.7MB</span>
+                        </li>
+                        <li style="padding: 8px 0;">
+                            <i class="fas fa-file-invoice-dollar" style="color: #28a745; margin-right: 10px;"></i>
+                            <strong>第三方资产评估报告.pdf</strong>
+                            <span style="float: right; color: #8c7b69;">5.3MB</span>
+                        </li>
+                    </ul>
+                </div>
+                
                 <div style="background-color: #f9f5ed; border-radius: 6px; padding: 15px;">
-                    <h4 style="color: #5d4c3a; margin-bottom: 10px;">相关函件</h4>
+                    <h4 style="color: #5d4c3a; margin-bottom: 10px;">相关函件与异常文件</h4>
                     <ul style="list-style-type: none; padding-left: 0;">
                         <li style="padding: 8px 0; border-bottom: 1px solid #e6dcc3;">
                             <i class="fas fa-envelope" style="color: #8b7355; margin-right: 10px;"></i>
@@ -630,10 +757,15 @@
                             <strong>李健兴与瞰世公司会议纪要</strong>
                             <span style="float: right; color: #8c7b69;">2025-10-08</span>
                         </li>
-                        <li style="padding: 8px 0;">
-                            <i class="fas fa-file-contract" style="color: #8b7355; margin-right: 10px;"></i>
-                            <strong>关联交易初步意向书草案</strong>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e6dcc3;">
+                            <i class="fas fa-file-contract" style="color: #dc3545; margin-right: 10px;"></i>
+                            <strong><span class="highlight-red">异常低价转让协议草案</span></strong>
                             <span style="float: right; color: #8c7b69;">2025-10-12</span>
+                        </li>
+                        <li style="padding: 8px 0;">
+                            <i class="fas fa-exclamation-triangle" style="color: #dc3545; margin-right: 10px;"></i>
+                            <strong><span class="highlight-red">内部审计风险预警报告</span></strong>
+                            <span style="float: right; color: #8c7b69;">2025-11-05</span>
                         </li>
                     </ul>
                 </div>
@@ -666,7 +798,8 @@
                         <option value="data_error">数据错误或不一致</option>
                         <option value="conflict_interest">潜在利益冲突</option>
                         <option value="policy_violation">违反政策或规定</option>
-                        <option value="security_issue">安全隐患</option>
+                        <option value="asset_loss">国有资产流失风险</option>
+                        <option value="price_abnormal">异常低价转让</option>
                         <option value="other">其他问题</option>
                     </select>
                 </div>
@@ -843,8 +976,20 @@
                 e.preventDefault();
             }
         }, { passive: false });
+        
+        // 页面加载后添加一些动态效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为价值对比添加闪烁效果
+            const transferValue = document.querySelector('.transfer-value');
+            if (transferValue) {
+                setInterval(() => {
+                    transferValue.style.boxShadow = '0 0 10px rgba(220, 53, 69, 0.5)';
+                    setTimeout(() => {
+                        transferValue.style.boxShadow = 'none';
+                    }, 1000);
+                }, 3000);
+            }
+        });
     </script>
- <script src="pages.js"></script>
 </body>
-
 </html>
