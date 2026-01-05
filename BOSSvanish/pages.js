@@ -14,67 +14,60 @@ const SimplePageCounter = {
 'xjjt.html',
 'shizong.html',
 'andun.html',
-'anxin.html',
+
 'baozha.html',
 'wangd.html',
-'chehuo.html',
-'mm-feis.html',
+
+'shuigd.html',
+'ydpost.html',
+'anxin.html',
+'todsk.html',
 'mmdn.html',
 /* 'mmfeis.html',
 'mmfeishu.html', */
 'mmttq.html',
+'mm-feis.html',
 'wyglc.html',
-'todsk.html',
+'zhuilou.html',
+'mingche.html',
+
 'horroryd.html',
-'index.html',
-'jiank.html',
 'lxxinz.html',
 'maimyoux.html',
-'mingche.html',
 'mishushouze.html',
+'zw-cpt.html',
+/* 'zw-fs.html', */
+'zw-htyx.html',
+'zw-ttq.html',
+'zwjiamwj.html',
+'shenxj-cpt.html',
+'chehuo.html',
 
-'police.html',
-'qitanews.html',
-'rein-wenjian.html',
-'rein.html',
-'reindn.html',
-'reinjmwj.html',
-
-
-'tongz.html',
-
-
-'wei.html',
-'wuyeriz.html',
-'wuzheng.html',
-
-'xiaofang.html',
-'xieyicaoan.html',
-
-'ydpost.html',
-'yelan-ttq.html',
 'yeldn.html',
-'yingjidy.html',
-'yl-ttq.html',
+'yelan-ttq.html',
 'ylhtyx.html',
 'yljmwj.html',
 
 'zhendcpt.html',
 'zhendyoux.html',
 'zhenjmwj.html',
-'zhuilou.html',
-'zw-cpt.html',
-/* 'zw-fs.html', */
-'zw-htyx.html',
-'zw-ttq.html',
-'zwjiamwj.html',
 
+'rein.html',
+'reindn.html',
+'reinjmwj.html',
+'xiaofang.html',
+'xieyicaoan.html',
+'jiank.html',
+'wuyeriz.html',
 'shangyda.html',
-'shennanshi.html',
-'shenxj-cpt.html',
+'yingjidy.html',
 
+'wuzheng.html',
+'wei.html',
+'duanx.html',
 'shouquanma.html',
-'shuigd.html',
+'police.html',
+
 'snxyjz.html',
 'sxjdejiamwj.html',
 'sxjyx.html',
@@ -83,13 +76,11 @@ const SimplePageCounter = {
 'heandjmwj.html',
 'zzttq.html',
 'duanx-rein.html',
-'duanx.html',
 'tuiliban.html',
 'jieju4.html',
 'jieju333.html',
 'jieju2222.html',
 'jieju01.html'
-
 ],
     
     // 样式 - 极简风格
