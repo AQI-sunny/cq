@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ========== 事件处理函数 ==========
     
     // 关闭窗口处理
-    function closeWindowHandler() {
+   /*  function closeWindowHandler() {
         console.log('关闭窗口按钮被点击');
         
         // 添加淡出效果
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             window.location.href = 'zhendcpt.html';
         }, 300);
-    }
+    } */
     
     // 最小化窗口处理
     function minimizeWindowHandler() {
@@ -518,4 +518,5 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     console.log('pages.js 加载完成');
+
 });
