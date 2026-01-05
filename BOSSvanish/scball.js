@@ -596,6 +596,12 @@ class SearchEngine {
                     "description": "该页面暂无描述..."
                 },
                 {
+                    "id": "medical_record",
+                    "keywords": ["5aGr6KGo","5qGI5Lu25YWz6ZSu5L+h5oGv6KGo"],
+                    "targetUrl": "tuiliban.html",
+                    "description": "该页面暂无描述..."
+                },
+                {
                     "id": "jqtjl",
                     "keywords": ["5a6J55u+56eR5oqA5YWs5Y+4","5a6J55u+56eR5oqA"],
                     "targetUrl": "andun.html",
