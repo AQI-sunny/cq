@@ -666,7 +666,7 @@
         }
 
         // 更新当前位置和选项
-        function updateLocation() {
+       /*  function updateLocation() {
             const current = locations[gameState.currentLocation];
             const locationElement = document.getElementById('current-location');
             const optionsContainer = document.getElementById('options-container');
@@ -677,11 +677,13 @@
             locationElement.innerHTML = `<h2>${current.name}</h2><p>${current.description}</p>`;
 
             // 更新进度
-            const foundCount = Object.values(gameState.foundItems).filter(Boolean).length;
+            /* const foundCount = Object.values(gameState.foundItems).filter(Boolean).length;
             const progressText = foundCount < 4 ? 
                 `线索收集: ${foundCount}/4 | 继续搜寻...` :
-                `线索收集: 4/4 | 真相即将揭晓...`;
-            progressElement.textContent = progressText;
+                `线索收集: 4/4 | 点击返回上级页面...`;
+            progressElement.textContent = progressText;  
+
+            
 
             // 清除之前的选项和结果
             optionsContainer.innerHTML = '';
@@ -709,8 +711,78 @@
             // 更换背景图片
             changeBackground(current.image);
         }
+ */
+        
+ function updateLocation() {
+    const current = locations[gameState.currentLocation];
+    const locationElement = document.getElementById('current-location');
+    const optionsContainer = document.getElementById('options-container');
+    const resultElement = document.getElementById('result');
+    const progressElement = document.getElementById('progress');
 
-        // 处理选项选择
+    // 更新位置信息
+    locationElement.innerHTML = `<h2>${current.name}</h2><p>${current.description}</p>`;
+
+    // 更新进度 - 包含可点击的链接
+    const foundCount = Object.values(gameState.foundItems).filter(Boolean).length;
+    
+    if (foundCount < 4) {
+        // 未收集完线索时，显示普通文本
+        progressElement.textContent = `线索收集: ${foundCount}/4 | 继续搜寻...`;
+        progressElement.style.cursor = 'default';
+        progressElement.onclick = null;
+        progressElement.style.color = '';
+        progressElement.style.textDecoration = '';
+        progressElement.style.fontWeight = '';
+    } else {
+        // 收集完所有线索时，显示可点击的链接
+        progressElement.innerHTML = `线索收集: 4/4 | <span id="return-link" style="cursor: pointer; text-decoration: underline; color: #007bff; font-weight: bold;">点击返回上级页面...</span>`;
+        
+        // 为链接部分添加点击事件
+        const returnLink = document.getElementById('return-link');
+        if (returnLink) {
+            returnLink.onclick = function(e) {
+                e.stopPropagation();
+                window.location.href = 'xjjt.html';
+            };
+        }
+        
+        // 整个进度条区域也可点击（可选）
+        progressElement.style.cursor = 'pointer';
+        progressElement.onclick = function() {
+            window.location.href = 'xjjt.html';
+        };
+    }
+
+    // 清除之前的选项和结果
+    optionsContainer.innerHTML = '';
+    resultElement.style.display = 'none';
+    resultElement.className = 'result';
+
+    // 添加选项
+    current.options.forEach(option => {
+        const button = document.createElement('button');
+        button.textContent = option.text;
+        
+        // 检查是否有前置要求
+        if (option.requires && !gameState.foundItems[option.requires]) {
+            button.classList.add('disabled');
+            button.onclick = () => {
+                showResult("这里好像需要什么东西才能打开...", 'failure');
+            };
+        } else {
+            button.onclick = () => selectOption(option.target, option.item);
+        }
+        
+        optionsContainer.appendChild(button);
+    });
+
+    // 更换背景图片
+    changeBackground(current.image);
+}
+
+
+ // 处理选项选择
         function selectOption(target, itemId) {
             gameState.currentLocation = target;
             updateLocation();
@@ -734,7 +806,7 @@
                             showResult(`<h3>所有线索都已找到！</h3>
                             <p>你收集到了全部4个关键线索：</p>
                             <ul style="margin: 10px 0; padding-left: 20px;">
-                                <li>2020年兴健大厦坠楼案剪报（指向2020news.html）</li>
+                                <li>2020年兴健大厦坠楼案剪报（指向/htyx.html）</li>
                                 <li>C办公桌上的神秘代码纸条</li>
                                 <li>储物间的信号屏蔽仪</li>
                                 <li>异常清洁的地面痕迹</li>

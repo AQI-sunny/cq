@@ -464,20 +464,20 @@ class SearchEngine {
                     "description": "该页面暂无描述..."
                 },
                 {
-                    "id": "jqtjl",
+                    "id": "jqtj4",
                     "keywords": ["5p2O5YGl5YW0","x6eR5oqA"],
                     "targetUrl": "shizong.html",
                     "description": "该页面暂无描述..."
                 },
                 {
-                    "id": "jqtjl",
-                    "keywords": ["MjAyMG5ld3M=","5YW055ub5Yi26YCg","5YW05YGl5aSn5Y6m5Z2g5qW85qGI","5Z2g5qW85qGI"],
+                    "id": "jqtj3",
+                    "keywords": ["5YW055ub5Yi26YCg","5YW055ub5Yi26YCg5bel5Y6C"],
                     "targetUrl": "baozha.html",
                     "description": "该页面暂无描述..."
                 },
                 {
-                    "id": "jqtj2",
-                    "keywords": ["LzIwMTVuZXdz","5Z2g5qW85qGICg=="],
+                    "id": "jqtj22",
+                    "keywords": ["5YW05YGl5aSn5Y6m5Z2g5qW85qGI","5Z2g5qW85qGICg==","5Z2g5qW85qGI"],
                     "targetUrl": "zhuilou.html",
                     "description": "该页面暂无描述..."
                 },
@@ -517,12 +517,7 @@ class SearchEngine {
                     "targetUrl": "wangd.html",
                     "description": "该页面暂无描述..."
                 },
-                {
-                    "id": "langren",
-                    "keywords": ["6J6C5Lq65rKZ", "5Luj5Y+36J6C5Lq65rKZ", "6J6C5Lq65rKZ5qGj5qGI"],
-                    "targetUrl": "langr.html",
-                    "description": "该页面暂无描述..."
-                },
+                
                 {
                     "id": "shehjg",
                     "keywords": ["56S+5Lya57uT5p6E", "57uT5p6E56S+5Lya"],
