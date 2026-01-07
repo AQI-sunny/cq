@@ -483,7 +483,7 @@ class SearchEngine {
                 },
                 {
                     "id": "jqtj3",
-                    "keywords": ["5p6c5aSa5aSa","6bKc5p6c5bqX"],
+                    "keywords": ["5p6c5aSa5aSa","6bKc5p6c5bqX","5p6c5aSa5aSa5rC05p6c5bqX"],
                     "targetUrl": "shuigd.html",
                     "description": "该页面暂无描述..."
                 },
