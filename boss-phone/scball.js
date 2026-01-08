@@ -528,8 +528,140 @@ class SearchEngine {
             "version": "3.0",
             "lastUpdated": "2026-01-01",
             "searchRules": [
-                // ... 保持原有的关键词数据不变
-                // 这里省略了原有的关键词数据，保持与您提供的代码一致
+                {
+                    "id": "medical_record",
+                    "keywords": ["5YW05YGl56eR5oqA6ZuG5Zui","5YW05YGl56eR5oqA6ZuG5Zui"],
+                    "targetUrl": "xjjt.html",
+                    "description": "该页面暂无描述..."
+                },
+                {
+                    "id": "jqtjl",
+                    "keywords": ["5a6J55u+56eR5oqA5YWs5Y+4","5a6J55u+56eR5oqA"],
+                    "targetUrl": "andun.html",
+                    "description": "该页面暂无描述..."
+                },
+                {
+                    "id": "jqtjl",
+                    "keywords": ["5p2O5YGl5YW0","x6eR5oqA"],
+                    "targetUrl": "shizong.html",
+                    "description": "该页面暂无描述..."
+                },
+                {
+                    "id": "jqtjl",
+                    "keywords": ["5YW055ub5Yi26YCg","5YW055ub5Yi26YCg"],
+                    "targetUrl": "baozha.html",
+                    "description": "该页面暂无描述..."
+                },
+                {
+                    "id": "jqtj2",
+                    "keywords": ["5YW05YGl5aSn5Y6m5Z2g5qW85qGI","5Z2g5qW85qGI"],
+                    "targetUrl": "zhuilou.html",
+                    "description": "该页面暂无描述..."
+                },
+                {
+                    "id": "jqtj3",
+                    "keywords": ["5p6c5aSa5aSa","6bKc5p6c5bqX","5p6c5aSa5aSa5rC05p6c5bqX"],
+                    "targetUrl": "shuigd.html",
+                    "description": "该页面暂无描述..."
+                },
+                {
+                    "id": "jqtj4",
+                    "keywords": ["54mp5Lia566h55CG5aSE", "5YW05YGl5aSn5Y6m54mp5Lia566h55CG5aSE"],
+                    "targetUrl": "wyglc.html",
+                    "description": "该页面暂无描述..."
+                },
+                {
+                    "id": "population_flow",
+                    "keywords": ["5L2V5a6J", "5byg5aiB", "5paH5b+D56u5"],
+                    "targetUrl": "snxyjz.html",
+                    "description": "该页面暂无描述..."
+                },
+                {
+                    "id": "population_flow",
+                    "keywords": ["5paH5b+D56u5 ", "5a6J5b+D6I2v5bqX", "5a6J5b+D6I2v5oi/"],
+                    "targetUrl": "anxin.html",
+                    "description": "该页面暂无描述..."
+                },
+                {
+                    "id": "slot_machine",
+                    "keywords": ["5Ym N5Y+w", "N+agi zQwMQ=="],
+                    "targetUrl": "qiantai.html",
+                    "description": "该页面暂无描述..."
+                },
+                {
+                    "id": "wd",
+                    "keywords": ["5pe66L6+5ZWG5ZyI", "5pe66L6+"],
+                    "targetUrl": "wangd.html",
+                    "description": "该页面暂无描述..."
+                },
+                {
+                    "id": "langren",
+                    "keywords": ["6J6C5Lq65rKZ", "5Luj5Y+36J6C5Lq65rKZ", "6J6C5Lq65rKZ5qGj5qGI"],
+                    "targetUrl": "langr.html",
+                    "description": "该页面暂无描述..."
+                },
+                {
+                    "id": "shehjg",
+                    "keywords": ["56S+5Lya57uT5p6E", "57uT5p6E56S+5Lya"],
+                    "targetUrl": "yjyjyjj.html",
+                    "description": "该页面暂无描述..."
+                },
+                {
+                    "id": "langrentu",
+                    "keywords": ["5Y+25YWw", "ZXZpZGVuY2VfcGhvdG8x"],
+                    "targetUrl": "mishushouze.html",
+                    "description": "该页面暂无描述..."
+                },
+                {
+                    "id": "chajianli",
+                    "keywords": ["5qGj5qGI566h55CG5a6k5peg6aKE57qm6YCa6YGT", "5qGj5qGI566h55CG5a6k5peg6aKE57qm"],
+                    "targetUrl": "chajlquanxianm.html",
+                    "description": "该页面暂无描述..."
+                },
+                {
+                    "id": "chajianli5",
+                    "keywords": ["5oiQ5Y2O5aSn6YGT", "5oiQ5Y2O5aSn6YGT6YeN5aSn5Lqk6YCa5LqL5pWF", "6L2m56W4", "5LqL5pWF", "5oiQ5Y2O5aSn6YGT5LqL5pWF"],
+                    "targetUrl": "chehuo.html",
+                    "description": "该页面暂无描述..."
+                }, 
+                {
+                    "id": "chajianli3",
+                    "keywords": ["Q1RIQw==", "Y3RoYw=="],
+                    "targetUrl": "todsk.html",
+                    "description": "该页面暂无描述..."
+                }, 
+                {
+                    "id": "chajianli6",
+                    "keywords": ["5raI6Ziy57O757uf6K6w5b2V", "5raI6Ziy57O757uf"],
+                    "targetUrl": "xiaofang.html",
+                    "description": "该页面暂无描述..."
+                }, 
+                 {
+                    "id": "chajianli6",
+                    "keywords": ["5bqU5oCl55S15rqQ", "5bqU5oCl55S15rqQ5pel5b+X", "55uR5o6n5pel5b+X"],
+                    "targetUrl": "yingjidy.html",
+                    "description": "该页面暂无描述..."
+                }, 
+
+                {
+                    "id": "chajianl2i",
+                    "keywords": ["6a2P6K2m5a6Y", "6a2P"],
+                    "targetUrl": "wei.html",
+                    "description": "该页面暂无描述..."
+                }, 
+                
+                {
+                    "id": "chajianli2",
+                    "keywords": ["cmVpbg==", "UmVpbg=="],
+                    "targetUrl": "rein.html",
+                    "description": "该页面暂无描述..."
+                }, 
+                {
+                    "id": "asset_assessment",
+                    "keywords": ["5byA5aeL", "6ZiI55WM5qmE5YyW5YmC"],
+                    "targetUrl": "begin.html",
+                    "description": "该页面暂无描述..."
+                }
             ],
             "recentPages": []
         }; 
