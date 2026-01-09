@@ -61,6 +61,51 @@
             margin: 0 auto;
         }
 
+        /* Logo 样式 - 放在header中间 */
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 30px;
+            width: 120px;
+            height: 120px;
+        }
+
+        .logo {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid var(--accent-color);
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.5s ease;
+            position: relative;
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('./gallery/AQIgame.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: transform 0.5s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.1) rotate(360deg);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+        }
+
         /* 模式切换按钮 */
         .mode-toggle-container {
             position: fixed;
@@ -465,6 +510,11 @@
                 height: 50px;
                 font-size: 1.5rem;
             }
+
+            .logo-container {
+                width: 100px;
+                height: 100px;
+            }
         }
     </style>
      <link rel="icon" type="image/png" href="./gallery/AQIgame.png">
@@ -477,13 +527,20 @@
 
     <div class="container">
         <header>
-            <h1>🎮 AQI Game</h1>
-            <p class="subtitle">网页游戏与实用工具平台 - 探索与创造的数字世界</p>
+            <!-- Logo放在header中间 -->
+            <div class="logo-container">
+                <div class="logo" id="siteLogo"></div>
+            </div>
+            
+            <!-- <h1>AQI Game🎮</h1> -->
+             <h1>AQI Game</h1>
+            <p class="subtitle">网页游戏与实用工具平台</p>
         </header>
 
         <div class="welcome-section">
             <h2>欢迎来到AQI Game平台</h2>
-            <p>这里是一个集网页游戏与实用工具于一体的数字空间。无论你是喜欢挑战智力的网页解谜游戏，还是喜欢摸鱼事件放松的休闲小游戏，或是需要便捷的网页工具，这里都能满足你的需求。探索隐藏的秘密，享受解谜的乐趣，或使用作者精心设计的实用工具提升效率。</p>
+            <!-- <p>这里是一个集网页解谜游戏与实用工具于一体的数字空间。无论你是喜欢挑战智力的网页解谜游戏，还是喜欢摸鱼事件放松的休闲小游戏，或是需要便捷的摸鱼工具，这里都能满足你的需求。探索隐藏的秘密，享受解谜的乐趣，或使用作者精心设计的实用工具提升效率。</p> -->
+             <p>这里是一个集网页解谜游戏与实用工具于一体的数字空间。无论你是喜欢网页解谜游戏，还是喜欢摸鱼放松的休闲小游戏，或是需要便捷的摸鱼工具，这里都能满足你的需求~关注不亏，常看常新~</p>
             <p>
                 作者阿柒的个人介绍：
             </p>
@@ -551,7 +608,7 @@
                 <div class="feature-item">
                     <span class="feature-icon">🎮</span>
                     <h4 class="feature-title">互动解谜</h4>
-                    <p class="feature-desc">精心设计的解谜关卡，每一步都充满惊喜与挑战</p>
+                    <p class="feature-desc">精心设计的网页解谜游戏，每一页都充满惊喜与挑战</p>
                 </div>
 
                 <div class="feature-item">
@@ -615,6 +672,15 @@
             } else {
                 localStorage.setItem('themeMode', 'light');
             }
+        });
+        
+        // Logo点击返回顶部
+        const siteLogo = document.getElementById('siteLogo');
+        siteLogo.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         });
         
         // 为带有背景的卡片设置背景图片
