@@ -61,49 +61,33 @@
             margin: 0 auto;
         }
 
-        /* Logo 样式 - 放在header中间 */
-        .logo-container {
+        /* Logo 样式 - 放在标题左侧 */
+        .header-content {
             display: flex;
-            justify-content: center;
             align-items: center;
-            margin: 0 auto 30px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+
+        .logo-link {
+            display: inline-block;
+            transition: all 0.5s ease;
+        }
+
+        .logo-link img {
             width: 120px;
             height: 120px;
-        }
-
-        .logo {
-            width: 100%;
-            height: 100%;
             border-radius: 50%;
-            background: white;
-            border: 3px solid var(--accent-color);
             cursor: pointer;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            transition: all 0.5s ease;
-            position: relative;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
         }
 
-        .logo::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('./gallery/AQIgame.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            transition: transform 0.5s ease;
-        }
-
-        .logo:hover {
-            transform: scale(1.1) rotate(360deg);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+        .logo-link:hover img {
+            transform: scale(1.15) rotate(15deg);
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
         }
 
         /* 模式切换按钮 */
@@ -147,16 +131,16 @@
 
         h1 {
             font-size: 3.5rem;
-            margin-bottom: 15px;
             color: var(--text-title);
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            line-height: 1;
         }
 
         .subtitle {
             font-size: 1.5rem;
             color: var(--text-secondary);
             max-width: 600px;
-            margin: 0 auto;
+            margin: 15px auto 0;
         }
 
         .nav-container {
@@ -479,6 +463,15 @@
             h1 {
                 font-size: 2.5rem;
             }
+            
+            .header-content {
+                gap: 15px;
+            }
+            
+            .logo-link img {
+                width: 70px;
+                height: 70px;
+            }
 
             .subtitle {
                 font-size: 1.2rem;
@@ -510,10 +503,21 @@
                 height: 50px;
                 font-size: 1.5rem;
             }
-
-            .logo-container {
-                width: 100px;
-                height: 100px;
+        }
+        
+        @media (max-width: 480px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .logo-link img {
+                width: 70px;
+                height: 70px;
             }
         }
     </style>
@@ -527,26 +531,28 @@
 
     <div class="container">
         <header>
-            <!-- Logo放在header中间 -->
-            <div class="logo-container">
-                <div class="logo" id="siteLogo"></div>
+            <!-- Logo和标题放在同一行 -->
+            <div class="header-content">
+                <!-- Logo放在标题左侧 -->
+                <a href="#" class="logo-link" id="logoLink">
+                    <img src="./gallery/AQIgame.png" alt="AQI Game Logo">
+                </a>
+                
+                <div>
+                    <h1>AQI Game</h1>
+                    <p class="subtitle">网页游戏与实用工具平台</p>
+                </div>
             </div>
-            
-            <!-- <h1>AQI Game🎮</h1> -->
-             <h1>AQI Game</h1>
-            <p class="subtitle">网页游戏与实用工具平台</p>
         </header>
 
         <div class="welcome-section">
             <h2>欢迎来到AQI Game平台</h2>
-            <!-- <p>这里是一个集网页解谜游戏与实用工具于一体的数字空间。无论你是喜欢挑战智力的网页解谜游戏，还是喜欢摸鱼事件放松的休闲小游戏，或是需要便捷的摸鱼工具，这里都能满足你的需求。探索隐藏的秘密，享受解谜的乐趣，或使用作者精心设计的实用工具提升效率。</p> -->
              <p>这里是一个集网页解谜游戏与实用工具于一体的数字空间。无论你是喜欢网页解谜游戏，还是喜欢摸鱼放松的休闲小游戏，或是需要便捷的摸鱼工具，这里都能满足你的需求~关注不亏，常看常新~</p>
             <p>
                 作者阿柒的个人介绍：
             </p>
             <p>
                 一个为了摸鱼什么事情都能做的出来的people！（除了高数）
-                <!--梦想是做一名牛掰的独立游戏制作银（参与牛掰游戏开发也行。。我不挑orz）敬请期待！（删去）-->
                 梦想是能做出一款火爆的游戏0v0！
             </p>
         </div>
@@ -568,21 +574,12 @@
         </div>
 
          <div class="nav-container">
-            <!-- 这个卡片有背景图片 -->
             <div class="nav-card with-bg" style="--card-bg-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80')">
                 <span class="nav-icon">🗝️</span>
                 <h3 class="nav-title">网页解谜游戏-BOSS消失事件！</h3>
                 <p class="nav-description">和boss坐同一个电梯他突然倒地！求援后boss却消失了？！你被列为重大嫌疑人！快来洗清嫌疑</p>
                 <a href="https://sylvie-seven-cq.top/BOSSvanish/begin.html" class="nav-link">开始解谜</a>
             </div>
-
-            <!-- 这个卡片没有背景图片，保持原样 -->
-            <!-- <div class="nav-card">
-                <span class="nav-icon">🗝️</span>
-                <h3 class="nav-title">网页解谜游戏-静乔公寓番外篇~</h3>
-                <p class="nav-description">进入阿七创造的静乔宇宙，登录静乔公寓论坛，挑战你的耐心和观察力！</p>
-                <a href="./jqgy30day/search.html" class="nav-link">开始解谜</a>
-            </div> -->
         </div>
 
         <div class="nav-container">
@@ -675,8 +672,9 @@
         });
         
         // Logo点击返回顶部
-        const siteLogo = document.getElementById('siteLogo');
-        siteLogo.addEventListener('click', () => {
+        const logoLink = document.getElementById('logoLink');
+        logoLink.addEventListener('click', (e) => {
+            e.preventDefault();
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth'
