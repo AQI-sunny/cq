@@ -366,104 +366,7 @@
             margin-bottom: 0;
         }
         
-        /* 搜索球样式 */
-        .floating-search-ball-container {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            z-index: 1000;
-        }
         
-        .floating-search-ball {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-            transition: transform 0.3s, box-shadow 0.3s;
-            position: relative;
-        }
-        
-        .floating-search-ball:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
-        }
-        
-        .floating-search-ball::before {
-            content: "🔍";
-            font-size: 1.8rem;
-        }
-        
-        .floating-search-expanded {
-            position: absolute;
-            bottom: 70px;
-            right: 0;
-            background-color: white;
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            width: 320px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(10px);
-            transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
-        }
-        
-        .floating-search-expanded.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        
-        .floating-search-input {
-            flex: 1;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
-        }
-        
-        .floating-search-input:focus {
-            border-color: #3498db;
-        }
-        
-        .floating-search-close, .floating-search-submit {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #7f8c8d;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s;
-        }
-        
-        .floating-search-close:hover {
-            background-color: #f5f5f5;
-            color: #e74c3c;
-        }
-        
-        .floating-search-submit {
-            background-color: #3498db;
-            color: white;
-            font-size: 1rem;
-        }
-        
-        .floating-search-submit:hover {
-            background-color: #2980b9;
-        }
         
         /* 临时消息提示 */
         .temp-message {
@@ -528,10 +431,7 @@
                 font-size: 0.95rem;
             }
             
-            .floating-search-expanded {
-                width: calc(100vw - 40px);
-                right: -10px;
-            }
+           
         }
         
         @media (max-width: 480px) {
@@ -1114,45 +1014,7 @@
         });
         
         // 搜索球交互
-        const searchBall = document.getElementById('searchBall');
-        const searchExpanded = document.getElementById('searchExpanded');
-        const searchClose = document.getElementById('searchClose');
-        const searchSubmit = document.getElementById('searchSubmit');
-        const searchInput = document.getElementById('searchInput');
-        
-        searchBall.addEventListener('click', function() {
-            searchExpanded.classList.add('active');
-            searchInput.focus();
-        });
-        
-        searchClose.addEventListener('click', function() {
-            searchExpanded.classList.remove('active');
-            searchInput.value = '';
-        });
-        
-        searchSubmit.addEventListener('click', function() {
-            const query = searchInput.value.trim();
-            if (query) {
-                showTempMessage(`搜索: ${query}`);
-                searchExpanded.classList.remove('active');
-            } else {
-                searchInput.focus();
-            }
-        });
-        
-        // 搜索框回车键提交
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchSubmit.click();
-            }
-        });
-        
-        // 点击外部关闭搜索框
-        document.addEventListener('click', function(event) {
-            if (!searchBall.contains(event.target) && !searchExpanded.contains(event.target)) {
-                searchExpanded.classList.remove('active');
-            }
-        });
+       
         
         // 底部导航交互
         document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {

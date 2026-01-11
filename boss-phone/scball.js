@@ -1,4 +1,5 @@
-// search-ball-complete.js - 移动端修复版本
+// search-ball-complete.js - 纯JS版本（无CSS依赖）
+//居中的搜索球代码参考！
 // ============================================
 // 第一部分：搜索框UI控制（移动端兼容）
 // ============================================
@@ -50,7 +51,59 @@ function ensureSearchElements() {
     searchContainer.style.zIndex = '999999';
 }
 
-// ✅ 核心居中函数（修改为靠右居中）
+// ✅ 核心居中函数
+/* function centerSearchBall() {
+    const searchContainer = document.querySelector('.floating-search-ball-container');
+    const searchBall = document.getElementById('searchBall');
+    
+    if (!searchContainer || !searchBall) {
+        console.warn('居中失败：元素未找到');
+        return;
+    }
+    
+    // 1. 强制显示
+    searchContainer.style.display = 'block';
+    searchContainer.style.visibility = 'visible';
+    searchContainer.style.opacity = '1';
+    searchContainer.style.zIndex = '999999';
+    
+    // 2. 计算居中位置
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    // 确保元素有正确的尺寸
+    const ballWidth = searchBall.offsetWidth || 56;
+    const ballHeight = searchBall.offsetHeight || 56;
+    
+    // 3. 设置居中位置
+    const centerLeft = (viewportWidth / 2) - (ballWidth / 2);
+    const centerTop = (viewportHeight / 2) - (ballHeight / 2);
+    
+    // 4. 应用位置
+    searchContainer.style.position = 'fixed';
+    searchContainer.style.left = centerLeft + 'px';
+    searchContainer.style.top = centerTop + 'px';
+    searchContainer.style.right = 'auto';  // 清除右对齐
+    
+    console.log('✅ 搜索球已居中:', {
+        left: centerLeft + 'px',
+        top: centerTop + 'px',
+        viewport: `${viewportWidth}x${viewportHeight}`,
+        ball: `${ballWidth}x${ballHeight}`
+    });
+    
+    // 5. 标记已居中
+    searchContainer.setAttribute('data-centered', 'true');
+    
+    // 6. 移除保存的位置（防止冲突）
+    try {
+        localStorage.removeItem('searchBallPosition');
+    } catch (e) {
+        // 忽略错误
+    }
+} */
+
+    // ✅ 核心居中函数（修改为靠右居中）
 function centerSearchBall() {
     const searchContainer = document.querySelector('.floating-search-ball-container');
     const searchBall = document.getElementById('searchBall');
@@ -103,7 +156,6 @@ function centerSearchBall() {
         // 忽略错误
     }
 }
-
 // ✅ 修改重置位置函数
 function resetSearchBallPosition() {
     const searchContainer = document.querySelector('.floating-search-ball-container');
@@ -125,19 +177,9 @@ function createSearchElements() {
     container.className = 'floating-search-ball-container';
     container.id = 'searchContainer';
     
-    // ✅ 为移动端优化点击区域
-    container.style.touchAction = 'manipulation';
-    container.style.userSelect = 'none';
-    
     const ball = document.createElement('div');
     ball.className = 'floating-search-ball';
     ball.id = 'searchBall';
-    
-    // ✅ 增加移动端点击区域
-    ball.style.cursor = 'pointer';
-    ball.style.touchAction = 'manipulation';
-    ball.style.userSelect = 'none';
-    ball.style.webkitTapHighlightColor = 'transparent'; // 移除移动端点击高亮
     
     const expanded = document.createElement('div');
     expanded.className = 'floating-search-expanded';
@@ -169,7 +211,7 @@ function createSearchElements() {
     console.log('搜索框元素创建完成');
 }
 
-// ✅ 修复：优化移动端点击事件处理
+// 设置搜索UI交互
 function setupSearchUI() {
     const searchBall = document.getElementById('searchBall');
     const searchExpanded = document.getElementById('searchExpanded');
@@ -179,17 +221,9 @@ function setupSearchUI() {
     
     if (!searchBall) return;
     
-    // ✅ 移动端点击检测变量
-    let touchStartTime = 0;
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let isTap = false;
-    
-    // ✅ 修复：统一使用点击事件，避免touch事件冲突
+    // 点击搜索球
     searchBall.addEventListener('click', function(e) {
-        e.preventDefault();
         e.stopPropagation();
-        
         const isActive = this.classList.contains('active');
         
         if (isActive) {
@@ -201,97 +235,33 @@ function setupSearchUI() {
             this.classList.add('pulse');
             setTimeout(() => this.classList.remove('pulse'), 500);
             setTimeout(() => {
-                if (searchInput) {
-                    searchInput.focus();
-                    // 移动端自动弹出键盘
-                    if ('virtualKeyboard' in navigator) {
-                        navigator.virtualKeyboard.show();
-                    }
-                }
+                if (searchInput) searchInput.focus();
             }, 300);
         }
-    });
-    
-    // ✅ 修复：添加touch事件用于移动端更好的反馈
-    searchBall.addEventListener('touchstart', function(e) {
-        e.stopPropagation();
-        touchStartTime = Date.now();
-        const touch = e.touches[0];
-        touchStartX = touch.clientX;
-        touchStartY = touch.clientY;
-        isTap = true;
-        
-        // 添加按下效果
-        this.style.transform = 'scale(0.95)';
-        this.style.transition = 'transform 0.1s';
-    }, { passive: true });
-    
-    searchBall.addEventListener('touchmove', function(e) {
-        const touch = e.touches[0];
-        const deltaX = Math.abs(touch.clientX - touchStartX);
-        const deltaY = Math.abs(touch.clientY - touchStartY);
-        
-        // 如果移动距离过大，不视为点击
-        if (deltaX > 10 || deltaY > 10) {
-            isTap = false;
-        }
-    }, { passive: true });
-    
-    searchBall.addEventListener('touchend', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        // 恢复原始大小
-        this.style.transform = 'scale(1)';
-        
-        const touchDuration = Date.now() - touchStartTime;
-        
-        // 如果是点击（非拖动）
-        if (isTap && touchDuration < 300) {
-            const clickEvent = new Event('click');
-            this.dispatchEvent(clickEvent);
-        }
-        
-        isTap = false;
     });
     
     // 关闭按钮
     if (searchClose) {
         searchClose.addEventListener('click', function(e) {
             e.stopPropagation();
-            e.preventDefault();
             searchBall.classList.remove('active');
             searchExpanded.classList.remove('active');
             if (searchInput) searchInput.value = '';
         });
-        
-        // 移动端支持
-        searchClose.addEventListener('touchstart', function(e) {
-            e.stopPropagation();
-            const clickEvent = new Event('click');
-            this.dispatchEvent(clickEvent);
-        }, { passive: true });
     }
     
     // 搜索按钮
     if (searchSubmit) {
         searchSubmit.addEventListener('click', function(e) {
             e.stopPropagation();
-            e.preventDefault();
             const query = searchInput ? searchInput.value.trim() : '';
             if (query) {
                 performCompleteSearch(query);
             } else {
+                // ✅ 修复：输入为空时显示提醒
                 showAlert('请输入搜索关键词', 2000);
             }
         });
-        
-        // 移动端支持
-        searchSubmit.addEventListener('touchstart', function(e) {
-            e.stopPropagation();
-            const clickEvent = new Event('click');
-            this.dispatchEvent(clickEvent);
-        }, { passive: true });
     }
     
     // ✅ 修复：改进的Enter键搜索处理
@@ -304,13 +274,14 @@ function setupSearchUI() {
                 if (query) {
                     performCompleteSearch(query);
                 } else {
+                    // ✅ 修复：输入为空时显示提醒
                     showAlert('请输入搜索关键词', 2000);
                 }
             }
         });
     }
     
-    // ✅ 修复：优化点击其他地方关闭的逻辑
+    // 点击其他地方关闭
     document.addEventListener('click', function(e) {
         if (!searchBall || !searchExpanded) return;
         
@@ -320,23 +291,8 @@ function setupSearchUI() {
         if (!isClickInside && searchExpanded.classList.contains('active')) {
             searchBall.classList.remove('active');
             searchExpanded.classList.remove('active');
-            if (searchInput) searchInput.blur();
         }
     });
-    
-    // 移动端触摸关闭支持
-    document.addEventListener('touchstart', function(e) {
-        if (!searchBall || !searchExpanded) return;
-        
-        const isTouchInside = searchBall.contains(e.target) || 
-                               searchExpanded.contains(e.target);
-        
-        if (!isTouchInside && searchExpanded.classList.contains('active')) {
-            searchBall.classList.remove('active');
-            searchExpanded.classList.remove('active');
-            if (searchInput) searchInput.blur();
-        }
-    }, { passive: true });
 }
 
 // 设置拖动功能
@@ -353,15 +309,11 @@ function setupDragFunction() {
     // 添加拖动类
     searchBall.classList.add('draggable');
     
-    // ✅ 修复：分离拖动和点击事件
     // 桌面端拖动
     searchBall.addEventListener('mousedown', function(e) {
-        // 如果搜索框已经展开，不进行拖动
         if (searchBall.classList.contains('active')) return;
         
         e.preventDefault();
-        e.stopPropagation();
-        
         isDragging = true;
         searchBall.classList.add('dragging');
         
@@ -373,12 +325,8 @@ function setupDragFunction() {
         initialTop = rect.top;
     });
     
-    // ✅ 修复：移动端拖动逻辑优化
-    let touchStartTime = 0;
-    let isTouchDrag = false;
-    
+    // 移动端拖动（简化版）
     searchBall.addEventListener('touchstart', function(e) {
-        // 如果搜索框已经展开，不进行拖动
         if (searchBall.classList.contains('active')) return;
         
         const touch = e.touches[0];
@@ -389,15 +337,10 @@ function setupDragFunction() {
         initialLeft = rect.left;
         initialTop = rect.top;
         
-        touchStartTime = Date.now();
-        isTouchDrag = false;
-        
-        // 延迟设置拖动状态，避免与点击冲突
         setTimeout(() => {
-            if (isDragging) {
-                searchBall.classList.add('dragging');
-            }
-        }, 150);
+            isDragging = true;
+            searchBall.classList.add('dragging');
+        }, 100);
     }, { passive: true });
     
     // 移动处理
@@ -410,14 +353,6 @@ function setupDragFunction() {
             const touch = e.touches[0];
             currentX = touch.clientX;
             currentY = touch.clientY;
-            
-            // 检测是否为拖动（移动距离大于阈值）
-            const deltaX = Math.abs(currentX - startX);
-            const deltaY = Math.abs(currentY - startY);
-            
-            if (deltaX > 15 || deltaY > 15) {
-                isTouchDrag = true;
-            }
         } else {
             currentX = e.clientX;
             currentY = e.clientY;
@@ -438,26 +373,14 @@ function setupDragFunction() {
         searchContainer.style.left = safeLeft + 'px';
         searchContainer.style.top = safeTop + 'px';
         searchContainer.style.right = 'auto';
-        
-        // 移除居中标记
-        searchContainer.removeAttribute('data-positioned');
     }
     
     // 结束拖动
-    function handleEnd(e) {
+    function handleEnd() {
         if (!isDragging) return;
         
         isDragging = false;
         searchBall.classList.remove('dragging');
-        
-        // 对于移动端，如果是短时间小距离移动，视为点击而非拖动
-        if (e.type === 'touchend') {
-            const touchDuration = Date.now() - touchStartTime;
-            if (touchDuration < 200 && !isTouchDrag) {
-                // 这很可能是点击，不保存位置
-                return;
-            }
-        }
         
         // 保存位置
         const left = parseFloat(searchContainer.style.left);
@@ -478,7 +401,7 @@ function setupDragFunction() {
     document.addEventListener('touchmove', handleMove, { passive: true });
     document.addEventListener('touchend', handleEnd, { passive: true });
     
-    // 设置位置重置
+    // 重置位置功能
     setupPositionReset();
 }
 
@@ -524,7 +447,7 @@ class SearchEngine {
     }
 
     async init() {
-        this.keywordsData = {
+         this.keywordsData = {
             "version": "3.0",
             "lastUpdated": "2026-01-01",
             "searchRules": [
@@ -541,20 +464,20 @@ class SearchEngine {
                     "description": "该页面暂无描述..."
                 },
                 {
-                    "id": "jqtjl",
+                    "id": "jqtj4",
                     "keywords": ["5p2O5YGl5YW0","x6eR5oqA"],
                     "targetUrl": "shizong.html",
                     "description": "该页面暂无描述..."
                 },
                 {
-                    "id": "jqtjl",
-                    "keywords": ["5YW055ub5Yi26YCg","5YW055ub5Yi26YCg"],
+                    "id": "jqtj3",
+                    "keywords": ["5YW055ub5Yi26YCg","5YW055ub5Yi26YCg5bel5Y6C"],
                     "targetUrl": "baozha.html",
                     "description": "该页面暂无描述..."
                 },
                 {
-                    "id": "jqtj2",
-                    "keywords": ["5YW05YGl5aSn5Y6m5Z2g5qW85qGI","5Z2g5qW85qGI"],
+                    "id": "jqtj22",
+                    "keywords": ["5YW05YGl5aSn5Y6m5Z2g5qW85qGI","5Z2g5qW85qGICg==","5Z2g5qW85qGI"],
                     "targetUrl": "zhuilou.html",
                     "description": "该页面暂无描述..."
                 },
@@ -594,12 +517,7 @@ class SearchEngine {
                     "targetUrl": "wangd.html",
                     "description": "该页面暂无描述..."
                 },
-                {
-                    "id": "langren",
-                    "keywords": ["6J6C5Lq65rKZ", "5Luj5Y+36J6C5Lq65rKZ", "6J6C5Lq65rKZ5qGj5qGI"],
-                    "targetUrl": "langr.html",
-                    "description": "该页面暂无描述..."
-                },
+                
                 {
                     "id": "shehjg",
                     "keywords": ["56S+5Lya57uT5p6E", "57uT5p6E56S+5Lya"],
@@ -666,6 +584,7 @@ class SearchEngine {
             "recentPages": []
         }; 
         
+
         await this.loadKeywords();
     }
 
@@ -879,7 +798,7 @@ function initSearchEngine() {
     }, 1000);
 }
 
-// 显示提醒函数
+// ✅ 修复：改进的显示提醒函数
 function showAlert(message, duration = 2000) {
     // 移除旧的提醒
     const oldAlert = document.getElementById('customAlert');
@@ -937,7 +856,7 @@ function showAlert(message, duration = 2000) {
     }, duration);
 }
 
-// 完整搜索函数
+// ✅ 修复：改进的完整搜索函数
 async function performCompleteSearch(keyword) {
     const searchInput = document.getElementById('searchInput');
     
@@ -981,6 +900,7 @@ async function performCompleteSearch(keyword) {
             }
         }, 1500);
     } else {
+        // ✅ 修复：搜索不到时显示提醒
         showAlert(`未找到与"${keyword}"相关的页面`, 2000);
         
         // 保持搜索框打开，让用户继续输入
@@ -1057,17 +977,34 @@ window.addEventListener('load', function() {
     }, 500);
 });
 
-// 窗口大小变化时重新居中
+// ✅ 窗口大小变化时重新居中
 window.addEventListener('resize', function() {
     const container = document.querySelector('.floating-search-ball-container');
-    if (container && container.hasAttribute('data-positioned')) {
+    if (container && container.hasAttribute('data-centered')) {
         setTimeout(centerSearchBall, 100);
     }
 });
 
-// 导出居中函数供外部调用
+// ✅ 导出居中函数供外部调用
 window.centerSearchBall = centerSearchBall;
 
+// ✅ 定时检查保障
+/* setInterval(() => {
+    const container = document.querySelector('.floating-search-ball-container');
+    const ball = document.getElementById('searchBall');
+    
+    if (container && ball) {
+        const rect = container.getBoundingClientRect();
+        const isVisible = rect.width > 0 && rect.height > 0;
+        const isCentered = container.hasAttribute('data-centered');
+        
+        if (isVisible && !isCentered) {
+            console.log('定时检查：重新居中');
+            centerSearchBall();
+        }
+    }
+}, 3000);
+ */
 // 导出控制函数
 window.searchControl = {
     init: initCompleteSearchSystem,
@@ -1081,4 +1018,4 @@ window.searchControl = {
     }
 };
 
-console.log('搜索球完整JS代码已优化加载（移动端修复版）');
+console.log('搜索球完整JS代码已优化加载');
