@@ -385,9 +385,12 @@
     </div>
     
     <script>
-        const targetDate = new Date();
+        /* const targetDate = new Date();
         targetDate.setDate(targetDate.getDate() + 15);
-        
+         */
+        // 设置一个固定的目标发布日期，例如 2024年12月31日 12:00:00
+// 你可以把这里的日期改成你游戏真正打算发布的日期
+const targetDate = new Date('2026-3-30T16:00:00');
         function updateCountdown() {
             const now = new Date().getTime();
             const timeRemaining = targetDate - now;
