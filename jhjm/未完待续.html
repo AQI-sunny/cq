@@ -393,7 +393,23 @@
          */
         // 设置一个固定的目标发布日期，例如 2024年12月31日 12:00:00
 // 你可以把这里的日期改成你游戏真正打算发布的日期
-const targetDate = new Date('2026-3-30T16:00:00');
+
+/* const targetDate = new Date('2026-3-30T16:00:00'); */
+
+let targetDate;
+// 尝试从浏览器本地存储中读取之前保存的倒计时目标时间
+const savedDate = localStorage.getItem('aqiGameTargetDate');
+
+if (savedDate) {
+    // 如果有记录，就使用记录的时间
+    targetDate = new Date(parseInt(savedDate));
+} else {
+    // 如果没有记录（第一次访问），就设置为当前时间往后15天
+    targetDate = new Date();
+    targetDate.setDate(targetDate.getDate() + 15);
+    // 将这个时间戳保存到本地浏览器
+    localStorage.setItem('aqiGameTargetDate', targetDate.getTime());
+}
         function updateCountdown() {
             const now = new Date().getTime();
             const timeRemaining = targetDate - now;
