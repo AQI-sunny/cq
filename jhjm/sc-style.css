@@ -1,0 +1,391 @@
+/* 悬浮搜索球样式 - 蓝白主题 */
+/* 兼容移动端、小程序及主流浏览器 */
+
+/* 基础搜索容器 */
+.floating-search-ball-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* 修复移动端的关键属性 */
+    -webkit-tap-highlight-color: transparent;
+    /* 不要在这里加 touch-action: none，会导致问题 */
+}
+
+/* 搜索球 - 圆形图标 */
+.floating-search-ball {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: #b0d5fb;
+    background-image: url('search.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 70px 70px; /* 您设置的图标大小 */
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+    border: 2px solid #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    /* 修复移动端的关键属性 */
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+
+/* 搜索球悬停效果 */
+.floating-search-ball:hover {
+    background-color: #0056cc;
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4);
+}
+
+/* 搜索球激活状态 */
+.floating-search-ball.active {
+    width: 56px;
+    border-radius: 28px 28px 28px 28px;
+    background-image: url('search.png');
+    background-position: center right 16px;
+    background-size: 50px 50px; /* 保持active状态一致 */
+}
+
+/* 搜索框容器 - 展开状态 */
+.floating-search-expanded {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 28px;
+    box-shadow: 0 6px 20px rgba(0, 122, 255, 0.25);
+    border: 2px solid #007aff;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    pointer-events: none;
+}
+
+/* 展开状态激活 */
+.floating-search-ball.active + .floating-search-expanded,
+.floating-search-expanded.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+/* 搜索输入框 */
+.floating-search-input {
+    width: 0;
+    padding: 0;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #333;
+    background-color: transparent;
+    transition: all 0.3s ease;
+    opacity: 0;
+    min-width: 0;
+}
+
+/* 展开时的输入框 */
+.floating-search-ball.active + .floating-search-expanded .floating-search-input,
+.floating-search-expanded.active .floating-search-input {
+    width: 240px;
+    padding: 15px 20px 15px 25px;
+    opacity: 1;
+}
+
+/* 搜索按钮 */
+.floating-search-submit {
+    width: 44px;
+    height: 44px;
+    border: none;
+    background-color: #007aff;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 22px;
+    margin-right: 6px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.floating-search-submit:hover {
+    background-color: #0056cc;
+}
+
+/* 关闭按钮 */
+.floating-search-close {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 20px;
+    margin: 0 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.floating-search-close:hover {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+/* 添加在CSS文件末尾 */
+
+/* 拖动功能样式 */
+.floating-search-ball.draggable {
+    cursor: move;
+    cursor: grab;
+}
+
+.floating-search-ball.draggable:active {
+    cursor: grabbing;
+}
+
+/* 拖动时的样式 */
+.floating-search-ball.dragging {
+    opacity: 0.8;
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(0, 122, 255, 0.5);
+    z-index: 10001;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .floating-search-ball-container {
+        top: 15px;
+        right: 15px;
+    }
+    
+    .floating-search-ball {
+        width: 52px;
+        height: 52px;
+        background-size: 66px 66px; /* 按比例缩小图标 */
+    }
+    
+    .floating-search-ball.active {
+        width: 52px;
+        border-radius: 26px 26px 26px 26px;
+        background-position: center right 14px;
+        background-size: 66px 66px; /* 按比例缩小图标 */
+    }
+    
+    .floating-search-expanded {
+        border-radius: 26px;
+    }
+    
+    .floating-search-ball.active + .floating-search-expanded .floating-search-input,
+    .floating-search-expanded.active .floating-search-input {
+        width: 200px;
+        padding: 13px 18px 13px 22px;
+        font-size: 15px;
+    }
+    
+    .floating-search-submit {
+        width: 40px;
+        height: 40px;
+        border-radius: 20px;
+        font-size: 13px;
+    }
+    
+    .floating-search-close {
+        width: 30px;
+        height: 30px;
+        font-size: 18px;
+        margin: 0 6px;
+    }
+}
+
+/* 超小屏幕设备 */
+@media (max-width: 480px) {
+    .floating-search-ball-container {
+        top: 12px;
+        right: 12px;
+    }
+    
+    .floating-search-ball {
+        width: 48px;
+        height: 48px;
+        background-size: 66px 66px; /* 按比例缩小图标 */
+    }
+    
+    .floating-search-ball.active {
+        width: 48px;
+        border-radius: 24px 24px 24px 24px;
+        background-position: center right 12px;
+        background-size: 66px 66px; /* 按比例缩小图标 */
+    }
+    
+    .floating-search-expanded {
+        border-radius: 24px;
+    }
+    
+    .floating-search-ball.active + .floating-search-expanded .floating-search-input,
+    .floating-search-expanded.active .floating-search-input {
+        width: 180px;
+        padding: 12px 16px 12px 20px;
+        font-size: 14px;
+    }
+    
+    .floating-search-submit {
+        width: 38px;
+        height: 38px;
+        border-radius: 19px;
+        font-size: 12px;
+    }
+    
+    .floating-search-close {
+        width: 28px;
+        height: 28px;
+        font-size: 16px;
+        margin: 0 5px;
+    }
+}
+
+/* 小程序适配 */
+/* 微信小程序 */
+page .floating-search-ball-container,
+#app .floating-search-ball-container {
+    position: fixed !important;
+}
+
+/* 防止小程序中的样式冲突 */
+.floating-search-ball {
+    box-sizing: border-box;
+}
+
+/* 暗色模式支持 */
+@media (prefers-color-scheme: dark) {
+    .floating-search-ball {
+        background-color: #0a84ff;
+        border-color: #1c1c1e;
+        box-shadow: 0 4px 12px rgba(10, 132, 255, 0.3);
+    }
+    
+    .floating-search-ball:hover {
+        background-color: #0066cc;
+        box-shadow: 0 6px 16px rgba(10, 132, 255, 0.4);
+    }
+    
+    .floating-search-expanded {
+        background-color: #1c1c1e;
+        border-color: #0a84ff;
+        box-shadow: 0 6px 20px rgba(10, 132, 255, 0.25);
+    }
+    
+    .floating-search-input {
+        color: #f2f2f7;
+    }
+    
+    .floating-search-submit {
+        background-color: #0a84ff;
+    }
+    
+    .floating-search-submit:hover {
+        background-color: #0066cc;
+    }
+    
+    .floating-search-close {
+        color: #8e8e93;
+    }
+    
+    .floating-search-close:hover {
+        background-color: #2c2c2e;
+        color: #f2f2f7;
+    }
+}
+
+/* 触摸设备优化 */
+@media (hover: none) and (pointer: coarse) {
+    .floating-search-ball {
+        min-width: 48px;
+        min-height: 48px;
+        /* 移动端触摸优化 */
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    .floating-search-submit,
+    .floating-search-close {
+        min-width: 44px;
+        min-height: 44px;
+    }
+}
+
+/* 动画效果 */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.floating-search-ball.pulse {
+    animation: pulse 0.5s ease;
+}
+
+/* 加载备用图标 */
+.floating-search-ball::before {
+    content: "🔍";
+    font-size: 24px;
+    color: white;
+    display: none;
+}
+
+/* 图标加载失败时的备用方案 */
+.floating-search-ball.icon-failed {
+    background-image: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.floating-search-ball.icon-failed::before {
+    display: block;
+}
+
+/* 无障碍支持 */
+.floating-search-ball:focus,
+.floating-search-input:focus,
+.floating-search-submit:focus,
+.floating-search-close:focus {
+    outline: 2px solid #007aff;
+    outline-offset: 2px;
+}
+
+/* 打印时隐藏 */
+@media print {
+    .floating-search-ball-container {
+        display: none !important;
+    }
+}
+
+/* 确保搜索球始终在最前面 */
+.floating-search-ball-container {
+    z-index: 999999 !important;
+}
+
+/* 修复移动端显示问题 */
+@media (max-width: 768px) {
+    .floating-search-ball-container {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}

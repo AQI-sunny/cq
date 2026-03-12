@@ -1,0 +1,271 @@
+/* ================================
+   网站访客统计系统样式
+   文件名: visitor-stats.css
+   功能: 美化访客统计显示组件
+   ================================ */
+
+/* 访客统计容器 */
+.visitor-stats-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    padding: 24px;
+    margin: 20px 0;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.visitor-stats-container:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* 标题区域 */
+.visitor-stats-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.visitor-stats-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.visitor-stats-title i {
+    color: #3498db;
+}
+
+.visitor-stats-last-updated {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    background-color: #f1f2f6;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+/* 统计数据网格 */
+.visitor-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+/* 统计卡片 */
+.visitor-stat-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 4px solid;
+    position: relative;
+    overflow: hidden;
+}
+
+.visitor-stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.visitor-stat-card:nth-child(1) {
+    border-left-color: #3498db;
+}
+
+.visitor-stat-card:nth-child(2) {
+    border-left-color: #2ecc71;
+}
+
+.visitor-stat-card:nth-child(3) {
+    border-left-color: #e74c3c;
+}
+
+.visitor-stat-card:nth-child(4) {
+    border-left-color: #f39c12;
+}
+
+/* 卡片图标 */
+.visitor-stat-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.8rem;
+    opacity: 0.1;
+    z-index: 0;
+}
+
+.visitor-stat-card:nth-child(1) .visitor-stat-icon {
+    color: #3498db;
+}
+
+.visitor-stat-card:nth-child(2) .visitor-stat-icon {
+    color: #2ecc71;
+}
+
+.visitor-stat-card:nth-child(3) .visitor-stat-icon {
+    color: #e74c3c;
+}
+
+.visitor-stat-card:nth-child(4) .visitor-stat-icon {
+    color: #f39c12;
+}
+
+/* 卡片内容 */
+.visitor-stat-content {
+    position: relative;
+    z-index: 1;
+}
+
+.visitor-stat-label {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+.visitor-stat-value {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 5px;
+    line-height: 1;
+}
+
+.visitor-stat-subtext {
+    font-size: 0.85rem;
+    color: #95a5a6;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* 趋势指示器 */
+.trend-indicator {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 6px;
+}
+
+.trend-up {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: #27ae60;
+}
+
+.trend-down {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: #c0392b;
+}
+
+.trend-up i, .trend-down i {
+    font-size: 0.7rem;
+}
+
+/* 访客标识区域 */
+.visitor-identifier {
+    background-color: white;
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    margin-top: 10px;
+}
+
+.visitor-identifier h3 {
+    font-size: 1rem;
+    color: #2c3e50;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.visitor-id-display {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    font-size: 0.9rem;
+}
+
+.visitor-id-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.visitor-id-label {
+    color: #7f8c8d;
+    font-weight: 500;
+}
+
+.visitor-id-value {
+    color: #3498db;
+    font-weight: 500;
+    background-color: #f8f9fa;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+}
+
+/* 访客类型标签 */
+.visitor-type {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.visitor-type-new {
+    background-color: rgba(52, 152, 219, 0.1);
+    color: #2980b9;
+}
+
+.visitor-type-returning {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: #27ae60;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .visitor-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .visitor-stats-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .visitor-id-display {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .visitor-stats-container {
+        padding: 16px;
+    }
+    
+    .visitor-stat-value {
+        font-size: 1.8rem;
+    }
+}

@@ -1,0 +1,760 @@
+/* 公共样式 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #fff;
+    color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding-top: 80px; /* 为固定搜索框留出空间 */
+}
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 面包屑导航 */
+.breadcrumb {
+    padding: 10px 20px;
+    background: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.breadcrumb a {
+    color: #4285F4;
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+.breadcrumb span {
+    margin: 0 5px;
+    color: #666;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+/* 搜索区域 */
+.search-section {
+    margin: 30px 0;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.search-box {
+    display: flex;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-box input[type="text"] {
+    flex: 1;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 1px solid #dfe1e5;
+    border-radius: 24px 0 0 24px;
+    outline: none;
+    min-height: 44px;
+    background: transparent;
+}
+
+.search-box input[type="text"]:focus {
+    border-color: #4285F4;
+    box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+}
+
+.search-box button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 1px solid #dfe1e5;
+    border-left: none;
+    background: #4285F4;
+    color: white;
+    border-radius: 0 24px 24px 0;
+    cursor: pointer;
+    transition: background 0.3s;
+    min-height: 44px;
+    font-weight: bold;
+}
+
+.search-box button:hover {
+    background: #357ae8;
+}
+
+/* 子页面固定搜索框 - 优化版 */
+.subpage-search-fixed {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background: white;
+    padding: 5px 15px; /* 减少内边距，特别是纵向内边距 */
+    border-radius: 30px; /* 保持圆角 */
+    box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    min-width: 700px;    /* 你设置的最小宽度 */
+    max-width: 900px;    /* 你设置的最大宽度 */
+    border: 1px solid #e0e0e0;
+    height: 60px;        /* 减小高度，从70px到60px */
+}
+
+.subpage-search-fixed:hover {
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    transform: translateX(-50%) translateY(-2px);
+}
+
+/* Logo样式 */
+.subpage-search-logo {
+    width: 50px; /* 减小Logo宽度 */
+    height: 50px; /* 减小Logo高度 */
+    margin-right: 10px; /* 减小右边距 */
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.subpage-search-input {
+    border: none;
+    padding: 8px 12px; /* 减小内边距 */
+    flex: 2;
+    outline: none;
+    border-radius: 15px; /* 减小圆角 */
+    font-size: 16px; /* 保持字体大小 */
+    background: transparent;
+    min-width: 200px; /* 保持最小宽度 */
+    transition: all 0.2s;
+    height: 40px; /* 减小高度，从50px到40px */
+}
+
+.subpage-search-input:focus {
+    background: #f8f9fa;
+}
+
+.subpage-search-button {
+    background: #4285F4;
+    color: white;
+    border: none;
+    border-radius: 15px; /* 减小圆角 */
+    padding: 6px 15px; /* 减小内边距 */
+    cursor: pointer;
+    margin-left: 8px; /* 减小左边距 */
+    font-size: 14px; /* 减小字体大小 */
+    font-weight: bold;
+    transition: background 0.2s, transform 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+    height: 40px; /* 减小高度，从50px到40px */
+}
+
+.subpage-search-button:hover {
+    background: #357ae8;
+    transform: scale(1.05);
+}
+
+/* 导航按钮 */
+.navigation-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.nav-btn {
+    padding: 10px 20px;
+    background: #f8f9fa;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #3c4043;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.nav-btn:hover {
+    background: #f1f3f4;
+    border-color: #d2e3fc;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.nav-btn.home {
+    background: #34a853;
+    color: white;
+    border-color: #34a853;
+}
+
+.nav-btn.home:hover {
+    background: #2d9248;
+}
+
+/* 搜索结果 */
+.search-results {
+    margin-top: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    background: #fff;
+    padding: 10px;
+    display: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.search-result-item {
+    padding: 12px;
+    border-bottom: 1px solid #eaeaea;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-radius: 4px;
+}
+
+.search-result-item:hover {
+    background: #f8f9fa;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 16px;
+    color: #1a0dab;
+}
+
+.search-result-description {
+    font-size: 14px;
+    color: #545454;
+    line-height: 1.4;
+}
+
+/* 专门针对子页面内容区域的样式（拍卖公告等） */
+.subpage-container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: #FFFFFF;
+    border: 1px solid #999999;
+    padding: 20px;
+    font-family: "宋体", Arial, sans-serif;
+    font-size: 14px;
+    color: #333333;
+    background-color: #F5F5DC;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABZJREFUeNpi/P//PwMDAwPD////GfAAQAAEPwC1WpQZAAAAAElFTkSuQmCC');
+    position: relative;
+}
+
+.subpage-header {
+    text-align: center;
+    border-bottom: 2px solid #990000;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.subpage-title {
+    font-size: 22px;
+    color: #990000;
+    margin: 5px 0;
+}
+
+.subpage-subtitle {
+    font-size: 18px;
+    color: #333366;
+    margin: 10px 0 5px 0;
+    border-bottom: 1px dashed #999999;
+    padding-bottom: 3px;
+}
+
+.subpage-section-title {
+    font-size: 16px;
+    margin: 15px 0 8px 0;
+}
+
+.subpage-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+}
+
+.subpage-table td, .subpage-table th {
+    border: 1px solid #999999;
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+.subpage-table th {
+    background-color: #E6E6FA;
+    text-align: center;
+}
+
+.subpage-warning {
+    background-color: #FFF8DC;
+    border: 1px solid #FFD700;
+    padding: 15px;
+    margin: 20px 0;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.subpage-footer {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px dashed #999999;
+    font-size: 12px;
+    color: #666666;
+}
+
+.subpage-highlight {
+    background-color: #FFFFCC;
+    padding: 2px 4px;
+}
+
+.subpage-stamp {
+    float: right;
+    width: 140px;
+    height: 140px;
+    border: 2px dashed #990000;
+    text-align: center;
+    padding: 8px;
+    margin: 0 0 15px 15px;
+    font-family: "楷体", "楷体_GB2312", serif;
+    font-size: 13px;
+    color: #990000;
+    line-height: 1.4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    word-break: break-all;
+    overflow: hidden;
+}
+
+.subpage-contact {
+    background-color: #F0F0F0;
+    padding: 15px;
+    border: 1px solid #CCCCCC;
+    margin: 15px 0;
+    font-size: 14px;
+}
+
+/* 子页面额外样式 */
+/* 访问计数器 */
+.counter {
+    text-align: right;
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 8px;
+    font-family: Arial, sans-serif;
+}
+
+/* 跑马灯 */
+.marquee {
+    background-color: #cc0000;
+    color: white;
+    padding: 4px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-size: 13px;
+    border-radius: 3px;
+}
+
+/* 导航菜单 */
+.nav-menu {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+    border-radius: 4px;
+}
+
+.nav-menu a {
+    color: #333;
+    text-decoration: none;
+    margin: 0 8px;
+    font-size: 13px;
+    font-family: Arial, sans-serif;
+}
+
+.nav-menu a:hover {
+    color: #cc0000;
+    text-decoration: underline;
+}
+
+/* 记录区域样式 */
+.record-section {
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+.record-section h3 {
+    color: #cc0000;
+    border-bottom: 1px dotted #999;
+    padding-bottom: 5px;
+    margin-top: 0;
+    font-size: 16px;
+}
+
+/* 操作按钮调整 */
+.navigation-buttons .nav-btn {
+    cursor: pointer;
+    border: 1px solid #dadce0;
+    background: #f8f9fa;
+    color: #3c4043;
+}
+
+.navigation-buttons .nav-btn:hover {
+    background: #f1f3f4;
+    border-color: #d2e3fc;
+}
+
+/* 打印优化 */
+@media print {
+    body {
+        padding-top: 0 !important;
+    }
+    
+    .subpage-search-fixed,
+    .nav-menu,
+    .navigation-buttons {
+        display: none !important;
+    }
+    
+    .subpage-container {
+        border: none !important;
+        padding: 0 !important;
+        background: none !important;
+        margin: 0 !important;
+    }
+    
+    .record-section {
+        border: 1px solid #000 !important;
+        background: none !important;
+        page-break-inside: avoid;
+    }
+}
+
+/* 超大屏幕适配 */
+@media (min-width: 1440px) {
+    .subpage-search-fixed {
+        min-width: 800px;
+        max-width: 1000px;
+        height: 65px; /* 减小高度 */
+        padding: 8px 20px; /* 减小内边距 */
+    }
+    
+    .subpage-search-logo {
+        width: 55px; /* 减小Logo */
+        height: 55px;
+        margin-right: 15px;
+    }
+    
+    .subpage-search-input {
+        font-size: 16px;
+        padding: 10px 15px;
+        height: 45px; /* 减小高度 */
+        min-width: 250px;
+    }
+    
+    .subpage-search-button {
+        font-size: 16px;
+        padding: 8px 20px;
+        height: 45px; /* 减小高度 */
+        margin-left: 10px;
+    }
+    
+    body {
+        padding-top: 85px; /* 减小顶部间距 */
+    }
+}
+
+/* 平板和中等尺寸笔记本适配 */
+@media (max-width: 1024px) {
+    .subpage-search-fixed {
+        min-width: 600px;
+        max-width: 700px;
+        height: 55px; /* 减小高度 */
+        padding: 6px 12px; /* 减小内边距 */
+    }
+    
+    .subpage-search-logo {
+        width: 45px; /* 减小Logo */
+        height: 45px;
+        margin-right: 10px;
+    }
+    
+    .subpage-search-input {
+        font-size: 14px;
+        height: 38px; /* 减小高度 */
+        min-width: 180px;
+    }
+    
+    .subpage-search-button {
+        font-size: 14px;
+        padding: 6px 15px;
+        height: 38px; /* 减小高度 */
+    }
+    
+    body {
+        padding-top: 75px; /* 减小顶部间距 */
+    }
+}
+
+/* 平板和小尺寸笔记本适配 */
+@media (max-width: 768px) {
+    body {
+        padding-top: 70px; /* 移动设备上减小顶部间距 */
+    }
+    
+    .breadcrumb {
+        font-size: 12px;
+        padding: 8px 15px;
+    }
+    
+    .search-section {
+        padding: 15px;
+        margin: 20px 0;
+    }
+    
+    .search-box {
+        max-width: 100%;
+    }
+    
+    .nav-btn {
+        padding: 8px 15px;
+        font-size: 13px;
+    }
+    
+    /* 子页面搜索框适配 - 平板和手机 */
+    .subpage-search-fixed {
+        top: 5px;
+        padding: 5px 10px; /* 减小内边距 */
+        min-width: 500px;
+        max-width: 90%;
+        height: 50px; /* 减小高度 */
+        border-radius: 25px; /* 减小圆角 */
+    }
+    
+    .subpage-search-logo {
+        width: 35px; /* 减小Logo大小 */
+        height: 35px;
+        margin-right: 8px;
+    }
+    
+    .subpage-search-input {
+        width: 120px;
+        font-size: 13px;
+        padding: 6px 10px; /* 减小内边距 */
+        height: 35px; /* 减小高度 */
+        min-width: 150px;
+        border-radius: 12px; /* 减小圆角 */
+    }
+    
+    .subpage-search-button {
+        padding: 5px 12px; /* 减小内边距 */
+        font-size: 13px;
+        height: 35px; /* 减小高度 */
+        margin-left: 6px;
+        border-radius: 12px; /* 减小圆角 */
+    }
+    
+    /* 子页面内容响应式 */
+    .subpage-container {
+        width: 100%;
+        padding: 15px;
+        font-size: 16px;
+        margin-top: 10px; /* 减小顶部边距 */
+    }
+    
+    .subpage-title {
+        font-size: 20px;
+    }
+    
+    .subpage-subtitle {
+        font-size: 18px;
+    }
+    
+    .subpage-table td, .subpage-table th {
+        padding: 6px 8px;
+        font-size: 14px;
+    }
+    
+    .subpage-stamp {
+        float: none;
+        margin: 15px auto;
+        display: block;
+        width: 130px;
+        height: 130px;
+        font-size: 12px;
+    }
+    
+    .search-results {
+        max-height: 300px;
+    }
+}
+
+/* 小尺寸手机适配 */
+@media (max-width: 600px) {
+    body {
+        padding-top: 65px; /* 减小顶部间距 */
+    }
+    
+    .subpage-search-fixed {
+        min-width: 400px;
+        height: 45px; /* 减小高度 */
+        padding: 4px 8px; /* 减小内边距 */
+        border-radius: 20px; /* 减小圆角 */
+    }
+    
+    .subpage-search-logo {
+        width: 30px;
+        height: 30px;
+        margin-right: 6px;
+    }
+    
+    .subpage-search-input {
+        font-size: 12px;
+        padding: 5px 8px; /* 减小内边距 */
+        height: 30px; /* 减小高度 */
+        min-width: 120px;
+        border-radius: 10px; /* 减小圆角 */
+    }
+    
+    .subpage-search-button {
+        padding: 4px 10px; /* 减小内边距 */
+        font-size: 12px;
+        height: 30px; /* 减小高度 */
+        margin-left: 5px;
+        border-radius: 10px; /* 减小圆角 */
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding-top: 60px; /* 减小顶部间距 */
+    }
+    
+    .search-box input[type="text"] {
+        font-size: 14px;
+        padding: 10px 14px;
+    }
+    
+    .search-box button {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+    
+    /* 子页面搜索框进一步适配 */
+    .subpage-search-fixed {
+        min-width: 300px;
+        padding: 3px 6px; /* 减小内边距 */
+        height: 40px; /* 减小高度 */
+        border-radius: 15px; /* 减小圆角 */
+    }
+    
+    .subpage-search-logo {
+        width: 25px;
+        height: 25px;
+        margin-right: 5px;
+    }
+    
+    .subpage-search-input {
+        width: 100px;
+        padding: 4px 6px; /* 减小内边距 */
+        font-size: 11px;
+        height: 25px; /* 减小高度 */
+        min-width: 100px;
+        border-radius: 8px; /* 减小圆角 */
+    }
+    
+    .subpage-search-button {
+        padding: 3px 8px; /* 减小内边距 */
+        font-size: 11px;
+        height: 25px; /* 减小高度 */
+        margin-left: 4px;
+        border-radius: 8px; /* 减小圆角 */
+    }
+    
+    .subpage-container {
+        padding: 10px;
+        margin-top: 15px; /* 减小顶部边距 */
+    }
+    
+    .subpage-title {
+        font-size: 18px;
+    }
+    
+    .subpage-subtitle {
+        font-size: 16px;
+    }
+    
+    .subpage-table td, .subpage-table th {
+        padding: 4px 6px;
+        font-size: 12px;
+    }
+    
+    .subpage-stamp {
+        width: 120px;
+        height: 120px;
+        font-size: 11px;
+    }
+}
+
+/* 小屏幕设备特别调整 */
+@media (max-width: 360px) {
+    .subpage-search-fixed {
+        min-width: 280px;
+        max-width: 95%;
+        height: 35px; /* 减小高度 */
+        padding: 2px 4px; /* 减小内边距 */
+    }
+    
+    .subpage-search-logo {
+        width: 20px;
+        height: 20px;
+        margin-right: 4px;
+    }
+    
+    .subpage-search-input {
+        width: 80px;
+        font-size: 10px;
+        padding: 3px 5px; /* 减小内边距 */
+        height: 20px; /* 减小高度 */
+        min-width: 80px;
+        border-radius: 6px; /* 减小圆角 */
+    }
+    
+    .subpage-search-button {
+        padding: 2px 6px; /* 减小内边距 */
+        font-size: 10px;
+        height: 20px; /* 减小高度 */
+        margin-left: 3px;
+        border-radius: 6px; /* 减小圆角 */
+    }
+    
+    body {
+        padding-top: 55px; /* 减小顶部间距 */
+    }
+}

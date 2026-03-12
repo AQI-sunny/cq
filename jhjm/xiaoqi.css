@@ -1,0 +1,474 @@
+/* 小奇 - 隐藏帖子助手样式 */
+.xiaoqi-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 10000;
+    display: none;
+}
+
+.xiaoqi-orb {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.3s ease;
+    border: 3px solid white;
+}
+
+.xiaoqi-orb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+}
+
+.xiaoqi-orb.active {
+    transform: scale(0.95);
+    background: linear-gradient(135deg, #ff5252, #ff6b6b);
+}
+
+/* 小奇眼睛 */
+.xiaoqi-eyes {
+    position: absolute;
+    top: 25px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.xiaoqi-eye {
+    width: 12px;
+    height: 12px;
+    background: #2F4F4F;
+    border-radius: 50%;
+    position: relative;
+    animation: blink 3s infinite;
+}
+
+@keyframes blink {
+    0%, 90%, 100% { transform: scaleY(1); }
+    95% { transform: scaleY(0.1); }
+}
+
+/* 小奇嘴巴 - 凶凶的表情 */
+.xiaoqi-mouth {
+    position: absolute;
+    bottom: 20px;
+    width: 20px;
+    height: 8px;
+    background: #2F4F4F;
+    border-radius: 0 0 10px 10px;
+    transition: all 0.3s ease;
+}
+
+.xiaoqi-orb.active .xiaoqi-mouth {
+    height: 4px;
+    border-radius: 2px;
+}
+
+/* 小奇面板 */
+.xiaoqi-panel {
+    position: absolute;
+    bottom: 85px;
+    right: 0;
+    width: 280px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    display: none;
+    animation: fadeInUp 0.3s ease;
+    border: 2px solid #ff8e8e;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ffeaea;
+}
+
+.panel-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #d32f2f;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.panel-title::before {
+    content: "🔍";
+    font-size: 20px;
+}
+
+.panel-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #ff6b6b;
+    transition: all 0.2s;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.panel-close:hover {
+    background: #ffeaea;
+    color: #d32f2f;
+}
+
+/* 关键词列表 */
+.keywords-section {
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #d32f2f;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.keywords-list {
+    max-height: 120px;
+    overflow-y: auto;
+    background: #fff5f5;
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid #ffeaea;
+}
+
+.keyword-item {
+    display: inline-block;
+    background: #ff6b6b;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    margin: 2px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.empty-keywords {
+    color: #ff6b6b;
+    font-size: 12px;
+    text-align: center;
+    padding: 10px;
+}
+
+/* 统计信息 */
+.stats-section {
+    background: #fff5f5;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ffeaea;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #d32f2f;
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: #2F4F4F;
+}
+
+.stat-value.highlight {
+    color: #ff6b6b;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* 操作按钮 */
+.panel-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.panel-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.panel-btn.primary {
+    background: #ff6b6b;
+    color: white;
+}
+
+.panel-btn.primary:hover {
+    background: #ff5252;
+    transform: translateY(-1px);
+}
+
+.panel-btn.secondary {
+    background: #fff5f5;
+    color: #d32f2f;
+    border: 1px solid #ff6b6b;
+}
+
+.panel-btn.secondary:hover {
+    background: #ffeaea;
+    transform: translateY(-1px);
+}
+
+/* 小奇徽章 */
+.xiaoqi-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ff4757;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-5px); }
+    60% { transform: translateY(-3px); }
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .xiaoqi-container {
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    .xiaoqi-orb {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .xiaoqi-panel {
+        width: calc(100vw - 40px);
+        right: 0;
+        left: 0;
+        margin: 0 auto;
+        bottom: 70px;
+    }
+    
+    .xiaoqi-eyes {
+        top: 20px;
+    }
+    
+    .xiaoqi-eye {
+        width: 10px;
+        height: 10px;
+    }
+    
+    .xiaoqi-mouth {
+        bottom: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .xiaoqi-panel {
+        padding: 15px;
+    }
+    
+    .panel-actions {
+        flex-direction: column;
+    }
+}
+
+/* 关键词样式 */
+.keyword-item.valid {
+    background: #e8f5e8 !important;
+    color: #2e7d32 !important;
+    border-left: 3px solid #4caf50 !important;
+}
+
+.keyword-item.invalid {
+    background: #ffebee !important;
+    color: #c62828 !important;
+    border-left: 3px solid #f44336 !important;
+}
+
+.keyword-count {
+    font-size: 11px;
+    background: rgba(0,0,0,0.1);
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 20px;
+    text-align: center;
+    display: inline-block;
+}
+
+/* 角标样式 */
+.xiaoqi-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ff4757;
+    color: white;
+    border-radius: 10px;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 18px;
+    text-align: center;
+    z-index: 10003;
+}
+
+/* 按钮自适应 */
+.panel-btn {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    flex: 1;
+}
+
+/* 提示信息样式 */
+.xiaoqi-hint {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #fff8e1;
+    border-radius: 6px;
+    border-left: 3px solid #ffc107;
+    font-size: 12px;
+    color: #856404;
+}
+
+.hint-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.hint-title::before {
+    content: "💡";
+}
+
+.hint-keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.hint-keyword {
+    background: #ffecb3;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 11px;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .xiaoqi-container {
+        bottom: 10px !important;
+        right: 10px !important;
+    }
+    
+    .xiaoqi-orb {
+        width: 50px !important;
+        height: 50px !important;
+    }
+    
+    .xiaoqi-panel {
+        width: 90vw !important;
+        max-width: 400px !important;
+        right: 5vw !important;
+        left: 5vw !important;
+        bottom: 65px !important;
+    }
+    
+    .panel-title {
+        font-size: 16px !important;
+    }
+    
+    .keyword-item {
+        font-size: 14px !important;
+        padding: 8px 12px !important;
+    }
+    
+    .stat-item {
+        font-size: 14px !important;
+    }
+    
+    .panel-btn {
+        font-size: 14px !important;
+        padding: 10px !important;
+    }
+}
+
+/* 通用字体优化 */
+.xiaoqi-panel {
+    font-size: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Microsoft YaHei', sans-serif;
+}
+
+.panel-title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.keyword-item {
+    font-size: 14px;
+}
+
+.stat-item {
+    font-size: 14px;
+}

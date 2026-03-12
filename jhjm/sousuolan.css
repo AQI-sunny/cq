@@ -1,0 +1,68 @@
+/* 顶部搜索栏样式 */
+        .header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+        }
+
+        .search-container {
+            flex: 0 0 50%;
+            min-width: 300px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border: 1px solid #ffffff;
+            border-radius: 24px;
+            padding: 12px 20px;
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+        }
+
+        .search-bar:hover {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.35);
+        }
+
+        .search-bar:focus-within {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.45);
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            color: #9aa0a6;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: transparent;
+        }
+
+        .search-button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .search-button:hover {
+            background-color: #2b6fd8;
+        }
