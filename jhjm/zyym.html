@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>录音文件 - 方红梅 - 1997案件相关记录</title>
+    <!-- 外部CSS文件 -->
+    <link rel="stylesheet" href="search-assistant.css">
+    <link rel="stylesheet" href="visitor.css">
+    <link rel="stylesheet" href="common.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(28, 58, 82, 0.8) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(31, 64, 55, 0.6) 0%, transparent 20%);
+        }
+        
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background-color: rgba(15, 23, 42, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 1px solid rgba(100, 100, 100, 0.3);
+            margin: 0 auto;
+        }
+        
+        /* 搜索栏样式适配 - 白色背景 */
+        .search-header {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 15px 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(220, 220, 220, 0.8);
+            margin-bottom: 20px;
+        }
+        
+        .header-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid rgba(220, 220, 220, 0.8);
+            flex-shrink: 0;
+        }
+        
+        .search-container {
+            flex: 1;
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: #f8f9fa;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            padding: 10px 20px;
+            box-shadow: 0 1px 6px rgba(32, 33, 36, 0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .search-bar:hover {
+            box-shadow: 0 1px 8px rgba(32, 33, 36, 0.2);
+            border-color: #dadce0;
+        }
+        
+        .search-bar:focus-within {
+            box-shadow: 0 1px 10px rgba(32, 33, 36, 0.25);
+            border-color: #4285f4;
+        }
+        
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            color: #9aa0a6;
+        }
+        
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: transparent;
+            color: #3c4043;
+            padding: 5px 0;
+        }
+        
+        .search-input::placeholder {
+            color: #9aa0a6;
+        }
+        
+        .search-button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 18px;
+            padding: 8px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .search-button:hover {
+            background-color: #2b6fd8;
+            transform: translateY(-1px);
+        }
+        
+        .search-button:active {
+            transform: translateY(0);
+        }
+        
+        .header {
+            background: linear-gradient(to right, #2c3e50, #34495e);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #444;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            color: #f1c40f;
+            letter-spacing: 1px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            color: #95a5a6;
+            margin-top: 5px;
+        }
+        
+        .tape-player {
+            padding: 30px;
+            background-color: rgba(25, 35, 50, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .tape-visualization {
+            background-color: #0f172a;
+            border: 2px solid #2d3748;
+            border-radius: 8px;
+            height: 120px;
+            margin-bottom: 25px;
+            padding: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tape-label {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        
+        .waveform {
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 0 10px;
+        }
+        
+        .wave-bar {
+            width: 4px;
+            background-color: #3498db;
+            border-radius: 2px;
+            animation: wavePulse 1.5s infinite ease-in-out;
+        }
+        
+        @keyframes wavePulse {
+            0%, 100% { height: 10px; opacity: 0.5; }
+            50% { height: 30px; opacity: 1; }
+        }
+        
+        .wave-bar:nth-child(2n) {
+            height: 20px;
+            background-color: #2ecc71;
+            animation-delay: 0.2s;
+        }
+        
+        .wave-bar:nth-child(3n) {
+            height: 25px;
+            background-color: #9b59b6;
+            animation-delay: 0.4s;
+        }
+        
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .control-btn {
+            background-color: #2c3e50;
+            border: none;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 0 15px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .control-btn:hover {
+            background-color: #3498db;
+            transform: scale(1.05);
+        }
+        
+        .control-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .play-btn {
+            background-color: #27ae60;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+        }
+        
+        .play-btn:hover {
+            background-color: #2ecc71;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #2d3748;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: #3498db;
+            width: 45%;
+            border-radius: 4px;
+            transition: width 0.1s linear;
+        }
+        
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #95a5a6;
+            margin-bottom: 25px;
+        }
+        
+        .transcript-container {
+            padding: 30px;
+            background-color: rgba(20, 30, 48, 0.8);
+        }
+        
+        .transcript-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .transcript-header h2 {
+            font-size: 20px;
+            color: #f1c40f;
+        }
+        
+        .recording-info {
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+        
+        .transcript-content {
+            background-color: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 25px;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .speaker {
+            color: #3498db;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .timestamp {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-right: 15px;
+            font-family: monospace;
+        }
+        
+        .content-line {
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 2px solid transparent;
+            transition: border-left-color 0.3s;
+            cursor: pointer;
+        }
+        
+        .content-line:hover {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+        
+        .content-line.active {
+            border-left-color: #f1c40f;
+            background-color: rgba(241, 196, 15, 0.05);
+        }
+        
+        .redacted {
+            background-color: #000;
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+            border: 1px dashed #555;
+        }
+        
+        .redacted:hover {
+            background-color: #222;
+            color: #f1c40f;
+        }
+        
+        .redacted::after {
+            content: "点击查看详情";
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #2c3e50;
+            color: #f1c40f;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            white-space: nowrap;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .redacted:hover::after {
+            opacity: 1;
+        }
+        
+        .footer {
+            padding: 20px;
+            text-align: center;
+            background-color: rgba(15, 23, 42, 0.9);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+        
+        .archive-tag {
+            display: inline-block;
+            background-color: #2c3e50;
+            color: #bdc3c7;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        /* 文本高亮样式 */
+        .highlight {
+            background-color: rgba(241, 196, 15, 0.3);
+            color: #f1c40f;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+         .keyword {
+  background-color: #fff701;  /*  背景 */
+  font-weight: 500;           /* 中等加粗 */
+  padding: 0 2px;            /* 左右内边距 */
+  border-radius: 2px;        /* 轻微圆角 */
+  color: #000407;            /*  文字 */
+}
+        
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 10px;
+            }
+            
+            .search-header {
+                padding: 12px 15px;
+            }
+            
+            .header-container {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .logo {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .search-container {
+                width: 100%;
+                min-width: 0;
+            }
+            
+            .search-bar {
+                padding: 8px 15px;
+            }
+            
+            .search-button {
+                padding: 6px 15px;
+                font-size: 13px;
+            }
+            
+            .container {
+                margin: 0;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .tape-player, .transcript-container {
+                padding: 20px;
+            }
+            
+            .control-btn {
+                width: 45px;
+                height: 45px;
+                margin: 0 10px;
+            }
+            
+            .play-btn {
+                width: 55px;
+                height: 55px;
+            }
+            
+            .transcript-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header-container {
+                gap: 8px;
+            }
+            
+            .search-bar {
+                padding: 6px 12px;
+            }
+            
+            .search-input {
+                font-size: 14px;
+            }
+            
+            .search-button {
+                padding: 5px 12px;
+                font-size: 12px;
+            }
+            
+            .header h1 {
+                font-size: 18px;
+            }
+            
+            .subtitle {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- 搜索栏区域 - 白色背景 -->
+        <div class="search-header">
+            <div class="header-container">
+                <img src="search.png" alt="深南市诚信拍卖行" class="logo">
+                <div class="search-container">
+                    <div class="search-bar">
+                        <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                        </svg>
+                        <input type="text" class="search-input" id="searchInput" placeholder="搜索其他关键词...">
+                        <button class="search-button" id="searchButton">搜索</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 原内容容器 -->
+        <div class="container">
+            <div class="header">
+                <h1>📼  方红梅相关录音文件 (1999年归档)</h1>
+                <div class="subtitle">案件编号: 1997-06-05-047 | 声音来源： 方红梅 | 涉及: 蒋小雨失踪案</div>
+            </div>
+            
+            <div class="tape-player">
+                <div class="tape-visualization">
+                    <div class="tape-label">录音编号: 97-FHM-0605</div>
+                    <div class="waveform">
+                        <!-- 波形图将通过JS生成 -->
+                    </div>
+                </div>
+                
+                <div class="player-controls">
+                    <button class="control-btn" id="rewind">⏪</button>
+                    <button class="control-btn play-btn" id="play">▶</button>
+                    <button class="control-btn" id="fast-forward">⏩</button>
+                </div>
+                
+                <div class="progress-container" id="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                
+                <div class="time-display">
+                    <span id="current-time">00:00</span>
+                    <span id="duration">03:16</span>
+                </div>
+            </div>
+            
+            <div class="transcript-container">
+                <div class="transcript-header">
+                    <h2>📝 录音转写文字稿</h2>
+                    <div class="recording-info">转写准确率: 92.7% | 背景噪音: 中等 | 录音质量: 一般</div>
+                </div>
+                
+                <div class="transcript-content" id="transcript-content">
+                    <div class="content-line" data-time="0">
+                        <span class="timestamp">[00:01]</span>
+                        <span class="speaker">方红梅:</span>
+                        我跟你说，蒋小雨这事儿我可清楚得很，她绝对是跟人私奔了！
+                    </div>
+                    
+                    <div class="content-line" data-time="15">
+                        <span class="timestamp">[00:15]</span>
+                        <span class="speaker">方红梅:</span>
+                        上个月15号，我亲眼看见她跟那个男的...就厂里新来的技术员，一起在车站买票。
+                    </div>
+                    
+                    <div class="content-line" data-time="28">
+                        <span class="timestamp">[00:28]</span>
+                        <span class="speaker">方红梅:</span>
+                        两人有说有笑的，手里还提着行李，一看就是要私奔的样子。
+                    </div>
+                    
+                    <div class="content-line" data-time="45">
+                        <span class="timestamp">[00:45]</span>
+                        录音背景: (嘈杂声，疑似茶杯放置声)
+                    </div>
+                    
+                    <div class="content-line" data-time="52">
+                        <span class="timestamp">[00:52]</span>
+                        <span class="speaker">方红梅:</span>
+                        这事儿厂里好多人都知道，就是不敢说。蒋小雨她妹还到处找，其实...
+                    </div>
+                    
+                    <div class="content-line" data-time="55">
+                        <span class="timestamp">[00:55]</span>
+                        录音背景: (嘈杂声)
+                    </div>
+
+                    <div class="content-line" data-time="68">
+                        <span class="timestamp">[01:08]</span>
+                        <span class="speaker">方红梅:</span>
+                        她早就跟人跑了！
+                        <span class="keyword">失物招领处</span> 
+                        那还有她来不及拿走的东西。
+                    </div>
+                    
+                    <div class="content-line" data-time="85">
+                        <span class="timestamp">[01:25]</span>
+                        录音背景: (椅子挪动声，低声交谈)
+                    </div>
+                    
+                    <div class="content-line" data-time="92">
+                        <span class="timestamp">[01:32]</span>
+                        <span class="speaker">方红梅:</span>
+                        具体是什么地方我就不说了，反正...就那个地方，大家都知道。
+                    </div>
+                    
+                    <div class="content-line" data-time="110">
+                        <span class="timestamp">[01:50]</span>
+                        录音背景: (纸张翻动声)
+                    </div>
+                    
+                    <div class="content-line" data-time="122">
+                        <span class="timestamp">[02:02]</span>
+                        <span class="speaker">方红梅:</span>
+                        这事儿你们可别说是我说的，我也是听别人讲的。蒋小雨那姑娘...
+                    </div>
+                    
+                    <!-- <div class="content-line" data-time="135">
+                        <span class="timestamp">[02:15]</span>
+                        <span class="speaker">方红梅:</span>
+                        平时看着挺文静，没想到能干出这种事。她家里现在肯定急坏了。
+                    </div> -->
+                    
+                    <div class="content-line" data-time="155">
+                        <span class="timestamp">[02:35]</span>
+                        录音背景: (远处电话铃声，谈话被打断)
+                    </div>
+                    
+                    <div class="content-line" data-time="175">
+                        <span class="timestamp">[02:55]</span>
+                        <span class="speaker">方红梅:</span>
+                        不过话说回来...
+                    </div>
+                    
+                     <div class="content-line" data-time="176">
+                        <span class="timestamp">[02:56]</span>
+                        录音背景: (低声交谈)
+                    </div>
+
+                    <div class="content-line" data-time="180">
+                        <span class="timestamp">[03:00]</span>
+                        <span class="speaker">方红梅:</span>
+                        也难怪... 
+                    </div>
+                    <div class="content-line" data-time="182">
+                        <span class="timestamp">[03:02]</span>
+                        录音背景: (录音中断几秒)
+                    </div>
+                    
+                    <div class="content-line" data-time="195">
+                        <span class="timestamp">[03:15]</span>
+                        <span class="speaker">方红梅:</span>
+                        总之，这事儿你们知道就行。蒋小雨的东西肯定还在
+                        <span class="keyword">失物招领处</span>
+                        ，不信你们去问问。
+                    </div>
+                    
+                    <div class="content-line" data-time="222">
+                        <span class="timestamp">[03:16]</span>
+                        <span>录音结束</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <div>档案状态: 已封存 <span class="archive-tag">机密</span></div>
+                <div style="margin-top: 8px;">注: 此录音文件仅为历史记录，相关说法未经证实 | 数字化日期: 2004年3月</div>
+                <div style="margin-top: 5px; color: #f70505; font-size: 12px;">注: 蒋小雨父母双亡，与小学六年级的妹妹蒋小雪相依为命</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 外部JS文件 -->
+    <script src="./search-engine.js"></script>
+    <script src="./storage.js"></script>
+    <script src="./navigation.js"></script>
+    <script src="visitor.js"></script>
+    <script src="./search-ass.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
+            const playBtn = document.getElementById('play');
+            const progressBar = document.getElementById('progress-bar');
+            const progressContainer = document.getElementById('progress-container');
+            const currentTimeEl = document.getElementById('current-time');
+            const durationEl = document.getElementById('duration');
+            const transcriptContent = document.getElementById('transcript-content');
+            const contentLines = document.querySelectorAll('.content-line');
+            const lostAndFoundLink = document.getElementById('lost-and-found');
+            const rewindBtn = document.getElementById('rewind');
+            const fastForwardBtn = document.getElementById('fast-forward');
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            
+            // 模拟音频总时长 (3分42秒 = 222秒)
+            const totalDuration = 196;
+            let currentTime = 0;
+            let isPlaying = false;
+            let playInterval;
+            
+            // 初始化波形图
+            initWaveform();
+            
+            // 设置总时长显示
+            durationEl.textContent = formatTime(totalDuration);
+            
+            // 播放/暂停功能
+            playBtn.addEventListener('click', togglePlay);
+            
+            // 快退/快进功能
+            rewindBtn.addEventListener('click', () => seek(-10));
+            fastForwardBtn.addEventListener('click', () => seek(10));
+            
+            // 进度条点击跳转
+            progressContainer.addEventListener('click', setProgress);
+            
+            // 点击失物招领处跳转到 swzl.html
+            /* lostAndFoundLink.addEventListener('click', function(e) {
+                e.stopPropagation();
+                window.location.href = 'swzl.html';
+            }); */
+            
+            // 点击其他被打码的地方也跳转
+            /* document.querySelectorAll('.redacted').forEach(el => {
+                if (el !== lostAndFoundLink) {
+                    el.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        window.location.href = 'swzl.html';
+                    });
+                }
+            }); */
+            
+            // 搜索功能
+            searchButton.addEventListener('click', performSearch);
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            // 初始化函数
+            function initWaveform() {
+                const waveform = document.querySelector('.waveform');
+                // 清空现有内容
+                waveform.innerHTML = '';
+                
+                // 创建波形条
+                for (let i = 0; i < 40; i++) {
+                    const bar = document.createElement('div');
+                    bar.className = 'wave-bar';
+                    // 随机高度
+                    const randomHeight = Math.floor(Math.random() * 25) + 5;
+                    bar.style.height = `${randomHeight}px`;
+                    // 随机动画延迟
+                    bar.style.animationDelay = `${Math.random() * 1.5}s`;
+                    waveform.appendChild(bar);
+                }
+            }
+            
+            // 播放/暂停切换
+            function togglePlay() {
+                if (isPlaying) {
+                    pausePlayback();
+                } else {
+                    startPlayback();
+                }
+            }
+            
+            // 开始播放
+            function startPlayback() {
+                isPlaying = true;
+                playBtn.innerHTML = '⏸';
+                playBtn.style.backgroundColor = '#e74c3c';
+                
+                // 模拟播放进度
+                playInterval = setInterval(() => {
+                    currentTime += 1;
+                    if (currentTime > totalDuration) {
+                        currentTime = totalDuration;
+                        pausePlayback();
+                    }
+                    
+                    updateProgress();
+                    updateActiveLine();
+                }, 1000);
+                
+                // 激活波形动画
+                document.querySelectorAll('.wave-bar').forEach(bar => {
+                    bar.style.animationPlayState = 'running';
+                });
+            }
+            
+            // 暂停播放
+            function pausePlayback() {
+                isPlaying = false;
+                playBtn.innerHTML = '▶';
+                playBtn.style.backgroundColor = '#27ae60';
+                
+                clearInterval(playInterval);
+                
+                // 暂停波形动画
+                document.querySelectorAll('.wave-bar').forEach(bar => {
+                    bar.style.animationPlayState = 'paused';
+                });
+            }
+            
+            // 更新进度显示
+            function updateProgress() {
+                const progressPercent = (currentTime / totalDuration) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+                currentTimeEl.textContent = formatTime(currentTime);
+            }
+            
+            // 设置播放进度
+            function setProgress(e) {
+                const width = progressContainer.clientWidth;
+                const clickX = e.offsetX;
+                const percent = clickX / width;
+                
+                currentTime = percent * totalDuration;
+                updateProgress();
+                updateActiveLine();
+            }
+            
+            // 快进/快退
+            function seek(seconds) {
+                currentTime += seconds;
+                
+                if (currentTime < 0) currentTime = 0;
+                if (currentTime > totalDuration) currentTime = totalDuration;
+                
+                updateProgress();
+                updateActiveLine();
+            }
+            
+            // 更新时间显示格式
+            function formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+            
+            // 更新当前活动的文字行
+            function updateActiveLine() {
+                // 移除所有行的活动状态
+                contentLines.forEach(line => {
+                    line.classList.remove('active');
+                });
+                
+                // 找到当前时间对应的行
+                for (let i = contentLines.length - 1; i >= 0; i--) {
+                    const lineTime = parseInt(contentLines[i].getAttribute('data-time'));
+                    if (currentTime >= lineTime) {
+                        contentLines[i].classList.add('active');
+                        
+                        // 滚动到活动行
+                        if (i > 2) {
+                            contentLines[i].scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+                        }
+                        break;
+                    }
+                }
+            }
+            
+            // 搜索功能
+            function performSearch() {
+                const query = searchInput.value.trim();
+                if (!query) {
+                    return;
+                }
+                
+                // 这里可以调用外部搜索引擎的搜索功能
+                // 例如：window.performSearch(query);
+                
+                // 临时演示：在页面内高亮搜索词
+                highlightText(query);
+                
+                // 记录搜索历史到本地存储（如果storage.js可用）
+                if (typeof window.addSearchHistory === 'function') {
+                    window.addSearchHistory(query);
+                }
+                
+                // 触发搜索助手（如果search-ass.js可用）
+                if (typeof window.triggerSearchAssistant === 'function') {
+                    window.triggerSearchAssistant(query);
+                }
+            }
+            
+            // 在页面内高亮文本
+            function highlightText(query) {
+                const transcript = document.getElementById('transcript-content');
+                const content = transcript.innerHTML;
+                
+                // 清除之前的高亮
+                const regex = /<span class="highlight">([^<]+)<\/span>/g;
+                const unhighlighted = content.replace(regex, '$1');
+                
+                // 创建新的高亮
+                const highlightRegex = new RegExp(`(${query})`, 'gi');
+                const highlighted = unhighlighted.replace(highlightRegex, '<span class="highlight">$1</span>');
+                
+                transcript.innerHTML = highlighted;
+                
+                // 重新绑定事件
+                bindRedactedLinks();
+            }
+            
+            // 重新绑定红色遮挡部分的点击事件
+            function bindRedactedLinks() {
+                document.querySelectorAll('.redacted').forEach(el => {
+                    if (el.id !== 'lost-and-found') {
+                        el.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            window.location.href = 'swzl.html';
+                        });
+                    }
+                });
+            }
+            
+            // 初始化活动行
+            updateActiveLine();
+            
+            // 点击文字行可以跳转到对应时间
+            contentLines.forEach(line => {
+                line.addEventListener('click', function(e) {
+                    // 防止点击红色遮挡部分时触发时间跳转
+                    if (e.target.classList.contains('redacted')) {
+                        return;
+                    }
+                    
+                    const time = parseInt(this.getAttribute('data-time'));
+                    if (!isNaN(time)) {
+                        currentTime = time;
+                        updateProgress();
+                        updateActiveLine();
+                    }
+                });
+            });
+        });
+    </script>
+    <script src="logo-return.js"></script>
+     <script src="./jinzhi.js"></script>
+</body>
+</html>

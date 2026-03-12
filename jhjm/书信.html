@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>97年书信 · 李振华致王素锦</title>
+    <style>
+        /* ----- 基础重置 · 怀旧基调 ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #3a2c1c;  /* 深木炭色底 */
+            background-image: 
+                radial-gradient(circle at 15% 25%, #5f4b33 2px, transparent 2px),
+                radial-gradient(circle at 85% 70%, #5f4b33 2px, transparent 2px);
+            background-size: 70px 70px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'KaiTi', '华文楷体', 'Georgia', 'Times New Roman', 'Courier New', serif;
+            padding: 20px 12px;  /* 手机左右留小边，pc足够 */
+        }
+
+        /* ----- 主信纸卡片 (pc为主，手机自适应) ----- */
+        .letter {
+            max-width: 820px;          /* PC端舒适宽度 */
+            width: 100%;
+            background-color: #f9f0da;  /* 泛旧米色纸 */
+            background-image: 
+                linear-gradient(rgba(190, 150, 100, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(160, 120, 70, 0.06) 1px, transparent 1px);
+            background-size: 24px 24px, 24px 24px;
+            box-shadow: 18px 18px 28px rgba(0, 0, 0, 0.6), 
+                        0 0 0 2px #dbbd94,
+                        inset 0 0 25px #b7976a;
+            padding: 40px 45px 45px 45px;
+            position: relative;
+            transform: rotate(-0.15deg);
+            border-radius: 2px;
+            transition: padding 0.2s;
+        }
+
+        /* 纸张晕染/水渍 (很淡) */
+        .letter::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 15% 60%, rgba(130, 90, 45, 0.08) 0%, transparent 35%),
+                        radial-gradient(circle at 90% 25%, rgba(110, 75, 35, 0.07) 0%, transparent 45%);
+            pointer-events: none;
+        }
+
+        /* ----- 邮票 (90年代风格) ----- */
+        .stamp-area {
+            position: absolute;
+            top: 22px;
+            right: 25px;
+            width: 90px;
+            height: 96px;
+            background-color: #eedbba;
+            border: 2px solid #a87d51;
+            padding: 5px 4px 4px 4px;
+            box-shadow: 2px 3px 8px rgba(0,0,0,0.35);
+            transform: rotate(4deg);
+            z-index: 15;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .stamp {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #dbbd90, #cbab78);
+            border: 1px dashed #7c5b38;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: #3e2c18;
+        }
+
+        .stamp .value {
+            font-size: 22px;
+            font-weight: 800;
+            font-family: 'Impact', 'Courier New', monospace;
+            color: #5f3c1c;
+            margin-top: 5px;
+            text-shadow: 1px 1px 0 #b58f5e;
+        }
+
+        .stamp .country {
+            font-size: 9px;
+            border-top: 1px solid #6b4f30;
+            padding-top: 3px;
+            margin-top: 2px;
+            width: 80%;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .stamp .perf {
+            font-size: 14px;
+            color: #745f40;
+            line-height: 0.6;
+        }
+
+        /* ----- 信头 (日期/地址 双行) 手机自适应 flex-wrap ----- */
+        .letterhead {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            font-size: 16px;
+            color: #4f3a24;
+            border-bottom: 1px dashed #b18f63;
+            padding-bottom: 12px;
+            font-family: 'Courier New', 'KaiTi', monospace;
+            row-gap: 6px;
+        }
+
+        .date {
+            font-style: italic;
+            background: rgba(170, 130, 80, 0.2);
+            padding: 0 10px;
+        }
+
+        .location {
+            font-weight: 600;
+            padding-left: 12px;
+            border-left: 2px solid #ad865b;
+        }
+
+        /* ----- 称呼 (更用力的手写) ----- */
+        .greeting {
+            font-size: 24px;
+            margin-bottom: 30px;
+            font-family: 'KaiTi', '华文楷体', 'Brush Script MT', cursive;
+            font-weight: 550;
+            color: #2e2317;
+            border-left: 4px solid #b4834b;
+            padding-left: 18px;
+            letter-spacing: 1.2px;
+        }
+
+        /* ----- 正文段落 (增大行距，保留缩进) ----- */
+        .content p {
+            font-size: 18px;
+            line-height: 2;
+            margin-bottom: 26px;
+            text-indent: 2.2em;
+            color: #2b1f13;
+            font-family: 'KaiTi', '华文楷体', 'Georgia', serif;
+            word-break: break-word;
+        }
+
+        /* 特殊手写标记 (涂改、加注、删除线等) */
+        .strikethrough-writeover {
+            background-color: #e8dcc4;
+            padding: 0 5px;
+            border: 1px dotted #a17e54;
+            font-style: normal;
+        }
+
+        .handwrite-note {
+            font-size: 16px;
+            margin-left: 8px;
+            color: #795d3a;
+            font-family: 'Courier New', monospace;
+            vertical-align: baseline;
+            background: #f3e7d3;
+            padding: 0 3px;
+        }
+
+        .correction-overlay {
+            background: #f2e6ce;
+            padding: 2px 6px;
+            border-left: 3px solid #b48b58;
+            font-size: 0.95em;
+        }
+
+        .underline-heavy {
+            text-decoration: underline wavy #8b613b 1.5px;
+            text-underline-offset: 5px;
+        }
+
+        /* 引号或重点 */
+        .quote-mark {
+            font-size: 1.8em;
+            color: #836e4c;
+            font-family: serif;
+            line-height: 0.8;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px dotted #b58f61;
+            margin: 20px 0;
+        }
+
+        /* 小星星分割 */
+        .ascii-star {
+            font-size: 16px;
+            color: #9e7a4c;
+            letter-spacing: 5px;
+            margin: 15px 0 10px;
+        }
+
+        /* 落款区域 */
+        .signature-block {
+            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            border-top: 1px solid #c7a470;
+            padding-top: 25px;
+        }
+
+        .signature {
+            font-size: 32px;
+            font-family: 'Brush Script MT', 'KaiTi', cursive;
+            color: #392b1a;
+            margin-bottom: 8px;
+            transform: rotate(-0.8deg);
+            text-shadow: 1px 1px 0 #e2c8a8;
+        }
+
+        .postscript {
+            font-size: 17px;
+            margin-top: 25px;
+            background: #ebddc5;
+            padding: 12px 20px;
+            border-left: 4px solid #b28049;
+            font-style: italic;
+            border-radius: 0 30px 0 0;
+        }
+
+        /* 手机端优化 ( <600px ) */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px 6px;
+                align-items: flex-start;
+            }
+            .letter {
+                padding: 28px 18px 30px 18px;
+            }
+            .stamp-area {
+                width: 70px;
+                height: 75px;
+                top: 15px;
+                right: 12px;
+            }
+            .stamp .value { font-size: 18px; }
+            .letterhead {
+                font-size: 15px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            .location {
+                border-left: none;
+                padding-left: 0;
+                border-top: 1px dashed #b89a70;
+                padding-top: 5px;
+            }
+            .content p {
+                font-size: 17px;
+                line-height: 1.95;
+            }
+            .greeting {
+                font-size: 22px;
+            }
+        }
+
+        /* 超小屏 ( <400px ) */
+        @media (max-width: 400px) {
+            .letter {
+                padding: 22px 14px;
+            }
+            .content p {
+                font-size: 16px;
+            }
+        }
+
+        /* 保持PC端字体舒适 */
+        @media (min-width: 1200px) {
+            .letter {
+                max-width: 900px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="letter">
+        <!-- 97回归邮票 (时代细节) -->
+        <div class="stamp-area">
+            <div class="stamp">
+                <span class="perf">⏤⏤⏤</span>
+                <span class="value">¥4.0</span>
+                <span class="country">CHINA 1997</span>
+                <span class="perf">⏤⏤⏤</span>
+                <div style="font-size: 9px; margin-top: 2px;">香港回归</div>
+            </div>
+        </div>
+
+        <!-- 信头：符合97年厂区通信习惯 -->
+        <div class="letterhead">
+            <span class="date"><!-- 📆  -->1997. 6. 22  深夜 写于宿舍</span>
+            <!-- <span class="location">📍 隔壁钢铁厂 · 集体宿舍 212 号</span> -->
+        </div>
+
+        <!-- 称呼——直呼其名，九十年代工厂味道 -->
+        <div class="greeting">
+            素锦：
+        </div>
+
+        <!-- 正文：李振华的心声，逐条解释，情绪真实 -->
+        <div class="content">
+            <p>
+                这封信压在枕头底下好几天了，有些话当面说不清楚，你们纺织厂门卫严，我只能写下来托人带给你。素锦，<span class="underline-heavy">我心里头一直装着你</span>，从去年厂区联谊会上见到你，我第一眼就觉得你跟别人不一样。这话憋了一年多，今儿非得跟你说明白。
+            </p>
+
+            <p>
+                关于你们纺织厂的方红梅，我俩真的就是普通工友。上个月她让我帮她搬了趟煤气罐，她男人跑长途不在家，你们车间男的都帮过，你别听刘姐她们瞎传。我要是有半点旁的心思，叫我不得好死。<span class="handwrite-note">(我真跟她不熟)</span>
+            </p>
+
+            <p>
+                至于你们厂劳资科的周科长——现在我想起来就恨得牙痒痒。上季度他说能帮你把二级工转成一级，还能加点奖金，只要我帮他跑几趟腿、送几次货。我以为遇上贵人了，傻乎乎替他往货运站送过三回麻袋，哪知道袋子里是啥<span class="correction-overlay">(他说是劳保手套)</span>。后来你们厂里查下来，我才晓得那些是走私的二手电机，周秃子拿我当枪使！升职加薪的事更是屁都没见着，他就是骗我替他卖命。素锦，我对不起你，让你空欢喜一场，可我跟周<strong>纯粹是交易被他坑了</strong>，绝对没有跟他同流合污。
+            </p>
+
+            <p>
+                小雨的事我更是一头雾水。我知道你跟她感情好，我也想早日找到她让你莫再忧虑。<!-- 她十月初说去广州找她表姐，之后再也没回过你们纺织厂。 -->你们厂保卫科找我谈过话，我比他们还着急。有人说我跟她“一块儿消失”了，纯属放屁！我李振华行得正站得直，没干过一件亏心事。<span style="background:#e7d7ba; padding:2px 5px;">她去哪我是真不知道</span>，更没掺和你们厂里那些乱七八糟的勾当<!-- ——什么偷卖纱锭、账目对不上 -->，那些腌臜事都是周秃子和旁的人一块搞的，我有天晚上还看见他们从你们厂后门拉废料。我没证据不敢乱说，但我绝对没参与，我的为人你还不清楚吗？
+            </p>
+
+            <p>
+                写到这里手都在抖。素锦，这几个月你看我的眼神都不对了，跟躲瘟神一样。我心像针扎。厂里风言风语多，但我只想让你知道：<span class="underline-heavy">我心里只有你</span>，以前是，现在是，以后也是。那些乱七八糟的关系、交易、烂事，跟我没半点关系。我李振华就是一个傻干活儿的，没本事，可我对你是真心的。
+            </p>
+
+            <!-- 加一小段手写补充 -->
+            <p style="margin-left: 1.5em; font-style: italic; border-left: 2px solid #b4834b; padding-left: 18px;">
+                上回发工资，我去百货大楼给你挑了条红纱巾，就是你说好看的那种。一直没敢给你。要是你还肯理我，周六晚上七点我在你们厂东边的职工桥头等你。
+            </p>
+        </div>
+
+        <!-- 小装饰 星星符号 -->
+        <div class="ascii-star">✽ ✾ ✿ ❀ ❁ ✢ ✣</div>
+
+        <!-- 落款 九十年代写法 -->
+        <div class="signature-block">
+            <div class="signature">振华</div>
+            <div style="font-size: 17px; color: #60492e;">97.7.2<!--   凌晨1:20 --></div>
+            <!-- <div style="font-size: 15px; margin-top: 6px; font-family: 'Courier New';">又及：信纸是偷了我们钢铁厂半张报表纸，别嫌弃。</div> -->
+        </div>
+
+        <!-- 附言 更浓的97味道 -->
+        <div class="postscript">
+            <strong>P.S.</strong> 周秃子的事你别掺和，我听说纪委可能要来你们厂。你好好上班，别跟人说这信的事。还有，方红梅她男人回来了，更没我啥事了……
+        </div>
+
+        <!-- 信纸背面手写地址 增加真实感 -->
+        <div style="margin-top: 30px; font-size: 13px; color: #836f4f; text-align: right; font-family: monospace; border-top: 1px dashed #c9ad82; padding-top: 12px;">
+            （锦华纺织厂 王素锦 收 ）
+        </div>
+    </div>
+     <script src="./jinzhi.js"></script>
+</body>
+</html>

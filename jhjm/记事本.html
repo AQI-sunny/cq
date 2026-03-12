@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二麻子的记事本 </title>
+    <style>
+        /* 基础样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "宋体", Arial, sans-serif;
+            background-color: #0a0a0a;
+            color: #ccc;
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(70, 0, 0, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(100, 0, 0, 0.1) 0%, transparent 20%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 神秘氛围装饰 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMCAwaDQwdjQwSDB6IiBmaWxsPSJub25lIiBzdHJva2U9IiMzMDAwMDAiIHN0cm9rZS13aWR0aD0iMC41Ii8+PC9zdmc+');
+            opacity: 0.1;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* 主容器 */
+        .notebook-container {
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: rgba(20, 20, 20, 0.95);
+            border: 1px solid #3a0000;
+            box-shadow: 0 0 30px rgba(150, 0, 0, 0.2),
+                        inset 0 0 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            padding: 30px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        /* 破损纸张效果 */
+        .notebook-container::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMCwxMCBMNSw1IEwxMCwxNSBMMTUsNyBMMjAsMTIgTDI1LDUgTDMwLDE1IEwzNSw3IEw0MCwxMiBMNDUsNSBMNTAsMTUgTDU1LDcgTDYwLDEyIEw2NSw1IEw3MCwxNSBMNzUsNyBMODAsMTIgTDg1LDUgTDkwLDE1IEw5NSw3IEwxMDAsMTAgTDEwMCw5MCBMOTUsOTUgTDkwLDg1IEw4NSw5MyBMODAsODggTDc1LDk1IEw3MCw4NSBMNjUsOTMgTDYwLDg4IEw1NSw5NSBMNTAsODUgTDQ1LDkzIEw0MCw4OCBMMzUsOTUgTDMwLDg1IEwyNSw5MyBMMjAsODggTDE1LDk1IEwxMCw4NSBMNSw5MyBMMCw5MCBaIiBmaWxsPSIjMDAwIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz48L3N2Zz4=');
+            background-size: 200px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        
+        /* 标题区域 */
+        .notebook-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #5a0000;
+            position: relative;
+        }
+        
+        .notebook-title {
+            font-size: 32px;
+            color: #b30000;
+            text-shadow: 0 0 10px rgba(179, 0, 0, 0.5);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .notebook-title::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 10%;
+            width: 80%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #b30000, transparent);
+        }
+        
+        .notebook-subtitle {
+            font-size: 18px;
+            color: #888;
+            font-style: italic;
+            margin-top: 5px;
+        }
+        
+        /* 内容区域 */
+        .content-section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            color: #990000;
+            border-left: 4px solid #990000;
+            padding-left: 15px;
+            margin-bottom: 25px;
+            text-shadow: 0 0 5px rgba(153, 0, 0, 0.3);
+        }
+        
+        /* 排班表样式 */
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 18px;
+        }
+        
+        .schedule-table td {
+            padding: 15px 20px;
+            border-bottom: 1px dashed #444;
+            position: relative;
+        }
+        
+        .schedule-date {
+            color: #aaa;
+            width: 35%;
+            font-family: "Courier New", monospace;
+            border-right: 1px dashed #444;
+        }
+        
+        .schedule-task {
+            color: #ddd;
+            padding-left: 30px;
+        }
+        
+        /* 特殊日期高亮 */
+        .schedule-table tr:nth-child(4) td {
+            color: #ff3333;
+            text-shadow: 0 0 8px rgba(255, 50, 50, 0.7);
+            font-weight: bold;
+        }
+        
+        .schedule-table tr:nth-child(4) .schedule-date {
+            color: #ff6666;
+        }
+        
+        /* 名字特殊样式 */
+        .codename {
+            display: inline-block;
+            padding: 2px 8px;
+            background-color: rgba(100, 0, 0, 0.2);
+            border-radius: 3px;
+            border: 1px solid rgba(150, 0, 0, 0.3);
+            margin: 0 5px;
+            font-family: "楷体", "STKaiti", serif;
+        }
+        
+        /* 解密提示 */
+        .decryption-hint {
+            background-color: rgba(30, 0, 0, 0.5);
+            border: 1px solid #5a0000;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .decryption-hint::before {
+            content: "绝密";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #990000;
+            font-size: 12px;
+            opacity: 0.5;
+            transform: rotate(15deg);
+        }
+        
+        .hint-title {
+            color: #cc6600;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .hint-content {
+            color: #996633;
+            font-family: "楷体", "STKaiti", serif;
+            line-height: 1.8;
+        }
+        
+        /* 交互按钮 */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 12px 25px;
+            background-color: rgba(60, 0, 0, 0.7);
+            color: #cc9999;
+            border: 1px solid #660000;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: "宋体", sans-serif;
+            font-size: 16px;
+            transition: all 0.3s;
+            min-width: 150px;
+        }
+        
+        .action-btn:hover {
+            background-color: rgba(100, 0, 0, 0.8);
+            color: #ffcccc;
+            box-shadow: 0 0 15px rgba(150, 0, 0, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .action-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .action-btn.decrypt {
+            background-color: rgba(100, 0, 0, 0.9);
+            color: #ff9999;
+            border-color: #990000;
+        }
+        
+        .action-btn.decrypt:hover {
+            background-color: rgba(130, 0, 0, 1);
+            box-shadow: 0 0 20px rgba(255, 50, 50, 0.7);
+        }
+        
+        /* 页脚 */
+        .notebook-footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* 解密效果 */
+        .decrypted-text {
+            display: none;
+            background-color: rgba(0, 20, 0, 0.2);
+            border: 1px solid #006600;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 5px;
+            color: #99cc99;
+            line-height: 1.8;
+            font-family: "楷体", "STKaiti", serif;
+        }
+        
+        .decrypted-text.show {
+            display: block;
+            animation: fadeIn 1s ease-out;
+        }
+        
+        /* 闪烁光标效果 */
+        .blinking-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background-color: #990000;
+            vertical-align: middle;
+            margin-left: 5px;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .notebook-container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .notebook-title {
+                font-size: 26px;
+            }
+            
+            .schedule-table {
+                font-size: 16px;
+            }
+            
+            .schedule-table td {
+                padding: 12px 15px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .action-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .notebook-container {
+                padding: 15px;
+            }
+            
+            .notebook-title {
+                font-size: 22px;
+            }
+            
+            .section-title {
+                font-size: 18px;
+            }
+            
+            .schedule-table {
+                font-size: 14px;
+            }
+            
+            .schedule-table td {
+                padding: 10px;
+                display: block;
+                width: 100%;
+                border-right: none;
+            }
+            
+            .schedule-date {
+                border-bottom: none;
+                padding-bottom: 5px;
+                width: 100%;
+            }
+            
+            .schedule-task {
+                padding-left: 20px;
+                padding-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 主容器 -->
+    <div class="notebook-container">
+        <!-- 标题区域 -->
+        <div class="notebook-header">
+            <h1 class="notebook-title">二麻子的记事本（解密页）</h1>
+            <div class="notebook-subtitle">内部资料 · 严禁外传</div>
+        </div>
+        
+        <!-- 内容区域 -->
+        <div class="content-section">
+            <h2 class="section-title">排班表</h2>
+            
+            <table class="schedule-table">
+                <tr>
+                    <td class="schedule-date">10月1日</td>
+                    <td class="schedule-task">
+                        任务代号：<span class="codename">鬼面</span>
+                        负责人：<span class="codename">吴</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="schedule-date">10月3日</td>
+                    <td class="schedule-task">
+                        任务代号：<span class="codename">哭声</span>
+                        负责人：<span class="codename">赖</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="schedule-date">10月5日</td>
+                    <td class="schedule-task">
+                        任务代号：<span class="codename">红影</span>
+                        负责人：<span class="codename">麻</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="schedule-date">10月7日（今晚）</td>
+                    <td class="schedule-task">
+                        任务代号：<span class="codename">全员出动</span>
+                        状态：<span class="codename">准备中</span>
+                    </td>
+                </tr>
+            </table>
+            
+            <!-- 解密提示 -->
+            <div class="decryption-hint">
+                <div class="hint-title">解密提示：</div>
+                <div class="hint-content">
+                    代号对应上月事件记录：<br>
+                    "鬼面" - 北区仓库异常声响事件<br>
+                    "哭声" - 三号车间夜间现象<br>
+                    "红影" - 地下通道不明移动体<br>
+                    "全员出动" - 综合清理行动
+                </div>
+            </div>
+            
+            <!-- 解密后内容 -->
+            <div class="decrypted-text" id="decryptedText">
+                <strong>解密完成：</strong><br><br>
+                排班表对应上月异常事件处理记录：<br>
+                10月1日 - 吴队负责调查北区仓库"鬼面"异常声响<br>
+                10月3日 - 赖队处理三号车间夜间"哭声"现象<br>
+                10月5日 - 麻队追踪地下通道"红影"移动体<br>
+                10月7日 - 全员联合行动，彻底清理异常源<br><br>
+                
+                <em>注：所有事件已记录在案，相关区域已暂时封锁。</em>
+                <div class="blinking-cursor"></div>
+            </div>
+        </div>
+        
+        <!-- 操作按钮 -->
+        <div class="action-buttons">
+            <button class="action-btn" id="printBtn">打印记录</button>
+            <button class="action-btn decrypt" id="decryptBtn">解密内容</button>
+            <button class="action-btn" id="backBtn">返回列表</button>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="notebook-footer">
+            <p>内部记录 · 仅供授权人员查阅</p>
+            <p>最后更新: 2003年10月6日 23:45</p>
+            <p>记录编号: D-007-密</p>
+        </div>
+    </div>
+
+    <script>
+        // 页面加载完成
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('解密页面已加载');
+            
+            // 获取DOM元素
+            const decryptBtn = document.getElementById('decryptBtn');
+            const printBtn = document.getElementById('printBtn');
+            const backBtn = document.getElementById('backBtn');
+            const decryptedText = document.getElementById('decryptedText');
+            
+            // 解密按钮点击事件
+            decryptBtn.addEventListener('click', function() {
+                // 模拟解密过程
+                decryptBtn.disabled = true;
+                decryptBtn.textContent = '解密中...';
+                
+                // 模拟解密进度
+                setTimeout(() => {
+                    decryptBtn.textContent = '正在破解加密...';
+                }, 500);
+                
+                setTimeout(() => {
+                    decryptBtn.textContent = '验证权限...';
+                }, 1000);
+                
+                setTimeout(() => {
+                    decryptBtn.textContent = '读取密文...';
+                }, 1500);
+                
+                // 完成解密
+                setTimeout(() => {
+                    // 显示解密内容
+                    decryptedText.classList.add('show');
+                    
+                    // 更新按钮状态
+                    decryptBtn.textContent = '已解密';
+                    decryptBtn.style.backgroundColor = 'rgba(0, 80, 0, 0.8)';
+                    decryptBtn.style.borderColor = '#006600';
+                    decryptBtn.style.color = '#99ff99';
+                    
+                    // 播放解密音效（模拟）
+                    playDecryptSound();
+                    
+                    // 页面震动效果
+                    document.body.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        document.body.style.animation = '';
+                    }, 500);
+                }, 2000);
+            });
+            
+            // 打印按钮
+            printBtn.addEventListener('click', function() {
+                window.print();
+            });
+            
+            // 返回按钮
+            backBtn.addEventListener('click', function() {
+                // 模拟返回操作
+                const confirmBack = confirm('确定要离开解密页面吗？');
+                if (confirmBack) {
+                    // 在实际应用中这里会跳转到其他页面
+                    alert('即将返回列表页面...');
+                    // window.location.href = 'index.html'; // 实际跳转代码
+                }
+            });
+            
+            // 模拟解密音效
+            function playDecryptSound() {
+                // 创建音频上下文
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // 创建振荡器
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // 设置音调
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.5);
+                
+                // 设置音量
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                // 播放声音
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            }
+            
+            // 添加震动动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes shake {
+                    0%, 100% {transform: translateX(0);}
+                    10%, 30%, 50%, 70%, 90% {transform: translateX(-5px);}
+                    20%, 40%, 60%, 80% {transform: translateX(5px);}
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // 添加神秘点击效果
+            document.addEventListener('click', function(e) {
+                // 随机在点击位置生成红色闪光
+                if (Math.random() > 0.7) {
+                    const flash = document.createElement('div');
+                    flash.style.position = 'fixed';
+                    flash.style.left = e.clientX + 'px';
+                    flash.style.top = e.clientY + 'px';
+                    flash.style.width = '20px';
+                    flash.style.height = '20px';
+                    flash.style.borderRadius = '50%';
+                    flash.style.backgroundColor = 'rgba(255, 0, 0, 0.3)';
+                    flash.style.boxShadow = '0 0 15px rgba(255, 0, 0, 0.7)';
+                    flash.style.pointerEvents = 'none';
+                    flash.style.zIndex = '9999';
+                    flash.style.animation = 'flashEffect 0.5s forwards';
+                    
+                    document.body.appendChild(flash);
+                    
+                    // 添加动画
+                    const flashStyle = document.createElement('style');
+                    flashStyle.textContent = `
+                        @keyframes flashEffect {
+                            0% {transform: scale(0); opacity: 1;}
+                            100% {transform: scale(3); opacity: 0;}
+                        }
+                    `;
+                    document.head.appendChild(flashStyle);
+                    
+                    // 移除元素
+                    setTimeout(() => {
+                        document.body.removeChild(flash);
+                        document.head.removeChild(flashStyle);
+                    }, 500);
+                }
+            });
+        });
+    </script>
+<script src="logo-return.js"></script>
+ <script src="./jinzhi.js"></script>
+</body>
+</html>

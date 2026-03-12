@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<!-- 添加 viewport 以支持移动端响应式缩放 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>寻呼机 - 万事知道</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: "Microsoft YaHei", "SimSun", sans-serif;
+    background: #f5f6f7;
+    color: #333;
+    line-height: 1.6;
+}
+
+.topbar {
+    background: #ffffff;
+    border-bottom: 1px solid #ddd;
+    padding: 12px 0;
+}
+
+/* 统一修改定宽为最大宽度以兼容手机端 */
+.topinner, .navinner, .container {
+    width: 100%;
+    max-width: 1100px;
+    margin: auto;
+    box-sizing: border-box;
+    padding: 0 15px;
+}
+
+.topinner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap; /* 适配小屏幕换行 */
+    gap: 15px;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #2a6db0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 控制Logo图片的显示大小 */
+.logo img {
+    height: 70px;
+}
+
+.notice {
+    font-size: 14px;
+}
+
+/* 公共寻呼台提示加粗标红 */
+.highlight-red {
+    color: red;
+    font-weight: bold;
+}
+
+.searchbox input {
+    padding: 8px;
+    width: 240px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.nav {
+    background: #3a6ea5;
+    color: white;
+}
+
+.navinner {
+    display: flex;
+    gap: 30px;
+    padding: 12px 15px;
+    flex-wrap: wrap;
+}
+
+.navinner a {
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.navinner a:hover {
+    text-decoration: underline;
+}
+
+.container {
+    display: flex;
+    margin-top: 20px;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.main {
+    flex: 1; /* 主体自适应剩余空间 */
+    min-width: 0; 
+    background: white;
+    padding: 25px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+}
+
+.sidebar {
+    width: 280px;
+    flex-shrink: 0; /* 保证侧边栏在PC端不被压缩 */
+}
+
+.box {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.box ul {
+    padding-left: 20px;
+    margin-bottom: 0;
+}
+
+.box li {
+    margin-bottom: 8px;
+}
+
+h1 {
+    margin-top: 0;
+    font-size: 28px;
+}
+
+.section {
+    margin-top: 30px;
+}
+
+.section h2 {
+    border-left: 4px solid #3a6ea5;
+    padding-left: 10px;
+    font-size: 20px;
+    background: #f9f9f9;
+    padding: 8px 10px;
+    margin-bottom: 15px;
+}
+
+.section p {
+    text-indent: 2em; /* 首行缩进使得百科风格更明显 */
+    margin-bottom: 15px;
+}
+
+.meta {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 20px;
+    border-bottom: 1px dashed #eee;
+    padding-bottom: 15px;
+}
+
+/* .footer {
+    text-align: right;
+    padding: 30px 15px;
+    font-size: 13px;
+    color: #666;
+}
+
+.footer a {
+    color: #2a6db0;
+    word-break: break-all;
+} */
+ .footer {
+    text-align: right;
+    padding: 30px 15px;
+    font-size: 10px;          /* 进一步减小字号 */
+    color: #f5f5f5;           /* 与背景色接近的灰色 */
+    opacity: 0.5;              /* 降低透明度 */
+}
+
+.footer a {
+    color: #f5f5f5;           /* 链接颜色也变淡 */
+    word-break: break-all;
+    text-decoration: none;     /* 去掉下划线，更隐蔽 */
+}
+
+/* 悬停时才稍微明显（可选） */
+.footer a:hover {
+    color: #999;
+}
+
+/* ===== 移动端适配代码 ===== */
+@media screen and (max-width: 768px) {
+    .topinner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .searchbox {
+        width: 100%;
+    }
+    
+    .searchbox input {
+        width: 100%;
+    }
+    
+    .container {
+        flex-direction: column; /* 手机端变为上下排列 */
+    }
+    
+    .sidebar {
+        width: 100%; /* 侧边栏宽度占满 */
+    }
+    
+    .main {
+        padding: 15px; /* 减小手机端内边距 */
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+<div class="topinner">
+
+<div class="logo">
+    <img src="search.png" alt="logo">
+    万事知道
+</div>
+
+<div class="notice">
+    <!-- 要求加粗标红 -->
+   <!--  <span class="highlight-red">我国的公共寻呼台号码是126和127</span> -->
+</div>
+
+<div class="searchbox">
+    <input placeholder="搜索词条">
+</div>
+
+</div>
+</div>
+
+<div class="nav">
+<div class="navinner">
+    <a href="#">首页</a>
+    <a href="#">通信知识</a>
+    <a href="#">历史通信</a>
+    <a href="#">百科词条</a>
+</div>
+</div>
+
+<div class="container">
+
+<div class="main">
+
+<h1>寻呼机</h1>
+
+<div class="meta">
+    点赞 0　|　收藏
+</div>
+
+<div class="section">
+    <h2>简介</h2>
+    <p>寻呼机也叫BP机、传呼机、BB机，简称呼机。beeper，pager。</p>
+    <p>1983年，上海开通国内第一家寻呼台，BP机进入中国。</p>
+    <p>从BP机开始的即时通信，将人们带入了没有时空距离的年代，时时处处可以被找到，大大加速了人们的生活、工作效率，但也让人无处可藏。人们对它爱恨交加，但已离不开它。</p>
+    <p>无线寻呼系统中的用户接收机。通常由超外差接收机、解码器、控制部分和显示部分组成。寻呼机收到信号后发出音响或产生震动，并显示有关信息。</p>
+    <p>手机之前比较通行的通讯工具，样子小巧，上个世纪末在中国和亚洲甚至全世界广为流传。</p>
+    <p>使用寻呼机的人们能方便快捷地通信和联系，所以BP机倍受青睐。无线寻呼系统是一种没有话音的单向广播式无线选呼系统。</p>
+</div>
+
+<div class="section">
+    <h2>使用方法</h2>
+    <p>如果要找人A，却不在家里。</p>
+    <p>就给传呼台打电话，说“A，速回电话”之类的信息。</p>
+    <p>A看到寻呼信息后，就会通过公共电话给你回电话。</p>
+    
+</div>
+
+<!-- <div class="section">
+    <h2>历史介绍</h2>
+    <p>传呼机刚出现的时候，谁要是有部传呼机，那是很叫人羡慕的。当时人们把它又叫“寻呼机”、BB机、BP机。</p>
+    <p>八十年代末我国开始出现传呼机。1990年开始传呼台大量出现，传呼市场逐渐繁荣。</p>
+    <p>1993年、1994年手机开始慢慢出现，不过当时价格非常昂贵，只有少数人能使用。</p>
+    <p>1995年之后，在手机的冲击下，传呼业务逐渐衰落。</p>
+</div> -->
+
+<div class="section">
+    <h2>演化路线图</h2>
+    <p>BP机只能接收无线电信号，不能发送信号，所以是单方向的移动通信工具。</p>
+    <p>普通型的数字寻呼机，外型小巧，比一包香烟还小，可以方便地放在衣袋中或者别在腰间。一旦收到寻呼信号，它会发出几声轻微的“B—，B—”声，提醒人注意。为了不干扰别人，也可以关上声音开关，寻呼机只是发出一阵阵机械振动，就像按摩器那样的轻微颤动，只有携带者本人才能感觉得到。寻呼机收到信号后，液晶屏幕上会显示出一些阿拉伯数字和英文字符，它们表示电话号码和简短话语。显示英文字符，使中国人用起来不方便，于是又有了汉字显示BP机。这种BP机不但能显示电话号码，同时也可传输简单信息。有些专业台还可以发布一些专业信息，如农业寻呼台发布当天的粮食价格和蔬菜、种子的价格等。到了夏天，人们还可以通过BP机知道西瓜的价格，这种BP机具有多种功能，普遍受到欢迎。</p>
+  <!--   <p>目前有各种各样的BP机，光是它的外型就有十几种。有的像一个袖珍日记本，小巧玲珑；有的像一张卡片，十分轻便；也有的像支圆珠笔，可以插在上衣口袋里；有的甚至做成胸花、项链，挂在胸前。还有的和手表合为一体，带在手上，平时计时，有人寻呼时又成了个BP机。</p>
+    <p>女孩通过有线电话拨了寻呼台的号码，电话接通后，她告诉话务员她要寻呼的BP机号及自己的姓名和电话号码，然后，挂机等候。寻呼台的话务员马上将以上信息输入计算机，发射机便在计算机的控制下，向空中自动发出呼叫信息。</p>
+    <p>你可能会问，既然寻呼台发射的无线电波能覆盖一定的区域，那么，这一区域内的BP机为什么只能收到对自己的呼叫，而收不到寻呼其它人的信号呢？</p>
+    <p>原来，各个BP机都有自己的号码，贮存在寻呼台的计算机上。寻呼台发出的信息带有这个号码，只能启动相应的BP机，对别的BP机没有作用。这就像邮递员，按照用户的门牌号送信，不会错的。</p>
+    <p>女孩的朋友听到“B—，B—”声音后，打开显示开关，屏上出现了要求回电的号码，于是，她的朋友就可以在附近找部电话，来和女孩通话。</p> -->
+    
+    <!-- 正文内要求加粗标红处 -->
+    <p><span class="highlight-red">我国的公共寻呼台号码是126和127</span>，也有一些专业寻呼台，号码是7位数或者6位数。126和127都是公用台，但是使用方法有所不同。126台是由话务员应答接续的，它是人工寻呼台，而127则是由计算机控制的，叫自动寻呼台。</p>
+
+    <p><span class="highlight-red">用户输入127后，再次回电号码即可拨打成功</span>。</p>
+    
+    <p>有的寻呼设备还和家里的电话机相联。电话铃响后经过一定时间如果没人接，打来的电话就会自动转到寻呼台。</p>
+    <p>寻呼机体积小，重量轻，而且价格便宜，使用方便，这使它在各个行业得到了广泛应用。</p>
+    <p>医生到病房巡诊时，身边可以携带BP机。假如手术室有急救病人，需要医生立即返回，可以使用BP机呼叫。如果还需要助手、护士、麻醉师等配合，寻呼台的特殊寻呼功能——群呼，就会“一声令下”，召集所有被寻呼者，而不必个别通知了。</p>
+    <p>建筑工地的指挥员和工程师经常在现场工作，配备寻呼机后，无论他们走到哪里，如果有急事，通过寻呼台可以立即找到他们。</p>
+    <p>在大饭店里，人们可以通过内部寻呼台寻找服务员或饭店领班。商店和公司的经理可以通过寻呼台，寻找在外办事的采购员。</p>
+    <p>寻呼机也可以开展漫游业务，这和移动电话中的漫游差不多。当你到外地出差时，不必担心别人找不到你，因为人们可以通过当地的寻呼台呼叫你。</p>
+    <p>如今拥有BP机的人越来越多，在城市的各个角落都会听到BP机发出的声响。人们自豪地拍着腰间的“电蛐蛐”说：“有了它可真方便！”</p>
+    <!-- <p>在日本西南部的一个牧场里，连奶牛也有幸带上了BP机。牧场主为了便于管理牛只，想出了使用寻呼机的奇招。放牧时，每头奶牛的脖子都挂上一只BP机，当BP机发出呼叫声时，奶牛闻声便会“自觉地”从牧场回到牛棚。</p> -->
+</div>
+<!-- 
+<div class="section">
+    <h2>先驱纪念碑</h2>
+    <p>BP机最早的品牌拥有者之一的摩托罗拉，借助BP机和模拟手机建立的品牌认知，至今还在目前最主流的即时通讯工具——2G手机领域保持着市场领先地位。</p>
+</div>
+
+<div class="section">
+    <h2>竞跑众生相</h2>
+    <p>国内第一个寻呼信号是从上海华侨商店的一间盥洗室内发出的，最初只有一个寻呼座席，当时是为第五届全运会在上海举行而开通的寻呼服务，只有30多个用户。</p>
+</div> -->
+
+<!-- <div class="section">
+    <h2>传播印象派 “有事CALL我！”</h2>
+    
+</div> -->
+
+</div>
+
+<div class="sidebar">
+<div class="box">
+    <b>目录</b>
+    <ul>
+        <li>简介</li>
+        <li>使用方法</li>
+        <li>历史介绍</li>
+        <li>演化路线图</li>
+       <!--  <li>先驱纪念碑</li>
+        <li>竞跑众生相</li>
+        <li>传播印象派</li> -->
+    </ul>
+</div>
+
+<div class="box">
+    <b>词条信息</b>
+    <p>浏览次数：1170 次</p>
+    <p>编辑次数：5 次</p>
+    <p>词条创建：万知用户</p>
+</div>
+</div>
+
+</div>
+
+<div class="footer">
+
+    百科来源： https://baike.c114.com.cn/view.php?id=9879-5D957FFF
+    免责声明：网页解谜游戏制作需要。如有冒犯联系作者进行删除。感谢理解。
+   <!--  <p></p>p>
+    
+    </p> -->
+    <br><!-- （在手机游戏内勿点击，以防回不来） -->
+</div>
+ <!-- 外部JS文件引用 -->
+ 
+<script src="./return.js"></script>
+</body>
+</html>

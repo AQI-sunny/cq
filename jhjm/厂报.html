@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>锦华风采 - 1997年6月22日</title>
+    <link rel="icon" type="image/jpeg" href="search.png">
+    
+    <!-- 链接外部CSS文件 -->
+    <link rel="stylesheet" href="css/search-assistant.css">
+    <link rel="stylesheet" href="css/visitor.css">
+    <link rel="stylesheet" href="css/common.css">
+    
+    <style>
+        /* 基础样式 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "宋体", Arial, sans-serif;
+            line-height: 1.6;
+            background-color: white;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 10px;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            padding: 15px 10px;
+            background-color: white;
+        }
+
+        .search-logo {
+            width: 100px;
+            height: 100px;
+            margin-right: 10px;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 500px;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+            background-color: white;
+        }
+
+        .search-box:focus {
+            border-color: #b30000;
+        }
+
+        .content-wrapper {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .ad-left, .ad-right {
+            width: 180px;
+            flex-shrink: 0;
+            padding: 10px;
+        }
+
+        .content {
+            flex-grow: 1;
+            max-width: 800px;
+            margin: 0 20px;
+        }
+
+        .container {
+            background-color: rgb(250, 238, 222);
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #d9c7a7;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding: 0 10px;
+            color: #b30000;
+            border-bottom: 2px solid #b30000;
+            padding-bottom: 10px;
+        }
+
+        .newspaper-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 3px double #8b4513;
+            padding-bottom: 10px;
+        }
+
+        .newspaper-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #b30000;
+            margin-bottom: 5px;
+        }
+
+        .newspaper-subtitle {
+            font-size: 16px;
+            color: #8b4513;
+            font-style: italic;
+        }
+
+        .newspaper-date {
+            font-size: 14px;
+            color: #8b4513;
+            margin-top: 5px;
+        }
+
+        .article-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0 15px;
+            color: #b30000;
+            border-bottom: 1px solid #d9c7a7;
+            padding-bottom: 10px;
+        }
+
+        .article-content {
+            font-size: 16px;
+            line-height: 1.8;
+            text-indent: 2em;
+            margin-bottom: 20px;
+            color: #5a4a3a;
+        }
+
+        .interview {
+            background-color: #f5eddc;
+            padding: 15px;
+            border-left: 4px solid #b30000;
+            margin: 20px 0;
+            font-style: italic;
+        }
+
+        .interviewer {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #8b4513;
+        }
+
+        .quote {
+            font-style: italic;
+            color: #8b4513;
+            margin: 10px 0;
+            padding-left: 20px;
+            border-left: 2px solid #d9c7a7;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #8b4513;
+            margin-top: 30px;
+            border-top: 1px solid #d9c7a7;
+            padding-top: 10px;
+        }
+
+        /* 2000年代风格的装饰元素 */
+        .marquee {
+            background-color: #fddab2;
+            padding: 5px;
+            margin: 10px 0;
+            border: 1px dashed #8b4513;
+            font-size: 14px;
+        }
+
+        .counter {
+            text-align: right;
+            font-size: 12px;
+            color: #8b4513;
+            margin-top: 10px;
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+            color: #b30000;
+            font-weight: bold;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* 广告样式 */
+        .ad {
+            width: 100%;
+            border: 1px solid #d9c7a7;
+            margin-bottom: 20px;
+            background-color: #f9e9c6;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .ad-title {
+            font-weight: bold;
+            font-size: 16px;
+            color: #b30000;
+            margin-bottom: 8px;
+            border-bottom: 1px dotted #d9c7a7;
+            padding-bottom: 5px;
+        }
+
+        .ad-content {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #5a4a3a;
+        }
+
+        .ad-image {
+            width: 100%;
+            height: 120px;
+            background-color: #efd6ac;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-style: italic;
+            border: 1px solid #d9c7a7;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .ad-image::before {
+            content: "⚠️";
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .ad-image::after {
+            content: "图片加载失败";
+            font-size: 12px;
+            color: #8b4513;
+        }
+
+        .ad-link {
+            display: block;
+            margin-top: 10px;
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .ad-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* 搜索结果提示弹窗样式 */
+        .search-result-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 2px solid #b30000;
+            padding: 20px;
+            z-index: 1000;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .modal-header {
+            color: #b30000;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #d9c7a7;
+            padding-bottom: 5px;
+        }
+        
+        .modal-content {
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+        
+        .modal-close {
+            background-color: #b30000;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            cursor: pointer;
+            float: right;
+        }
+        
+        .modal-close:hover {
+            background-color: #8b0000;
+        }
+    </style>
+    
+    <!-- 链接外部JS文件 -->
+    <script src="search-engine.js"></script>
+    <script src="storage.js"></script>
+    <script src="navigation.js"></script>
+    <script src="visitor.js"></script>
+    <script src="search-ass.js"></script>
+    <script src="buxukandesearch.js"></script>
+</head>
+<body>
+    <div class="main-container">
+        <!-- 搜索结果提示弹窗 -->
+        <div id="searchResultModal" class="search-result-modal">
+            <div class="modal-header">搜索结果</div>
+            <div id="modalContent" class="modal-content">正在搜索...</div>
+            <button id="modalClose" class="modal-close">关闭</button>
+        </div>
+        
+        <!-- 搜索栏 - 最上层 -->
+        <div class="search-container">
+            <img src="./search.png" alt="Logo" class="search-logo">
+            <input type="text" class="search-box" id="searchInput" placeholder="输入搜索内容...">
+        </div>
+        
+        <!-- 内容区域 -->
+        <div class="content-wrapper">
+            <!-- 左侧广告 -->
+            <div class="ad-left">
+                <div class="ad">
+                    <div class="ad-title">拯救使电脑</div>
+                    <div class="ad-image"></div>
+                    <div class="ad-content">高性能处理器，预装操作系统，让您轻松进入互联网时代！</div>
+                    <a href="#" class="ad-link">点击了解详情>></a>
+                </div>
+                
+                <div class="ad">
+                    <div class="ad-title">大灵通手机</div>
+                    <div class="ad-image"></div>
+                    <div class="ad-content">超长待机，内置娱乐功能，沟通无处不在！</div>
+                    <a href="#" class="ad-link">点击了解详情>></a>
+                </div>
+                
+                <div class="ad">
+                    <div class="ad-title">霸王龙学习机</div>
+                    <div class="ad-image"></div>
+                    <div class="ad-content">寓教于乐，帮助孩子提高学习成绩，家长放心！</div>
+                    <a href="#" class="ad-link">点击了解详情>></a>
+                </div>
+            </div>
+            
+            <!-- 主要内容 -->
+            <div class="content">
+                <div class="container">
+                    <!-- 厂报内容 -->
+                    <div class="newspaper-header">
+                        <div class="newspaper-title">锦华风采</div>
+                        <div class="newspaper-subtitle">锦华纺织厂内部刊物</div>
+                        <div class="newspaper-date">1997年6月22日 第32期 总第87期</div>
+                    </div>
+                    
+                    <div class="marquee">
+                        <marquee behavior="scroll" direction="left">热烈庆祝我厂第一季度生产任务超额完成！ 安全生产月活动即将开始，请各部门做好准备！</marquee>
+                    </div>
+                    
+                    <h1>青年职工恶作剧引恐慌，厂方力倡科学破迷信</h1>
+                    
+                    <div class="article-content">
+                        <p>近期，我厂<strong>四号仓库</strong>区域频现异常现象，包括夜间怪声与不明绿色火光，引起部分职工不安与猜测。经<strong>保卫科</strong>连日调查，现已查明这些现象系人为制造，旨在扰乱工厂正常秩序。</p>
+                        
+                        <p>据调查，这些所谓的"灵异现象"实际上是由几名青年职工利用业余时间进行的恶作剧。他们使用简单的化学物质制造绿色火光，并通过录音设备播放预先录制的怪声，试图制造恐慌气氛。</p>
+                        
+                        <div class="interview">
+                            <div class="interviewer">记者采访<strong>夜班看守员</strong>老刘：</div>
+                            <p>"最初听到那些声音，看到那些绿火，确实有点害怕。毕竟值<strong>夜班</strong>就我一个人，心里难免发毛。但后来我发现这些现象很有规律，总是在固定时间出现，就觉得不对劲了。"</p>
+                            <p>"有一次我提前躲在了仓库角落，亲眼看到两个年轻人偷偷摸摸地进来布置。我当时就冲出来抓住了他们，这才知道是我们厂里的职工。"</p>
+                        </div>
+                        
+                        <p>保卫科科长张某表示："我们已经对涉事职工进行了严肃批评教育，他们已认识到错误的严重性。这种恶作剧不仅干扰了工厂的正常秩序，还在职工中造成了不必要的恐慌。"</p>
+                        
+                        <p>厂领导高度重视此事，强调要加强科学知识普及，提高职工的科学素养。党委副书记指出："在科学技术日新月异的今天，我们更要相信科学、依靠科学，坚决抵制各种封建迷信思想的侵蚀。"</p>
+                        
+                        <p>为此，厂党委决定在下周举办"科学知识普及周"活动，通过讲座、展览等形式，向职工普及科学知识，增强辨别是非的能力。</p>
+                        
+                        <p class="quote">"我们要用科学的光芒照亮每一个角落，让封建迷信无处藏身。"——厂党委书记</p>
+                        
+                        <p>同时，<strong>保卫科</strong>将加强夜间巡逻，特别是在仓库等重点区域，确保类似事件不再发生。厂方也呼吁广大职工，如发现可疑情况，应及时向<strong>保卫科</strong>报告，共同维护工厂的安全与稳定。</p>
+                    </div>
+                    
+                   <!--  <div class="counter">
+                        您是第 <span id="visitCount">188</span> 位访问者
+                    </div> -->
+                    
+                    <div class="footer">
+                        <p>锦华纺织厂宣传部主办 | 内部资料 注意保存 | 1997年6月22日</p>
+                        <p class="blink">请使用IE4.0以上浏览器浏览以获得最佳效果</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧广告 -->
+            <div class="ad-right">
+                <div class="ad">
+                    <div class="ad-title">金脑子</div>
+                    <div class="ad-image"></div>
+                    <div class="ad-content">节日送礼，健康第一！表达关心的最佳选择！</div>
+                    <a href="#" class="ad-link">点击了解详情>></a>
+                </div>
+                
+                <div class="ad">
+                    <div class="ad-title">浅蓝计算机</div>
+                    <div class="ad-image"></div>
+                    <div class="ad-content">信息管理助手，成功人士的得力工具！</div>
+                    <a href="#" class="ad-link">点击了解详情>></a>
+                </div>
+                
+                <div class="ad">
+                    <div class="ad-title">八喜饮料</div>
+                    <div class="ad-image"></div>
+                    <div class="ad-content">喜庆时刻，畅饮欢乐！带来清爽口感！</div>
+                    <a href="#" class="ad-link">点击了解详情>></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化搜索功能
+            initializeSearch();
+            
+            // 初始化访问计数器
+            initializeVisitorCounter();
+            
+            // 设置模态框关闭事件
+            document.getElementById('modalClose').addEventListener('click', function() {
+                document.getElementById('searchResultModal').style.display = 'none';
+            });
+            
+            // 点击模态框外部关闭
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('searchResultModal');
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+        
+        function initializeSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const searchResultModal = document.getElementById('searchResultModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(event) {
+                    if (event.key === 'Enter') {
+                        const searchTerm = this.value.trim();
+                        
+                        if (searchTerm === '') {
+                            showSearchResult('请输入搜索关键词！');
+                            return;
+                        }
+                        
+                        // 使用外部搜索功能（如果可用）
+                        if (typeof performSearch !== 'undefined') {
+                            try {
+                                performSearch(searchTerm, event);
+                            } catch (e) {
+                                // 如果外部搜索失败，使用内部搜索
+                                handleInternalSearch(searchTerm);
+                            }
+                        } else {
+                            // 使用内部搜索
+                            handleInternalSearch(searchTerm);
+                        }
+                    }
+                });
+            }
+            
+            /* function handleInternalSearch(searchTerm) {
+                // 模拟搜索逻辑
+                const searchResults = {
+                    '封建迷信': '找到相关文章：破除封建迷信！',
+                    '锦华': '找到相关刊物：锦华风采第32期',
+                    '仓库': '找到相关内容：四号仓库事件调查',
+                    '保卫科': '找到相关部门：保卫科工作情况',
+                    '科学': '找到相关内容：科学知识普及周活动'
+                };
+                
+                if (searchResults[searchTerm]) {
+                    showSearchResult(searchResults[searchTerm]);
+                } else {
+                    showSearchResult(`未找到与"${searchTerm}"相关的内容。请尝试其他关键词。`);
+                }
+            }
+             */
+            function showSearchResult(message) {
+                modalContent.textContent = message;
+                searchResultModal.style.display = 'block';
+            }
+            
+            // 初始化外部搜索页面（如果可用）
+            if (typeof initSearchPage !== 'undefined') {
+                try {
+                    initSearchPage();
+                } catch (e) {
+                    console.log("外部搜索功能初始化失败，使用内部搜索");
+                }
+            }
+        }
+        
+        function initializeVisitorCounter() {
+            // 使用外部访问计数器（如果可用）
+            if (typeof initVisitorCounter !== 'undefined') {
+                try {
+                    initVisitorCounter('visitCount');
+                    return;
+                } catch (e) {
+                    console.log("外部访问计数器不可用");
+                }
+            }
+            
+            // 使用内部访问计数器
+            const countElement = document.getElementById('visitCount');
+            if (countElement) {
+                let count = parseInt(localStorage.getItem('visitCount') || '188');
+                count++;
+                localStorage.setItem('visitCount', count.toString());
+                countElement.textContent = count;
+            }
+        }
+    </script>
+<script src="logo-return.js"></script>
+</body>
+</html>

@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深南日报 · 1985年8月12日 第3版</title>
+    <!-- 外部样式表 -->
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/search-assistant.css">
+    <link rel="stylesheet" href="css/visitor.css">
+    <!-- 针对子页面内容过宽问题的内嵌样式 -->
+    <style>
+        /* 针对子页面内容区域的优化样式 */
+        .subpage-container {
+            /* 保持原有背景和边框，但优化宽度和内边距 */
+            width: 100%;
+            max-width: 1200px;
+            box-sizing: border-box;
+            margin: 20px auto;
+            background-color: #FFFFFF;
+            border: 1px solid #999999;
+            padding: 20px;
+            font-family: "宋体", Arial, sans-serif;
+            font-size: 14px;
+            color: #333333;
+            background-color: #F5F5DC;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABZJREFUeNpi+P//PwMDAwPD////GfAAQAAEPwC1WpQZAAAAAElFTkSuQmCC');
+            position: relative;
+            overflow-x: hidden; /* 防止水平滚动条 */
+        }
+
+        /* 修复列表项圆点溢出问题 */
+        .record-section ul {
+            margin-left: 20px;
+            padding-left: 10px;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .record-section li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+            padding-right: 10px; /* 为圆点留出空间 */
+            position: relative;
+        }
+
+        /* 确保圆点符号在容器内 */
+        .record-section ul li::before {
+            content: "•";
+            position: absolute;
+            left: -15px;
+            color: #333;
+        }
+
+        /* 段落文本优化 */
+        .record-section p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+            text-align: justify;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+        }
+
+        /* 表格响应式优化 */
+        .subpage-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            table-layout: fixed; /* 固定表格布局防止溢出 */
+        }
+
+        .subpage-table td, .subpage-table th {
+            border: 1px solid #999999;
+            padding: 8px 12px;
+            font-size: 14px;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* 标题区域优化 */
+        .subpage-title {
+            font-size: 24px;
+            color: #990000;
+            margin: 5px 0;
+            line-height: 1.3;
+            text-align: center;
+            overflow-wrap: break-word;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+        }
+
+        .subpage-subtitle {
+            font-size: 18px;
+            color: #333366;
+            margin: 10px 0 5px 0;
+            border-bottom: 2px solid #990000;
+            padding-bottom: 5px;
+            text-align: center;
+            overflow-wrap: break-word;
+        }
+
+        /* 剪报特定样式 */
+        .newspaper-masthead {
+            text-align: center;
+            border-bottom: 3px double #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .newspaper-name {
+            font-size: 32px;
+            font-weight: bold;
+            color: #000;
+            letter-spacing: 5px;
+            margin-bottom: 5px;
+            font-family: "黑体", Arial, sans-serif;
+        }
+        
+        .newspaper-date {
+            font-size: 16px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .newspaper-column {
+            column-count: 2;
+            column-gap: 40px;
+            text-align: justify;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .newspaper-column {
+                column-count: 1;
+            }
+        }
+        
+        .news-title {
+            font-size: 28px;
+            color: #000;
+            text-align: center;
+            margin: 25px 0 15px 0;
+            font-family: "黑体", Arial, sans-serif;
+            border-top: 1px solid #999;
+            padding-top: 15px;
+        }
+        
+        .news-subtitle {
+            font-size: 18px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        
+        .news-image {
+            text-align: center;
+            margin: 20px 0;
+            border: 1px solid #999;
+            padding: 10px;
+            background-color: #fff;
+        }
+        
+        .news-image img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+        }
+        
+        .image-caption {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        .news-content {
+            text-indent: 2em;
+            margin-bottom: 15px;
+        }
+        
+        .highlight-text {
+            background-color: #FFFF99;
+            padding: 2px 4px;
+            font-weight: bold;
+        }
+        
+        .byline {
+            text-align: right;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        /* 剪报老化效果 */
+        .aged-paper {
+            position: relative;
+            padding: 30px;
+            background-color: #F5F5DC;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border: 1px solid #D4B483;
+        }
+        
+        .aged-paper::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABhQTFRF8fHx7e3t6enp5+fn4+Pj3d3d2NjY0dHRycnJq6urm5ubRkZGIyMjAAAAI1qRrgAAAAZ0Uk5T//////8AsK+z7wAAAIJJREFUeNrs0rENgDAQQ9EHiv9/6QAJhIKm7I1nNVfZARERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERH5mz0CDADFwCqYq6NiWgAAAABJRU5ErkJggg==');
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        .yellowed {
+            color: #5C4B37;
+        }
+        
+        /* 段落中的强调文本 */
+        .record-section strong {
+            color: #990000;
+        }
+        
+        /* 内部提醒样式 */
+        .internal-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border: 2px solid #990000;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            padding: 20px;
+            min-width: 300px;
+            max-width: 500px;
+            z-index: 9999;
+            font-family: "宋体", Arial, sans-serif;
+            display: none;
+        }
+        
+        .internal-alert-content {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #333;
+            text-align: center;
+        }
+        
+        .internal-alert-title {
+            font-size: 18px;
+            color: #990000;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .internal-alert-button {
+            display: block;
+            margin: 0 auto;
+            background-color: #990000;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-family: "宋体", Arial, sans-serif;
+        }
+        
+        .internal-alert-button:hover {
+            background-color: #770000;
+        }
+        
+        .internal-alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 9998;
+            display: none;
+        }
+
+        /* 移动端优化 */
+        @media (max-width: 768px) {
+            .subpage-container {
+                padding: 15px;
+                margin: 10px auto;
+                width: 95%;
+            }
+            
+            .newspaper-name {
+                font-size: 24px;
+                letter-spacing: 2px;
+            }
+            
+            .news-title {
+                font-size: 22px;
+            }
+            
+            .aged-paper {
+                padding: 20px;
+            }
+            
+            .record-section ul {
+                margin-left: 15px;
+                padding-left: 5px;
+            }
+            
+            .record-section li {
+                margin-bottom: 6px;
+            }
+            
+            .record-section ul li::before {
+                left: -12px;
+            }
+            
+            .subpage-table td, .subpage-table th {
+                padding: 6px 8px;
+                font-size: 13px;
+            }
+            
+            .internal-alert {
+                min-width: 250px;
+                max-width: 90%;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .subpage-container {
+                padding: 12px;
+                width: 98%;
+            }
+            
+            .newspaper-name {
+                font-size: 20px;
+                letter-spacing: 1px;
+            }
+            
+            .news-title {
+                font-size: 18px;
+            }
+            
+            .aged-paper {
+                padding: 15px;
+            }
+            
+            .record-section ul {
+                margin-left: 10px;
+                padding-left: 0;
+            }
+            
+            .record-section li {
+                margin-bottom: 5px;
+                padding-right: 5px;
+            }
+            
+            .record-section ul li::before {
+                left: -10px;
+            }
+            
+            .subpage-table {
+                font-size: 12px;
+            }
+            
+            .subpage-table td, .subpage-table th {
+                padding: 4px 6px;
+                font-size: 12px;
+            }
+            
+            .internal-alert {
+                min-width: 200px;
+                padding: 12px;
+            }
+            
+            /* 小屏幕下将部分表格转换为垂直布局 */
+            @media (max-width: 360px) {
+                .subpage-table {
+                    display: block;
+                    overflow-x: auto;
+                    white-space: nowrap;
+                }
+                
+                .record-section ul li::before {
+                    left: -8px;
+                    font-size: 12px;
+                }
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 内部提醒弹窗 -->
+    <div class="internal-alert-overlay" id="alertOverlay"></div>
+    <div class="internal-alert" id="internalAlert">
+        <div class="internal-alert-title" id="alertTitle">系统提醒</div>
+        <div class="internal-alert-content" id="alertContent"></div>
+        <button class="internal-alert-button" id="alertButton">确定</button>
+    </div>
+    
+    <!-- 子页面固定搜索栏 - 更新版 -->
+    <!-- <div class="subpage-search-fixed" id="subpage-search">
+        <img src="https://sylvie-seven-cq.top/gallery3/search-logo.png" alt="搜索logo" class="subpage-search-logo">
+        <input type="text" class="subpage-search-input" placeholder="搜索其他内容..." id="searchInput">
+        <button class="subpage-search-button" id="searchButton">搜索</button>
+    </div> -->
+    
+    <!-- 子页面容器 -->
+    <div class="subpage-container">
+        <!-- 访问计数器 -->
+        <!-- <div class="counter">您是第 <span id="visit-count">8888</span> 位访问者</div> -->
+        
+        <!-- 跑马灯 -->
+        <div class="marquee">
+            <marquee behavior="scroll" direction="left" scrollamount="3">欢迎访问历史档案系统！本系统收录各类历史文献和剪报资料。</marquee>
+        </div>
+        
+        <!-- 页面标题 -->
+        <div class="subpage-header">
+            <h1 class="subpage-title">历史剪报档案系统</h1>
+            <h2 class="subpage-subtitle">1985年地方水渠纠纷剪报（扫描件）</h2>
+        </div>
+        
+        <!-- 主要内容 -->
+        <div class="content">
+            <div class="aged-paper yellowed">
+                <!-- 报纸报头 -->
+                <div class="newspaper-masthead">
+                    <div class="newspaper-name">深 南 日 报</div>
+                    <div class="newspaper-date">1985年8月12日 星期四 第3版</div>
+                    <div>中共深南地委机关报 今日四版 零售价：0.05元</div>
+                </div>
+                
+                <!-- 新闻标题 -->
+                <h1 class="news-title">临渠萍山争水械斗，政府裁定水渠归萍山刘姓</h1>
+                <div class="news-subtitle">地方法院依法裁决水利纠纷，朱氏母子不服当庭晕厥</div>
+                
+                <!-- 两栏新闻内容 -->
+                <div class="newspaper-column">
+                    <p class="news-content"><span>【本报记者 郝晨 8月11日讯】</span> 临渠县萍山水渠纠纷案经地方法院审理，于昨日作出最终裁决。法院判定，争议水渠使用权归萍山公社刘姓集体所有，朱氏家族提出的水渠归属主张不予支持。</p>
+                    
+                    <p class="news-content">据了解，此次水渠纠纷始于1963年春旱期间。萍山公社刘姓社员与相邻朱家村因灌溉用水分配问题产生矛盾，后发展为大规模械斗，造成三人轻伤，农田设施受损。当地政府多次调解未果，遂将此案移交地方法院审理。</p>
+                    
+                    <p class="news-content">法院审理认为，根据1958年土地改革时期的原始档案记载，争议水渠所在地原属刘姓家族祖产。虽经合作化运动转为集体所有，但历史使用权明确。朱氏家族提供的1955年地契因缺乏完整手续，无法作为有效证据采信。</p>
+                    
+                    <p class="news-content">庭审过程中，朱氏母子情绪激动。当审判长宣布最终裁决时，朱母张桂花当场晕厥，经现场医护人员紧急施救后苏醒。朱家长子朱为民当庭表示不服判决，声称将继续上诉。</p>
+                    
+                    <!-- 新闻图片 -->
+                    <div class="news-image">
+                        <img src="https://sylvie-seven-cq.top/jhjm/gallery3/配图.png" alt="朱家地界被划入刘家田示意图" onerror="this.onerror=null; this.src='https://via.placeholder.com/600x400/CCCCCC/666666?text=剪报配图+（朱家地界示意图）'">
+                        <!-- <div class="image-caption">朱家地界被划入刘家田（示意图）</div> -->
+                    </div>
+                    
+                    <p class="news-content">据记者从医院了解，朱母被送往县人民医院后，病情持续恶化。主治医师表示，患者原有心脏病史，此次情绪剧烈波动导致病情加重。截至发稿时，患者仍在抢救中。</p>
+                    
+                    <p class="news-content">萍山公社刘姓代表刘大富在接受采访时表示："我们尊重法院判决，希望此事能就此了结。水渠问题解决了，我们就能安心搞生产，争取今年粮食丰收。"</p>
+                    
+                    <p class="news-content">县委副书记李为民在案件宣判后发表讲话，强调："人民内部矛盾要用民主的方法解决。法院的判决具有法律效力，各方都应遵守。县政府将确保判决执行，同时做好群众思想工作，维护社会稳定。"</p>
+                    
+                    <p class="news-content">此案审理历时七个月，先后开庭五次，传唤证人二十余名，调阅历史档案五十余件。法院表示，此案裁决体现了"以事实为依据，以法律为准绳"的司法原则，对今后类似水利纠纷案件具有重要参考意义。</p>
+                    
+                    <p class="news-content">另据了解，朱家村部分村民对判决结果表示不满，已联名向地区中级人民法院提出申诉。地委宣传部已派工作组进驻相关村镇，开展政策宣传和思想教育工作，防止矛盾激化。</p>
+                </div>
+                
+                <!-- 记者署名 -->
+                <div class="byline">
+                    <p>记者：郝晨</p>
+                    <p>编辑：秦慧</p>
+                    <p>（本报版权所有，未经许可不得转载）</p>
+                </div>
+            </div>
+            
+            <!-- 剪报背景信息 -->
+            <div class="record-section" style="margin-top: 30px;">
+                <h3 class="subpage-section-title">档案信息</h3>
+                <table class="subpage-table">
+                    <tr>
+                        <th width="30%">档案编号</th>
+                        <td><span class=highlight-text>DN65-0812-03B</td>
+                    </tr>
+                    <tr>
+                        <th>来源</th>
+                        <td>《深南日报》1985年8月12日第3版</td>
+                    </tr>
+                    <tr>
+                        <th>扫描日期</th>
+                        <td>2002年3月15日</td>
+                    </tr>
+                    <tr>
+                        <th>扫描分辨率</th>
+                        <td>300 DPI</td>
+                    </tr>
+                    <tr>
+                        <th>档案状态</th>
+                        <td>完整，轻微黄化</td>
+                    </tr>
+                    <tr>
+                        <th>备注</th>
+                        <td>此剪报为锦华纺织厂档案室收藏的地方史料</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <!-- 后续发展 -->
+            <div class="record-section">
+                <h3 class="subpage-section-title">后续事件</h3>
+                <p>据档案记录，此案判决后发生了以下后续事件：</p>
+                <ul>
+                    <li><strong>1985年8月13日：</strong>朱母因抢救无效在县人民医院病逝，终年58岁。</li>
+                    <li><strong>1985年8月15日：</strong>朱为民向地区中级人民法院递交上诉状，同时组织朱家村村民联名请愿。</li>
+                    <li><strong>1985年9月3日：</strong>地区中级人民法院驳回上诉，维持原判。</li>
+                    <li><strong>1985年9月10日：</strong>县政府工作组进驻朱家村，开展政策宣讲和安抚工作。</li>
+                    <li><strong>1985年10月：</strong>水渠正式划归萍山公社刘姓集体使用，争议告一段落。</li>
+                </ul>
+                <!-- <p><strong>档案备注：</strong>此案为当地1960年代典型的水利纠纷案例，反映了集体化时期资源配置的矛盾。朱为民后于1972年进入锦华纺织厂工作，任后勤科职员。</p> -->
+            </div>
+            
+            <!-- 相关剪报 -->
+            <div class="record-section">
+                <h3 class="subpage-section-title">相关历史剪报</h3>
+                <table class="subpage-table">
+                    <tr>
+                        <th>日期</th>
+                        <th>报纸</th>
+                        <th>标题</th>
+                        <th>版次</th>
+                    </tr>
+                    <tr>
+                        <td>1985-07-05</td>
+                        <td>深南日报</td>
+                        <td>萍山水渠纠纷案开庭审理</td>
+                        <td>第2版</td>
+                    </tr>
+                    <tr>
+                        <td>1985-08-13</td>
+                        <td>临渠县报</td>
+                        <td>水渠纠纷案判决引关注</td>
+                        <td>第1版</td>
+                    </tr>
+                    <tr>
+                        <td>1985-08-20</td>
+                        <td>深南日报</td>
+                        <td>县委加强农村水利建设管理</td>
+                        <td>第1版</td>
+                    </tr>
+                    <tr>
+                        <td>1985-09-15</td>
+                        <td>临渠县报</td>
+                        <td>朱家村村民接受调解，恢复生产</td>
+                        <td>第3版</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <!-- 操作按钮 -->
+            <div class="navigation-buttons" style="margin-top: 30px;">
+                <button class="nav-btn" onclick="window.print()">打印剪报</button>
+                <button class="nav-btn" onclick="exportToPDF()">导出PDF</button>
+                <button class="nav-btn" onclick="showOriginalScan()">查看原始扫描</button>
+                <a href="#" class="nav-btn home">返回列表</a>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="subpage-footer">
+            <p>历史档案剪报系统 &copy; 2003 | 最后更新: 2003-08-10</p>
+            <p>锦华纺织厂档案室收藏 | 仅供内部研究使用</p>
+            <p>建议使用Internet Explorer 5.0以上版本浏览，分辨率800×600</p>
+        </div>
+    </div>
+    
+    <!-- 外部JavaScript文件 -->
+    <script src="search-engine.js"></script>
+    <script src="storage.js"></script>
+    <script src="navigation.js"></script>
+    <script src="visitor.js"></script>
+    <script src="search-ass.js"></script>
+      <script src="./return.js"></script>
+    <script>
+        // 页面初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查外部JS是否加载失败
+            setupExternalJSFailureCheck();
+            
+            // 初始化内部提醒系统
+            initInternalAlert();
+            
+            // 页面加载完成后的其他初始化
+            console.log('剪报页面加载完成');
+            
+            // 检查内容宽度问题
+            checkContentWidth();
+            
+            // 添加剪报特有的初始化
+            initializeNewspaperFeatures();
+        });
+        
+        // 初始化内部提醒系统
+        function initInternalAlert() {
+            const alertButton = document.getElementById('alertButton');
+            const alertOverlay = document.getElementById('alertOverlay');
+            
+            alertButton.addEventListener('click', function() {
+                hideInternalAlert();
+            });
+            
+            alertOverlay.addEventListener('click', function() {
+                hideInternalAlert();
+            });
+            
+            // 监听ESC键关闭提醒
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    hideInternalAlert();
+                }
+            });
+        }
+        
+        // 显示内部提醒
+        function showInternalAlert(title, message) {
+            document.getElementById('alertTitle').textContent = title;
+            document.getElementById('alertContent').textContent = message;
+            document.getElementById('internalAlert').style.display = 'block';
+            document.getElementById('alertOverlay').style.display = 'block';
+            
+            // 聚焦到确定按钮
+            setTimeout(function() {
+                document.getElementById('alertButton').focus();
+            }, 100);
+        }
+        
+        // 隐藏内部提醒
+        function hideInternalAlert() {
+            document.getElementById('internalAlert').style.display = 'none';
+            document.getElementById('alertOverlay').style.display = 'none';
+        }
+        
+        // 检查外部JS是否加载失败
+        function setupExternalJSFailureCheck() {
+            const searchButton = document.getElementById('searchButton');
+            const searchInput = document.getElementById('searchInput');
+            
+            // 延迟检查外部JS是否成功加载
+            setTimeout(function() {
+                // 检查外部search-engine.js是否已加载
+                if (!window.searchEngineLoaded) {
+                    // 外部JS加载失败，绑定错误处理函数
+                    searchButton.addEventListener('click', handleSearchError);
+                    searchInput.addEventListener('keypress', function(e) {
+                        if(e.key === 'Enter') {
+                            handleSearchError();
+                        }
+                    });
+                    
+                    console.log('外部JS加载失败，已启用错误处理');
+                } else {
+                    console.log('外部JS已成功加载');
+                }
+            }, 1000); // 延迟1秒检查，给外部JS足够时间加载
+        }
+        
+        // 处理搜索错误
+        /* function handleSearchError() {
+            const searchTerm = document.getElementById('searchInput').value;
+            if(searchTerm.trim() !== '') {
+                showInternalAlert('搜索功能错误', '无法执行搜索操作，请稍后再试或联系管理员');
+            } else {
+                showInternalAlert('搜索提示', '请输入搜索内容');
+            }
+        } */
+        
+        // 检查内容宽度问题
+        function checkContentWidth() {
+            const container = document.querySelector('.subpage-container');
+            const content = document.querySelector('.content');
+            
+            if (container && content) {
+                const containerWidth = container.offsetWidth;
+                const contentWidth = content.scrollWidth;
+                
+                if (contentWidth > containerWidth) {
+                    console.log('检测到内容宽度问题：内容宽度(' + contentWidth + 'px) > 容器宽度(' + containerWidth + 'px)');
+                    // 可以在这里添加额外的调整逻辑
+                }
+            }
+        }
+        
+        // 剪报特有功能初始化
+        function initializeNewspaperFeatures() {
+            // 添加图片加载失败处理
+            const newsImage = document.querySelector('.news-image img');
+            if (newsImage) {
+                newsImage.addEventListener('error', function() {
+                    console.log('剪报配图加载失败，已启用备用显示');
+                });
+            }
+            
+            // 添加剪报点击效果
+            const agedPaper = document.querySelector('.aged-paper');
+            if (agedPaper) {
+                agedPaper.addEventListener('click', function() {
+                    this.style.boxShadow = '0 0 15px rgba(0,0,0,0.2)';
+                    setTimeout(() => {
+                        this.style.boxShadow = '0 0 10px rgba(0,0,0,0.1)';
+                    }, 300);
+                });
+            }
+        }
+        
+        // 查看原始扫描功能
+        function showOriginalScan() {
+            showInternalAlert(
+                '查看原始扫描', 
+                '原始高分辨率扫描文件为TIFF格式，大小约15MB。\n\n如需查看，请联系档案管理员获取权限。'
+            );
+        }
+        
+        // 导出PDF功能（模拟）
+        function exportToPDF() {
+            showInternalAlert(
+                'PDF导出功能', 
+                '正在生成剪报PDF文件...\n\n由于剪报图像分辨率较高，生成可能需要几分钟时间。\n\n完成后将自动下载。'
+            );
+            
+            // 模拟处理延迟
+            setTimeout(() => {
+                showInternalAlert(
+                    'PDF导出失败'
+                    /* , 
+                    '剪报PDF文件已生成并开始下载。\n\n文件名：深南日报_1985-08-12_第3版.pdf\n文件大小：约3.2MB' */
+                );
+            }, 2000);
+        }
+        
+        // 窗口调整大小时重新检查
+        window.addEventListener('resize', checkContentWidth);
+    </script>
+<script src="logo-return.js"></script>
+</body>
+</html>

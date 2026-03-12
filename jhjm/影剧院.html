@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>南华影剧院 </title>
+    <style>
+        /* 整体复古97风格 —— 粗像素、深蓝幕布、亮绿/黄字、闪烁、灰边框 */
+        body {
+            background: #000000; 
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Courier New', Courier, '宋体', monospace;
+            box-sizing: border-box;
+        }
+        .cinema-box {
+            max-width: 860px;
+            width: 100%;
+            background: #0c2a4a; /* 深靛蓝，老式影院幕布感 */
+            border: 6px solid #b58a4d; /* 木纹黄铜色 */
+            padding: 20px 20px 30px;
+            box-shadow: 10px 10px 0 #4d3e2b;
+            /* 增加老电视扫描线效果 */
+            background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.2) 0px, rgba(0,255,0,0.03) 2px, transparent 3px, transparent 5px);
+        }
+
+        /* 老式霓虹灯招牌 - 南华影剧院 */
+        .marquee {
+            text-align: center;
+            background: #720e0e;
+            color: #ffd966;
+            padding: 10px 0 6px;
+            border: 3px outset #b87c3a;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-weight: bold;
+            font-size: 28px;
+            text-shadow: 0 0 5px #ffb347, 0 0 12px #ffd700;
+            box-shadow: inset 0 -2px 0 #4a2c0e, 0 5px 0 #2f1e0a;
+            font-family: 'Courier New', '宋体', monospace;
+            word-break: keep-all;
+        }
+        .marquee span {
+            display: inline-block;
+            background: #00000066;
+            padding: 0 15px;
+            border-radius: 30px;
+        }
+
+        /* 屏幕 */
+        .screen {
+            background: #7f8c8d;
+            background: linear-gradient(145deg, #bdc3c7, #7f8c8d);
+            text-align: center;
+            padding: 12px 0;
+            margin: 0 10px 20px 10px;
+            border: 2px solid #ecf0f1;
+            color: #1e2b3a;
+            font-weight: bold;
+            font-size: 24px;
+            letter-spacing: 8px;
+            box-shadow: inset -2px -2px 0 #3a3f44, inset 2px 2px 0 #f0f4f5;
+            text-transform: uppercase;
+            border-radius: 40% 40% 10px 10px;
+            font-family: 'Courier New', monospace;
+            transform: perspective(400px) rotateX(2deg);
+        }
+
+        /* 座位区网格 */
+        .seat-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: #1d3a5c;
+            padding: 25px 15px;
+            border: 4px inset #a27752;
+            margin-bottom: 30px;
+            box-shadow: inset 0 0 0 2px #2f4f2f, 0 6px 0 #0f1f2f;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* 座位 ———— 复古显像管风格 */
+        .seat {
+            width: 48px;
+            height: 48px;
+            background: #3c3f4d;
+            border: 3px outset #787878;
+            color: #d4d4aa;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: -2px -2px 0 #1e1e1e, 2px 2px 0 #a1a1a1;
+            font-family: 'Courier New', '宋体', monospace;
+            transition: 0.05s linear;
+            text-shadow: 0 0 5px currentColor;
+            border-radius: 0;
+            user-select: none;
+        }
+        .seat:hover {
+            background: #5e6b5e;
+            border-color: #b8b86e;
+            color: #f9f9b2;
+            box-shadow: -2px -2px 0 #2b2b2b, 2px 2px 0 #dbdb79, 0 0 20px #ffd966;
+        }
+
+        /* 已售出/正确入座后状态：不可选，暗红 */
+        .seat.sold {
+            background: #4d2626;
+            border: 3px inset #4f3b2c;
+            color: #adadad;
+            text-shadow: none;
+            box-shadow: inset -2px -2px 0 #201f1f, inset 2px 2px 0 #644d4d;
+            cursor: not-allowed;
+            pointer-events: none;
+            font-size: 20px;
+            line-height: 1;
+        }
+        
+        /* 微小反馈：已正确点击但尚未通关的座位（临时标记） */
+        .seat.correct-temp {
+            background: #7d6b3c;  /* 暗金色 */
+            border: 3px solid #ffb347;
+            color: #fff1b8;
+            text-shadow: 0 0 8px #ffd700;
+            box-shadow: 0 0 10px #ffb347, -2px -2px 0 #4d3e2b, 2px 2px 0 #c9ae70;
+            /* 保留指针事件，可再次点击（但内部会忽略重复） */
+        }
+
+        /* 97年代票根 */
+        .ticket-stub {
+            background: #e8e2c0;
+            border: 5px double #4a2e1e;
+            padding: 12px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 20px;
+            font-weight: bold;
+            color: #251e12;
+            text-transform: uppercase;
+            border-radius: 0 30px 0 30px;
+            box-shadow: 4px 6px 0 #2d1b0d;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #f5eac1 0%, #d4c59e 100%);
+            font-family: 'Courier New', '宋体', monospace;
+        }
+        .ticket-stub .ticket-label {
+            background: #9e2b2b;
+            color: #f9e281;
+            padding: 5px 15px;
+            border-radius: 20px 0 20px 0;
+            letter-spacing: 2px;
+            border: 2px solid #b68b40;
+            font-size: 22px;
+        }
+        .ticket-stub .seat-code {
+            background: #20281c;
+            color: #b7f76b;
+            padding: 8px 25px;
+            font-family: 'Courier New', monospace;
+            font-size: 28px;
+            border: 3px dashed #a77c3a;
+            letter-spacing: 2px;
+            box-shadow: inset 0 -2px 0 #6f874f;
+            text-shadow: 0 0 8px #71c971;
+        }
+
+        /* 按钮 粗糙 灰阶 */
+        .button-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            margin: 15px 0 5px;
+        }
+        .btn {
+            background: #a5acb0;
+            border: 5px outset #ececec;
+            color: #121212;
+            font-size: 28px;
+            font-weight: bold;
+            padding: 12px 25px;
+            cursor: pointer;
+            font-family: 'Courier New', '宋体', monospace;
+            text-transform: uppercase;
+            box-shadow: -3px -3px 0 #3e3e3e, 3px 3px 0 #ffffff;
+            transition: 0.04s linear;
+            line-height: 1;
+            letter-spacing: 2px;
+        }
+        .btn:active {
+            border: 5px inset #6d6d6d;
+            background: #767e84;
+            box-shadow: inset -3px -3px 0 #3b3b3b, inset 3px 3px 0 #b1b1b1;
+            transform: translate(2px, 2px);
+        }
+        .btn.reset-btn {
+            background: #9c6b3f;
+            color: #ffe3a4;
+        }
+
+        /* 入场提示器 */
+        .message-area {
+            background: #212f1f;
+            color: #b9f48b;
+            padding: 12px;
+            font-size: 24px;
+            border: 4px ridge #7f6b42;
+            text-align: center;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 8px #30ff30;
+            letter-spacing: 2px;
+            word-break: break-word;
+        }
+        .message-area span.blink {
+            animation: textBlink 1.2s step-end infinite;
+            background: #000;
+            padding: 0 5px;
+        }
+        @keyframes textBlink {
+            0%, 100% { color: #f3ffb6; background: #002a00; }
+            50% { color: #788b48; background: #0d2b0d; }
+        }
+
+        /* 复古进度条 */
+        .progress-container {
+            margin: 20px 0 10px;
+            background: #221c0f;
+            border: 4px ridge #ad8b5f;
+            padding: 10px;
+            display: none;
+        }
+        .progress-label {
+            color: #f0e68c;
+            font-size: 22px;
+            text-align: center;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        .progress-bar-bg {
+            background: #2f412f;
+            height: 28px;
+            border: 3px inset #624c2e;
+            padding: 3px;
+        }
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: repeating-linear-gradient(90deg, #7cfc00, #32cd32 10px, #228b22 15px);
+            box-shadow: 0 0 12px #00ff80;
+            transition: width 0.2s linear;
+        }
+        .progress-percent {
+            color: #f4f0b1;
+            font-size: 24px;
+            text-align: right;
+            margin-top: 5px;
+            text-shadow: 0 0 6px #15ff15;
+        }
+
+        footer {
+            color: #8b7f66;
+            text-align: center;
+            margin-top: 15px;
+            border-top: 2px dotted #6e5b42;
+            padding-top: 8px;
+            font-size: 18px;
+        }
+        a {
+            color: #f0e09b;
+            text-decoration: none;
+            background: #351f0e;
+            padding: 2px 12px;
+            border: 2px solid #9b8558;
+            font-weight: bold;
+        }
+        a:hover {
+            background: #53462b;
+            color: #f9f1b6;
+        }
+
+        /* 老式弹窗 (彩蛋专用柔光版) */
+        .old-alert {
+            background: #000;
+            color: #ffdab9;
+            border: 6px double #f4c542;
+            padding: 15px 25px;
+            font-size: 28px;
+            text-align: center;
+            position: fixed;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 999;
+            font-family: 'Courier New', monospace;
+            box-shadow: 10px 10px 0 #5a3e2b, 0 0 30px #ffb347;
+            background: #2a1f0e;
+            border-radius: 0;
+            display: none;
+        }
+        .old-alert button {
+            background: #b88a4b;
+            border: 4px outset #e8c27a;
+            color: #1c1207;
+            font-size: 30px;
+            padding: 8px 35px;
+            margin-top: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 0 15px #ffd27f;
+        }
+
+        /* 错误弹窗保留原来样式，新定义一个彩蛋专用 */
+        #errorAlert {
+            border-color: #ff6b6b;
+            background: #4d1e1e;
+        }
+        /* 彩蛋提示用特殊id */
+        #eggAlert {
+            border-color: #ffb3b3;
+            background: #3e2720;
+            color: #fbe9c3;
+            box-shadow: 10px 10px 0 #724e3a, 0 0 40px #ffaf7a;
+        }
+    </style>
+</head>
+<body>
+    <!-- 错误弹窗 (原来的) -->
+    <div id="errorAlert" class="old-alert">
+        <div>⚠️ 座位错误 ⚠️</div>
+        <div style="font-size: 22px; margin: 15px 0;">你被赶出了南华影剧院</div>
+        <button id="closeAlertBtn">惨</button>
+    </div>
+
+    <!-- 新增彩蛋专用弹窗 -->
+    <div id="eggAlert" class="old-alert">
+        <div>✨ 彩 蛋 时 刻 ✨</div>
+        <div id="eggMessage" style="font-size: 26px; margin: 15px 0;">沉鱼落雁 闭月羞花</div>
+        <button id="closeEggBtn">妙啊</button>
+    </div>
+
+<div class="cinema-box">
+    <div class="marquee">
+        <span>🎞️ 南 华 影 剧 院 🎞️</span>
+    </div>
+
+    <div class="screen">
+        ★ 幕 布 ★
+    </div>
+
+    <!-- 座位表 9行 x 10列 -->
+    <div class="seat-grid" id="seatGrid"></div>
+
+    <!-- 票根区现在会显示彩蛋位提示 -->
+   <!--  <div class="ticket-stub">
+        <span class="ticket-label">🎟️ 神 秘 嘉 宾</span>
+        <span class="seat-code" id="ticketDisplay">？排？ ？排？ ？排？</span>
+    </div> 不要改我注释掉的 笨蛋ai-->
+
+    <!-- 按钮区：只剩重置按钮 -->
+    <div class="button-bar">
+        <div class="btn reset-btn" id="resetBtn">↺ 重 置</div>
+    </div>
+
+    <!-- 复古进度条 (初始隐藏) -->
+    <div id="progressContainer" class="progress-container">
+        <div class="progress-label">🎬 放 映 中</div>
+        <div class="progress-bar-bg">
+            <div id="progressFill" class="progress-fill"></div>
+        </div>
+        <div id="progressPercent" class="progress-percent">0%</div>
+    </div>
+
+    <!-- 信息显示屏 -->
+    <div class="message-area" id="messageDisplay">
+        请对号入座: 3排5, 3排6, 4排3
+    </div>
+
+    <footer>
+        <a href="#" id="jumpLink">🎬 观 影 结 束 后 跳 转  </a>
+    </footer>
+</div>
+
+<script>
+    (function() {
+        const ROWS = 9;
+        const COLS = 10;
+
+        const requiredSeats = [
+            { row: 3, col: 5 },
+            { row: 3, col: 6 },
+            { row: 4, col: 3 }
+        ];
+
+        const eggSeats = new Map([
+            ['7,7', '✨ 这个位置上坐了一个沉鱼落雁、闭月羞花之人，全场都看呆了。'],
+            ['3,4', '🧔 这坐了一个手里拿着大葱的大肚油腻男。'],
+            ['6,2', ' 这个人一直念叨着什么大纲。。。'],
+            ['4,4', ' 一个银边眼镜男正谄媚的朝着旁边的女生笑。。。'],
+            ['1,1', ' 这个女生似乎有点眼熟'],
+            ['1,8', ' 坐在前排偏角落的女生头上顶着好大一个🎀'],
+            ['3,7', '🌸 如花正在对你回眸一笑百媚生。']
+        ]);
+
+        const requiredSet = new Set(requiredSeats.map(s => `${s.row},${s.col}`));
+
+        let seatMap = [];
+        let correctlyClicked = new Set();
+
+        const seatGrid = document.getElementById('seatGrid');
+        // ticketDisplay 元素被注释掉了，所以这里需要检查
+        const ticketDisplay = document.getElementById('ticketDisplay');
+        const messageEl = document.getElementById('messageDisplay');
+        const resetBtn = document.getElementById('resetBtn');
+        const jumpLink = document.getElementById('jumpLink');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const progressPercent = document.getElementById('progressPercent');
+
+        const errorAlert = document.getElementById('errorAlert');
+        const closeAlertBtn = document.getElementById('closeAlertBtn');
+        const eggAlert = document.getElementById('eggAlert');
+        const eggMessage = document.getElementById('eggMessage');
+        const closeEggBtn = document.getElementById('closeEggBtn');
+
+        function initSeatMap() {
+            seatMap = Array(ROWS).fill().map(() => Array(COLS).fill(false));
+        }
+        initSeatMap();
+
+        function resetAttempt() {
+            correctlyClicked.clear();
+            initSeatMap();
+            messageEl.innerHTML = '请同时找对三个座位: ？排？, ？排？, 4排3';
+            progressContainer.style.display = 'none';
+            progressFill.style.width = '0%';
+            progressPercent.textContent = '0%';
+            renderSeats();
+        }
+
+        function renderSeats() {
+            seatGrid.innerHTML = '';
+
+            for (let r = 0; r < ROWS; r++) {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'row';
+                for (let c = 0; c < COLS; c++) {
+                    const seatDiv = document.createElement('div');
+                    seatDiv.className = 'seat';
+                    const rowNum = r + 1;
+                    const colNum = c + 1;
+                    const seatKey = `${rowNum},${colNum}`;
+                    
+                    if (seatMap[r][c] === true) {
+                        seatDiv.classList.add('sold');
+                        seatDiv.textContent = '🎫';
+                    } else {
+                        seatDiv.textContent = `${rowNum}-${colNum}`;
+                        seatDiv.addEventListener('click', onSeatClick);
+                        
+                        if (requiredSet.has(seatKey) && correctlyClicked.has(seatKey)) {
+                            seatDiv.classList.add('correct-temp');
+                            seatDiv.textContent = '✓';
+                        }
+                    }
+
+                    seatDiv.dataset.row = rowNum;
+                    seatDiv.dataset.col = colNum;
+
+                    rowDiv.appendChild(seatDiv);
+                }
+                seatGrid.appendChild(rowDiv);
+            }
+            
+            // 只有在ticketDisplay存在时才设置textContent
+            if (ticketDisplay) {
+                ticketDisplay.textContent = '7排7 3排4 3排7 4排4 1排8 1排1 6排2';
+            }
+        }
+
+        function showEggMessage(text) {
+            eggMessage.textContent = text;
+            eggAlert.style.display = 'block';
+        }
+
+        function onSeatClick(e) {
+            const seat = e.currentTarget;
+            const row = parseInt(seat.dataset.row);
+            const col = parseInt(seat.dataset.col);
+            const r = row - 1;
+            const c = col - 1;
+
+            if (seatMap[r][c] === true) return;
+
+            const seatKey = `${row},${col}`;
+
+            if (eggSeats.has(seatKey)) {
+                showEggMessage(eggSeats.get(seatKey));
+                return;
+            }
+
+            if (!requiredSet.has(seatKey)) {
+                showErrorAlert();
+                correctlyClicked.clear();
+                messageEl.innerHTML = '🚫 点错座位，被赶出影院 ... 请重新尝试';
+                renderSeats();
+                return;
+            }
+
+            if (correctlyClicked.has(seatKey)) {
+                return;
+            }
+
+            correctlyClicked.add(seatKey);
+            renderSeats();
+
+            if (correctlyClicked.size === 3) {
+                requiredSeats.forEach(s => {
+                    seatMap[s.row-1][s.col-1] = true;
+                });
+
+                correctlyClicked.clear();
+                renderSeats();
+                messageEl.innerHTML = '✅ 三座全对！电影开始……';
+                startProgressAndJump();
+            }
+        }
+
+        function showErrorAlert() {
+            errorAlert.style.display = 'block';
+        }
+
+        function startProgressAndJump() {
+            progressContainer.style.display = 'block';
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 2;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    progressFill.style.width = '100%';
+                    progressPercent.textContent = '100%';
+                    setTimeout(() => {
+                        window.location.href = 'sujinriji-chicu.html';
+                    }, 400);
+                }
+                progressFill.style.width = progress + '%';
+                progressPercent.textContent = progress + '%';
+            }, 100);
+        }
+
+        resetBtn.addEventListener('click', () => {
+            resetAttempt();
+        });
+
+        renderSeats();
+
+        closeAlertBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            errorAlert.style.display = 'none';
+        });
+
+        closeEggBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            eggAlert.style.display = 'none';
+        });
+
+        // 点击弹窗背景不关闭
+        errorAlert.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+        
+        eggAlert.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        jumpLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = 'sujinriji-chicu.html';
+        });
+
+        messageEl.innerHTML = '请同时找对三个座位: ？排？, ？排？, 4排3';
+    })();
+</script>
+ <!-- 外部JS文件引用 -->
+    <script src="./search-engine.js"></script>
+    <script src="./storage.js"></script>
+    <script src="./navigation.js"></script>
+    <script src="./visitor.js"></script>
+    <script src="./search-ass.js"></script>
+<script src="./return.js"></script>
+ <script src="./jinzhi.js"></script>
+</body>
+</html>

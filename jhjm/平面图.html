@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>锦华纺织厂四号成品仓库搜索系统</title>
+
+<style>
+
+body{
+background:#c0c0c0;
+font-family: "SimSun","宋体",monospace;
+}
+
+.title{
+text-align:center;
+font-size:28px;
+font-weight:bold;
+color:#000080;
+margin-top:20px;
+}
+
+.container{
+width:700px;
+margin:auto;
+background:#e0e0e0;
+border:3px ridge #999;
+padding:15px;
+}
+
+.map{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:8px;
+margin-top:15px;
+}
+
+.area{
+background:#dcdcdc;
+border:2px outset #999;
+padding:30px 10px;
+text-align:center;
+cursor:pointer;
+font-size:14px;
+}
+
+.area:hover{
+background:#f5f5f5;
+}
+
+.result{
+margin-top:20px;
+background:#fff;
+border:2px inset #999;
+padding:12px;
+min-height:80px;
+font-size:14px;
+}
+
+.bb{
+color:#cc0000;
+font-weight:900;
+font-size:16px;
+}
+
+.footer{
+text-align:center;
+font-size:12px;
+margin-top:20px;
+color:#444;
+}
+
+/* 搜索栏相关样式 */
+.header-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 20px;
+}
+
+.logo {
+    width: 100px; /* 更小的Logo */
+    height: 100px;
+}
+
+.search-container {
+    flex: 0 0 50%;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border: 1px solid #dfe1e5;
+    border-radius: 24px;
+    padding: 12px 20px;
+    box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+}
+
+.search-bar:hover {
+    box-shadow: 0 1px 8px rgba(32,33,36,0.35);
+}
+
+.search-bar:focus-within {
+    box-shadow: 0 1px 8px rgba(32,33,36,0.45);
+}
+
+.search-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    color: #9aa0a6;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    background: transparent;
+}
+
+.search-button {
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.search-button:hover {
+    background-color: #2b6fd8;
+}
+
+/* 响应式调整 */
+@media (max-width: 900px) {
+    .header-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .search-container {
+        width: 80%;
+    }
+}
+</style>
+
+<script>
+
+function search(place){
+
+var result=document.getElementById("result");
+
+var text="";
+
+switch(place){
+
+case "cloth":
+
+text="这里堆满了成品棉布。布料标签显示1997年6月批次，没有发现异常。";
+
+break;
+
+case "forklift":
+
+text="一辆旧叉车停在角落，钥匙不见了，油箱几乎是空的。";
+
+break;
+
+case "packing":
+
+text="地上有一些打包绳和纸箱。箱子上写着：出口订单 A-17。";
+
+break;
+
+case "rack":
+
+text="破旧货架上放着一些废弃纸袋，看起来很久没人动过。";
+
+break;
+
+case "door":
+
+text="仓库铁门有些生锈，锁看起来被人打开过。";
+
+break;
+
+case "desk":
+
+text="你在角落发现一台 <span class='bb'>BB机</span>。<br>屏幕上显示一串数字：<b>36578</b>";
+
+break;
+
+default:
+
+text="这里没有发现特别的东西。";
+
+}
+
+result.innerHTML=text;
+
+}
+
+</script>
+
+</head>
+
+<body>
+
+     <!--  Logo和搜索栏 -->
+    <div class="header-container">
+        <img src="search.png" alt=" " class="logo">
+        <div class="search-container">
+            <div class="search-bar">
+                <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索其他关键词...">
+                <button class="search-button" id="searchButton">搜索</button>
+            </div>
+        </div>
+    </div>
+
+<div class="title">
+锦华纺织厂四号成品仓库平面图搜索
+</div>
+
+<div class="container">
+
+<div style="font-size:14px;">
+点击仓库区域进行搜索
+</div>
+
+<div class="map">
+
+<div class="area" onclick="search('cloth')">
+成品布料区
+</div>
+
+<div class="area" onclick="search('packing')">
+打包区
+</div>
+
+<div class="area" onclick="search('forklift')">
+叉车停放区
+</div>
+
+<div class="area" onclick="search('rack')">
+破损货架
+</div>
+
+<div class="area" onclick="search('desk')">
+仓库角落
+</div>
+
+<div class="area" onclick="search('door')">
+仓库入口
+</div>
+
+</div>
+
+<div id="result" class="result">
+这里什么都没有...
+</div>
+
+</div>
+
+<div class="footer">
+1997 JinHua Textile Factory Internal Warehouse System
+</div>
+ <!-- 外部JS文件引用 -->
+    <script src="./search-engine.js"></script>
+    <script src="./storage.js"></script>
+    <script src="./navigation.js"></script>
+    <script src="./visitor.js"></script>
+    <script src="./search-ass.js"></script>
+<script src="./logo-return.js"></script>
+</body>
+</html>

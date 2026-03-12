@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1997 锦华纺织厂 · 柯君兰工牌</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #a79e8f;  /* 陈旧墙面底色 */
+            background-image: 
+                radial-gradient(circle at 10% 30%, rgba(140, 120, 90, 0.15) 2px, transparent 2px),
+                radial-gradient(circle at 90% 70%, rgba(100, 80, 60, 0.12) 1px, transparent 2px),
+                linear-gradient(145deg, #b8ae9a 0%, #8d8273 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', monospace;
+            padding: 16px;
+            margin: 0;
+            /* 模拟老纺织厂空气里的飞絮斑点 */
+            position: relative;
+        }
+        body::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(45deg, rgba(255,255,240,0.02) 0px, rgba(255,255,240,0.02) 4px, rgba(0,0,0,0.01) 4px, rgba(0,0,0,0.01) 8px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* 工牌主体 —— 老牛皮纸 laminate 质感 */
+        .badge {
+            position: relative;
+            width: 360px;
+            max-width: 90vw;
+            background: #ebe1cf;  /* 泛黄底 */
+            background: linear-gradient(165deg, #d9cdb4 0%, #f2e8d5 65%, #cabb9f 100%);
+            border: 12px solid #3f3a30;  /* 深色仿皮革/塑料封边 */
+            border-radius: 28px 28px 28px 28px;
+            box-shadow: 
+                0 20px 25px -10px rgba(0,0,0,0.7),
+                0 0 0 2px #6a5e4e inset,          /* 内层磨损线 */
+                inset 0 -8px 12px rgba(0,0,0,0.2),
+                inset 0 8px 10px rgba(255, 235, 200, 0.6);
+            padding: 24px 18px 22px 18px;
+            transition: all 0.1s ease;
+            z-index: 10;
+            /* 旧塑料划痕 */
+            &::after {
+                content: "";
+                position: absolute;
+                top: 8px; left: 12px; right: 12px; bottom: 8px;
+                border-radius: 20px;
+                background: repeating-linear-gradient(45deg, 
+                    transparent, 
+                    transparent 6px, 
+                    rgba(90, 70, 40, 0.05) 6px, 
+                    rgba(90, 70, 40, 0.05) 12px);
+                pointer-events: none;
+            }
+        }
+
+        /* 顶部厂名 + 时代标语 */
+        .factory-header {
+            text-align: center;
+            border-bottom: 3px double #876b4f;
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        .factory-name {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: #2a241c;
+            text-shadow: 2px 2px 0 #b8956b, 4px 4px 0 rgba(0,0,0,0.1);
+            line-height: 1.1;
+        }
+        .slogan {
+            font-size: 0.68rem;
+            color: #4f3f2e;
+            background: #dbcbb4;
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 30px;
+            margin-top: 8px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border: 1px solid #9b7f61;
+            box-shadow: inset 0 1px 2px white;
+        }
+
+        /* 员工照片区域（手工风格） */
+        .photo-section {
+            display: flex;
+            justify-content: center;
+            margin: 6px 0 16px;
+        }
+        .photo-placeholder {
+            width: 130px;
+            height: 150px;
+            background: #b2a386;
+            background: linear-gradient(135deg, #998e78 10%, #cbbca4 80%);
+            border: 6px solid #4e443a;
+            border-radius: 10px 10px 18px 10px;  /* 仿老相纸圆角 */
+            box-shadow: 
+                0 2px 6px black,
+                inset -4px -4px 8px #4d3e2b,
+                inset 3px 3px 10px #efdbb8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transform: rotate(-0.5deg); /* 手工贴歪一点 */
+        }
+        /* 模拟黑白证件照轮廓 */
+        .photo-placeholder::before {
+            content: "";
+            width: 80px;
+            height: 100px;
+            background: #3f3a30;
+            background: radial-gradient(circle at 30% 30%, #6a5c46, #2a241b);
+            border-radius: 4px;
+            border: 2px solid #644f39;
+            box-shadow: inset 0 0 0 2px #d2b48c, 0 2px 4px black;
+            margin-bottom: 8px;
+        }
+        .photo-placeholder::after {
+            content: "◊ 柯君兰 ◊";
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #f2eedb;
+            text-shadow: 1px 1px 0 #332e26;
+            background: #5b4b36;
+            padding: 2px 12px;
+            border-radius: 20px;
+            letter-spacing: 2px;
+            border: 1px solid #ab8f6c;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* 职工信息主体 */
+        .info-panel {
+            background: #e4d5be;
+            background: linear-gradient(to bottom, #f0e4cf, #d6c5ab);
+            border: 3px solid #7b694f;
+            border-radius: 18px 8px 18px 8px;
+            padding: 18px 16px 14px;
+            margin: 10px 0 18px;
+            box-shadow: inset 0 2px 5px #bbaa90, 0 6px 8px rgba(0,0,0,0.3);
+        }
+
+        .info-row {
+            display: flex;
+            align-items: baseline;
+            border-bottom: 1px dashed #9f8a6f;
+            padding: 6px 0;
+            font-size: 1.3rem;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            width: 100px;
+            font-weight: 800;
+            color: #3d2f1f;
+            text-transform: uppercase;
+            font-size: 1.0rem;
+            letter-spacing: 1.5px;
+            text-shadow: 0 1px 1px #cfa776;
+        }
+        .info-value {
+            flex: 1;
+            font-weight: 700;
+            color: #1c140e;
+            font-family: 'Courier New', 'Lucida Console', monospace;
+            font-size: 1.35rem;
+            letter-spacing: 0.5px;
+            background: #dacbb2;
+            padding: 0 8px;
+            border-radius: 15px;
+            border: 1px solid #a58c6d;
+            box-shadow: inset 0 1px 3px #fff0dd, 1px 1px 0 #3b3228;
+            line-height: 1.6;
+        }
+        /* 财务处特殊标记 */
+        .dept-tag {
+            background: #8b6f4c;
+            color: #ffeecd;
+            font-size: 0.95rem;
+            padding: 4px 12px;
+            border-radius: 40px;
+            display: inline-block;
+            margin: 6px 0 2px;
+            border: 1px solid #eec89e;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* 编号/年份区域 */
+        .footer-badge {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            background: #392f26;
+            color: #bc9f7c;
+            padding: 10px 14px;
+            border-radius: 50px 10px 50px 10px;
+            border: 3px solid #6f5d47;
+            box-shadow: inset 0 -2px 3px #5b4a36, 0 2px 6px black;
+            margin-top: 12px;
+        }
+        .emp-id {
+            font-size: 1.4rem;
+            font-weight: 800;
+            font-family: 'Courier New', monospace;
+            color: #e7cfae;
+            background: #1f1a14;
+            padding: 2px 10px 2px 16px;
+            border-radius: 30px;
+            border-left: 6px solid #a88158;
+            letter-spacing: 3px;
+        }
+        .year {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #efdbb8;
+            text-shadow: 3px 3px 0 #4d3e2b;
+            background: #4c3d2c;
+            padding: 4px 10px;
+            border-radius: 40px 0 40px 0;
+            border: 1px solid #bfa27e;
+        }
+
+        /* 下方仿旧钢印/水印 */
+        .watermark {
+            text-align: center;
+            margin-top: 14px;
+            font-size: 0.6rem;
+            color: #8f7b60;
+            font-weight: 600;
+            text-transform: uppercase;
+            border-top: 1px dotted #ad977b;
+            padding-top: 8px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .watermark span {
+            background: rgba(130, 100, 70, 0.3);
+            padding: 2px 10px;
+            border-radius: 30px;
+            backdrop-filter: blur(1px);
+        }
+
+        /* 手工加一些磨损 */
+        .badge .scuff {
+            position: absolute;
+            background: rgba(80,60,30,0.05);
+            width: 60px;
+            height: 20px;
+            transform: rotate(-10deg);
+            border-radius: 50%;
+            filter: blur(3px);
+            bottom: 40px;
+            right: 30px;
+            z-index: 20;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="badge">
+        <!-- 随机划痕 (装饰) -->
+        <div class="scuff" style="top: 18px; left: 45px; width: 90px; height: 12px; background: rgba(255,250,210,0.2); filter: blur(4px);"></div>
+        <div class="scuff" style="bottom: 85px; left: 20px; width: 40px; height: 25px; background: rgba(40,30,10,0.1);"></div>
+
+        <!-- 厂名 HEADER -->
+        <div class="factory-header">
+            <div class="factory-name">锦华纺织厂</div>
+           <!--  <div class="slogan">✦ 经编纬织 · 奉献纺织 ✦</div> -->
+        </div>
+
+        <!-- 照片 + 名字突出 -->
+        <div class="photo-section">
+            <div class="photo-placeholder"></div>
+        </div>
+
+        <!-- 部门及姓名核心信息 -->
+        <div class="info-panel">
+            <div class="info-row">
+                <span class="info-label">姓名</span>
+                <span class="info-value">柯君兰</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">车间</span>
+                <span class="info-value">织造车间</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">职位</span>
+                <span class="info-value">挡车工</span>
+            </div>
+            <!-- 财务处专属标记 -->
+            <!-- <div style="text-align: right; margin-top: 6px;">
+                <span class="dept-tag">⚬ 成本结算 ⚬</span>
+            </div> -->
+        </div>
+
+        <!-- 工号 + 年份（1997） -->
+        <div class="footer-badge">
+            <span class="emp-id">JHFZ-970203</span>
+            <span class="year">1997</span>
+        </div>
+
+        <!-- 下方小字仿旧厂牌细节 -->
+        <!-- <div class="watermark">
+            <span>锦华·专用</span>
+            <span>97' 核发</span>
+            <span>钢印 J.H.</span>
+        </div> -->
+
+        <!-- 再补两个老式磨损点 -->
+        <div style="position: absolute; bottom: 18px; left: 28px; width: 50px; height: 15px; background: rgba(170,140,100,0.1); border-radius: 50%; filter: blur(5px); z-index: 5;"></div>
+        <div style="position: absolute; top: 80px; right: 22px; width: 30px; height: 30px; background: rgba(210,180,130,0.08); border-radius: 50%; filter: blur(8px);"></div>
+
+        <!-- 手写签名风格线 (模拟圆珠笔迹) -->
+        <!-- <div style="font-family: 'Brush Script MT', cursive; position: absolute; bottom: 52px; right: 30px; color: #3a3127; opacity: 0.25; font-size: 1.2rem; transform: rotate(-5deg);">柯君兰</div> -->
+    </div>
+
+    <!-- 说明: 纯粹复古工牌设计，所有元素指向1997锦华纺织厂财务处柯君岚 -->
+</body>
+</html>

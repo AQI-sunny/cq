@@ -4,7 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>锦华纺织厂 - 万企查企业档案</title>
-    <link rel="icon" type="image/jpeg" href="https://sylvie-seven-cq.top/gallery/search.png">
+    <link rel="icon" type="image/jpeg" href="search.png">
+    
+    <!-- 外部CSS文件 -->
+    <link rel="stylesheet" href="search-assistant.css">
+    <link rel="stylesheet" href="visitor.css">
+    <link rel="stylesheet" href="common.css">
+    
+    <!-- 保留原有的内部样式 -->
     <style>
         * {
             margin: 0;
@@ -32,12 +39,12 @@
         }
 
         .logo {
-            width: 50px;
-            height: 50px;
+            width: 100px;
+            height: 100px;
         }
 
         .search-container {
-            flex: 0 0 33.33%;
+            flex: 0 0 50%;
             min-width: 300px;
         }
 
@@ -473,13 +480,13 @@
 <body>
     <!-- 顶部搜索栏 -->
     <div class="header-container">
-        <img src="https://sylvie-seven-cq.top/gallery/search.png" alt="万企查" class="logo">
+        <img src="search.png" alt="万企查" class="logo">
         <div class="search-container">
             <div class="search-bar">
                 <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
                 </svg>
-                <input type="text" class="search-input" id="searchInput" placeholder="搜索其他企业...">
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索其他关键词...">
                 <button class="search-button" id="searchButton">搜索</button>
             </div>
         </div>
@@ -645,22 +652,39 @@
         </div>
     </div>
     
+    <!-- 外部JS文件 -->
+    <script src="search-engine.js"></script>
+    <script src="storage.js"></script>
+    <script src="navigation.js"></script>
+    <script src="visitor.js"></script>
+    <script src="search-ass.js"></script>
+    <script src="./logo-return.js"></script>
+    
+    <!-- 只保留最基本的脚本，确保搜索功能调用外部JS -->
     <script>
-        // 搜索功能
-        document.getElementById('searchButton').addEventListener('click', function() {
-            const searchTerm = document.getElementById('searchInput').value.trim();
-            if (searchTerm) {
-                alert(`搜索: ${searchTerm}\n此功能需要后端支持`);
-                // 实际应用中这里应该发送搜索请求
-            } else {
-                alert('请输入搜索内容');
-            }
-        });
-        
-        // 按回车键搜索
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('searchButton').click();
+        // 页面加载完成后，将搜索功能绑定到外部JS
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchButton = document.getElementById('searchButton');
+            const searchInput = document.getElementById('searchInput');
+            
+            // 检查外部搜索引擎是否可用
+            if (typeof window.performSearch !== 'undefined') {
+                // 如果外部搜索引擎可用，绑定到外部功能
+                searchButton.addEventListener('click', function() {
+                    const searchTerm = searchInput.value.trim();
+                    if (searchTerm) {
+                        window.performSearch(searchTerm);
+                    }
+                });
+                
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        const searchTerm = searchInput.value.trim();
+                        if (searchTerm) {
+                            window.performSearch(searchTerm);
+                        }
+                    }
+                });
             }
         });
     </script>

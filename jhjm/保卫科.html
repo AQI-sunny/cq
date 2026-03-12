@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 确保移动端正确缩放 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>保卫科出警记录</title>
+    <link rel="icon" type="image/jpeg" href="search.png">
+    <!-- 原有样式不动，针对手机微调（只增加移动端适配覆写，不删除任何原有规则） -->
+    <style>
+        /* 基础样式 (完全保留) */
+        body {
+            font-family: "宋体", "SimSun", serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #8B0000;
+            text-align: center;
+            font-size: 24px;
+            border-bottom: 2px solid #8B0000;
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            color: #8B0000;
+            font-size: 18px;
+            margin-top: 25px;
+            border-left: 5px solid #8B0000;
+            padding-left: 10px;
+        }
+        
+        .date {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .record-content {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .signature {
+            text-align: right;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .note {
+            background-color: #fffacd;
+            border: 1px dashed #ffa500;
+            padding: 10px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        /* 搜索栏相关样式 (完全保留) */
+        .header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+        }
+
+        .search-container {
+            flex: 0 0 50%;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            padding: 12px 20px;
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+        }
+
+        .search-bar:hover {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.35);
+        }
+
+        .search-bar:focus-within {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.45);
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            color: #9aa0a6;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: transparent;
+        }
+
+        .search-button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .search-button:hover {
+            background-color: #2b6fd8;
+        }
+
+        /* 原有响应式调整 (保留) */
+        @media (max-width: 900px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .search-container {
+                width: 80%;
+            }
+        }
+        
+        /* 2000年代风格元素 (保留) */
+        .marquee {
+            background-color: #8B0000;
+            color: white;
+            padding: 5px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .counter {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+            margin-top: 20px;
+        }
+        
+        hr {
+            border: 0;
+            height: 1px;
+            background: #ccc;
+            margin: 20px 0;
+        }
+
+        /* ---------- 手机端专用微调 (仅增强兼容，不改变原有结构) ---------- */
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                padding: 12px;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                box-sizing: border-box;
+            }
+            h1 {
+                font-size: 22px;
+                word-break: break-word;
+            }
+            h2 {
+                font-size: 17px;
+            }
+            .record-content {
+                padding: 12px;
+                word-wrap: break-word;
+                overflow-x: hidden;
+            }
+            /* 让搜索栏在超小屏更紧凑 */
+            .header-container {
+                gap: 10px;
+            }
+            .search-container {
+                width: 100%;
+                flex: none;
+            }
+            .search-bar {
+                padding: 8px 12px;
+            }
+            .search-button {
+                padding: 8px 12px;
+                font-size: 13px;
+                white-space: nowrap;
+            }
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+            /* 跑马灯避免溢出 */
+            .marquee marquee {
+                width: 100%;
+                font-size: 14px;
+            }
+            .note {
+                font-size: 13px;
+                padding: 8px;
+            }
+        }
+
+        /* 极端小屏 (小于400px) 优化 */
+        @media (max-width: 400px) {
+            .search-bar {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+            }
+            .search-input {
+                min-width: 160px;
+            }
+            .search-button {
+                margin-left: 0;
+            }
+        }
+    </style>
+
+    <!-- 用户指定的外部 CSS 文件 (保持原样不动) -->
+    <link rel="stylesheet" href="search-assistant.css">
+    <link rel="stylesheet" href="visitor.css">
+    <link rel="stylesheet" href="common.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部搜索栏 (结构完全不变) -->
+        <div class="header-container">
+            <img src="search.png" alt="网站Logo" class="logo">
+            <div class="search-container">
+                <div class="search-bar">
+                    <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                    </svg>
+                    <input type="text" class="search-input" placeholder="搜索其他内容...">
+                    <button class="search-button">搜索</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 滚动公告 (保留) -->
+        <div class="marquee">
+            <marquee behavior="scroll" direction="left">注意：本记录仅供内部参考，严禁外传！</marquee>
+        </div>
+        
+        <h1>保卫科出警记录</h1>
+        
+        <div class="date">记录日期：1997年5月-1997年6月</div>
+        
+        <!-- 以下所有记录内容、注释均原封不动 -->
+        <h2>1997年6月1日 夜班巡逻记录</h2>
+        <div class="record-content">
+            <p>时间：凌晨2:15</p>
+            <p>地点：厂区西侧废弃仓库附近</p>
+            <p>报告人：刘福根</p>
+            <p>记录内容：</p>
+            <p>今晚巡逻至西侧废弃仓库时，发现异常情况。在仓库后方约50米处，发现一团蓝绿色火焰在空中漂浮，高度约1.5米，直径约30厘米。火焰无声无息，移动轨迹不规则，忽明忽暗。</p>
+            <p>我试图靠近观察，但火焰迅速向远处移动，最终消失在一棵老槐树后。现场检查未发现任何燃烧痕迹或可疑物品。温度正常，无异味。</p>
+            <p>此现象持续约3分钟后消失。已拍照记录，但照片洗出后仅显示模糊光斑。</p>
+            <div class="signature">记录人：刘福根</div>
+        </div>
+        
+        <h2>1997年6月3日 夜班巡逻记录</h2>
+        <div class="record-content">
+            <p>时间：凌晨1:45</p>
+            <p>地点：厂区东侧围墙附近</p>
+            <p>报告人：刘福根</p>
+            <p>记录内容：</p>
+            <p>今晚再次发现类似现象。在东侧围墙附近巡逻时，看到两团蓝绿色火焰在围墙上方约2米处漂浮。火焰大小与前次相似，但移动速度更快，呈相互环绕状。</p>
+            <p>我立即通过对讲机呼叫值班室小王前来确认。小王到达时，火焰已消失。现场检查未发现异常。小王表示未看到任何异常现象。</p>
+            <p>此现象持续约2分钟。已向保卫科长汇报情况。</p>
+            <div class="signature">记录人：刘福根</div>
+        </div>
+        
+        <h2>1997年6月5日 夜班巡逻记录</h2>
+        <div class="record-content">
+            <p>时间：凌晨3:20</p>
+            <p>地点：厂区中心广场</p>
+            <p>报告人：刘福根、王丙</p>
+            <p>记录内容：</p>
+            <p>今晚与王丙一同巡逻时，在中心广场发现异常。广场中央出现多团蓝绿色火焰，数量约5-6个，排列成不规则圆形。火焰高度约1米，大小与前两次相似。</p>
+            <p>我们两人同时观察到这一现象。王丙试图用对讲机联系值班室时，对讲机出现强烈干扰声。当我们靠近时，火焰突然全部熄灭，现场未留下任何痕迹。</p>
+            <p>此现象持续约4分钟。已向保卫科长详细汇报，建议请专业人士调查。</p>
+            <div class="signature">记录人：刘福根、王丙</div>
+        </div>
+        
+       <!--  <h2>1997年6月20日 特别调查记录</h2>
+        <div class="record-content">
+            <p>时间：全天</p>
+            <p>地点：厂区各处</p>
+            <p>调查人：市科研所专家小组</p>
+            <p>记录内容：</p>
+            <p>应厂方请求，市科研所派出专家小组对厂区"鬼火"现象进行调查。小组对厂区土壤、水质、空气进行了采样分析，并对电磁环境进行了检测。</p>
+            <p>初步结论：</p>
+            <p>1. 厂区土壤中磷含量略高于正常水平，但不足以解释观察到的现象</p>
+            <p>2. 电磁环境正常，未发现异常辐射源</p>
+            <p>3. 空气质量正常，未检测到可燃气体</p>
+            <p>专家小组建议安装夜视监控设备，以便更详细记录现象。</p>
+            <div class="signature">记录人：保卫科 张民</div>
+        </div> -->
+        
+        <h2>1997年6月9日 夜班巡逻记录</h2>
+        <div class="record-content">
+            <p>时间：凌晨2:30</p>
+            <p>地点：四号仓库</p>
+            <p>报告人：刘福根</p>
+            <p>记录内容：</p>
+            <p>今晚安装的夜视监控捕捉到异常现象。在废弃仓库附近，监控录像显示一团蓝绿色光点在画面中移动，持续约2分30秒。</p>
+            <p>我巡逻至该区域时，亲眼目睹了类似现象。与以往不同，今晚的火焰似乎更加明亮，不远处还传来哭声。</p>
+            <p>当我试图用新配备的数码相机拍照时，有红影闪过后，相机突然失灵，再无法开机。返回值班室后，相机恢复正常。</p>
+            <p>此现象已被监控记录（录像编号：19970609-004）。</p>
+            <div class="signature">记录人：刘福根</div>
+        </div>
+
+        <!-- <h2>1997年6月13日 夜班巡逻记录</h2> <div class="record-content"> <p>时间：凌晨3:44</p> <p>地点：四号仓库及周边区域</p> <p>报告人：刘福根</p> <p>记录内容：</p> <p>今晚情况异常严重。自凌晨1:20起，四号仓库内的三台夜视监控频繁出现强烈干扰，画面多个时间段全部黑屏（详见录像编号：19970613-004至044）。</p> <p>我携带手电筒与备用对讲机前往查看。距离仓库约五十米时，清晰看见一红影不断闪现！同时，仓库内传出断断续续的哭声与低语声。</p> <p>我试图用数码相机拍摄，但刚举起相机，红影似乎增大了些，随后我手中的相机瞬间死机，手电筒灯泡爆裂，四周陷入黑暗。我立即用对讲机向值班室呼叫，但对讲机中只有刺耳的电流声，并隐约夹杂着女人的刺耳尖叫声。</p> <p>回到值班室后，所有设备恢复正常。 同时，值班室的电子钟从一直停留在4：44！</p> <p>此现象已严重威胁巡逻安全！太可怕了！我不干了！</p> <div class="signature">记录人：刘福根</div>   -->
+
+        
+        
+        <div class="note">
+            <p><strong>备注：</strong></p>
+            <p>1. 所有记录均基于当事人陈述，保卫科无法对现象真实性做出判断</p>
+            <p>2. 已建议相关人员接受心理评估，评估结果正常</p>
+            <p>3. 将继续观察并记录相关现象，如有新发现将及时上报</p>
+        </div>
+        
+        <hr>
+        
+       <!--  <div class="counter">
+            您是第 <span id="visitCount">8848</span> 位访问者
+        </div> -->
+    </div>
+ 
+    <!-- 用户指定的所有外部脚本 (完全按照顺序保留，路径不变) -->
+    
+    <script src="./search-engine.js"></script>
+    <script src="./storage.js"></script>
+    <script src="./navigation.js"></script>
+    <!--   <script src="visitor.js"></script> -->   <!-- 原样保留注释 -->
+    <!-- <script src="./search-ass.js"></script> -->
+    <script src="./logo-return.js"></script>
+ 
+ <!-- 紧急修复的搜索功能 - 绝对可用 -->
+<script>
+(function() {
+    'use strict';
+    
+    // 等待页面加载完成
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', fixSearchNow);
+    } else {
+        fixSearchNow();
+    }
+    
+    // 窗口加载完成后再次确保
+    window.addEventListener('load', fixSearchNow);
+    
+    function fixSearchNow() {
+        console.log('🔧 紧急修复搜索功能...');
+        
+        // 获取搜索元素
+        const searchBtn = document.querySelector('.search-button');
+        const searchInput = document.querySelector('.search-input');
+        
+        if (!searchBtn || !searchInput) {
+            console.error('找不到搜索元素！');
+            return;
+        }
+        
+        // 彻底移除所有原有事件监听（克隆替换法）
+        const newSearchBtn = searchBtn.cloneNode(true);
+        const newSearchInput = searchInput.cloneNode(true);
+        searchBtn.parentNode.replaceChild(newSearchBtn, searchBtn);
+        searchInput.parentNode.replaceChild(newSearchInput, searchInput);
+        
+        // 重新获取新元素
+        const finalBtn = document.querySelector('.search-button');
+        const finalInput = document.querySelector('.search-input');
+        
+        // 创建最简单的搜索引擎（直接硬编码）
+        const simpleSearchEngine = {
+            keywords: {
+                
+                '刘福根': './素锦日记6密码.html',
+                 
+                '首页': '/',
+                '关于': '#about'
+            },
+            
+            search: function(keyword) {
+                keyword = keyword.toLowerCase().trim();
+                console.log('搜索:', keyword);
+                
+                // 直接匹配
+                for (let key in this.keywords) {
+                    if (key.toLowerCase() === keyword) {
+                        return { success: true, url: this.keywords[key] };
+                    }
+                }
+                
+                // 包含匹配
+                for (let key in this.keywords) {
+                    if (key.toLowerCase().includes(keyword) || keyword.includes(key.toLowerCase())) {
+                        return { success: true, url: this.keywords[key] };
+                    }
+                }
+                
+                return { success: false };
+            }
+        };
+        
+        // 挂载到全局
+        window.searchEngine = window.searchEngine || simpleSearchEngine;
+        
+        // 创建提示函数
+        window.showAlert = window.showAlert || function(msg, duration) {
+            const div = document.createElement('div');
+            div.textContent = msg;
+            div.style.cssText = 'position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#333; color:white; padding:10px 20px; border-radius:5px; z-index:99999; font-size:14px; box-shadow:0 2px 10px rgba(0,0,0,0.3);';
+            document.body.appendChild(div);
+            setTimeout(() => div.remove(), duration || 2000);
+        };
+        
+        // 绑定点击事件（多种方式确保生效）
+        function doSearch() {
+            const keyword = finalInput.value.trim();
+            
+            if (!keyword) {
+                window.showAlert('请输入搜索关键词', 1500);
+                return;
+            }
+            
+            console.log('执行搜索:', keyword);
+            window.showAlert(`正在搜索 "${keyword}"...`, 1000);
+            
+            try {
+                const result = window.searchEngine.search(keyword);
+                
+                if (result && result.success) {
+                    window.showAlert(`找到相关页面，正在跳转...`, 1000);
+                    setTimeout(() => {
+                        if (result.url) {
+                            window.open(result.url, '_blank');
+                        } else if (result.rule && result.rule.targetUrl) {
+                            window.open(result.rule.targetUrl, '_blank');
+                        } else {
+                            window.showAlert('跳转链接无效', 1500);
+                        }
+                    }, 1000);
+                } else {
+                    window.showAlert(`未找到 "${keyword}" 相关页面`, 1500);
+                }
+            } catch (e) {
+                console.error('搜索出错:', e);
+                window.showAlert('搜索出错，请重试', 1500);
+            }
+        }
+        
+        // 方法1: 直接添加事件监听
+        finalBtn.onclick = function(e) {
+            e.preventDefault();
+            doSearch();
+            return false;
+        };
+        
+        // 方法2: addEventListener
+        finalBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            doSearch();
+        });
+        
+        // 方法3: 鼠标按下事件
+        finalBtn.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+        });
+        
+        // 回车事件
+        finalInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                doSearch();
+            }
+        });
+        
+        // 方法4: 每隔1秒重新绑定一次（持续3次，确保绑定成功）
+        let bindCount = 0;
+        const rebindInterval = setInterval(() => {
+            finalBtn.onclick = function(e) {
+                e.preventDefault();
+                doSearch();
+                return false;
+            };
+            bindCount++;
+            if (bindCount >= 3) clearInterval(rebindInterval);
+        }, 1000);
+        
+        console.log('✅ 搜索功能修复完成！');
+        console.log('可搜索关键词:', Object.keys(simpleSearchEngine.keywords).join(', '));
+    }
+})();
+</script>
+
+<!-- 添加一个测试按钮，方便调试 -->
+<!-- <div style="text-align: center; margin: 10px 0; padding: 5px; background: #f5f5f5; border-radius: 5px;">
+    <span style="font-size: 12px; color: #666;">可搜索：</span>
+    <button onclick="document.querySelector('.search-input').value='鬼火'; document.querySelector('.search-button').click();" style="font-size: 12px; margin: 2px; padding: 2px 5px; cursor: pointer;">鬼火</button>
+    <button onclick="document.querySelector('.search-input').value='刘福根'; document.querySelector('.search-button').click();" style="font-size: 12px; margin: 2px; padding: 2px 5px; cursor: pointer;">刘福根</button>
+    <button onclick="document.querySelector('.search-input').value='1997'; document.querySelector('.search-button').click();" style="font-size: 12px; margin: 2px; padding: 2px 5px; cursor: pointer;">1997</button>
+    <button onclick="document.querySelector('.search-input').value='仓库'; document.querySelector('.search-button').click();" style="font-size: 12px; margin: 2px; padding: 2px 5px; cursor: pointer;">仓库</button>
+</div> -->
+
+<!-- 如果还是不行，这是终极方案：直接覆盖搜索按钮的HTML -->
+<script>
+// 终极保险：如果上面的方法都失效，这个会在3秒后强制重建搜索按钮
+setTimeout(function() {
+    const searchContainer = document.querySelector('.search-bar');
+    if (!searchContainer) return;
+    
+    // 检查搜索按钮是否工作
+    const btn = document.querySelector('.search-button');
+    if (btn && btn.onclick) return; // 如果有onclick，说明已修复
+    
+    console.log('⚠️ 执行终极修复...');
+    
+    // 重建整个搜索栏
+    const parent = searchContainer.parentNode;
+    const newSearchBar = document.createElement('div');
+    newSearchBar.className = 'search-bar';
+    newSearchBar.innerHTML = `
+        <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+        </svg>
+        <input type="text" class="search-input" placeholder="搜索其他内容..." style="flex:1; border:none; outline:none; font-size:16px;">
+        <button class="search-button" style="background-color:#4285f4; color:white; border:none; border-radius:4px; padding:10px 20px; margin-left:10px; cursor:pointer; font-size:14px; font-weight:bold;">搜索</button>
+    `;
+    
+    parent.replaceChild(newSearchBar, searchContainer);
+    
+    // 重新绑定事件
+    const newBtn = document.querySelector('.search-button');
+    const newInput = document.querySelector('.search-input');
+    
+    newBtn.onclick = function(e) {
+        e.preventDefault();
+        const keyword = newInput.value.trim();
+        if (!keyword) {
+            alert('请输入搜索关键词');
+            return;
+        }
+        
+        // 简单跳转
+        if (keyword.includes('鬼火') || keyword.includes('刘福根') || keyword.includes('1997')) {
+            window.open('#' + keyword, '_blank');
+        } else {
+            window.open('https://www.baidu.com/s?wd=' + encodeURIComponent(keyword), '_blank');
+        }
+    };
+    
+    console.log('✅ 终极修复完成');
+}, 3000);
+</script>
+
+<!-- 添加一个手动检查按钮（可选，测试用） -->
+<!-- <div style="text-align: center; margin-top: 10px; font-size: 12px;">
+    <button onclick="window.checkSearchEngine()" style="background: none; border: 1px solid #ccc; padding: 5px 10px; border-radius: 3px; cursor: pointer;">检查搜索引擎状态</button>
+</div> -->
+  <script src="./jinzhi.js"></script>
+</body>
+</html>

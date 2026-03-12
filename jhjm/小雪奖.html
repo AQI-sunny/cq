@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
+    <title>红旗小学 · 九七喜报</title>
+    <style>
+        /* 全局reset —— 极简，保留90年代标签感 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #7c6e5d;  /* 老式木质地板色 */
+            font-family: 'Times New Roman', '宋体', SimSun, '仿宋', FangSong, serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+        }
+
+        /* 主喜报卡片 —— 90年代泛黄纸张质感，加粗重边框 */
+        .xibao {
+            max-width: 780px;
+            width: 100%;
+            background: #fbf3d5;  /* 老新闻纸黄 */
+            background-image: radial-gradient(circle, #e5d7b0 1px, transparent 1px);
+            background-size: 24px 24px;  /* 隐约的网点，像老印刷 */
+            border: 8px solid #9e2a2a;    /* 砖红边框，怀旧黑板报风格 */
+            padding: 2.2rem 1.8rem 2.8rem 1.8rem;
+            box-shadow: 16px 18px 0px 0px #3f3327;  /* 深色投影，加强立体 */
+            border-radius: 0;               /* 彻底直角，符合1997风格 */
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        /* 斑驳做旧效果：随机白点/划痕 (手工感) */
+        .xibao::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(45deg, rgba(200,180,140,0.1) 0px, rgba(200,180,140,0.1) 4px, transparent 4px, transparent 12px);
+            pointer-events: none;
+        }
+
+        /* 红旗小学头标 + 年份 banner */
+        .school-header {
+            text-align: center;
+            border-bottom: 3px double #b37b48;
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        .school-name {
+            font-family: '黑体', 'Microsoft YaHei', 'Arial Black', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: #b13b3b;
+            text-shadow: 2px 2px 0px #ffd966, 4px 4px 0px #7a3e1f;
+            line-height: 1.1;
+            word-break: keep-all;
+        }
+        /* 适应小屏 */
+        @media (max-width: 500px) {
+            .school-name {
+                font-size: 2rem;
+                letter-spacing: 2px;
+                text-shadow: 2px 2px 0px #ffd966, 3px 3px 0px #7a3e1f;
+            }
+        }
+
+        .year-badge {
+            font-size: 1.3rem;
+            background: #2e4c2e;
+            color: #f9eeb2;
+            display: inline-block;
+            padding: 4px 28px;
+            border: 3px solid #e0b354;
+            transform: skewX(-8deg) scale(1);
+            margin-top: 8px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            box-shadow: inset 0 -2px 0 #1a2f1a;
+        }
+
+        /* 主标题：喜报 */
+        .celebrate-title {
+            font-size: 4.2rem;
+            font-weight: 900;
+            text-align: center;
+            color: #c02f2f;
+            font-family: '华文楷体', 'KaiTi', '楷体', serif;
+            line-height: 1;
+            margin: 25px 0 15px 0;
+            transform: rotate(-0.5deg);
+            filter: drop-shadow(0 4px 2px rgba(120, 60, 20, 0.4));
+            letter-spacing: 6px;
+        }
+        @media (max-width: 500px) {
+            .celebrate-title {
+                font-size: 2.8rem;
+                letter-spacing: 3px;
+            }
+        }
+
+        /* 学生信息区域 巨大且隆重 */
+        .student-info {
+            background: #e9dbba;
+            border: 5px ridge #ba8b5a;   /*  ridge 让边缘有老式浮雕感 */
+            padding: 20px 18px 18px 18px;
+            margin: 24px 0 28px 0;
+            box-shadow: inset 0 0 0 2px #fef5d4, 6px 8px 0 #4c3f2f;
+            font-family: '黑体', 'Arial', sans-serif;
+        }
+
+        .class-name {
+            font-size: 2rem;
+            background: #1f4f2b;
+            color: #fbe585;
+            display: inline-block;
+            padding: 0.2rem 1.8rem;
+            border-radius: 30px 8px 8px 30px;  /* 稍微有点不规范的圆，但保持棱角 */
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+            border: 2px solid #fad473;
+            transform: skewX(-5deg);
+            font-weight: bold;
+        }
+        @media (max-width: 500px) {
+            .class-name {
+                font-size: 1.5rem;
+                padding: 0.2rem 1rem;
+            }
+        }
+
+        .student-name {
+            font-size: 5rem;
+            font-weight: 900;
+            color: #0f1f5c;
+            text-shadow: 3px 3px 0 #c9af7b, 5px 5px 0 #64512e;
+            line-height: 1.2;
+            margin: 10px 0 10px 0;
+            word-break: break-word;
+            font-family: '隶书', 'LiSu', 'Arial Black', sans-serif;
+        }
+        @media (max-width: 500px) {
+            .student-name {
+                font-size: 3.2rem;
+                text-shadow: 2px 2px 0 #c9af7b, 4px 4px 0 #64512e;
+            }
+        }
+
+        .award-highlight {
+            font-size: 2.5rem;
+            background: linear-gradient(145deg, #e63f3f, #9f2020);
+            color: #ffec9e;
+            padding: 0.6rem 1.2rem;
+            display: inline-block;
+            border: 4px outset #fcdb8b;
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            letter-spacing: 2px;
+            margin-top: 16px;
+            box-shadow: 4px 6px 0 #6b3d0e;
+            transform: rotate(0.5deg);
+        }
+        @media (max-width: 500px) {
+            .award-highlight {
+                font-size: 1.8rem;
+                padding: 0.3rem 0.6rem;
+            }
+        }
+
+        /* 具体奖项描述 */
+        .award-detail {
+            margin: 30px 0 30px 0;
+            font-size: 2rem;
+            background: #dac292;
+            padding: 14px 18px;
+            border: 3px dotted #3d2b1b;
+            border-left: 14px solid #a14444;
+            font-family: '仿宋', 'FangSong', serif;
+            font-weight: bold;
+            color: #1c2b1c;
+        }
+        .award-detail span {
+            background: #fbf3d5;
+            padding: 6px 14px;
+            border: 1px solid #aa7b5b;
+            display: inline-block;
+        }
+
+        /* 绘画奖项具体名称（可自定义） */
+        .prize-name {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #004d4d;
+            background: #e0dbb8;
+            padding: 0.3rem 1.2rem;
+            border: 6px double #b6572e;
+            transform: scale(1.02);
+            display: inline-block;
+            margin: 0 0 0 8px;
+            font-family: '华文楷体', '楷体', serif;
+        }
+        @media (max-width: 500px) {
+            .prize-name {
+                font-size: 2.2rem;
+                display: block;
+                margin: 8px 0 0 0;
+                text-align: center;
+            }
+            .award-detail {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* 颁奖单位 + 日期 老式落款 */
+        .footer-signature {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 40px;
+            border-top: 4px double #b97949;
+            padding-top: 24px;
+            font-family: '楷体', 'KaiTi', serif;
+        }
+
+        .issuer {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #2e2e1f;
+            background: #ead5b0;
+            padding: 8px 24px 8px 16px;
+            border: 2px solid #5f4029;
+            box-shadow: 4px 4px 0 #3f2d1b;
+        }
+        .issuer strong {
+            font-size: 2rem;
+            margin-right: 8px;
+            color: #a52a2a;
+        }
+
+        .date {
+            font-size: 1.8rem;
+            background: #2a4b2a;
+            color: #ffe78c;
+            padding: 8px 32px;
+            border: 4px solid #d9b15e;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            letter-spacing: 2px;
+            transform: skewX(2deg);
+        }
+        @media (max-width: 550px) {
+            .footer-signature {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 18px;
+            }
+            .date {
+                align-self: flex-end;
+            }
+        }
+
+        /* 增加一些老式小点缀: 星星和红旗 */
+        .star-deco {
+            font-size: 2rem;
+            color: #b33e3e;
+            letter-spacing: 12px;
+            text-align: center;
+            margin: 15px 0 5px;
+            opacity: 0.8;
+        }
+
+        /* 完全不使用圆角，除了极少数默认, 一切为了1997 */
+        hr {
+            border: none;
+            border-top: 4px dashed #b68b5a;
+            margin: 20px 0;
+        }
+
+        /* 计算机字体兼容，保留像素感 */
+        .pixel-note {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            text-align: right;
+            color: #4f4f2e;
+            margin-top: 8px;
+        }
+
+        /* 手机小屏精细微调 */
+        @media (max-width: 400px) {
+            .xibao {
+                padding: 1.2rem 0.8rem 1.8rem 0.8rem;
+                border-width: 5px;
+            }
+            .school-name {
+                font-size: 1.8rem;
+            }
+            .year-badge {
+                font-size: 1rem;
+                padding: 2px 16px;
+            }
+            .student-name {
+                font-size: 2.6rem;
+            }
+            .award-highlight {
+                font-size: 1.5rem;
+            }
+            .prize-name {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="xibao">
+        <!-- 校名与年份 -->
+        <div class="school-header">
+            <div class="school-name">红旗小学·HONGQI</div>
+            <div class="year-badge">✦ 一九九七 光荣榜 ✦</div>
+        </div>
+
+        <!-- 巨大的喜报二字 -->
+        <div class="celebrate-title">🎉 喜 报 🎉</div>
+
+        <!-- 核心人物: 三年级五班 蒋小雪 -->
+        <div class="student-info">
+            <div class="class-name">三年级五班</div>
+            <div class="student-name">蒋 小 雪</div>
+            <!-- 获奖头衔 -->
+            <div class="award-highlight">⭐ 荣 获 绘 画 大 奖 ⭐</div>
+        </div>
+
+        <!-- 详细奖项信息 突出绘画奖项名 -->
+        <div class="award-detail">
+            <span>🏅 全国少儿书画大赛 · 儿童组 🏅</span><br>
+            荣获 <span class="prize-name">『 金 彩 童 年 』 一 等 奖</span>
+        </div>
+
+        <!-- 老式分割线 -->
+        <hr>
+
+        <!-- 作品描述，加上一点90年代语气 -->
+        <div style="font-size:1.4rem; font-family:'楷体'; background:#f7ebc6; padding:12px; border:2px solid #b3894b; margin:10px 0; text-align:center;">
+            🌟 绘画作品《红旗下的向日葵》 构思新颖，色彩绚丽 🌟<br>
+            <span style="font-size:1.2rem; ">—— 荣获大赛最高奖项 · 为校争光 ——</span>
+        </div>
+
+        <!-- 星星装饰 -->
+        <div class="star-deco">★ ★ ★ ★ ★</div>
+
+        <!-- 落款与日期 (1997风格) -->
+        <div class="footer-signature">
+            <div class="issuer">
+                <strong>红旗小学</strong> 教导处  · 少先队
+            </div>
+            <div class="date">
+                1997 年 10 月 15 日
+            </div>
+        </div>
+        
+        <!-- 极小的一行像素备注，怀旧感 -->
+        <!-- <div class="pixel-note">
+            &lt; PC & 手机兼容 · 九七复古版面 &gt;
+        </div> -->
+
+        <!-- 再加点手工感油墨标记 (完全为了风格统一) -->
+        <div style="position: absolute; bottom: 8px; left: 20px; font-size: 0.9rem; color: #ac8e62; font-family: monospace;">◆ 喜报编号：HX-1997-0325 ◆</div>
+    </div>
+     <!-- 外部JS文件引用 -->
+     
+<script src="./return.js"></script>
+</body>
+</html>

@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>锦纺·0626 警察笔记</title>
+    <!-- 引用样式 (模拟路径) -->
+    <link rel="stylesheet" href="search-assistant.css">
+    <link rel="stylesheet" href="visitor.css">
+    <link rel="stylesheet" href="common.css">
+    <!-- 模拟内联风格补丁，保证手机端阅读质感，不打乱原有结构；同时针对搜索栏宽度及文字方向做兼容 -->
+    <style>
+        /* 保证在无真实样式表情况下基础样式不乱 —— 仅作兼容增强 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #e6e9ef;
+            font-family: 'Courier New', Courier, '宋体', monospace;
+            padding: 12px 10px 40px 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .investigation-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+            background-color: #f5f3eb;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+            border: 1px solid #aca08a;
+            border-radius: 12px 12px 8px 8px;
+            overflow: hidden;
+        }
+        /* ========= 搜索栏调整 ========= */
+        /* 原样式基本保留，但针对PC端宽度缩小，手机端兼容“搜索”二字不竖排 */
+        .header-container {
+            display: flex;
+            align-items: center;
+            gap: 12px; /* 稍缩小间隙 */
+            max-width: 560px;    /* 控制整体宽度（PC相对收窄） */
+            margin: 0 auto 20px auto;  /* 居中且底部留白 */
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 28px;  /* 更紧凑的圆角 */
+            padding: 8px 18px;    /* 左右内边距调整使搜索栏视觉更窄 */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(220, 220, 220, 0.8);
+        }
+        
+        .logo {
+            width: 48px;          /* 略缩小logo */
+            height: 48px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid rgba(220, 220, 220, 0.8);
+            flex-shrink: 0;
+        }
+        
+        .search-container {
+            flex: 1;
+            min-width: 0;          /* 防止flex溢出 */
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: #f8f9fa;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            padding: 6px 12px;      /* 缩小内边距，使整体宽度变窄 */
+            box-shadow: 0 1px 6px rgba(32, 33, 36, 0.15);
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .search-bar:hover {
+            box-shadow: 0 1px 8px rgba(32, 33, 36, 0.2);
+            border-color: #dadce0;
+        }
+        
+        .search-bar:focus-within {
+            box-shadow: 0 1px 10px rgba(32, 33, 36, 0.25);
+            border-color: #4285f4;
+        }
+        
+        .search-icon {
+            width: 18px;            /* 稍微缩小图标 */
+            height: 18px;
+            margin-right: 6px;
+            color: #9aa0a6;
+            flex-shrink: 0;
+        }
+        
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;        /* 略缩小 */
+            background: transparent;
+            color: #3c4043;
+            padding: 4px 0;
+            min-width: 0;            /* 防止输入框把按钮挤出去 */
+        }
+        
+        .search-input::placeholder {
+            color: #9aa0a6;
+            font-size: 14px;
+        }
+        
+        .search-button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 20px;     /* 圆角但保证横向 */
+            padding: 6px 16px;        /* 左右padding足够，让“搜索”二字横排 */
+            margin-left: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            white-space: nowrap;      /* 强制不换行，防止竖排 */
+            flex-shrink: 0;            /* 防止被压缩 */
+            line-height: 1.2;          /* 保证高度正常 */
+            letter-spacing: 0.5px;
+        }
+        
+        .search-button:hover {
+            background-color: #2b6fd8;
+            transform: translateY(-1px);
+        }
+        
+        .search-button:active {
+            transform: translateY(0);
+        }
+
+        /* 手机端专用强确保搜索二字横排、宽度合理 */
+        @media (max-width: 480px) {
+            .header-container {
+                padding: 6px 12px;
+                gap: 8px;
+            }
+            .logo {
+                width: 42px;
+                height: 42px;
+            }
+            .search-bar {
+                padding: 4px 8px;
+            }
+            .search-button {
+                padding: 5px 12px;
+                font-size: 13px;
+                white-space: nowrap;    /* 再次确保横排 */
+                letter-spacing: 0px;
+            }
+            .search-icon {
+                width: 16px;
+                height: 16px;
+                margin-right: 4px;
+            }
+            .search-input {
+                font-size: 14px;
+            }
+        }
+
+        /* 手机超小屏再加强 */
+        @media (max-width: 360px) {
+            .header-container {
+                padding: 5px 8px;
+            }
+            .search-button {
+                padding: 4px 8px;
+                font-size: 12px;
+            }
+        }
+        
+        /* 报告头部 */
+        .doc-header {
+            padding: 16px 18px 8px 18px;
+            border-bottom: 2px dashed #a6876e;
+            background: #ece5d8;
+        }
+        .case-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: #2d221c;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 0 #b49d89;
+        }
+        .meta-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #3e2f24;
+            border-left: 4px solid #a0352e;
+            padding-left: 12px;
+            background: #dcd3c4;
+            padding: 8px 12px;
+            border-radius: 0 20px 20px 0;
+        }
+        .redacted-badge {
+            background-color: #1d1d1d;
+            color: #f0c9a6;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 40px;
+            display: inline-block;
+            margin-top: 6px;
+            border: 1px solid #855e48;
+        }
+        /* 内容区块 */
+        .section-block {
+            padding: 12px 18px;
+            border-bottom: 1px solid #cbbca8;
+        }
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2b1b0f;
+            margin-bottom: 12px;
+            border-left: 6px solid #b37b48;
+            padding-left: 12px;
+            background: linear-gradient(to right, #e3d9ca, transparent);
+        }
+        .person-list, .witness-list {
+            list-style: none;
+        }
+        .person-item {
+            background-color: #e8ded1;
+            margin: 8px 0;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            border: 1px solid #b2a088;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            word-break: break-word;
+        }
+        .redacted {
+            background-color: #2c3e50;
+            color: #d6cfb8;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-style: normal;
+            display: inline-block;
+            border: 1px solid #b59d7a;
+            letter-spacing: 2px;
+            box-shadow: inset 0 -1px 0 #5f5a4f;
+        }
+        .redacted-block {
+            background-color: #2f4f4f;
+            color: #dfd7c0;
+            padding: 6px 12px;
+            border-radius: 40px;
+            display: inline-block;
+            margin: 2px 0;
+            font-weight: 600;
+        }
+        .evidence-highlight {
+            background-color: #f2e1c0;
+            border-left: 6px solid #b63e32;
+            padding: 14px 16px;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+        .small-note {
+            font-size: 0.85rem;
+            color: #2e3b4e;
+            background: #d1c4b2;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+        .handwritten-note {
+            background-color: #fff9e6;
+            border: 2px dashed #9b6f4b;
+            padding: 18px 18px;
+            margin: 16px 0 8px 0;
+            border-radius: 12px;
+            font-family: 'Comic Sans MS', '楷体', cursive;
+            color: #1f3a3f;
+            box-shadow: inset 0 0 0 2px #eedbba;
+        }
+        .handwritten-note p {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .pen-icon {
+            font-size: 1.5rem;
+            transform: rotate(15deg);
+        }
+        .footer-sign {
+            padding: 20px 18px 12px 18px;
+            display: flex;
+            justify-content: space-between;
+            color: #2c3a41;
+            border-top: 2px solid #9c8b78;
+            background: #dbcfbf;
+        }
+        /* 手机专用调整 (对原有内部微调) */
+        @media (max-width: 480px) {
+            .section-block {
+                padding: 12px 12px;
+            }
+            .redacted {
+                padding: 4px 8px;
+                font-size: 0.85rem;
+            }
+        }
+        /* 引用文件的模拟效果——仅作占位 */
+    </style>
+</head>
+<body>
+    <!-- 顶部区域：Logo和搜索栏 —— 已调整宽度缩小，“搜索”二字保证不竖排（white-space:nowrap） -->
+    <div class="header-container">
+        <img src="search.png" alt="深南市诚信拍卖行" class="logo">
+        <div class="search-container">
+            <div class="search-bar">
+                <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索其他关键词...">
+                <button class="search-button" id="searchButton">搜索</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="investigation-wrapper">
+        <!-- 报告头部信息 (姓名均已手动打码，日期已改为1997.6.26) -->
+        <div class="doc-header">
+            <div class="case-title">锦纺-0626</div>   <!-- 标题同步改为0626 -->
+            <div class="meta-info">
+                <span>汇报人：<span class="redacted">███████</span>（刑侦大队）</span>
+                <span>1997.6.26</span>    <!-- 日期按要求修改 -->
+            </div>
+            <div class="redacted-badge">✔ 本案所有涉案人员姓名均已手动打码</div>
+        </div>
+
+        <!-- 一、主要涉案人员关联（初步梳理） -->
+        <div class="section-block">
+            <div class="section-title">📋 一、主要涉案人员关联 <span style="font-size:0.8rem; font-weight:normal;">(初步梳理)</span></div>
+            
+            <div style="margin-bottom:16px;">
+                <div style="font-weight:600; background:#b99167; color:#1f1a15; padding:6px 12px; border-radius:6px;">青年职工方（厂内）</div>
+                <ul class="person-list">
+                    <li class="person-item"><span class="redacted">█████</span>（23岁，机修车间，有公开抱怨加班记录）</li>
+                    <li class="person-item"><span class="redacted">█████</span>（21岁，织布车间，<span class="redacted">█████</span>女友）</li>
+                    <li class="person-item"><span class="redacted">█████</span>（24岁，电工班，曾因奖金问题与车间主任争执）</li>
+                </ul>
+                <div class="small-note">共同特点：均为近年进厂青工，住厂集体宿舍，社交圈相对封闭，对厂内现状不满情绪有所流露。</div>
+            </div>
+
+            <div style="margin-bottom:8px;">
+                <div style="font-weight:600; background:#7a6a58; color:#f0e1cf; padding:6px 12px; border-radius:6px;">社会闲散人员方（厂外）</div>
+                <ul class="person-list">
+                    <li class="person-item">“<span class="redacted">████</span>”（本名待查，常在厂区周边台球厅、录像厅活动，有偷摸前科）</li>
+                    <li class="person-item">“<span class="redacted">████</span>”（<span class="redacted">████</span>同伙）</li>
+                    <li class="person-item">另有三至四名身份待核实人员。</li>
+                </ul>
+                <div class="small-note">共同特点：无固定职业，经济状况起伏大，近期消费水平反常提高（据台球厅老板反映）。</div>
+            </div>
+        </div>
+
+        <!-- 二、关键关联证据（已核实） -->
+        <div class="section-block">
+            <div class="section-title">📌 二、关键关联证据（已核实）</div>
+            
+            <div style="margin: 12px 0;">
+                <div style="background:#847a6b; color:#fcf3e4; padding:4px 10px; border-radius:30px; display:inline-block;">目击证言1</div>
+                <div class="evidence-highlight" style="margin-top:8px;">
+                    <span style="font-weight:600;">菜市场个体户，<span class="redacted">█████</span>，女：</span>
+                    “大概上个月吧，天刚擦黑，我看见厂里那<span class="redacted">██</span>（指认<span class="redacted">█████</span>照片），跟那个头发染得黄不拉几的小子在东街拐角那嘀咕。俩人还互相递烟，看着挺熟。我心想，这正经工人怎么跟街上混子搅和一块儿了。”<br>
+                    <span style="font-size:0.8rem; background:#b9a386; padding:2px 8px; border-radius:12px;">——笔录时间：6月25日</span>
+                </div>
+            </div>
+
+            <div style="margin: 18px 0;">
+                <div style="background:#847a6b; color:#fcf3e4; padding:4px 10px; border-radius:30px; display:inline-block;">目击证言2</div>
+                <div class="evidence-highlight" style="margin-top:8px;">
+                    <span style="font-weight:600;">红星娱乐城经理，<span class="redacted">█████</span>，男：</span>
+                    “<span class="redacted">█████</span>（指认照片）他们是常客。<span class="redacted">████</span>那伙人也常来。有几次他们打一张桌子，赌输赢，赌注是烟。具体说啥我没听清，但肯定认识。哦对了，大概两周前，<span class="redacted">████</span>输了球，还嚷嚷说‘等厂里那批货出手了，请你喝好的’，当时<span class="redacted">█████</span>就在旁边笑。”<br>
+                    <span style="font-size:0.8rem;">——笔录时间：6月26日（附注：此“货”与厂内失窃布料是否有指代关系，存疑待查。）</span>
+                </div>
+            </div>
+
+            <div style="margin: 18px 0;">
+                <div style="font-weight:700; color:#5b3f2b;">🔗 关键物证关联：</div>
+                <div style="background-color:#b7a68e; padding:12px; border-radius:12px; margin-top:6px;">
+                    6月24日，对“<span class="redacted">████</span>”常聚的民房进行突击检查，搜出：<br>
+                    · 锦华厂失窃的的确良布料三匹（有厂内货号）。<br>
+                    · 印有“锦华纺织厂”字样的《机械维修手册》一本，扉页写有 “<span class="redacted">█████</span>” 姓名及机修车间编号。<br>
+                    <span style="background:#5f4e3c; color:#efe2d2; padding:4px 10px; display:inline-block; border-radius:16px; margin-top:8px;">初步判断：该手册出现在赃物藏匿点，极有可能为<span class="redacted">█████</span>本人所有，是其与<span class="redacted">████</span>团伙存在密切联系、共同参与盗窃的间接物证。</span>
+                </div>
+            </div>
+
+            <div style="margin: 14px 0;">
+                <div style="font-weight:700;">🧩 动机与行为关联分析：</div>
+                <ul style="margin-left:22px; color:#2d241c;">
+                    <li><span class="redacted">█████</span>、<span class="redacted">█████</span>等人近三个月多次在公开场合（如食堂、宿舍区）抱怨“夜班补贴太低”、“领导不公”。厂办有相关记录。</li>
+                    <li>多名夜班女工反映，“闹鬼”现象（异响、怪影）出现的时间段，与<span class="redacted">█████</span>班组结束加班或轮休的时间存在部分重叠。</li>
+                    <li>厂区西门老门卫（孙大爷）模糊提及，曾在晚上见过“像<span class="redacted">████</span>那样的小青年在围墙外边转悠”，而当晚恰好是<span class="redacted">█████</span>值夜班。</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 三、现阶段初步判断 -->
+        <div class="section-block">
+            <div class="section-title">⚖️ 三、现阶段初步判断（待补充证据链）</div>
+            <p style="background:#ddd0bd; padding:14px; border-radius:12px;">
+                现有证据倾向于支持以下假设：<br>
+                以<span class="redacted">█████</span>、<span class="redacted">█████</span>为代表的少数对厂不满的青年职工，与厂外以“<span class="redacted">████</span>”为首的社会闲散人员相互勾结。其目的可能为：
+            </p>
+            <ul style="margin: 12px 0 12px 30px;">
+                <li><strong>制造恐慌：</strong>利用封建迷信手段（“闹鬼”），破坏生产秩序，向厂方施压以满足其不合理要求。</li>
+                <li><strong>散步谣言：</strong>编造厂区内多个谣言，在工人及周边居民中传播，制造恐慌情绪。</li>
+                <li><strong>趁机牟利：</strong>在混乱掩护下，盗窃厂内物资（布料、零件等），通过<span class="redacted">████</span>等人渠道销赃，获取非法利益。</li>
+            </ul>
+            <div style="background:#a28d73; padding:12px; border-radius:12px; color:#1d2c2f;">
+                ⏩ 下一步侦查方向：<br>
+                1. 重点突破<span class="redacted">█████</span>或<span class="redacted">█████</span>，获取其与<span class="redacted">████</span>团伙勾结、策划作案的具体口供。<br>
+                2. 查清<span class="redacted">████</span>团伙销赃渠道，追回更多赃物，固定证据。<br>
+                3. 核实“闹鬼”具体手段（如异响来源、怪影制作），寻找直接作案工具。
+            </div>
+        </div>
+
+        <!-- 汇报人及潦草笔记（埋反转伏笔） -->
+        <div style="padding: 10px 18px 0 18px;">
+            <div style="display:flex; justify-content: space-between; border-top: 2px solid #7c6351; padding-top:16px;">
+                <span>汇报人：<span class="redacted">██████</span></span>
+                <span style="color:#555;">刑侦大队</span>
+            </div>
+        </div>
+        
+        <!-- 手写笔记区域 (不同颜色笔迹) -->
+        <div class="handwritten-note">
+            <span class="pen-icon">✒️</span> <span style="font-weight:bold; color:#1f4f5c;">【魏警官笔记】</span>
+            <p><span style="background: #afc7d0;">“<span class="redacted">█████</span>审讯时情绪激动，坚称手册早丢了，看着不像说谎…<span class="redacted">████</span>对‘货’的来源含糊其辞，只说是‘厂里人’给的。再查查。” </span></p>
+            <p><span style="background: #f4d1b9;">“失窃的‘高级雪纺’布料，出入库记录只有保卫科和仓库有完整联单…奇怪。”</span></p>
+            <div style="display:flex; gap: 12px; margin-top: 14px; font-size:1.1rem; color:#482b1a;">
+                <!-- <span>🔍</span> <span style="border-bottom: 2px dotted #943e2e;">红色圆珠笔补充：<span class="redacted">████</span>的口供与黄毛对不上……？</span> -->
+            </div>
+        </div>
+
+        <!-- 结尾留白模拟档案 (编号也微调为0626，保持风格) -->
+        <div class="footer-sign">
+            <span>编号：锦纺-0626</span>
+            <span>密级：🔒 侦查阶段</span>
+        </div>
+    </div>
+
+    <!-- 引用js (仅声明占位) -->
+    
+        <script src="./search-engine.js"></script>
+        <script src="./storage.js"></script>
+        <script src="./navigation.js"></script>
+       <!--  <script src="visitor.js"></script> -->
+         <script src="./logo-return.js"></script>
+        <script src="./search-ass.js"></script>
+   
+ 
+    <div style="display: none;">脚本引用占位(已按指示列出)</div>
+</body>
+</html>

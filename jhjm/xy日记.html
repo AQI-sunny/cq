@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蒋小雨的日记本 - 1997.x.x</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+QingKe+HuangYou&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'SimSun', '宋体', serif;
+            background-color: #f5e9d8;
+            background-image: 
+                radial-gradient(#d4b483 1px, transparent 1px),
+                radial-gradient(#d4b483 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            color: #5a3921;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 90年代风格的装饰边框 */
+        body:before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 15px solid transparent;
+            border-image: repeating-linear-gradient(45deg, #8b4513, #8b4513 10px, #d2691e 10px, #d2691e 20px) 30;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            background-color: #fffef0;
+            border: 2px solid #8b4513;
+            box-shadow: 8px 8px 0px rgba(139, 69, 19, 0.3);
+            position: relative;
+            padding: 30px;
+            border-radius: 3px;
+        }
+        
+        /* 90年代风格的标题 */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px dashed #8b4513;
+            padding-bottom: 20px;
+            position: relative;
+        }
+        
+        .title {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 36px;
+            color: #8b4513;
+            text-shadow: 2px 2px 0px #d4b483;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-family: 'ZCOOL QingKe HuangYou', cursive;
+            font-size: 18px;
+            color: #a0522d;
+            letter-spacing: 2px;
+        }
+        
+        /* 锁屏区域 */
+        .lock-screen {
+            background: linear-gradient(to bottom, #f9e4b7, #e8d4a6);
+            border: 3px double #8b4513;
+            padding: 40px;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            box-shadow: inset 0 0 10px rgba(139, 69, 19, 0.2);
+        }
+        
+        .lock-icon {
+            font-size: 50px;
+            color: #8b4513;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .lock-instruction {
+            font-size: 18px;
+            color: #5a3921;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+        
+        .rjmm-input {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .rjmm-input input {
+            width: 120px;
+            padding: 12px 15px;
+            font-size: 24px;
+            font-family: 'ZCOOL QingKe HuangYou', monospace;
+            letter-spacing: 5px;
+            border: 2px solid #8b4513;
+            background-color: #fffef0;
+            color: #5a3921;
+            text-align: center;
+            border-radius: 3px;
+            outline: none;
+            box-shadow: inset 0 0 5px rgba(139, 69, 19, 0.3);
+        }
+        
+        .rjmm-input input:focus {
+            border-color: #d2691e;
+            box-shadow: 0 0 8px rgba(210, 105, 30, 0.5);
+        }
+        
+        .unlock-btn {
+            background-color: #8b4513;
+            color: #fffef0;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            font-family: 'Ma Shan Zheng', cursive;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: all 0.3s;
+            letter-spacing: 2px;
+            box-shadow: 3px 3px 0px #5a3921;
+        }
+        
+        .unlock-btn:hover {
+            background-color: #a0522d;
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 0px #5a3921;
+        }
+        
+        .unlock-btn:active {
+            transform: translateY(1px);
+            box-shadow: 1px 1px 0px #5a3921;
+        }
+        
+        .message {
+            margin-top: 15px;
+            min-height: 24px;
+            font-size: 16px;
+            color: #8b0000;
+        }
+        
+        /* 日记内容区域 - 初始隐藏 */
+        .diary-content {
+            display: none;
+            padding: 20px;
+            background-color: #fffef0;
+            border: 1px solid #d4b483;
+            border-radius: 3px;
+            position: relative;
+        }
+        
+        /* 90年代风格的日记纸纹理 */
+        .diary-content:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
+                linear-gradient(#eee .1em, transparent .1em);
+            background-size: 100% 1.2em;
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .diary-text {
+            position: relative;
+            z-index: 1;
+            font-size: 18px;
+            line-height: 1.8;
+            text-indent: 2em;
+        }
+        
+        .diary-date {
+            text-align: right;
+            font-style: italic;
+            margin-bottom: 20px;
+            color: #8b4513;
+            font-weight: bold;
+            border-bottom: 1px dotted #d4b483;
+            padding-bottom: 10px;
+        }
+        
+        /* 90年代风格的装饰元素 */
+        .decoration {
+            position: absolute;
+            font-size: 30px;
+            color: #d4b483;
+            opacity: 0.7;
+        }
+        
+        .decoration-1 { top: 10px; left: 10px; }
+        .decoration-2 { top: 10px; right: 10px; }
+        .decoration-3 { bottom: 10px; left: 10px; }
+        .decoration-4 { bottom: 10px; right: 10px; }
+        
+        /* 复古的提示文本 */
+        .hint {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #a0522d;
+            text-align: center;
+            font-style: italic;
+        }
+        
+        /* 90年代风格的页脚 */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+            color: #8b4513;
+            border-top: 1px dashed #d4b483;
+            padding-top: 20px;
+        }
+        
+        /* 纺织厂工作证样式 */
+        .work-card {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f9f3e9;
+            border: 2px solid #8b4513;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .work-card-title {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 24px;
+            color: #8b4513;
+            margin-bottom: 15px;
+        }
+        
+        .work-card-info {
+            font-size: 18px;
+            color: #5a3921;
+            line-height: 1.6;
+            padding: 15px;
+            background-color: #fffef0;
+            border-radius: 3px;
+        }
+        /* 搜索栏相关样式 */
+.header-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 20px;
+}
+
+.logo {
+    width: 100px; /* 更小的Logo */
+    height: 100px;
+}
+
+.search-container {
+    flex: 0 0 30%;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border: 1px solid #dfe1e5;
+    border-radius: 24px;
+    padding: 12px 20px;
+    box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+}
+
+.search-bar:hover {
+    box-shadow: 0 1px 8px rgba(32,33,36,0.35);
+}
+
+.search-bar:focus-within {
+    box-shadow: 0 1px 8px rgba(32,33,36,0.45);
+}
+
+.search-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    color: #9aa0a6;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    background: transparent;
+}
+
+.search-button {
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.search-button:hover {
+    background-color: #2b6fd8;
+}
+
+/* 响应式调整 */
+@media (max-width: 900px) {
+    .header-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .search-container {
+        width: 80%;
+    }
+}
+        /* 响应式设计 */
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+                margin: 15px auto;
+            }
+            
+            .title {
+                font-size: 28px;
+            }
+            
+            .rjmm-input input {
+                width: 100px;
+            }
+            
+            .lock-screen {
+                padding: 25px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 装饰元素 -->
+    <div class="decoration decoration-1">✿</div>
+    <div class="decoration decoration-2">✿</div>
+    <div class="decoration decoration-3">❀</div>
+    <div class="decoration decoration-4">❀</div>
+
+ <!-- 顶部区域：Logo和搜索栏 -->
+    <div class="header-container">
+        <img src="search.png" alt="深南市诚信拍卖行" class="logo">
+        <div class="search-container">
+            <div class="search-bar">
+                <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索其他关键词...">
+                <button class="search-button" id="searchButton">搜索</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="title">蒋小雨的日记本</h1>
+            <div class="subtitle">私人记录 · 未经许可请勿翻阅</div>
+        </div>
+        
+        <!-- 锁屏区域 -->
+        <div class="lock-screen">
+            <div class="lock-icon">🔒</div>
+            <div class="lock-instruction">此日记已上锁，请输入5位数字密码解锁</div>
+            
+            <div class="rjmm-input">
+                <input type="text" id="rjmmInput" maxlength="5" placeholder="00000" inputmode="numeric">
+            </div>
+            
+            <button class="unlock-btn" id="unlockButton">解锁日记</button>
+            
+            <div class="message" id="message"></div>
+            
+            <div class="hint">提示：四个字的笔画数 → <span id="dnxbHint">东南西北</span> </div>
+        </div>
+        
+        <!-- 日记内容 -->
+        <div class="diary-content" id="diaryContent">
+            <div class="diary-date">一九九七年 × 月 × 日 星期三 晴</div>
+            <div class="diary-text">
+                <p>今天下班后，<strong>匆匆忙忙去红旗小学接妹妹小雪</strong>。纺织厂今天任务特别重，我的手指都被纱线磨红了，但一想到小雪在校门口等着，就顾不上累了。</p>
+                <p>天空特别蓝，阳光透过梧桐树叶洒在地上，像碎金一样。远远地就看见小雪背着画板站在校门口，马尾辫在风里轻轻摆动。这孩子，父母走后，就我们姐妹俩相依为命了。</p>
+                <p>还没走到跟前，班主任齐老师急匆匆地走过来，脸上带着既兴奋又严肃的表情。"蒋小雨同志，请等一下，有重要的事情要跟你说。"</p>
+                <p>齐老师告诉我，省艺术学校的老师来学校选拔艺术特长生，看了小雪的美术作品和舞蹈表演后，决定破格录取她。他们说小雪在色彩感知和肢体表达上有罕见的天赋，是十年难遇的艺术苗子。</p>
+                <p>但是，因为小雪才十岁，省艺术学校要求必须有监护人陪读。这意味着小雪要离开家，<strong>离开红旗小学</strong>，去省城开始专业的艺术学习。我们无父无母，这个责任自然落到了我的肩上。</p>
+                <p>不得不离开。这四个字像石头一样压在心里。我知道这对小雪是天大的机会，她那双会说话的眼睛里闪烁着对艺术的热爱。可是离开熟悉的街道、朋友和这棵老梧桐树，对她来说会是怎样的改变？</p>
+                <p>小雪还不知道这个消息。她正蹲在地上用树枝画画，阳光照在她专注的小脸上。我该怎么告诉她呢？告诉她姐姐要辞去纺织厂的工作，陪她去省城？告诉她我们要离开这个唯一的家？</p>
+                <p>夜深了，妹妹已经睡熟。我轻轻翻看她以前的画——<strong>红旗小学的操场</strong>、家门口的梧桐树、纺织厂的大门、我们一起放的风筝...每一幅都充满灵气。或许，我真的应该陪她去追逐那个更大的世界。</p>
+                <p>只是，省城的生活费该怎么办？我的积蓄只够维持几个月。但看到小雪熟睡的脸庞，我下定决心，无论如何都要给她这个机会。明天就去跟厂里说明情况，办理离职手续。</p>
+            </div>
+            
+            <!-- 纺织厂工作证 -->
+            <!-- <div class="work-card" id="workCard">
+                <div class="work-card-title">青松市纺织厂工作证</div>
+                <div class="work-card-info">
+                    <p><strong>姓名：</strong>蒋小雨</p>
+                    <p><strong>工号：</strong>0287</p>
+                    <p><strong>部门：</strong>纺纱车间</p>
+                    <p><strong>岗位：</strong>挡车工</p>
+                    <p><strong>工龄：</strong>5年</p>
+                    <p><strong>备注：</strong>1997年×月×日因陪妹妹赴省城求学离职</p>
+                </div>
+            </div> -->
+        </div>
+        
+       <!--  <div class="footer">
+            <p>蒋小雨 · 1997 · 版权所有</p>
+        </div> -->
+    </div>
+
+    <script>
+        // 正确密码： 
+        // 提示：东南西北页面
+        const CORRECT_RJMM = "31158";
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const rjmmInput = document.getElementById('rjmmInput');
+            const unlockButton = document.getElementById('unlockButton');
+            const message = document.getElementById('message');
+            const diaryContent = document.getElementById('diaryContent');
+            const workCard = document.getElementById('workCard');
+            const dnxbHint = document.getElementById('dnxbHint');
+            
+            // 解锁按钮点击事件
+            unlockButton.addEventListener('click', function() {
+                const enteredRjmm = rjmmInput.value.trim();
+                
+                if (enteredRjmm.length !== 5) {
+                    message.textContent = "密码必须是5位数字！";
+                    shakeInput();
+                    return;
+                }
+                
+                // 检查是否全为数字
+                if (!/^\d+$/.test(enteredRjmm)) {
+                    message.textContent = "密码必须是数字！";
+                    shakeInput();
+                    return;
+                }
+                
+                if (enteredRjmm == 31158) {
+                    // 密码正确
+                    message.textContent = "密码正确！日记解锁中...";
+                    message.style.color = "#2e8b57";
+                    
+                    // 解锁动画效果
+                    setTimeout(() => {
+                        document.querySelector('.lock-icon').textContent = "🔓";
+                        document.querySelector('.lock-icon').style.animation = "none";
+                        document.querySelector('.lock-screen').style.opacity = "0.5";
+                        
+                        // 显示日记内容
+                        setTimeout(() => {
+                            diaryContent.style.display = "block";
+                            if (workCard) {
+                                workCard.style.display = "block";
+                            }
+                            message.textContent = "日记已解锁！";
+                            
+                            // 滚动到日记内容
+                            diaryContent.scrollIntoView({ behavior: 'smooth' });
+                        }, 800);
+                    }, 1000);
+                } else {
+                    // 密码错误
+                    message.textContent = "密码错误！请再试一次。";
+                    message.style.color = "#8b0000";
+                    shakeInput();
+                }
+            });
+            
+            // 按Enter键也可以解锁
+            rjmmInput.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    unlockButton.click();
+                }
+            });
+            
+            // 输入时只允许数字
+            rjmmInput.addEventListener('input', function() {
+                // 只保留数字
+                this.value = this.value.replace(/\D/g, '');
+                message.textContent = "";
+            });
+            
+            // 抖动效果函数
+            function shakeInput() {
+                rjmmInput.style.transform = "translateX(5px)";
+                setTimeout(() => { rjmmInput.style.transform = "translateX(-5px)"; }, 100);
+                setTimeout(() => { rjmmInput.style.transform = "translateX(5px)"; }, 200);
+                setTimeout(() => { rjmmInput.style.transform = "translateX(0)"; }, 300);
+            }
+            
+            // 添加一些90年代风格的初始化效果
+            const decorations = document.querySelectorAll('.decoration');
+            decorations.forEach((dec, index) => {
+                // 为每个装饰元素添加轻微浮动动画
+                dec.style.animation = `float ${3 + index * 0.5}s ease-in-out infinite alternate`;
+            });
+            
+            // 为装饰元素添加浮动动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes float {
+                    from { transform: translateY(0px); }
+                    to { transform: translateY(-10px); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // 点击"东南西北"跳转到 dnxb.html
+            dnxbHint.addEventListener('click', function() {
+                window.location.href = '东南西北.html';
+            });
+            
+            // 添加提示文本的交互效果
+            const hint = document.querySelector('.hint');
+            dnxbHint.style.cursor = 'pointer';
+            dnxbHint.style.textDecoration = 'underline';
+            dnxbHint.style.transition = 'color 0.3s';
+            
+            dnxbHint.addEventListener('mouseover', function() {
+                dnxbHint.style.color = '#8b4513';
+                dnxbHint.style.fontWeight = 'bold';
+            });
+            
+            dnxbHint.addEventListener('mouseout', function() {
+                dnxbHint.style.color = '#a0522d';
+                dnxbHint.style.fontWeight = 'normal';
+            });
+            
+            // 添加悬停提示
+            dnxbHint.title = "点击查看东南西北的密码提示";
+        });
+    </script>
+<script src="logo-return.js"></script>
+<script src="./search-engine.js"></script>
+<!-- <script src="return.js"></script> -->
+  <script src="./jinzhi.js"></script>
+</body>
+</html>

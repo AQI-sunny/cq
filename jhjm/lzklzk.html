@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>锦华纺织厂 - 内部档案系统 (1997)</title>
+    <link rel="icon" type="image/jpeg" href="search.png">
+    
+    <!-- 外部CSS文件 -->
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="search-assistant.css">
+    <link rel="stylesheet" href="visitor.css">
+    
+    <!-- 内联CSS样式 - 针对布局优化 -->
+    <style>
+        /* 页面基本样式 - 简化版90年代风格 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        :root {
+            --primary-color: #000080;
+            --secondary-color: #F0F0F0;
+            --danger-color: #CC0000;
+            --warning-color: #FFCC00;
+            --success-color: #006600;
+            --border-color: #A0A0A0;
+        }
+        
+        body {
+            font-family: "SimSun", "宋体", serif;
+            background-color: #E8E8E8;
+            color: #333333;
+            background-image: url('data:image/gif;base64,R0lGODlhBAAEAIAAAP///8zMzCH5BAAAAAAALAAAAAAEAAQAAAIFhI+pmwUAOw==');
+            background-repeat: repeat;
+            padding: 15px;
+            min-height: 100vh;
+            -webkit-text-size-adjust: 100%;
+            touch-action: manipulation;
+        }
+        
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        /* 顶部搜索栏容器 - 重新设计布局 */
+        .top-header {
+            background-color: #FFFFFF;
+            border-radius: 4px;
+            padding: 15px 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 15px;
+            z-index: 100;
+        }
+        
+        /* Logo和搜索框的紧凑布局 */
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            width: 100%;
+        }
+        
+        .logo-search-wrapper {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            gap: 15px;
+        }
+        
+        .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 4px;
+            background-color: #FFFFFF;
+            padding: 5px;
+            object-fit: contain;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+        
+        .factory-title {
+            font-family: "SimHei", "黑体", sans-serif;
+            color: var(--primary-color);
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+            white-space: nowrap;
+        }
+        
+        /* 搜索栏相关样式 - 从参考页面添加 */
+        .search-container {
+            flex: 1;
+            min-width: 0; /* 允许容器缩小 */
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border: 2px solid #A0A0A0;
+            border-radius: 24px;
+            padding: 10px 18px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        
+        .search-bar:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 8px rgba(0,0,128,0.2);
+        }
+        
+        .search-bar:focus-within {
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0,0,128,0.25);
+        }
+        
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            color: #666666;
+        }
+        
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: transparent;
+            font-family: "SimSun", "宋体", serif;
+            color: #333333;
+        }
+        
+        .search-input::placeholder {
+            color: #888888;
+            font-style: italic;
+        }
+        
+        .search-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            font-family: "SimHei", "黑体", sans-serif;
+            transition: all 0.2s;
+            min-height: 38px;
+        }
+        
+        .search-button:hover {
+            background-color: #0000CC;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+        }
+        
+        .search-button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        /* 内容容器 - 简化边框 */
+        .content-container {
+            background-color: #FFFFFF;
+            border-radius: 4px;
+            padding: 25px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        h1, h2, h3 {
+            font-family: "SimHei", "黑体", sans-serif;
+            color: var(--primary-color);
+            word-wrap: break-word;
+        }
+        
+        h1 {
+            font-size: 24px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 12px;
+            margin: 0 0 15px 0;
+            text-align: center;
+        }
+        
+        h2 {
+            font-size: 19px;
+            background: linear-gradient(to right, transparent, #F0F5FF, transparent);
+            padding: 10px 15px;
+            margin: 20px 0 15px 0;
+            text-align: center;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        h3 {
+            font-size: 17px;
+            margin: 15px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 1px dotted #CCCCCC;
+        }
+        
+        .blink {
+            animation: blink 1.2s infinite;
+            color: var(--danger-color);
+            font-weight: bold;
+        }
+        
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .marquee-container {
+            background: linear-gradient(to right, #FFF9E6, #FFF0CC);
+            padding: 10px 15px;
+            font-weight: bold;
+            margin: 15px 0;
+            overflow: hidden;
+            border-radius: 3px;
+            border-left: 3px solid var(--warning-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .marquee-text {
+            white-space: nowrap;
+            animation: marquee 30s linear infinite;
+            padding: 3px 0;
+            color: #8B4513;
+        }
+        
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #999999, transparent);
+            margin: 20px 0;
+        }
+        
+        .yinmimima-section {
+            background-color: #F9F9FF;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: center;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,128,0.08);
+            border: 1px solid #E0E0FF;
+        }
+        
+        .yinmimima-input {
+            padding: 12px 15px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 300px;
+            border: 1px solid #B0B0B0;
+            background-color: #FFFFFF;
+            font-family: "SimSun", "宋体", serif;
+            text-align: center;
+            margin: 15px 0;
+            border-radius: 4px;
+            transition: border-color 0.2s;
+        }
+        
+        .yinmimima-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0,0,128,0.1);
+            outline: none;
+        }
+        
+        .submit-button {
+            background-color: var(--primary-color);
+            color: #FFFFFF;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: "SimHei", "黑体", sans-serif;
+            margin: 10px 5px;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 180px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .submit-button:hover {
+            background-color: #0000CC;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .submit-button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .content-section {
+            display: none;
+            background-color: #FFFFFF;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 4px;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .record-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 20px 0;
+            font-size: 14px;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+        
+        .record-table th {
+            background-color: var(--primary-color);
+            color: #FFFFFF;
+            padding: 12px 10px;
+            text-align: left;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+        }
+        
+        .record-table td {
+            padding: 10px;
+            border: none;
+            font-size: 13px;
+            word-break: break-word;
+            border-bottom: 1px solid #F0F0F0;
+        }
+        
+        .record-table tr {
+            transition: background-color 0.2s;
+        }
+        
+        .record-table tr:nth-child(even) {
+            background-color: #F9F9F9;
+        }
+        
+        .record-table tr:hover {
+            background-color: #F0F5FF;
+        }
+        
+        .record-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .warning-box {
+            background: linear-gradient(to right, #FFF0F0, #FFE8E8);
+            padding: 18px;
+            margin: 20px 0;
+            font-weight: bold;
+            border-radius: 6px;
+            border-left: 4px solid var(--danger-color);
+            box-shadow: 0 2px 5px rgba(255,0,0,0.05);
+        }
+        
+        .notice-box {
+            background-color: #F0F8FF;
+            padding: 16px;
+            margin: 18px 0;
+            font-style: italic;
+            border-radius: 6px;
+            border-left: 4px solid #4682B4;
+            box-shadow: 0 2px 5px rgba(70,130,180,0.05);
+        }
+        
+        .counter {
+            text-align: center;
+            font-size: 13px;
+            color: #707070;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #E0E0E0;
+        }
+        
+        /* 工厂特色元素 */
+        .factory-banner {
+            background: linear-gradient(90deg, #8B0000, #B22222, #8B0000);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            font-size: 15px;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 4px rgba(139,0,0,0.2);
+        }
+        
+        .thread-pattern {
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+            height: 2px;
+            margin: 15px 0;
+            opacity: 0.5;
+        }
+        
+        /* 内部弹窗样式 */
+        .internal-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .modal-content {
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            padding: 25px;
+            max-width: 550px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .modal-title {
+            font-family: "SimHei", "黑体", sans-serif;
+            color: var(--primary-color);
+            font-size: 20px;
+            margin: 0;
+        }
+        
+        .close-button {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #666666;
+            cursor: pointer;
+            padding: 0 10px;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+        
+        .close-button:hover {
+            color: #000000;
+        }
+        
+        .modal-body {
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        
+        /* 移动端优化 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .main-container {
+                gap: 15px;
+            }
+            
+            .top-header {
+                padding: 12px 15px;
+                top: 10px;
+                border-radius: 3px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .logo-search-wrapper {
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+            }
+            
+            .search-container {
+                width: 100%;
+            }
+            
+            .content-container {
+                padding: 20px;
+                border-radius: 3px;
+            }
+            
+            h1 {
+                font-size: 21px;
+            }
+            
+            h2 {
+                font-size: 18px;
+                padding: 8px 12px;
+            }
+            
+            h3 {
+                font-size: 16px;
+            }
+            
+            .logo {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .factory-title {
+                font-size: 16px;
+            }
+            
+            .search-bar {
+                padding: 8px 15px;
+            }
+            
+            .search-button {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+                max-width: 90%;
+            }
+            
+            .record-table {
+                font-size: 13px;
+            }
+            
+            .record-table th,
+            .record-table td {
+                padding: 8px;
+                font-size: 12px;
+            }
+            
+            /* 表格在小屏幕上水平滚动 */
+            .table-wrapper {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                margin: 0 -10px;
+                padding: 0 10px;
+            }
+            
+            .table-wrapper table {
+                min-width: 500px;
+            }
+            
+            .yinmimima-section {
+                padding: 20px 15px;
+            }
+            
+            .yinmimima-input {
+                max-width: 100%;
+                font-size: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo-search-wrapper {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .factory-title {
+                font-size: 15px;
+            }
+            
+            h1 {
+                font-size: 19px;
+            }
+            
+            .yinmimima-input {
+                font-size: 15px;
+                padding: 10px;
+            }
+            
+            .submit-button {
+                font-size: 15px;
+                padding: 10px 20px;
+                max-width: 100%;
+            }
+            
+            .marquee-text {
+                font-size: 13px;
+            }
+            
+            .factory-banner {
+                font-size: 13px;
+                padding: 8px;
+            }
+            
+            .search-button {
+                padding: 8px 12px;
+                font-size: 13px;
+                margin-left: 5px;
+            }
+            
+            .search-input {
+                font-size: 14px;
+            }
+        }
+        
+        /* 防止长按选中 */
+        .no-select {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* 优化触摸体验 */
+        button, input[type="button"], input[type="submit"] {
+            -webkit-tap-highlight-color: transparent;
+            min-height: 44px;
+        }
+        
+        input, textarea, select {
+            font-size: 16px; /* 防止iOS缩放 */
+        }
+
+         .keyword {
+  background-color: #f5ff70;  /*  背景 */
+  font-weight: 500;           /* 中等加粗 */
+  padding: 0 2px;            /* 左右内边距 */
+  border-radius: 2px;        /* 轻微圆角 */
+  color: #000407;            /*  文字 */
+}
+        
+        /* 列表样式 */
+        ul, ol {
+            padding-left: 25px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- 顶部搜索栏区域 - 重新设计 -->
+        <div class="top-header">
+            <div class="header-content">
+                <div class="logo-search-wrapper">
+                    <!-- Logo -->
+                    <div class="logo-section">
+                        <img src="search.png" alt="锦华纺织厂" class="logo" onerror="this.style.display='none';">
+                    </div>
+                    
+                    <!-- 搜索框区域 - 从参考页面添加完整的搜索栏 -->
+                    <div class="search-container">
+                        <!-- <div class="factory-title">锦华纺织厂档案检索系统</div> -->
+                        <div class="search-bar">
+                            <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                            </svg>
+                            <input type="text" class="search-input" id="searchInput" placeholder="搜索其他关键词..." autocomplete="off">
+                            <button class="search-button" id="searchButton">搜索</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 内容区域 -->
+        <div class="content-container">
+            <div class="factory-banner">
+                锦华纺织厂 - 始建于1978年 - 国家二级企业
+            </div>
+            
+            <h1>锦华纺织厂内部档案管理系统</h1>
+            
+            <div class="marquee-container">
+                <div class="marquee-text">
+                    ★ 欢迎使用内部档案系统！最后更新日期：1997年12月8日。本系统包含厂内机密档案，仅供授权人员访问。★
+                </div>
+            </div>
+            
+            <div class="notice-box">
+                <strong>系统公告：</strong>根据厂党委要求，所有敏感档案必须设置密码保护。请各部门负责人定期检查档案安全性。
+            </div>
+            
+            <h2>劳资科机密档案访问系统</h2>
+            <div class="yinmimima-section">
+                <p>此部分内容受密码保护，请输入访问密码：</p>
+                <!-- 修复这里：将 type="yinmimima" 改为有效的输入类型 -->
+                <input type="text" class="yinmimima-input" id="yinmimimaInput" placeholder="输入密码（字母与数字组合）">
+                <button class="submit-button" id="submityinmimima">确认访问</button>
+                <p id="yinmimimaMessage" style="margin-top:15px; font-size:14px;"></p>
+            </div>
+            
+            <div class="content-section" id="secretContent">
+                <div class="thread-pattern"></div>
+                
+                <h2>锦华纺织厂劳资科外聘人员记录 (1995-1997)</h2>
+                
+                <div class="warning-box">
+                    <strong>警告：</strong>以下内容为厂内绝密信息，仅限劳资科科长及以上级别人员查阅。未经授权泄露将按厂纪严肃处理。
+                </div>
+                
+                <h3>主要相关人员</h3>
+                <ul>
+                    <li><strong>周德贵</strong> - 劳资科科长，负责外聘人员审核与合同签订</li>
+                    <li><strong>李振华</strong> - 前进钢铁厂高级技工，持有三级钳工、二级焊工证书</li>
+                    <li><strong>████</strong> - 财务科科长，负责外聘费用审批</li>
+                    <li><strong>████</strong> - 前进钢铁厂人事科科长</li>
+                </ul>
+                
+                <h3>外聘维修记录详情</h3>
+                <div class="table-wrapper">
+                    <table class="record-table">
+                        <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>维修项目</th>
+                                <th>地点</th>
+                                <th>费用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1995-03-12</td>
+                                <td>私人住宅暖气维修</td>
+                                <td>中山路78号</td>
+                                <td>320元</td>
+                            </tr>
+                            <tr>
+                                <td>1995-07-25</td>
+                                <td>阳台护栏加固</td>
+                                <td>解放路112号</td>
+                                <td>480元</td>
+                            </tr>
+                            <tr>
+                                <td>1996-01-18</td>
+                                <td>卷帘门安装</td>
+                                <td>青年路45号</td>
+                                <td>650元</td>
+                            </tr>
+                            <tr>
+                                <td>1996-05-30</td>
+                                <td>私人车辆维修</td>
+                                <td>厂区车库</td>
+                                <td>400元</td>
+                            </tr>
+                            <tr>
+                                <td>1997-04-05</td>
+                                <td>房屋结构加固</td>
+                                <td><span class="keyword">周家村12号</span></td>
+                                <td>1800元</td>
+                            </tr>
+                            <tr>
+                                <td>1997-08-20</td>
+                                <td>水电改造</td>
+                                <td>新华路234号</td>
+                                <td>1200元</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="notice-box">
+                    <strong>审计发现：</strong>以上维修累计支付李振华技工5650元，均未通过正规外聘流程。其中3次以虚假名义报销，涉及金额2850元。
+                </div>
+                
+                <div class="warning-box">
+                    <p><span class="blink">■ 厂党委处理意见 ■</span></p>
+                    <p>鉴于证据确凿，建议：</p>
+                    <ol>
+                        <li>对周德贵同志停职检查</li>
+                        <li>追回违规报销款项</li>
+                        <li>对相关责任人诫勉谈话</li>
+                        <li>完善外聘管理制度</li>
+                    </ol>
+                </div>
+                
+                <div class="thread-pattern"></div>
+                
+                <hr>
+                <p><strong>档案编号：</strong>JH97-LZ-0088</p>
+                <p><strong>记录人：</strong>厂审计科 ███</p>
+                <p><strong>记录日期：</strong>1997年12月8日</p>
+                <p><strong>保密等级：</strong>绝密</p>
+            </div>
+            
+            <div class="counter">
+                <p>系统访问次数：<span id="visitCount">000142</span></p>
+                <p>最后更新：1997-12-08 14:30:25</p>
+                <p style="font-size:12px; color:#888; margin-top:8px;">© 1978-1997 锦华纺织厂信息中心</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 内部弹窗 - 系统提示 -->
+    <div id="systemModal" class="internal-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">系统提示</h3>
+                <button class="close-button" id="closeSystemModal">&times;</button>
+            </div>
+            <div class="modal-body" id="systemMessage">
+                <!-- 系统消息将动态插入到这里 -->
+            </div>
+        </div>
+    </div>
+    
+    
+    <!-- 内联JavaScript - 仅保留密码验证功能 -->
+    <script>
+        // 系统初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('页面加载完成');
+            
+            // 检查密码输入框是否存在
+            const yinmimimaInput = document.getElementById('yinmimimaInput');
+            console.log('密码输入框:', yinmimimaInput);
+            
+            // 检查提交按钮是否存在
+            const submityinmimimaBtn = document.getElementById('submityinmimima');
+            console.log('提交按钮:', submityinmimimaBtn);
+            
+            // 检查消息元素是否存在
+            const yinmimimaMessage = document.getElementById('yinmimimaMessage');
+            console.log('消息元素:', yinmimimaMessage);
+            
+            // 检查秘密内容是否存在
+            const secretContent = document.getElementById('secretContent');
+            console.log('秘密内容:', secretContent);
+            
+            // 密码验证功能 - 添加详细的事件监听
+            if (submityinmimimaBtn && yinmimimaInput) {
+                submityinmimimaBtn.addEventListener('click', function() {
+                    console.log('提交按钮被点击');
+                    checkyinmimima();
+                });
+                
+                yinmimimaInput.addEventListener('keyup', function(event) {
+                    console.log('键盘事件:', event.key);
+                    if (event.key === 'Enter') {
+                        console.log('回车键被按下');
+                        checkyinmimima();
+                    }
+                });
+                
+                console.log('密码验证事件监听已添加');
+            } else {
+                console.error('找不到密码输入框或提交按钮');
+            }
+            
+            // 搜索按钮功能
+            const searchButton = document.getElementById('searchButton');
+            const searchInput = document.getElementById('searchInput');
+            
+            if (searchButton && searchInput) {
+                searchButton.addEventListener('click', performSearch);
+                searchInput.addEventListener('keyup', function(event) {
+                    if (event.key === 'Enter') performSearch();
+                });
+            }
+            
+            // 弹窗关闭功能
+            document.getElementById('closeSystemModal').addEventListener('click', closeSystemModal);
+            
+            // 点击弹窗背景关闭
+            document.getElementById('systemModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeSystemModal();
+                }
+            });
+            
+            // 防止键盘弹出时页面布局错乱（移动端优化）
+            window.addEventListener('resize', function() {
+                document.body.scrollTop = 0;
+            });
+            
+            // 显示系统启动提示
+            setTimeout(showSystemMessage, 800);
+        });
+        
+        // 搜索功能
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.trim();
+            
+            if (!searchTerm) {
+                showSystemMessage('请输入搜索关键词');
+                return;
+            }
+            
+            // 显示搜索中状态
+            const searchButton = document.getElementById('searchButton');
+            const originalText = searchButton.textContent;
+            searchButton.textContent = '搜索中...';
+            searchButton.disabled = true;
+            
+            // 模拟搜索过程
+            setTimeout(function() {
+                searchButton.textContent = originalText;
+                searchButton.disabled = false;
+                
+                // 简单的搜索逻辑 - 在实际应用中应调用search-engine.js
+                const lowerSearchTerm = searchTerm.toLowerCase();
+                
+                // 检查搜索词是否与页面内容匹配
+                const pageText = document.body.innerText.toLowerCase();
+                const isMatch = pageText.includes(lowerSearchTerm);
+                
+                if (isMatch) {
+                    showSystemMessage(`找到与"${searchTerm}"相关的档案记录\n搜索结果已高亮显示`);
+                    
+                    // 高亮显示匹配文本（简化版本）
+                    highlightText(searchTerm);
+                } else {
+                    showSystemMessage(`未找到与"${searchTerm}"相关的档案\n请尝试其他关键词`);
+                }
+            }, 800);
+        }
+        
+        // 简单的高亮文本函数
+        function highlightText(searchTerm) {
+            // 这是一个简化的高亮实现
+            // 在实际应用中，应该使用更复杂的方法来避免破坏HTML结构
+            const elements = document.querySelectorAll('.content-container p, .content-container li, .content-container td');
+            
+            elements.forEach(element => {
+                const text = element.innerText;
+                if (text.toLowerCase().includes(searchTerm.toLowerCase())) {
+                    element.style.backgroundColor = '#FFFFCC';
+                    element.style.padding = '2px';
+                    element.style.borderRadius = '2px';
+                    
+                    // 滚动到第一个匹配元素
+                    if (!window.scrollToElement) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        window.scrollToElement = true;
+                    }
+                }
+            });
+        }
+        
+        // 密码检查函数
+        function checkyinmimima() {
+            console.log('密码检查函数被调用');
+            
+            const yinmimima = document.getElementById('yinmimimaInput').value;
+            const messageElement = document.getElementById('yinmimimaMessage');
+            const secretContent = document.getElementById('secretContent');
+            
+            console.log('输入的密码:', yinmimima);
+            console.log('正确密码应该是: 0812ZDG632578');
+            
+            // 调试：检查所有元素是否存在
+            if (!yinmimima) {
+                console.error('无法获取密码输入框的值');
+                return;
+            }
+            
+            if (!messageElement) {
+                console.error('找不到消息元素');
+                return;
+            }
+            
+            if (!secretContent) {
+                console.error('找不到秘密内容元素');
+                return;
+            }
+            
+            if (yinmimima === '0812ZDG632578') {
+                console.log('密码正确');
+                messageElement.innerHTML = '<span style="color:var(--success-color);">✓ 密码验证通过，正在加载机密档案...</span>';
+                
+                // 模拟加载延迟
+                setTimeout(function() {
+                    secretContent.style.display = 'block';
+                    messageElement.innerHTML = '<span style="color:var(--success-color);">✓ 机密档案加载完成 [JH97-LZ-0088]</span>';
+                    
+                    // 显示系统提示
+                    showSystemMessage('档案JH97-LZ-0088已解密加载\n锦华纺织厂档案系统 v2.1\n1997-12-08 15:42:17');
+                    
+                    // 滚动到内容区域
+                    setTimeout(function() {
+                        secretContent.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 300);
+                }, 800);
+            } else {
+                console.log('密码错误');
+                messageElement.innerHTML = '<span style="color:var(--danger-color);">✗ 密码错误，访问被拒绝</span>';
+                secretContent.style.display = 'none';
+                
+                // 清除密码输入框
+                document.getElementById('yinmimimaInput').value = '';
+                
+                // 错误效果
+                const inputElement = document.getElementById('yinmimimaInput');
+                inputElement.style.backgroundColor = '#FFE4E1';
+                setTimeout(function() {
+                    inputElement.style.backgroundColor = '#FFF';
+                }, 300);
+            }
+        }
+        
+        // 关闭系统弹窗
+        function closeSystemModal() {
+            document.getElementById('systemModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // 显示系统消息
+        /* function showSystemMessage(message) {
+            if (!message) {
+                message = '锦华纺织厂档案系统 v2.1 已启动\n系统时间: 1997-12-08 15:40:00\n当前用户: 内部访问者\n档案库状态: 正常';
+            }
+            
+            document.getElementById('systemMessage').textContent = message;
+            document.getElementById('systemModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        } */
+        
+        // 更新访问计数器
+        /* function updateCounter() {
+            const countElement = document.getElementById('visitCount');
+            let count = parseInt(countElement.textContent);
+            count += Math.floor(Math.random() * 3) + 1;
+            countElement.textContent = count.toString().padStart(6, '0');
+        } */
+    </script>
+    <!-- 外部JavaScript文件 -->
+    <script src="./storage.js"></script>
+    <script src="./navigation.js"></script>
+    <script src="./visitor.js"></script>
+    <script src="./search-ass.js"></script>
+    <script src="./search-engine.js"></script>
+       <script src="./logo-return.js"></script>
+        <script src="./jinzhi.js"></script>
+</body>
+
+</html>

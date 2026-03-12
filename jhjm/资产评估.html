@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>深南市诚信拍卖行 - 资产处置公告</title>
-    <link rel="icon" type="image/jpeg" href="https://sylvie-seven-cq.top/gallery/search.png">
+    <link rel="icon" type="image/jpeg" href="./search.png">
     <style>
         * {
             box-sizing: border-box;
@@ -30,8 +30,8 @@
         }
 
         .logo {
-            width: 50px;
-            height: 50px;
+            width: 120px;
+            height: 120px;
         }
 
         .search-container {
@@ -308,11 +308,15 @@
             }
         }
     </style>
+    <!-- 外部CSS链接 -->
+    <link rel="stylesheet" href="search-assistant.css">
+    <link rel="stylesheet" href="visitor.css">
+    <link rel="stylesheet" href="common.css">
 </head>
 <body>
     <!-- 顶部区域：Logo和搜索栏 -->
     <div class="header-container">
-        <img src="https://sylvie-seven-cq.top/gallery/search.png" alt="深南市诚信拍卖行" class="logo">
+        <img src="search.png" alt="深南市诚信拍卖行" class="logo">
         <div class="search-container">
             <div class="search-bar">
                 <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -426,7 +430,7 @@
             <strong>⚠️ 风险提示 / 特别说明</strong><br/><br/>
             
             <strong>资产边界说明：</strong><br/>
-            本次拍卖标的物严格按照地籍图红线范围界定。厂区西北角<span class="highlight">"四号成品仓库"</span>及周边50米范围不在此次拍卖、移交范围内。<br/><br/>
+            本次拍卖标的物严格按照地籍图红线范围界定。厂区西北角<!-- <span class="highlight">"四号成品仓库"</span> --><span class="highlight" style="cursor: pointer;" onclick="window.open('平面图.html', '_blank')">"四号成品仓库"</span>及周边50米范围不在此次拍卖、移交范围内。<br/><br/>
             
             <strong>注：</strong>四号仓库目前由深南市特殊物资管理处封存，竞买人严禁擅自靠近或试图开启。<br/><br/>
             
@@ -445,11 +449,20 @@
         </div>
         
         <div class="footer">
+            <p><strong>本页为彩蛋页面</strong></p>
             <p>深南市诚信拍卖行 版权所有 © 2005</p>
-            <p>地址：深南市人民中路88号诚信大厦3楼 | 电话：0755-88240001</p>
+            
+            <p>地址：深南市人民中路88号诚信大厦3楼 | 电话：0755-00010002</p>
             <p>本公告最终解释权归深南市诚信拍卖行所有</p>
         </div>
     </div>
+    <!-- 链接外部JS文件 -->
+    <script src="search-engine.js"></script>
+    <script src="storage.js"></script>
+    <script src="navigation.js"></script>
+    <script src="visitor.js"></script>
+    <script src="search-ass.js"></script>
+    <script src="buxukandesearch.js"></script>
 
     <script>
         // 搜索功能
@@ -460,7 +473,7 @@
             }
         });
 
-        function performSearch() {
+        /* function performSearch() {
             const searchTerm = document.getElementById('searchInput').value.trim();
             if (searchTerm) {
                 // 这里可以调用实际的搜索函数
@@ -468,7 +481,7 @@
                 // 实际应用中，这里应该调用外部JS中的搜索函数
                 // 例如：performSearch(searchTerm, event);
             }
-        }
+        } */
 
         // 模拟搜索数据
         const searchData = [
@@ -478,5 +491,7 @@
             { title: "文化资产清单", content: "《菁英会客厅》节目相关物资，Betacam母带等" }
         ];
     </script>
+<script src="logo-return.js"></script>
+<script src="./return.js"></script>
 </body>
 </html>

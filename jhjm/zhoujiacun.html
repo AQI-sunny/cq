@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>锦华纺织厂 · 周家村12号绝密录音 · 周德贵/李振华</title>
+    <style>
+        /* 古早CRT / 厂办密档风格 — 周家村12号 1997 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #1a2419;
+            background-image: 
+                linear-gradient(45deg, #1f2e1e 20%, transparent 20%),
+                linear-gradient(-45deg, #1f2e1e 20%, transparent 20%);
+            background-size: 30px 30px;
+            font-family: 'Courier New', 'VT323', 'Source Code Pro', 'IBM EGA', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        /* 老式录音带 / 案件卷宗 主容器 */
+        .crt-container {
+            max-width: 950px;
+            width: 100%;
+            background: #0f130f;
+            border: 12px solid #3c352b;
+            border-image: repeating-linear-gradient(45deg, #4a4136, #2c2720 15px) 30;
+            box-shadow: 0 0 0 2px #6b5a45, 0 0 0 6px #1f1c16, 0 20px 30px rgba(0,0,0,0.7);
+            padding: 2rem 1.8rem;
+            position: relative;
+            color: #b9b46a;
+        }
+
+        /* 仿旧磁带/盘式录音机标识 */
+        .crt-container::before {
+            content: "⏻  RECORDER  · 周家村12号·私录 ⏼";
+            position: absolute;
+            top: -18px;
+            left: 20px;
+            background: #1f1c16;
+            color: #b1a86b;
+            padding: 4px 18px;
+            font-size: 0.85rem;
+            letter-spacing: 4px;
+            border: 2px solid #7b7545;
+            border-radius: 30px;
+            box-shadow: inset 0 -2px 0 #3a351e;
+            text-transform: uppercase;
+        }
+
+        /* 顶部密封警告条——绝密信息参照 */
+        .seal-warning {
+            border: 3px dashed #8b1e1e;
+            background: #1c1410;
+            padding: 0.8rem 1rem;
+            margin-bottom: 2rem;
+            color: #dbb42c;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1rem;
+            letter-spacing: 3px;
+            word-break: break-word;
+            box-shadow: inset 0 0 10px #3d0b0b;
+        }
+
+        .seal-warning span {
+            background: #291d0e;
+            padding: 0.2rem 0.8rem;
+            border: 1px solid #ba8b1b;
+        }
+
+        /* 录音内容主面板 —— 类似老式开盘机标签 */
+        .audio-surface {
+            background: #191e15;
+            border: 1px solid #6a6942;
+            padding: 1.8rem 2rem;
+            box-shadow: inset 0 0 30px #020202, inset 0 0 8px #44471f;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        /* 磨损的仿古打字/手写体 */
+        .transcript {
+            font-size: 1.25rem;
+            line-height: 2rem;
+            color: #dbd484;
+            text-shadow: 0 0 2px #928c4a;
+            letter-spacing: 0.8px;
+        }
+
+        .speaker {
+            color: #ebb434;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            border-bottom: 1px dotted #7a6d37;
+            padding-bottom: 2px;
+        }
+
+        /* 重点对话 古早加重 */
+        .highlight {
+            background: #302d1a;
+            color: #ffd970;
+            padding: 0.2rem 0.4rem;
+            font-style: italic;
+            border-left: 6px solid #ad9e46;
+        }
+
+        .months-stressed {
+            font-weight: bold;
+            color: #fdffb8;
+            background: #4a3b1a;
+            padding: 0 6px;
+            font-size: 1.5rem;
+            letter-spacing: 3px;
+            border: 1px solid #ad9e5b;
+            display: inline-block;
+            transform: scale(1.02);
+            box-shadow: 0 0 10px #30260c;
+        }
+
+        /* 录音机动态波纹 —— 暗示正在播放 */
+        .vu-meter {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .vu-bar {
+            width: 20px;
+            height: 8px;
+            background: #3b472b;
+            border: 1px solid #878a47;
+        }
+
+        .vu-bar.active {
+            background: linear-gradient(90deg, #aeb885, #dfe66a);
+            border-color: #fcf69e;
+            animation: flicker 1.2s infinite;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+
+        /* 参考页面 —— 锦华纺织厂外聘绝密记录卡 */
+        .reference-card {
+            margin-top: 2.5rem;
+            border-top: 6px double #6b5e3f;
+            padding-top: 1.8rem;
+            background: #14190e;
+            padding: 1.5rem 1.2rem;
+            border: 1px solid #4b4e25;
+            box-shadow: inset 0 0 12px #010101;
+        }
+
+        .reference-header {
+            font-size: 1.2rem;
+            color: #be9a5a;
+            text-decoration: underline overline wavy #634f29;
+            letter-spacing: 6px;
+            margin-bottom: 0.8rem;
+            font-weight: bold;
+        }
+
+        .ref-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            color: #b1ab6c;
+        }
+
+        .ref-table td, .ref-table th {
+            border: 1px solid #685d32;
+            padding: 0.6rem 0.3rem;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .ref-table th {
+            background: #1f281b;
+            color: #e1c261;
+            font-weight: normal;
+            text-transform: uppercase;
+        }
+
+        .redacted {
+            background: #1d1d1d;
+            color: #1d1d1d;
+            border: 1px solid #4f4123;
+            padding: 0 4px;
+            letter-spacing: 2px;
+        }
+
+        .redacted:hover {
+            color: #b6a574;
+            background: #2c2c1c;
+        }
+
+        .warning-stamp {
+            color: #db5a4a;
+            font-size: 0.85rem;
+            border: 2px solid #911818;
+            padding: 0.5rem;
+            margin-top: 0.8rem;
+            background: #251010;
+            text-align: center;
+        }
+
+        .footer-note {
+            margin-top: 1.8rem;
+            font-size: 0.7rem;
+            color: #7e7a49;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px dashed #5c613c;
+            padding-top: 1rem;
+        }
+
+        /* 模拟老式盘式带转轮 */
+        .reel-icon {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid #9c944d;
+            border-radius: 50%;
+            background: #0a0c06;
+            margin-right: 5px;
+            box-shadow: inset 0 0 0 2px #3f3e1f;
+        }
+
+        /* 周家村12号特别标记 */
+        .location-marker {
+            background: #362c18;
+            padding: 0.3rem 0.8rem;
+            display: inline-block;
+            border-radius: 0;
+            font-size: 0.75rem;
+            border: 1px solid #947a30;
+            color: #eedd99;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="crt-container">
+        <!-- 绝密级别警示 —— 与参考页面一致的精神 -->
+        <div class="seal-warning">
+            <span>⚠️  绝密 · 周家村12号现场录音 ⚠️</span><br>
+            <span style="font-size:0.8rem; letter-spacing:2px;">仅限███查阅 · 私自查阅将追踪法律责任</span>
+        </div>
+
+        <!-- 主录音机界面 — 模拟交易对话 周德贵/李振华 1997 周家村12号 -->
+        <div class="audio-surface">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                <span style="display: flex; align-items: center;"><span class="reel-icon"></span> 开盘带 · 实录 </span>
+                <span class="location-marker">📍 周家村12号 · 结构加固现场 1997.04.05</span>
+            </div>
+            <!-- VU表 模拟录音电平 -->
+            <div class="vu-meter">
+                <span style="color:#aca242; margin-right: 10px;">⏺ REC</span>
+                <span class="vu-bar active"></span>
+                <span class="vu-bar active"></span>
+                <span class="vu-bar active"></span>
+                <span class="vu-bar"></span>
+                <span class="vu-bar"></span>
+                <span style="margin-left: auto; color: #b4a545;">⏲ 0:21 / 1:17:34</span>
+            </div>
+            <!-- 录音转写 —— 核心交易对话 1997 周德贵与李振华 -->
+            <div class="transcript">
+                <span class="speaker">🧾 周德贵:</span> 
+                <span style="display: inline-block; margin-left: 5px;">“振华啊，再帮我干<b class="months-stressed"> 几个月 </b>，把周家村12号这收尾弄利索——我就立马给王素锦升职加薪。你知道的，劳资科我说了算。”</span>
+                <br>
+                <span class="speaker" style="margin-top: 12px; display: inline-block;">🔧 李振华:</span> 
+                <span style="display: inline-block; margin-left: 5px;"> 
+                    “<span style="background: #372f14; padding: 0 5px;">周科长，你上回也是这么讲的。</span> 我从1995年3月干到1997年4月，<br>
+                    <span style="font-size: 1.6rem; line-height: 2.2rem; display: block; margin: 10px 0 6px; border-left: 8px solid #928041; padding-left: 20px;">
+                    💥 我已经帮你干了 <span class="months-stressed" style="font-size: 2rem;">两年多</span> 了！ 💥
+                    </span>
+                    <span style="background: #2c2817; padding: 0.2rem 0.8rem; display: inline-block; border: 1px solid #a18e47;"> 
+                        ████78号暖气、██路护栏、██路45号卷帘门、厂区车库……全是我垫工。
+                    </span>
+                </span>
+                <br>
+                <span class="speaker" style="margin-top: 15px;">🧾 周德贵:</span> 
+                <span style="display: inline-block; margin-left: 5px;"> 
+                    “<span class="highlight">嘘… 小点声，被人听见不好办。再坚持几个月，王素锦那事儿我肯定办妥。</span> 我不会亏待自己人。”
+                </span>
+                <br>
+                <span class="speaker" style="margin-top: 12px;">🔧 李振华:</span> 
+                <span style="display: inline-block; margin-left: 5px;"> 
+                    “说好了，再干3个月，王素锦的晋升呈报表必须报到厂长那儿。周家村12号和水电改造我都弄完。别再拖了。”
+                </span>
+                <br>
+                <span class="speaker" style="margin-top: 12px;">🧾 周德贵:</span> 
+                <span style="display: inline-block; margin-left: 5px;"> 
+                    “一言为定。这个你拿着，刚批下来，按老规矩走虚假名目，你懂的……”
+                </span>
+            </div>
+            <!-- 模拟磁带磨损噪音 -->
+            <div style="margin-top: 24px; color: #79733d; font-size: 0.65rem; display: flex; gap: 15px;">
+                <span>⚡ 磁带嘶嘶声 ~ 3.75 IPS</span>
+                <span>⛔ 此录音████授权查阅</span>
+                <span style="margin-left: auto;">📻 周家村12号 · 隐匿录音</span>
+            </div>
+        </div>
+
+        <!-- 第二核心：锦华纺织厂劳资科外聘人员记录 (1995-1997) —— 完全参照提供内容，并融合周家村12号细节 -->
+       <!--  <div class="reference-card">
+            <div class="reference-header">📁 锦华纺织厂劳资科 · 外聘人员记录 (1995-1997) </div>
+            <div style="color: #c2b157; margin-bottom: 12px; font-size:0.95rem;">
+                <span class="reel-icon" style="border-color:#b87e2b;"></span> 绝密·周德贵卷宗 ／ 李振华外聘维修档案
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; background: #0b0e08; padding: 0.8rem; border-left: 6px solid #564d28;">
+                <div><span style="color:#e2bf6e;">周德贵</span> - 劳资科科长，负责外聘人员审核与合同签订</div>
+                <div><span style="color:#e2bf6e;">李振华</span> - 前进钢铁厂高级技工，三级钳工、二级焊工证书</div>
+                <div><span class="redacted" title="财务科科长 · 保密">████</span> - 财务科科长，负责外聘费用审批</div>
+                <div><span class="redacted" title="前进钢铁厂人事科科长 · 保密">████</span> - 前进钢铁厂人事科科长</div>
+            </div>
+           
+            <table class="ref-table">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>维修项目</th>
+                        <th>地点</th>
+                        <th>费用</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1995-03-12</td><td>私人住宅暖气维修</td><td>中山路78号</td><td>320元</td></tr>
+                    <tr><td>1995-07-25</td><td>阳台护栏加固</td><td>解放路112号</td><td>480元</td></tr>
+                    <tr><td>1996-01-18</td><td>卷帘门安装</td><td>青年路45号</td><td>650元</td></tr>
+                    <tr><td>1996-05-30</td><td>私人车辆维修</td><td>厂区车库</td><td>400元</td></tr>
+                    <tr style="background: #2d2a12; border: 2px solid #a38e3b;">
+                        <td><strong>1997-04-05</strong></td>
+                        <td><strong>房屋结构加固</strong></td>
+                        <td><strong>周家村12号</strong></td>
+                        <td><strong>1800元</strong></td>
+                    </tr>
+                    <tr><td>1997-08-20</td><td>水电改造</td><td>新华路234号</td><td>1200元</td></tr>
+                </tbody>
+            </table>
+            
+            <div class="warning-stamp">
+                📢 审计发现：以上维修累计支付李振华技工5650元，均未通过正规外聘流程。<br>
+                其中3次以虚假名义报销，涉及金额2850元。<span style="background:#301a1a; margin-left: 8px; padding: 3px;"> (含1997-04-05 周家村12号加固)</span>
+            </div>
+            <div style="margin-top: 1.2rem; color:#afa14b; font-size: 0.8rem; border-left: 4px solid #aa964a; padding-left: 12px;">
+                ⚙️ 前进钢铁厂高级技工李振华 · 外聘事由: 主要为周德贵科长私人房产维修，累计垫付工时可疑。<br>
+                🔍 王素锦晋升与周家村12号交易存在关联——厂纪办接匿名检举(录音带编号 R1997-1003)
+            </div>
+        </div> -->
+
+        <!-- 结尾脚注 —— 古早录音带时间戳、厂规追溯 -->
+        <div class="footer-note">
+            <span>⏱ 录音介质：TDK D60 铬带 · 周家村12号隐匿录制</span>
+            <span style="letter-spacing: 3px;">🎤 1997.04.05 / 1997.08.20 截获</span>
+        </div>
+        <!-- 隐形标记 类似隐写，和参考页面呼应 -->
+        <div style="color: #2b321a; font-size: 0.5rem; text-align: right; margin-top: 8px; border-top: 1px solid #3d4323; padding-top: 6px;">
+            [绝密] 劳资科外聘附件 · 未经授权严禁查阅 · 锦华总厂(1997)密字第097号
+        </div>
+    </div>
+
+    <!-- 复古扫描线浮动效果 (纯粹氛围) -->
+    <div style="position: fixed; top:0; left:0; width:100%; height:100%; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.2) 0px, rgba(0,255,0,0.02) 2px, transparent 3px, transparent 5px); mix-blend-mode: multiply; z-index: 9999;"></div>
+
+     <!-- 外部JS文件引用 -->
+    <script src="./search-engine.js"></script>
+    <!-- <script src="./storage.js"></script>
+    <script src="./navigation.js"></script> -->
+    <!-- <script src="./visitor.js"></script>
+    <script src="./search-ass.js"></script> -->
+<script src="./return.js"></script>
+</body>
+</html>

@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1996年锦华纺织厂春季招工简章</title>
+    
+    <!-- 外部CSS文件 -->
+    <link rel="stylesheet" href="search-assistant.css">
+    <link rel="stylesheet" href="visitor.css">
+    <link rel="stylesheet" href="common.css">
+    
     <style>
         * {
             box-sizing: border-box;
@@ -31,12 +37,12 @@
         }
 
         .logo {
-            width: 50px;
-            height: 50px;
+            width: 100px;
+            height: 100px;
         }
 
         .search-container {
-            flex: 0 0 33.33%;
+            flex: 0 0 50%;
             min-width: 300px;
         }
 
@@ -124,65 +130,7 @@
             clip-path: polygon(0 10px, 10px 0, 100% 0, 100% 100%, 0 100%);
         } */
 
-        /* 右上角折角效果 */
-        .corner-fold {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            width: 60px;
-            height: 60px;
-            z-index: 10;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .corner-fold::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 0 60px 60px 0;
-            border-color: transparent #990000 transparent transparent;
-            z-index: 1;
-        }
-
-        .corner-fold::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 0 50px 50px 0;
-            border-color: transparent #F5F5DC transparent transparent;
-            z-index: 2;
-        }
-
-        .corner-fold:hover {
-            transform: scale(1.1);
-        }
-
-        .corner-fold:hover::before {
-            border-color: transparent #cc0000 transparent transparent;
-        }
-
-        /* 折角文字提示 */
-        .corner-text {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            transform: rotate(45deg);
-            font-size: 12px;
-            color: white;
-            font-weight: bold;
-            z-index: 3;
-            opacity: 0.7;
-            pointer-events: none;
-        }
+        /* 移除右上角折角效果的所有CSS */
 
         .header {
             text-align: center;
@@ -220,27 +168,29 @@
             margin-bottom: 15px;
         }
 
+        /* 修复印章位置和样式 */
         .stamp {
             position: absolute;
-            right: 20px;
-            top: 20px;
+            right: 30px; /* 调整右边距 */
+            top: 40px; /* 增加上边距，避免被顶部边框遮挡 */
             width: 120px;
             height: 120px;
             border: 2px dashed #990000;
             text-align: center;
-            padding: 8px;
+            padding: 10px; /* 增加内边距 */
             font-family: "楷体", "楷体_GB2312", serif;
             font-size: 14px;
             color: #990000;
-            line-height: 1.4;
+            line-height: 1.1; /* 调整行高 */
             display: flex;
             flex-direction: column;
             justify-content: center;
             word-break: break-all;
             overflow: hidden;
-            transform: rotate(5deg);
-            background-color: rgba(255,255,255,0.8);
-            z-index: 5; /* 确保印章在折角之上 */
+            transform: rotate(1deg); /* 减小旋转角度，避免歪斜 */
+            background-color: rgba(255,255,255,0.95); /* 增加不透明度 */
+            z-index: 5;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
         .stamp-content {
@@ -248,10 +198,11 @@
             flex-direction: column;
             justify-content: space-between;
             height: 100%;
+            padding: 5px; /* 增加内容内边距 */
         }
 
         .stamp-line {
-            margin: 3px 0;
+            margin: 2px 0; /* 减小行间距 */
         }
 
         .section {
@@ -375,6 +326,9 @@
                 width: 120px;
                 height: 120px;
                 font-size: 14px;
+                right: auto;
+                top: auto;
+                transform: rotate(2deg); /* 移动设备上减少旋转 */
             }
             
             .search-bar {
@@ -383,26 +337,6 @@
             
             .search-button {
                 padding: 8px 15px;
-            }
-            
-            /* 移动设备上调整折角大小 */
-            .corner-fold {
-                width: 50px;
-                height: 50px;
-            }
-            
-            .corner-fold::before {
-                border-width: 0 50px 50px 0;
-            }
-            
-            .corner-fold::after {
-                border-width: 0 40px 40px 0;
-            }
-            
-            .corner-text {
-                font-size: 10px;
-                top: 12px;
-                right: 12px;
             }
         }
 
@@ -432,49 +366,29 @@
                 width: 110px;
                 height: 110px;
                 font-size: 12px;
-            }
-            
-            .corner-fold {
-                width: 40px;
-                height: 40px;
-            }
-            
-            .corner-fold::before {
-                border-width: 0 40px 40px 0;
-            }
-            
-            .corner-fold::after {
-                border-width: 0 30px 30px 0;
-            }
-            
-            .corner-text {
-                font-size: 9px;
-                top: 10px;
-                right: 10px;
+                padding: 8px;
             }
         }
     </style>
 </head>
 <body>
     <!-- 顶部区域：Logo和搜索栏 -->
+    <!-- 使用提供的搜索顶栏代码 -->
     <div class="header-container">
-        <img src="https://sylvie-seven-cq.top/gallery/search.png" alt="锦华纺织厂" class="logo">
+        <img src="search.png" alt="深南市诚信拍卖行" class="logo">
         <div class="search-container">
             <div class="search-bar">
                 <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
                 </svg>
-                <input type="text" class="search-input" id="searchInput" placeholder="搜索招工信息...">
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索其他关键词...">
                 <button class="search-button" id="searchButton">搜索</button>
             </div>
         </div>
     </div>
 
     <div class="container">
-        <!-- 右上角折角 -->
-        <div class="corner-fold" id="cornerFold">
-            <div class="corner-text">查看</div>
-        </div>
+        <!-- 已完全移除右上角折角元素 -->
         
         <div class="header">
             <div class="file-info">
@@ -486,10 +400,11 @@
             <h2>关于一九九六年春季扩招挡车工的通知</h2>
         </div>
         
+        <!-- 修复后的印章位置 -->
         <div class="stamp">
             <div class="stamp-content">
                 <div class="stamp-line">深南市锦华纺织厂</div>
-                <div class="stamp-line">劳资科</div>
+                <div class="stamp-line"><span class="red-text">劳资科</span></div>
                 <div class="stamp-line"><br></div>
                 <div class="stamp-line">（盖章）</div>
                 <div class="stamp-line"><br></div>
@@ -534,30 +449,30 @@
             </tr>
             <tr>
                 <td><strong>政策</strong></td>
-                <td>凭身份证及乡镇介绍信，<span class="red-text">免试直接上岗</span>。</td>
-                <td>需参加穿纱、接头技能考核，择优录取。<span class="red-text">体检费自理</span>。</td>
+                <td>凭身份证及乡镇介绍信，免试直接上岗</span>。</td>
+                <td>需参加穿纱、接头技能考核，择优录取。体检费自理</span>。</td>
             </tr>
             <tr>
                 <td><strong>住宿安排</strong></td>
                 <td>直接入住厂区中心<span class="highlight">"干部楼"宿舍</span>（2人/间，配暖气、吊扇，每层有电视房）。</td>
-                <td>实行封闭式管理，统一安置于西北角<span class="red-text">"老仓库改造区"</span>。</td>
+                <td>实行封闭式管理，统一安置于西北角"老仓库改造区"</span>。</td>
             </tr>
             <tr>
                 <td><strong>福利</strong></td>
-                <td>报销来程车票，<span class="red-text">优先办理城市蓝印户口</span>。</td>
+                <td>报销来程车票，优先办理城市蓝印户口</span>。</td>
                 <td>无特殊福利</td>
             </tr>
         </table>
         
         <h2>三、外地工（B类）住宿及管理特别须知</h2>
         
-        <p>鉴于主生活区床位紧张，萍山籍及其他外地员工将暂时入住<span class="red-text">四号成品仓背阴面临时工棚</span>。请严格遵守以下《厂区治安管理规定》：</p>
+        <p>鉴于主生活区床位紧张，萍山籍及其他外地员工将暂时入住<span class="red-text" id="tempDormitory">四号成品仓背阴面临时工棚</span>。请严格遵守以下《厂区治安管理规定》：</p>
         
         <h3>宵禁制度：</h3>
         <p>工棚区每晚 <span class="highlight">22:30 统一熄灯锁门</span>，严禁夜不归宿。</p>
         
         <h3>禁区警告（重点）：</h3>
-        <p>宿舍后方的<span class="highlight">"四号成品仓库"为重点防火防盗单位</span>，存放有<span class="highlight">易燃化学助剂</span>。</p>
+        <p>宿舍后方的<span class="highlight"><span class="red-text">"四号成品仓库"</span>为重点防火防盗单位</span>，存放有<span class="highlight">易燃化学助剂</span>。</p>
         <p>严禁员工在仓库周围晾晒衣物、堆放杂物。</p>
         
         <h3>特别提示：</h3>
@@ -573,13 +488,13 @@
             
             <strong>团结互助：</strong>不同户籍员工应互相尊重，共同维护良好的工作生活环境。<br/><br/>
             
-            <strong>权益保障：</strong>如遇任何问题，请及时向劳资科反映。
+            <strong>权益保障：</strong>如遇任何问题，请及时向<span class="red-text">劳资科</span>反映。
         </div>
         
         <h2>四、报名方式</h2>
         
         <div class="contact">
-            <p>有意者请携带身份证、未婚证，于<strong>2月28日前</strong>到锦华厂劳资科（办公楼102室）报名。</p>
+            <p>有意者请携带身份证、未婚证，于<strong>2月28日前</strong>到锦华厂<span class="red-text">劳资科</span>（办公楼102室）报名。</p>
             <p>联系人：王科长</p>
             <p>联系电话：0755-8824XXXX</p>
         </div>
@@ -589,71 +504,245 @@
         </div>
         
         <div class="footer">
-            <p>深南市锦华纺织厂 劳资科</p>
+            <p>深南市锦华纺织厂 <span class="red-text">劳资科</span></p>
             <p>地址：深南市工业南路128号 | 电话：0755-88240001</p>
             <p>本简章最终解释权归深南市锦华纺织厂所有</p>
         </div>
     </div>
 
+    <!-- 外部JS文件 -->
+    <script src="./search-engine.js"></script>
+    <script src="./storage.js"></script>
+    <script src="./navigation.js"></script>
+    <script src="visitor.js"></script>
+    <script src="./search-ass.js"></script>
+    
     <script>
         // 添加一些交互效果
         document.addEventListener('DOMContentLoaded', function() {
-            // 搜索功能
-            const searchInput = document.getElementById('searchInput');
-            const searchButton = document.getElementById('searchButton');
+            // 确保外部搜索JS正常工作
+            if (typeof initSearchEngine !== 'undefined') {
+                initSearchEngine();
+            }
             
-            searchButton.addEventListener('click', function() {
-                const searchTerm = searchInput.value.trim();
-                if (searchTerm) {
-                    alert(`搜索关键词: "${searchTerm}"\n\n(此功能为演示，实际应用中会执行搜索操作)`);
-                } else {
-                    alert('请输入搜索关键词');
-                }
-            });
+            // 为"四号成品仓背阴面临时工棚"添加点击跳转功能
+            const tempDormitory = document.getElementById('tempDormitory');
             
-            searchInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    searchButton.click();
-                }
-            });
-            
-            // 折角点击跳转功能
-            const cornerFold = document.getElementById('cornerFold');
-            
-            cornerFold.addEventListener('click', function() {
-                // 添加点击动画效果
-                this.style.transform = 'scale(0.9)';
-                setTimeout(() => {
-                    this.style.transform = '';
-                    // 跳转到招工horror.html页面
-                    window.location.href = '招工horror.html';
-                }, 200);
-            });
-            
-            // 添加悬停提示
-            cornerFold.addEventListener('mouseenter', function() {
-                const tooltip = document.createElement('div');
-                tooltip.className = 'tooltip';
-                tooltip.innerHTML = '谨慎点击⚠谨慎点击⚠谨慎点击⚠';
-                tooltip.style.position = 'absolute';
-                tooltip.style.top = '70px';
-                tooltip.style.right = '0';
-                tooltip.style.backgroundColor = 'rgba(0,0,0,0.7)';
-                tooltip.style.color = 'white';
-                tooltip.style.padding = '5px 10px';
-                tooltip.style.borderRadius = '3px';
-                tooltip.style.fontSize = '12px';
-                tooltip.style.whiteSpace = 'nowrap';
-                tooltip.style.zIndex = '100';
-                this.appendChild(tooltip);
-            });
-            
-            cornerFold.addEventListener('mouseleave', function() {
-                const tooltip = this.querySelector('.tooltip');
-                if (tooltip) {
-                    this.removeChild(tooltip);
-                }
-            });
+            if (tempDormitory) {
+                // 添加样式，使其看起来可点击
+                tempDormitory.style.cursor = 'pointer';
+                tempDormitory.style.textDecoration = 'underline';
+                tempDormitory.style.textDecorationStyle = 'dashed';
+                tempDormitory.title = '点击查看详情';
+                
+                tempDormitory.addEventListener('click', function() {
+                    // 添加点击动画效果
+                    this.style.transform = 'scale(1.05)';
+                    
+                    // 创建红黑风格弹窗
+                    const modalOverlay = document.createElement('div');
+                    modalOverlay.id = 'redBlackModal';
+                    modalOverlay.style.cssText = `
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0, 0, 0, 0.85);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 9999;
+                        opacity: 0;
+                        transition: opacity 0.3s ease;
+                    `;
+                    
+                    const warningModal = document.createElement('div');
+                    warningModal.style.cssText = `
+                        background: linear-gradient(145deg, #1a0a0a, #0a0505);
+                        width: 90%;
+                        max-width: 500px;
+                        border-radius: 10px;
+                        overflow: hidden;
+                        box-shadow: 0 0 40px rgba(198, 40, 40, 0.7);
+                        border: 2px solid #c62828;
+                        transform: scale(0.9);
+                        transition: transform 0.3s ease;
+                    `;
+                    
+                    const modalHeader = document.createElement('div');
+                    modalHeader.style.cssText = `
+                        background-color: #2a0a0a;
+                        padding: 20px;
+                        border-bottom: 1px solid #c62828;
+                        text-align: center;
+                    `;
+                    
+                    modalHeader.innerHTML = `
+                        <div style="font-size: 3rem; color: #c62828; margin-bottom: 15px; animation: pulse 2s infinite;">⚠</div>
+                        <h2 style="font-size: 1.8rem; color: #ff5252; margin-bottom: 5px;">警告：受限档案区域</h2>
+                        <p style="color: #b71c1c; font-size: 1.1rem;">访问需要高级权限</p>
+                    `;
+                    
+                    const modalContent = document.createElement('div');
+                    modalContent.style.cssText = `
+                        padding: 25px;
+                        text-align: left;
+                        line-height: 1.6;
+                        color: #e0e0e0;
+                        background-color: rgba(139, 0, 0, 0.1);
+                        margin: 20px;
+                        border-radius: 8px;
+                        border-left: 4px solid #c62828;
+                        white-space: pre-line;
+                    `;
+                    modalContent.textContent = "⚠ 警告：即将进入受限档案区域\n\n您确定要继续吗？";
+                    
+                    const modalFooter = document.createElement('div');
+                    modalFooter.style.cssText = `
+                        padding: 20px;
+                        display: flex;
+                        justify-content: center;
+                        gap: 20px;
+                    `;
+                    
+                    const cancelBtn = document.createElement('button');
+                    cancelBtn.textContent = '取消';
+                    cancelBtn.style.cssText = `
+                        padding: 12px 30px;
+                        background: linear-gradient(to bottom, #333, #222);
+                        color: #e0e0e0;
+                        border: 1px solid #555;
+                        border-radius: 5px;
+                        font-size: 1.1rem;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        min-width: 120px;
+                    `;
+                    
+                    const confirmBtn = document.createElement('button');
+                    confirmBtn.textContent = '确认进入';
+                    confirmBtn.style.cssText = `
+                        padding: 12px 30px;
+                        background: linear-gradient(to bottom, #c62828, #8e0000);
+                        color: white;
+                        border: 1px solid #ff5252;
+                        border-radius: 5px;
+                        font-size: 1.1rem;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        min-width: 120px;
+                    `;
+                    
+                    // 添加悬停效果
+                    cancelBtn.onmouseover = () => cancelBtn.style.background = 'linear-gradient(to bottom, #444, #333)';
+                    cancelBtn.onmouseout = () => cancelBtn.style.background = 'linear-gradient(to bottom, #333, #222)';
+                    confirmBtn.onmouseover = () => confirmBtn.style.background = 'linear-gradient(to bottom, #d32f2f, #b71c1c)';
+                    confirmBtn.onmouseout = () => confirmBtn.style.background = 'linear-gradient(to bottom, #c62828, #8e0000)';
+                    
+                    // 添加脉动动画
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        @keyframes pulse {
+                            0% { opacity: 0.7; }
+                            50% { opacity: 1; }
+                            100% { opacity: 0.7; }
+                        }
+                        
+                        @media (max-width: 600px) {
+                            #redBlackModal div > div {
+                                flex-direction: column;
+                                gap: 10px;
+                            }
+                            #redBlackModal button {
+                                width: 100%;
+                            }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                    
+                    // 组装弹窗
+                    modalFooter.appendChild(cancelBtn);
+                    modalFooter.appendChild(confirmBtn);
+                    
+                    warningModal.appendChild(modalHeader);
+                    warningModal.appendChild(modalContent);
+                    warningModal.appendChild(modalFooter);
+                    modalOverlay.appendChild(warningModal);
+                    document.body.appendChild(modalOverlay);
+                    
+                    // 显示弹窗动画
+                    setTimeout(() => {
+                        modalOverlay.style.opacity = '1';
+                        warningModal.style.transform = 'scale(1)';
+                    }, 10);
+                    
+                    // 取消按钮事件
+                    cancelBtn.onclick = () => {
+                        modalOverlay.style.opacity = '0';
+                        warningModal.style.transform = 'scale(0.9)';
+                        setTimeout(() => {
+                            document.body.removeChild(modalOverlay);
+                            document.head.removeChild(style);
+                            // 恢复动画
+                            tempDormitory.style.transform = '';
+                        }, 300);
+                    };
+                    
+                    // 确认按钮事件
+                    confirmBtn.onclick = () => {
+                        modalOverlay.style.opacity = '0';
+                        warningModal.style.transform = 'scale(0.9)';
+                        setTimeout(() => {
+                            document.body.removeChild(modalOverlay);
+                            document.head.removeChild(style);
+                            // 恢复动画并跳转
+                            tempDormitory.style.transform = '';
+                            window.location.href = '招工horror.html';
+                        }, 300);
+                    };
+                    
+                    // 点击弹窗外部也可以关闭弹窗
+                    modalOverlay.onclick = (e) => {
+                        if (e.target === modalOverlay) {
+                            modalOverlay.style.opacity = '0';
+                            warningModal.style.transform = 'scale(0.9)';
+                            setTimeout(() => {
+                                document.body.removeChild(modalOverlay);
+                                document.head.removeChild(style);
+                                // 恢复动画
+                                tempDormitory.style.transform = '';
+                            }, 300);
+                        }
+                    };
+                    
+                    // ESC键关闭弹窗
+                    const handleEscKey = (e) => {
+                        if (e.key === 'Escape') {
+                            modalOverlay.style.opacity = '0';
+                            warningModal.style.transform = 'scale(0.9)';
+                            setTimeout(() => {
+                                document.body.removeChild(modalOverlay);
+                                document.head.removeChild(style);
+                                document.removeEventListener('keydown', handleEscKey);
+                                // 恢复动画
+                                tempDormitory.style.transform = '';
+                            }, 300);
+                        }
+                    };
+                    document.addEventListener('keydown', handleEscKey);
+                });
+                
+                tempDormitory.addEventListener('mouseenter', function() {
+                    this.style.opacity = '0.8';
+                });
+                
+                tempDormitory.addEventListener('mouseleave', function() {
+                    this.style.opacity = '1';
+                });
+            }
             
             // 添加打印样式
             const style = document.createElement('style');
@@ -670,13 +759,11 @@
                     .header-container {
                         display: none;
                     }
-                    .corner-fold {
-                        display: none;
-                    }
                 }
             `;
             document.head.appendChild(style);
         });
     </script>
+<script src="logo-return.js"></script>
 </body>
 </html>

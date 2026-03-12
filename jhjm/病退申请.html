@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>职工病退申请单 - 锦华纺织厂</title>
+    <link rel="icon" type="image/jpeg" href="./search.png">
+    <style>
+        /* 基础样式 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "宋体", Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+            color: #333;
+            min-height: 100vh;
+        }
+
+      
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 10px;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            padding: 0 10px;
+            background-color: transparent; /* 搜索栏背景透明 */
+        }
+
+        .search-logo {
+            width: 100px;
+            height: 100px;
+            margin-right: 10px;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 500px;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            outline: none;
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+            background-color: white;
+        }
+
+        .search-box:focus {
+            box-shadow: 0 1px 6px rgba(32,33,36,0.45);
+        }
+
+        .content-wrapper {
+            display: flex;
+            gap: 20px;
+        }
+
+        .ad-left, .ad-right {
+            width: 180px;
+            flex-shrink: 0;
+        }
+
+        .content {
+            flex-grow: 1;
+            max-width: 800px;
+             width: 200; /* 必须设置宽度 */
+    margin: 0 auto;
+        }
+
+        .container {
+            background-color: rgb(250, 238, 222); /* 米黄色背景 */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding: 0 10px;
+            color: #b30000;
+            border-bottom: 2px solid #b30000;
+            padding-bottom: 10px;
+        }
+
+        .newspaper-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 3px double #333;
+            padding-bottom: 10px;
+        }
+
+        .newspaper-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #b30000;
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .newspaper-subtitle {
+            font-size: 16px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .newspaper-date {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .article-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0 15px;
+            color: #b30000;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .article-content {
+            font-size: 16px;
+            line-height: 1.8;
+            text-indent: 2em;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ddd;
+            margin: 20px 0;
+        }
+
+        .form-row {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .form-label {
+            width: 120px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .form-field {
+            flex: 1;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: white;
+        }
+
+        .form-textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .form-submit {
+            display: block;
+            margin: 20px auto 0;
+            padding: 10px 30px;
+            background-color: #b30000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .form-submit:hover {
+            background-color: #990000;
+        }
+
+        .interview {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-left: 4px solid #b30000;
+            margin: 20px 0;
+            font-style: italic;
+        }
+
+        .interviewer {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .quote {
+            font-style: italic;
+            color: #555;
+            margin: 10px 0;
+            padding-left: 20px;
+            border-left: 2px solid #ccc;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 30px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        /* 2000年代风格的装饰元素 */
+        .marquee {
+            background-color: #fddab2;
+            padding: 5px;
+            margin: 10px 0;
+            border: 1px dashed #999;
+            font-size: 14px;
+        }
+
+        .counter {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+            color: #b30000;
+            font-weight: bold;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* 广告样式 */
+        .ad {
+            width: 100%;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            background-color: #f9e9c6;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .ad-title {
+            font-weight: bold;
+            font-size: 16px;
+            color: #b30000;
+            margin-bottom: 8px;
+            border-bottom: 1px dotted #ccc;
+            padding-bottom: 5px;
+        }
+
+        .ad-content {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .ad-image {
+            width: 100%;
+            height: 120px;
+            background-color: #efd6ac;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-style: italic;
+        }
+
+        .ad-link {
+            display: block;
+            margin-top: 10px;
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .ad-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script src="https://sylvie-seven-cq.top/Syzygy/buxukandesearch.js"></script>
+</head>
+<body>
+    <div class="main-container">
+        <!-- 搜索框 - 位于最上层 -->
+        <div class="search-container">
+            <img src="search.png" alt="Logo" class="search-logo">
+            <input type="text" class="search-box" id="searchInput" placeholder="输入搜索内容...">
+        </div>
+        
+        <!-- 内容区域 -->
+        <div class="content-wrapper">
+            <!-- 左侧广告 -->
+           <!--  <div class="ad-left">
+                <div class="ad">
+                    <div class="ad-title">联想电脑</div>
+                    <div class="ad-image">联想天禧电脑<br>家庭首选</div>
+                    <div class="ad-content">奔腾III处理器，预装Windows 98，让您轻松进入互联网时代！</div>
+                    <a href="#" class="ad-link">点击了解详情>></a>
+                </div>
+                
+                <div class="ad">
+                    <div class="ad-title">诺基亚手机</div>
+                    <div class="ad-image">诺基亚3310<br>坚固耐用</div>
+                    <div class="ad-content">超长待机，内置贪食蛇游戏，沟通无处不在！</div>
+                    <a href="#" class="ad-link">点击了解详情>></a>
+                </div>
+                
+                <div class="ad">
+                    <div class="ad-title">小霸王学习机</div>
+                    <div class="ad-image">小霸王SB-99<br>学习娱乐一体</div>
+                    <div class="ad-content">寓教于乐，帮助孩子提高学习成绩，家长放心！</div>
+                    <a href="#" class="ad-link">点击了解详情>></a>
+                </div>
+            </div> -->
+            
+            <!-- 主要内容 -->
+            <div class="content">
+                <div class="container">
+                    <!-- 厂报内容 -->
+                    <!-- <div class="newspaper-header">
+                        <div class="newspaper-title">锦华风采</div>
+                        <div class="newspaper-subtitle">锦华纺织厂内部刊物</div>
+                        <div class="newspaper-date">1997年5月15日 第15期 总第87期</div>
+                    </div> -->
+                    
+                    <!-- <div class="marquee">
+                        <marquee behavior="scroll" direction="left">热烈庆祝我厂第一季度生产任务超额完成！ 安全生产月活动即将开始，请各部门做好准备！</marquee>
+                    </div> -->
+                    
+                    <h1>职工病退申请单</h1>
+                    
+                    <div class="form-container">
+                        <div class="form-row">
+                            <div class="form-label">姓名：</div>
+                            <input type="text" class="form-field" value="刘福根" readonly>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-label">籍贯：</div>
+                            <input type="text" class="form-field" value="萍山籍" readonly>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-label">工号：</div>
+                            <input type="text" class="form-field" value="JH-970315" readonly>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-label">部门：</div>
+                            <input type="text" class="form-field" value="保卫科" readonly>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-label">岗位：</div>
+                            <input type="text" class="form-field" value="夜班看守员" readonly>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-label">病因：</div>
+                            <input type="text" class="form-field" value="突发心律失常（受惊吓）" readonly>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-label">发病时间：</div>
+                            <input type="text" class="form-field" value="1997年6月9日" readonly>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-label">诊断医院：</div>
+                            <input type="text" class="form-field" value="深南市第一人民医院" readonly>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-label">主治医师：</div>
+                            <input type="text" class="form-field" value="张██ 主任医师" readonly>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-label">申请日期：</div>
+                            <input type="text" class="form-field" value="1997年6月15日" readonly>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-label">病情描述：</div>
+                            <textarea class="form-field form-textarea" readonly>患者于1997年6月9日夜间值班期间，因四号仓库区域出现异常声响和不明火光，受到严重惊吓，突发心悸、胸闷、呼吸困难等症状。经同事紧急送往深南市第一人民医院救治，诊断为突发性心律失常。经过两周住院治疗，病情有所缓解，但医生建议不宜继续从事夜班工作，尤其避免受到惊吓和过度劳累。</textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-label">申请理由：</div>
+                            <textarea class="form-field form-textarea" readonly>本人自1986年初入职锦华纺织厂，已在四号仓库担任夜班看守员11年。因突发心律失常疾病，经医院诊断确认不宜继续从事夜班工作。<!-- 考虑到本人年龄已近退休，且身体状况无法适应其他岗位工作， -->特申请病退，恳请厂领导批准。</textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-label">附件材料：</div>
+                            <div class="form-field">
+                                <p>1. 深南市第一人民医院诊断证明</p>
+                                <p>2. 住院病历复印件</p>
+                                <p>3. 心电图检查报告</p>
+                                <p>4. 主治医师建议书</p>
+                            </div>
+                        </div>
+                        
+                        <button class="form-submit">打印申请单</button>
+                    </div>
+                    
+                    <div class="article-content">
+                        <p>根据厂人事管理规定，职工因病无法继续工作，且符合病退条件的，可申请病退。病退申请需经厂医务室审核、人事部门审批，最终由厂领导批准。</p>
+                        
+                        <p>病退职工将按照国家相关规定享受病退待遇，包括基本生活费、医疗补贴等。具体标准参照《锦华纺织厂职工病退管理办法》。</p>
+                        
+                       <!--  <div class="interview">
+                            <div class="interviewer">人事科科长王建国说明：</div>
+                            <p>"刘福根同志是我厂的老职工，工作认真负责。对于他的病情和病退申请，我们表示理解。人事科将按照程序尽快办理相关手续，确保刘福根同志的合法权益得到保障。"</p>
+                            <p>"同时，我们也提醒广大职工，工作中要注意安全，遇到异常情况要及时报告，避免类似事件发生。"</p>
+                        </div> -->
+                        
+                       <!--  <p>厂工会主席李红梅表示："工会将密切关注刘福根同志的情况，提供必要的帮助和支持。对于因病致困的职工，工会将启动帮扶机制，确保职工基本生活不受影响。"</p>
+                        
+                        <p class="quote">"职工的健康和安全始终是我们工作的重中之重。"——厂长赵志强</p> -->
+                    </div>
+                    
+                   <!--  <div class="counter">
+                        您是第 <span id="visitCount">8888</span> 位访问者
+                    </div>
+                     -->
+                    <div class="footer">
+                        <p>锦华纺织厂人事部 | 内部资料 注意保存 | 1997年6月15日</p>
+                        <p class="blink">请使用IE4.0以上浏览器浏览以获得最佳效果</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧广告 -->
+            <!-- <div class="ad-right">
+               <div class="ad">
+    <div class="ad-title">健康礼盒</div>
+    <div class="ad-image">精美礼盒<br>送礼佳品</div>
+    <div class="ad-content">节日送礼表心意，贴心好礼传温情！</div>
+    <a href="#" class="ad-link">点击了解详情>></a>
+</div>
+
+<div class="ad">
+    <div class="ad-title">智能助手</div>
+    <div class="ad-image">智能终端<br>高效人士必备</div>
+    <div class="ad-content">工作生活两不误，智能设备来相助！</div>
+    <a href="#" class="ad-link">点击了解详情>></a>
+</div>
+
+<div class="ad">
+    <div class="ad-title">欢乐饮品</div>
+    <div class="ad-image">气泡饮料<br>清爽解渴选择</div>
+    <div class="ad-content">欢庆时刻，当然要喝个痛快！</div>
+    <a href="#" class="ad-link">点击了解详情>></a>
+</div>
+                <div class="ad">
+                    <div class="ad-title">网怡聊天室</div>
+                    <div class="ad-image">网怡聊天室<br>结交天下朋友</div>
+                    <div class="ad-content">网聚人的力量，与全国网友实时聊天！</div>
+                    <a href="#" class="ad-link">点击进入聊天室>></a>
+                </div>
+            </div> -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化搜索页面
+            if (typeof initSearchPage !== 'undefined') {
+                initSearchPage();
+            } else {
+                // 如果外部JS加载失败，显示错误信息
+                console.log("搜索功能暂时不可用");
+            }
+
+            // 设置搜索框事件
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(event) {
+                    if (event.key === 'Enter' && typeof performSearch !== 'undefined') {
+                        performSearch(this.value.trim(), event);
+                    }
+                });
+            }
+            
+            // 模拟访问计数器
+            let count = parseInt(localStorage.getItem('visitCount') || '8888');
+            count++;
+            localStorage.setItem('visitCount', count.toString());
+            document.getElementById('visitCount').textContent = count;
+            
+            // 打印按钮功能
+            const printButton = document.querySelector('.form-submit');
+            if (printButton) {
+                printButton.addEventListener('click', function() {
+                   showalert('打印功能已启动，请连接打印机后按确定继续...');  
+                    // 实际应用中这里应该调用window.print()
+                });
+            }
+        });
+    </script>
+     <!-- 外部JS文件引用 -->
+    <script src="./search-engine.js"></script>
+    <script src="./storage.js"></script>
+    <script src="./navigation.js"></script>
+<script src="logo-return.js"></script>
+</body>
+</html>

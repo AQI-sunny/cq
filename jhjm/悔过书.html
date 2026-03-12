@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>吴老二的悔过书</title>
+    <link rel="icon" type="image/jpeg" href="jinhua.png">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet">
+    <!-- 外部样式文件 (按需引用) -->
+    <link rel="stylesheet" href="search-assistant.css">
+    <link rel="stylesheet" href="visitor.css">
+    <link rel="stylesheet" href="common.css">
+    <style>
+        /* 基础样式 + 兼容性微调 (保留原样，仅补充移动端适配) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'ZCOOL QingKe HuangYou', cursive;
+            background-color: #f5e8c8;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><rect fill="none" stroke="%23000" stroke-width="2" x="10" y="10" width="80" height="80"/></svg>');
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        /* 搜索栏相关样式 */
+        .header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            flex-shrink: 0;
+            background: #f0f0f0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 700px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            padding: 8px 15px;
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+            width: 100%;
+        }
+
+        .search-bar:hover {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.35);
+        }
+
+        .search-bar:focus-within {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.45);
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            color: #9aa0a6;
+            flex-shrink: 0;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: transparent;
+            min-width: 0;
+        }
+
+        .search-button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .search-button:hover {
+            background-color: #2b6fd8;
+        }
+        
+        /* 密码区域样式 */
+        .yinmimima-section {
+            margin: 30px 0;
+            text-align: center;
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .yinmimima-input {
+            padding: 12px 18px;
+            border: 1px solid #d4b483;
+            border-radius: 4px;
+            font-size: 16px;
+            width: 220px;
+            margin-right: 10px;
+            max-width: calc(100% - 120px);
+        }
+        
+        .yinmimima-button {
+            padding: 12px 22px;
+            background-color: #8b4513;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            white-space: nowrap;
+        }
+        
+        .yinmimima-button:hover {
+            background-color: #654321;
+        }
+        
+        .yinmimima-message {
+            margin-top: 15px;
+            font-size: 16px;
+            color: #8b4513;
+            min-height: 20px;
+        }
+        
+        /* 书信样式 */
+        .letter-container {
+            background-color: #fef6e0;
+            border: 1px solid #d4b483;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            padding: 40px;
+            margin-top: 20px;
+            position: relative;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.05"><path d="M10,10 L90,10 L90,90 L10,90 Z" fill="none" stroke="%23000" stroke-width="1"/></svg>');
+            display: none; /* 初始隐藏 */
+        }
+        
+        .letter-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #8b4513;
+            padding-bottom: 15px;
+        }
+        
+        .letter-title {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 32px;
+            color: #8b4513;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .letter-date {
+            font-size: 18px;
+            color: #666;
+        }
+        
+        .letter-content {
+            font-size: 20px;
+            line-height: 1.8;
+            text-indent: 2em;
+            margin-bottom: 20px;
+        }
+        
+        .letter-signature {
+            text-align: right;
+            margin-top: 40px;
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 24px;
+            color: #8b4513;
+        }
+        
+        .letter-stamp {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 100px;
+            height: 100px;
+            border: 2px dashed #8b4513;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(15deg);
+            opacity: 0.7;
+        }
+        
+        .stamp-text {
+            font-size: 14px;
+            color: #8b4513;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        /* 提示信息样式 */
+        .hint-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .hint-text {
+            font-size: 16px;
+            color: #8b4513;
+        }
+        
+        /* 简易模态框样式 (用于显示搜索结果，确保不被外部样式覆盖) */
+        .search-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 25px 30px;
+            border-radius: 16px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+            z-index: 2000;
+            max-width: 90%;
+            width: 450px;
+            border: 2px solid #8b4513;
+            font-family: 'ZCOOL QingKe HuangYou', cursive;
+        }
+        .search-modal.active {
+            display: block;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #d4b483;
+            padding-bottom: 8px;
+        }
+        .modal-header h3 {
+            font-family: 'Ma Shan Zheng', cursive;
+            color: #8b4513;
+            font-size: 22px;
+        }
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #8b4513;
+            line-height: 1;
+        }
+        .modal-content {
+            font-size: 18px;
+            min-height: 70px;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1999;
+        }
+        .modal-overlay.active {
+            display: block;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 900px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .search-container {
+                width: 100%;
+            }
+
+            .yinmimima-section {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .yinmimima-input {
+                width: 100%;
+                max-width: 280px;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            
+            .letter-container {
+                padding: 20px;
+            }
+            
+            .letter-title {
+                font-size: 26px;
+            }
+            
+            .letter-content {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 搜索栏部分 (保持原样，图片占位) -->
+        <!-- <div class="header-container">
+            <div class="logo">
+                <  !-- 原图片可能不存在，显示文本占位符，保留结构 -- >
+                <span>🔍</span>
+            </div>
+            <div class="search-container">
+                <div class="search-bar">
+                    <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                    </svg>
+                    <input type="text" class="search-input" id="mainSearchInput" placeholder="搜索相关内容...">
+                    <button class="search-button" id="mainSearchBtn">搜索</button>
+                </div>
+            </div>
+        </div> -->
+        
+        <!-- 提示信息 -->
+        <div class="hint-section">
+            <p class="hint-text">请输入密码查看内容</p>
+        </div>
+        
+        <!-- 密码输入部分 (修正type="password") -->
+        <div class="yinmimima-section">
+            <input type="password" class="yinmimima-input" id="yinmimimaInput" placeholder="输入密码查看悔过书">
+            <button class="yinmimima-button" id="yinmimimaButton">验证</button>
+            <div class="yinmimima-message" id="yinmimimaMessage"></div>
+        </div>
+        
+        <!-- 书信内容 -->
+        <div class="letter-container" id="letterContainer">
+            <div class="letter-header">
+                <h1 class="letter-title">悔过书</h1>
+                <div class="letter-date">一九九八年七月十五日</div>
+            </div>
+            
+            <div class="letter-content">
+                <p>尊敬的领导：</p>
+                
+                <p>我，吴永贵，在此写下这份悔过书，为我过去的错误行为表示深深的忏悔。</p>
+                
+                <p>我曾在锦华纺织厂工作多年，亲眼目睹了许多不该发生的事情。周师傅给我一大笔钱，让我带女儿走。他说这厂里的水太深，老刘就是被吓疯的。</p>
+                
+                <p>那时我还不明白周师傅话中的深意，直到后来我才逐渐看清了厂里那些不为人知的内幕。</p>
+                
+                <p>老刘就是因为发现了某些人的秘密，才遭到了恐吓和威胁，最终精神崩溃。而我，因为害怕同样的命运降临到我和家人身上，选择了沉默，甚至接受了周师傅的帮助，带着女儿离开了工厂。</p>
+                
+                <p>如今回想起来，我深感愧疚。我本应该站出来，揭露那些不法行为，维护工厂和工友们的利益。但我却选择了逃避，这是我的懦弱，也是我的罪过。</p>
+                
+                <p>现在，我愿意说出我所知道的一切，希望能够弥补我过去的错误。我知道这可能会带来风险，但为了良心安宁，我必须这样做。</p>
+                
+                <p>我恳请组织能够宽恕我的过错，给我一个改过自新的机会。</p>
+            </div>
+            
+            <div class="letter-signature">
+                悔过人：吴永贵
+            </div>
+            
+            <div class="letter-stamp">
+                <div class="stamp-text">
+                    锦华纺织厂<br>内部文件
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 搜索结果模态框 (自定义，确保可用) -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="search-modal" id="searchResultModal">
+        <div class="modal-header">
+            <h3>搜索结果</h3>
+            <button class="close-modal" id="closeModalBtn">&times;</button>
+        </div>
+        <div class="modal-content" id="modalContent">正在搜索...</div>
+    </div>
+
+    <!-- 外部JavaScript文件 (相对路径，严格按用户要求保留) -->
+    <script src="./search-engine.js"></script>
+    <script src="./storage.js"></script>
+    <script src="./navigation.js"></script>
+    <script src="./logo-return.js"></script>
+    <script src="./search-ass.js"></script>
+    <!-- 注意: visitor.js 不在列表，但原注释中有，这里不添加以免冲突，只保留要求的 -->
+    
+    <script>
+        (function() {
+            // ---------- 密码验证功能 (完全保留原样) ----------
+            document.getElementById('yinmimimaButton').addEventListener('click', function() {
+                const yinmimima = document.getElementById('yinmimimaInput').value;
+                const messageElement = document.getElementById('yinmimimaMessage');
+                const letterContainer = document.getElementById('letterContainer');
+                
+                if (yinmimima === '19900519yaya') {
+                    messageElement.textContent = '密码正确！已显示悔过书内容';
+                    messageElement.style.color = '#228B22';
+                    letterContainer.style.display = 'block';
+                    
+                    // 滚动到悔过书位置
+                    letterContainer.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    messageElement.textContent = '密码错误，请重新输入.提示：最重要的人小名+生日';
+                    messageElement.style.color = '#B22222';
+                    letterContainer.style.display = 'none';
+                }
+            });
+
+            // 密码框回车触发验证
+            document.getElementById('yinmimimaInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('yinmimimaButton').click();
+                }
+            });
+
+            // ---------- 修复搜索引擎：确保外部JS可用，同时降级处理 ----------
+            const searchInput = document.getElementById('mainSearchInput');
+            const searchBtn = document.getElementById('mainSearchBtn');
+            
+            // 模态框元素
+            const modal = document.getElementById('searchResultModal');
+            const overlay = document.getElementById('modalOverlay');
+            const modalContent = document.getElementById('modalContent');
+            const closeBtn = document.getElementById('closeModalBtn');
+
+            // 显示模态框函数
+            function showResultModal(message) {
+                if (modal && overlay && modalContent) {
+                    modalContent.textContent = message || '无搜索结果';
+                    modal.classList.add('active');
+                    overlay.classList.add('active');
+                } else {
+                    // 极端情况fallback
+                    alert(message);
+                }
+            }
+
+            // 隐藏模态框
+            function hideResultModal() {
+                if (modal && overlay) {
+                    modal.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            }
+
+            // 绑定关闭事件
+            if (closeBtn) {
+                closeBtn.addEventListener('click', hideResultModal);
+            }
+            if (overlay) {
+                overlay.addEventListener('click', hideResultModal);
+            }
+
+            // 核心搜索函数：优先调用外部search-engine.js暴露的方法，否则使用内部模拟
+            function executeSearch(term) {
+                if (!term.trim()) {
+                    showResultModal('请输入搜索关键词！');
+                    return;
+                }
+
+                // 尝试调用外部 search-engine.js 中可能定义的 performSearch 或 searchEngine 函数
+                // 根据文件名 search-engine.js 猜测可能暴露全局对象
+                if (typeof window.performSearch === 'function') {
+                    try {
+                        // 假设外部函数接受两个参数：搜索词和回调/事件
+                        // 如果外部函数自己处理UI，我们就不干涉；但为了保险，我们包装一下
+                        // 但外部可能直接操作DOM，为了不冲突，我们尝试调用并传入我们的显示函数
+                        // 很多搜索引擎会返回结果字符串，我们尝试兼容
+                        const result = window.performSearch(term);
+                        if (result !== undefined) {
+                            showResultModal(result);
+                        } else {
+                            // 如果外部没有返回，但可能已经显示，我们不做处理
+                            // 但为了用户可见，加个简单提示
+                            console.log('外部搜索已触发');
+                        }
+                        return;
+                    } catch (e) {
+                        console.warn('外部performSearch出错，使用内部搜索', e);
+                    }
+                } else if (typeof window.searchEngine !== 'undefined' && typeof window.searchEngine.search === 'function') {
+                    try {
+                        const result = window.searchEngine.search(term);
+                        showResultModal(result || '无结果');
+                        return;
+                    } catch (e) {
+                        console.warn('外部searchEngine出错', e);
+                    }
+                } else if (typeof window.initSearchPage === 'function') {
+                    // 有些初始化函数会绑定事件，我们手动触发搜索框事件试试
+                    try {
+                        // 如果外部绑定了事件，我们模拟回车可能触发
+                        // 但避免重复，我们仍用内部
+                    } catch (e) {}
+                }
+
+                // ---------- 内部模拟搜索 (完全保留原注释中的备选数据并扩充) ----------
+                /* const internalDB = {
+                    '封建迷信': '找到相关文章：破除封建迷信！ (锦华厂内部学习资料)',
+                    '锦华': '找到相关刊物：锦华风采第32期 —— 厂庆特刊',
+                    '仓库': '找到相关内容：四号仓库事件调查报告 (1997年卷宗)',
+                    '保卫科': '找到相关部门：保卫科工作记录 — 夜间巡查日志',
+                    '科学': '找到相关内容：科学知识普及周活动通知及照片',
+                    '周师傅': '周师傅：原机修车间老师傅，1998年退休。',
+                    '老刘': '老刘：原财务科职员，因病离职。',
+                    '吴永贵': '吴永贵：即吴老二，曾为锦华纺织厂工人。',
+                    '970309': '密码正确，请返回上方验证查看悔过书。',
+                    '悔过书': '请输入密码970309查看。',
+                    '吴老二': '吴老二：本名吴永贵，悔过书作者。',
+                }; */
+
+                const lowerTerm = term.trim().toLowerCase();
+                let exactMatch = null;
+
+                // 精确匹配（原键名）
+                if (internalDB.hasOwnProperty(term)) {
+                    exactMatch = internalDB[term];
+                } else {
+                    // 忽略大小写匹配键
+                    const foundKey = Object.keys(internalDB).find(k => k.toLowerCase() === lowerTerm);
+                    if (foundKey) exactMatch = internalDB[foundKey];
+                }
+
+                if (exactMatch) {
+                    showResultModal(exactMatch);
+                } else {
+                    // 模糊包含匹配
+                    const fuzzy = [];
+                    Object.entries(internalDB).forEach(([key, val]) => {
+                        if (key.toLowerCase().includes(lowerTerm) || val.toLowerCase().includes(lowerTerm)) {
+                            fuzzy.push(`• ${key}: ${val}`);
+                        }
+                    });
+                    if (fuzzy.length > 0) {
+                        showResultModal('相关结果:\n' + fuzzy.join('\n'));
+                    } else {
+                        showResultModal(`未找到与"${term}"相关的内容。试试：封建迷信、锦华、仓库、保卫科、周师傅等。`);
+                    }
+                }
+            }
+
+            // 绑定搜索事件
+            if (searchBtn) {
+                searchBtn.addEventListener('click', function() {
+                    executeSearch(searchInput.value);
+                });
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        executeSearch(searchInput.value);
+                    }
+                });
+            }
+
+            // 兼容原代码中的 initializeSearch 函数调用（如果存在外部定义）
+            if (typeof window.initializeSearch === 'function') {
+                try {
+                    window.initializeSearch();
+                } catch (e) {
+                    console.log('外部initializeSearch调用失败', e);
+                }
+            }
+
+            // 原注释中 document.querySelector('.search-input') 的回车绑定，已经被上面的覆盖，避免重复，但保留无妨
+            // 注意原代码还有一段被注释的搜索功能，我们不启用以免冲突
+
+        })();
+    </script>
+ <script src="./jinzhi.js"></script>
+    <!-- 注意：原注释中的 visitor.js 未在script列表，但链接中引入了visitor.css，保持原样 -->
+    <!-- 外部logo-return.js已在列表中 -->
+</body>
+</html>

@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>旧磁带倒带  </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 蓝白基调，极简 —— 移动端优先适配 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, 'IBM Plex Mono', monospace;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #eef5ff;
+            color: #0a2f44;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+        }
+
+        .container {
+            max-width: 860px;
+            width: 100%;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 12px 24px rgba(0,40,80,0.06);
+            padding: 24px 20px 36px;
+            border: 1px solid #b8d1e5;
+        }
+
+        .tape-title {
+            font-size: 1rem;
+            letter-spacing: 2px;
+            color: #1e4b6e;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 2px dashed #9ac0d9;
+            padding-bottom: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .tape-title i {
+            color: #2d7f9e;
+            font-size: 1.2rem;
+        }
+
+        .tape-player {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 20px 18px 24px;
+            margin-bottom: 22px;
+            border: 2px solid #1f5068;
+            box-shadow: inset 0 0 0 1px #c8ddea, 0 5px 0 #0a3140;
+            position: relative;
+            cursor: grab;
+            touch-action: none;
+        }
+        .tape-player:active {
+            cursor: grabbing;
+        }
+
+        .tape-visual {
+            width: 100%;
+            height: 170px;
+            background: #dbe9f2;
+            border-radius: 18px;
+            position: relative;
+            border: 2px solid #1f5068;
+            box-shadow: inset 0 0 0 3px white, inset 0 0 0 5px #b0cbd9;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .tape-reel {
+            position: absolute;
+            width: 84px;
+            height: 84px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #d1e0eb, #7b9eb3);
+            top: 38px;
+            border: 7px solid #254e62;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.6), inset 0 0 10px rgba(0,0,0,0.2), inset 0 0 0 2px #3e6a7c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.03s linear;
+            z-index: 10;
+        }
+
+        .left-reel {
+            left: 8px;
+        }
+        .right-reel {
+            right: 8px;
+        }
+
+        .reel-center {
+            width: 26px;
+            height: 26px;
+            background: radial-gradient(#e6f1fa, #497a8f);
+            border-radius: 50%;
+            border: 4px solid #1b4557;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .tape-strip {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 8;
+        }
+
+        .continuous-tape {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            stroke: #1f4e60;
+            stroke-width: 6.5;
+            fill: transparent;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.15));
+            transition: d 0.08s ease-out;
+        }
+
+        .tape-shadow {
+            stroke: #aac3cf;
+            stroke-width: 2.5;
+            opacity: 0.4;
+            stroke-linecap: round;
+            fill: transparent;
+            transition: d 0.08s ease-out;
+        }
+
+        .tape-debris {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #3d6e82;
+            border-radius: 60% 40% 70% 30%;
+            opacity: 0.3;
+            filter: blur(0.5px);
+        }
+
+        /* 倒带指示器 - 只有真正转圈时才显示 */
+        .rewind-indicator {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.9);
+            padding: 10px 20px;
+            border-radius: 40px;
+            border: 2px solid #1e5065;
+            color: #0a3142;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 4px 12px rgba(0,60,100,0.2);
+            letter-spacing: 1px;
+            z-index: 100;
+            white-space: nowrap;
+        }
+        .rewind-indicator i {
+            color: #035c7c;
+            font-size: 1.3rem;
+            animation: spinCounter 0.7s infinite linear;
+        }
+        @keyframes spinCounter {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .recording-section {
+            background: #ffffff;
+            border-radius: 22px;
+            padding: 18px;
+            border: 2px solid #1f5068;
+            box-shadow: inset 0 0 0 2px #edf5fc, 0 4px 0 #0a3140;
+        }
+
+        .recording-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #1a4e63;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .recording-header i {
+            font-size: 1.2rem;
+            color: #1b6c8a;
+        }
+
+        .noise-print {
+            background: #d1e2ec;
+            background-image: repeating-linear-gradient(45deg, rgba(10,60,90,0.06) 0px, rgba(10,60,90,0.06) 2px, transparent 2px, transparent 8px);
+            border-radius: 18px;
+            padding: 20px;
+            min-height: 240px;
+            border: 1px solid #3d7a93;
+            box-shadow: inset 0 0 20px rgba(0,50,80,0.08);
+            font-size: 0.95rem;
+            color: #052630;
+            position: relative;
+        }
+
+        .cassette-crackle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 40%, rgba(0,0,0,0.02) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .dialogue-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .dialogue-item {
+            background: rgba(255,255,250,0.85);
+            padding: 10px 14px;
+            border-radius: 16px;
+            border-left: 6px solid #0a5068;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .speaker {
+            font-weight: 700;
+            color: #035a74;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+        .speaker i {
+            margin-right: 6px;
+            font-size: 0.8rem;
+        }
+        .line-content {
+            font-size: 1rem;
+            color: #043b47;
+            line-height: 1.45;
+            word-break: break-word;
+        }
+        .key-line {
+            background: #fdf8e7;
+            border-left-color: #b13b3b;
+            font-weight: 600;
+        }
+
+        .complete-glow {
+            border-color: #0f637d;
+            box-shadow: 0 0 0 4px rgba(30,130,150,0.2);
+        }
+
+        .rewind-callout {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #146b84;
+            background: #e2f0f7;
+            padding: 10px 16px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #1e657b;
+            width: 100%;
+            justify-content: center;
+        }
+
+        i {
+            color: #15708c;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 18px;
+            left: 20px;
+            right: 20px;
+            height: 6px;
+            background: rgba(30,80,100,0.15);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 10%;
+            background: #1f6f8f;
+            border-radius: 10px;
+            transition: width 0.1s ease;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        button, .tape-player {
+            touch-action: manipulation;
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 18px 14px 28px; }
+            .tape-visual { height: 150px; }
+            .tape-reel { width: 72px; height: 72px; top: 34px; }
+            .left-reel { left: 5px; }
+            .right-reel { right: 5px; }
+            .rewind-indicator { padding: 8px 16px; font-size: 0.9rem; }
+            .continuous-tape { stroke-width: 5.5; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tape-title">
+            <i class="fas fa-cassette-tape"></i> 倒带·证物A-203
+            <span style="margin-left:auto; font-size:0.8rem; background:#d1e2ed; padding:5px 14px; border-radius:30px; color:#03516b;">⚡半损毁</span>
+        </div>
+
+        <div class="tape-player" id="tapePlayer">
+            <div id="rewindIndicator" class="rewind-indicator" style="display: none;">
+                <i class="fas fa-undo-alt"></i> 转圈·倒带
+            </div>
+
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill" style="width: 10%;"></div>
+            </div>
+
+            <div class="tape-visual" id="tapeVisual">
+                <div class="tape-reel left-reel" id="leftReel">
+                    <div class="reel-center"></div>
+                </div>
+                <div class="tape-reel right-reel" id="rightReel">
+                    <div class="reel-center"></div>
+                </div>
+
+                <svg class="tape-strip" viewBox="0 0 400 170" preserveAspectRatio="none" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                    <path id="tapePathShadow" class="tape-shadow" stroke="#8faebf" stroke-width="3" fill="none" stroke-linecap="round" 
+                          d="M 70,80 C 120,60 180,95 230,70 C 280,45 320,80 350,75" />
+                    <path id="tapePathMain" class="continuous-tape" stroke="#1a4a5e" stroke-width="7" fill="none" stroke-linecap="round"
+                          d="M 70,80 C 120,60 180,95 230,70 C 280,45 320,80 350,75" />
+                </svg>
+
+                <div class="tape-debris" style="left: 15%; top: 65%;"></div>
+                <div class="tape-debris" style="left: 75%; top: 30%; width: 6px; height: 6px;"></div>
+                <div class="tape-debris" style="left: 45%; top: 20%; width: 7px; height: 7px; opacity: 0.2;"></div>
+            </div>
+
+            <!-- <div class="rewind-callout">
+                <i class="fas fa-mouse-pointer"></i> <strong style="color:#b13b3b;">请长按滑动修复磁带</strong> · 顺时针都试试哦
+            </div> -->
+            <div class="rewind-callout">
+                <i class="fas fa-mouse-pointer"></i> <strong style="color:#b13b3b;">请长按滑动修复磁带</strong> 
+            </div>
+        </div>
+
+        <div class="recording-section">
+            <div class="recording-header">
+                <i class="fas fa-circle"></i> 录音带·底噪 
+                <span style="font-size:0.75rem; background:#aac7d6; padding:4px 12px; border-radius:18px; color:#012a36;">滋滋/嘶嘶声</span>
+            </div>
+            <div class="noise-print" id="noisePrint">
+                <div class="cassette-crackle"></div>
+                
+                <div id="evidenceMessage" style="display: flex; align-items: center; justify-content: center; min-height: 220px;">
+                    <div style="text-align: center; color: #1c5568; opacity: 0.9;">
+                        <i class="fas fa-volume-off" style="font-size: 2.2rem; margin-bottom: 10px;"></i>
+                        <p style="letter-spacing: 3px; font-size: 1.1rem;">~~~~ 嘶 ~~~ 滋滋 ~~~~</p>
+                       <!--  <p style="font-size: 0.95rem; margin-top: 14px; background: rgba(255,255,255,0.6); padding: 8px 18px; border-radius: 40px;">
+                            ⏳ 磁带扭曲 · 画圈倒带
+                        </p> -->
+                    </div>
+                </div>
+
+                <div id="keyEvidenceContainer" style="display: none;">
+                    <div class="dialogue-list">
+                        <div class="dialogue-item"><div class="speaker"><i class="fas fa-user"></i> 朱师傅</div><div class="line-content">老吴，上次那件事你处理得怎么样了？</div></div>
+                        <div class="dialogue-item"><div class="speaker"><i class="fas fa-user"></i> 吴老二</div><div class="line-content">已经办妥了...您看我女儿的药...</div></div>
+                        <div class="dialogue-item"><div class="speaker"><i class="fas fa-user"></i> 朱师傅</div><div class="line-content">再帮我办件事。</div></div>
+                        <div class="dialogue-item"><div class="speaker"><i class="fas fa-user"></i> 吴老二</div><div class="line-content">这样做风险太大了，我家里还有病人...</div></div>
+                        <div class="dialogue-item"><div class="speaker"><i class="fas fa-user"></i> 朱师傅</div><div class="line-content">病人的事你不用操心，我都安排好了，你别给我找麻烦！</div></div>
+                        <div class="dialogue-item"><div class="speaker"><i class="fas fa-user"></i> 吴老二</div><div class="line-content">朱师傅，我真的不能再做了，上次就已经...</div></div>
+                        <div class="dialogue-item"><div class="speaker"><i class="fas fa-user"></i> 朱师傅</div><div class="line-content">吴老二，我劝你想清楚，你女儿的药可不能断。</div></div>
+                        <div class="dialogue-item"><div class="speaker"><i class="fas fa-user"></i> 吴老二</div><div class="line-content">您这是什么意思？</div></div>
+                        <div class="dialogue-item key-line">
+                            <div class="speaker"><i class="fas fa-exclamation-triangle"></i> 朱师傅</div>
+                            <div class="line-content"><strong>“意思很简单，不干就停药。你自己掂量掂量。”</strong></div>
+                        </div>
+                        <div class="dialogue-item"><div class="speaker"><i class="fas fa-user"></i> 吴老二</div><div class="line-content">你...你怎么能这样！</div></div>
+                        <div class="dialogue-item"><div class="speaker"><i class="fas fa-user"></i> 朱师傅</div><div class="line-content">明天给我答复，不然你知道后果。</div></div>
+                    </div>
+                    <div style="margin-top: 18px; background: #cee5f0; padding: 12px 16px; border-radius: 30px; color: #023a48; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <i class="fas fa-check-circle" style="color: #0f705c;"></i> 磁带修复成功 
+                    </div>
+                </div>
+            </div>
+            <div class="hint-text" style="margin-top: 16px; color: #1e5f74; font-size: 0.85rem; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-info-circle"></i> 倒带完成后对话浮现
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function(){
+            "use strict";
+
+            // ---------- 终极修复：只有连续的、大幅度的圆周运动才有效 ----------
+            let rewindProgress = 10;            // 初始10%
+            const TARGET_PROGRESS = 100;        // 目标100%
+            let gameCompleted = false;
+
+            // 转圈状态
+            let isDragging = false;
+            let lastAngle = 0;
+            let accumulatedDeg = 0;            // 仅累计有效的角度
+            
+            // 【关键参数】每30度增加1%进度 → 一圈12% → 约8.3圈100%
+            const DEG_PER_STEP = 30;           
+            
+            // 【新增】连续判定阈值：必须连续移动超过该角度才视为有效转圈
+            const VALID_CIRCLE_THRESHOLD = 5;   // 小于5度的微小忽略
+            
+            // 记录有效转动圈数的视觉反馈
+
+            // DOM 元素
+            const tapePlayer = document.getElementById('tapePlayer');
+            const leftReel = document.getElementById('leftReel');
+            const rightReel = document.getElementById('rightReel');
+            const rewindIndicator = document.getElementById('rewindIndicator');
+            const evidenceMessage = document.getElementById('evidenceMessage');
+            const keyEvidenceContainer = document.getElementById('keyEvidenceContainer');
+            const progressFill = document.getElementById('progressFill');
+            const tapePathMain = document.getElementById('tapePathMain');
+            const tapePathShadow = document.getElementById('tapePathShadow');
+
+            // 初始卷盘角度
+            leftReel.style.transform = 'rotate(5deg)';
+            rightReel.style.transform = 'rotate(5deg)';
+
+            // 获取角度
+            function getAngle(clientX, clientY) {
+                const rect = tapePlayer.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const dx = clientX - centerX;
+                const dy = clientY - centerY;
+                return Math.atan2(dy, dx) * (180 / Math.PI);
+            }
+
+            // 🌟 磁带路径更新 —— 当进度100%时磁带变直（即结束在0位置）
+            function updateTapePath(progress) {
+                // 进度从10到100，映射到t：0 -> 进度10%，1 -> 进度100%
+                let t = (progress - 10) / (TARGET_PROGRESS - 10);
+                t = Math.min(Math.max(t, 0), 1);
+                
+                // 【特殊】当完成100%时，t=1，磁带完全变直（左右路径汇聚成水平短线）
+                // 使用平滑插值，终点曲线高度/位置完全归零 (最终效果: 一条几乎看不见的直线)
+                if (progress >= TARGET_PROGRESS) {
+                    // 完全修复：磁带拉直、消失 —— 设定为一段极其短且直的路径，象征倒带完成
+                    const finalPath = `M 200,80 L 200,80`;  // 磁带收缩为一个点 (视觉上消失)
+                    tapePathMain?.setAttribute('d', finalPath);
+                    tapePathShadow?.setAttribute('d', finalPath);
+                    return;
+                }
+                
+                // 常规插值: 从扭曲逐渐变直, 但终点100%时上面的分支已经拦截，所以这里不用终点全直
+                // 随t增加，弯曲幅度急剧减小，到95%时已接近直线
+                const startX = 70, startY = 80;
+                
+                // 插值系数——越接近100%曲线越平
+                let c1x = lerp(120, 95, t*1.2);
+                let c1y = lerp(60, 78, t*1.2);
+                let c2x = lerp(180, 120, t*1.3);
+                let c2y = lerp(95, 79, t*1.2);
+                let m1x = lerp(230, 160, t*1.5);
+                let m1y = lerp(70, 80, t*1.1);
+                
+                let c3x = lerp(280, 200, t*1.5);
+                let c3y = lerp(45, 81, t*1.3);
+                let c4x = lerp(320, 260, t*1.4);
+                let c4y = lerp(80, 80, t*1.2);
+                let endX = lerp(350, 310, t*1.4);
+                let endY = lerp(75, 80, t*1.1);
+
+                const newPath = `M ${startX},${startY} C ${c1x},${c1y} ${c2x},${c2y} ${m1x},${m1y} C ${c3x},${c3y} ${c4x},${c4y} ${endX},${endY}`;
+                
+                tapePathMain?.setAttribute('d', newPath);
+                tapePathShadow?.setAttribute('d', newPath);
+            }
+
+            function lerp(a, b, t) {
+                return a + (b - a) * t;
+            }
+
+            function updateProgress() {
+                if (progressFill) {
+                    progressFill.style.width = rewindProgress + '%';
+                }
+                let rot = (rewindProgress * 3.6) % 360;
+                leftReel.style.transform = `rotate(${rot}deg)`;
+                rightReel.style.transform = `rotate(${rot}deg)`;
+                updateTapePath(rewindProgress);
+            }
+
+            function completeRewind() {
+                if (gameCompleted) return;
+                gameCompleted = true;
+                if (evidenceMessage) evidenceMessage.style.display = 'none';
+                keyEvidenceContainer.style.display = 'block';
+                tapePlayer.classList.add('complete-glow');
+                leftReel.style.transform = `rotate(360deg)`;
+                rightReel.style.transform = `rotate(360deg)`;
+                
+                // 🌟🌟🌟 关键修改：进度100%时，磁带路径强制设为一个点 (完全拉直消失) 
+                // 直接调用updateTapePath，内部逻辑检测progress>=100会设置成"点"
+                updateTapePath(TARGET_PROGRESS); 
+                
+                rewindIndicator.style.display = 'none';
+                isDragging = false;
+            }
+
+            // ---------- 🚨 核心修复：只有真正的画圈才有效 🚨 ----------
+            function handleDragStart(e) {
+                if (gameCompleted) return;
+                isDragging = true;
+                accumulatedDeg = 0;
+                const clientX = e.clientX ?? (e.touches ? e.touches[0].clientX : 0);
+                const clientY = e.clientY ?? (e.touches ? e.touches[0].clientY : 0);
+                lastAngle = getAngle(clientX, clientY);
+                // 不立即显示指示器，等检测到有效转圈再显示
+                e.preventDefault?.();
+            }
+
+            function handleDragMove(e) {
+                if (!isDragging || gameCompleted) return;
+                e.preventDefault?.();
+                
+                const clientX = e.clientX ?? (e.touches ? e.touches[0].clientX : 0);
+                const clientY = e.clientY ?? (e.touches ? e.touches[0].clientY : 0);
+                const currentAngle = getAngle(clientX, clientY);
+                let diff = currentAngle - lastAngle;
+                
+                if (diff > 180) diff -= 360;
+                if (diff < -180) diff += 360;
+
+                // 🚨【关键】只有(diff > 0) 且 单次移动角度超过阈值（不是小抖动）才累积
+                if (diff > VALID_CIRCLE_THRESHOLD) {
+                    // 这才是真正的画圈动作！
+                    accumulatedDeg += diff;
+                    
+                    // 显示倒带指示器（证明检测到了有效）
+                    if (rewindIndicator.style.display !== 'flex') {
+                        rewindIndicator.style.display = 'flex';
+                    }
+                    
+                    // 每累积到DEG_PER_STEP，进度+1
+                    while (accumulatedDeg >= DEG_PER_STEP) {
+                        accumulatedDeg -= DEG_PER_STEP;
+                        if (rewindProgress < TARGET_PROGRESS) {
+                            rewindProgress = Math.min(TARGET_PROGRESS, rewindProgress + 1);
+                            updateProgress();
+                        }
+                        if (!gameCompleted && rewindProgress >= TARGET_PROGRESS) {
+                            completeRewind();
+                            break;
+                        }
+                    }
+                } else {
+                    // 🚨 小幅度滑动、抖动、顺时针、或者但角度太小 —— 全部忽略！
+                    // 不仅不增加进度，还要隐藏指示器（除非已经有较大累积）
+                    if (diff < 0 || diff < 15) {
+                        // 明显不是画圈，隐藏指示器
+                       /*  rewindIndicator.style.display = 'none'; */
+                    }
+                    
+                    // 重要：顺时针移动（diff < 0）会轻微减少累积角度，但不会减少进度
+                    if (diff < -VALID_CIRCLE_THRESHOLD) {
+                        // 大幅度顺时针：重置累积，惩罚瞎转
+                        accumulatedDeg = Math.max(0, accumulatedDeg - 10);
+                    }
+                }
+
+                lastAngle = currentAngle;
+            }
+
+            function handleDragEnd(e) {
+                isDragging = false;
+                accumulatedDeg = 0;
+                rewindIndicator.style.display = 'none';
+                e.preventDefault?.();
+            }
+
+            // ---------- 事件监听 ----------
+            function init() {
+                tapePlayer.addEventListener('mousedown', handleDragStart);
+                window.addEventListener('mousemove', handleDragMove);
+                window.addEventListener('mouseup', handleDragEnd);
+                
+                tapePlayer.addEventListener('touchstart', handleDragStart, { passive: false });
+                window.addEventListener('touchmove', handleDragMove, { passive: false });
+                window.addEventListener('touchend', handleDragEnd);
+                window.addEventListener('touchcancel', handleDragEnd);
+                
+                window.addEventListener('mouseleave', function() {
+                    if (isDragging) {
+                        isDragging = false;
+                        rewindIndicator.style.display = 'none';
+                    }
+                });
+
+                rewindProgress = 10;
+                updateProgress();
+                
+                console.log('✅ 终极修复：磁带进度100%时完全变直(消失)');
+            }
+
+            init();
+        })();
+    </script>
+<script src="return.js"></script>
+</body>
+</html>

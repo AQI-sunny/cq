@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深南市锦华纺织厂-内部公告网</title>
+    <link rel="icon" type="image/jpeg" href="https://sylvie-seven-cq.top/gallery/search.png">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "宋体", Arial, sans-serif;
+            background-color: #f0f0f0;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABZJREFUeNpi/P//PwMDAwPD////GfAAQAAEPwC1WpQZAAAAAElFTkSuQmCC');
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+        }
+
+        .search-container {
+            flex: 0 0 33.33%;
+            min-width: 300px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            padding: 12px 20px;
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+        }
+
+        .search-bar:hover {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.35);
+        }
+
+        .search-bar:focus-within {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.45);
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            color: #9aa0a6;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: transparent;
+        }
+
+        .search-button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .search-button:hover {
+            background-color: #2b6fd8;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            border: 1px solid #999999;
+            padding: 20px;
+            font-family: "宋体", Arial, sans-serif;
+            font-size: 14px;
+            color: #333333;
+            background-color: #F5F5DC;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #990000;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 22px;
+            color: #990000;
+            margin: 5px 0;
+        }
+
+        h2 {
+            font-size: 18px;
+            color: #333366;
+            margin: 10px 0 5px 0;
+            border-bottom: 1px dashed #999999;
+            padding-bottom: 3px;
+        }
+
+        h3 {
+            font-size: 16px;
+            margin: 15px 0 8px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+
+        td, th {
+            border: 1px solid #999999;
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #E6E6FA;
+            text-align: center;
+        }
+
+        .warning {
+            background-color: #FFF8DC;
+            border: 1px solid #FFD700;
+            padding: 15px;
+            margin: 20px 0;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px dashed #999999;
+            font-size: 12px;
+            color: #666666;
+        }
+
+        .highlight {
+            background-color: #FFFFCC;
+            padding: 2px 4px;
+        }
+
+        a:link, a:visited {
+            color: #0000CC;
+            text-decoration: underline;
+        }
+
+        a:hover {
+            color: #CC0000;
+        }
+
+        .stamp {
+            float: right;
+            width: 140px;
+            height: 140px;
+            border: 2px dashed #990000;
+            text-align: center;
+            padding: 8px;
+            margin: 0 0 15px 15px;
+            font-family: "楷体", "楷体_GB2312", serif;
+            font-size: 13px;
+            color: #990000;
+            line-height: 1.4;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            word-break: break-all;
+            overflow: hidden;
+        }
+
+        .stamp-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .stamp-line {
+            margin: 3px 0;
+        }
+
+        .contact {
+            background-color: #F0F0F0;
+            padding: 15px;
+            border: 1px solid #CCCCCC;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        /* 留言板样式 */
+        .message-board {
+            margin-top: 20px;
+            border: 1px solid #CCCCCC;
+            padding: 15px;
+            background-color: #FFFFFF;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px dotted #CCCCCC;
+        }
+
+        .message-header {
+            font-weight: bold;
+            color: #333366;
+            margin-bottom: 5px;
+        }
+
+        .message-content {
+            margin-left: 10px;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: #666666;
+            margin-top: 5px;
+        }
+
+        .reply {
+            margin-left: 20px;
+            margin-top: 10px;
+            padding: 8px;
+            background-color: #F9F9F9;
+            border-left: 3px solid #CCCCCC;
+        }
+
+        .marquee {
+            background-color: #990000;
+            color: #FFFFFF;
+            padding: 5px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        /* 响应式调整 - 增强手机适配 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .search-container {
+                width: 100%;
+                min-width: unset;
+            }
+            
+            .container {
+                width: 100%;
+                padding: 15px;
+                font-size: 16px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            h2 {
+                font-size: 18px;
+            }
+            
+            h3 {
+                font-size: 16px;
+            }
+            
+            table {
+                font-size: 14px;
+            }
+            
+            td, th {
+                padding: 6px 8px;
+                font-size: 14px;
+            }
+            
+            .stamp {
+                float: none;
+                margin: 15px auto;
+                display: block;
+                width: 130px;
+                height: 130px;
+                font-size: 12px;
+            }
+            
+            .search-bar {
+                padding: 10px 15px;
+            }
+            
+            .search-button {
+                padding: 8px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 18px;
+            }
+            
+            h2 {
+                font-size: 16px;
+            }
+            
+            table {
+                font-size: 12px;
+            }
+            
+            td, th {
+                padding: 4px 6px;
+                font-size: 12px;
+            }
+            
+            .stamp {
+                width: 120px;
+                height: 120px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部区域：Logo和搜索栏 -->
+    <div class="header-container">
+        <img src="search.png" alt="深南市锦华纺织厂" class="logo">
+        <div class="search-container">
+            <div class="search-bar">
+                <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索其他信息...">
+                <button class="search-button" id="searchButton">搜索</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div class="container">
+        <!-- 顶部滚动横幅 -->
+        <div class="marquee">
+            <marquee behavior="scroll" direction="left">安全生产，警钟长鸣 | 深南市锦华纺织厂提醒您：遵守安全规程，防止事故发生</marquee>
+        </div>
+
+        <!-- 页面标题 -->
+        <div class="header">
+            <h1>深南市锦华纺织厂内部公告网</h1>
+            <p>内部信息，请勿外传</p>
+        </div>
+
+        <!-- 印章 -->
+        <div class="stamp">
+            <div class="stamp-content">
+                <div class="stamp-line">深南市</div>
+                <div class="stamp-line">锦华纺织厂</div>
+                <div class="stamp-line">内部公告</div>
+                <div class="stamp-line">1997年12月</div>
+            </div>
+        </div>
+
+        <!-- 严打偷盗通告 -->
+        <h2>关于严厉打击偷盗公物行为的通告</h2>
+        <p>近期，我厂发生多起偷盗公物事件，严重损害了集体利益。为维护正常生产秩序，现通告如下：</p>
+        
+        <div class="warning">
+            <p>⚠️ 警告：任何偷盗公物行为一经发现，将严肃处理，情节严重者移交公安机关！</p>
+        </div>
+        
+        <h3>近期处理案例：</h3>
+        <table>
+            <tr>
+                <th>姓名</th>
+                <th>部门</th>
+                <th>违规行为</th>
+                <th>处理结果</th>
+            </tr>
+            <tr>
+                <td>张某某</td>
+                <td>织布车间</td>
+                <td>偷盗成品布匹</td>
+                <td>开除并罚款500元</td>
+            </tr>
+            <tr>
+                <td>李某某</td>
+                <td>仓库管理</td>
+                <td>私拿纺织原料</td>
+                <td>记大过处分</td>
+            </tr>
+            <tr>
+                <td>王某某</td>
+                <td>后勤部</td>
+                <td>盗用厂内物资</td>
+                <td>警告处分并罚款200元</td>
+            </tr>
+        </table>
+        
+        <h3>举报奖励：</h3>
+        <p>凡举报偷盗公物行为，经查证属实，给予举报人<strong>100-500元</strong>奖励，并严格保密。</p>
+        
+        <div class="contact">
+            <p><strong>举报电话：</strong> 内线 8888 | <strong>保卫科：</strong> 内线 8110</p>
+        </div>
+
+        <!-- 职工留言板 -->
+        <h2>职工留言板</h2>
+        <div class="message-board">
+            <div class="message">
+                <div class="message-header">匿名用户 发表于 1997-12-05 21:34</div>
+                <div class="message-content">四号仓库最近半夜老有怪声，还有人看到红色影子、鬼火，是不是有什么不干净的东西啊？</div>
+                <div class="message-time">IP: 192.168.10.34</div>
+                
+                <div class="reply">
+                    <div class="message-header">车间小王 回复于 1997-12-05 22:15</div>
+                    <div class="message-content">我感觉是！老刘就是被吓得住院了！听说他前天晚上去四号仓库拿东西，看到一个红色影子飘过，当场就吓晕了！</div>
+                    <div class="message-time">IP: 192.168.10.56</div>
+                </div>
+                
+                <div class="reply">
+                    <div class="message-header">小灵通 回复于 1997-12-06 08:45</div>
+                    <div class="message-content">哎呀，鬼啥的太假了，有啥意思啊，我可知道更劲爆的事儿呢！听说厂里最近在查账，好像有大问题...</div>
+                    <div class="message-time">IP: 192.168.10.78</div>
+                </div>
+                
+                <div class="reply">
+                    <div class="message-header">保卫科老张 回复于 1997-12-06 09:30</div>
+                    <div class="message-content">请大家不要传播不实信息！四号仓库的"怪声"已经查明是通风管道老化造成的，所谓"红色影子"是附近工地夜间施工的灯光反射。老刘同志是因为高血压住院，与四号仓库无关。</div>
+                    <div class="message-time">IP: 192.168.10.12</div>
+                </div>
+            </div>
+            
+            <div class="message">
+                <div class="message-header">纺织女工 发表于 1997-12-06 10:22</div>
+                <div class="message-content">我听说四号仓库以前是文革时期的批斗场，死过不少人呢！难怪会有怪事！</div>
+                <div class="message-time">IP: 192.168.10.45</div>
+            </div>
+            
+            <div class="message">
+                <div class="message-header">技术科小李 发表于 1997-12-06 11:05</div>
+                <div class="message-content">我觉得小灵通说得对，什么鬼啊怪的太扯了。我倒是听说厂里最近资金周转有问题，可能要裁员...</div>
+                <div class="message-time">IP: 192.168.10.67</div>
+                
+                <div class="reply">
+                    <div class="message-header">厂办秘书 回复于 1997-12-06 11:45</div>
+                    <div class="message-content">请大家不要散布谣言！厂里经营状况正常，没有裁员计划。对于继续散布谣言者，将按厂规处理！</div>
+                    <div class="message-time">IP: 192.168.10.01</div>
+                </div>
+            </div>
+            
+            <div class="message">
+                <div class="message-header">夜班保安 发表于 1997-12-06 20:15</div>
+                <div class="message-content">我昨晚巡逻时确实听到四号仓库有声音，但没敢进去看。保卫科说是通风管道，可我觉得不太像...</div>
+                <div class="message-time">IP: 192.168.10.89</div>
+            </div>
+        </div>
+
+        <!-- 其他公告 -->
+        <h2>其他公告</h2>
+        <ul>
+            <li><a href="#">关于1997年度先进工作者评选的通知</a></li>
+            <li><a href="#">元旦放假安排及值班表</a></li>
+            <li><a href="#">职工食堂菜价调整公告</a></li>
+            <li><a href="#">关于开展冬季消防安全检查的通知</a></li>
+        </ul>
+
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>深南市锦华纺织厂内部公告网 © 1997</p>
+            <p>本系统仅供内部使用，严禁外传 | 最后更新：1997-12-06</p>
+        </div>
+    </div>
+
+    <script>
+        // 搜索功能
+        document.getElementById('searchButton').addEventListener('click', function() {
+            const searchTerm = document.getElementById('searchInput').value;
+            if (searchTerm.trim() !== '') {
+                alert('搜索功能正在开发中，您搜索的关键词是: ' + searchTerm);
+            }
+        });
+
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('searchButton').click();
+            }
+        });
+    </script>
+<script src="logo-return.js"></script>
+</body>
+</html>

@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>警方笔记·红星娱乐城 · 97风格</title>
+    <style>
+        /* ========== 原有样式完全保留 (未动任何注释部分) ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #3a2e1f;
+            background-image: linear-gradient(145deg, #4d3e2b 0%, #2f2519 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', 'IBM Plex Mono', 'American Typewriter', 'Lucida Console', monospace;
+            padding: 20px;
+        }
+
+        .note-page {
+            max-width: 1000px;
+            width: 100%;
+            background-color: #ece3cf;
+            background-image: 
+                radial-gradient(circle at 30% 40%, rgba(200,180,140,0.2) 1px, transparent 1px),
+                radial-gradient(circle at 80% 70%, rgba(150,120,80,0.15) 2px, transparent 2px);
+            background-size: 40px 40px, 80px 80px;
+            border: 12px solid #b89a7a;
+            border-image: repeating-linear-gradient(45deg, #8b6f4c, #c9ad87 15px, #7c5f3a 20px) 30;
+            box-shadow: 20px 20px 0 rgba(0,0,0,0.4), 0 0 0 2px #4f3f2b inset;
+            padding: 30px 25px;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .note-page::before {
+            content: '';
+            position: absolute;
+            top: 30px;
+            left: -18px;
+            width: 18px;
+            height: 18px;
+            background: #5f4d33;
+            border-radius: 50%;
+            border: 2px solid #372b1b;
+            box-shadow: 0 100px 0 #5f4d33, 0 190px 0 #5f4d33;
+        }
+
+        .header-97 {
+            border-bottom: 3px double #462f18;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: baseline;
+            font-size: 1.1rem;
+            color: #2c1f0f;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .stamp {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #6b4a2a;
+            background: rgba(200,180,120,0.3);
+            padding: 4px 12px;
+            border: 2px dashed #8b4513;
+            transform: rotate(-1deg);
+            font-size: 1.2rem;
+        }
+
+        .case-content {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #2f2a1f;
+            margin-bottom: 35px;
+            text-shadow: 1px 1px 0 rgba(255,245,215,0.8);
+            word-break: break-word;
+        }
+
+        .case-content p {
+            margin: 20px 0;
+        }
+
+        .highlight-name {
+            font-weight: 800;
+            background: #d6b57c;
+            padding: 2px 8px;
+            border: 1px solid #a7601a;
+            font-style: italic;
+            font-size: 1.3rem;
+            box-shadow: 3px 3px 0 #7b5c37;
+            margin-right: 6px;
+        }
+
+        .place {
+            font-weight: bold;
+            text-decoration: underline wavy #973f0e 2px;
+            text-underline-offset: 6px;
+        }
+
+        .typewriter-cursor {
+            display: inline-block;
+            width: 12px;
+            background: #332814;
+            height: 1.4rem;
+            vertical-align: middle;
+            animation: blink 1s infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+
+        /* 扑克牌区域 - 修复溢出问题：改用grid+动态min宽度，防止挤压溢出 */
+        .poker-grid {
+            display: grid;
+            /* 自动填充，最小宽度85px，最大1fr，避免卡片被压缩到0 */
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 16px 12px;  /* 统一间隙 */
+            justify-content: center;
+            margin: 40px 0 20px;
+            padding: 20px 15px;
+            background: #cfbb9f;
+            background: linear-gradient(165deg, #bd9f7a, #ddccb0);
+            border: 4px solid #7b623e;
+            box-shadow: inset 0 0 0 2px #efdecb, 8px 8px 0 #342715;
+        }
+
+        /* 简约牌面设计 */
+        .card {
+            width: 100%;            /* 占满grid列 */
+            max-width: 130px;       /* 大屏也不要太大，保持协调 */
+            justify-self: center;   /* 水平居中 */
+            height: auto;           /* 高度由内容撑开，但为了比例可以给个基础min-height */
+            min-height: 160px;       /* 保证基本高度，移动端会缩小 */
+            background: #fefbf2;
+            border-radius: 12px;
+            border: 3px solid #251e12;
+            box-shadow: 5px 5px 0 #513e25, 0 0 0 1px #ebdbbd inset;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 4px;       /* 内边距稍减，防止字被切 */
+            font-family: 'Courier New', 'Impact', 'Franklin Gothic Heavy', sans-serif;
+            transition: transform 0.1s ease;
+            transform: rotate(0deg) scale(1);
+            position: relative;
+        }
+
+        /* 轻微错动手摆感 (旋转但保留在网格内) */
+        .card:nth-child(odd) {
+            transform: rotate(-1deg) translateY(-2px);
+        }
+        .card:nth-child(even) {
+            transform: rotate(2deg) translateY(3px);
+        }
+        .card:nth-child(3) {
+            transform: rotate(-2deg) translateX(-2px);
+        }
+        .card:nth-child(5) {
+            transform: rotate(3deg) translateX(3px) translateY(-2px);
+        }
+        /* 防止太多旋转超出父级，但只是视觉效果 */
+
+        .card.emphasized {
+            border: 5px solid #b13e3e;
+            box-shadow: 8px 8px 0 #631515, 0 0 0 3px #f0c9a6 inset;
+            background: #fffaf0;
+            transform: scale(1.05) rotate(1deg);  /* 稍小一点避免溢出 */
+            z-index: 5;
+        }
+
+        .card.emphasized .card-number {
+            color: #b11a1a;
+            text-shadow: 2px 2px 0 #e19f9f;
+        }
+
+        .card-number {
+            font-size: 2.4rem;     /* 稍微降低默认大小，移动端配合媒体继续减小 */
+            font-weight: 900;
+            line-height: 1;
+            color: #1f1a0e;
+            letter-spacing: -2px;
+            word-break: break-word;
+        }
+
+        .card-suit {
+            font-size: 2.6rem;
+            line-height: 1;
+            color: #27221a;
+        }
+
+        .card-bottom {
+            align-self: flex-end;
+            transform: rotate(180deg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .mini-label {
+            font-size: 0.7rem;
+            font-family: 'Courier New';
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 4px;
+            color: #2a2a2a;
+            background: #efdfb7;
+            padding: 2px 8px;
+            border-left: 4px solid #a75212;
+            white-space: nowrap;    /* 防止“四”折行，但若太小会溢出，用scale降级 */
+        }
+
+        /* 参考图底部的数字排列 —— 保持原样未动（已注释掉的部分完全保留不修改） */
+        .reference-digits {
+            margin-top: 40px;
+            border-top: 2px solid #aa8e64;
+            padding-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 18px;
+            font-size: 1.8rem;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #1f3a2f;
+            background: #e2cfb0;
+            padding: 20px;
+            border: 2px solid #5f4d32;
+        }
+
+        .digit-item {
+            background: #362812;
+            color: #e6dcc0;
+            padding: 10px 18px;
+            font-size: 2rem;
+            border-radius: 0px;
+            border-left: 6px solid #bc8f4b;
+            box-shadow: 4px 4px 0 #a09b8b inset, -2px -2px 0 #5f3f1a inset;
+            transform: skewX(-5deg);
+        }
+
+        /* 手机兼容 —— 强化卡片内字缩小，避免溢出 */
+        @media (max-width: 700px) {
+            .note-page {
+                padding: 20px 12px;
+                border-width: 8px;
+            }
+            .poker-grid {
+                grid-template-columns: repeat(auto-fit, minmax(75px, 1fr)); /* 适应更小屏幕 */
+                gap: 10px;
+                padding: 15px 8px;
+            }
+            .card {
+                min-height: 130px;
+                padding: 8px 2px;
+                border-width: 2px;
+            }
+            .card.emphasized {
+                border-width: 4px;
+            }
+            .card-number {
+                font-size: 1.9rem;
+            }
+            .card-suit {
+                font-size: 2.0rem;
+            }
+            .card-bottom .card-number {
+                font-size: 1.5rem;  /* 底部数字也相应缩小 */
+            }
+            .card-bottom .card-suit {
+                font-size: 1.6rem;
+            }
+            .mini-label {
+                font-size: 0.6rem;
+                padding: 1px 5px;
+                white-space: nowrap;
+            }
+            .digit-item {
+                font-size: 1.4rem;
+                padding: 6px 10px;
+            }
+            .header-97 {
+                font-size: 0.9rem;
+                flex-direction: column;
+                gap: 8px;
+            }
+            .stamp {
+                font-size: 1rem;
+                align-self: flex-start;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .poker-grid {
+                grid-template-columns: repeat(auto-fit, minmax(68px, 1fr));
+                gap: 8px;
+            }
+            .card {
+                min-height: 110px;
+                padding: 6px 1px;
+            }
+            .card-number {
+                font-size: 1.5rem;
+            }
+            .card-suit {
+                font-size: 1.6rem;
+            }
+            .card-bottom .card-number {
+                font-size: 1.2rem;
+            }
+            .card-bottom .card-suit {
+                font-size: 1.3rem;
+            }
+            .mini-label {
+                font-size: 0.5rem;
+                padding: 1px 3px;
+                border-left-width: 2px;
+            }
+        }
+
+        /* 针对极小屏（<360px）进一步微调 */
+        @media (max-width: 360px) {
+            .poker-grid {
+                grid-template-columns: repeat(3, 1fr); /* 强制三列，保证可读 */
+            }
+            .card {
+                min-height: 100px;
+            }
+            .card-number {
+                font-size: 1.3rem;
+            }
+            .card-suit {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* 故意制造一点墨迹飞溅感 (97复印风格) */
+        .splatter {
+            position: absolute;
+            bottom: 40px;
+            right: 30px;
+            width: 90px;
+            height: 40px;
+            background: #382d1b;
+            opacity: 0.15;
+            filter: blur(8px);
+            border-radius: 50%;
+            transform: rotate(25deg);
+            pointer-events: none;
+        }
+
+        .star-ribbon {
+            display: inline-block;
+            background: #b13e3e;
+            color: #f5e1b9;
+            padding: 4px 14px;
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            border: 2px solid gold;
+            transform: rotate(-2deg);
+            margin-left: 10px;
+        }
+
+        /* ========== 追加修复代码：仅通过负边距微调左上角数字/花色贴边 ========== */
+        /* 原理：将每个.card中的第一个.card-number和第一个.card-suit（即左上角那组）向左上移动 */
+        .card > .card-number:first-of-type {
+            margin-left: -10px;    /* 向左移动，抵消内边距/边框 */
+            margin-top: -8px;      /* 向上移动 */
+            align-self: flex-start; /* 保证位于左上 */
+        }
+
+        .card > .card-suit:first-of-type {
+            margin-left: -6px;     /* 花色略微左移 */
+            margin-top: -14px;      /* 向上移更多，与数字搭配 */
+            align-self: flex-start;
+        }
+
+        /* 使数字和花色能排列在一行（flex列会影响，确保它们同行） */
+        .card {
+            align-items: flex-start;  /* 让所有子项从左侧开始，更便于负边距控制 */
+            justify-content: flex-start; /* 内容从顶部开始 */
+            padding-top: 16px;        /* 增加一点顶部空间给负边距腾挪，保持整体视觉平衡（数字虽然上移但被负边距拉回） */
+            padding-left: 10px;
+        }
+
+        /* 针对emphasized卡片边框较粗，微调更多一点 */
+        .card.emphasized > .card-number:first-of-type {
+            margin-left: -14px;
+            margin-top: -12px;
+        }
+        .card.emphasized > .card-suit:first-of-type {
+            margin-left: -8px;
+            margin-top: -18px;
+        }
+
+        /* 底部倒转的那组完全不受影响，保持原位 */
+
+        /* 手机端兼容：根据屏幕宽度微调负边距值，保证贴边但不溢出 */
+        @media (max-width: 700px) {
+            .card > .card-number:first-of-type {
+                margin-left: -7px;
+                margin-top: -5px;
+            }
+            .card > .card-suit:first-of-type {
+                margin-left: -4px;
+                margin-top: -10px;
+            }
+            .card.emphasized > .card-number:first-of-type {
+                margin-left: -10px;
+                margin-top: -8px;
+            }
+            .card.emphasized > .card-suit:first-of-type {
+                margin-left: -6px;
+                margin-top: -13px;
+            }
+            /* 调整基础内边距让数字区域不拥挤 */
+            .card {
+                padding-top: 12px;
+                padding-left: 6px;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .card > .card-number:first-of-type {
+                margin-left: -5px;
+                margin-top: -3px;
+            }
+            .card > .card-suit:first-of-type {
+                margin-left: -3px;
+                margin-top: -7px;
+                font-size: 1.4rem;  /* 同时稍微缩小花色配合负边距 */
+            }
+            .card.emphasized > .card-number:first-of-type {
+                margin-left: -8px;
+                margin-top: -6px;
+            }
+            .card.emphasized > .card-suit:first-of-type {
+                margin-left: -5px;
+                margin-top: -10px;
+            }
+            .card {
+                padding-top: 10px;
+                padding-left: 4px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .card > .card-number:first-of-type {
+                margin-left: -4px;
+                margin-top: -2px;
+                font-size: 1.2rem;
+            }
+            .card > .card-suit:first-of-type {
+                margin-left: -2px;
+                margin-top: -6px;
+                font-size: 1.3rem;
+            }
+            .card.emphasized > .card-number:first-of-type {
+                margin-left: -6px;
+                margin-top: -4px;
+            }
+            .card.emphasized > .card-suit:first-of-type {
+                margin-left: -4px;
+                margin-top: -8px;
+            }
+            .card {
+                padding-top: 8px;
+                padding-left: 3px;
+            }
+        }
+
+        /* 微调数字本身的大小，保证负边距后仍清晰 (配合原有媒体) */
+        @media (max-width: 450px) {
+            .card > .card-number:first-of-type {
+                font-size: 1.5rem; /* 与原有.card-number媒体一致 */
+            }
+        }
+        @media (max-width: 360px) {
+            .card > .card-number:first-of-type {
+                font-size: 1.3rem;
+            }
+        }
+        /* 花色微调已在上面控制font-size */
+    </style>
+</head>
+<body>
+    <div class="note-page">
+        <div class="header-97">
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <span>📋 深南分局 · 刑侦记录</span>
+                <span class="star-ribbon">★ 1997 JXY失踪案 ★</span>
+            </div>
+            <div class="stamp">机密 · 编号 0134</div>
+        </div>
+
+        <div class="case-content">
+            <p>
+                <span class="highlight-name">▶ 赖皮狗 (alias: 赖狗)</span> 
+                近期频繁与 <strong style="color:#aa3a3a; background:#efcca5; padding:0 6px;">黄毛</strong> 
+                混迹于 <span class="place">「红星娱乐城 · 棋牌室」</span> 后台暗间。
+            </p>
+            <p>
+                <span style="background: #b89f7a; padding:2px;">✓ 据线报</span> 赖皮狗嗜好扑克，其常用玩法经打探得：<span style="font-weight:800;">三张为炸弹</span>、<span style="font-weight:800;">7为变牌</span>、<span style="font-weight:800;">黑桃3最大</span>、<span style="font-weight:800;">方块4最小</span>。<br>
+                <span style="margin-left: 20px;">或许这副牌面透露了某些信息:</span>
+            </p>
+        </div>
+
+        <!-- 扑克牌区域 使用grid布局，卡片宽度自适应，彻底解决溢出问题 -->
+        <div class="poker-grid">
+            <!-- 牌1: 红桃7 (重点) -->
+            <div class="card emphasized">
+                <div class="card-number">7</div>
+                <div class="card-suit">♥</div>
+                <div class="card-bottom">
+                    <div class="card-suit">♥</div>
+                    <div class="card-number">7</div>
+                </div>
+            </div>
+            <!-- 牌2: 黑桃3 (重点仍保持原有 emphasized 类，未改变任何注释部分) -->
+            <div class="card emphasized">
+                <div class="card-number">3</div>
+                <div class="card-suit">♠</div>
+                <div class="card-bottom">
+                    <div class="card-suit">♠</div>
+                    <div class="card-number">3</div>
+                </div>
+            </div>
+            <!-- 牌3: 方块9 (重点) -->
+            <div class="card">
+                <div class="card-number">9</div>
+                <div class="card-suit">♦</div>
+                <div class="card-bottom">
+                    <div class="card-suit">♦</div>
+                    <div class="card-number">9</div>
+                </div>
+            </div>
+            <!-- 牌4: 黑桃8 (重点) -->
+            <div class="card ">
+                <div class="card-number">8</div>
+                <div class="card-suit">♠</div>
+                <div class="card-bottom">
+                    <div class="card-suit">♠</div>
+                    <div class="card-number">8</div>
+                </div>
+            </div>
+            <!-- 牌5: 草花6 (普通) -->
+            <div class="card">
+                <div class="card-number">6</div>
+                <div class="card-suit">♣</div>
+                <div class="card-bottom">
+                    <div class="card-suit">♣</div>
+                    <div class="card-number">6</div>
+                </div>
+            </div>
+            <!-- 牌6: 红桃2 (普通) -->
+            <div class="card emphasized">
+                <div class="card-number">2</div>
+                <div class="card-suit">♥</div>
+                <div class="card-bottom">
+                    <div class="card-suit">♥</div>
+                    <div class="card-number">2</div>
+                </div>
+            </div>
+           <!--  <br>
+            <br>
+            <br> -->
+            <!-- 牌7: 方块6  (重点) -->
+            <div class="card ">
+                <div class="card-number">6</div>
+                <div class="card-suit">♦</div>
+                <div class="card-bottom">
+                    <div class="card-suit">♦</div>
+                    <div class="card-number">6</div>
+                </div>
+            </div>
+            <!-- 牌8: 草花3 (重点) -->
+            <div class="card emphasized">
+                <div class="card-number">3</div>
+                <div class="card-suit">♣</div>
+                <div class="card-bottom">
+                    <div class="card-suit">♣</div>
+                    <div class="card-number">3</div>
+                </div>
+            </div>
+            <!-- 牌9: 黑桃5 (重点) -->
+            <div class="card  emphasized">
+                <div class="card-number">5</div>
+                <div class="card-suit">♠</div>
+                <div class="card-bottom">
+                    <div class="card-suit">♠</div>
+                    <div class="card-number">5</div>
+                </div>
+            </div>
+            <!-- 牌10: 方块9 (普通) -->
+            <div class="card">
+                <div class="card-number">9</div>
+                <div class="card-suit">♦</div>
+                <div class="card-bottom">
+                    <div class="card-suit">♦</div>
+                    <div class="card-number">9</div>
+                </div>
+            </div>
+            <!-- 牌11: 黑桃4 (重点) 带小标“四” 不影响溢出 -->
+            <div class="card emphasized">
+                <div class="card-number">4</div>
+                <div class="card-suit">♠</div>
+                <div class="card-bottom">
+                    <div class="card-suit">♠</div>
+                    <div class="card-number">4</div>
+                </div>
+                <!-- <div class="mini-label">四</div> -->
+            </div>
+            <!-- 牌12: 红桃3 (重点) -->
+            <div class="card emphasized">
+                <div class="card-number">3</div>
+                <div class="card-suit">♥</div>
+                <div class="card-bottom">
+                    <div class="card-suit">♥</div>
+                    <div class="card-number">3</div>
+                </div>
+            </div>
+            <!-- 牌13: 草花10 (普通) 没加重点标记 保持原样-->
+            <div class="card emphasized">
+                <div class="card-number">10</div>
+                <div class="card-suit">♣</div>
+                <div class="card-bottom">
+                    <div class="card-suit">♣</div>
+                    <div class="card-number">10</div>
+                </div>
+            </div>
+            <!-- 牌14: 用特殊符号代表0 (保持原样) -->
+            <!-- <div class="card emphasized">
+                <div class="card-number">0</div>
+                <div class="card-suit">⏀</div>
+                <div class="card-bottom">
+                    <div class="card-suit">⏀</div>
+                    <div class="card-number">0</div>
+                </div>
+            </div> -->
+        </div>
+
+        <!-- 下方参考数字区域 完全保留注释状态，未作任何修改，不存在溢出影响 -->
+        <!-- <div class="reference-digits"> ... 原样不动 ... </div> -->
+
+        <!-- 页脚警员笔记签名 与之前一致 -->
+        <div style="display: flex; justify-content: space-between; margin-top: 30px; border-top: 2px dotted #7b5b3a; padding-top: 20px; font-size: 1.0rem; flex-wrap: wrap;">
+            <span>记录人: 刑侦科 魏 / 97.6.11</span>
+            <!-- <span style="font-style: italic;">「赖皮狗常局扑克，重点监控」</span> -->
+        </div>
+
+        <div class="splatter"></div>
+        <div class="splatter" style="top: 60px; left: 30px; width: 50px; height: 50px; opacity: 0.1; background: #1b3a2a;"></div>
+    </div>
+    <script src="./return.js"></script>
+</body>
+</html>

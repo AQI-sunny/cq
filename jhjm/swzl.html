@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>锦华纺织厂失物招领处 (1997)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- 外部CSS文件引用 -->
+    <link rel="stylesheet" href="search-assistant.css">
+    <link rel="stylesheet" href="visitor.css">
+    <link rel="stylesheet" href="common.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SimSun', '宋体', serif;
+        }
+        
+        body {
+            background-color: #e0e0e0;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            background-image: linear-gradient(to bottom, #f0f0f0, #c0c0c0);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            padding: 25px;
+            border: 2px solid #8b0000;
+            position: relative;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px double #8b0000;
+            position: relative;
+        }
+        
+        .title {
+            color: #8b0000;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 0 #ddd;
+            letter-spacing: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #333;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .date-info {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .input-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+        }
+        
+        .display-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #8b0000;
+            font-size: 1.1rem;
+        }
+        
+        .date-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.2rem;
+            border: 2px solid #8b0000;
+            border-radius: 4px;
+            text-align: center;
+            background-color: #fff;
+            color: #333;
+        }
+        
+        .date-input:focus {
+            outline: none;
+            box-shadow: 0 0 8px rgba(139, 0, 0, 0.5);
+        }
+        
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #8b0000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #a00;
+        }
+        
+        .display-title {
+            color: #8b0000;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        
+        .lost-item {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 5px solid #8b0000;
+            border-radius: 3px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+        }
+        
+        .lost-item-date {
+            font-weight: bold;
+            color: #8b0000;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .lost-item-list {
+            list-style-type: square;
+            padding-left: 20px;
+        }
+        
+        .lost-item-list li {
+            margin-bottom: 5px;
+            padding-left: 5px;
+        }
+
+        .color-item {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        
+        /* 可点击的绿色四叶草发卡样式 */
+        .clickable-item {
+            color: #2e7d32;
+            cursor: pointer;
+            text-decoration: underline dotted;
+            transition: all 0.2s;
+            font-weight: bold;
+        }
+        
+        .clickable-item:hover {
+            color: #4caf50;
+            text-decoration: underline solid;
+        }
+        
+        /* 工牌链接样式 */
+        .work-card-link {
+            color: #1976d2;
+            cursor: pointer;
+            text-decoration: underline dotted;
+            transition: all 0.2s;
+            font-weight: bold;
+        }
+        
+        .work-card-link:hover {
+            color: #0d47a1;
+            text-decoration: underline solid;
+        }
+        
+        .no-item {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .hint {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fff8dc;
+            border: 1px dashed #8b0000;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: #333;
+        }
+        
+        .hint-title {
+            font-weight: bold;
+            color: #8b0000;
+            margin-bottom: 5px;
+        }
+        
+        .factory-logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: #8b0000;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #666;
+            border-top: 1px solid #ccc;
+            padding-top: 15px;
+        }
+        
+        /* 弹窗样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background-color: #fff;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            border: 3px solid #8b0000;
+            overflow: hidden;
+        }
+        
+        .modal-header {
+            background-color: #8b0000;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-close:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+        }
+        
+        .modal-body {
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .modal-body p {
+            margin-bottom: 15px;
+        }
+        
+        .item-image {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 4rem;
+            color: #4caf50;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            background-color: #f8f8f8;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        /* 90年代风格的装饰元素 */
+        .decoration {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .decoration-1 {
+            top: 10px;
+            left: 10px;
+            border-top: 20px solid #8b0000;
+            border-left: 20px solid #8b0000;
+        }
+        
+        .decoration-2 {
+            bottom: 10px;
+            right: 10px;
+            border-bottom: 20px solid #8b0000;
+            border-right: 20px solid #8b0000;
+        }
+        
+        /* 复古滚动条 */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #8b0000;
+            border-radius: 6px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .modal-content {
+                width: 95%;
+            }
+        }
+        
+        /* 搜索栏样式 */
+        .header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+        }
+
+        .search-container {
+            flex: 0 0 50%;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            padding: 12px 20px;
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+        }
+
+        .search-bar:hover {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.35);
+        }
+
+        .search-bar:focus-within {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.45);
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            color: #9aa0a6;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: transparent;
+        }
+
+        .search-button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .search-button:hover {
+            background-color: #2b6fd8;
+        }
+
+        @media (max-width: 900px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .search-container {
+                width: 80%;
+            }
+        }
+    </style>
+    
+</head>
+<body>
+    <!-- 顶部区域：Logo和搜索栏 -->
+    <div class="header-container">
+        <img src="search.png" alt="深南市诚信拍卖行" class="logo">
+        <div class="search-container">
+            <div class="search-bar">
+                <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索其他关键词...">
+                <button class="search-button" id="searchButton">搜索</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="decoration decoration-1"></div>
+        <div class="decoration decoration-2"></div>
+        
+        <div class="factory-logo">
+            <div>锦华纺织厂</div>
+            <div style="font-size: 0.8rem;">1997</div>
+        </div>
+        
+        <div class="header">
+            <h1 class="title">失物招领处</h1>
+            <div class="subtitle">锦华纺织厂后勤保障科</div>
+            <div class="date-info">当前系统时间：1997年12月15日</div>
+        </div>
+        
+        <div class="content">
+            <div class="input-section">
+                <div class="input-group">
+                    <label class="input-label">请输入日期查询失物：</label>
+                    <input type="text" id="dateInput" class="date-input" placeholder="格式：1997.x.x" maxlength="10">
+                    <button id="submitBtn" class="submit-btn">查询失物</button>
+                </div>
+                
+                <div class="hint">
+                    <div class="hint-title">查询提示：</div>
+                    <p>1. 请输入正确的日期格式，例如：1997.5.5</p>
+                    <p>2. 系统仅保存1997年1月1日以来的失物记录</p>
+                    <p>3. 每日18:00更新前一日失物信息</p>
+                </div>
+            </div>
+            
+            <div class="display-section">
+                <h2 class="display-title">失物信息</h2>
+                <div id="resultDisplay">
+                    <div class="no-item">
+                        <i class="fa fa-search" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <p>请输入日期查询失物信息</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>锦华纺织厂失物招领处 &copy; 1997 版权所有</p>
+            <p>地址：锦华市纺织路28号 | 电话：0321-12345678 | 联系人：王主任</p>
+            <p>工作时间：周一至周五 8:00-17:30</p>
+        </div>
+    </div>
+    
+    <!-- 弹窗 -->
+    <div id="itemModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">物品详情</div>
+                <button id="closeModal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="item-image">
+                    <i class="fa-solid fa-clover"></i>
+                </div>
+                <h3 id="modalItemTitle" style="color: #2e7d32; margin-bottom: 15px; text-align: center;">绿色四叶草发卡</h3>
+                <p><strong>发现日期：</strong><span id="modalItemDate">1997年6月6日</span></p>
+                <p><strong>发现地点：</strong>第三车间更衣室</p>
+                <p><strong>物品描述：</strong>塑料材质绿色四叶草造型，长约8厘米，宽约4厘米。</p>
+                <p><strong>认领要求：</strong>请失主描述发卡的具体特征和丢失地点，并提供有效证件。</p>
+                <p><strong>备注：</strong>发卡上面似乎少了些什么，看起来有些残缺。</p>
+            </div>
+            <div class="modal-footer">
+                如有疑问，请到后勤保障科咨询王主任（电话：0321-12345）
+            </div>
+        </div>
+    </div>
+
+    <!-- 外部JS文件引用 -->
+    <script src="./search-engine.js"></script>
+    <script src="./storage.js"></script>
+    <script src="./navigation.js"></script>
+    <script src="visitor.js"></script>
+    <script src="./search-ass.js"></script>
+    <script src="./logo-return.js"></script>
+    
+    <script>
+        // 失物数据库
+        const lostItemsDB = {
+            "1997.6.6": ["蓝色围巾一条", "绿色四叶草发卡一个", "粉色手帕一条", "红色毛线帽一顶"],
+            "1997.6.12": ["蓝色工作服一件", "饭盒一个", "钥匙一串"],
+            "1997.7.3": ["女式手表一块", "手帕两条", "小镜子一面"],
+            "1997.5.5": ["工牌一张", "饭票若干", "手套一副"],
+            "1997.7.18": ["黑色雨伞一把", "笔记本一本", "圆珠笔两支"],
+            "1997.8.15": ["棕色钱包一个", "身份证一张", "公交月票一张", "五元纸币"],
+            "1997.8.22": ["毛线手套一副", "绿色水杯一个", "车间出入证"],
+            "1997.9.5": ["纱线样本册", "计算器一个", "老花镜一副"],
+            "1997.9.30": ["红色高跟鞋一只", "丝巾一条", "口红一支"],
+            "1997.10.22": ["收音机一台", "电池两节", "武侠小说一本"],
+            "1997.11.8": ["自行车钥匙", "工具包一个", "劳保手套三副"],
+            "1997.12.5": ["牛皮公文包", "工作证", "会议记录本", "印章一枚"],
+            "1997.12.12": ["毛线帽一顶", "围巾两条", "保暖耳罩"]
+        };
+
+        // 颜色关键词映射
+        const colorKeywords = ['红', '绿', '蓝', '黄', '紫', '黑', '白', '棕', '灰', '橙', '粉'];
+        
+        // 页面元素
+        const dateInput = document.getElementById('dateInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const resultDisplay = document.getElementById('resultDisplay');
+        const itemModal = document.getElementById('itemModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalItemTitle = document.getElementById('modalItemTitle');
+        const modalItemDate = document.getElementById('modalItemDate');
+        
+        // 当前查询日期
+        let currentQueryDate = "";
+        
+        // 提交查询
+        submitBtn.addEventListener('click', function() {
+            const date = dateInput.value.trim();
+            
+            if (!date) {
+                showError("请输入查询日期");
+                return;
+            }
+            
+            // 简单日期格式验证
+            if (!/^\d{4}\.\d{1,2}\.\d{1,2}$/.test(date)) {
+                showError("日期格式不正确，请使用 1997.x.x 格式");
+                return;
+            }
+            
+            // 保存当前查询日期
+            currentQueryDate = date;
+            
+            // 查找失物
+            if (lostItemsDB[date]) {
+                displayLostItems(date, lostItemsDB[date]);
+            } else {
+                showNoItems(date);
+            }
+        });
+        
+        // 按回车键也可提交
+        dateInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitBtn.click();
+            }
+        });
+        
+        // 检查物品是否包含颜色词
+        function hasColorWord(item) {
+            return colorKeywords.some(color => item.includes(color));
+        }
+        
+        // 显示失物信息
+        function displayLostItems(date, items) {
+            let itemsHTML = '';
+            items.forEach(item => {
+                // 检查是否为工牌
+                if (item.includes("工牌一张")) {
+                    itemsHTML += `<li><span class="work-card-link" onclick="window.location.href='工牌2.html'">${item}</span></li>`;
+                }
+                // 检查是否为绿色四叶草发卡
+                else if (item.includes("绿色四叶草发卡")) {
+                    itemsHTML += `<li><span class="clickable-item" onclick="openItemModal('${item}', '${date}')">${item}</span></li>`;
+                }
+                // 检查是否包含颜色词
+                else if (hasColorWord(item)) {
+                    itemsHTML += `<li><span class="color-item">${item}</span></li>`;
+                } else {
+                    itemsHTML += `<li>${item}</li>`;
+                }
+            });
+            
+            resultDisplay.innerHTML = `
+                <div class="lost-item">
+                    <div class="lost-item-date">${date} 失物招领</div>
+                    <ul class="lost-item-list">
+                        ${itemsHTML}
+                    </ul>
+                    <div style="margin-top: 10px; font-size: 0.9rem; color: #666;">
+                        <i class="fa fa-info-circle"></i> 请失主携带有效证件到后勤科领取
+                    </div>
+                </div>
+                <div class="hint">
+                    以上物品于${date}在厂区被发现，请失主于7日内认领，逾期将上交厂工会处理。
+                </div>
+            `;
+        }
+        
+        // 显示无失物信息
+        function showNoItems(date) {
+            resultDisplay.innerHTML = `
+                <div class="no-item">
+                    <i class="fa fa-folder-open" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                    <p>${date} 暂无失物记录</p>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">该日期可能没有失物登记，或日期输入有误</p>
+                    <p style="margin-top: 5px; font-size: 0.9rem;">请尝试其他日期查询</p>
+                </div>
+            `;
+        }
+        
+        // 显示错误信息
+        function showError(message) {
+            resultDisplay.innerHTML = `
+                <div class="no-item" style="color: #8b0000;">
+                    <i class="fa fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+        
+        // 打开物品详情弹窗
+        function openItemModal(itemName, date) {
+            // 设置弹窗内容
+            modalItemTitle.textContent = itemName;
+            
+            // 将日期格式转换为中文
+            const dateParts = date.split('.');
+            const chineseDate = `${dateParts[0]}年${parseInt(dateParts[1])}月${parseInt(dateParts[2])}日`;
+            modalItemDate.textContent = chineseDate;
+            
+            // 显示弹窗
+            itemModal.style.display = 'flex';
+        }
+        
+        // 关闭弹窗
+        closeModal.addEventListener('click', function() {
+            itemModal.style.display = 'none';
+        });
+        
+        // 点击弹窗外部关闭
+        itemModal.addEventListener('click', function(e) {
+            if (e.target === itemModal) {
+                itemModal.style.display = 'none';
+            }
+        });
+        
+        // 页面加载时清空输入框
+        window.addEventListener('DOMContentLoaded', function() {
+            dateInput.value = "";
+            dateInput.focus();
+        });
+    </script>
+     <script src="./jinzhi.js"></script>
+</body>
+</html>

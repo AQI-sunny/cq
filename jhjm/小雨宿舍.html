@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工厂宿舍·三角锥折纸·小雨在302</title>
+    <style>
+        /* 全局硬朗复古风格 —— 像老机器界面 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        body {
+            background-color: #4f3f2f;            /* 深褐色工厂墙面 */
+            font-family: 'Courier New', Courier, 'VT323', monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 14px;
+            /* 极淡的扫描线，模拟老CRT */
+            background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.06) 0px, rgba(0,0,0,0.06) 2px, transparent 2px, transparent 4px);
+        }
+
+        /* 宿舍桌面 —— 一张大而厚的木纹垫板 */
+        .desktop {
+            max-width: 960px;
+            width: 100%;
+            background: #bda37c;                 /* 暖旧木色 */
+            padding: 28px 18px 32px 18px;
+            border: 10px solid #7a5d3f;           /* 深色木框 */
+            box-shadow: 12px 12px 0 rgba(0,0,0,0.4);
+            border-radius: 3px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* 标题区 – 手写感，加上“小雨在302” */
+        .title-block {
+            text-align: center;
+            border-bottom: 4px solid #624a30;
+            padding-bottom: 6px;
+        }
+        .title-block h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #261b0e;
+            text-shadow: 3px 3px 0 #b5956b, 4px 4px 0 #4f3a24;
+            letter-spacing: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            text-transform: uppercase;
+        }
+        .title-block .subhead {
+            background: #bea071;
+            color: #1e160d;
+            font-size: 1.1rem;
+            padding: 5px 20px;
+            border: 3px solid #4f3a22;
+            display: inline-block;
+            margin-top: 10px;
+            font-weight: bold;
+            box-shadow: inset 1px 1px 0 #e7cfad;
+        }
+        /* 小雨标注 */
+        .xiaoyu-note {
+            margin-top: 10px;
+            background: #70634d;
+            color: #ffefc0;
+            padding: 6px 18px;
+            border: 3px solid #30281e;
+            font-size: 1.4rem;
+            letter-spacing: 3px;
+            display: inline-block;
+            box-shadow: 0 3px 0 #3f2f1e;
+        }
+
+        /* 说明条 */
+        .info-bar {
+            background: #c8b088;
+            padding: 8px 12px;
+            border-left: 16px solid #836b47;
+            border-top: 2px solid #e5caa0;
+            font-size: 1.2rem;
+            color: #2d1f0e;
+            font-style: italic;
+            letter-spacing: 0.5px;
+        }
+
+        /* ========= 图标面板：方向 + 日记 + 三角锥折纸 ========= */
+        .card-container {
+            background: #9d8462;                  /* 深一度底毡 */
+            border: 5px inset #6f543a;              /* 内凹边框 */
+            padding: 30px 20px;
+            box-shadow: inset 3px 3px 8px #3f3222;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .compass-title {
+            font-size: 2rem;
+            background: #5c4a33;
+            color: #efdcb8;
+            padding: 4px 28px;
+            border: 3px solid #2f2519;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            box-shadow: 0 4px 0 #3d2e1c;
+        }
+
+        /* 图标行：五个图标一排 */
+        .icons-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 30px 35px;
+            width: 100%;
+        }
+
+        /* 卡片公用样式（方向卡片、日记卡片、三角锥卡片） */
+        .icon-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            width: 120px;
+            border: 3px solid transparent;
+            transition: all 0.1s;
+            cursor: pointer;
+        }
+        .icon-card:hover {
+            border: 3px solid #f9dd9e;
+            background: #b4956b;
+            transform: translate(-2px, -2px);
+        }
+        .icon-card:active {
+            transform: translate(2px, 2px);
+            filter: brightness(0.85);
+        }
+
+        /* 图标方块通用 */
+        .icon-square {
+            width: 100px;
+            height: 100px;
+            background: #d6b48b;
+            border: 5px outset #efe2c6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3.2rem;
+            font-weight: bold;
+            color: #3a2a12;
+            text-shadow: 3px 3px 0 #a8895e;
+            box-shadow: 5px 5px 0 #5f4531;
+            margin-bottom: 8px;
+        }
+
+        /* 方向图标文字稍大 */
+        .dir-icon {
+            font-size: 4rem;
+        }
+
+        /* 标签样式 */
+        .icon-label {
+            font-size: 1.5rem;
+            background: #5d4a34;
+            color: #ecdbbd;
+            padding: 5px 8px;
+            border: 3px solid #342819;
+            letter-spacing: 2px;
+            width: 100%;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: inset 1px 2px 0 #b59e7c;
+            white-space: nowrap;
+        }
+
+        /* 三角锥特殊样式：做一个简单的三角形图案 */
+        .triangle-cone {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+        .triangle-cone span {
+            font-size: 2.2rem;
+            filter: drop-shadow(2px 2px 0 #7a5a3a);
+        }
+        .triangle-cone .base {
+            font-size: 1.8rem;
+            margin-top: -8px;
+        }
+
+        /* 快捷功能区 */
+        .shortcut-row {
+            background: #937b59;
+            padding: 10px;
+            border: 4px ridge #735e42;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            font-size: 1.2rem;
+            color: #211b10;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .shortcut-row span {
+            background: #5f4f38;
+            color: #ead5b3;
+            padding: 4px 12px;
+            border: 2px solid #30281d;
+        }
+
+        /* 底部状态栏，加上302小雨 */
+        .footer-1997 {
+            background: #4c3d2b;
+            color: #bea887;
+            padding: 8px 15px;
+            border-top: 4px solid #7d6448;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+            text-transform: uppercase;
+        }
+        .blink-led {
+            background: #30291f;
+            color: #c9bf8f;
+            padding: 0 8px;
+            animation: blink 1.2s step-end infinite;
+        }
+        @keyframes blink {
+            0%,100%{ opacity:1; }
+            50%{ opacity:0.3; }
+        }
+
+        /* 模拟的“东南西北页面”和“日记页面”区块 */
+        .page-area {
+            margin-top: 25px;
+            border: 5px double #5d4a32;
+            background: #ab8f6b;
+            padding: 20px;
+            min-height: 200px;
+            box-shadow: inset 0 0 0 2px #6c5540;
+        }
+        .page-title {
+            font-size: 2rem;
+            background: #6f5f48;
+            color: #ffefcf;
+            padding: 5px 25px;
+            border: 3px solid #2b231b;
+            display: inline-block;
+            margin-bottom: 25px;
+        }
+        .compass-page-content, .diary-page-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+        .diary-page-content {
+            font-size: 1.8rem;
+            background: #e3cfb0;
+            color: #2b1f14;
+            padding: 40px;
+            border: 8px inset #b49468;
+            min-height: 200px;
+            align-items: center;
+            justify-content: flex-start;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+
+        /* 隐藏与显示逻辑 */
+        .hidden {
+            display: none;
+        }
+
+        /* 老式鼠标指针 */
+        .icon-card {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" viewBox="0 0 16 20"><polygon points="1,1 12,1 8,6 12,12 7,12 3,6 1,6" fill="black" /></svg>') 1 1, auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="desktop">
+        <!-- 头部，加入小雨在302室 -->
+        <div class="title-block">
+            <h1>🏠 锦华纺织厂宿舍 · 302室 🏠</h1>
+           <!--  <div class="subhead">三角锥折纸指向东南西北</div>
+            <div class="xiaoyu-note">🌧️ 小雨在302室 🌧️</div> -->
+        </div>
+
+      <!--   <div class="info-bar">
+            █ 点击三角锥折纸 进入「东南西北.html」 | 点击日记卡片进入「日记.html」 █
+        </div> -->
+
+        <!-- 图标面板：四个方向 + 日记 + 三角锥折纸（点击跳转东南西北.html） -->
+        <div class="card-container">
+            <div class="compass-title">✦ 小 雨 的 抽 屉 ✦</div>
+            抽屉里静静躺着6种颜色的东南西北折纸 还有一本日记本...
+                <br>
+            或许和她遗失物品的颜色、生日、幸运数相关？
+                <br>
+                <br>
+            <div class="icons-row">
+                
+                <!-- 东 -->
+                <!-- <a href="javascript:void(0)" class="icon-card" onclick="showCompassPage('东')">
+                    <div class="icon-square dir-icon">东</div>
+                    <span class="icon-label">EAST</span>
+                </a>
+                < -- 南 -- 
+                <a href="javascript:void(0)" class="icon-card" onclick="showCompassPage('南')">
+                    <div class="icon-square dir-icon">南</div>
+                    <span class="icon-label">SOUTH</span>
+                </a>
+                <  -- 西 -- 
+                <a href="javascript:void(0)" class="icon-card" onclick="showCompassPage('西')">
+                    <div class="icon-square dir-icon">西</div>
+                    <span class="icon-label">WEST</span>
+                </a>
+                <! - 北  
+                <a href="javascript:void(0)" class="icon-card" onclick="showCompassPage('北')">
+                    <div class="icon-square dir-icon">北</div>
+                    <span class="icon-label">NORTH</span>
+                </a> -->
+                <!-- 日记卡片 -->
+                <a href="./xy日记.html" class="icon-card" onclick="showDiaryPage()">
+                    <div class="icon-square">📔</div>
+                    <span class="icon-label">日记</span>
+                </a>
+                <!-- 三角锥折纸 —— 点击也打开东南西北页面（默认显示东） -->
+                <a href="./东南西北.html" class="icon-card" onclick="showCompassPage('东')">
+                    <div class="icon-square">
+                        <div class="triangle-cone">
+                            <!-- <span>▲</span> -->
+                            <span class="base">▼</span>
+                        </div>
+                    </div>
+                    <span class="icon-label">东南西北</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- 快捷方式栏 (突出三角锥跳转东南西北.html) -->
+        <!-- <div class="shortcut-row">
+            <span>📁 东南西北.html (三角锥直达)</span>
+            <span>📄 日记.html</span>
+            <span>🚪 302室·小雨</span>
+            <span>🔺 三角锥折纸</span>
+        </div> -->
+
+        <!-- 动态页面区域：模拟“东南西北页面”和“日记页面”的切换，融入“小雨在302” -->
+        <!-- <div id="compass-page" class="page-area hidden">
+            <div class="page-title">🧭 东南西北 · 页面</div>
+            <div class="compass-page-content" id="compass-inner">
+                < -- 由js动态填充方位内容，默认显示东，且结合小雨  >
+                <div style="font-size: 2rem; background: #ccb48c; padding: 30px; width: 100%; text-align: center; border: 6px ridge #886f4b;">
+                    东 · 宿舍东区 · 锅炉房 · 小雨常去打水<br>
+                    <span style="font-size: 1.5rem;">(点击不同方向卡片查看详情，302小雨贯穿始终)</span>
+                </div>
+            </div>
+            <div style="margin-top: 25px; background: #b29064; padding: 15px; border: 3px inset #6c533b; font-size: 1.2rem; text-align: center;">
+                方位页面 · 一九九七 厂宿舍 · 302室小雨在这里
+            </div>
+        </div>
+ -->
+        <div id="diary-page" class="page-area hidden">
+            <div class="page-title">📓 日记 · 页面</div>
+            <!-- <div class="diary-page-content">
+                1997.7.1  星期二  阴有小雨<br>
+                今天小雨来302找我们借磁带。<br>
+                “东边锅炉房又坏了，好吵。”<br>
+                她说西边小卖部有新进的北冰洋。<br>
+                晚上一起在北边晾衣场聊天。<br>
+                对了，小雨用废纸折了个三角锥，放在桌上。<br>
+                —— 工友 老陈 记于302室
+            </div> -->
+            <div style="margin-top: 25px; background: #b29064; padding: 15px; border: 3px inset #6c533b; font-size: 1.2rem;">
+                日记.html · 302室  ·  
+            </div>
+        </div>
+
+        <!-- 底部状态，加入302小雨 -->
+        <!-- <div class="footer-1997">
+            <span>🛠️ 厂宿舍 302室 小雨在呢</span>
+            <span class="blink-led">⏻ 待机 97'</span>
+            <span>1997-07-01 周二 小雨</span>
+        </div> -->
+    </div>
+
+    <script>
+        // 获取两个页面区块
+        const compassPage = document.getElementById('compass-page');
+        const diaryPage = document.getElementById('diary-page');
+        const compassInner = document.getElementById('compass-inner');
+
+        // 定义方位详情内容，每个方位都包含“小雨在302”的线索
+        /* const directionDetails = {
+            '东': '<div style="font-size: 2.2rem; background: #af8f64; padding: 30px; width: 100%; text-align: center; border: 6px ridge #7b613f;">🌅 东 · 锅炉房 · 东门 🌅<br><span style="font-size:1.4rem;">早上小雨从302去打热水，锅炉房轰隆响</span></div>',
+            '南': '<div style="font-size: 2.2rem; background: #af8f64; padding: 30px; width: 100%; text-align: center; border: 6px ridge #7b613f;">🏭 南 · 食堂 · 开水房 🏭<br><span style="font-size:1.4rem;">小雨中午在食堂打饭，碰到302的工友</span></div>',
+            '西': '<div style="font-size: 2.2rem; background: #af8f64; padding: 30px; width: 100%; text-align: center; border: 6px ridge #7b613f;">🌇 西 · 停车场 · 杂货铺 🌇<br><span style="font-size:1.4rem;">小雨帮302带酱油，还买了包话梅</span></div>',
+            '北': '<div style="font-size: 2.2rem; background: #af8f64; padding: 30px; width: 100%; text-align: center; border: 6px ridge #7b613f;">🌌 北 · 宿舍楼 · 晾衣场 🌌<br><span style="font-size:1.4rem;">晚上小雨和302室友在晾衣场乘凉、数星星</span></div>'
+        }; */
+
+        function showCompassPage(direction) {
+            // 隐藏日记页面，显示东南西北页面
+            diaryPage.classList.add('hidden');
+            compassPage.classList.remove('hidden');
+            // 更新内部方位内容
+            if (directionDetails[direction]) {
+                compassInner.innerHTML = directionDetails[direction];
+            } else {
+                compassInner.innerHTML = directionDetails['东']; // fallback
+            }
+            // 改变url hash
+            location.hash = direction;
+        }
+
+        function showDiaryPage() {
+            // 隐藏东南西北页面，显示日记页面
+            compassPage.classList.add('hidden');
+            diaryPage.classList.remove('hidden');
+            location.hash = 'diary';
+        }
+
+        // 初始默认显示东南西北页面（东），让用户一眼看到小雨元素，同时三角锥存在感强
+        window.onload = function() {
+            compassPage.classList.remove('hidden');
+            compassInner.innerHTML = directionDetails['东'];
+            diaryPage.classList.add('hidden');
+        };
+    </script>
+
+    <!-- 复古网格效果 -->
+    <style>
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            background: radial-gradient(circle at 10% 20%, rgba(255,250,210,0.02) 0px, transparent 2px);
+            background-size: 5px 5px;
+            z-index: 9999;
+        }
+        a:visited, a:link {
+            color: inherit;
+        }
+    </style>
+     <!-- 外部JS文件引用 -->
+    <!-- <script src="./search-engine.js"></script>
+    <script src="./storage.js"></script>
+    <script src="./navigation.js"></script>
+    <script src="./visitor.js"></script>
+    <script src="./search-ass.js"></script> -->
+<script src="./return.js"></script>
+ <script src="./jinzhi.js"></script>
+</body>
+</html>

@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>东南西北</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a89cc 0%, #4a69bd 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        .header {
+            text-align: center;
+            margin: 20px 0 20px;
+            width: 100%;
+            padding: 0 20px;
+        }
+        
+        h1 {
+            color: #fff;
+            font-size: 2.2rem;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            margin-bottom: 8px;
+            position: relative;
+            display: inline-block;
+            font-weight: 700;
+        }
+        
+        h1:after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(to right, #ff6b6b, #4ecdc4, #45b7d1, #feca57, #ff9ff3);
+            border-radius: 2px;
+        }
+        
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            margin-top: 15px;
+            max-width: 600px;
+            line-height: 1.5;
+            padding: 0 10px;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding: 0 20px;
+            flex: 1;
+        }
+        
+        /* 步骤指示器 */
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .step-indicator:before {
+            content: "";
+            position: absolute;
+            top: 24px;
+            left: 20px;
+            right: 20px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.3);
+            z-index: 1;
+        }
+        
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+            flex: 1;
+        }
+        
+        .step-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 10px;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+        }
+        
+        .step.active .step-circle {
+            background: #fff;
+            color: #4a69bd;
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .step-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .step.active .step-label {
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        /* 颜色选择区域 */
+        .color-selection {
+            margin-bottom: 25px;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .colors {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .color-option {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            border: 4px solid transparent;
+        }
+        
+        .color-option:active {
+            transform: translateY(-3px) scale(0.98);
+        }
+        
+        .color-option.selected {
+            border-color: white;
+            transform: scale(1.1);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+        }
+        
+        /* 东南西北区域 */
+        .fortune-teller-container {
+            margin: 25px 0;
+            position: relative;
+        }
+        
+        .fortune-teller {
+            width: 220px;
+            height: 220px;
+            position: relative;
+            transition: transform 0.5s;
+        }
+        
+        .fortune-teller.flap {
+            animation: flapAnimation 1s ease-in-out;
+        }
+        
+        @keyframes flapAnimation {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(0.9) rotate(5deg); }
+            50% { transform: scale(0.95) rotate(-5deg); }
+            75% { transform: scale(0.92) rotate(3deg); }
+        }
+        
+        .fortune-teller-base {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        
+        .fortune-teller-flap {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transition: transform 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.6rem;
+            color: white;
+            cursor: pointer;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        .fortune-teller-flap:active {
+            opacity: 0.9;
+        }
+        
+        .fortune-teller-flap.top-left {
+            top: 0;
+            left: 0;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px 0 0 0;
+        }
+        
+        .fortune-teller-flap.top-right {
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 0 10px 0 0;
+        }
+        
+        .fortune-teller-flap.bottom-left {
+            bottom: 0;
+            left: 0;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 0 0 0 10px;
+        }
+        
+        .fortune-teller-flap.bottom-right {
+            bottom: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 0 0 10px 0;
+        }
+        
+        .fortune-teller-flap.selected {
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .direction-text {
+            font-size: 1.6rem;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        /* 数字选择区域 */
+        .number-selection {
+            margin-top: 25px;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .numbers {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .number-option {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        .number-option:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+        
+        .number-option.selected {
+            background: #fff;
+            color: #4a69bd;
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        /* 操作按钮 */
+        .action-buttons {
+            margin: 25px 0 30px;
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            max-width: 400px;
+            justify-content: center;
+        }
+        
+        button {
+            padding: 16px 28px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            flex: 1;
+            max-width: 180px;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        button:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+        
+        .play-btn {
+            background: linear-gradient(to right, #4ecdc4, #44a08d);
+            color: white;
+        }
+        
+        .reset-btn {
+            background: linear-gradient(to right, #ff9a9e, #fad0c4);
+            color: white;
+        }
+        
+        /* 结果弹窗 */
+        .result-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            padding: 20px;
+        }
+        
+        .result-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .result-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px 25px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            transform: translateY(30px);
+            transition: transform 0.5s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .result-modal.show .result-content {
+            transform: translateY(0);
+        }
+        
+        .result-header {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #f0f0f0;
+            font-weight: 700;
+        }
+        
+        .result-text {
+            font-size: 1.5rem;
+            color: #4a69bd;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+        
+        .result-details {
+            color: #666;
+            font-size: 1rem;
+            margin-top: 15px;
+            line-height: 1.4;
+            padding: 0 10px;
+        }
+        
+        .close-modal {
+            margin-top: 25px;
+            padding: 14px 28px;
+            background: #4a69bd;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            width: 100%;
+            max-width: 200px;
+        }
+        
+        .close-modal:active {
+            background: #3c5aa8;
+            transform: translateY(-2px);
+        }
+        
+        /* 颜色定义 */
+        .red { background: linear-gradient(135deg, #ff6b6b, #ff8e8e); }
+        .yellow { background: linear-gradient(135deg, #ffd93d, #ffed4e); }
+        .blue { background: linear-gradient(135deg, #4d96ff, #6bc5ff); }
+        .pink { background: linear-gradient(135deg, #ff9ff3, #ffcce6); }
+        .green { background: linear-gradient(135deg, #6bcf7f, #8de8a0); }
+        .purple { background: linear-gradient(135deg, #9b59b6, #bb8fce); }
+        
+        /* 底部装饰 */
+        .footer {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 15px;
+            width: 100%;
+        }
+        
+        /* 适配小屏幕 */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 0.9rem;
+                padding: 0 5px;
+            }
+            
+            .step-circle {
+                width: 42px;
+                height: 42px;
+                font-size: 1.1rem;
+            }
+            
+            .step-label {
+                font-size: 0.75rem;
+            }
+            
+            .color-option {
+                width: 60px;
+                height: 60px;
+                font-size: 0.9rem;
+            }
+            
+            .fortune-teller {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .direction-text {
+                font-size: 1.4rem;
+            }
+            
+            .number-option {
+                width: 48px;
+                height: 48px;
+                font-size: 1.4rem;
+            }
+            
+            button {
+                padding: 14px 24px;
+                font-size: 1rem;
+            }
+            
+            .result-content {
+                padding: 25px 20px;
+            }
+            
+            .result-header {
+                font-size: 1.6rem;
+            }
+            
+            .result-text {
+                font-size: 1.3rem;
+                min-height: 110px;
+                padding: 18px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .colors {
+                gap: 8px;
+            }
+            
+            .color-option {
+                width: 56px;
+                height: 56px;
+            }
+            
+            .fortune-teller {
+                width: 180px;
+                height: 180px;
+            }
+            
+            .numbers {
+                gap: 8px;
+            }
+            
+            .number-option {
+                width: 44px;
+                height: 44px;
+                font-size: 1.3rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+            
+            button {
+                max-width: 240px;
+                width: 100%;
+            }
+        }
+        
+        /* 防止点击穿透 */
+        .no-scroll {
+            overflow: hidden;
+            height: 100%;
+        }
+        /* 添加全局文字居中样式 */
+/* .header {
+    text-align: center;
+    width: 100%;
+} */
+ /* 找到.header样式，大约在第40行左右 */
+.header {
+    text-align: center;
+    margin: 20px auto; /* 修改这里：从20px 0 20px改为20px auto */
+    width: 100%;
+    max-width: 800px; /* 添加这个限制最大宽度 */
+    padding: 0 20px;
+}
+
+.section-title {
+    text-align: center;
+    width: 100%;
+}
+
+.footer {
+    text-align: center;
+}
+
+/* 确保弹窗内容居中 */
+.result-content {
+    text-align: center;
+}
+
+/* 确保步骤标签居中 */
+.step {
+    align-items: center;
+}
+
+.step-label {
+    text-align: center;
+    width: 100%;
+}
+
+/* 确保东南西北的方向文字居中 */
+.fortune-teller-flap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.direction-text {
+    text-align: center;
+    width: 100%;
+}
+
+/* 确保颜色选项文字居中 */
+.color-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 确保数字选项文字居中 */
+.number-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+    </style>
+</head>
+<body>
+    <!-- <div class="header">
+        <h1>东南西北</h1>
+        <p class="subtitle">选择一种颜色的东南西北，然后选择一个方向（东、南、西、北），再选择一个数字（1-9），看看你的结果！</p>
+    </div> -->
+    <div class="header">
+    <h1>东南西北</h1>
+   <!--  <p class="subtitle">选择一种颜色的东南西北，然后选择一个方向（东、南、西、北），再选择一个数字（1-9），看看你的结果！</p>
+ -->
+</div>
+    
+    <div class="container">
+        <!-- 步骤指示器 -->
+        <div class="step-indicator">
+            <div class="step active" id="step1">
+                <div class="step-circle">1</div>
+                <div class="step-label">选择颜色</div>
+            </div>
+            <div class="step" id="step2">
+                <div class="step-circle">2</div>
+                <div class="step-label">选择方向</div>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-circle">3</div>
+                <div class="step-label">选择数字</div>
+            </div>
+        </div>
+        
+        <!-- 颜色选择区域 -->
+        <div class="color-selection">
+            <h2 class="section-title">第一步：选择东南西北的颜色</h2>
+            <div class="colors">
+                <div class="color-option red selected" data-color="red">红</div>
+                <div class="color-option yellow" data-color="yellow">黄</div>
+                <div class="color-option blue" data-color="blue">蓝</div>
+                <div class="color-option pink" data-color="pink">粉</div>
+                <div class="color-option green" data-color="green">绿</div>
+                <div class="color-option purple" data-color="purple">紫</div>
+            </div>
+        </div>
+        
+        <!-- 东南西北区域 -->
+        <div class="fortune-teller-container">
+            <h2 class="section-title">第二步：选择一个方向</h2>
+            <div class="fortune-teller" id="fortuneTeller">
+                <div class="fortune-teller-base" id="fortuneTellerBase"></div>
+                <div class="fortune-teller-flap top-left" data-direction="north">
+                    <span class="direction-text">北</span>
+                </div>
+                <div class="fortune-teller-flap top-right" data-direction="east">
+                    <span class="direction-text">东</span>
+                </div>
+                <div class="fortune-teller-flap bottom-left" data-direction="west">
+                    <span class="direction-text">西</span>
+                </div>
+                <div class="fortune-teller-flap bottom-right" data-direction="south">
+                    <span class="direction-text">南</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 数字选择区域 -->
+        <div class="number-selection">
+            <h2 class="section-title">第三步：选择一个数字</h2>
+            <div class="numbers" id="numberSelection">
+                <!-- 数字1-9将通过JavaScript生成 -->
+            </div>
+        </div>
+        
+        <!-- 操作按钮 -->
+        <div class="action-buttons">
+            <button class="play-btn" id="playBtn">开始</button>
+            <button class="reset-btn" id="resetBtn">重新开始</button>
+        </div>
+    </div>
+    
+    <!-- <div class="footer">
+        翻开小雨的日记本 · 东南西北
+    </div>
+     -->
+     <div class="footer">
+        <!-- 只有“翻开小雨的日记本”是可跳转的链接，后跟中间点 + 东南西北 -->
+        <a href="xy日记.html" style="color: #784e2e; text-decoration: none; font-weight: 500;" 
+           onmouseover="this.style.textDecoration='underline'" 
+           onmouseout="this.style.textDecoration='none'">
+           翻开小雨的日记本
+        </a>
+        <span> · </span>  <!-- 中间点装饰 -->
+        东南西北
+    </div>
+    <!-- 结果弹窗 -->
+    <div class="result-modal" id="resultModal">
+        <div class="result-content">
+            <h2 class="result-header">你的结果</h2>
+            <div class="result-text" id="resultText">加载中...</div>
+            <div class="result-details" id="resultDetails"></div>
+            <button class="close-modal" id="closeModal">关闭</button>
+        </div>
+    </div>
+    
+    <script>
+        // 游戏状态
+        const gameState = {
+            selectedColor: 'red',
+            selectedDirection: null,
+            selectedNumber: null,
+            step: 1
+        };
+        
+        // 东南西北结果数据库
+        const fortuneResults = {
+            red: {
+                north: [
+                    "你会遇到一个新朋友",
+                    "今天会有意外之财",
+                    "有人会向你表白",
+                    "你会收到一份礼物",
+                    "你今天的工作非常顺利",
+                    "会有好消息传来",
+                    "你会学到新技能",
+                    "你将帮助到他人",
+                    "你的愿望将会实现"
+                ],
+                east: [
+                    "今天宜尝试新事物",
+                    "注意健康",
+                    "有机会结交新朋友",
+                    "工作会有进展",
+                    "和同事相处关系更和谐",
+                    "买彩票需谨慎",
+                    "适合学习新知识",
+                    "会有小幸运",
+                    "旅行计划将成型"
+                ],
+                west: [
+                    "耐心等待机会",
+                    "避免冲动消费",
+                    "适合整理房间",
+                    "与家人多沟通",
+                    "注意交通安全",
+                    "会有惊喜",
+                    "工作表现被认可",
+                    "旧友重逢",
+                    "得到他人帮助"
+                ],
+                south: [
+                    "爱情运势上升",
+                    "注意饮食健康",
+                    "适合运动锻炼",
+                    "财运亨通",
+                    "学习效率高",
+                    "今日必有意外之财",
+                    "创意想法涌现",
+                    "油",
+                    "找到丢失的物品"
+                ]
+            },
+            yellow: {
+                north: [
+                    "今天心情很好",
+                    "会有美食享受",
+                    "收到好消息",
+                    "遇到有趣的人",
+                    "会有很多很多肯德基吃",
+                    "得到称赞",
+                    "找到新兴趣",
+                    "解决一个难题",
+                    "实现小目标"
+                ],
+                east: [
+                    "未来会成为超级大明星",
+                    "注意时间管理",
+                    "适合团队合作",
+                    "财务有进账",
+                    "学习新知识",
+                    "会有很多很多麦当劳吃",
+                    "表达自己的想法",
+                    "帮助他人",
+                    "收到邀请"
+                ],
+                west: [
+                    "去公园逛逛",
+                    "睡大觉一天",
+                    "适合读书",
+                    "与老朋友联系",
+                    "尝试新菜谱",
+                    "整理个人物品",
+                    "欣赏帅哥",
+                    "听音乐放松",
+                    "写日记"
+                ],
+                south: [
+                    "活力充沛",
+                    "今日适合户外活动",
+                    "结交新朋友",
+                    "工作有突破",
+                    "和同事相处和睦",
+                    "财运不错",
+                    "学习进步",
+                    "未来你会在北京拥有一个房子！",
+                    "今日适合带蝴蝶结发卡"
+                ]
+            },
+            blue: {
+                north: [
+                    "冷静思考问题",
+                    "专注工作学习",
+                    "小",
+                    "得到师傅超细心的指导",
+                    "周末和妹妹去公园 ",
+                    "解决矛盾",
+                    "工资翻倍",
+                    "提升技能",
+                    "明确目标"
+                ],
+                east: [
+                    "宜冒险尝试",
+                    "注意细节",
+                    "适合创新",
+                    "工作有进展",
+                    "人际关系改善",
+                    "财务稳定",
+                    "学习新方法",
+                    "得到支持",
+                    "发现机会"
+                ],
+                west: [
+                    "需要耐心",
+                    "注意沟通",
+                    "适合反思",
+                    "和同事相处和谐",
+                    "财务谨慎",
+                    "学习深入",
+                    "香港即将回归",
+                    "得到谅解",
+                    "达成共识"
+                ],
+                south: [
+                    "情绪稳定",
+                    "适合社交",
+                    "工作顺利",
+                    "财运上升",
+                    "学习高效",
+                    "烦恼已久的问题被解决",
+                    "帮助他人",
+                    "得到认可",
+                    "实现计划"
+                ]
+            },
+            pink: {
+                north: [
+                    "爱情甜蜜",
+                    "友情加深",
+                    "会有很多很多钱买新衣服",
+                    "我和师傅工作顺利",
+                    "财运不错",
+                    "妹妹学习进步",
+                    "心情愉快",
+                    "得到关爱",
+                    "分享快乐"
+                ],
+                east: [
+                    "今日会邂逅帅哥",
+                    "今日天涯帖会爆火",
+                    "今日适合和喜欢的人约会",
+                    "工作有惊喜",
+                    "财务有收获",
+                    "学习有趣",
+                    "烦恼已久的问题被解决",
+                    "得到赞美",
+                    "享受生活"
+                ],
+                west: [
+                    "温柔待人",
+                    "注意倾听",
+                    "适合聚会",
+                    "即将有一个快乐的周末",
+                    "财务稳定",
+                    "学习轻松",
+                    "加",
+                    "得到安慰",
+                    "分享感受"
+                ],
+                south: [
+                    "热情洋溢",
+                    "注意健康",
+                    "适合运动",
+                    "工作积极",
+                    "财运上升",
+                    "学习热情",
+                    "烦恼已久的问题被解决",
+                    "得到鼓励",
+                    "实现梦想"
+                ]
+            },
+            green: {
+                north: [
+                    "健康好转",
+                    "注意饮食",
+                    "适合锻炼",
+                    "工作有活力",
+                    "财务增长",
+                    "学习进步",
+                    "心情舒畅",
+                    "得到帮助",
+                    "实现目标"
+                ],
+                east: [
+                    "雪",
+                    "注意平衡",
+                    "适合创新",
+                    "工作有突破",
+                    "财务有收获",
+                    "学习新知识",
+                    "烦恼已久的问题被解决",
+                    "得到认可",
+                    "发现机会"
+                ],
+                west: [
+                    "放松身心",
+                    "注意休息",
+                    "适合冥想",
+                    "和同事相处和谐",
+                    "财务稳定",
+                    "学习深入",
+                    "烦恼已久的问题被解决",
+                    "得到支持",
+                    "达成共识"
+                ],
+                south: [
+                    "活力四射",
+                    "注意安全",
+                    "适合户外",
+                    "工作顺利",
+                    "财运不错",
+                    "学习高效",
+                    "烦恼已久的问题被解决",
+                    "得到赞美",
+                    "实现愿望"
+                ]
+            },
+            purple: {
+                north: [
+                    "灵感迸发",
+                    "注意直觉",
+                    "适合创作",
+                    "工作有创意",
+                    "财务有惊喜",
+                    "学习深入",
+                    "心情愉悦",
+                    "得到灵感",
+                    "实现创意"
+                ],
+                east: [
+                    "宜探索未知",
+                    "注意细节",
+                    "适合研究",
+                    "工作有发现",
+                    "财务有突破",
+                    "学习新领域",
+                    "烦恼已久的问题被解决",
+                    "得到启示",
+                    "发现秘密"
+                ],
+                west: [
+                    "深度思考",
+                    "注意内心",
+                    "适合反思",
+                    "被理解",
+                    "财务规划",
+                    "学习深入",
+                    "烦恼已久的问题被解决",
+                    "得到智慧",
+                    "达成领悟"
+                ],
+                south: [
+                    "魅力四射",
+                    "注意形象",
+                    "适合社交",
+                    "工作有表现",
+                    "财务有收获",
+                    "学习进步",
+                    "烦恼已久的问题被解决",
+                    "得到欣赏",
+                    "实现目标"
+                ]
+            }
+        };
+        
+        // DOM元素
+        const colorOptions = document.querySelectorAll('.color-option');
+        const directionFlaps = document.querySelectorAll('.fortune-teller-flap');
+        const numberSelection = document.getElementById('numberSelection');
+        const fortuneTeller = document.getElementById('fortuneTeller');
+        const fortuneTellerBase = document.getElementById('fortuneTellerBase');
+        const playBtn = document.getElementById('playBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const resultModal = document.getElementById('resultModal');
+        const resultText = document.getElementById('resultText');
+        const resultDetails = document.getElementById('resultDetails');
+        const closeModal = document.getElementById('closeModal');
+        const steps = document.querySelectorAll('.step');
+        const body = document.body;
+        
+        // 初始化数字选择
+        function initNumberSelection() {
+            numberSelection.innerHTML = '';
+            for (let i = 1; i <= 9; i++) {
+                const numberOption = document.createElement('div');
+                numberOption.className = 'number-option';
+                if (i === 1) numberOption.classList.add('selected');
+                numberOption.textContent = i;
+                numberOption.dataset.number = i;
+                numberOption.addEventListener('click', selectNumber);
+                numberSelection.appendChild(numberOption);
+            }
+        }
+        
+        // 选择颜色
+        function selectColor(e) {
+            const color = e.currentTarget.dataset.color;
+            gameState.selectedColor = color;
+            
+            // 更新UI
+            colorOptions.forEach(option => option.classList.remove('selected'));
+            e.currentTarget.classList.add('selected');
+            
+            // 更新东南西北颜色
+            updateFortuneTellerColor(color);
+            
+            // 更新步骤
+            updateStep(1);
+        }
+        
+        // 更新东南西北颜色
+        function updateFortuneTellerColor(color) {
+            // 设置背景渐变
+            const colorGradients = {
+                red: 'linear-gradient(135deg, #ff6b6b, #ff8e8e)',
+                yellow: 'linear-gradient(135deg, #ffd93d, #ffed4e)',
+                blue: 'linear-gradient(135deg, #4d96ff, #6bc5ff)',
+                pink: 'linear-gradient(135deg, #ff9ff3, #ffcce6)',
+                green: 'linear-gradient(135deg, #6bcf7f, #8de8a0)',
+                purple: 'linear-gradient(135deg, #9b59b6, #bb8fce)'
+            };
+            
+            fortuneTellerBase.style.background = colorGradients[color];
+        }
+        
+        // 选择方向
+        function selectDirection(e) {
+            const direction = e.currentTarget.dataset.direction;
+            gameState.selectedDirection = direction;
+            
+            // 更新UI
+            directionFlaps.forEach(flap => {
+                flap.classList.remove('selected');
+            });
+            e.currentTarget.classList.add('selected');
+            
+            // 更新步骤
+            updateStep(2);
+        }
+        
+        // 选择数字
+        function selectNumber(e) {
+            const number = parseInt(e.currentTarget.dataset.number);
+            gameState.selectedNumber = number;
+            
+            // 更新UI
+            document.querySelectorAll('.number-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            e.currentTarget.classList.add('selected');
+            
+            // 更新步骤
+            updateStep(3);
+        }
+        
+        // 更新步骤指示器
+        function updateStep(step) {
+            gameState.step = step;
+            
+            steps.forEach((s, index) => {
+                if (index < step) {
+                    s.classList.add('active');
+                } else {
+                    s.classList.remove('active');
+                }
+            });
+        }
+        
+        // 开始
+        function playGame() {
+            // 验证所有选择
+            if (!gameState.selectedColor) {
+                showToast('请先选择一种颜色的东南西北');
+                return;
+            }
+            
+            if (!gameState.selectedDirection) {
+                showToast('请先选择一个方向');
+                return;
+            }
+            
+            if (!gameState.selectedNumber) {
+                showToast('请先选择一个数字');
+                return;
+            }
+            
+            // 添加动画效果
+            fortuneTeller.classList.add('flap');
+            
+            // 防止滚动
+            body.classList.add('no-scroll');
+            
+            // 延迟显示结果
+            setTimeout(() => {
+                // 获取结果
+                const directionMap = {
+                    'north': '北',
+                    'east': '东',
+                    'west': '西',
+                    'south': '南'
+                };
+                
+                const colorMap = {
+                    'red': '红色',
+                    'yellow': '黄色',
+                    'blue': '蓝色',
+                    'pink': '粉色',
+                    'green': '绿色',
+                    'purple': '紫色'
+                };
+                
+                const directionText = directionMap[gameState.selectedDirection];
+                const colorText = colorMap[gameState.selectedColor];
+                const number = gameState.selectedNumber;
+                
+                // 从数据库中获取结果
+                const resultArray = fortuneResults[gameState.selectedColor][gameState.selectedDirection];
+                const resultIndex = (number - 1) % resultArray.length;
+                const result = resultArray[resultIndex];
+                
+                // 显示结果
+                resultText.textContent = result;
+                resultDetails.textContent = `颜色：${colorText} · 方向：${directionText} · 数字：${number}`;
+                
+                // 显示弹窗
+                resultModal.classList.add('show');
+                
+                // 移除动画类
+                fortuneTeller.classList.remove('flap');
+            }, 1000);
+        }
+        
+        // 重新开始
+        function resetGame() {
+            // 重置游戏状态
+            gameState.selectedColor = 'red';
+            gameState.selectedDirection = null;
+            gameState.selectedNumber = 1;
+            gameState.step = 1;
+            
+            // 重置UI
+            colorOptions.forEach(option => option.classList.remove('selected'));
+            document.querySelector('.color-option.red').classList.add('selected');
+            
+            directionFlaps.forEach(flap => {
+                flap.classList.remove('selected');
+            });
+            
+            document.querySelectorAll('.number-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            document.querySelector('.number-option[data-number="1"]').classList.add('selected');
+            
+            // 重置东南西北颜色
+            updateFortuneTellerColor('red');
+            
+            // 重置步骤
+            updateStep(1);
+            
+            // 隐藏结果弹窗
+            resultModal.classList.remove('show');
+            
+            // 恢复滚动
+            body.classList.remove('no-scroll');
+        }
+        
+        // 关闭弹窗
+        function closeResultModal() {
+            resultModal.classList.remove('show');
+            body.classList.remove('no-scroll');
+        }
+        
+        // 显示Toast提示
+        function showToast(message) {
+            // 如果已存在toast，先移除
+            const existingToast = document.querySelector('.toast');
+            if (existingToast) {
+                existingToast.remove();
+            }
+            
+            // 创建toast元素
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20%;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 1001;
+                font-size: 0.9rem;
+                max-width: 80%;
+                text-align: center;
+                animation: fadeInOut 2.5s ease-in-out;
+            `;
+            
+            // 添加动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeInOut {
+                    0%, 100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+                    10%, 90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(toast);
+            
+            // 2.5秒后移除toast
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+                if (style.parentNode) {
+                    style.remove();
+                }
+            }, 2500);
+        }
+        
+        // 事件监听
+        colorOptions.forEach(option => option.addEventListener('click', selectColor));
+        directionFlaps.forEach(flap => flap.addEventListener('click', selectDirection));
+        playBtn.addEventListener('click', playGame);
+        resetBtn.addEventListener('click', resetGame);
+        closeModal.addEventListener('click', closeResultModal);
+        
+        // 点击弹窗外部关闭
+        resultModal.addEventListener('click', function(e) {
+            if (e.target === resultModal) {
+                closeResultModal();
+            }
+        });
+        
+        // 阻止默认拖拽行为
+        document.addEventListener('touchmove', function(e) {
+            if (e.target.classList.contains('no-scroll') || document.body.classList.contains('no-scroll')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        // 初始化
+        function init() {
+            initNumberSelection();
+            updateFortuneTellerColor('red');
+            updateStep(1);
+            
+            // 添加触摸反馈
+            const touchElements = document.querySelectorAll('.color-option, .fortune-teller-flap, .number-option, button');
+            touchElements.forEach(el => {
+                el.addEventListener('touchstart', function() {
+                    this.style.opacity = '0.8';
+                });
+                
+                el.addEventListener('touchend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+     <script src="./jinzhi.js"></script>
+</body>
+</html>

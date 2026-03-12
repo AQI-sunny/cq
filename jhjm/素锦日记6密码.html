@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><!-- 1997  -->寻呼机<!--  · liufugen --></title>
+    <style>
+        /*  BB机风格 —— 光标永远跟随数字 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: #1a1e1a;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', Courier, 'VT323', 'DSEG7-Classic', monospace;
+            background-image: radial-gradient(circle at 30% 40%, #3c443c 0%, #0a0f0a 95%);
+            padding: 1rem;
+            position: relative;
+        }
+
+        /* 主设备 —— 经典BB机造型 */
+        .beeper {
+            background: #2b2b28;
+            padding: 1.8rem 1.5rem 2rem 1.5rem;
+            border-radius: 40px 40px 50px 50px;
+            box-shadow: 
+                0 15px 0 #121212,
+                0 25px 30px #000000cc,
+                inset 0 -6px 8px #3d3d3d,
+                inset 0 6px 10px #64645e;
+            border-left: 4px solid #4e4e48;
+            border-right: 4px solid #1b1b18;
+            max-width: 380px;
+            width: 100%;
+            position: relative;
+            transform: perspective(1200px) rotateX(1deg) rotateY(-0.5deg);
+            transition: transform 0.2s;
+        }
+
+        /* 天线 */
+        .beeper::before {
+            content: "";
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 28px;
+            background: linear-gradient(145deg, #3f3f3a, #1f1f1c);
+            border-radius: 40px 40px 10px 10px;
+            box-shadow: inset 0 4px 5px #6f6f64, 0 6px 0 #0a0a08;
+            border-bottom: 2px solid #6f6f60;
+            z-index: 5;
+        }
+
+        /* 天线小红帽 */
+        .beeper::after {
+            content: "";
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 14px;
+            height: 14px;
+            background: #c05030;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ff8a5c, inset -2px -2px 5px #602010;
+            border: 1px solid #f5bc90;
+            z-index: 10;
+        }
+
+        /* 显示屏区域 */
+        .display-panel {
+            background: #a39f89;
+            border-radius: 30px 30px 18px 18px;
+            padding: 18px 16px 12px 16px;
+            box-shadow: 
+                inset 0 0 0 3px #706e5e,
+                inset 0 0 15px #2d2d24,
+                0 8px 0 #43423a;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #cac5af;
+        }
+
+        /* 液晶偏光片效果 */
+        .lcd {
+            background: #1f2f1a;
+            border-radius: 14px;
+            padding: 20px 10px 16px 10px;
+            box-shadow: 
+                inset 0 0 30px #000000,
+                inset 0 -8px 8px #223322,
+                0 4px 6px #00000080;
+            border: 2px solid #7c8a6e;
+            font-family: 'Courier New', Courier, 'VT323', monospace;
+            color: #ffb873;
+            text-shadow: 0 0 5px #ff9f4a, 0 2px 3px black;
+            position: relative;
+        }
+
+        /* 寻呼信息头 */
+        .lcd-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1rem;
+            margin-bottom: 14px;
+            color: #f0b063;
+            border-bottom: 2px dotted #6f824f;
+            padding-bottom: 6px;
+            letter-spacing: 1px;
+        }
+        .lcd-header .id {
+            background: #2b4020;
+            padding: 0 8px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        .lcd-header .battery {
+            display: flex;
+            gap: 5px;
+        }
+        .battery span {
+            display: inline-block;
+            width: 10px;
+            background: #e09540;
+            box-shadow: 0 0 6px #faa64e;
+        }
+
+        /* 主密码显示区 */
+        .message-area {
+            text-align: center;
+            margin: 5px 0 10px 0;
+        }
+        .label-prompt {
+            font-size: 1.0rem;
+            color: #dcb075;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .code-display {
+            background: #0f1f0c;
+            border-radius: 12px;
+            padding: 16px 5px;
+            border: 2px solid #7c9a60;
+            box-shadow: inset 0 0 12px black;
+            font-size: 3.2rem;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, 'VT323', monospace;
+            color: #ffbc6e;
+            text-shadow: 0 0 10px #ff962e, 0 3px 2px #3f2f0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: nowrap;
+            min-height: 95px;
+            letter-spacing: 4px;
+        }
+        .code-display span {
+            line-height: 1.2;
+        }
+
+        /* 光标 —— 始终紧跟在已输入数字后面 */
+        .cursor-blink {
+            display: inline-block;
+            width: 20px;
+            height: 45px;
+            background-color: #ffa44b;
+            box-shadow: 0 0 12px #ffbc80;
+            margin-left: 2px;        /* 稍微靠紧前一个字符 */
+            vertical-align: middle;
+            animation: lcdBlink 0.9s step-end infinite;
+        }
+        @keyframes lcdBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.1; }
+        }
+
+        /* 副信息 */
+        .sub-message {
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            color: #c9944a;
+            border-top: 1px solid #55773d;
+            padding-top: 8px;
+        }
+
+        /* 状态行 */
+        .status-row {
+            background: #23301d;
+            padding: 6px 12px;
+            border-radius: 30px;
+            margin-top: 8px;
+            font-size: 1.0rem;
+            text-align: center;
+            color: #f5bc80;
+            border: 1px solid #6f8f50;
+            box-shadow: inset 0 0 6px black;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        /* 按键区域 */
+        .keyboard-beeper {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px 14px;
+            margin: 25px 0 10px;
+        }
+
+        .btn {
+            background: #3d3d34;
+            border: none;
+            border-radius: 30px 30px 18px 18px;
+            padding: 16px 0 12px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #d9d0b0;
+            font-family: 'Courier New', Courier, monospace;
+            box-shadow: 
+                0 8px 0 #1a1a14,
+                0 10px 15px black,
+                inset 0 -3px 5px #6a6a5a,
+                inset 0 2px 5px #e0dcc0;
+            cursor: pointer;
+            transition: all 0.06s linear;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            border-bottom: 4px solid #525244;
+            text-shadow: 0 3px 2px #202018;
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 2px 0 #1a1a14, 0 5px 10px black;
+            border-bottom-width: 2px;
+        }
+
+        .btn-clear {
+            background: #73553a;
+            border-bottom-color: #4f3926;
+            color: #ffdbb0;
+        }
+        .btn-enter {
+            background: #2b6840;
+            border-bottom-color: #174020;
+            grid-column: span 2;
+            font-size: 2rem;
+            letter-spacing: 4px;
+            font-weight: bold;
+            color: #f5ffd3;
+        }
+
+        /* 扬声器格栅 */
+        .speaker-grill {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 25px 0 10px;
+        }
+        .speaker-grill div {
+            width: 8px;
+            height: 22px;
+            background: #5c5c50;
+            border-radius: 10px;
+            box-shadow: inset 0 3px 5px #2f2f28, 0 2px 0 #91917a;
+            transform: rotate(-5deg);
+        }
+
+        .belt-clip {
+            width: 40px;
+            height: 12px;
+            background: #5c5c4d;
+            border-radius: 20px 20px 0 0;
+            margin: 15px auto 0;
+            box-shadow: inset 0 4px 6px #24241c;
+            border-bottom: 3px solid #24241c;
+        }
+
+        /* 错误闪烁 */
+        .error-flash {
+            background: #a04530 !important;
+            color: #fff0c0 !important;
+            transition: 0.05s;
+        }
+    </style>
+</head>
+<body>
+    <div class="beeper">
+        <div class="display-panel">
+            <div class="lcd" id="lcdScreen">
+                <!-- 头部 呼机号码 & 电池 -->
+                <div class="lcd-header">
+                    <span class="id">✉ 555-0197</span>
+                    <span class="battery">
+                        <span style="height: 16px;"></span>
+                        <span style="height: 22px;"></span>
+                        <span style="height: 28px;"></span>
+                    </span>
+                </div>
+
+                <!-- 主要密码显示区 —— 光标永远跟在数字后 -->
+                <div class="message-area">
+                    <div class="label-prompt">[ 回电代码 ]</div>
+                    <div class="code-display" id="codeDisplay">
+                        <!-- 动态数字占位 + 光标独立 -->
+                        <span id="codeNumbers">— — — — — — — —</span>
+                        <span class="cursor-blink" id="cursorEl"></span>
+                    </div>
+                </div>
+
+                <!-- 子行信息 (日期时间) -->
+                <div class="sub-message">
+                    <span>📟 1997-06-13</span>
+                    <span>⏳ 19:97</span>  <!-- 彩蛋年份 -->
+                </div>
+
+                <!-- 状态行 -->
+                <div class="status-row" id="beeperStatus">
+                    <span>▶ 待命</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 按键区域 -->
+        <div class="keyboard-beeper">
+            <button class="btn" data-digit="1">1</button>
+            <button class="btn" data-digit="2">2</button>
+            <button class="btn" data-digit="3">3</button>
+            <button class="btn" data-digit="4">4</button>
+            <button class="btn" data-digit="5">5</button>
+            <button class="btn" data-digit="6">6</button>
+            <button class="btn" data-digit="7">7</button>
+            <button class="btn" data-digit="8">8</button>
+            <button class="btn" data-digit="9">9</button>
+            <button class="btn btn-clear" id="clearBeeper">CLR</button>
+            <button class="btn" data-digit="0">0</button>
+            <button class="btn btn-enter" id="enterBeeper">⏎ 拨号</button>
+        </div>
+
+        <!-- 装饰 -->
+        <div class="speaker-grill">
+            <div></div><div></div><div></div><div></div><div></div>
+        </div>
+        <div class="belt-clip"></div>
+    </div>
+
+    <script>
+        (function() {
+            // 新密码：12736568 (8位)
+            const TARGET_CODE = "12736578";
+            let currentInput = "";
+
+            // DOM 元素
+            const codeNumbersSpan = document.getElementById('codeNumbers');
+            const beeperStatus = document.getElementById('beeperStatus');
+            const lcdScreen = document.getElementById('lcdScreen');
+            const cursor = document.getElementById('cursorEl');
+
+            // 更新液晶显示 + 光标位置永远在数字后
+            function updateLCD() {
+                const raw = currentInput;
+                // 构造视觉字符串: 已输入的数字 + 占位符，每4位后加一个空格
+                let visual = '';
+                for (let i = 0; i < 8; i++) {
+                    if (i < raw.length) {
+                        visual += raw[i];
+                    } else {
+                        visual += '—';      // 短横占位
+                    }
+                    // 每4位加一个小空格，让老式寻呼机分组更清晰
+                    if (i === 3) visual += ' ';
+                }
+                codeNumbersSpan.innerText = visual;
+
+                // 光标策略: 只要在8位以内，光标就显示 (视觉上跟在已输数字后面)
+                // 当输满8位，光标仍然可见，但稍微弱化以示提醒（同时可继续按CLR或ENTER）
+                if (currentInput.length >= 8) {
+                    cursor.style.opacity = '0.4';   // 满位时仍然显示光标，但变淡
+                } else {
+                    cursor.style.opacity = '1';
+                }
+
+                // 让光标在正确的位置——通过调整父级flex和margin，光标自然跟在文字后。
+                // 不做额外平移，因为光标是span，跟在#codeNumbers后面。
+            }
+
+            // 设置状态信息
+            function setStatus(text, isError = false) {
+                beeperStatus.innerHTML = `<span>${isError ? '⚠️' : '▶'} ${text}</span>`;
+                if (isError) {
+                    beeperStatus.style.background = '#6a3326';
+                    beeperStatus.style.color = '#ffcfb0';
+                    beeperStatus.style.borderColor = '#b05a40';
+                } else {
+                    beeperStatus.style.background = '#23301d';
+                    beeperStatus.style.color = '#f5bc80';
+                    beeperStatus.style.borderColor = '#6f8f50';
+                }
+            }
+
+            // 错误震动/闪烁 (寻呼机来报)
+            function errorVibrate() {
+                let count = 0;
+                const interval = setInterval(() => {
+                    lcdScreen.style.backgroundColor = (count % 2 === 0) ? '#5a2e1a' : '#1f2f1a';
+                    lcdScreen.style.transition = 'background-color 0.05s';
+                    count++;
+                    if (count > 3) {
+                        clearInterval(interval);
+                        lcdScreen.style.backgroundColor = '#1f2f1a';
+                    }
+                }, 80);
+                // 光标微微抖动
+                cursor.style.transform = 'translateX(2px)';
+                setTimeout(() => cursor.style.transform = 'translateX(-2px)', 50);
+                setTimeout(() => cursor.style.transform = 'translateX(1px)', 100);
+                setTimeout(() => cursor.style.transform = 'translateX(0)', 150);
+            }
+
+            // 处理数字输入
+            function handleDigit(digit) {
+                if (currentInput.length < 8) {
+                    currentInput += digit;
+                    updateLCD();
+                    setStatus(`已输 ${currentInput.length}/8`, false);
+                } else {
+                    setStatus('8位已满 · 请按拨号键', false);
+                    errorVibrate();  // 提示不能再输
+                }
+            }
+
+            // 清除
+            function handleClear() {
+                currentInput = '';
+                updateLCD();
+                setStatus('清除', false);
+                // 恢复光标正常闪烁
+                cursor.style.opacity = '1';
+                cursor.style.transform = 'translateX(0)';
+            }
+
+            // 回车/发送 —— 验证密码，正确则跳转「素锦日记6-lfg.html」
+            function handleEnter() {
+                if (currentInput === TARGET_CODE) {
+                    setStatus('✓ 通过！ 呼叫中..', false);
+                    // 给点反馈再跳转，保留老式寻呼机那种确认感
+                    cursor.style.animation = 'lcdBlink 0.3s step-end infinite';
+                    beeperStatus.style.background = '#2b6840';
+                    beeperStatus.style.color = '#e9ffc0';
+                    beeperStatus.innerHTML = `<span>📡 接通刘福根...</span>`;
+
+                    // 延迟跳转到「素锦日记6-lfg.html」
+                    setTimeout(() => {
+                        window.location.href = '素锦日记6-lfg.html';
+                    }, 800);
+                } else {
+                    setStatus('✗ 拒绝访问', true);
+                    errorVibrate();
+                    // 按照真实BB机习惯，输错不自动清空 (但CLR可用)
+                }
+            }
+
+            // 事件绑定：按钮
+            document.querySelectorAll('.btn[data-digit]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const digit = btn.getAttribute('data-digit');
+                    handleDigit(digit);
+                });
+            });
+
+            document.getElementById('clearBeeper').addEventListener('click', (e) => {
+                e.preventDefault();
+                handleClear();
+            });
+
+            document.getElementById('enterBeeper').addEventListener('click', (e) => {
+                e.preventDefault();
+                handleEnter();
+            });
+
+            // 键盘支持
+            document.addEventListener('keydown', (e) => {
+                const key = e.key;
+                // 数字键
+                if (key >= '0' && key <= '9') {
+                    e.preventDefault();
+                    handleDigit(key);
+                } else if (key === 'Enter') {
+                    e.preventDefault();
+                    handleEnter();
+                } else if (key === 'Backspace' || key === 'Delete' || key === 'c' || key === 'C' || key === 'Escape') {
+                    e.preventDefault();
+                    handleClear();
+                }
+            });
+
+            // 初始化显示
+            updateLCD();
+            setStatus('输入目标号码', false);
+        })();
+    </script>
+ <script src="./jinzhi.js"></script>
+</body>
+</html>

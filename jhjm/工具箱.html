@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>吴老二的工具箱</title>
+    <!-- 引用已有样式 (模拟路径) 保留原样 -->
+    <link rel="stylesheet" href="search-assistant.css">
+    <link rel="stylesheet" href="visitor.css">
+    <link rel="stylesheet" href="common.css">
+    <style>
+        /* ===== 全局 1997 粗糙质感 (完全保留) ===== */
+        body {
+            background: #c0c0c0 url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%224%22 height=%224%22 viewBox=%220 0 4 4%22><path fill=%22%23999999%22 d=%22M1 3h1v1H1zM3 1h1v1H3z%22 /></svg>');
+            font-family: 'Courier New', Courier, 'MS Sans Serif', Geneva, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #222;
+        }
+        .w95-window {
+            max-width: 1000px;
+            margin: 20px auto;
+            border: 3px outset #dfdfdf;
+            background: #efefef;
+            padding: 20px 20px 30px 20px;
+            box-shadow: 5px 5px 0px #808080;
+        }
+        h1 {
+            font-size: 32px;
+            letter-spacing: 2px;
+            text-align: center;
+            margin: 0 0 10px 0;
+            text-shadow: 2px 2px 0 #808080;
+            color: #000080;
+            background: #dfdfdf;
+            padding: 10px;
+            border: 2px inset #ffffff;
+        }
+        hr {
+            border: 1px solid #808080;
+        }
+
+        /* ===== 密码遮罩层 ===== */
+        #lockScreen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #008080;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .pwd-panel {
+            background: #c0c0c0;
+            border: 5px outset #ffffff;
+            padding: 30px;
+            width: 300px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+        .pwd-panel h2 {
+            margin-top: 0;
+            color: #000080;
+            border-bottom: 2px groove #808080;
+            padding-bottom: 10px;
+        }
+        .pwd-panel input {
+            background: #ffffff;
+            border: 3px inset #eee;
+            padding: 12px;
+            font-size: 20px;
+            width: 80%;
+            font-family: monospace;
+            margin: 20px 0;
+        }
+        .w95-button {
+            background: #c0c0c0;
+            border: 3px outset #ffffff;
+            padding: 10px 25px;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+        }
+        .w95-button:active {
+            border: 3px inset #ffffff;
+        }
+        .error-msg {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* ===== 头部搜索栏 (logo严格固定于左侧，绝不遮挡文字) ===== */
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;    /* 整体水平居中，但logo与搜索框浑然一体 */
+            gap: 8px;                   /* 微小间隙，既不分家也不拥挤 */
+            margin-bottom: 30px;
+            background: transparent;
+            padding: 0;
+            border: none;
+            flex-wrap: nowrap;          /* 铁律：永不换行，logo永远在搜索框左边 */
+        }
+
+        /* logo样式 — 死死固定在搜索框左侧，拒绝任何偏移或遮挡 */
+        .logo2 {
+            width: 100px; /* 更小的Logo */
+            height: 100px;
+        }
+
+        .search-container {
+            flex: 0 1 500px;            /* 优先500px，可适当缩小但不变形 */
+            min-width: 300px;            /* 太窄时也不会把logo挤走 */
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            padding: 12px 20px;
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+            /* 保证内部文字不会被logo影响 */
+        }
+        .search-bar:hover {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.35);
+        }
+        .search-bar:focus-within {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.45);
+        }
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            color: #9aa0a6;
+            background: #ccc;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            fill: currentColor;          /* 让svg继承颜色 */
+        }
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: transparent;
+        }
+        .search-button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            flex-shrink: 0;              /* 防止按钮被压缩，保持可点 */
+        }
+        .search-button:hover {
+            background-color: #2b6fd8;
+        }
+
+        /* 窄屏时允许搜索栏宽度缩小，但logo纹丝不动 */
+        @media (max-width: 700px) {
+            .header-container {
+                gap: 8px;               /* 维持固定 */
+            }
+            .search-container {
+                min-width: 200px;
+            }
+        }
+
+        /* ===== 物品网格 ===== */
+        .tool-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        .tool-item {
+            background: #d4d0c8;
+            border: 4px outset #ffffff;
+            padding: 20px 15px;
+            width: 160px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 4px 4px 0px #808080;
+        }
+        .tool-item:active {
+            border: 4px inset #ffffff;
+        }
+        .tool-item a {
+            text-decoration: none;
+            color: #0000cc;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .tool-item a:hover {
+            text-decoration: underline dotted red;
+        }
+        .tool-icon {
+            font-size: 50px;
+            line-height: 1.4;
+            filter: drop-shadow(3px 3px 0px #404040);
+        }
+        /* 真实图片样式 */
+        .real-photo {
+            width: 120px;
+            height: 90px;
+            object-fit: cover;
+            border: 4px solid #000;
+            border-style: inset;
+            margin-top: 8px;
+            background: #808080; /* 加载中的占位色 */
+            image-rendering: pixelated; /* 增加复古像素感 */
+            cursor: zoom-in;  /* 提示可点击放大 */
+        }
+        .img-placeholder {
+            background: #808080;
+            color: #ffffcc;
+            padding: 8px 5px;
+            border: 3px inset #efefef;
+            font-weight: bold;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+        .footer-note {
+            margin-top: 40px;
+            border-top: 4px groove #ffffff;
+            padding: 10px;
+            text-align: right;
+            color: #000080;
+            font-style: italic;
+        }
+        /* 修复链接点击区域 */
+        .tool-item[onclick] {
+            cursor: pointer;
+        }
+
+        /* ===== 新增：图片放大查看模态框 (Windows 95 风格) ===== */
+        .zoom-modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            background-color: #008080c0;  /* 类似win95蓝绿 */
+            align-items: center;
+            justify-content: center;
+        }
+        .zoom-modal-content {
+            background: #c0c0c0;
+            border: 8px outset #efefef;
+            padding: 15px;
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 10px 10px 5px #404040;
+        }
+        .zoom-modal-content img {
+            max-width: 70vw;
+            max-height: 70vh;
+            object-fit: contain;
+            border: 4px inset #808080;
+            background: #808080;
+            image-rendering: pixelated;
+        }
+        .zoom-caption {
+            margin-top: 8px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #000080;
+            background: #dfdfdf;
+            padding: 5px;
+            text-align: center;
+            border: 2px inset #ffffff;
+        }
+        .zoom-close {
+            background: #c0c0c0;
+            border: 3px outset #ffffff;
+            padding: 5px 15px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            align-self: flex-end;
+            margin-bottom: 8px;
+        }
+        .zoom-close:active {
+            border: 3px inset #ffffff;
+        }
+
+        /* 手机端小调整 */
+        @media (max-width: 500px) {
+            .zoom-modal-content img {
+                max-width: 85vw;
+                max-height: 60vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 密码锁屏层 (完全保留) -->
+<div id="lockScreen">
+    <div class="pwd-panel">
+        <h2>🔐 吴老二的工具箱</h2>
+        <div style="font-size: 14px; margin-bottom: 5px;">输入密码</div>
+        <input type="password" id="passwordInput" placeholder="******" maxlength="6">
+        <br>
+        <button class="w95-button" id="unlockBtn">开锁</button>
+        <div id="pwdError" class="error-msg"></div>
+        <!-- <div style="margin-top: 20px; font-size: 12px; color: #222;">© 1997 锦华工作室</div> -->
+    </div>
+</div>
+
+<!-- 主内容区 (解锁后显示) -->
+<div id="mainContent" style="display: none;">
+    <div class="w95-window">
+        <!-- 头部：logo + 搜索栏 (logo严格在搜索框左侧固定) 完全保留原样 -->
+        <div class="header-container">
+            <!-- 注释掉的logo保留，仅启用logo2 -->
+            <div> <img src="search.png" class="logo2" alt="吴老二工牌厂"></div>
+
+            <div class="search-container">
+                <div class="search-bar">
+                    <!-- 原搜索图标被注释掉，保留空位 -->
+                    <input type="text" class="search-input" id="searchInput" placeholder="搜索其他关键词...">
+                    <button class="search-button" id="searchButton">搜索</button>
+                </div>
+            </div>
+        </div>
+
+        <h1>⛏️ 吴老二的工具箱 ⛏️</h1>
+        <div style="background: #ffffcc; border: 2px solid #cc9933; padding: 8px; text-align: center; font-weight: bold;">
+            ✔ 密码正确  ·  工具箱已打开 <!--   1997.03.02 -->
+        </div>
+        <hr>
+
+        <!-- 物品陈列区：工牌(注释掉) + 两张真实照片 + 悔过书 (照片点击放大，悔过书新标签打开) -->
+        <div class="tool-grid">
+            <!-- 工牌被注释掉，保留原样 -->
+            <!-- <div class="tool-item" onclick="window.location.href='工牌2.html';"> ... </div> -->
+
+            <!-- 合照.jpg - 点击图片放大 (整个tool-item不跳转，仅图片可放大，但保留点击图区域友好) -->
+            <div class="tool-item" style="cursor: default;"> <!-- 取消手型，因为图片单独有放大 -->
+                <div class="tool-icon">📸</div>
+                <div><span style="font-weight:bold;color:#a52a2a;">合照.jpg</span></div>
+                <!-- 真实图片元素: 模拟1997老旧合照，增加点击放大事件 -->
+                <img src="合照.png" alt="合照.jpg" class="real-photo" id="groupPhoto" style="cursor:zoom-in;">
+                <div class="photo-symbol" style="margin-top:5px;">[丫丫<br>幼儿园毕业照]</div>
+            </div>
+
+            <!-- 生日照.jpg - 点击图片放大 -->
+            <div class="tool-item" style="cursor: default;">
+                <div class="tool-icon">🎂</div>
+                <div><span style="font-weight:bold;color:#a52a2a;">生日照.jpg</span></div>
+                <img src="生日照.png" alt="生日照.jpg" class="real-photo" id="birthPhoto" style="cursor:zoom-in;">
+                <div class="photo-symbol" style="margin-top:5px;">[丫丫五周岁<br>生日纪念照]</div>
+            </div>
+
+            <!-- 悔过书 - 按照要求：点击在新标签页打开 悔过书.html (同时保留tool-item点击跳转，同时链接也可点) -->
+            <div class="tool-item" onclick="window.open('悔过书.html', '_blank');" style="cursor: pointer;">
+                <div class="tool-icon">📜</div>
+                <!-- 这里a标签也加上新标签打开，保持双重保险，但不影响外观 -->
+                <div><a href="悔过书.html" target="_blank" rel="noopener">📖 悔过书</a></div>
+                <div style="font-size:12px;">(亲笔签名)</div>
+                <div class="img-placeholder">点我阅读</div>
+            </div>
+        </div>
+
+        <!-- 复古装饰 (被注释掉保留) -->
+        <!-- <div style="margin-top: 30px; background: #d4d0c8; ... </div> -->
+        <!-- <div class="footer-note"> ... </div> -->
+    </div>
+</div>
+
+<!-- 放大图片模态框 (Win95风格) -->
+<div id="zoomModal" class="zoom-modal">
+    <div class="zoom-modal-content">
+        <button class="zoom-close" id="closeZoomBtn">✕ 关闭</button>
+        <img id="zoomImage" src="" alt="放大照片">
+        <div id="zoomCaption" class="zoom-caption"></div>
+    </div>
+</div>
+
+<!-- 引入已有的 JS 文件 (模拟路径，保留原样) -->
+<script src="./search-engine.js"></script>
+<script src="./storage.js"></script>
+<script src="./navigation.js"></script>
+<script src="./logo-return.js"></script>
+<script src="./search-ass.js"></script>
+
+<!-- 解锁逻辑 + 图片放大功能 (完全保留原解锁，新增放大和悔过书新标签) -->
+<script>
+    (function() {
+        // 原有解锁逻辑 完全保留
+        const lockScreen = document.getElementById('lockScreen');
+        const mainContent = document.getElementById('mainContent');
+        const unlockBtn = document.getElementById('unlockBtn');
+        const pwdInput = document.getElementById('passwordInput');
+        const pwdError = document.getElementById('pwdError');
+
+        const SECRET_mima = '970309';
+
+        function unlockApp() {
+            const entered = pwdInput.value.trim();
+            if (entered === SECRET_mima) {
+                lockScreen.style.display = 'none';
+                mainContent.style.display = 'block';
+                document.body.style.overflow = 'auto';
+            } else {
+                pwdError.textContent = '密码错误！  提示:工号(6位数字)';
+                pwdInput.value = '';
+                pwdInput.focus();
+            }
+        }
+
+        unlockBtn.addEventListener('click', unlockApp);
+        pwdInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                unlockApp();
+            }
+        });
+
+        document.body.style.overflow = 'hidden';  // 初始锁定滚动
+
+        // --- 新增图片放大查看功能 (完全不改动原有结构，只添加事件) ---
+        const zoomModal = document.getElementById('zoomModal');
+        const zoomImage = document.getElementById('zoomImage');
+        const zoomCaption = document.getElementById('zoomCaption');
+        const closeZoomBtn = document.getElementById('closeZoomBtn');
+
+        // 获取两张图片元素
+        const groupPhoto = document.getElementById('groupPhoto');
+        const birthPhoto = document.getElementById('birthPhoto');
+
+        // 封装显示大图函数
+        function showZoom(imgElement, captionText) {
+            if (imgElement && imgElement.src) {
+                zoomImage.src = imgElement.src;          // 使用原图（如果是真实路径会加载）
+                // 后备：如果图片加载失败，保持复古感，但不用处理
+                zoomCaption.textContent = captionText || '吴老二珍藏';
+                zoomModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden'; // 防止背景滚动
+            }
+        }
+
+        // 合照点击事件
+        if (groupPhoto) {
+            groupPhoto.addEventListener('click', function(e) {
+                e.stopPropagation();  // 防止冒泡到tool-item (tool-item已取消手型，无动作但保留)
+                showZoom(groupPhoto, '📸 合照.jpg —— 丫丫幼儿园毕业照');
+            });
+        }
+
+        // 生日照点击事件
+        if (birthPhoto) {
+            birthPhoto.addEventListener('click', function(e) {
+                e.stopPropagation();
+                showZoom(birthPhoto, '🎂 生日照.jpg —— 丫丫五周岁生日纪念照');
+            });
+        }
+
+        // 关闭模态框 —— 点击关闭按钮
+        closeZoomBtn.addEventListener('click', function() {
+            zoomModal.style.display = 'none';
+            document.body.style.overflow = '';     // 恢复滚动
+            zoomImage.src = '';                     // 清空避免闪烁
+        });
+
+        // 点击模态框背景（空白区域）关闭
+        zoomModal.addEventListener('click', function(e) {
+            if (e.target === zoomModal) {
+                zoomModal.style.display = 'none';
+                document.body.style.overflow = '';
+                zoomImage.src = '';
+            }
+        });
+
+        // 增加ESC关闭 (可选)
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && zoomModal.style.display === 'flex') {
+                zoomModal.style.display = 'none';
+                document.body.style.overflow = '';
+                zoomImage.src = '';
+            }
+        });
+
+        // --- 悔过书已经用 target="_blank" 和 onclick="window.open" 保证新标签页打开 ---
+        // 额外确保tool-item上的点击不覆盖原有行为 (onclick已经定义为window.open，完美)
+
+        // 模拟外部js文件占位，防止控制台报错 (保留原样)
+        window.searchEngineLoaded = true;
+        window.storageLoaded = true;
+        window.navigationLoaded = true;
+        window.logoReturnLoaded = true;
+        window.searchAssLoaded = true;
+
+        window.defaultStatus = '吴老二的工具箱 ';
+    })();
+</script>
+ <script src="./jinzhi.js"></script>
+<!-- 保留外链引用以满足题目要求 (原样) -->
+</body>
+</html>

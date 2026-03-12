@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1997年锦华纺织厂三号车间签到表</title>
+    <link rel="icon" type="image/jpeg" href="search.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SimSun', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            background-image: linear-gradient(to bottom, #f9f9f9, #e8e8e8);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px 0;
+        }
+        
+        .container {
+            width: 900px; /* 固定宽度 */
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ccc;
+        }
+        
+        /* 搜索栏相关样式 */
+        .header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .logo {
+            width: 100px; /* 更小的Logo */
+            height: 100px;
+        }
+
+        .search-container {
+            flex: 0 0 50%;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            padding: 12px 20px;
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+        }
+
+        .search-bar:hover {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.35);
+        }
+
+        .search-bar:focus-within {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.45);
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            color: #9aa0a6;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: transparent;
+        }
+
+        .search-button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .search-button:hover {
+            background-color: #2b6fd8;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 900px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .search-container {
+                width: 80%;
+            }
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #8B0000;
+            padding-bottom: 15px;
+        }
+        
+        .header h1 {
+            color: #8B0000;
+            font-size: 28px;
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+        }
+        
+        .header h2 {
+            color: #333;
+            font-size: 20px;
+            font-weight: normal;
+        }
+        
+        .info-box {
+            background-color: #f0f0f0;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-left: 5px solid #8B0000;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .info-box p {
+            margin-bottom: 8px;
+        }
+        
+        .signature-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .signature-table th {
+            background-color: #8B0000;
+            color: white;
+            padding: 12px 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+            font-weight: 600;
+        }
+        
+        .signature-table td {
+            padding: 12px 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        .signature-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .signature-table tr:nth-child(odd) {
+            background-color: #fff;
+        }
+        
+        .signature-table tr:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .bold-name {
+            font-weight: bold;
+            color: #8B0000;
+        }
+        
+        .signature-column {
+            min-height: 50px;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px dashed #999;
+            font-size: 14px;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .notice {
+            background-color: #fff8dc;
+            padding: 15px;
+            border: 1px solid #e0c240;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        
+        .notice h3 {
+            color: #8B0000;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+        
+        .notice p {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .signature-column:hover {
+            background-color: #f0f8ff;
+            cursor: pointer;
+        }
+        
+        /* 打印样式 */
+        @media print {
+            .header-container {
+                display: none;
+            }
+            
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                border: 1px solid #000;
+                width: 100%;
+            }
+            
+            .notice {
+                border: 1px solid #000;
+            }
+            
+            .signature-column:hover {
+                background-color: transparent;
+            }
+        }
+        
+        /* 移动端优化 */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 8px;
+            }
+            
+            .container {
+                width: 100%;
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 22px;
+            }
+            
+            .header h2 {
+                font-size: 16px;
+            }
+            
+            .info-box {
+                padding: 12px;
+                font-size: 14px;
+            }
+            
+            .signature-table {
+                font-size: 14px;
+            }
+            
+            .signature-table th,
+            .signature-table td {
+                padding: 8px 4px;
+            }
+            
+            .notice {
+                padding: 12px;
+                font-size: 14px;
+            }
+            
+            .footer {
+                font-size: 12px;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .logo {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .search-container {
+                width: 100%;
+                flex: 1;
+            }
+            
+            .search-bar {
+                padding: 10px 15px;
+            }
+            
+            .search-button {
+                padding: 8px 15px;
+                font-size: 13px;
+            }
+        }
+        
+        /* 小屏幕手机优化 */
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 12px;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .header h2 {
+                font-size: 15px;
+            }
+            
+            .signature-table {
+                font-size: 13px;
+            }
+            
+            .signature-table th,
+            .signature-table td {
+                padding: 6px 3px;
+            }
+            
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .search-bar {
+                padding: 8px 12px;
+                border-radius: 20px;
+            }
+            
+            .search-button {
+                padding: 6px 12px;
+                font-size: 12px;
+                margin-left: 8px;
+            }
+            
+            .search-icon {
+                width: 16px;
+                height: 16px;
+                margin-right: 6px;
+            }
+        }
+        
+        /* 横屏优化 */
+        @media screen and (orientation: landscape) and (max-height: 500px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header {
+                margin-bottom: 15px;
+            }
+            
+            .signature-table {
+                margin-bottom: 15px;
+            }
+            
+            .header-container {
+                margin-bottom: 20px;
+            }
+        }
+        
+        /* 防止iOS Safari缩放 */
+        input, textarea, select {
+            font-size: 16px;
+        }
+        
+        /* iOS输入框优化 */
+        @media screen and (max-width: 767px) {
+            input[type="text"],
+            input[type="search"] {
+                font-size: 16px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <div class="header-container">
+            <img src="search.png" alt="search" class="logo">
+            <div class="search-container">
+                <div class="search-bar">
+                    <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                    </svg>
+                    <input type="text" class="search-input" id="searchInput" placeholder="搜索其他内容...">
+                    <button class="search-button" id="searchButton">搜索</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="header">
+            <h1>锦华纺织厂员工晚班签到表</h1>
+            <h2><strong>三号车间 - 1997年5月</h2>
+        </div>
+
+        <div class="info-box">
+            <p><strong>车间主任：</strong>███</p>
+            <p><strong>考勤日期：</strong> 1997年5月1日 至 1997年5月31日</p>
+            <p><strong>考勤说明：</strong> 请员工每日14:00前、晚上22:00后在此表对应日期栏签名</p>
+        </div>
+        
+        <table class="signature-table">
+            <thead>
+                <tr>
+                    <th style="width: 8%;">序号</th>
+                    <th style="width: 15%;">姓名</th>
+                    <th style="width: 15%;">宿舍号</th>
+                    <th style="width: 20%;">县名</th>
+                    <th style="width: 42%;">签名区 (5月1日-5月31日)</th>
+                </tr>
+            </thead>
+            <tbody>
+    <tr>
+        <td>1</td>
+        <td>张伟</td>
+        <td>201室</td>
+        <td>萍山县</td>
+        <td class="signature-column"></td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>李娜</td>
+        <td>202室</td>
+        <td>临渠县</td>
+        <td class="signature-column"></td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>王强</td>
+        <td>203室</td>
+        <td>萍山县</td>
+        <td class="signature-column"></td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>赵敏</td>
+        <td>204室</td>
+        <td>临渠县</td>
+        <td class="signature-column"></td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>陈晨</td>
+        <td>205室</td>
+        <td>临渠县</td>
+        <td class="signature-column"></td>
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>刘洋</td>
+        <td>206室</td>
+        <td>萍山县</td>
+        <td class="signature-column"></td>
+    </tr>
+    <tr>
+        <td>7</td>
+        <td>周杰</td>
+        <td>207室</td>
+        <td>萍山县</td>
+        <td class="signature-column"></td>
+    </tr>
+    <tr>
+        <td>8</td>
+        <td>吴迪</td>
+        <td>208室</td>
+        <td>萍山县</td>
+        <td class="signature-column"></td>
+    </tr>
+    <tr>
+        <td>9</td>
+        <td>吴永贵</td>
+        <td>209室</td>
+        <td>临渠县</td>
+        <td class="signature-column"></td>
+    </tr>
+    <tr>
+        <td>10</td>
+        <td>林峰</td>
+        <td>210室</td>
+        <td>临渠县</td>
+        <td class="signature-column"></td>
+    </tr>
+    <tr>
+        <td>11</td>
+        <td>何璐</td>
+        <td>211室</td>
+        <td>萍山县</td>
+        <td class="signature-column"></td>
+    </tr>
+    <tr>
+        <td>12</td>
+        <td>黄涛</td>
+        <td>212室</td>
+        <td>临渠县</td>
+        <td class="signature-column"></td>
+    </tr>
+</tbody>
+        </table>
+        
+        <div class="notice">
+            <h3>注意事项：</h3>
+            <p>1. 请员工在每天上班前和下班后准时签名，不得代签或提前签退</p>
+            <p>2. 如有请假、迟到、早退等情况，请在签名区备注说明</p>
+            <p>3. 月底将由车间主任统一收集，作为工资核算依据</p>
+            <p>4. 宿舍分配如有变动，请及时向车间主任报告</p>
+        </div>
+        
+        <div class="footer">
+            <div>
+                <p>制表：锦华纺织厂人事科</p>
+                <p>日期：1997年5月1日</p>
+            </div>
+            <div>
+                <p>车间主任签字：________________</p>
+                <p>审核：________________</p>
+            </div>
+        </div>
+    </div>
+
+       <!-- 这是第一个放置位置 - 在页面主要内容之后 -->
+    <script>
+        // ==================== 签名样式配置 ====================
+        // 定义签名样式数组
+        const signatureStyles = [
+            // 默认样式 - 用于大多数员工（索引0）
+            {
+                color: '#000',
+                fontSize: '16px',
+                fontWeight: 'normal'
+            },
+            
+            // 特殊样式1 - 用于方红梅（索引1）
+            {
+                color: '#8B0000',
+                fontSize: '18px',
+                fontWeight: 'bold'
+            },
+            
+            // 特殊样式2 - 用于柯君兰（索引2）
+            {
+                color: '#333',
+                fontSize: '17px',
+                fontWeight: 'normal',
+                fontStyle: 'italic'
+            }
+        ];
+
+        // 定义哪些员工使用哪种样式（数组索引）
+        const employeeStyleMap = {
+            '方红梅': 1,     // 使用特殊样式1（红色粗体）
+            '柯君兰': 2,     // 使用特殊样式2（深灰色斜体）
+            // 其他员工不在此处定义，会使用默认样式（索引0）
+        };
+        // ==================== 配置结束 ====================
+    </script>
+    
+    <!-- 外部JavaScript链接 -->
+    <script src="./search-engine.js"></script>
+    <script src="./storage.js"></script>
+    <script src="./navigation.js"></script>
+    <script src="visitor.js"></script>
+    <script src="./search-ass.js"></script>
+    <script src="logo-return.js"></script>
+    
+     <!-- 这是第二个放置位置 - 在所有外部JS之后 -->
+    <script>
+        // ==================== 桌面端签名逻辑 ====================
+        // 添加交互效果 - 点击表格行可以模拟签名
+        document.querySelectorAll('.signature-column').forEach(cell => {
+            cell.addEventListener('click', function() {
+                if(this.innerHTML === '') {
+                    // 获取对应员工的名字
+                    const row = this.parentElement;
+                    const nameCell = row.children[1];
+                    const employeeName = nameCell.textContent;
+                    
+                    // 根据员工姓名获取样式索引，如果没有指定则使用默认样式（索引0）
+                    const styleIndex = employeeStyleMap[employeeName] || 0;
+                    const style = signatureStyles[styleIndex];
+                    
+                    // 设置签名
+                    this.innerHTML = employeeName;
+                    this.style.color = style.color;
+                    this.style.fontSize = style.fontSize;
+                    this.style.fontWeight = style.fontWeight;
+                    if(style.fontStyle) this.style.fontStyle = style.fontStyle;
+                    
+                    // 添加动画效果
+                    this.style.transition = 'all 0.3s';
+                    this.style.backgroundColor = '#f0f8ff';
+                    
+                    // 3秒后恢复背景色
+                    setTimeout(() => {
+                        this.style.backgroundColor = '';
+                    }, 3000);
+                }
+            });
+        });
+        
+        // 打印功能提示
+        window.addEventListener('load', function() {
+            console.log("1997年锦华纺织厂签到表2已加载");
+            console.log("提示：点击签名区可以模拟员工签名");
+        });
+        // ==================== 桌面端逻辑结束 ====================
+    </script>
+    
+    <!-- 这是第三个放置位置 - 移动端兼容代码 -->
+    <script>
+        // ==================== 移动端兼容性脚本 ====================
+        // 移动端友好的交互效果
+        document.querySelectorAll('.signature-column').forEach(cell => {
+            cell.addEventListener('touchstart', function(e) {
+                e.preventDefault(); // 防止触发其他触摸事件
+                handleSignature.call(this);
+            }, {passive: false});
+            
+            // 保留原有的click事件
+            // cell.addEventListener('click', handleSignature);
+        });
+
+        function handleSignature() {
+            if(this.innerHTML === '') {
+                const row = this.parentElement;
+                const nameCell = row.children[1];
+                const employeeName = nameCell.textContent;
+                
+                // 根据员工姓名获取样式索引
+                const styleIndex = employeeStyleMap[employeeName] || 0;
+                const style = signatureStyles[styleIndex];
+                
+                this.innerHTML = employeeName;
+                this.style.color = style.color;
+                this.style.fontSize = style.fontSize;
+                this.style.fontWeight = style.fontWeight;
+                if(style.fontStyle) this.style.fontStyle = style.fontStyle;
+                
+                this.style.transition = 'all 0.3s';
+                this.style.backgroundColor = '#f0f8ff';
+                
+                setTimeout(() => {
+                    this.style.backgroundColor = '';
+                }, 3000);
+                
+                // 振动反馈（仅支持移动设备）
+                if (navigator.vibrate) {
+                    navigator.vibrate(50);
+                }
+            }
+        }
+        
+        // 防止双击缩放（移动端优化）
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+        
+        // iOS输入框优化
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+            // 防止输入框被键盘遮挡
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('focus', function() {
+                    setTimeout(() => {
+                        this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 300);
+                });
+            }
+        }
+        // ==================== 移动端逻辑结束 ====================
+        
+    </script>
+     <script src="./jinzhi.js"></script>
+</body>
+</html>

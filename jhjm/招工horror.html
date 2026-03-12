@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="zh-CN" style="background-color: #200000 !important;">
+<head>
+    <meta charset="GB2312">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四号成品仓背阴面临时工棚 - 内部档案</title>
+    <style>
+        /* 强制所有元素背景为深红色 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            background-color: #200000 !important;
+            height: 100%;
+            width: 100%;
+        }
+        
+        body {
+            background-color: #300000 !important;
+            font-family: "宋体", "SimSun", serif;
+            color: #ffcccc;
+            line-height: 1.6;
+            font-size: 14px;
+            padding: 10px;
+            margin: 0;
+            min-height: 100vh;
+            width: 100%;
+            cursor: default;
+            overflow-x: hidden;
+        }
+        
+        /* 复古滚动条 */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #400000;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #800000;
+        }
+        
+        /* Firefox滚动条 */
+        * {
+            scrollbar-color: #800000 #400000;
+            scrollbar-width: thin;
+        }
+        
+        /* 选择文本时的背景色 */
+        ::selection {
+            background-color: #990000;
+            color: #ffffff;
+        }
+        
+        /* 主容器 */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #993333;
+            padding: 15px;
+            background-color: #200000;
+            box-shadow: 0 0 10px #600000;
+            position: relative;
+            min-height: calc(100vh - 20px);
+        }
+        
+        /* 复古标题样式 */
+        .header {
+            border-bottom: 2px solid #ff0000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            color: #ff3333;
+            text-align: center;
+            text-shadow: 1px 1px 0 #000;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+        
+        h2 {
+            font-size: 18px;
+            color: #ff6666;
+            margin: 15px 0 10px;
+            border-bottom: 1px dashed #993333;
+            padding-bottom: 5px;
+        }
+        
+        h3 {
+            font-size: 16px;
+            color: #ff6666;
+            margin: 10px 0;
+        }
+        
+        /* 复古链接 */
+        a {
+            color: #ff9966;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            color: #ff3300;
+            text-decoration: underline;
+        }
+        
+        /* 复古图片框 */
+        .image-container {
+            border: 3px double #993333;
+            padding: 5px;
+            background-color: #000;
+            margin: 15px auto;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            max-width: 100%;
+            height: 300px;
+        }
+        
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            background-color: #330000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ff6666;
+            font-size: 14px;
+        }
+        
+        .image-placeholder span {
+            margin-top: 10px;
+        }
+        
+        /* 恐怖文字效果 */
+        .blood-text {
+            color: #ff0000;
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 2px 2px 0 #000, 0 0 10px #600;
+            animation: blood-pulse 3s infinite;
+            margin: 15px 0;
+            letter-spacing: 3px;
+            padding: 10px;
+            border: 1px solid #800;
+            background-color: rgba(40, 0, 0, 0.7);
+            font-family: "黑体", "SimHei", sans-serif;
+        }
+        
+        @keyframes blood-pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+        
+        /* 内容区域 */
+        .content {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #993333;
+            background-color: #1a0000;
+        }
+        
+        .content p {
+            margin-bottom: 15px;
+            text-indent: 2em;
+        }
+        
+        /* 复古列表 */
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        /* 警告框 */
+        .warning {
+            border: 2px solid #ff0000;
+            background-color: #330000;
+            padding: 10px;
+            margin: 15px 0;
+            color: #ff6666;
+        }
+        
+        /* 复古按钮 */
+        .retro-button {
+            display: inline-block;
+            background-color: #660000;
+            color: #ffcccc;
+            border: 2px outset #993333;
+            padding: 6px 12px;
+            margin: 5px;
+            font-family: "宋体", "SimSun", serif;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .retro-button:hover {
+            background-color: #880000;
+            color: #fff;
+        }
+        
+        .retro-button:active {
+            border: 2px inset #993333;
+        }
+        
+        .button-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        /* 自制弹窗系统 */
+        .custom-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(80, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            overflow: auto;
+        }
+        
+        .modal-content {
+            background-color: #200000;
+            border: 3px double #993333;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            color: #ffcccc;
+            position: relative;
+            box-shadow: 0 0 30px #800000;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            border-bottom: 1px solid #993333;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            color: #ff3333;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #ff6666;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .modal-close:hover {
+            color: #ff3333;
+        }
+        
+        /* 恐怖效果元素 */
+        .ghost-text {
+            color: #ff9999;
+            font-style: italic;
+            animation: flicker 5s infinite;
+        }
+        
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                opacity: 1;
+            }
+            20%, 24%, 55% {
+                opacity: 0.3;
+            }
+        }
+        
+        .footnote {
+            font-size: 12px;
+            color: #993333;
+            margin-top: 30px;
+            border-top: 1px dotted #993333;
+            padding-top: 10px;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            body {
+                font-size: 16px;
+                padding: 5px;
+            }
+            
+            .container {
+                padding: 10px;
+                min-height: calc(100vh - 10px);
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            .image-container {
+                height: 250px;
+            }
+            
+            .blood-text {
+                font-size: 22px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 18px;
+            }
+            
+            .image-container {
+                height: 200px;
+            }
+            
+            .blood-text {
+                font-size: 18px;
+                padding: 8px;
+            }
+            
+            .retro-button {
+                padding: 8px 15px;
+                margin: 5px 0;
+                display: block;
+                width: 100%;
+            }
+        }
+        
+        /* 闪烁光标效果 */
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        /* 恐怖高亮 */
+        .highlight {
+            color: #ff3300;
+            font-weight: bold;
+        }
+        
+        /* 乱码效果 */
+        .glitch-text {
+            position: relative;
+        }
+        
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch-text::before {
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+            left: 2px;
+            text-shadow: -1px 0 #ff0000;
+            clip: rect(44px, 450px, 56px, 0);
+        }
+        
+        .glitch-text::after {
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+            left: -2px;
+            text-shadow: -1px 0 #00ff00;
+            clip: rect(44px, 450px, 56px, 0);
+        }
+        
+        @keyframes glitch-anim {
+            0% { clip: rect(31px, 9999px, 94px, 0); }
+            5% { clip: rect(112px, 9999px, 76px, 0); }
+            10% { clip: rect(85px, 9999px, 77px, 0); }
+            15% { clip: rect(27px, 9999px, 97px, 0); }
+            20% { clip: rect(64px, 9999px, 98px, 0); }
+            25% { clip: rect(60px, 9999px, 83px, 0); }
+            30% { clip: rect(60px, 9999px, 23px, 0); }
+            35% { clip: rect(17px, 9999px, 14px, 0); }
+            40% { clip: rect(77px, 9999px, 30px, 0); }
+            45% { clip: rect(64px, 9999px, 28px, 0); }
+            50% { clip: rect(28px, 9999px, 84px, 0); }
+            55% { clip: rect(16px, 9999px, 91px, 0); }
+            60% { clip: rect(59px, 9999px, 98px, 0); }
+            65% { clip: rect(62px, 9999px, 85px, 0); }
+            70% { clip: rect(58px, 9999px, 40px, 0); }
+            75% { clip: rect(29px, 9999px, 27px, 0); }
+            80% { clip: rect(73px, 9999px, 51px, 0); }
+            85% { clip: rect(6px, 9999px, 100px, 0); }
+            90% { clip: rect(23px, 9999px, 49px, 0); }
+            95% { clip: rect(85px, 9999px, 79px, 0); }
+            100% { clip: rect(79px, 9999px, 34px, 0); }
+        }
+        
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); }
+            5% { clip: rect(52px, 9999px, 74px, 0); }
+            10% { clip: rect(79px, 9999px, 85px, 0); }
+            15% { clip: rect(75px, 9999px, 5px, 0); }
+            20% { clip: rect(67px, 9999px, 61px, 0); }
+            25% { clip: rect(14px, 9999px, 79px, 0); }
+            30% { clip: rect(1px, 9999px, 66px, 0); }
+            35% { clip: rect(86px, 9999px, 30px, 0); }
+            40% { clip: rect(23px, 9999px, 98px, 0); }
+            45% { clip: rect(85px, 9999px, 72px, 0); }
+            50% { clip: rect(71px, 9999px, 75px, 0); }
+            55% { clip: rect(2px, 9999px, 48px, 0); }
+            60% { clip: rect(30px, 9999px, 16px, 0); }
+            65% { clip: rect(59px, 9999px, 50px, 0); }
+            70% { clip: rect(41px, 9999px, 62px, 0); }
+            75% { clip: rect(2px, 9999px, 82px, 0); }
+            80% { clip: rect(47px, 9999px, 73px, 0); }
+            85% { clip: rect(3px, 9999px, 27px, 0); }
+            90% { clip: rect(40px, 9999px, 86px, 0); }
+            95% { clip: rect(45px, 9999px, 72px, 0); }
+            100% { clip: rect(23px, 9999px, 49px, 0); }
+        }
+        
+        /* 静态干扰效果 */
+        .static-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.02;
+            z-index: 9999;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==');
+            mix-blend-mode: overlay;
+            animation: static-anim 0.2s infinite;
+        }
+        
+        @keyframes static-anim {
+            0% { opacity: 0.02; }
+            50% { opacity: 0.04; }
+            100% { opacity: 0.02; }
+        }
+        
+        /* 破损效果 */
+        .corrupted {
+            color: #ff6666;
+            text-shadow: 0 0 5px #ff0000;
+            animation: corruption 2s infinite;
+        }
+        
+        @keyframes corruption {
+            0% { opacity: 0.7; }
+            50% { opacity: 0.3; }
+            100% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body>
+    <div class="static-overlay"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="glitch-text" data-text="四号成品仓背阴面临时工棚内部档案">四号成品仓背阴面临时工棚内部档案</h1>
+            <p style="text-align: center; color: #ff9999; font-size: 12px;">内部资料 · 严禁外传 · 访问时间: <span id="current-date" class="corrupted">ERROR: LOAD_FAILED</span></p>
+        </div>
+        
+        <div class="warning">
+            <strong class="corrupted">警告：</strong> 以下内容包含可能引起不适的信息。此档案仅限授权人员访问。未经授权的访问将被记录并追究责任。
+        </div>
+        
+        <div class="image-container">
+            <div class="image-placeholder">
+                <div style="font-size: 48px; color: #993333;">&#9608;&#9619;&#9632;&#9644;</div>
+                <span class="corrupted">四号成品仓背阴面临时工棚照片</span>
+                <span style="font-size: 12px; margin-top: 5px; color: #ff6666;">[图片加载失败]</span>
+            </div>
+        </div>
+        
+        <div class="blood-text" id="bloodText">
+            还我保岗名额
+        </div>
+        
+        <div class="content">
+            <h2>档案记录 <span class="corrupted">#97-04-0382</span></h2>
+            <p>记录日期：<span class="corrupted">1997年10月23日</span></p>
+            <p>记录人员：<span class="corrupted">█████</span></p>
+            
+            <p class="corrupted">四号成品仓背阴面临时工棚最初建于███年█月，作为临时存储区域使用。███年██月起，该区域被重新分配为下岗员工临时安置点。</p>
+            
+            <p class="corrupted">1997年2月，首批<span class="highlight">47名</span>员工被分配到该工棚等待"保岗名额"重新分配。根据记录，截至1997年8月，仅<span class="highlight">12人</span>获得正式岗位，其余人员去向未明。</p>
+            
+            <h3>异常事件记录</h3>
+            <ul>
+                <li class="corrupted">1997年5月14日：夜班保安报告工棚内有异常响动，调查未发现异常。</li>
+                <li class="corrupted">1997年6月30日：清洁人员在工棚外墙发现红色涂鸦，内容为"不公平"，当日被清除。</li>
+                <li class="corrupted">1997年8月22日：<span class="ghost-text">多名员工报告夜间听到工棚内传来哭泣声</span>，保安检查未发现人员。</li>
+                <li class="corrupted">1997年9月5日：外墙出现大量红色油漆字迹"还我保岗名额"，清除后次日再次出现。</li>
+                <li class="corrupted">1997年9月18日：监控设备在工棚区域频繁故障，画面出现干扰条纹。</li>
+            </ul>
+            
+            <h3>当前状态</h3>
+            <p class="corrupted">自1997年10月1日起，四号成品仓背阴面临时工棚已被列为<span class="highlight">限制区域</span>。所有访问需经三级以上主管批准。</p>
+            
+            <p class="corrupted">最近一次巡查报告（1997年10月15日）指出，工棚内温度异常偏低，且油漆字迹清除后<span class="ghost-text">仍会在墙面留下淡红色痕迹</span>，随时间推移逐渐加深。</p>
+            
+            <div class="button-container">
+                <button class="retro-button corrupted" id="viewDetails">查看详细事件记录</button>
+                <button class="retro-button corrupted" id="viewNames">查看相关人员名单</button>
+                <button class="retro-button corrupted" id="accessLog">访问工棚监控日志</button>
+            </div>
+        </div>
+        
+        <div class="footnote">
+            <p class="corrupted">档案编号：97-04-0382 | 安全等级：机密 | 最后更新：1997-10-23 21:47</p>
+            <p class="corrupted">警告：任何试图修改、删除或传播此档案的行为都将受到纪律处分。</p>
+        </div>
+    </div>
+    
+    <!-- 自制弹窗1：详细事件记录 -->
+    <div class="custom-modal" id="modalDetails">
+        <div class="modal-content">
+            <div class="modal-header">
+                四号成品仓工棚详细事件记录
+                <span class="modal-close corrupted" data-modal="modalDetails">&times;</span>
+            </div>
+            <h3>1997年事件时间线</h3>
+            <ul>
+                <li class="corrupted"><strong>2月15日：</strong>第一批下岗员工入住临时工棚，共计47人。</li>
+                <li class="corrupted"><strong>3月22日：</strong>首次保岗名额分配，仅3人获得正式岗位。</li>
+                <li class="corrupted"><strong>5月14日：</strong>夜班保安李建国报告"工棚内有持续敲击声"，检查未果。</li>
+                <li class="corrupted"><strong>6月30日：</strong>外墙首次出现红色涂鸦"不公平"，怀疑为内部人员所为。</li>
+                <li class="corrupted"><strong>7月18日：</strong>第二次保岗名额分配，5人获得岗位。</li>
+                <li class="corrupted"><strong>8月22日：</strong><span class="ghost-text">夜班巡逻人员报告"女性哭泣声"</span>，来源无法确定。</li>
+                <li class="corrupted"><strong>9月5日：</strong>"还我保岗名额"字样首次出现，油漆无法完全清除。</li>
+                <li class="corrupted"><strong>9月28日：</strong>第三次保岗名额分配，4人获得岗位。</li>
+                <li class="corrupted"><strong>10月1日：</strong>区域封锁，禁止未经授权访问。</li>
+            </ul>
+            Password Fragment 1 is 0812
+            <h3>异常现象记录</h3>
+            <p class="corrupted">根据安保部门报告，以下现象无法用常规方式解释：</p>
+            <ol>
+                <li class="corrupted">油漆字迹在清除后24-72小时内会重新显现</li>
+                <li class="corrupted">监控录像在夜间2:00-4:00期间出现规律性干扰</li>
+                <li class="corrupted">工棚内温度比周围区域低5-8摄氏度</li>
+                <li class="corrupted">有保安报告看到"人影"但搜查无果</li>
+            </ol>
+            
+            <div class="warning" style="margin-top: 15px;">
+                <strong class="corrupted">注意：</strong> 此记录为机密材料，仅限三级以上主管查阅。
+            </div>
+        </div>
+    </div>
+    
+    <!-- 自制弹窗2：相关人员名单 -->
+    <div class="custom-modal" id="modalNames">
+        <div class="modal-content">
+            <div class="modal-header">
+                四号成品仓工棚相关人员名单
+                <span class="modal-close corrupted" data-modal="modalNames">&times;</span>
+            </div>
+            <h3>1997年2月入住员工（部分名单）</h3>
+            <ul>
+                <li class="corrupted">张卫国 (工号 2107) - 已分配岗位</li>
+                <li class="corrupted">李红梅 (工号 2143) - 已分配岗位</li>
+                <li class="corrupted">王建军 (工号 2089) - <span class="ghost-text">1997年5月离职</span></li>
+                <li class="corrupted">赵秀英 (工号 2156) - 已分配岗位</li>
+                <li class="corrupted">刘国富 (工号 2122) - <span class="ghost-text">1997年6月离职</span></li>
+                <li class="corrupted">陈爱华 (工号 2178) - 已分配岗位</li>
+                <li class="corrupted">孙志强 (工号 2095) - <span class="highlight">状态未知</span></li>
+                <li class="corrupted">周玉兰 (工号 2167) - <span class="ghost-text">1997年7月离职</span></li>
+                <li class="corrupted">吴国强 (工号 2114) - 已分配岗位</li>
+                <li class="corrupted">郑秀芳 (工号 2182) - <span class="highlight">状态未知</span></li>
+            </ul>
+            Password Fragment 2 is ZDG
+            <p style="margin-top: 15px; color: #ff9966;">注：名单中12人已确认获得保岗名额，8人确认离职，其余27人<span class="highlight">状态未更新</span>。</p>
+            
+            <h3>相关管理人员</h3>
+            <ul>
+                <li class="corrupted">王志刚 (主管) - 负责保岗名额分配</li>
+                <li class="corrupted">李建国 (安保) - 首次报告异常现象</li>
+                <li class="corrupted">张丽华 (人事) - 员工档案管理</li>
+            </ul>
+            
+            <div class="warning" style="margin-top: 15px;">
+                <strong class="corrupted">警告：</strong> 部分人员状态为"未知"，相关档案已于1997年9月封存。
+            </div>
+        </div>
+    </div>
+    
+    <!-- 自制弹窗3：监控日志 -->
+    <div class="custom-modal" id="modalLog">
+        <div class="modal-content">
+            <div class="modal-header">
+                四号成品仓工棚监控访问日志
+                <span class="modal-close corrupted" data-modal="modalLog">&times;</span>
+            </div>
+            
+            <h3>最近访问记录</h3>
+            <ul>
+                <li class="corrupted">1997-10-23 14:30: 王██ ███ (工号 0427) - 档案更新</li>
+                <li class="corrupted">1997-10-22 21:15: 李██ (工号 0389) - 安全检查</li>
+                <li class="corrupted">1997-10-20 03:45: <span class="ghost-text">未知用户</span> - 访问被拒绝</li>
+                <li class="corrupted">1997-10-18 10:20: 张██ (工号 0512) - 例行检查</li>
+                <li class="corrupted">1997-10-15 23:30: <span class="ghost-text">系统检测到异常访问尝试</span></li>
+            </ul>
+            
+            <h3>监控异常记录</h3>
+            <p class="corrupted">以下是1997年9月以来的监控异常报告：</p>
+            
+            <div style="background-color: #1a0000; padding: 10px; margin: 10px 0; border: 1px solid #993333;">
+                <p class="corrupted"><strong>1997-09-05 02:17</strong></p>
+                <p class="corrupted">摄像头04-CC-07：画面出现干扰，持续4分32秒。恢复后，外墙出现红色字迹。</p>
+            </div>
+            
+            <div style="background-color: #1a0000; padding: 10px; margin: 10px 0; border: 1px solid #993333;">
+                <p class="corrupted"><strong>1997-09-22 03:41</strong></p>
+                <p class="corrupted">所有面向工棚的摄像头同时故障2分18秒。恢复后，字迹颜色加深。</p>
+            </div>
+            
+            <div style="background-color: #1a0000; padding: 10px; margin: 10px 0; border: 1px solid #993333;">
+                <p class="corrupted"><strong>1997-10-08 01:55</strong></p>
+                <p class="corrupted"><span class="ghost-text">摄像头04-CC-07捕捉到疑似人影，但现场检查无发现。</span></p>
+            </div>
+            Password Fragment 3 is 632578
+            <div class="warning" style="margin-top: 15px;">
+                <strong class="corrupted">注意：</strong> 自1997年10月10日起，所有监控录像已移交安保部门分析。
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 设置乱码日期
+        document.getElementById('current-date').textContent = new Date().getFullYear() + '年' + 
+                                                              (Math.floor(Math.random()*12)+1) + '月' + 
+                                                              (Math.floor(Math.random()*28)+1) + '日 ' +
+                                                              (Math.floor(Math.random()*24)) + ':' + 
+                                                              (Math.floor(Math.random()*60));
+        
+        // 弹窗控制系统
+        const modals = {
+            modalDetails: document.getElementById('modalDetails'),
+            modalNames: document.getElementById('modalNames'),
+            modalLog: document.getElementById('modalLog')
+        };
+        
+        const buttons = {
+            viewDetails: document.getElementById('viewDetails'),
+            viewNames: document.getElementById('viewNames'),
+            accessLog: document.getElementById('accessLog')
+        };
+        
+        // 打开弹窗函数
+        function openModal(modalId) {
+            if (modals[modalId]) {
+                modals[modalId].style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                
+                // 添加乱码效果
+                const modalContent = modals[modalId].querySelectorAll('.corrupted');
+                modalContent.forEach(element => {
+                    if (Math.random() > 0.3) {
+                        const originalText = element.textContent;
+                        const glitchedText = originalText.split('').map(char => 
+                            Math.random() > 0.7 ? String.fromCharCode(0x2581 + Math.floor(Math.random() * 8)) : char
+                        ).join('');
+                        element.textContent = glitchedText;
+                    }
+                });
+            }
+        }
+        
+        // 关闭弹窗函数
+        function closeModal(modalId) {
+            if (modals[modalId]) {
+                modals[modalId].style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+        
+        // 绑定按钮事件
+        buttons.viewDetails.addEventListener('click', () => openModal('modalDetails'));
+        buttons.viewNames.addEventListener('click', () => openModal('modalNames'));
+        buttons.accessLog.addEventListener('click', () => openModal('modalLog'));
+        
+        // 绑定关闭按钮事件
+        document.querySelectorAll('.modal-close').forEach(closeBtn => {
+            closeBtn.addEventListener('click', function() {
+                const modalId = this.getAttribute('data-modal');
+                closeModal(modalId);
+            });
+        });
+        
+        // 点击弹窗外部关闭弹窗
+        Object.keys(modals).forEach(modalId => {
+            modals[modalId].addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal(modalId);
+                }
+            });
+        });
+        
+        // 添加恐怖效果：血字随机轻微移动
+        const bloodText = document.getElementById('bloodText');
+        let moveInterval;
+        
+        function startBloodEffect() {
+            let x = 0, y = 0;
+            moveInterval = setInterval(() => {
+                // 随机轻微移动
+                x = (Math.random() - 0.5) * 4;
+                y = (Math.random() - 0.5) * 4;
+                bloodText.style.transform = `translate(${x}px, ${y}px)`;
+                
+                // 随机颜色微调
+                const r = 255 - Math.floor(Math.random() * 30);
+                const g = Math.floor(Math.random() * 30);
+                const b = Math.floor(Math.random() * 30);
+                bloodText.style.color = `rgb(${r}, ${g}, ${b})`;
+                
+                // 偶尔添加乱码
+                if (Math.random() > 0.8) {
+                    const originalText = bloodText.textContent;
+                    const glitchedText = originalText.split('').map(char => 
+                        Math.random() > 0.9 ? String.fromCharCode(0x2581 + Math.floor(Math.random() * 8)) : char
+                    ).join('');
+                    bloodText.textContent = glitchedText;
+                    
+                    // 恢复原文本
+                    setTimeout(() => {
+                        bloodText.textContent = originalText;
+                    }, 200);
+                }
+            }, 500);
+        }
+        
+        // 停止效果（当用户与页面交互时）
+        function stopBloodEffect() {
+            clearInterval(moveInterval);
+            bloodText.style.transform = 'translate(0, 0)';
+            bloodText.style.color = '#ff0000';
+        }
+        
+        // 开始恐怖效果
+        startBloodEffect();
+        
+        // 当用户点击页面时停止效果，离开时重新开始
+        document.addEventListener('click', function() {
+            stopBloodEffect();
+            setTimeout(startBloodEffect, 5000);
+        });
+        
+        // 添加随机恐怖文本闪烁效果
+        const ghostTexts = document.querySelectorAll('.ghost-text');
+        const corruptedTexts = document.querySelectorAll('.corrupted');
+        
+        function randomFlicker() {
+            ghostTexts.forEach(text => {
+                if (Math.random() > 0.7) {
+                    text.style.opacity = Math.random() > 0.5 ? '0.3' : '1';
+                }
+            });
+            
+            // 随机添加乱码到损坏文本
+            corruptedTexts.forEach(text => {
+                if (Math.random() > 0.9 && text.textContent.length > 3) {
+                    const originalText = text.textContent;
+                    const position = Math.floor(Math.random() * originalText.length);
+                    const glitchedChar = String.fromCharCode(0x2581 + Math.floor(Math.random() * 8));
+                    const glitchedText = originalText.substring(0, position) + glitchedChar + originalText.substring(position + 1);
+                    text.textContent = glitchedText;
+                    
+                    // 短暂恢复原文本
+                    setTimeout(() => {
+                        text.textContent = originalText;
+                    }, 100);
+                }
+            });
+        }
+        
+        setInterval(randomFlicker, 800);
+        
+        // 添加页面加载时的效果
+        window.addEventListener('load', function() {
+            // 模拟老式电脑启动效果
+            document.body.style.opacity = '0';
+            
+            let opacity = 0;
+            const fadeIn = setInterval(() => {
+                opacity += 0.05;
+                document.body.style.opacity = opacity;
+                
+                if (opacity >= 1) {
+                    clearInterval(fadeIn);
+                }
+            }, 50);
+            
+            // 初始乱码效果
+            setTimeout(() => {
+                corruptedTexts.forEach(text => {
+                    if (Math.random() > 0.5 && text.textContent.length > 10) {
+                        const originalText = text.textContent;
+                        const words = originalText.split(' ');
+                        const glitchedWords = words.map(word => 
+                            Math.random() > 0.7 ? word.split('').reverse().join('') : word
+                        );
+                        text.textContent = glitchedWords.join(' ');
+                    }
+                });
+            }, 1000);
+        });
+        
+        // 添加复古打字机效果到某些元素
+        function typeWriterEffect(element, text, speed = 50) {
+            let i = 0;
+            element.textContent = '';
+            
+            function type() {
+                if (i < text.length) {
+                    // 偶尔添加乱码
+                    if (Math.random() > 0.95) {
+                        element.textContent += String.fromCharCode(0x2581 + Math.floor(Math.random() * 8));
+                        setTimeout(() => {
+                            element.textContent = element.textContent.slice(0, -1) + text.charAt(i);
+                        }, 100);
+                    } else {
+                        element.textContent += text.charAt(i);
+                    }
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            
+            type();
+        }
+        
+        // 对某个元素应用打字机效果
+        setTimeout(() => {
+            const footnote = document.querySelector('.footnote p:first-child');
+            if (footnote) {
+                const originalText = footnote.textContent;
+                typeWriterEffect(footnote, originalText, 30);
+            }
+        }, 1000);
+        
+        // 随机全局乱码效果
+        setInterval(() => {
+            if (Math.random() > 0.98) {
+                const allTexts = document.querySelectorAll('p, li, span:not(.modal-close)');
+                const randomText = allTexts[Math.floor(Math.random() * allTexts.length)];
+                if (randomText && randomText.textContent && randomText.textContent.length > 10) {
+                    const originalText = randomText.textContent;
+                    const glitchedText = originalText.split('').map(char => 
+                        Math.random() > 0.5 ? char : String.fromCharCode(0x2581 + Math.floor(Math.random() * 8))
+                    ).join('');
+                    randomText.textContent = glitchedText;
+                    
+                    setTimeout(() => {
+                        randomText.textContent = originalText;
+                    }, 300);
+                }
+            }
+        }, 2000);
+        
+        // 随机背景闪烁
+        setInterval(() => {
+            if (Math.random() > 0.97) {
+                document.body.style.backgroundColor = '#500000';
+                setTimeout(() => {
+                    document.body.style.backgroundColor = '#300000';
+                }, 100);
+            }
+        }, 3000);
+    </script>
+</body>
+</html>

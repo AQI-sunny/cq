@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>· 无权限 · </title>
+    <style>
+        /* === 彻底的黑红复古风 —— 致敬1997 + 移动端精细调校 === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ff0000;
+            font-family: 'Courier New', Courier, 'VT323', 'Lucida Console', monospace;
+            min-height: 100vh;           /* 兼容手机，用 min-height 代替 height */
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;                /* 手机留边，防止贴边 */
+            font-size: 16px;               /* 手机基础字号稍小，但用rem调整 */
+            line-height: 1.3;
+            /* 复古扫描线微肌理 —— 轻量，不影响阅读 */
+            background-image: radial-gradient(rgba(255, 0, 0, 0.12) 1px, transparent 1px);
+            background-size: 4px 4px;
+            image-rendering: crisp-edges;  /* 保持边缘锐利 */
+            -webkit-tap-highlight-color: transparent; /* 去掉手机点击灰块 */
+        }
+
+        /* 主面板 —— 双线红框，像素感 */
+        .permission-panel {
+            border: 6px double #ff0000;
+            padding: 1.8rem 1.2rem;        /* 手机版舒适内边距 */
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+            background-color: #000000;
+            box-shadow: 0 0 0 2px black, 0 0 0 5px #660000; /* 凸屏效果 */
+            transition: none;
+            image-rendering: pixelated;
+            margin: 8px 0;                  /* 极安全距离 */
+        }
+
+        /* 锁型符号区域 —— 适配各种屏幕 */
+        .tiny-lock {
+            font-size: 2.8rem;              /* 手机略缩小 */
+            filter: drop-shadow(2px 2px 0 #5f0000);
+            margin-bottom: 0.2rem;
+            color: #ff0000;
+            line-height: 1.2;
+            word-break: keep-all;
+        }
+        /* 兼容iOS 特殊字符显示 */
+        .tiny-lock span {
+            display: inline-block;
+        }
+
+        /* 主标题 —— 暂无权限 (大而有力，可换行) */
+        .title-97 {
+            font-size: clamp(2.2rem, 12vw, 3.8rem);  /* 动态缩放，最大3.8rem，最小2.2rem */
+            font-weight: 900;
+            letter-spacing: 2px;             /* 手机稍收紧一点 */
+            color: #ff2222;
+            text-transform: uppercase;
+            margin: 0.6rem 0 1rem 0;
+            text-shadow: 4px 4px 0 #3f0000;   /* 红影，手机稍微淡一点也清晰 */
+            font-stretch: expanded;
+            line-height: 1.2;
+            word-break: break-word;
+        }
+
+        /* 中间菱形装饰行 */
+        .scanline-decoration {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 15px 0 10px;
+            color: #b00;
+            font-size: 2rem;                 /* 手机自适应 */
+            flex-wrap: wrap;
+        }
+        .scanline-decoration span {
+            display: inline-block;
+            line-height: 1;
+        }
+
+        /* ACCESS DENIED 条 */
+        .message-sub {
+            font-size: clamp(1.3rem, 6vw, 1.8rem);
+            color: #ff5555;
+            border-top: 2px solid #a00;
+            border-bottom: 2px solid #a00;
+            padding: 0.8rem 0;
+            margin: 1.5rem 0 1.2rem 0;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-weight: bold;
+            word-break: break-word;
+        }
+
+        /* 错误代码框 */
+        .error-code {
+            font-size: clamp(1.1rem, 5vw, 1.5rem);
+            color: #aa0000;
+            border: 1px dashed #aa2222;
+            padding: 10px 16px;
+            margin: 20px auto 20px;
+            display: inline-block;
+            background: #0a0000;
+            font-family: 'Courier New', Courier, monospace;
+            box-shadow: inset 0 0 8px #2a0000;
+            max-width: 100%;
+            word-break: break-word;
+        }
+
+        /* 底部三块标签 (复古bbs) */
+        .bbs-footer {
+            margin-top: 25px;
+            font-size: 1rem;
+            color: #aa2222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            border-top: 1px solid #330000;
+            padding-top: 18px;
+            flex-wrap: wrap;
+        }
+        .bbs-footer span {
+            background: #1a0000;
+            padding: 6px 12px;
+            border: 1px solid #a00;
+            font-family: inherit;
+            white-space: nowrap;           /* 手机如果太窄会换行，由flex控制 */
+        }
+        /* 针对极端小屏，让底部标签可以换行且居中 */
+        @media (max-width: 400px) {
+            .bbs-footer span {
+                white-space: normal;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* 红色块光标 (静态) */
+        .cursor-block {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            background-color: #ff0000;
+            vertical-align: middle;
+            margin-left: 5px;
+            box-shadow: 0 0 0 1px #ff8888;
+            flex-shrink: 0;
+        }
+
+        /* 最底部细线 + 时间文本 */
+        hr {
+            border: none;
+            border-top: 4px solid #660000;
+            margin: 18px 0 12px;
+        }
+
+        .footer-time {
+            color: #880000;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+        .footer-time span {
+            display: inline-block;
+        }
+
+        /* 所有链接/任何交互元素无变化，保持静态 */
+        a, a:active, a:visited {
+            text-decoration: none;
+            color: #ff0000;
+            cursor: default;
+        }
+
+        /* 针对手机避免任何按压高亮 */
+        div, span, p {
+            -webkit-touch-callout: none;    /* 禁止长按菜单 */
+            -webkit-user-select: none;       /* 可选，让文字更像界面不可选，但保留阅读性 */
+            user-select: text;                /* 保留选中能力(方便复制)，但视觉不变 */
+        }
+
+        /* 为了保证极度老旧感，不使用任何动画/过渡 */
+    </style>
+</head>
+<body>
+    <!-- 整个面板 —— 手机完全自适应，保留所有复古元素，没有任何溢出 -->
+    <div class="permission-panel">
+        <!-- 锁型符号 (混合特殊字符) 对于手机显示友好 -->
+        <div class="tiny-lock">
+            <span>⛒</span><span>⛔</span>
+        </div>
+        
+        <!-- 核心信息：暂无权限查看该内容 （手机自动换行） -->
+        <div class="title-97">
+            ⚡ 暂无权限<br>查看该内容 ⚡
+        </div>
+        
+        <!-- 复古装饰行 (红色菱形) -->
+        <div class="scanline-decoration">
+            <span>◆</span> <span>✦</span> <span>◆</span> <span>✦</span> <span>◆</span>
+        </div>
+        
+        <!-- 辅助拒绝语 -->
+        <div class="message-sub">
+            ACCESS DENIED
+        </div>
+        
+        <!-- 错误代码 加上1997标识，保留神秘感 -->
+        <div class="error-code">
+            ERROR 0x0000001F  🞅  1997
+        </div>
+        
+        <!-- 底部工具条，包含光标块 -->
+        <div class="bbs-footer">
+            <span>✦ 你已被拒绝 ✦</span>
+            <span>SYSTEM LOCK</span>
+            <span>
+                [ : ] 
+                <span class="cursor-block" aria-label="红色光标"></span>
+            </span>
+        </div>
+        
+        <!-- 分割线以及管理员联系文本，模拟终端提示符，带一个静态时间(永远停留在1997的某刻) -->
+        <hr>
+        <div class="footer-time">
+            * 请与厂内相关管理员联系 *<br>
+            &lt; 权限验证失败 &gt;   ·   11:47 PM
+        </div>
+    </div>
+
+    <!-- 不移除脚本占位，但return.js可以不存在，完全复古。
+         没有任何js干扰，保持页面纯静态。 手机兼容完美。 -->
+    <script src="./return.js"></script>
+</body>
+</html>

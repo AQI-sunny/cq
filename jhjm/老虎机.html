@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>红星娱乐城 - 老虎机游戏</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Comic+Sans+MS">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=SimSun">
+    <!-- 关键移动优化：视口设置 + 允许缩放 (保留老式风味但确保可用) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>红星娱乐城·97老虎机 暴走版 [手机兼容]</title>
     <style>
+        /* ===== 原始风格保留 & 优化 ===== */
         * {
             margin: 0;
             padding: 0;
@@ -14,33 +14,63 @@
         }
         
         body {
-            font-family: 'Comic Sans MS', Arial, sans-serif;
+            font-family: 'Comic Sans MS', 'SimSun', 'VT323', Arial, sans-serif;
             background-color: #000;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23000066"/><circle cx="50" cy="50" r="2" fill="%23ffffff" opacity="0.2"/></svg>');
+            /* 星空背景 — 更细腻 */
+            background-image: 
+                radial-gradient(white 1px, transparent 1px),
+                linear-gradient(#000066, #000028);
+            background-size: 50px 50px, 100% 100%;
             color: #fff;
             text-align: center;
-            padding: 20px;
+            padding: 10px;           /* 手机周围稍小 */
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .container {
-            max-width: 800px;
+            max-width: 880px;
+            width: 100%;
             margin: 0 auto;
-            padding: 20px;
+            padding: 15px 10px 20px;   /* 手机适当减少填充 */
             border: 8px solid #ff00ff;
-            border-radius: 20px;
+            border-radius: 30px 30px 20px 20px;
             background-color: #0000cc;
-            box-shadow: 0 0 30px #ff00ff, inset 0 0 30px #0000ff;
+            background: radial-gradient(circle at 20% 30%, #1a1aff, #000099);
+            box-shadow: 0 0 30px #ff00ff, inset 0 0 40px #0000ff, 0 20px 20px rgba(0,0,0,0.7);
             position: relative;
+        }
+        
+        /* 大红星装饰 (左) */
+        .red-star {
+            color: #ff0000;
+            text-shadow: 0 0 20px #ff6600, 0 0 40px red;
+            font-size: 64px;
+            position: absolute;
+            top: 0px;
+            left: 10px;
+            animation: starPulse 1.8s infinite;
+            z-index: 10;
+            filter: drop-shadow(0 0 5px yellow);
+        }
+        @keyframes starPulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(5deg); }
         }
         
         h1 {
             color: #ffff00;
-            font-size: 48px;
-            text-shadow: 3px 3px 0 #ff0000, 6px 6px 0 #0000ff;
-            margin-bottom: 10px;
+            font-size: 44px;          /* 手机稍小一点但依然霸气 */
+            text-shadow: 4px 4px 0 #ff0000, 8px 8px 0 #0000ff, 12px 12px 0 #330033;
+            margin-bottom: 5px;
             letter-spacing: 2px;
-            font-family: 'SimSun', serif;
+            font-family: 'SimSun', 'Impact', serif;
+            transform: perspective(400px) rotateX(2deg);
+        }
+        @media (max-width: 600px) {
+            h1 { font-size: 36px; }
         }
         
         .site-title {
@@ -48,196 +78,374 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            font-size: 52px;
+            font-size: 54px;           /* 调小一点 */
             margin-bottom: 5px;
+            line-height: 1.2;
+        }
+        @media (max-width: 600px) {
+            .site-title { font-size: 42px; }
         }
         
         .subtitle {
             color: #00ffff;
             font-size: 22px;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 0 #ff00ff;
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 0 #ff00ff, 5px 5px 0 #330000;
         }
         
-        /* 修正的建设中横幅 */
+        /* 施工中跑马灯 */
         .under-construction {
             background-color: #ffff00;
             color: #ff0000;
-            padding: 12px;
-            font-size: 20px;
+            padding: 12px 10px;
+            font-size: 22px;
             font-weight: bold;
-            width: 90%;
-            margin: 20px auto;
-            border: 3px dashed #ff0000;
-            border-radius: 10px;
+            width: 95%;
+            margin: 10px auto 20px;
+            border: 5px dashed #ff0000;
+            border-radius: 30px 5px 30px 5px;
             text-align: center;
-            transform: rotate(0deg); /* 去掉倾斜 */
-            box-shadow: 0 0 15px #ff9900;
+            box-shadow: 0 0 25px #ffaa00, inset 0 0 10px orange;
             position: relative;
+            transform: rotate(-0.5deg);
         }
         
         .under-construction::before {
-            content: "⚠️";
-            margin-right: 10px;
-            font-size: 24px;
+            content: "⚡⚡⚡ 暴走中 更容易赢 ⚡⚡⚡";
+            font-size: 26px;
+            letter-spacing: 4px;
+        }
+        /* 手机微调 */
+        @media (max-width: 500px) {
+            .under-construction::before {
+                font-size: 20px;
+                content: "⚡⚡ 暴走中 ⚡⚡";
+            }
         }
         
-        .under-construction::after {
-            content: "⚠️";
-            margin-left: 10px;
-            font-size: 24px;
-        }
-        
-        /* 2000年代风格的闪烁箭头 */
-        .construction-arrow {
-            display: inline-block;
-            animation: arrowBlink 1s infinite;
-            margin: 0 10px;
-        }
-        
-        @keyframes arrowBlink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-        
+        /* 优化版老虎机主体 */
         .slot-machine {
-            background-color: #990000;
-            border: 10px ridge #ffcc00;
-            border-radius: 15px;
-            padding: 30px 20px;
-            margin: 20px auto 30px;
-            box-shadow: 0 0 20px #ff9900;
+            background: linear-gradient(145deg, #b30000, #6f0000);
+            border: 12px ridge #ffcc00;
+            border-radius: 40px 40px 20px 20px;
+            padding: 25px 10px 20px;    /* 手机左右padding减少 */
+            margin: 20px auto 25px;
+            box-shadow: 0 10px 0 #7f4f00, 0 0 30px #ffaa00, inset 0 0 20px #ffd966;
             position: relative;
-            overflow: hidden;
         }
         
-        .slot-machine::before {
+        .slot-machine::after {
             content: "";
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 10px,
-                rgba(255, 255, 0, 0.1) 10px,
-                rgba(255, 255, 0, 0.1) 20px
-            );
+            top: 5px; left: 5px; right: 5px; bottom: 5px;  /* 稍微适应 */
+            border: 2px dotted #ffcc00;
+            border-radius: 30px;
             pointer-events: none;
+            opacity: 0.5;
         }
         
         .reels-container {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-bottom: 30px;
-            perspective: 1000px;
+            gap: 10px;                  /* 手机间隙缩小 */
+            margin-bottom: 20px;
+            perspective: 1200px;
+            flex-wrap: wrap;             /* 极端小屏允许换行？但保留三列 */
+        }
+        @media (max-width: 550px) {
+            .reels-container {
+                gap: 5px;
+            }
         }
         
         .reel {
-            width: 150px;
-            height: 180px;
-            background-color: #000;
-            border: 5px groove #ffcc00;
-            border-radius: 10px;
+            width: 140px;                /* 稍微缩小适应手机 */
+            height: 170px;
+            background-color: #0a0a0a;
+            border: 6px groove #ffcc00;
+            border-radius: 20px 5px 20px 5px;
             overflow: hidden;
             position: relative;
-            box-shadow: inset 0 0 20px #000, 0 0 10px #ffff00;
+            box-shadow: inset 0 0 30px #000, 0 10px 0 #553300, 0 0 20px #ffdd55;
+        }
+        @media (max-width: 500px) {
+            .reel {
+                width: 110px;
+                height: 140px;
+            }
+        }
+        @media (max-width: 380px) {
+            .reel {
+                width: 95px;
+                height: 120px;
+            }
         }
         
         .reel-inner {
             position: absolute;
             width: 100%;
-            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: transform 0.1s ease-out;
+            transition: transform 0.2s cubic-bezier(0.1, 0.7, 0.3, 1);
+            will-change: transform;
+            top: 0;
+            left: 0;
         }
         
         .reel-item {
             width: 100%;
-            height: 180px;
+            height: 170px;                /* 匹配reel高度 */
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 70px;
+            font-size: 70px;              /* 手机稍小 */
             font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 10px #fff;
+            color: #FFD966;
+            text-shadow: 0 0 15px white, 0 0 30px red;
+            background-color: #111;
+            border-bottom: 2px solid #ffcc00;
+            flex-shrink: 0;
+            font-family: 'SimSun', 'Courier New', monospace;
+        }
+        @media (max-width: 500px) {
+            .reel-item {
+                font-size: 55px;
+                height: 140px;
+            }
+        }
+        @media (max-width: 380px) {
+            .reel-item {
+                font-size: 48px;
+                height: 120px;
+            }
         }
         
+        /* 控制区 + 拉杆风格 */
         .controls {
-            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;                    /* 手机适当缩小 */
+            margin: 25px 0 15px;
+            background: rgba(0, 0, 50, 0.6);
+            border-radius: 60px;
+            padding: 12px 20px;
+            border: 3px solid #ffcc00;
+            flex-wrap: wrap;               /* 避免太挤换行 */
         }
         
         .spin-button {
-            background: linear-gradient(to bottom, #ff0000, #990000);
+            background: linear-gradient(to bottom, #ff4444, #aa0000);
             color: #ffff00;
-            border: 5px outset #ffcc00;
-            border-radius: 15px;
-            padding: 15px 40px;
-            font-size: 28px;
+            border: 6px outset #ffcc00;
+            border-radius: 60px 20px 60px 20px;
+            padding: 14px 30px;            /* 手机略小 */
+            font-size: 30px;
             font-weight: bold;
             cursor: pointer;
-            text-shadow: 2px 2px 0 #000;
-            letter-spacing: 2px;
-            transition: all 0.2s;
-            font-family: 'Comic Sans MS', Arial, sans-serif;
+            text-shadow: 4px 4px 0 #660000;
+            letter-spacing: 4px;
+            transition: all 0.1s;
+            font-family: 'Comic Sans MS', 'Impact', sans-serif;
+            box-shadow: 0 12px 0 #5a2b00, 0 0 20px #ffbb33;
+            min-width: 160px;
+        }
+        @media (max-width: 450px) {
+            .spin-button {
+                font-size: 26px;
+                padding: 12px 20px;
+                min-width: 130px;
+            }
         }
         
         .spin-button:hover {
-            background: linear-gradient(to bottom, #ff3333, #cc0000);
-            transform: scale(1.05);
-            box-shadow: 0 0 20px #ffff00;
+            background: linear-gradient(to bottom, #ff6666, #cc0000);
+            transform: translateY(-2px);
+            box-shadow: 0 14px 0 #5a2b00, 0 0 30px yellow;
         }
         
         .spin-button:active {
+            transform: translateY(8px);
+            box-shadow: 0 4px 0 #5a2b00, 0 0 30px yellow;
             border-style: inset;
-            transform: scale(0.98);
         }
         
         .spin-button:disabled {
-            background: linear-gradient(to bottom, #666666, #333333);
-            color: #999999;
+            background: #666;
+            border-color: #aaa;
+            color: #ccc;
+            transform: none;
+            box-shadow: 0 8px 0 #333;
             cursor: not-allowed;
         }
         
-        .stats {
-            background-color: rgba(0, 0, 100, 0.8);
-            border: 5px double #00ffff;
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 20px;
+        .credit-display {
+            background: #0a1f2e;
+            border: 5px inset #ffcc00;
+            border-radius: 40px;
+            padding: 8px 20px;
+            font-size: 36px;
+            color: #b3ff66;
+            font-family: 'VT323', 'Courier New', monospace;
+            text-shadow: 0 0 8px #00ff00;
+            box-shadow: inset 0 0 15px #000, 0 6px 0 #3f5c1a;
+        }
+        @media (max-width: 450px) {
+            .credit-display {
+                font-size: 30px;
+                padding: 6px 12px;
+            }
         }
         
-        .stats p {
-            font-size: 18px;
-            margin: 8px 0;
+        /* 赢家弹窗 —— 保留原始风格但更抢眼, 移动端缩小 */
+        .win-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);  /* 稍微缩小适应小屏 */
+            background: #ffcc66;
+            background: linear-gradient(145deg, #ffdb9f, #cc9933);
+            border: 12px double #aa2b2b;
+            border-radius: 80px 20px 80px 20px;
+            padding: 20px 20px;
+            min-width: 300px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 0 0 8px #ffcc00, 0 30px 40px black, inset 0 0 20px #ffdd99;
+            z-index: 200;
+            color: #2d150a;
+            font-family: 'SimSun', 'Comic Sans MS', cursive;
+            border: 6px ridge #ff4444;
+        }
+        
+        .win-popup.hidden {
+            display: none;
+        }
+        
+        .popup-header {
+            font-size: 32px;              /* 手机缩小 */
+            font-weight: bold;
+            background: #c92525;
+            color: #ffffaa;
+            padding: 10px 20px;
+            border-radius: 60px 10px 60px 10px;
+            margin-top: -50px;
+            margin-bottom: 20px;
+            border: 5px solid #f3c26b;
+            text-shadow: 2px 2px 0 #8b0000;
+            font-family: 'Impact', fantasy;
+        }
+        
+        .score-list {
+            list-style: none;
+            background: #1f541b;
+            border: 6px ridge #e5b95c;
+            padding: 15px 12px;
+            border-radius: 40px 8px 40px 8px;
+            color: #fae283;
+            font-size: 24px;               /* 适中 */
+            font-weight: bold;
+            text-shadow: 3px 3px 0 #154215;
+            margin-bottom: 20px;
+        }
+        
+        .score-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px dashed #f3c26b;
+            padding: 6px 5px;
+        }
+        
+        .score-list li:last-child {
+            border: none;
+        }
+        
+        .score-list .name {
+            background: #372814;
+            padding: 0 15px;
+            border-radius: 40px;
+            border: 2px solid #dba959;
+            font-size: 22px;
+        }
+        
+        .score-list .points {
+            background: #000;
+            color: #eae65b;
+            padding: 4px 16px;
+            border-radius: 40px;
+            border: 3px solid #f9b81b;
+            font-size: 22px;
+        }
+        
+        .close-popup-btn {
+            background: #bb3030;
+            border: none;
+            border-bottom: 8px solid #551a1a;
+            color: #f9e281;
+            font-size: 28px;
+            font-weight: bold;
+            padding: 8px 30px;
+            border-radius: 80px 10px 80px 10px;
+            cursor: pointer;
+            font-family: 'VT323', monospace;
+            letter-spacing: 3px;
+            transition: 0.05s linear;
+        }
+        
+        .close-popup-btn:active {
+            border-bottom-width: 2px;
+            transform: translateY(6px);
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 150;
+            backdrop-filter: blur(2px);
+        }
+        .overlay.hidden { display: none; }
+        
+        /* 信息条 */
+        .stats {
+            background: #000066;
+            border: 6px double #00ffff;
+            border-radius: 30px;
+            padding: 12px 10px;
+            margin: 20px 0 10px;
             color: #ffff00;
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         
         .win-message {
-            color: #00ff00;
-            font-size: 28px;
+            color: #33ff33;
+            font-size: 28px;               /* 手机稍小 */
             font-weight: bold;
-            text-shadow: 0 0 10px #00ff00;
-            margin: 15px 0;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            text-shadow: 0 0 20px #00ff00;
+            min-height: 50px;
+            background: #003300;
+            border-radius: 50px;
+            padding: 8px 15px;
+            border: 3px solid #88ff88;
+        }
+        @media (max-width: 450px) {
+            .win-message {
+                font-size: 22px;
+            }
         }
         
         .blink {
-            animation: blink 0.8s infinite;
+            animation: blink 1s step-end infinite;
         }
-        
         @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            0%,100%{ opacity:1; } 50%{ opacity:0.2; }
         }
         
         .marquee {
@@ -245,533 +453,445 @@
             color: #ffff00;
             padding: 10px;
             font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            border: 3px dotted #ffff00;
+            border: 4px dotted #ffff00;
             overflow: hidden;
             white-space: nowrap;
+            border-radius: 40px;
         }
-        
         .marquee span {
             display: inline-block;
-            animation: marquee 15s linear infinite;
+            animation: marquee 12s linear infinite;
         }
-        
         @keyframes marquee {
             0% { transform: translateX(100%); }
             100% { transform: translateX(-100%); }
         }
         
-        .counter {
-            font-size: 24px;
-            color: #ff9900;
-            font-weight: bold;
-            margin: 15px 0;
-        }
-        
         .footer {
-            margin-top: 30px;
+            margin-top: 20px;
             color: #00ffff;
             font-size: 14px;
-            border-top: 2px dotted #ff00ff;
+            border-top: 3px double #ff00ff;
             padding-top: 15px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         
-        /* 2000年代风格的网页装饰元素 */
         .web-rings {
             display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
+            gap: 10px;
             flex-wrap: wrap;
+            justify-content: center;
         }
-        
         .web-ring {
-            background-color: #0000ff;
-            border: 3px solid #ffff00;
-            padding: 8px 15px;
-            font-size: 14px;
-            color: #ffff00;
+            background: #00f;
+            border: 3px solid #ff0;
+            padding: 6px 15px;
+            border-radius: 30px;
+            color: #ff0;
             text-decoration: none;
-            border-radius: 20px;
-            transition: all 0.3s;
+            font-weight: bold;
+            font-size: 16px;
         }
-        
         .web-ring:hover {
-            background-color: #ff0000;
-            transform: scale(1.1);
+            background: #f0f;
+            color: #fff;
         }
         
-        /* 2000年代风格的GIF占位符 */
-        .gif-placeholder {
-            width: 88px;
-            height: 31px;
-            background-color: #ff00ff;
-            color: #000;
-            display: inline-block;
-            font-size: 10px;
-            vertical-align: middle;
-            margin: 0 5px;
-            border: 1px solid #ffff00;
-            line-height: 31px;
-        }
-        
-        /* 访客计数器样式 */
         .visitor-counter {
-            background-color: #000;
-            border: 2px solid #00ff00;
-            color: #00ff00;
-            padding: 5px 10px;
+            background: #111;
+            border: 3px solid #0f0;
+            color: #0f0;
+            padding: 6px 15px;
             font-family: 'Courier New', monospace;
-            font-size: 18px;
-            display: inline-block;
-            margin: 10px;
+            font-size: 22px;
+            border-radius: 0;
         }
         
-        /* 红星logo - 移动到.container内部 */
-        .red-star {
-            color: #ff0000;
-            text-shadow: 0 0 10px #ff0000;
-            font-size: 60px;
-            position: absolute;
-            top: 10px;
-            left: 20px;
-            animation: starPulse 2s infinite;
-            z-index: 10;
-        }
-        
-        @keyframes starPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        
-        /* 导航按钮 */
         .nav-buttons {
             display: flex;
+            gap: 10px;
             justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
+            margin: 15px 0;
             flex-wrap: wrap;
         }
-        
         .nav-button {
-            background: linear-gradient(to bottom, #0000cc, #000066);
-            color: #ffff00;
-            border: 3px outset #ffcc00;
-            border-radius: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
+            background: #0000aa;
+            color: #ff0;
+            border: 4px outset #ffcc00;
+            border-radius: 30px;
+            padding: 8px 20px;
+            font-size: 18px;
             cursor: pointer;
-            transition: all 0.3s;
         }
-        
         .nav-button:hover {
-            background: linear-gradient(to bottom, #3333ff, #000099);
-            transform: translateY(-2px);
+            background: #4444ff;
         }
-        
-        /* 闪烁光标效果 */
         .blinking-cursor {
             animation: cursorBlink 1s infinite;
-            font-weight: bold;
+            font-size: 28px;
         }
-        
+
+        /* 搜索栏相关样式 - 保持原样但添加弹性 */
+        .header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+            flex-wrap: wrap;          /* 手机换行 */
+        }
+
+        .logo {
+            width: 80px;              /* 手机缩小 */
+            height: 80px;
+        }
+        @media (max-width: 500px) {
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+        }
+
+        .search-container {
+            flex: 1 1 280px;
+            min-width: 240px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            padding: 8px 15px;
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+        }
+
+        .search-bar:hover {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.35);
+        }
+
+        .search-bar:focus-within {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.45);
+        }
+
+        .search-icon {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            color: #9aa0a6;
+            flex-shrink: 0;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: transparent;
+            min-width: 120px;
+        }
+
+        .search-button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            margin-left: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .search-button:hover {
+            background-color: #2b6fd8;
+        }
+
+        /* 基础重置与背景氛围 保留 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #2b3f5c 0%, #1d2c3f 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+            padding: 0.5rem;
+        }
+
+        /* 外层模拟“别的容器” */
+        .outer-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(2px);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 2rem;
+            width: 100%;
+            max-width: 1100px;
+            padding: 1.5rem 1rem;          /* 手机缩小 */
+            position: relative;
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 你想要的正上方白色容器 */
+        .white-elevated-card {
+            background-color: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.35), 0 8px 18px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 880px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 1.2rem 1rem 1.5rem 1rem;  /* 内部留白适应手机 */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.6);
+            position: relative;
+            top: -8px;
+        }
+
+        .white-elevated-card:hover {
+            box-shadow: 0 30px 50px -15px black;
+            transform: translateY(-10px);
+            transition: all 0.25s;
+        }
+
+        @media (max-width: 600px) {
+            .white-elevated-card {
+                padding: 1rem 0.8rem;
+            }
+        }
+
         @keyframes cursorBlink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
+            0%,100%{ opacity:1; } 50%{ opacity:0; }
+        }
+
+        /* 额外手机优化：防止容器溢出 */
+        img {
+            max-width: 100%;
+            height: auto;
         }
     </style>
 </head>
 <body>
-    <div class="marquee">
-        <span>★☆★ 欢迎来到红星娱乐城！老虎机游戏免费玩！赢取虚拟积分！ ★☆★</span>
-    </div>
-    
-    <div class="container">
-        <!-- 红星logo - 现在在.container内部 -->
-        <div class="red-star">★</div>
-        
-        <div class="site-title">红星娱乐城</div>
-        <h1>经典老虎机</h1>
-        <div class="subtitle">试试你的运气！匹配三个相同符号即可赢得虚拟积分！</div>
-        
-        <!-- 修正后的建设中横幅 -->
-        <div class="under-construction">
-            <span class="construction-arrow">▶</span>
-            本页面正在建设中... 最佳分辨率：800×600
-            <span class="construction-arrow">◀</span>
-        </div>
-        
-        <!-- 访客计数器 -->
-        <div class="visitor-counter">
-            您是第 <span id="visitorCount">008842</span> 位访客
-        </div>
-        
-        <!-- 导航按钮 -->
-        <div class="nav-buttons">
-            <button class="nav-button" onclick="alert('街机游戏区 - 即将开放！')">街机游戏</button>
-            <button class="nav-button" onclick="alert('台球俱乐部 - 即将开放！')">台球俱乐部</button>
-            <button class="nav-button" onclick="alert('麻将棋牌室 - 即将开放！')">麻将棋牌室</button>
-            <button class="nav-button" onclick="alert('扑克大厅 - 即将开放！')">扑克大厅</button>
-        </div>
-        
-        <div class="slot-machine">
-            <div class="reels-container">
-                <div class="reel" id="reel1">
-                    <div class="reel-inner" id="reelInner1"></div>
-                </div>
-                <div class="reel" id="reel2">
-                    <div class="reel-inner" id="reelInner2"></div>
-                </div>
-                <div class="reel" id="reel3">
-                    <div class="reel-inner" id="reelInner3"></div>
+    <div class="outer-container">
+        <div class="white-elevated-card">
+            <!-- 顶部区域：Logo和搜索栏 (完全原样) -->
+            <div class="header-container">
+                <img src="search.png" alt="深南市诚信拍卖行" class="logo" onerror="this.style.display='none'"> <!-- 图片不存在时隐藏，不破坏布局 -->
+                <div class="search-container">
+                    <div class="search-bar">
+                        <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                        </svg>
+                        <input type="text" class="search-input" id="searchInput" placeholder="搜索其他关键词...">
+                        <button class="search-button" id="searchButton">搜索</button>
+                    </div>
                 </div>
             </div>
-            
-            <div class="controls">
-                <button class="spin-button" id="spinButton">开始旋转！</button>
+        </div> <!-- 白色卡片结束 -->
+
+        <!-- 老虎机主容器 (完全原样，除class) 注意之前div顺序，现在正确放置 -->
+        <div class="container" style="margin-top: 10px;">
+            <div class="red-star">★</div>
+            <div class="site-title">红星娱乐城</div>
+            <h1>☭老虎机 ☭</h1>
+            <div class="subtitle">· 十次九中 · 信誉保证 ·</div>
+
+            <div class="under-construction"></div>
+
+            <div class="slot-machine">
+                <div class="reels-container" id="reelsContainer">
+                    <div class="reel" id="reel1"><div class="reel-inner" id="reel1Inner"><div class="reel-item">🍒</div><div class="reel-item">7️⃣</div><div class="reel-item">💎</div><div class="reel-item">🐅</div><div class="reel-item">🍌</div><div class="reel-item">🍇</div><div class="reel-item">🍊</div></div></div>
+                    <div class="reel" id="reel2"><div class="reel-inner" id="reel2Inner"><div class="reel-item">🍒</div><div class="reel-item">7️⃣</div><div class="reel-item">💎</div><div class="reel-item">🐅</div><div class="reel-item">🍌</div><div class="reel-item">🍇</div><div class="reel-item">🍊</div></div></div>
+                    <div class="reel" id="reel3"><div class="reel-inner" id="reel3Inner"><div class="reel-item">🍒</div><div class="reel-item">7️⃣</div><div class="reel-item">💎</div><div class="reel-item">🐅</div><div class="reel-item">🍌</div><div class="reel-item">🍇</div><div class="reel-item">🍊</div></div></div>
+                </div>
+
+                <div class="controls">
+                    <div class="credit-display" id="creditDisplay">¥ 100</div>
+                    <button class="spin-button" id="spinButton">拉杆</button>
+                </div>
+
+                <div class="win-message" id="winMessage">✨ 暴走模式 ✨</div>
             </div>
-            
-            <div class="win-message" id="winMessage"></div>
-            
+
             <div class="stats">
-                <p>目标：匹配三个相同的符号</p>
-                <p>获胜后自动跳转页面</p>
+                <span>🕹️ 在线: 28人</span>
+                <span>💰 彩池: ¥388</span>
+                <span>🎰 今日爆率: 90%</span>
             </div>
-        </div>
-        
-        <div class="web-rings">
-            <a href="#" class="web-ring" onclick="alert('网页计数器 - 功能建设中')">网页计数器</a>
-            <a href="#" class="web-ring" onclick="alert('访客留言板 - 功能建设中')">访客留言板</a>
-            <a href="#" class="web-ring" onclick="alert('设为首页 - 功能建设中')">设为首页</a>
-            <a href="#" class="web-ring" onclick="addToFavorites()">加入收藏夹</a>
-        </div>
-        
-        <div class="footer">
-            <p>© 1997-2000 红星娱乐城 个人非商用网站</p>
-            <p>推荐使用 Internet Explorer 5.0 或 Netscape Navigator 4.0 浏览</p>
-            <p>最后更新：<span id="lastUpdate">1999年12月31日</span></p>
-            <p class="blinking-cursor">>_</p>
-        </div>
-    </div>
+
+            <div class="marquee"><span>★ 老炮儿 刚刚赢了5000分  ★ 花臂勇 又中大奖 ★ 彪哥 赢得手软 ★ 龅牙陈 请客喝酒 ★</span></div>
+
+            <!-- 弹窗 & 遮罩 -->
+            <div class="overlay hidden" id="overlay"></div>
+            <div class="win-popup hidden" id="winPopup">
+                <div class="popup-header">🎉 满堂红榜单 🎉</div>
+                <ul class="score-list" id="scoreList"></ul>
+                <div style="display: flex; justify-content: flex-end;">
+                    <button class="close-popup-btn" id="closePopup">通杀</button>
+                </div>
+            </div>
+
+            <div style="margin-top: 8px; font-size:20px; color:#ffb347;">⚡ 最佳观赏 800x600 ⚡</div>
+        </div> <!-- container 结束 -->
+    </div> <!-- outer-container 结束 -->
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 符号集合
-            const symbols = ['🍒', '🍋', '🍊', '🍇', '⭐', '🔔', '7️⃣'];
-            
-            // 游戏状态
-            let attempts = 0;
-            let maxAttempts = 0;
-            let isSpinning = false;
-            let gameWon = false;
-            let winSymbol = '';
-            
-            // 初始化游戏
-            function initGame() {
-                // 随机决定通关所需尝试次数(3-7次)
-                maxAttempts = Math.floor(Math.random() * 5) + 3;
-                attempts = 0;
-                gameWon = false;
-                document.getElementById('winMessage').textContent = '';
-                
-                // 初始化转轮
-                initReels();
-                
-                // 随机选择获胜符号
-                winSymbol = symbols[Math.floor(Math.random() * symbols.length)];
-                
-                console.log(`游戏设置：需要 ${maxAttempts} 次尝试获胜，获胜符号是 ${winSymbol}`);
+        (function() {
+            // 积分库  
+            const gangNames = ["黄毛", "二麻子", "老炮儿", "彪哥", "花臂勇", "赖皮狗", "红中", "龅牙陈"];
+
+            function generateScoreList() {
+                const shuffled = [...gangNames].sort(() => 0.5 - Math.random());
+                const selected = shuffled.slice(0, 6 + Math.floor(Math.random() * 3));
+                return selected.map(name => ({
+                    name,
+                    points: Math.floor(Math.random() * 2000) + 800
+                }));
             }
-            
-            // 初始化转轮显示
-            function initReels() {
-                const reelInners = [
-                    document.getElementById('reelInner1'),
-                    document.getElementById('reelInner2'),
-                    document.getElementById('reelInner3')
-                ];
-                
-                // 清空转轮
-                reelInners.forEach(reelInner => {
-                    reelInner.innerHTML = '';
-                    reelInner.style.transform = 'translateY(0)';
+
+            function renderPopup(scores) {
+                const list = document.getElementById('scoreList');
+                list.innerHTML = '';
+                scores.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span class="name">${item.name}</span><span class="points">${item.points}</span>`;
+                    list.appendChild(li);
                 });
-                
-                // 为每个转轮添加符号
-                reelInners.forEach(reelInner => {
-                    // 添加多个符号实例以创建连续循环效果
-                    for (let i = 0; i < 3; i++) {
-                        symbols.forEach(symbol => {
-                            const item = document.createElement('div');
-                            item.className = 'reel-item';
-                            item.textContent = symbol;
-                            reelInner.appendChild(item);
-                        });
+            }
+
+            const reelInner1 = document.getElementById('reel1Inner');
+            const reelInner2 = document.getElementById('reel2Inner');
+            const reelInner3 = document.getElementById('reel3Inner');
+            const creditDisplay = document.getElementById('creditDisplay');
+            const winMessage = document.getElementById('winMessage');
+            const spinBtn = document.getElementById('spinButton');
+            const popup = document.getElementById('winPopup');
+            const overlay = document.getElementById('overlay');
+            const closeBtn = document.getElementById('closePopup');
+
+            let credit = 100;
+            const SPIN_COST = 20;
+
+            const symbols = [
+                { emoji: '🍒', text: ' ' }, { emoji: '🍒', text: ' ' }, { emoji: '🍒', text: ' ' },
+                { emoji: '🐅', text: ' ' }, { emoji: '🐅', text: ' ' }, { emoji: '🐅', text: ' ' },
+                { emoji: '🐅', text: ' ' }, { emoji: '🐅', text: ' ' }, 
+                { emoji: '🍊', text: ' ' }, { emoji: '🍌', text: ' ' }, { emoji: '🍇', text: ' ' },         
+                { emoji: '7️⃣', text: '7' }, { emoji: '7️⃣', text: '7' },
+                { emoji: '💎', text: ' ' }, { emoji: '⭐', text: '星' }
+            ];
+
+            function setReelContent(reelInner, symbol) {
+                const items = reelInner.children; 
+                for (let i = 0; i < items.length; i++) {
+                    items[i].innerHTML = symbol.emoji;
+                }
+            }
+
+            function randomSymbol() {
+                const r = Math.random();
+                if (r < 0.6) return symbols[0];
+                else if (r < 0.85) return symbols[11];  // 7️⃣
+                else if (r < 0.95) return symbols[13];  // 💎
+                else return symbols[14];                 // ⭐
+            }
+
+            function isWinning(sym1, sym2, sym3) {
+                return sym1.emoji === sym2.emoji && sym2.emoji === sym3.emoji;
+            }
+
+            function spin() {
+                if (credit < SPIN_COST) {
+                    winMessage.innerText = '💰 赊账200! 继续拉';
+                    credit += 200;
+                    creditDisplay.innerText = `¥ ${credit}`;
+                    setTimeout(() => { winMessage.innerText = '✨ 暴走模式 ✨'; }, 1000);
+                    return;
+                }
+
+                credit -= SPIN_COST;
+                creditDisplay.innerText = `¥ ${credit}`;
+                spinBtn.disabled = true;
+
+                const r1 = randomSymbol();
+                const r2 = randomSymbol();
+                const r3 = randomSymbol();
+
+                let steps = 0;
+                const maxSteps = 8;
+                const interval = setInterval(() => {
+                    setReelContent(reelInner1, randomSymbol());
+                    setReelContent(reelInner2, randomSymbol());
+                    setReelContent(reelInner3, randomSymbol());
+                    steps++;
+                    if (steps >= maxSteps) {
+                        clearInterval(interval);
+                        setReelContent(reelInner1, r1);
+                        setReelContent(reelInner2, r2);
+                        setReelContent(reelInner3, r3);
+
+                        if (isWinning(r1, r2, r3)) {
+                            const winBonus = 500 + Math.floor(Math.random() * 1000);
+                            credit += winBonus;
+                            creditDisplay.innerText = `¥ ${credit}`;
+                            winMessage.innerText = `🏆 暴击! +${winBonus}`;
+                            const scoreData = generateScoreList();
+                            renderPopup(scoreData);
+                            popup.classList.remove('hidden');
+                            overlay.classList.remove('hidden');
+                        } else {
+                            if (Math.random() < 0.15) {
+                                credit += 100;
+                                creditDisplay.innerText = `¥ ${credit}`;
+                                winMessage.innerText = '😎 安慰奖 +100';
+                            } else {
+                                winMessage.innerText = '😄 差点赢 再来!';
+                            }
+                        }
+                        spinBtn.disabled = false;
                     }
-                });
+                }, 80);
             }
-            
-            // 旋转转轮
-            function spinReels() {
-                if (isSpinning || gameWon) return;
-                
-                isSpinning = true;
-                attempts++;
-                document.getElementById('spinButton').disabled = true;
-                document.getElementById('winMessage').textContent = '转轮旋转中...';
-                
-                const reelInners = [
-                    document.getElementById('reelInner1'),
-                    document.getElementById('reelInner2'),
-                    document.getElementById('reelInner3')
-                ];
-                
-                // 生成随机停止位置
-                const stopPositions = [];
-                for (let i = 0; i < 3; i++) {
-                    // 决定本次是否要获胜
-                    // 如果达到最大尝试次数，强制获胜
-                    // 否则在随机尝试次数后获胜
-                    const shouldWinThisTime = attempts === maxAttempts;
-                    
-                    if (shouldWinThisTime) {
-                        // 获胜情况：所有转轮显示相同符号
-                        stopPositions[i] = symbols.indexOf(winSymbol) + symbols.length * 1;
-                    } else {
-                        // 非获胜情况：随机显示符号
-                        stopPositions[i] = Math.floor(Math.random() * symbols.length) + symbols.length * 1;
-                    }
+
+            function closePopup() {
+                popup.classList.add('hidden');
+                overlay.classList.add('hidden');
+            }
+
+            spinBtn.addEventListener('click', spin);
+            closeBtn.addEventListener('click', closePopup);
+            overlay.addEventListener('click', closePopup);
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !spinBtn.disabled && popup.classList.contains('hidden')) {
+                    spin();
+                } else if (e.key === 'Escape' && !popup.classList.contains('hidden')) {
+                    closePopup();
                 }
-                
-                // 动画旋转
-                let spinDuration = 2000; // 旋转持续时间
-                const startTime = Date.now();
-                
-                function animate() {
-                    const elapsed = Date.now() - startTime;
-                    const progress = Math.min(elapsed / spinDuration, 1);
-                    
-                    // 使用缓动函数
-                    const easeOut = 1 - Math.pow(1 - progress, 3);
-                    
-                    reelInners.forEach((reelInner, index) => {
-                        // 计算当前转轮位置
-                        const startPos = 0;
-                        const endPos = -stopPositions[index] * 180; // 每个项目高180px
-                        const currentPos = startPos + (endPos - startPos) * easeOut;
-                        reelInner.style.transform = `translateY(${currentPos}px)`;
-                    });
-                    
-                    if (progress < 1) {
-                        requestAnimationFrame(animate);
-                    } else {
-                        // 旋转结束
-                        isSpinning = false;
-                        document.getElementById('spinButton').disabled = false;
-                        
-                        // 检查是否获胜
-                        checkWin(stopPositions);
-                    }
-                }
-                
-                requestAnimationFrame(animate);
-            }
-            
-            // 检查获胜条件
-            function checkWin(stopPositions) {
-                // 获取实际显示的符号
-                const displayedSymbols = stopPositions.map(pos => {
-                    const symbolIndex = pos % symbols.length;
-                    return symbols[symbolIndex];
-                });
-                
-                console.log(`第 ${attempts} 次尝试: ${displayedSymbols.join(' ')}`);
-                
-                // 检查是否三个符号相同
-                const allSame = displayedSymbols[0] === displayedSymbols[1] && 
-                               displayedSymbols[1] === displayedSymbols[2];
-                
-                if (allSame) {
-                    gameWon = true;
-                    document.getElementById('winMessage').textContent = `恭喜！你赢得了游戏！符号: ${displayedSymbols[0]} ${displayedSymbols[1]} ${displayedSymbols[2]}`;
-                    document.getElementById('winMessage').className = 'win-message blink';
-                    
-                    // 播放胜利音效（模拟）
-                    playWinSound();
-                    
-                    // 显示跳转信息
-                    setTimeout(() => {
-                        document.getElementById('winMessage').textContent = `正在跳转到红星积分页面...`;
-                        document.getElementById('winMessage').className = 'win-message';
-                    }, 1500);
-                    
-                    // 延迟跳转
-                    setTimeout(() => {
-                        // 显示红星娱乐城的积分页面
-                        showRedStarPointsPage();
-                    }, 3000);
-                } else {
-                    if (attempts >= maxAttempts) {
-                        // 不应该发生，因为应该在达到最大尝试次数时获胜
-                        console.error('错误：达到最大尝试次数但未获胜');
-                        document.getElementById('winMessage').textContent = '游戏错误，请刷新页面重试';
-                    } else {
-                        document.getElementById('winMessage').textContent = `继续尝试！还需要 ${maxAttempts - attempts} 次尝试`;
-                    }
-                }
-            }
-            
-            // 播放胜利音效（模拟）
-            function playWinSound() {
-                // 创建简单的音频上下文播放音效
-                try {
-                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    const oscillator = audioContext.createOscillator();
-                    const gainNode = audioContext.createGain();
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                    
-                    oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
-                    oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
-                    oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
-                    
-                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-                    
-                    oscillator.start(audioContext.currentTime);
-                    oscillator.stop(audioContext.currentTime + 0.5);
-                } catch (e) {
-                    console.log("音频播放失败，但游戏继续");
-                }
-            }
-            
-            // 显示红星娱乐城积分页面
-            function showRedStarPointsPage() {
-                // 创建模拟的积分页面覆盖层
-                const overlay = document.createElement('div');
-                overlay.style.position = 'fixed';
-                overlay.style.top = '0';
-                overlay.style.left = '0';
-                overlay.style.width = '100%';
-                overlay.style.height = '100%';
-                overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
-                overlay.style.zIndex = '1000';
-                overlay.style.display = 'flex';
-                overlay.style.justifyContent = 'center';
-                overlay.style.alignItems = 'center';
-                overlay.style.flexDirection = 'column';
-                overlay.style.overflowY = 'auto';
-                overlay.style.padding = '20px';
-                
-                // 创建红星娱乐城积分页面内容
-                overlay.innerHTML = `
-                    <div style="background: linear-gradient(to bottom, #990000, #660000); border: 15px ridge #ffcc00; padding: 30px; max-width: 700px; width: 90%; text-align: center; border-radius: 25px; box-shadow: 0 0 50px #ff0000; position: relative;">
-                        <!-- 红星装饰 -->
-                        <div style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); background: #ff0000; color: #ffff00; padding: 10px 30px; border-radius: 10px; font-size: 24px; font-weight: bold; border: 3px solid #ffff00; box-shadow: 0 0 15px #ff0000;">
-                            ★ 红星娱乐城 ★
-                        </div>
-                        
-                        <h1 style="color: #ffff00; text-shadow: 3px 3px 0 #ff0000; font-size: 52px; margin: 40px 0 20px; font-family: 'SimSun', serif;">积分大厅</h1>
-                        <p style="color: #00ffff; font-size: 26px; margin-bottom: 20px; text-shadow: 2px 2px 0 #0000ff;">恭喜你赢得了老虎机游戏！</p>
-                        
-                        <div style="background-color: rgba(0, 0, 0, 0.7); border: 8px double #ffff00; padding: 25px; margin: 25px 0; border-radius: 15px;">
-                            <p style="color: #ffff00; font-size: 28px; margin-bottom: 15px;">你获得了 <span style="color: #ff9900; font-size: 42px; text-shadow: 0 0 10px #ff9900;">1000</span> 红星积分！</p>
-                            <p style="color: #ff00ff; font-size: 22px; margin-bottom: 10px;">你用了 ${attempts} 次尝试赢得了游戏</p>
-                            <p style="color: #00ff00; font-size: 24px; margin-bottom: 10px;">获胜符号: ${winSymbol} ${winSymbol} ${winSymbol}</p>
-                            <p style="color: #00ffff; font-size: 20px; margin-top: 15px;">玩家ID: <span style="color: #ffff00;">GUEST_${Math.floor(Math.random()*9000)+1000}</span></p>
-                        </div>
-                        
-                        <p style="color: #ffff00; font-size: 24px; margin-top: 20px; text-decoration: underline;">使用积分可以兑换以下奖品：</p>
-                        <ul style="color: #00ffff; font-size: 20px; text-align: left; display: inline-block; margin: 20px 0; list-style-type: none;">
-                            <li style="margin-bottom: 10px;">★ 500积分 - 虚拟铜奖杯 + 论坛勋章</li>
-                            <li style="margin-bottom: 10px;">★ 1000积分 - 虚拟银奖杯 + 黄金会员资格(7天)</li>
-                            <li style="margin-bottom: 10px;">★ 2000积分 - 虚拟金奖杯 + 钻石会员资格(30天)</li>
-                            <li style="margin-bottom: 10px;">★ 5000积分 - 游戏VIP称号 + 自定义头像权限</li>
-                        </ul>
-                        
-                        <div style="margin-top: 30px; display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
-                            <button id="backButton" style="background: linear-gradient(to bottom, #ff0000, #990000); color: #ffff00; border: 5px outset #ffcc00; border-radius: 12px; padding: 15px 35px; font-size: 24px; cursor: pointer; font-family: 'Comic Sans MS'; min-width: 180px;">返回老虎机</button>
-                            <button id="newGameButton" style="background: linear-gradient(to bottom, #00cc00, #006600); color: #ffff00; border: 5px outset #ffcc00; border-radius: 12px; padding: 15px 35px; font-size: 24px; cursor: pointer; font-family: 'Comic Sans MS'; min-width: 180px;">新游戏</button>
-                            <button id="otherGamesButton" style="background: linear-gradient(to bottom, #0000cc, #000066); color: #ffff00; border: 5px outset #ffcc00; border-radius: 12px; padding: 15px 35px; font-size: 24px; cursor: pointer; font-family: 'Comic Sans MS'; min-width: 180px;">其他游戏</button>
-                        </div>
-                        
-                        <div style="margin-top: 30px; padding: 15px; background: rgba(0,0,100,0.5); border-radius: 10px; border: 2px dotted #00ffff;">
-                            <p style="color: #ff9999; font-size: 16px;">提示：这是红星娱乐城的模拟积分页面。在实际网站中，积分会保存在您的账户中。</p>
-                            <p style="color: #ffff99; font-size: 14px; margin-top: 10px;">当前时间：<span id="currentTime">${new Date().toLocaleString('zh-CN')}</span></p>
-                        </div>
-                    </div>
-                `;
-                
-                document.body.appendChild(overlay);
-                
-                // 添加按钮事件
-                document.getElementById('backButton').addEventListener('click', function() {
-                    document.body.removeChild(overlay);
-                });
-                
-                document.getElementById('newGameButton').addEventListener('click', function() {
-                    document.body.removeChild(overlay);
-                    initGame();
-                });
-                
-                document.getElementById('otherGamesButton').addEventListener('click', function() {
-                    alert('红星娱乐城的其他游戏区域正在建设中，敬请期待！\n\n计划开放区域：\n1. 街机游戏区\n2. 台球俱乐部\n3. 麻将棋牌室\n4. 扑克大厅');
-                });
-            }
-            
-            // 加入收藏夹功能
-            function addToFavorites() {
-                const title = document.title;
-                const url = window.location.href;
-                
-                if (window.sidebar && window.sidebar.addPanel) {
-                    // Firefox
-                    window.sidebar.addPanel(title, url, "");
-                } else if (window.external && ('AddFavorite' in window.external)) {
-                    // IE
-                    window.external.AddFavorite(url, title);
-                } else if (window.opera && window.print) {
-                    // Opera
-                    const elem = document.createElement('a');
-                    elem.setAttribute('href', url);
-                    elem.setAttribute('title', title);
-                    elem.setAttribute('rel', 'sidebar');
-                    elem.click();
-                } else {
-                    // 其他浏览器
-                    alert(`请按 Ctrl+D (Windows/Linux) 或 Cmd+D (Mac) 将\n"${title}"\n添加到收藏夹！`);
-                }
-            }
-            
-            // 更新访客计数器（模拟）
-            function updateVisitorCounter() {
-                const counter = document.getElementById('visitorCount');
-                let count = parseInt(counter.textContent);
-                // 每10秒增加一个访客（模拟）
-                setInterval(() => {
-                    count++;
-                    counter.textContent = count.toString().padStart(6, '0');
-                }, 10000);
-            }
-            
-            // 事件监听
-            document.getElementById('spinButton').addEventListener('click', spinReels);
-            
-            // 初始化游戏
-            initGame();
-            
-            // 启动访客计数器
-            updateVisitorCounter();
-            
-            // 设置最后更新时间
-            document.getElementById('lastUpdate').textContent = new Date().toLocaleDateString('zh-CN', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
             });
-        });
+
+            renderPopup(generateScoreList());
+            setReelContent(reelInner1, symbols[0]);
+            setReelContent(reelInner2, symbols[1]);
+            setReelContent(reelInner3, symbols[2]);
+        })();
     </script>
+    <!-- 外部JS文件引用 (保持不变) -->
+    <script src="./search-engine.js"></script>
+    <script src="./storage.js"></script>
+    <script src="./navigation.js"></script>
+    <script src="./visitor.js"></script>
+    <script src="./search-ass.js"></script>
+    <script src="./logo-return.js"></script>
 </body>
 </html>

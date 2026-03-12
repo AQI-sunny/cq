@@ -43,8 +43,8 @@
         }
 
         .logo {
-            width: 80px;
-            height: 80px;
+            width: 120px;
+            height: 120px;
         }
 
         .search-container {
@@ -314,19 +314,23 @@
             }
         }
     </style>
+ <link rel="stylesheet" href="css/search-assistant.css">
+     <link rel="stylesheet" href="css/visitor.css">
+      <link rel="stylesheet" href="css/common.css">
+
 </head>
 <body>
     <div class="main-container">
         <!-- 搜索栏 -->
         <div class="header-container">
-            <img src="https://sylvie-seven-cq.top/gallery/search.png" alt="Logo" class="logo">
+            <img src="search.png" alt="Logo" class="logo">
             <div class="search-container">
                 <div class="search-bar">
                     <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
                     </svg>
-                    <input type="text" class="search-input" placeholder="输入搜索内容...">
-                    <button class="search-button">搜索</button>
+                    <input type="text" class="search-input" id="searchInput" placeholder="输入搜索内容...">
+                    <button class="search-button" id="searchButton">搜索</button>
                 </div>
             </div>
         </div>
@@ -347,9 +351,9 @@
             <div class="patient-info">
                 <h3>患者信息</h3>
                 <div class="patient-details">
-                    <div><strong>姓名：</strong> 吴小丫</div>
+                    <div><strong>姓名：</strong>吴雅</div>
                     <div><strong>性别：</strong> 女</div>
-                    <div><strong>年龄：</strong> 5岁</div>
+                    <div><strong>年龄：</strong> 7岁</div>
                     <div><strong>住址：</strong> 临渠县大王庄村三组</div>
                 </div>
             </div>
@@ -490,28 +494,139 @@
         </div>
     </div>
 
+    <script src="search-engine.js"></script>
+    <script src="storage.js"></script>
+    <script src="navigation.js"></script>
+    <script src="visitor.js"></script>
+    <script src="search-ass.js"></script>
+    
+    <!-- 修复搜索功能的备用脚本 -->
     <script>
+        // 等待页面加载完成
         document.addEventListener('DOMContentLoaded', function() {
-            // 搜索功能
-            const searchInput = document.querySelector('.search-input');
-            const searchButton = document.querySelector('.search-button');
+            console.log('页面加载完成，初始化搜索功能...');
             
-            searchButton.addEventListener('click', function() {
-                performSearch(searchInput.value.trim());
-            });
+            // 获取搜索元素
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
             
-            searchInput.addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    performSearch(this.value.trim());
+            // 确保元素存在
+            if (!searchInput || !searchButton) {
+                console.error('搜索元素未找到！请检查HTML中的id属性');
+                return;
+            }
+            
+            console.log('搜索元素找到：', {searchInput, searchButton});
+            
+            // 检查外部搜索函数是否存在
+            let externalSearchAvailable = false;
+            
+            // 尝试检查各种可能的搜索函数
+            /* if (typeof performExternalSearch === 'function') {
+                externalSearchAvailable = true;
+                console.log('找到外部搜索函数: performExternalSearch');
+            } else if (typeof searchAssistantSearch === 'function') {
+                externalSearchAvailable = true;
+                console.log('找到外部搜索函数: searchAssistantSearch');
+            } else if (typeof window.searchEngine === 'object' && typeof window.searchEngine.search === 'function') {
+                externalSearchAvailable = true;
+                console.log('找到外部搜索对象: window.searchEngine');
+            } else {
+                console.warn('未找到外部搜索函数，将使用内置搜索功能');
+            } */
+            
+            // 定义搜索处理函数
+            function handleSearch() {
+                const query = searchInput.value.trim();
+                console.log('搜索查询:', query);
+                
+                if (!query) {
+                    alert('请输入搜索内容');
+                    return;
                 }
-            });
+                
+                // 尝试使用外部搜索函数
+                let searchExecuted = false;
+                
+                if (externalSearchAvailable) {
+                    try {
+                        if (typeof performExternalSearch === 'function') {
+                            performExternalSearch(query);
+                            searchExecuted = true;
+                        } else if (typeof searchAssistantSearch === 'function') {
+                            searchAssistantSearch(query);
+                            searchExecuted = true;
+                        } else if (typeof window.searchEngine === 'object' && typeof window.searchEngine.search === 'function') {
+                            window.searchEngine.search(query);
+                            searchExecuted = true;
+                        }
+                    } catch (error) {
+                       /*  console.error('外部搜索函数执行错误:', error);
+                         */
+                        searchExecuted = false;
+                    }
+                }
+                
+                // 如果外部搜索不可用或失败，使用内置搜索
+                /* if (!searchExecuted) {
+                    console.log('使用内置搜索功能');
+                    
+                    // 在页面中高亮搜索词
+                    highlightSearchTerm(query);
+                    
+                    // 显示搜索结果（模拟）
+                    alert(`搜索: "${query}"\n\n这是内置搜索功能，请确保外部JS文件正确加载以实现完整搜索功能。\n\n搜索到的相关内容已在页面中高亮显示。`);
+                } */
+            }
             
-            function performSearch(query) {
-                if (query) {
-                    alert(`正在搜索: ${query}\n\n注意：此页面为1997年病历单模拟页面，搜索功能仅为演示。`);
+            // 高亮搜索词
+            function highlightSearchTerm(term) {
+                const medicalContent = document.querySelector('.medical-record');
+                if (!medicalContent) return;
+                
+                // 移除之前的高亮
+                const existingHighlights = medicalContent.querySelectorAll('.search-highlight');
+                existingHighlights.forEach(el => {
+                    const parent = el.parentNode;
+                    parent.replaceChild(document.createTextNode(el.textContent), el);
+                    parent.normalize();
+                });
+                
+                if (!term) return;
+                
+                // 高亮新搜索词
+                const text = medicalContent.innerHTML;
+                const regex = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                
+                medicalContent.innerHTML = text.replace(regex, '<span class="search-highlight" style="background-color: yellow;">$1</span>');
+                
+                // 滚动到第一个匹配项
+                const firstHighlight = medicalContent.querySelector('.search-highlight');
+                if (firstHighlight) {
+                    firstHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
             }
+            
+            // 绑定事件监听器
+            searchButton.addEventListener('click', handleSearch);
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleSearch();
+                }
+            });
+            
+            console.log('搜索功能初始化完成');
         });
+        
+        // 监听外部JS加载错误
+        window.addEventListener('error', function(e) {
+            if (e.target.tagName === 'SCRIPT') {
+                console.error('JS文件加载失败:', e.target.src);
+                /* alert('部分JavaScript文件加载失败，搜索功能可能受限。请检查控制台获取详细信息。');
+             */
+            }
+        }, true);
     </script>
+    <script src="logo-return.js"></script>
 </body>
 </html>

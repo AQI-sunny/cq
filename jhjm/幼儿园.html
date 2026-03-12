@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>向阳幼儿园95级大一班 </title>
+    <style>
+        /* 90年代怀旧风格 —— 老课本、作业本、泛黄纸张的感觉 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #9e7b6b;  /* 仿旧木板/深色底 */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', '宋体', 'KaiTi', '华文楷体', monospace;
+            padding: 20px;
+            margin: 0;
+            /* 老式显示器扫描线效果 (极淡) */
+            background-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,0.1) 1px, transparent 1px);
+            background-size: 4px 4px;
+        }
+
+        /* 主卡片：仿作业本/稿纸，撕边效果+胶带 */
+        .roll-paper {
+            max-width: 780px;
+            width: 100%;
+            background: #f7eed7;  /* 老道林纸色 */
+            background-image: 
+                linear-gradient(#e0d6bf 1px, transparent 1px),
+                linear-gradient(90deg, #e0d6bf 1px, transparent 1px);
+            background-size: 24px 24px, 24px 24px;  /* 隐约田字格风格（极浅） */
+            background-position: -1px -1px;
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.2), 12px 12px 15px rgba(0,0,0,0.3);
+            padding: 35px 25px 30px 25px;
+            border: 1px solid #bba88a;
+            border-left: 4px solid #c7b194;
+            border-top: 3px solid #cfbea4;
+            border-radius: 2px 30px 8px 30px;  /* 不规则旧损感 */
+            position: relative;
+            transition: all 0.1s ease;
+        }
+
+        /* 破损的胶带痕迹 (左上右下) */
+        .roll-paper::before {
+            content: "";
+            position: absolute;
+            top: -8px;
+            left: 30px;
+            width: 140px;
+            height: 25px;
+            background: rgba(215, 195, 160, 0.6);
+            border-left: 3px solid #b0966d;
+            border-right: 3px solid #b0966d;
+            transform: rotate(-1deg);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 5;
+            mix-blend-mode: multiply;
+        }
+
+        .roll-paper::after {
+            content: "";
+            position: absolute;
+            bottom: 12px;
+            right: 15px;
+            width: 100px;
+            height: 20px;
+            background: rgba(190, 170, 140, 0.5);
+            border-left: 2px solid #937b5c;
+            border-right: 2px solid #937b5c;
+            transform: rotate(3deg);
+            box-shadow: 0 2px 3px rgba(0,0,0,0.15);
+            z-index: 5;
+            opacity: 0.5;
+            mix-blend-mode: multiply;
+        }
+
+        /* 标题区 🌻 */
+        .header-sunflower {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 3px dashed #ccb396;
+            padding-bottom: 8px;
+            position: relative;
+        }
+
+        .header-sunflower h1 {
+            font-size: 2.4rem;
+            font-weight: bold;
+            letter-spacing: 4px;
+            color: #7a4d2e;
+            text-shadow: 2px 2px 0 #e7cfaa, 3px 3px 0 #ac8b64;
+            font-family: 'KaiTi', '华文楷体', '楷体', 'Courier New', monospace;
+            word-break: keep-all;
+            margin: 0 0 5px 0;
+            line-height: 1.2;
+        }
+
+        .sunflower-icon {
+            font-size: 2rem;
+            filter: drop-shadow(2px 2px 0 #aa7b54);
+            margin: 0 5px;
+        }
+
+        .sub-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            background: #e6d8bf;
+            padding: 10px 15px;
+            border: 2px solid #bba27a;
+            box-shadow: inset 0 0 0 1px #fbf3e0;
+            font-weight: bold;
+            color: #3d2b1a;
+            margin-top: 15px;
+            font-family: 'Courier New', '宋体', monospace;
+            text-transform: uppercase;
+        }
+
+        .sub-info span {
+            background: white;
+            padding: 2px 8px;
+            border: 1px solid #a5845c;
+            font-style: italic;
+        }
+
+        /* 手写统计数字 */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            background: #ebddc3;
+            padding: 7px 15px;
+            border-radius: 40px 8px 40px 8px;
+            border: 2px solid #b8946a;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #392b1b;
+            width: fit-content;
+            margin: 15px auto 10px auto;
+            box-shadow: 0 0 0 3px #f5e7cf;
+        }
+
+        .stats i {
+            font-style: normal;
+            background: #b6734b;
+            color: #fcf0d9;
+            padding: 0 10px;
+            border-radius: 30px;
+            margin-left: 5px;
+        }
+
+        /* 表格 —— 90年代手写油印风格 */
+        .roster-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0 5px;
+            font-family: 'KaiTi', '华文楷体', '楷体', 'Courier New', monospace;
+            font-size: 1.2rem;
+            background: #fffef8;
+            border: 2px solid #af8f6b;
+            box-shadow: 4px 4px 0 #846f53;
+        }
+
+        .roster-table th {
+            background: #b78e64;
+            color: #2c1d0f;
+            font-weight: 900;
+            text-transform: uppercase;
+            padding: 12px 4px;
+            border: 2px solid #6f4f31;
+            font-size: 1.15rem;
+            letter-spacing: 1.5px;
+            text-shadow: 0px 1px 0 #ebc191;
+            font-family: 'Courier New', '宋体', monospace;
+            border-bottom: 4px solid #5e3e26;
+        }
+
+        .roster-table td {
+            padding: 10px 6px;
+            border: 1.5px solid #bc9b78;
+            text-align: center;
+            background: #fffdf5;
+            color: #2f241a;
+        }
+
+        /* 奇数行轻微斑马纹 (油墨深浅) */
+        .roster-table tbody tr:nth-child(odd) td {
+            background-color: #f9f1e3;
+        }
+
+        /* 序号列 */
+        .roster-table td:first-child {
+            font-weight: bold;
+            color: #4d3421;
+            width: 15%;
+        }
+
+        /* 姓名列 稍微左对齐 更有名单感 */
+        .roster-table td:nth-child(2) {
+            text-align: left;
+            padding-left: 18px;
+            font-weight: 550;
+            letter-spacing: 0.5px;
+        }
+
+        /* 备注列 */
+        .roster-table td:last-child {
+            font-style: italic;
+            color: #684e33;
+            font-size: 1.05rem;
+        }
+
+        /* 男生/女生视觉标签 */
+        .gender-badge {
+            display: inline-block;
+            background: #c7b8a2;
+            border-radius: 30px;
+            padding: 2px 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #2b1d11;
+            border: 1px solid #856e51;
+            box-shadow: inset 0 1px 0 #f1e1cd;
+        }
+
+        .gender-male {
+            background: #b1bfd3;
+            border-color: #3b5777;
+        }
+
+        .gender-female {
+            background: #f9cdcd;
+            border-color: #aa6470;
+        }
+
+        /* 下方仿教师评语 / 旧装饰 */
+        .footnote {
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            background: #e7d7be;
+            padding: 12px 20px;
+            border: 2px solid #af8b63;
+            box-shadow: inset 0 0 0 2px #fbefdb;
+            color: #4a3825;
+            font-family: 'Courier New', 'KaiTi', monospace;
+        }
+
+        .teacher-sign {
+            border-top: 2px dotted #9e7d5b;
+            width: 220px;
+            text-align: right;
+            padding-top: 6px;
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+
+        .stamp {
+            background: #b56532;
+            color: #efdfc7;
+            font-size: 1.5rem;
+            padding: 2px 15px;
+            border-radius: 30px 0 30px 0;
+            transform: rotate(-2deg);
+            font-family: 'KaiTi', '华文楷体', serif;
+            border: 3px double #f1dab9;
+            letter-spacing: 3px;
+        }
+
+        /* 小向日葵点缀 */
+        .dots {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 8px;
+            font-size: 1.5rem;
+            color: #b37b49;
+        }
+
+        /* 适配老式屏幕 */
+        @media (max-width: 550px) {
+            .header-sunflower h1 {
+                font-size: 1.8rem;
+            }
+            .sub-info {
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+            .roster-table th, .roster-table td {
+                font-size: 1rem;
+                padding: 6px 2px;
+            }
+        }
+
+        /* 修正姓名（符合90年代风格）细微调整 */
+        .ninety-name {
+            font-family: 'KaiTi', '华文楷体', '楷体', 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="roll-paper">
+        <!-- 向日葵标题 带 🌻 符号 -->
+        <div class="header-sunflower">
+            <h1>
+                <span class="sunflower-icon">🌻</span> 向阳幼儿园95级大一班 <span class="sunflower-icon">🌻</span>
+            </h1>
+            <div class="dots">✿ ✿ ✿ ✿ ✿</div>
+            <!-- 班级信息 -->
+            <div class="sub-info">
+                <span>🌱 向日葵班</span>
+                <span>👩‍🏫 班主任：王秀英 老师</span>
+                <span>📅 1995.9.1</span>
+            </div>
+            <!-- 人数统计（男生/女生） -->
+            <div class="stats">
+                <div>👧 女生 <i>8人</i></div>
+                <div>👦 男生 <i>8人</i></div>
+                <div>👫 共计 <i>16人</i></div>
+            </div>
+        </div>
+
+        <!-- 花名册表格 —— 名字已调整成90年代常用名，且保留原结构 -->
+        <table class="roster-table">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>姓名</th>
+                    <th>性别</th>
+                    <th>备注</th> 
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 女生部分 (原8人，名字微调: 更贴近90年代风格 如 雅→雅静，欣然→雪，一诺→丹，沐苒→婷等) -->
+                <tr><td>1</td><td class="ninety-name">吴雅</td><td><span class="gender-badge gender-female">女</span></td><!-- <td>（全班唯一吴姓）</td> --></tr>
+                <tr><td>2</td><td class="ninety-name">李雪</td><td><span class="gender-badge gender-female">女</span></td><td></td></tr>
+                <tr><td>3</td><td class="ninety-name">王丹</td><td><span class="gender-badge gender-female">女</span></td><td></td></tr>
+                <tr><td>4</td><td class="ninety-name">张婷</td><td><span class="gender-badge gender-female">女</span></td><td></td></tr>
+                <tr><td>5</td><td class="ninety-name">刘雨萌</td><td><span class="gender-badge gender-female">女</span></td><td></td></tr>
+                <tr><td>6</td><td class="ninety-name">陈思佳</td><td><span class="gender-badge gender-female">女</span></td><td></td></tr>
+                <tr><td>7</td><td class="ninety-name">钱小娜</td><td><span class="gender-badge gender-female">女</span></td><td></td></tr>
+                <tr><td>8</td><td class="ninety-name">孙丽丽</td><td><span class="gender-badge gender-female">女</span></td><!-- <td>曾用名：孙艺昕</td> --></tr>
+                <!-- 男生部分 (原8人 子轩→磊, 子皓→阳, 嘉瑞→瑞, 子昂→鹏, 泽楷→凯, 明远→明, 宇辰→宇, 一鸣→一鸣保留常用) -->
+                <tr><td>9</td><td class="ninety-name">周磊</td><td><span class="gender-badge gender-male">男</span></td><td></td></tr>
+                <tr><td>10</td><td class="ninety-name">郑阳</td><td><span class="gender-badge gender-male">男</span></td><td></td></tr>
+                <tr><td>11</td><td class="ninety-name">王瑞</td><td><span class="gender-badge gender-male">男</span></td><td></td></tr>
+                <tr><td>12</td><td class="ninety-name">高鹏</td><td><span class="gender-badge gender-male">男</span></td><td></td></tr>
+                <tr><td>13</td><td class="ninety-name">杨凯</td><td><span class="gender-badge gender-male">男</span></td><td></td></tr>
+                <tr><td>14</td><td class="ninety-name">何明</td><td><span class="gender-badge gender-male">男</span></td><td></td></tr>
+                <tr><td>15</td><td class="ninety-name">王宇安</td><td><span class="gender-badge gender-male">男</span></td><td></td></tr>
+                <tr><td>16</td><td class="ninety-name">赵二鸣</td><td><span class="gender-badge gender-male">男</span></td><td></td></tr>
+            </tbody>
+        </table>
+
+        <!-- 花名册下角老物件：留言/印章/数字 -->
+        <div class="footnote">
+            <div class="stamp">🌻 向日葵班 🌻</div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 1.3rem;">✨ 1995级大一班</span>
+                <span>✏️ 共16人</span>
+            </div>
+            <div class="teacher-sign">
+                王秀英 (签字) <!-- <span style="font-family: 'KaiTi';"> </span> -->
+            </div>
+        </div>
+
+        <!-- 底部怀旧装饰线，模仿墨水印记 -->
+        <div style="display: flex; justify-content: flex-end; margin-top: 8px; font-size: 1rem; color:#936e48;">
+              <span>〓 〓 〓 〓 〓 大一班花名册 〓 〓 〓 〓 〓</span>
+              <br>
+        </div>  
+        <!-- 隐形的涂改痕迹 -->
+       <!--  <div style="position: relative; height:5px; background:transparent;"></div> -->
+    </div>
+</body>
+</html>

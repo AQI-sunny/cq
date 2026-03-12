@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> 密码锁 · 素锦日记</title>
+    <style>
+        /* ===== 全锁体造型 · 滚轮转盘 ===== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #1f2a1f;                /* 深色背景，凸显锁体 */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 16px;
+            background-image: radial-gradient(circle at 30% 40%, #2d402d 0%, #172017 90%);
+            transition: background-color 0.2s ease;
+        }
+
+        /* ---------- 整个锁体 (大挂锁) ---------- */
+        .lock-body {
+            background: #b9b38c;                 /* 旧铜色锁体 */
+            padding: 35px 35px 45px 35px;
+            border-radius: 100px 100px 60px 60px; /* 圆润厚重 */
+            box-shadow: 
+                0 20px 0 #5f5b4a,                 /* 厚底投影 */
+                0 30px 30px rgba(0,0,0,0.7),
+                inset 0 -8px 10px #6a674b,
+                inset 0 10px 20px #efe9c5;         /* 金属高光 */
+            border: 4px solid #7d7a5c;
+            max-width: 550px;
+            width: 100%;
+            position: relative;
+            /* 锁体上的装饰线 */
+            background-image: 
+                linear-gradient(90deg, transparent 30%, #9e9872 30%, #9e9872 70%, transparent 70%);
+            background-size: 100% 6px;
+            background-repeat: no-repeat;
+            background-position: bottom 60px center;
+        }
+
+        /* 锁梁 (粗壮 shackle) — 让整个造型更像锁 */
+        .shackle {
+            position: absolute;
+            top: -42px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 80px;
+            border: 12px solid #8b8563;
+            border-bottom: none;
+            border-radius: 120px 120px 0 0;
+            box-shadow: 0 15px 0 #4d4a33, inset 0 6px 12px #d9d09e;
+            background: transparent;
+            z-index: 10;
+        }
+        /* 锁梁两端的加固 */
+        .shackle::before,
+        .shackle::after {
+            content: '';
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background: #5f5b42;
+            border-radius: 50%;
+            bottom: -16px;
+            box-shadow: inset -2px -2px 5px #2d2b1c;
+        }
+        .shackle::before { left: -8px; }
+        .shackle::after { right: -8px; }
+
+        /* ---------- 滚轮转盘区 (模仿机械密码转盘) ---------- */
+        .dial-panel {
+            background: #3f3f2f;                 /* 深色金属面板 */
+            border-radius: 80px 80px 40px 40px;
+            padding: 25px 15px 25px 15px;
+            margin: 10px 0 30px 0;
+            border: 6px solid #6a674b;
+            box-shadow: inset 0 0 0 8px #2e2e1f, 0 12px 0 #3a382a;
+        }
+
+        .dial-label {
+            text-align: center;
+            color: #e0dbb0;
+            font-size: 18px;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            font-weight: bold;
+            text-shadow: 0 2px 0 #2b2b15;
+        }
+
+        /* 四个机械滚轮 (每个显示一位数字) */
+        .wheels {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            padding: 10px 0;
+        }
+
+        .wheel-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 80px;
+        }
+
+        /* 滚轮本身 (像老式密码锁的转盘) */
+        .wheel {
+            width: 80px;
+            height: 100px;
+            background: #2b2b1b;                /* 深色转轮 */
+            border-radius: 40px 40px 20px 20px;   /* 圆柱体感觉 */
+            border: 4px solid #878151;
+            box-shadow: 
+                0 10px 0 #3b3a24,
+                inset 0 -8px 6px #56512e,
+                inset 0 8px 10px #cbc58b;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            /* 模仿滚轮刻度线 */
+            background-image: repeating-linear-gradient(180deg, 
+                #5c593a 0px, #5c593a 4px, 
+                #2b2b15 4px, #2b2b15 10px);
+            background-size: 100% 20px;
+        }
+
+        /* 滚轮上显示的大数字 (像印在转盘上) */
+        .wheel-number {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 58px;
+            font-weight: 900;
+            color: #d5cf8c;
+            text-shadow: 0 0 10px #b8c060, 0 4px 4px black;
+            background: rgba(20, 20, 5, 0.6);
+            width: 100%;
+            text-align: center;
+            line-height: 1.3;
+            border-radius: 20px;
+            letter-spacing: 2px;
+            backdrop-filter: blur(1px);
+            transform: rotate(0.5deg); /* 轻微错位更机械感 */
+        }
+
+        /* 每个滚轮下方的轴/刻度装饰 */
+        .wheel-indicator {
+            width: 16px;
+            height: 16px;
+            background: #b30000;                /* 红色标记点 */
+            border-radius: 50%;
+            margin-top: 10px;
+            border: 2px solid #ffcc66;
+            box-shadow: 0 0 8px #ff9900;
+        }
+        /* 当前选中的滚轮 (通过键盘输入) 增加高亮 */
+        .wheel-unit.active-wheel .wheel {
+            box-shadow: 0 0 0 6px #edb872, 0 12px 0 #3b3a24, inset 0 -8px 6px #56512e, inset 0 8px 10px #f5e7b5;
+            transition: box-shadow 0.1s;
+        }
+        .wheel-unit.active-wheel .wheel-number {
+            color: #fff7b0;
+            text-shadow: 0 0 18px #f5e55c;
+        }
+
+        /* ---------- 钥匙孔 & 铭牌 ---------- */
+        .keyhole-block {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0 25px;
+            padding: 0 15px;
+        }
+
+        .keyhole-large {
+            width: 55px;
+            height: 70px;
+            background: #2b2a1b;
+            border-radius: 40px 40px 20px 20px;
+            border: 5px solid #837d59;
+            box-shadow: inset 0 0 0 6px #4f4b30, 0 8px 0 #3e3b28;
+            position: relative;
+        }
+        .keyhole-large::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 14px;
+            width: 18px;
+            height: 26px;
+            background: #2b2a1b;
+            border-radius: 20px;
+            border: 5px solid #837d59;
+            box-shadow: inset 0 0 0 4px #4f4b30;
+        }
+
+        .brand {
+            font-size: 32px;
+            font-weight: bold;
+            color: #433f29;
+            text-shadow: 2px 2px 0 #a09863;
+            letter-spacing: 6px;
+            background: #5b583b;
+            padding: 10px 28px;
+            border-radius: 60px;
+            border: 3px solid #cec084;
+            box-shadow: inset 0 2px 8px #f6eab3, 0 8px 0 #363423;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* ---------- 底部状态条 (锁芯状态) ---------- */
+        .lock-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #424530;
+            border-radius: 60px;
+            padding: 14px 28px;
+            border: 4px solid #2f3422;
+            box-shadow: inset 0 4px 10px #1c1f12, 0 10px 0 #323525;
+            margin-top: 20px;
+            color: #f5efc2;
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .led-big {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #352e1a;
+            box-shadow: inset 0 3px 8px black, 0 0 15px #8fad4b;
+            border: 3px solid #2c321c;
+        }
+        .led-green {
+            background: #5fb03e;
+            box-shadow: 0 0 22px #a0f07a, inset 0 2px 10px white;
+        }
+
+        .status-message {
+            letter-spacing: 3px;
+        }
+
+        /* 小提示 (键盘操作) */
+        .hint-bar {
+            background: #9a946b;
+            color: #1f2a0e;
+            padding: 12px 20px;
+            border-radius: 60px;
+            margin: 20px 0 5px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            border: 3px solid #6b6843;
+            box-shadow: inset 0 2px 8px #efdfaa;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .hint-bar span {
+            background: #2b372b;
+            color: #e1eea0;
+            padding: 6px 16px;
+            border-radius: 30px;
+            margin: 0 5px;
+            border: 1px solid #abc85a;
+        }
+
+        /* 错误提示临时样式（由JS触发） */
+        .error-flash {
+            background-color: #6d3a3a !important;
+            transition: background-color 0.1s;
+        }
+
+        @media (max-width: 500px) {
+            .wheel { width: 60px; height: 80px; }
+            .wheel-number { font-size: 44px; }
+            .wheel-unit { width: 60px; }
+            .brand { font-size: 24px; padding: 8px 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="lock-body">
+        <!-- 锁梁 (挂锁特征) -->
+        <div class="shackle"></div>
+
+        <!-- 滚轮转盘区 —— 密码显示 -->
+        <div class="dial-panel">
+            <!-- <div class="dial-label">⚙️ COMBINATION DIAL ⚙️</div> -->
+            <div class="wheels" id="wheelContainer">
+                <!-- 四个滚轮, 分别对应第1-4位密码, 由JS动态填充数字, 但先构建结构 -->
+                <div class="wheel-unit" data-index="0">
+                    <div class="wheel"><div class="wheel-number" id="digit0">0</div></div>
+                    <div class="wheel-indicator"></div>
+                </div>
+                <div class="wheel-unit" data-index="1">
+                    <div class="wheel"><div class="wheel-number" id="digit1">0</div></div>
+                    <div class="wheel-indicator"></div>
+                </div>
+                <div class="wheel-unit" data-index="2">
+                    <div class="wheel"><div class="wheel-number" id="digit2">0</div></div>
+                    <div class="wheel-indicator"></div>
+                </div>
+                <div class="wheel-unit" data-index="3">
+                    <div class="wheel"><div class="wheel-number" id="digit3">0</div></div>
+                    <div class="wheel-indicator"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 钥匙孔 + 铭牌 (装饰) -->
+        <div class="keyhole-block">
+            <div class="keyhole-large"></div>
+            <div class="brand">1997</div>
+        </div>
+
+        <!-- 底部锁状态 + LED -->
+        <div class="lock-status">
+            <span class="status-message" id="statusMsg">🔒 已锁定</span>
+            <div class="led-big" id="statusLed"></div>
+        </div>
+
+        <!-- 纯键盘操作提示 (无鼠标模拟键盘) -->
+        <!-- <div class="hint-bar">
+            <span>⏎ 回车</span> 开锁 · <span>⌫ 退格</span> 清除 · <span>←/→</span> 移动 · <span>ESC</span> 重置
+        </div> -->
+    </div>
+
+    <script>
+        (function() {
+            // ----- 复古机械密码锁 · 纯物理键盘输入 -----
+            const SECRET = "0305";           //   (提示：一年级一班=0101，但示例用0305)
+            const MAX_DIGITS = 4;
+
+            // 当前输入的数组 (最多4位数字字符)
+            let currentCode = ['', '', '', ''];   // 初始为空，显示为'0' (占位)
+            let currentPosition = 0;               // 当前激活的滚轮索引 0~3 (类似光标)
+            
+            // 解锁状态
+            let unlocked = false;
+
+            // DOM 元素
+            const digitEls = [
+                document.getElementById('digit0'),
+                document.getElementById('digit1'),
+                document.getElementById('digit2'),
+                document.getElementById('digit3')
+            ];
+            const wheelUnits = document.querySelectorAll('.wheel-unit');
+            const statusMsg = document.getElementById('statusMsg');
+            const statusLed = document.getElementById('statusLed');
+            const bodyEl = document.body;
+
+            // 初始化显示: 全部显示 '0' (占位)
+            function updateWheelsDisplay() {
+                for (let i = 0; i < MAX_DIGITS; i++) {
+                    // 如果当前位是空字符串，显示 '0' 作为占位
+                    let char = currentCode[i] === '' ? '0' : currentCode[i];
+                    digitEls[i].textContent = char;
+                }
+                // 更新激活高亮 (解锁后不高亮任何滚轮)
+                wheelUnits.forEach((unit, idx) => {
+                    if (idx === currentPosition && !unlocked) {
+                        unit.classList.add('active-wheel');
+                    } else {
+                        unit.classList.remove('active-wheel');
+                    }
+                });
+            }
+
+            // 重置到锁定 + 清空所有位 (变为占位0)
+            function resetLocked(clearAll = true) {
+                unlocked = false;
+                if (clearAll) {
+                    currentCode = ['', '', '', ''];
+                    currentPosition = 0;
+                }
+                statusMsg.textContent = '🔒 (素锦日记) 已锁定';
+                statusLed.className = 'led-big';  // 移除绿色类
+                updateWheelsDisplay();
+            }
+
+            // 开锁成功
+            function doUnlock() {
+                unlocked = true;
+                statusMsg.textContent = '🔓 已解锁 (素锦日记)';
+                // 打开新窗口 (素锦日记-小学后门.html) 
+                window.open('素锦日记4-小学后门.html'); // 注意：该页面需同目录存在，否则新标签页会是空白或404
+                statusLed.className = 'led-big led-green';
+                // 移除所有激活高亮 (解锁后不能输入)
+                wheelUnits.forEach(unit => unit.classList.remove('active-wheel'));
+                // 保留数字显示不变
+            }
+
+            // 显示自定义错误消息 (并重置所有)
+            function showErrorAndReset(message) {
+                // 设置状态消息
+                statusMsg.textContent = message;
+                statusLed.className = 'led-big';
+                // 红色闪烁 (添加临时类)
+                bodyEl.classList.add('error-flash');
+                setTimeout(() => bodyEl.classList.remove('error-flash'), 250);
+                // 清空所有
+                currentCode = ['', '', '', ''];
+                currentPosition = 0;
+                unlocked = false;
+                updateWheelsDisplay();
+                // 短暂延迟后恢复状态文字 (但保留锁定状态)
+                setTimeout(() => {
+                    // 但避免覆盖新输入，只在仍为错误消息且未解锁时恢复
+                    if (!unlocked && statusMsg.textContent === message) {
+                        statusMsg.textContent = '🔒 已锁定';
+                    }
+                }, 1200);
+            }
+
+            // 校验密码 (比较 currentCode 拼接)
+            function checkCode() {
+                // 如果有任何一位是空字符串，视为无效
+                for (let i = 0; i < MAX_DIGITS; i++) {
+                    if (currentCode[i] === '') return false;
+                }
+                const entered = currentCode.join('');
+                return entered === SECRET;
+            }
+
+            // 尝试解锁 (如果四位齐全则判断)
+           // 添加一个全局变量来记录错误次数
+let errorCount = 0;
+
+function tryUnlockIfFull() {
+    // 检查是否有空位
+    for (let i = 0; i < MAX_DIGITS; i++) {
+        if (currentCode[i] === '') return false;
+    }
+    
+    if (checkCode()) {
+        // 密码正确：重置错误次数并开锁
+        errorCount = 0;
+        doUnlock();
+        return true;
+    } else {
+        // 密码错误：增加错误次数
+        errorCount++;
+        
+        // 判断错误次数
+        if (errorCount >= 3) {
+            showErrorAndReset('❌ 密码错误 (提示:一年级一班=0101)');
+            // 可选：达到3次错误后重置计数器，或者保持计数继续
+            // errorCount = 0; // 如果希望3次后重置计数，取消这行注释
+        } else {
+            showErrorAndReset('❌ 密码错误 (提示:小雪)');
+        }
+        
+        return false;
+    }
+}
+
+            // 处理数字输入 (0-9)
+            function handleDigit(digit) {
+                if (unlocked) {
+                    // 解锁状态下按数字：重新锁定并开始新输入 (第一位设为该数字，其他清空)
+                    unlocked = false;
+                    currentCode = ['', '', '', ''];
+                    currentCode[0] = digit;   // 第一位设为按的数字
+                    currentPosition = 1;        // 下一个位置
+                    if (currentPosition >= MAX_DIGITS) currentPosition = MAX_DIGITS - 1;
+                    statusMsg.textContent = '🔒 已锁定';
+                    statusLed.className = 'led-big';
+                    updateWheelsDisplay();
+                    return;
+                }
+
+                // 锁定状态: 将数字写入当前光标位置
+                if (currentPosition < 0 || currentPosition >= MAX_DIGITS) currentPosition = 0;
+                
+                // 把数字赋给当前位置 (覆盖)
+                currentCode[currentPosition] = digit;
+
+                // 光标右移一位 (如果没到最右)
+                if (currentPosition < MAX_DIGITS - 1) {
+                    currentPosition++;
+                } else {
+                    // 已经是最右，保持不动
+                }
+                updateWheelsDisplay();
+
+                // 每次输入后检查是否四位都非空，若全满则自动解锁尝试
+                let allFilled = true;
+                for (let i = 0; i < MAX_DIGITS; i++) {
+                    if (currentCode[i] === '') { allFilled = false; break; }
+                }
+                if (allFilled && !unlocked) {
+                    tryUnlockIfFull();
+                }
+            }
+
+            // 处理退格 (清除当前光标所在的数字，并且光标左移)
+            function handleBackspace() {
+                if (unlocked) {
+                    // 解锁时按退格：直接锁定并清除所有
+                    resetLocked(true);
+                    return;
+                }
+
+                // 锁定状态: 清除当前光标位置的数字 (设为'')，并且光标左移一格(如果可能)
+                if (currentPosition < 0) currentPosition = 0;
+                
+                // 先把当前位清空
+                currentCode[currentPosition] = '';
+
+                // 光标左移，但不能小于0
+                if (currentPosition > 0) {
+                    currentPosition--;
+                }
+                updateWheelsDisplay();
+            }
+
+            // 处理回车 (手动开锁)
+            function handleEnter() {
+                if (unlocked) {
+                    // 已解锁时回车相当于关锁并清除
+                    resetLocked(true);
+                    return;
+                }
+
+                // 锁定状态：尝试用当前数字解锁
+                // 检查是否所有位都有数字
+                for (let i = 0; i < MAX_DIGITS; i++) {
+                    if (currentCode[i] === '') {
+                        // 有不完整的，显示不足4位错误
+                        showErrorAndReset('⚠️ 需输满4位');
+                        return;
+                    }
+                }
+                // 四位齐全，验证
+                const entered = currentCode.join('');
+                if (entered === SECRET) {
+                    doUnlock();
+                } else {
+                    // 错误: 显示密码错误
+                    showErrorAndReset('❌ 密码错误 (提示: 0305)');
+                }
+            }
+
+            // 清除所有 (ESC键)
+            function handleEscape() {
+                resetLocked(true);
+            }
+
+            // ----- 键盘监听 -----
+            document.addEventListener('keydown', function(e) {
+                // 防止页面滚动/默认行为
+                const key = e.key;
+                
+                // 数字0-9
+                if (key >= '0' && key <= '9') {
+                    e.preventDefault();
+                    handleDigit(key);
+                }
+                // 退格
+                else if (key === 'Backspace') {
+                    e.preventDefault();
+                    handleBackspace();
+                }
+                // 回车
+                else if (key === 'Enter') {
+                    e.preventDefault();
+                    handleEnter();
+                }
+                // ESC 重置
+                else if (key === 'Escape') {
+                    e.preventDefault();
+                    handleEscape();
+                }
+                // 左/右方向键移动光标
+                else if (key === 'ArrowLeft') {
+                    e.preventDefault();
+                    if (!unlocked) {
+                        currentPosition = Math.max(0, currentPosition - 1);
+                        updateWheelsDisplay();
+                    }
+                }
+                else if (key === 'ArrowRight') {
+                    e.preventDefault();
+                    if (!unlocked) {
+                        currentPosition = Math.min(MAX_DIGITS - 1, currentPosition + 1);
+                        updateWheelsDisplay();
+                    }
+                }
+            });
+
+            // 鼠标点击滚轮切换光标
+            wheelUnits.forEach((unit, idx) => {
+                unit.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (!unlocked) {
+                        currentPosition = idx;
+                        updateWheelsDisplay();
+                    }
+                });
+            });
+
+            // 初始化
+            resetLocked(true);
+            // 额外: 预显示0
+            updateWheelsDisplay();
+
+            // 防止页面点击输入框
+        })();
+    </script>
+     <script src="./jinzhi.js"></script>
+</body>
+</html>

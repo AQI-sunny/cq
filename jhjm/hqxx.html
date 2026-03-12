@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>红旗小学介绍</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "SimSun", sans-serif;
+        }
+        
+        body {
+            background-color: #f0f0f0;
+            background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="%23f0f0f0"/><path d="M0,0 L100,100" stroke="%23e0e0e0" stroke-width="1"/><path d="M100,0 L0,100" stroke="%23e0e0e0" stroke-width="1"/></svg>');
+            color: #333;
+            padding: 15px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            background-color: white;
+            border: 5px double #cc0000;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #cc0000;
+        }
+        
+        h1 {
+            color: #cc0000;
+            font-size: 28px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            margin-bottom: 8px;
+            letter-spacing: 3px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            font-style: italic;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .main-content {
+            flex: 2;
+            min-width: 0;
+        }
+        
+        .sidebar {
+            flex: 1;
+            min-width: 0;
+            background-color: #f9f3e9;
+            padding: 15px;
+            border: 2px solid #e6d5b8;
+            border-radius: 5px;
+        }
+        
+        .section {
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            color: #cc0000;
+            border-left: 4px solid #cc0000;
+            padding-left: 8px;
+            margin-bottom: 12px;
+            font-size: 20px;
+        }
+        
+        p {
+            line-height: 1.7;
+            margin-bottom: 12px;
+            text-align: justify;
+            font-size: 16px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        .highlight {
+            background-color: #fff9e6;
+            padding: 12px;
+            border-left: 4px solid #ffcc00;
+            margin: 15px 0;
+            font-weight: bold;
+            font-size: 15px;
+        }
+        
+        .front-gate-placeholder {
+            width: 100%;
+            height: 150px;
+            background-color: #f5f5f5;
+            border: 2px dashed #999;
+            margin: 12px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-style: italic;
+            border-radius: 3px;
+        }
+        
+        .placeholder-text {
+            text-align: center;
+            font-size: 14px;
+            padding: 0 10px;
+        }
+        
+        .expired-note {
+            font-size: 11px;
+            color: #cc3333;
+            margin-top: 5px;
+            font-style: normal;
+        }
+        
+        .info-box {
+            background-color: #f0f7ff;
+            border: 1px dashed #4a86e8;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 3px;
+            font-size: 15px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px dashed #ccc;
+            color: #666;
+            font-size: 13px;
+        }
+        
+        .page-counter {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            color: #999;
+            font-size: 11px;
+        }
+        
+        ul {
+            padding-left: 20px;
+            line-height: 1.6;
+            margin-top: 10px;
+            font-size: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        /* 学校名称高亮样式 */
+        .school-highlight {
+            background-color: #fff9cc;
+            padding: 1px 3px;
+            border-radius: 2px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* 搜索栏相关样式 */
+.header-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 20px;
+}
+
+.logo {
+    width: 100px; /* 更小的Logo */
+    height: 100px;
+}
+
+.search-container {
+    flex: 0 0 50%;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border: 1px solid #dfe1e5;
+    border-radius: 24px;
+    padding: 12px 20px;
+    box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+}
+
+.search-bar:hover {
+    box-shadow: 0 1px 8px rgba(32,33,36,0.35);
+}
+
+.search-bar:focus-within {
+    box-shadow: 0 1px 8px rgba(32,33,36,0.45);
+}
+
+.search-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    color: #9aa0a6;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    background: transparent;
+}
+
+.search-button {
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.search-button:hover {
+    background-color: #2b6fd8;
+}
+
+/* 响应式调整 */
+@media (max-width: 900px) {
+    .header-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .search-container {
+        width: 80%;
+    }
+}
+        
+        /* 移动端优化 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+                border-width: 3px;
+            }
+            
+            .content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+                letter-spacing: 2px;
+            }
+            
+            h2 {
+                font-size: 18px;
+            }
+            
+            .front-gate-placeholder {
+                height: 120px;
+            }
+            
+            .sidebar {
+                order: -1;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 22px;
+            }
+            
+            h2 {
+                font-size: 17px;
+            }
+            
+            p {
+                font-size: 15px;
+                line-height: 1.6;
+            }
+            
+            .front-gate-placeholder {
+                height: 100px;
+            }
+            
+            .placeholder-text {
+                font-size: 13px;
+            }
+        }
+        
+        /* 打印样式 */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                border: none;
+                box-shadow: none;
+                padding: 10px;
+            }
+            
+            .page-counter {
+                display: none;
+            }
+            
+            .school-highlight {
+                background-color: transparent;
+                font-weight: bold;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+<div class="container">
+ <!-- 顶部区域：Logo和搜索栏 -->
+    <div class="header-container">
+        <img src="search.png" alt="深南市诚信拍卖行" class="logo">
+        <div class="search-container">
+            <div class="search-bar">
+                <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索其他关键词...">
+                <button class="search-button" id="searchButton">搜索</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="container">
+
+
+        <div class="header">
+            <h1>红旗小学</h1>
+            <div class="subtitle">校园介绍</div>
+        </div>
+        
+        <div class="content">
+            <div class="main-content">
+                <div class="section">
+                    <h2>学校简介</h2>
+                    <p><span class="school-highlight">红旗小学</span>成立于1965年，是一所有着光荣传统和优良校风的学校。1997年的校园占地约2.5万平方米，拥有28个教学班，学生1300余名，教职工86人。学校以"团结、勤奋、求实、创新"为校训，致力于培养德智体美全面发展的社会主义建设者和接班人。</p>
+                    
+                    <div class="front-gate-placeholder">
+                        <div class="placeholder-text">1997年的学校前门<br><span class="expired-note">※ 图片已过期无法查看</span></div>
+                    </div>
+                    
+                    <p>学校位于市区中心位置，交通便利，环境优美。从学校前门进入，首先映入眼帘的是宽阔的校前广场和迎风飘扬的五星红旗，给人以庄严而亲切的感觉。</p>
+                </div>
+                
+                <div class="section">
+                    <h2>前门环境特色</h2>
+                    <p><span class="school-highlight">红旗小学前门</span>是学校的标志性建筑，也是学校形象的集中体现。前门采用红色砖石结构，上方镶嵌着"红旗小学"四个金色大字，在阳光下熠熠生辉。</p>
+                    
+                    <div class="highlight">
+                        每天早晨，学生们从学校前门有序进入校园，值日老师和少先队员会在前门迎接每一位同学。前门两侧种植着整齐的松柏和鲜艳的花卉，四季常青，春华秋实。
+                    </div>
+                    
+                    <p>学校前门外是一条宽敞的街道，街道两旁绿树成荫。为了保障学生安全，学校在前门区域设置了明显的交通标志和安全警示牌，并有专门的老师在上学放学时段维持秩序。</p>
+                    
+                    <div class="front-gate-placeholder" style="height: 120px;">
+                        <div class="placeholder-text">前门花园环境<br><span class="expired-note">※ 图片已过期无法查看</span></div>
+                    </div>
+                    
+                    <p>特别值得一提的是，学校前门附近有一个小型花园，园内有假山、水池和各种花草，成为学生们等候家长时的好去处。很多家长也喜欢在前门外的长椅上休息，等待孩子放学。</p>
+                </div>
+                
+                <div class="section">
+                    <h2>校园布局</h2>
+                    <p>进入<span class="school-highlight">红旗小学前门</span>后，首先看到的是学校的中心广场。广场中央矗立着国旗杆，每周一早晨全校师生在这里举行升旗仪式。广场左侧是教学楼，右侧是办公楼，正前方是操场。</p>
+                    
+                    <div class="front-gate-placeholder" style="height: 100px;">
+                        <div class="placeholder-text">从前门看校园全景<br><span class="expired-note">※ 图片已过期无法查看</span></div>
+                    </div>
+                    
+                    <p>教学楼共四层，每层有7个教室，教室宽敞明亮，配备了当时的先进教学设备。从学校前门到教学楼有一条笔直的水泥路，路两旁是宣传栏，展示着学生作品和学校荣誉。</p>
+                    
+                    <div class="info-box">
+                        <p><strong>前门周边设施：</strong>学校前门附近有公交车站，方便师生出行；前门对面有小卖部，为学生提供学习用品；前门东侧是学校自行车停放区，整齐摆放着师生的自行车。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <div class="section">
+                    <h2>前门记忆</h2>
+                    <p>对于许多校友来说，学校前门承载着他们童年的美好回忆。每天清晨，伴着朝阳和鸟鸣，孩子们背着书包从学校前门踏入知识的殿堂。</p>
+                    
+                    <div class="front-gate-placeholder" style="height: 100px;">
+                        <div class="placeholder-text">前门外的学生活动<br><span class="expired-note">※ 图片已过期无法查看</span></div>
+                    </div>
+                    
+                    <p>1997年的学校前门区域进行了翻新，增加了更多的绿化带和休息区，使前门环境更加优美宜人。</p>
+                </div>
+                
+                <div class="section">
+                    <h2>前门活动</h2>
+                    <p>学校前门不仅是进出校园的通道，也是学校开展活动的重要场所：</p>
+                    <ul>
+                        <li>每周一早上的升旗仪式队列从学校前门开始排列</li>
+                        <li>节日庆祝活动时，前门会装饰彩旗和灯笼</li>
+                        <li>家长会时，前门设有接待处迎接家长</li>
+                        <li>新生入学第一天，学校领导会在前门欢迎新同学</li>
+                    </ul>
+                </div>
+                
+                <div class="section">
+                    <h2>1997年大事记</h2>
+                    <ul>
+                        <li>学校前门区域完成改造升级</li>
+                        <li>学校荣获"市级文明校园"称号</li>
+                        <li>前门花园新增雕塑一座</li>
+                        <li>学校操场扩建工程完成</li>
+                        <li>前门安全设施全面更新</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>未来展望</h2>
+            <p>1997年的红旗小学正处在蓬勃发展的时期。学校计划进一步美化学校前门环境，增加更多的文化元素，使前门不仅成为学校的出入口，更成为展示学校文化和精神风貌的窗口。</p>
+            
+            <div class="front-gate-placeholder" style="height: 110px;">
+                <div class="placeholder-text">前门改造规划图<br><span class="expired-note">※ 图片已过期无法查看</span></div>
+            </div>
+            
+            <p>从学校前门望进去，可以看到学校的发展蓝图——更加现代化的教学楼、更加完善的教学设施、更加优美的校园环境。学校前门将见证学校更加辉煌的明天。</p>
+        </div>
+        
+        <div class="footer">
+            <p>红旗小学丨前门介绍 | 本页面基于1997年资料整理</p>
+           <!--  <p>学校前门是学校的象征，承载着师生的共同记忆</p> -->
+        </div>
+        
+        <div class="page-counter">第 1 页</div>
+    </div>
+
+    <script>
+        // 简单交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为图片占位符添加点击效果
+            const placeholders = document.querySelectorAll('.front-gate-placeholder');
+            placeholders.forEach(placeholder => {
+                placeholder.addEventListener('click', function() {
+                    const originalBorderColor = this.style.borderColor;
+                    const originalBackground = this.style.backgroundColor;
+                    
+                    this.style.borderColor = '#cc0000';
+                    this.style.backgroundColor = '#fff0f0';
+                    this.style.transition = 'all 0.3s';
+                    
+                    setTimeout(() => {
+                        this.style.borderColor = originalBorderColor;
+                        this.style.backgroundColor = originalBackground;
+                    }, 800);
+                });
+            });
+            
+            // 学校名称高亮点击效果
+            const schoolHighlights = document.querySelectorAll('.school-highlight');
+            schoolHighlights.forEach(text => {
+                text.addEventListener('click', function() {
+                    const originalBackground = this.style.backgroundColor;
+                    this.style.backgroundColor = '#ffcc00';
+                    
+                    setTimeout(() => {
+                        this.style.backgroundColor = originalBackground;
+                    }, 500);
+                });
+            });
+            
+            // 移动端触摸效果
+            let touchStartY = 0;
+            document.addEventListener('touchstart', function(e) {
+                touchStartY = e.touches[0].clientY;
+            });
+            
+            document.addEventListener('touchend', function(e) {
+                const touchEndY = e.changedTouches[0].clientY;
+                const diff = touchStartY - touchEndY;
+                
+                if (Math.abs(diff) > 50) {
+                    const pageCounter = document.querySelector('.page-counter');
+                    if (pageCounter) {
+                        pageCounter.style.color = '#cc0000';
+                        setTimeout(() => {
+                            pageCounter.style.color = '#999';
+                        }, 300);
+                    }
+                }
+            });
+            
+            // 控制台信息
+            console.log("%c红旗小学介绍", "color: #cc0000; font-size: 16px; font-weight: bold;");
+            console.log("%c展现1997年校园风貌", "color: #666; font-size: 14px;");
+        });
+    </script>
+     <!-- 外部JS文件引用 -->
+    <script src="./search-engine.js"></script>
+    <script src="./storage.js"></script>
+    <script src="./navigation.js"></script>
+    <script src="./visitor.js"></script>
+    <script src="./search-ass.js"></script>
+ 
+<script src="logo-return.js"></script>
+</body>
+</html>

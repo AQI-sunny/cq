@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>银孔雀 - 锦华纺织厂1996年产品宣传</title>
+    <link rel="icon" type="image/jpeg" href="search.png">
+    
+    <!-- 外部CSS链接 -->
+    <link rel="stylesheet" href="search-assistant.css">
+    <link rel="stylesheet" href="visitor.css">
+    <link rel="stylesheet" href="common.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+        }
+
+        .search-container {
+            flex: 0 0 50%;
+            min-width: 300px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            padding: 12px 20px;
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+        }
+
+        .search-bar:hover {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.35);
+        }
+
+        .search-bar:focus-within {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.45);
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            color: #9aa0a6;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: transparent;
+        }
+
+        .search-button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .search-button:hover {
+            background-color: #2b6fd8;
+        }
+
+        /* 页面容器 - 米黄色背景 */
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #FFF8E7;
+            border: 1px solid #e0e0e0;
+            padding: 30px;
+            font-family: "宋体", Arial, sans-serif;
+            font-size: 14px;
+            color: #333333;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #990000;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #990000;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 18px;
+            color: #333366;
+            margin: 20px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid rgba(0,0,0,0.1);
+        }
+
+        h3 {
+            font-size: 16px;
+            margin: 15px 0 8px 0;
+            color: #555;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            background-color: white;
+        }
+
+        td, th {
+            border: 1px solid #ddd;
+            padding: 10px 12px;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .warning {
+            background-color: #fff8e1;
+            border: 1px solid #ffd54f;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            font-size: 12px;
+            color: #777;
+        }
+
+        .highlight {
+            background-color: #e8f4fd;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        a:link, a:visited {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #cc0000;
+            text-decoration: underline;
+        }
+
+        .stamp {
+            float: right;
+            width: 140px;
+            height: 140px;
+            border: 2px dashed #990000;
+            text-align: center;
+            padding: 10px;
+            margin: 0 0 20px 20px;
+            font-family: "楷体", "楷体_GB2312", serif;
+            font-size: 13px;
+            color: #990000;
+            line-height: 1.4;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            word-break: break-all;
+            overflow: hidden;
+            border-radius: 4px;
+            background-color: white;
+        }
+
+        .stamp-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .stamp-line {
+            margin: 3px 0;
+        }
+
+        .contact {
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            margin: 20px 0;
+            border-radius: 6px;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .search-container {
+                width: 100%;
+                min-width: unset;
+            }
+            
+            .container {
+                width: 100%;
+                padding: 20px;
+                font-size: 16px;
+            }
+            
+            h1 {
+                font-size: 22px;
+            }
+            
+            h2 {
+                font-size: 18px;
+            }
+            
+            h3 {
+                font-size: 16px;
+            }
+            
+            table {
+                font-size: 14px;
+            }
+            
+            td, th {
+                padding: 8px 10px;
+                font-size: 14px;
+            }
+            
+            .stamp {
+                float: none;
+                margin: 20px auto;
+                display: block;
+                width: 130px;
+                height: 130px;
+                font-size: 12px;
+            }
+            
+            .search-bar {
+                padding: 10px 15px;
+            }
+            
+            .search-button {
+                padding: 8px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            h2 {
+                font-size: 17px;
+            }
+            
+            table {
+                font-size: 13px;
+            }
+            
+            td, th {
+                padding: 6px 8px;
+                font-size: 13px;
+            }
+            
+            .stamp {
+                width: 120px;
+                height: 120px;
+                font-size: 11px;
+            }
+        }
+
+        /* 银孔雀页面样式 */
+        .content {
+            margin: 20px 0;
+        }
+        
+        .product-image {
+            float: right;
+            margin: 0 0 20px 20px;
+            border: 2px solid #e0e0e0;
+            padding: 5px;
+            background-color: white;
+            width: 220px;
+            height: auto;
+            border-radius: 4px;
+        }
+        
+        .caption {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-top: 8px;
+            font-style: italic;
+        }
+        
+        .quote {
+            font-style: italic;
+            color: #555;
+            border-left: 3px solid #ccc;
+            padding-left: 15px;
+            margin: 15px 0;
+            background-color: white;
+            padding: 12px 15px;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .counter {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 11px;
+            color: #999;
+        }
+        
+        .blink {
+            animation: blink 1.5s infinite;
+        }
+        
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        /* 跑马灯样式 - 简化版，无额外容器 */
+        marquee {
+            display: block;
+            background-color: #990000;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            padding: 12px 0;
+            margin: 20px 0;
+            letter-spacing: 0.5px;
+            border-radius: 6px;
+        }
+        
+        /* 蒋小雨红色删除线样式 */
+        .deleted-name {
+            color: #d32f2f;
+            text-decoration: line-through;
+        }
+        
+        /* 搜索结果弹窗样式 */
+        .search-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow: auto;
+        }
+        
+        .search-modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 25px;
+            border: none;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            font-family: Arial, sans-serif;
+        }
+        
+        .search-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .search-modal-title {
+            font-size: 18px;
+            color: #4285f4;
+            font-weight: bold;
+        }
+        
+        .search-modal-close {
+            color: #999;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .search-modal-close:hover {
+            color: #333;
+        }
+        
+        .search-result-item {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        .search-result-item:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .search-result-title {
+            font-weight: bold;
+            color: #1a73e8;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+        
+        .search-result-snippet {
+            color: #5f6368;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .search-result-highlight {
+            background-color: #fef7e0;
+            padding: 1px 3px;
+            border-radius: 2px;
+        }
+        
+        .search-no-results {
+            text-align: center;
+            padding: 30px 20px;
+            color: #666;
+        }
+        
+        .search-jump-link {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 14px;
+            background-color: #4285f4;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 13px;
+            transition: background-color 0.2s;
+        }
+        
+        .search-jump-link:hover {
+            background-color: #2b6fd8;
+            text-decoration: none;
+        }
+        
+        /* 提高可读性 */
+        .text-content {
+            color: #333;
+            line-height: 1.7;
+        }
+        
+        /* 表格行样式 */
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        table tr:hover {
+            background-color: #f0f8ff;
+        }
+        
+        /* 按钮样式统一 */
+        button {
+            transition: all 0.2s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- 搜索结果弹窗 -->
+    <div id="searchModal" class="search-modal">
+        <div class="search-modal-content">
+            <div class="search-modal-header">
+                <div class="search-modal-title">搜索结果</div>
+                <span class="search-modal-close" onclick="closeSearchModal()">&times;</span>
+            </div>
+            <div id="searchResults"></div>
+        </div>
+    </div>
+
+    <!-- 顶部区域：Logo和搜索栏 -->
+    <div class="header-container">
+        <img src="search.png" alt="深南市诚信拍卖行" class="logo">
+        <div class="search-container">
+            <div class="search-bar">
+                <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索信息...">
+                <button class="search-button" id="searchButton">搜索</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页面内容 -->
+    <div class="container">
+        <!-- 标题 -->
+        <h1>《1996年"银孔雀"产品宣传画册（扫描件）》</h1>
+        
+        <!-- 简化跑马灯，无额外容器 -->
+        <marquee behavior="scroll" direction="left">🌟 "银孔雀"——锦华人的骄傲，飞向世界的翅膀 🌟&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🌟 《锦华风采》——讲咱厂里人，说咱厂里事！ 🌟</marquee>
+        <!-- <marquee behavior="scroll" direction="left"></marquee> -->
+        
+        <!-- 产品图片 -->
+        <div style="text-align: center; margin: 15px 0;">
+            <img src="fengcai.jpg" alt="银孔雀产品宣传图" class="product-image">
+        </div>
+        
+        <!-- 主要内容 -->
+        <div class="content text-content">
+            <p>欢迎访问锦华纺织厂官方产品展示页面！本页面展示我厂1996年推出的明星产品——<span class="highlight">"银孔雀"</span>系列纺织品。</p>
+            
+            <h2>产品简介</h2>
+            <p>"银孔雀"系列是锦华纺织厂于1996年推出的高端纺织品系列，专供出口国际市场。该产品采用当时最先进的纺织技术和优质原材料，以其独特的光泽度和耐用性赢得了国内外客户的一致好评。</p>
+            
+            <div class="quote">
+                "银孔雀"——锦华人的骄傲，飞向世界的翅膀
+            </div>
+            
+            <h2>产品特点</h2>
+            <table>
+                <tr>
+                    <th width="30%">特点</th>
+                    <th width="70%">描述</th>
+                </tr>
+                <tr>
+                    <td>特殊防潮包装</td>
+                    <td>采用特制防潮包装技术，确保产品在长途海运中保持最佳品质</td>
+                </tr>
+                <tr>
+                    <td>高级纺织工艺</td>
+                    <td>使用进口纺织机械，织造密度高于行业标准20%</td>
+                </tr>
+                <tr>
+                    <td>环保染料</td>
+                    <td>全部采用符合国际环保标准的染料，色牢度达到最高等级</td>
+                </tr>
+                <tr>
+                    <td>多样化规格</td>
+                    <td>提供从薄型到厚型的多种规格，满足不同客户需求</td>
+                </tr>
+            </table>
+            
+            <h2>形象代言人</h2>
+            <p>本产品由锦华纺织厂织造车间挡车工、<span class="highlight">1996年厂劳模蒋小雨</span>担任形象代言人。蒋小雨同志以其精湛的技术和敬业精神，成为全厂职工学习的榜样。</p>
+            
+            <h2>市场表现</h2>
+            <p>"银孔雀"系列产品主要出口至东南亚、欧洲和北美市场，年出口额曾占全厂总产值的35%。该产品在1997年荣获"省优产品"称号，并于1998年获得"全国纺织行业优秀出口产品"奖项。</p>
+            
+            <h2>产品规格</h2>
+            <table>
+                <tr>
+                    <th>型号</th>
+                    <th>规格</th>
+                    <th>主要用途</th>
+                    <th>出口地区</th>
+                </tr>
+                <tr>
+                    <td>银孔雀-A型</td>
+                    <td>120cm×100m/卷</td>
+                    <td>高档服装面料</td>
+                    <td>欧洲、北美</td>
+                </tr>
+                <tr>
+                    <td>银孔雀-B型</td>
+                    <td>150cm×80m/卷</td>
+                    <td>家居装饰布料</td>
+                    <td>东南亚</td>
+                </tr>
+                <tr>
+                    <td>银孔雀-C型</td>
+                    <td>180cm×60m/卷</td>
+                    <td>酒店专用布料</td>
+                    <td>全球</td>
+                </tr>
+            </table>
+            
+            <h2>联系我们</h2>
+            <div class="contact">
+                <p>如果您对"银孔雀"系列产品感兴趣，欢迎与我们联系：</p>
+                <p>📞 电话：0755-8824XXXX<br>
+                   📧 邮箱：sales@jinhuatextile.com<br>
+                   🏢 地址：深南市工业南路128号锦华纺织厂销售部</p>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>© 1996-2000 锦华纺织厂 版权所有</p>
+            <p>最后更新日期：2000年12月15日</p>
+            <p>推荐使用IE4.0以上浏览器，800×600分辨率浏览本页面</p>
+            <p class="blink">✨ 欢迎访问锦华纺织厂官方网站 ✨</p>
+        </div>
+    </div>
+
+  
+
+    <script>
+        // 修复字符编码问题后，确保页面正确显示中文
+        // 搜索功能 - 如果外部JS未加载，使用备选方案
+        
+        // 搜索弹窗功能
+        function openSearchModal() {
+            document.getElementById('searchModal').style.display = 'block';
+        }
+        
+        function closeSearchModal() {
+            document.getElementById('searchModal').style.display = 'none';
+        }
+        
+        // 模拟搜索结果数据
+       
+        // 搜索功能
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.trim();
+            
+            if (!searchTerm) {
+                showSearchResults([], "请输入搜索关键词");
+                return;
+            }
+            
+            // 模拟搜索过程
+            const results = searchData.filter(item => {
+                const searchText = searchTerm.toLowerCase();
+                const titleMatch = item.title.toLowerCase().includes(searchText);
+                const snippetMatch = item.snippet.toLowerCase().includes(searchText);
+                const keywordMatch = item.keywords.some(keyword => 
+                    keyword.toLowerCase().includes(searchText)
+                );
+                
+                return titleMatch || snippetMatch || keywordMatch;
+            });
+            
+            if (results.length > 0) {
+                showSearchResults(results, `找到 ${results.length} 个相关结果`);
+            } else {
+                showSearchResults([], `未找到与"${searchTerm}"相关的结果`);
+            }
+        }
+        
+        function showSearchResults(results, title) {
+            const resultsContainer = document.getElementById('searchResults');
+            resultsContainer.innerHTML = '';
+            
+            // 添加标题
+            const titleElement = document.createElement('div');
+            titleElement.className = 'search-modal-title';
+            titleElement.textContent = title;
+            resultsContainer.appendChild(titleElement);
+            
+            if (results.length === 0) {
+                const noResults = document.createElement('div');
+                noResults.className = 'search-no-results';
+                noResults.innerHTML = `
+                    <p>未找到相关结果，请尝试其他关键词。</p>
+                `;
+                resultsContainer.appendChild(noResults);
+            } else {
+                results.forEach(result => {
+                    const resultElement = document.createElement('div');
+                    resultElement.className = 'search-result-item';
+                    resultElement.innerHTML = `
+                        <div class="search-result-title">${result.title}</div>
+                        <div class="search-result-snippet">${result.snippet}</div>
+                        <a href="${result.url}" class="search-jump-link" onclick="closeSearchModal()">查看详情</a>
+                    `;
+                    resultsContainer.appendChild(resultElement);
+                });
+            }
+            
+            openSearchModal();
+        }
+        
+        // 绑定搜索事件
+        document.getElementById('searchButton').addEventListener('click', performSearch);
+        document.getElementById('searchInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        });
+        
+        // 点击弹窗外部关闭弹窗
+        window.onclick = function(event) {
+            const modal = document.getElementById('searchModal');
+            if (event.target === modal) {
+                closeSearchModal();
+            }
+        };
+        
+        // 检测外部JS是否加载成功
+        window.addEventListener('load', function() {
+            console.log('页面加载完成，外部JS应该已加载');
+            
+            // 如果外部search-ass.js加载成功，可能覆盖我们的搜索功能
+            // 这里我们保留我们的搜索功能作为备选方案
+            if (typeof window.externalSearch === 'undefined') {
+                console.log('使用内置搜索功能');
+            } else {
+                console.log('检测到外部搜索功能，使用外部搜索');
+            }
+        });
+    </script>
+      <!-- 外部JavaScript链接 -->
+    <script src="./search-engine.js"></script>
+    <script src="./storage.js"></script>
+    <script src="./navigation.js"></script>
+    <script src="visitor.js"></script>
+    <script src="./search-ass.js"></script>
+</body>
+</html>

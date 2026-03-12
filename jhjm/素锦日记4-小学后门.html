@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>素锦日记 </title>
+    <style>
+        /* ========== 基础复古粉调 ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #ffdbdb;  /* 柔和粉底 */
+            background-image: url('data:image/gif;base64,R0lGODlhBAAEAIABAAAAAP///yH5BAEAAAEALAAAAAAEAAQAAAIFhB6nq4gAOw=='); /* 极淡像素点 */
+            color: #4d2e2e;
+            font-family: "楷体", "KaiTi", "Microsoft YaHei", serif;
+            line-height: 1.7;
+            padding: 15px 10px;
+            max-width: 780px;
+            margin: 0 auto;
+            border-left: 1px solid #dba8a8;
+            border-right: 1px solid #dba8a8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== 复古标题栏 ========== */
+        .header {
+            background: #b97a7a;  /* 粉褐 */
+            background: linear-gradient(145deg, #c98989, #b36868);
+            color: #fff0ed;
+            padding: 18px 10px;
+            text-align: center;
+            border: 2px solid #e5b3b3;
+            border-top: none;
+            box-shadow: 0 4px 6px rgba(150, 60, 60, 0.2);
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 26px;
+            letter-spacing: 2px;
+            text-shadow: 3px 3px 0 #964b4b;
+            font-weight: bold;
+        }
+        .header .subtitle {
+            font-size: 14px;
+            margin-top: 6px;
+            color: #fff0da;
+            font-style: italic;
+        }
+
+        /* ========== 日记主容器 ========== */
+        .diary-container {
+            background-color: #fffbf2;   /* 旧米白 */
+            border: 2px solid #c4877a;
+            border-left: 18px solid #c4877a;  /* 粗边穿孔效果 */
+            padding: 30px 25px;
+            margin: 15px 0 30px;
+            box-shadow: 8px 8px 0 #dba8a8;
+            position: relative;
+            transition: all 0.2s;
+        }
+        /* 穿孔装订线 */
+        .diary-container::before {
+            content: "";
+            position: absolute;
+            left: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 130px;
+            background: #a56b5e;
+            border-radius: 6px;
+            box-shadow: inset -1px -1px 0 #6e3f34;
+        }
+
+        /* 日记日期样式 */
+        .diary-date {
+            text-align: right;
+            font-size: 15px;
+            color: #ab5d4d;
+            border-bottom: 1px dashed #d9a29b;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            font-family: "宋体", monospace;
+        }
+
+        /* 日记正文 */
+        .diary-content {
+            font-size: 17px;
+            text-indent: 2em;
+            word-spacing: 0.5px;
+        }
+        .diary-content p {
+            margin-bottom: 1.2em;
+        }
+        /* 段落中加粗日期/方向 — 突出且怀旧 */
+        .diary-content strong {
+            color: #b3432e;
+            font-weight: 800;
+            background-color: #fff0e0;
+            padding: 0 2px;
+            border-bottom: 1px dotted #d47b7b;
+        }
+        /* 人物名微标记 */
+        .character-name {
+            color: #b14f4f;
+            font-weight: 600;
+            text-decoration: underline wavy #dba8a8 1px;
+        }
+
+        /* 闪烁光标 */
+        .blink {
+            animation: blink 1s step-end infinite;
+            color: #b32626;
+            font-size: 1.2rem;
+            margin-left: 2px;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* 情感落款 */
+        .diary-sign {
+            margin-top: 25px;
+            text-align: right;
+            font-size: 15px;
+            color: #6e4b4b;
+            border-top: 1px dashed #e3b5b5;
+            padding-top: 10px;
+            font-style: italic;
+        }
+
+        /* 复古按钮组 — 纯粹装饰，无弹窗 */
+        .button-panel {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0 10px;
+        }
+        .retro-btn {
+            background: #edb8b8;
+            border: 3px outset #d47b7b;
+            color: #4d2626;
+            padding: 6px 16px;
+            font-family: "宋体", "Courier New", monospace;
+            font-weight: bold;
+            font-size: 14px;
+            letter-spacing: 1px;
+            cursor: default;  /* 无交互，仅装饰 */
+            box-shadow: 2px 2px 0 #b16d6d;
+            transition: 0.1s;
+        }
+        .retro-btn:hover {
+            background: #e2a0a0;
+            border-style: inset;
+            box-shadow: 1px 1px 0 #b16d6d;
+        }
+
+        /* 怀旧分割线 */
+        .hr-97 {
+            border: none;
+            height: 2px;
+            background: repeating-linear-gradient(90deg, #d47b7b, #d47b7b 6px, #fad2d2 6px, #fad2d2 12px);
+            margin: 20px 0;
+        }
+
+        /* 页脚—访客计数器 & 版权 */
+        .footer {
+            text-align: center;
+            font-size: 13px;
+            color: #7b5454;
+            border-top: 1px solid #cf9f9f;
+            margin-top: auto;
+            padding-top: 15px;
+        }
+        .footer span {
+            background: #f3d2d2;
+            padding: 3px 6px;
+            border: 1px solid #b57c7c;
+            font-family: "Courier New", monospace;
+            margin: 0 4px;
+        }
+        .footer a {
+            color: #883e3e;
+            text-decoration: none;
+            border-bottom: 1px dotted #b57373;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+            color: #5e2a2a;
+        }
+
+        /* ========== 修复：搜索栏容器整体居中 ========== */
+        /* 外部包装块：让白底圆角容器在页面上水平居中，同时保留内联特性 */
+        .search-wrapper {
+            display: flex;
+            justify-content: center;    /* 水平居中 */
+            width: 100%;
+            margin-bottom: 8px;          /* 保留一点和header的间距，原结构没有margin，现添加少许不影响 */
+        }
+
+        /* 白底圆角胶囊 — 宽度根据内容自适应，并居中显示 */
+        .white-bg-rounded {
+            background-color: #ffffff;
+            border-radius: 60px;
+            padding: 8px 16px;
+            display: inline-flex;      /* 依然内联flex，使背景包住内容 */
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            max-width: 100%;
+            flex-wrap: wrap;
+        }
+
+        /* logo 大小 */
+        .logo {
+            height: 80px;
+            width: auto;
+            display: block;
+        }
+
+        /* 搜索容器占满剩余空间 */
+        .search-container {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 8px;
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            fill: #5f6368;
+            flex-shrink: 0;
+        }
+
+        .search-input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            font-size: 20px;
+            padding: 8px 0;
+            min-width: 120px;
+        }
+
+        .search-button {
+            border: 1px solid #e0e0e0;
+            background-color: #f8f9fa;
+            border-radius: 40px;
+            padding: 20px 30px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            flex-shrink: 0;
+            color: #3c4043;
+        }
+
+        .search-button:hover {
+            background-color: #f1f3f4;
+            border-color: #dadce0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .search-input::placeholder {
+            color: #9aa0a6;
+        }
+
+        /* 移动端优化 */
+        @media (max-width: 600px) {
+            .diary-container {
+                padding: 20px 15px;
+                border-left-width: 12px;
+            }
+            .diary-container::before {
+                height: 90px;
+                left: -8px;
+            }
+            .diary-content {
+                font-size: 16px;
+            }
+            .search-wrapper {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部区域：Logo和搜索栏 —— 已通过外层 search-wrapper 实现居中 -->
+    <div class="search-wrapper">
+        <div class="white-bg-rounded">
+            <img src="search.png" alt=" " class="logo">
+            <div class="search-container">
+                <div class="search-bar">
+                    <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                    </svg>
+                    <input type="text" class="search-input" id="searchInput" placeholder="搜索其他关键词......">
+                    <button class="search-button" id="searchButton">搜索</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页眉 -->
+    <div class="header">
+        <h1>素锦的日记本</h1>
+        <div class="subtitle">记录心情 · 1997年 · 日记 4 / 7<!-- 第4篇 --></div>
+    </div>
+    
+    <!-- 日记内容 -->
+    <div class="diary-container">
+        <div class="diary-date">1997年██月██日 星期五 多云</div>
+        
+        <div class="diary-content" id="diaryText"> <p>今天去红旗小学接小雪放学。</p> <p>到后门的时候还早，我就在那儿站着，正百无聊赖地四处瞎看呢，冷不丁眼角瞥见两个人影——竟然是<span class="character-name">朱为民和周秃子</span>！他俩鬼鬼祟祟地躲到后门拐角的墙根底下，神色紧张得很，一边说话一边东张西望。</p> <p>我心里直犯嘀咕，这俩啥时候搞一块儿去了？</p> <p>看他俩那模样，绝对不是在聊什么寻常事儿。我琢磨来琢磨去，这两人平日里就不是什么踏实本分的主儿，能凑一块儿，准没好事。可离得远，我压根儿听不清他们在说啥，心里头就跟猫抓似的，好奇得不行。我努力想听清，奈何他俩声音压得实在太低。就见周秃子皱着眉头，一脸凝重地听着，时不时凑到朱为民耳边低声回应几句，一边说着，一边还不时地左右张望，手还在空中比划来比划去。</p> <p>正巧这时候小雪从学校出来了，我怕被发现，赶紧一把拽住小雪，捂住她嘴巴，蹲下来冲她“嘘”了一声，示意她安静。这小丫头片子还怪懂事的，眨巴着那双大眼睛，安安静静地冲我点了点头。</p> <p>我拉着小雪躲在一边，大气儿不敢出，竖起耳朵拼命听——</p> <p>“……风声紧……这笔钱……可别让人发现……”好像是朱为民的声音，断断续续飘过来。</p> <p>“最近……走远点儿……闹鬼那事儿……”周秃子的破锣嗓子压得低低的，听得不真切。</p> <p>安静了一会儿，又模模糊糊听见朱为民说了句：“……她……哪知道……私奔……”</p> <p>私奔？我脑子里“嗡”的一下，这说的是谁跟谁？</p> <p>我还想再听，可俩人说完就匆匆走了，一转眼就没了影儿。我没敢跟上去，拉着小雪的手攥得紧紧的，手心都出汗了。</p> <p>厂里闹鬼的传闻最近传得厉害，他们俩这个时候鬼鬼祟祟提厂里干什么？还有那个“私奔”……我心里越想越不对劲——小雨失踪这么多天了，一点消息都没有，会不会……会不会真跟他俩有关系？</p> <p>他们俩在这儿偷偷摸摸的，也不知道憋着什么坏主意。我真希望是我想多了，可看他俩那鬼鬼祟祟的架势，实在让人放心不下。</p> <p>低头看了看小雪，她就在旁边安安静静地站着，睁着那双大眼睛望着我，一声也不吭。我心里不禁涌上一丝酸楚。爹娘都不在了，唯一的亲姐姐到现在还了无音讯，这可怜孩子往后可咋办。</p> <p>我牵着小雪慢慢往回走，一路上脑子里乱哄哄的，全是刚才那些话。</p> <!-- <p>心里乱得很。从明天起，我得好好盯着他们，要是真有什么歪心思，可不能让他们祸害了人。</p> --> <p><span class="blink">_</span></p> </div>
+    </div>
+    
+    <!-- 交互按钮 — 仅保留外观，所有弹窗已移除，点击无弹窗 -->
+    <!-- <div class="button-container">
+        <button class="retro-button" id="btnWhy">为什么素锦这么生气？</button>
+        <button class="retro-button" id="btnBackground">周的风评如何？</button>
+        <button class="retro-button" id="btnFeeling">素锦此刻的心情</button>
+        <button class="retro-button" id="btnNext">后续会怎样？</button>
+    </div> -->
+    
+    <hr class="hr-97">
+    
+    <!-- 页脚 -->
+    <div class="footer">
+        <p>© 1997 素锦的个人空间 | 本日记仅代表个人观点 | 访问次数: <span id="visitCount">00001</span></p>
+        <p>最佳分辨率 800×600 | 本页使用 IE 4.0 及以上版本浏览效果最佳</p>
+        <!-- <p><a href="javascript:void(0)" id="guestbookLink">留言本</a> | <a href="javascript:void(0)" id="homeLink">返回主页</a></p> -->
+    </div>
+    
+    <script>
+        // 页面访问计数器 (保留，无弹窗关联)
+        document.addEventListener('DOMContentLoaded', function() {
+            // 模拟访问计数
+            let count = localStorage.getItem('diaryVisitCount') || 10001;
+            count = parseInt(count) + 1;
+            localStorage.setItem('diaryVisitCount', count);
+            document.getElementById('visitCount').textContent = count.toString().padStart(5, '0');
+            
+            // 打字机效果
+            const diaryText = document.getElementById('diaryText');
+            const lastParagraph = diaryText.querySelector('p:last-child');
+            const originalText = lastParagraph.innerHTML;
+            lastParagraph.innerHTML = originalText.replace('<span class="blink">_</span>', '');
+            
+            setTimeout(() => {
+                const text = "心里乱得很。从明天起，我得好好盯着他们... ";
+                let i = 0;
+                const typeWriter = () => {
+                    if (i < text.length) {
+                        lastParagraph.innerHTML = text.substring(0, i+1) + '<span class="blink">_</span>';
+                        i++;
+                        setTimeout(typeWriter, 100);
+                    }
+                };
+                typeWriter();
+            }, 1000);
+            
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 1s';
+                document.body.style.opacity = '1';
+            }, 100);
+            
+            // 按钮无事件（纯装饰）
+        });
+    </script>
+    
+    <!-- 外部JS文件引用 -->
+    <script src="./search-engine.js"></script>
+    <script src="./storage.js"></script>
+    <script src="./navigation.js"></script>
+    <script src="./visitor.js"></script>
+    <script src="./search-ass.js"></script>
+    <script src="./logo-return.js"></script> 
+    <!-- <script src="return.js"></script> -->
+</body>
+</html>

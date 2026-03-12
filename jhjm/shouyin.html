@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>红星娱乐城 · 收银台系统</title>
+    <style>
+        /* 1997年怀旧风格 — 移动端优化 */
+        body {
+            background-color: #c0c0c0;
+            font-family: "宋体", "SimSun", "MS Sans Serif", sans-serif;
+            font-size: 14px;
+            color: #000000;
+            margin: 0;
+            padding: 0;
+            -webkit-text-size-adjust: 100%;
+            touch-action: manipulation;
+        }
+        #container {
+            width: 100%;
+            max-width: 800px;
+            min-width: 320px;
+            margin: 0 auto;
+            border: 2px outset #ffffff;
+            background-color: #d4d0c8;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+        #header {
+            background-color: #000080;
+            color: #ffffff;
+            padding: 10px 5px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            word-wrap: break-word;
+        }
+        #visit-time {
+            background-color: #000000;
+            color: #ffff00;
+            font-family: "Courier New", monospace;
+            padding: 8px;
+            margin: 5px 0;
+            font-size: 12px;
+            overflow: hidden;
+        }
+        #main-content {
+            padding: 10px;
+            background-color: #ffffff;
+            border: 2px inset #808080;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+        #login-area {
+            background-color: #d4d0c8;
+            border: 2px inset #808080;
+            padding: 15px;
+            margin: 20px auto;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+        #ledger-content {
+            display: none;
+            background-color: #f5f5f5;
+            border: 2px inset #808080;
+            padding: 10px;
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        .button {
+            background-color: #d4d0c8;
+            border: 2px outset #ffffff;
+            color: #000000;
+            font-family: "宋体", "SimSun", sans-serif;
+            font-size: 14px;
+            padding: 8px 15px;
+            cursor: pointer;
+            margin: 5px;
+            min-height: 44px;
+            min-width: 80px;
+            touch-action: manipulation;
+        }
+        .button:active {
+            border: 2px inset #808080;
+            background-color: #c0c0c0;
+        }
+        input[type="password"] {
+            background-color: #ffffff;
+            border: 2px inset #808080;
+            font-family: "宋体", "SimSun", sans-serif;
+            font-size: 16px;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            min-height: 44px;
+        }
+        .ledger-table {
+            width: 100%;
+            min-width: 500px;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .ledger-table th {
+            background-color: #000080;
+            color: #ffffff;
+            padding: 8px 5px;
+            text-align: left;
+            border: 1px solid #808080;
+            white-space: nowrap;
+        }
+        .ledger-table td {
+            padding: 8px 5px;
+            border: 1px solid #808080;
+            word-break: break-word;
+        }
+        .ledger-table tr:nth-child(even) {
+            background-color: #e8e8e8;
+        }
+        #footer {
+            background-color: #d4d0c8;
+            border-top: 2px outset #ffffff;
+            padding: 10px 5px;
+            text-align: center;
+            font-size: 12px;
+            color: #808080;
+            margin-top: 20px;
+        }
+        .error-message {
+            color: #ff0000;
+            font-weight: bold;
+            margin-top: 10px;
+            display: none;
+            padding: 5px;
+            background-color: #fff0f0;
+            border: 1px solid #ff0000;
+        }
+        .welcome-banner {
+            background-color: #ff0000;
+            color: #ffffff;
+            padding: 8px 5px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        hr {
+            border: 0;
+            height: 2px;
+            background-color: #808080;
+            margin: 15px 0;
+        }
+        /* 自制弹窗 */
+        #custom-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: #d4d0c8;
+            border: 3px outset #ffffff;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
+        }
+        .modal-header {
+            background-color: #000080;
+            color: #ffffff;
+            padding: 10px;
+            margin: -20px -20px 15px -20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .modal-body {
+            padding: 10px 0;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .modal-footer { text-align: center; margin-top: 20px; }
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        .system-status {
+            margin-top: 25px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #808080;
+            font-size: 12px;
+            overflow: hidden;
+        }
+        .table-container {
+            overflow-x: auto;
+            margin: 10px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+        @media (max-width: 480px) {
+            #header { font-size: 18px; }
+            .button { width: 45%; margin: 5px 2%; }
+        }
+
+        /* 搜索栏相关样式 */
+.header-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 20px;
+}
+
+.logo {
+    width: 100px; /* 更小的Logo */
+    height: 100px;
+}
+
+.search-container {
+    flex: 0 0 50%;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border: 1px solid #dfe1e5;
+    border-radius: 24px;
+    padding: 12px 20px;
+    box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+}
+
+.search-bar:hover {
+    box-shadow: 0 1px 8px rgba(32,33,36,0.35);
+}
+
+.search-bar:focus-within {
+    box-shadow: 0 1px 8px rgba(32,33,36,0.45);
+}
+
+.search-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    color: #9aa0a6;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    background: transparent;
+}
+
+.search-button {
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.search-button:hover {
+    background-color: #2b6fd8;
+}
+
+/* 响应式调整 */
+@media (max-width: 900px) {
+    .header-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .search-container {
+        width: 80%;
+    }
+}
+    </style>
+</head>
+<body>
+
+     <!--  Logo和搜索栏 -->
+    <div class="header-container">
+        <img src="search.png" alt=" " class="logo">
+        <div class="search-container">
+            <div class="search-bar">
+                <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索其他关键词...">
+                <button class="search-button" id="searchButton">搜索</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 弹窗 -->
+    <div id="custom-modal">
+        <div class="modal-content">
+            <div class="modal-header" id="modal-header">系统提示</div>
+            <div class="modal-body" id="modal-body">消息</div>
+            <div class="modal-footer">
+                <button class="button" id="modal-ok">确定</button>
+                <button class="button" id="modal-cancel" style="display:none;">取消</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="container">
+        <div id="header">★ 红星娱乐城 ★<br><span style="font-size:16px;">收银台管理系统 v1.0</span></div>
+        <div id="visit-time"></div>
+        
+        <div id="main-content">
+            <div class="welcome-banner">欢迎使用红星娱乐城收银台系统</div>
+            <p>请使用授权密码访问收银台账本。未经授权访问将记录在系统日志中。</p>
+            
+            <!-- 登录区 -->
+            <div id="login-area">
+                <h3>🔒 收银台访问验证</h3>
+                <p>请输入密码以开启收银台账本：</p>
+                <div style="margin:15px 0;">
+                    <label for="password">密码：</label><br>
+                    <input type="password" id="password" maxlength="9" placeholder="9位数字+字母密码">
+                </div>
+                <div class="button-container">
+                    <button class="button" id="login-btn">进入收银台</button>
+                    <button class="button" id="clear-btn">清除</button>
+                </div>
+                <div id="error-message" class="error-message">❌ 密码错误！请重新输入。</div>
+            </div>
+            
+            <!-- 账本区域 (修正后：临渠李哥支出965元，总计正确) -->
+            <div id="ledger-content">
+                <div style="text-align:center; margin-bottom:15px;">
+                    <h2>⭐ 红星娱乐城收银台账本 ⭐</h2>
+                    <p>记录日期：1997年11月</p>
+                </div>
+                <hr>
+                <div class="table-container">
+                    <table class="ledger-table">
+                        <thead>
+                            <tr><th width="30%">日期</th><th width="40%">项目</th><th width="15%">收入(元)</th><th width="15%">支出(元)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1997-11-01</td><td>店面日常收入</td><td>2,800.00</td><td></td></tr>
+                            <tr><td>1997-11-03</td><td>设备维护费用</td><td></td><td>350.00</td></tr>
+                            <!-- 关键修正：临渠李哥 支出 965元 (原为500，按要求改为965) -->
+                            <tr><td>1997-11-05</td><td><strong>临渠李哥</strong></td><td></td><td><strong>965.00</strong></td></tr>
+                            <tr><td>1997-11-08</td><td>酒水进货</td><td></td><td>1,200.00</td></tr>
+                            <tr><td>1997-11-10</td><td>包间预订收入</td><td>1,500.00</td><td></td></tr>
+                            <tr><td>1997-11-12</td><td>员工工资</td><td></td><td>3,800.00</td></tr>
+                            <tr><td>1997-11-15</td><td>设备更新</td><td></td><td>2,500.00</td></tr>
+                            <tr><td>1997-11-18</td><td>会员充值收入</td><td>3,200.00</td><td></td></tr>
+                            <tr><td>1997-11-20</td><td>水电杂费</td><td></td><td>480.00</td></tr>
+                            <tr><td>1997-11-25</td><td>周末活动收入</td><td>4,500.00</td><td></td></tr>
+                        </tbody>
+                        <tfoot>
+                            <!-- 手动重新计算：收入 = 2800+1500+3200+4500 = 12000.00 ? 等一下仔细算:
+                                 2800 (11-01) + 1500 (11-10) + 3200 (11-18) + 4500 (11-25) = 2800+1500=4300; 4300+3200=7500; 7500+4500=12000。确实是12000。
+                                 支出 = 350 + 965 + 1200 + 3800 + 2500 + 480 = 计算: 350+965=1315; +1200=2515; +3800=6315; +2500=8815; +480=9295。净收入 = 12000 - 9295 = 2705。
+                                 表格中原先总计是12500/8330/4170，那是旧数据。现在完全重新求和并更正。
+                                 同时保持格式两位小数。使用纯数字不带千分位逗号便于阅读，但风格上可带逗号。 -->
+                            <tr style="font-weight:bold; background-color:#d4d0c8;">
+                                <td colspan="2">本月总计</td>
+                                <td>12,000.00</td>
+                                <td>9,295.00</td>
+                            </tr>
+                            <tr style="font-weight:bold; background-color:#c0c0c0;">
+                                <td colspan="2">本月净收入</td>
+                                <td colspan="2">2,705.00</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <hr>
+                <div style="margin-top:20px; font-size:12px; color:#808080;">
+                    <p>备注：</p>
+                    <ul>
+                        <li><strong>临渠李哥：965元 (11月5日，VIP客户 ) </strong> </li>
+                        <li>以上数据为1997年6月份收银台账本记录 </li>
+                        <li>系统最后更新：1997-6-30 23:45</li>
+                    </ul>
+                </div>
+                <div class="button-container">
+                    <button class="button" id="lock-btn">锁定账本</button>
+                    <button class="button" id="print-btn">打印账本</button>
+                    <button class="button" id="help-btn">使用帮助</button>
+                </div>
+            </div>
+            
+            <div class="system-status">
+                <strong>系统状态：</strong> 收银台已就绪 | 
+                <strong>当前用户：</strong> <span id="current-user">未登录</span> | 
+                <strong>最后访问：</strong> <span id="last-access">--:--:--</span>
+            </div>
+        </div>
+        
+        <div id="footer">
+            <p>红星娱乐城 © 1997 版权所有</p>
+            <p>地址：红星街28号 | 电话：0531-88889999</p>
+            <p>本系统仅限内部使用，严禁外泄</p>
+            <p style="margin-top:5px;">
+                <img src="data:image/gif;base64,R0lGODlhEAAQAMQfAGtra2xsbG5ubm9vb3BwcHFxcXJycnNzc3R0dHV1dXZ2dnd3d3h4eHl5eXp6ent7e3x8fH19fX5+fn9/f4CAgIGBgYKCgoODg4SEhIWFhYaGhoeHh4iIiImJiYqKiouLi4yMjI2NjY6Ojo+Pj5CQkJGRkZKSkpOTk5SUlJWVlZaWlpeXl5iYmJmZmZqampubm5ycnJ2dnZ6enp+fn6CgoKGhoaKioqOjo6SkpKWlpaampqenp6ioqKmpqaqqqqurq6ysrK2tra6urq+vr7CwsLGxsbKysrOzs7S0tLW1tba2tre3t7i4uLm5ubq6uru7u7y8vL29vb6+vr+/v8DAwMHBwcLCwsPDw8TExMXFxcbGxsfHx8jIyMnJycrKysvLy8zMzM3Nzc7Ozs/Pz9DQ0NHR0dLS0tPT09TU1NXV1dbW1tfX19jY2NnZ2dra2tvb29zc3N3d3d7e3t/f3+Dg4OHh4eLi4uPj4+Tk5OXl5ebm5ufn5+jo6Onp6erq6uvr6+zs7O3t7e7u7u/v7/Dw8PHx8fLy8vPz8/T09PX19fb29vf39/j4+Pn5+fr6+vv7+/z8/P39/f7+/v///yH5BAEAAB8ALAAAAAAQABAAAAWQ4Cd+Zml5pKWx7Pue7xMBiAQBcCzHkRjHQSTJ2wGRAATeSCQ6FgAAUCl6hcYl5IFcIgAXQKphbJbL5m2SqQ0MrtVrQtsJh+GA+5dO2B8Bg3IgCJ8BgYEJAFgJfQAZBgwMAgEDBQUDAQ8RBgAMCgsPDw4NCwYqAwEHBgkKCw0KBxMiBQoLDQ4PEAsHXwUKCw0OEBAJBV8FCgsNEBEQYgUKCw0QEBERADs=" width="88" height="31" alt="Netscape Now!">
+                <img src="data:image/gif;base64,R0lGODlhEAAQAMQfABoaGhsbGxwcHB0dHR4eHh8fHyAgICEhISIiIiMjIyQkJCUlJSYmJicnJygoKCkpKSoqKisrKywsLC0tLS4uLi8vLzAwMDExMTIyMjMzMzQ0NDU1NTY2Njc3Nzg4ODk5OTo6Ojs7Ozw8PD09PT4+Pj8/P0BAQEFBQUJCQkNDQ0REREVFRUZGRkdHR0hISElJSUpKSktLS0xMTE1NTU5OTk9PT1BQUFFRUVJSUlNTU1RUVFVVVVZWVldXV1hYWFlZWVpaWltbW1xcXF1dXV5eXl9fX2BgYGFhYWJiYmNjY2RkZGVlZWZmZmdnZ2hoaGlpaWpqamtra2xsbG1tbW5ubm9vb3BwcHFxcXJycnNzc3R0dHV1dXZ2dnd3d3h4eHl5eXp6ent7e3x8fH19fX5+fn9/f4CAgIGBgYKCgoODg4SEhIWFhYaGhoeHh4iIiImJiYqKiouLi4yMjI2NjY6Ojo+Pj5CQkJGRkZKSkpOTk5SUlJWVlZaWlpeXl5iYmJmZmZqampubm5ycnJ2dnZ6enp+fn6CgoKGhoaKioqOjo6SkpKWlpaampqenp6ioqKmpqaqqqqurq6ysrK2tra6urq+vr7CwsLGxsbKysrOzs7S0tLW1tba2tre3t7i4uLm5ubq6uru7u7y8vL29vb6+vr+/v8DAwMHBwcLCwsPDw8TExMXFxcbGxsfHx8jIyMnJycrKysvLy8zMzM3Nzc7Ozs/Pz9DQ0NHR0dLS0tPT09TU1NXV1dbW1tfX19jY2NnZ2dra2tvb29zc3N3d3d7e3t/f3+Dg4OHh4eLi4uPj4+Tk5OXl5ebm5ufn5+jo6Onp6erq6uvr6+zs7O3t7e7u7u/v7/Dw8PHx8fLy8vPz8/T09PX19fb29vf39/j4+Pn5+fr6+vv7+/z8/P39/f7+/v///yH5BAEAAB8ALAAAAAAQABAAAAWQ4CeOZGmeaKqubOu+cCzPdG3feK7vfO//wKBwSCwaj8ikcslsOp/QqHRKrVqv2Kx2y+16v+CweEwum8/otHrNbrvf8Lh8Tq/b7/i8fs/v+/+AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t/g4SgAOw==" width="88" height="31" alt="Best Viewed With Internet Explorer">
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // 弹窗系统
+        const modal = {
+            el: document.getElementById('custom-modal'),
+            header: document.getElementById('modal-header'),
+            body: document.getElementById('modal-body'),
+            okBtn: document.getElementById('modal-ok'),
+            cancelBtn: document.getElementById('modal-cancel'),
+            resolve: null,
+            show(title, msg, showCancel = false) {
+                this.header.textContent = title;
+                this.body.textContent = msg;
+                this.cancelBtn.style.display = showCancel ? 'inline-block' : 'none';
+                this.el.style.display = 'flex';
+                return new Promise(res => { this.resolve = res; });
+            },
+            hide() {
+                this.el.style.display = 'none';
+                this.resolve = null;
+            }
+        };
+        modal.okBtn.addEventListener('click', () => { if(modal.resolve) modal.resolve(true); modal.hide(); });
+        modal.cancelBtn.addEventListener('click', () => { if(modal.resolve) modal.resolve(false); modal.hide(); });
+        modal.el.addEventListener('click', (e) => { if(e.target === modal.el) { if(modal.resolve) modal.resolve(false); modal.hide(); } });
+
+        // DOM
+        const passwordInput = document.getElementById('password');
+        const errorMsg = document.getElementById('error-message');
+        const ledgerDiv = document.getElementById('ledger-content');
+        const loginArea = document.getElementById('login-area');
+        const currentUserSpan = document.getElementById('current-user');
+        const lastAccessSpan = document.getElementById('last-access');
+        const visitTimeDiv = document.getElementById('visit-time');
+
+        // 修正：原计数器元素已不存在于新版本（之前被注释），为了不影响逻辑，移除相关代码。
+        // 但保留last-access更新功能。
+        
+        function updateVisitTime() {
+            const now = new Date();
+            visitTimeDiv.textContent = '访问时间：' + 
+                now.getFullYear() + '年' + (now.getMonth()+1) + '月' + now.getDate() + '日 ' +
+                now.getHours().toString().padStart(2,'0') + ':' +
+                now.getMinutes().toString().padStart(2,'0') + ':' +
+                now.getSeconds().toString().padStart(2,'0');
+            setTimeout(updateVisitTime, 1000);
+        }
+
+        function updateLastAccess() {
+            const now = new Date();
+            lastAccessSpan.textContent = now.getHours().toString().padStart(2,'0') + ':' +
+                                         now.getMinutes().toString().padStart(2,'0') + ':' +
+                                         now.getSeconds().toString().padStart(2,'0');
+        }
+
+        /* async function checkPassword() {
+            const pwd = passwordInput.value;
+            if(pwd === '8wan66899') {
+                ledgerDiv.style.display = 'block';
+                loginArea.style.display = 'none';
+                currentUserSpan.textContent = '收银员';
+                updateLastAccess();
+                errorMsg.style.display = 'none';
+                await modal.show('登录成功', '欢迎使用红星娱乐城收银台系统！您已成功登录。');
+            } else if(pwd === '') {
+                errorMsg.textContent = '❌ 请输入密码！';
+                errorMsg.style.display = 'block';
+                passwordInput.focus();
+            } else {
+                errorMsg.textContent = '❌ 密码错误！请重新输入。';
+                errorMsg.style.display = 'block';
+                passwordInput.value = '';
+                passwordInput.focus();
+                await modal.show('密码错误', '您输入的密码不正确，请重新输入。');
+            }
+        } */
+       let errorCount = 0;
+       async function checkPassword() {
+    const pwd = passwordInput.value;
+    // 添加错误计数变量（需要在函数外部定义，比如 let errorCount = 0;）
+    
+    if(pwd === '8wan66899' || pwd === '5wan66899' || pwd === '5WAN66899' || pwd === '8WAN66899') {
+        ledgerDiv.style.display = 'block';
+        loginArea.style.display = 'none';
+        currentUserSpan.textContent = '收银员';
+        updateLastAccess();
+        errorMsg.style.display = 'none';
+        errorCount = 0; // 重置错误计数
+        await modal.show('登录成功', '欢迎使用红星娱乐城收银台系统！您已成功登录。');
+    } else if(pwd === '') {
+        errorMsg.textContent = '❌ 请输入密码！';
+        errorMsg.style.display = 'block';
+        passwordInput.focus();
+    } else {
+        errorCount++; // 增加错误计数
+        
+        // 根据错误次数显示不同提示
+        if(errorCount === 2) {
+            errorMsg.textContent = '❌ 密码错误！听哪张牌呢';
+        } else if(errorCount === 3) {
+            errorMsg.textContent = '❌ 密码错误！去掉炸弹试试';
+        } else if(errorCount === 5) {
+            errorMsg.textContent = '❌ 密码错误！去掉两个最大的试试';
+        } else if(errorCount === 6) {
+            errorMsg.textContent = '❌ 密码错误！去掉两个最小的试试';
+        } else {
+            errorMsg.textContent = '❌ 密码错误！请重新输入。';
+        }
+        
+        errorMsg.style.display = 'block';
+        passwordInput.value = '';
+        passwordInput.focus();
+        await modal.show('密码错误', errorMsg.textContent);
+    }
+}
+
+        function clearPassword() {
+            passwordInput.value = '';
+            errorMsg.style.display = 'none';
+            passwordInput.focus();
+        }
+
+        async function lockLedger() {
+            const confirm = await modal.show('确认锁定', '您确定要锁定账本并退出登录吗？', true);
+            if(confirm) {
+                ledgerDiv.style.display = 'none';
+                loginArea.style.display = 'block';
+                currentUserSpan.textContent = '未登录';
+                passwordInput.value = '';
+                errorMsg.style.display = 'none';
+                await modal.show('已锁定', '账本已锁定，请重新输入密码访问。');
+            }
+        }
+
+        async function showHelp() {
+            await modal.show('系统帮助', '使用说明：\n\n1. 输入密码访问账本\n2. 支出已修正\n3. 账本总计：收入12000，支出9295，净收入2705\n4. 使用后及时锁定账本');
+        }
+
+        async function printLedger() {
+            const ok = await modal.show('打印确认', '您确定要打印当前账本内容吗？', true);
+            if(ok) await modal.show('打印提示', '打印功能已调用，请按照设备提示操作。');
+        }
+
+        function init() {
+            updateVisitTime();
+            document.getElementById('login-btn').addEventListener('click', checkPassword);
+            document.getElementById('clear-btn').addEventListener('click', clearPassword);
+            document.getElementById('lock-btn').addEventListener('click', lockLedger);
+            document.getElementById('print-btn').addEventListener('click', printLedger);
+            document.getElementById('help-btn').addEventListener('click', showHelp);
+            passwordInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') checkPassword(); });
+            passwordInput.focus();
+
+            // 检测移动端
+            if(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                document.body.style.fontSize = '16px';
+            }
+
+            // 延迟欢迎语
+            setTimeout(() => {
+                modal.show('欢迎使用', '欢迎来到红星娱乐城收银台系统！请使用授权密码登录。');
+            }, 800);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+    <!-- 外部JS文件引用 -->
+    <script src="./search-engine.js"></script>
+    <script src="./storage.js"></script>
+    <script src="./navigation.js"></script>
+    <script src="./visitor.js"></script>
+    <script src="./search-ass.js"></script>
+<script src="./logo-return.js"></script>
+ <script src="./jinzhi.js"></script>
+</body>
+</html>

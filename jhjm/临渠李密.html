@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> 密码锁 · 书信盒</title>
+    <style>
+        /* ===== 全锁体造型 · 滚轮转盘 (红黑风格) ===== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #0a0202;                /* 极深的暗红色背景 */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 16px;
+            background-image: radial-gradient(circle at 30% 40%, #1f0505 0%, #050000 90%);
+            transition: background-color 0.3s;
+        }
+
+        /* ---------- 整个锁体 (大挂锁) ---------- */
+        .lock-body {
+            background: #1a1a1a;                 /* 深沉的黑灰锁体 */
+            padding: 35px 35px 45px 35px;
+            border-radius: 100px 100px 60px 60px; 
+            box-shadow: 
+                0 20px 0 #0d0d0d,                 
+                0 30px 30px rgba(0,0,0,0.9),
+                inset 0 -8px 10px #000000,
+                inset 0 10px 20px #333333;         
+            border: 4px solid #3a0f0f;           /* 暗红边框 */
+            max-width: 550px;
+            width: 100%;
+            position: relative;
+            background-image: 
+                linear-gradient(90deg, transparent 30%, #2a0a0a 30%, #2a0a0a 70%, transparent 70%);
+            background-size: 100% 6px;
+            background-repeat: no-repeat;
+            background-position: bottom 60px center;
+        }
+
+        /* 锁梁 */
+        .shackle {
+            position: absolute;
+            top: -42px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 80px;
+            border: 12px solid #222;
+            border-bottom: none;
+            border-radius: 120px 120px 0 0;
+            box-shadow: 0 15px 0 #050505, inset 0 6px 12px #444;
+            background: transparent;
+            z-index: 10;
+        }
+        .shackle::before,
+        .shackle::after {
+            content: '';
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background: #111;
+            border-radius: 50%;
+            bottom: -16px;
+            box-shadow: inset -2px -2px 5px #000;
+        }
+        .shackle::before { left: -8px; }
+        .shackle::after { right: -8px; }
+
+        /* ---------- 滚轮转盘区 ---------- */
+        .dial-panel {
+            background: #0d0d0d;                 
+            border-radius: 80px 80px 40px 40px;
+            padding: 25px 15px 25px 15px;
+            margin: 10px 0 30px 0;
+            border: 6px solid #2a0808;           /* 暗红边 */
+            box-shadow: inset 0 0 0 8px #050505, 0 12px 0 #000;
+        }
+
+        .wheels {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 10px 0;
+        }
+
+        .wheel-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 80px;
+        }
+
+        /* 滚轮 */
+        .wheel {
+            width: 80px;
+            height: 100px;
+            background: #111;                
+            border-radius: 40px 40px 20px 20px;   
+            border: 4px solid #222;
+            box-shadow: 
+                0 10px 0 #000,
+                inset 0 -8px 6px #000,
+                inset 0 8px 10px #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background-image: repeating-linear-gradient(180deg, 
+                #1a1a1a 0px, #1a1a1a 4px, 
+                #050505 4px, #050505 10px);
+            background-size: 100% 20px;
+        }
+
+        /* 滚轮上的数字 (血红) */
+        .wheel-number {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 58px;
+            font-weight: 900;
+            color: #d32f2f;                      /* 血红色 */
+            text-shadow: 0 0 10px #ff0000, 0 4px 4px black;
+            background: rgba(0, 0, 0, 0.8);
+            width: 100%;
+            text-align: center;
+            line-height: 1.3;
+            border-radius: 20px;
+            letter-spacing: 2px;
+            backdrop-filter: blur(1px);
+            transform: rotate(0.5deg); 
+        }
+
+        .wheel-indicator {
+            width: 16px;
+            height: 16px;
+            background: #4a0000;                
+            border-radius: 50%;
+            margin-top: 10px;
+            border: 2px solid #8b0000;
+            box-shadow: 0 0 8px #ff0000;
+        }
+
+        /* 当前选中的滚轮高亮 */
+        .wheel-unit.active-wheel .wheel {
+            box-shadow: 0 0 0 4px #b30000, 0 12px 0 #000, inset 0 -8px 6px #000, inset 0 8px 10px #333;
+            transition: box-shadow 0.1s;
+        }
+        .wheel-unit.active-wheel .wheel-number {
+            color: #ff4d4d;
+            text-shadow: 0 0 18px #ff0000;
+        }
+
+        /* ---------- 钥匙孔 & 铭牌 ---------- */
+        .keyhole-block {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0 25px;
+            padding: 0 15px;
+        }
+
+        .keyhole-large {
+            width: 55px;
+            height: 70px;
+            background: #0a0a0a;
+            border-radius: 40px 40px 20px 20px;
+            border: 5px solid #222;
+            box-shadow: inset 0 0 0 6px #111, 0 8px 0 #000;
+            position: relative;
+        }
+        .keyhole-large::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 14px;
+            width: 18px;
+            height: 26px;
+            background: #0a0a0a;
+            border-radius: 20px;
+            border: 5px solid #222;
+            box-shadow: inset 0 0 0 4px #111;
+        }
+
+        .brand {
+            font-size: 32px;
+            font-weight: bold;
+            color: #8b0000;
+            text-shadow: 2px 2px 0 #000;
+            letter-spacing: 6px;
+            background: #111;
+            padding: 10px 28px;
+            border-radius: 60px;
+            border: 3px solid #3a0f0f;
+            box-shadow: inset 0 2px 8px #2a0000, 0 8px 0 #000;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* ---------- 底部状态条 ---------- */
+        .lock-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0d0d0d;
+            border-radius: 60px;
+            padding: 14px 28px;
+            border: 4px solid #2a0808;
+            box-shadow: inset 0 4px 10px #000, 0 10px 0 #050505;
+            margin-top: 20px;
+            color: #d32f2f;
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .led-big {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #2a0000;
+            box-shadow: inset 0 3px 8px black, 0 0 5px #ff0000;
+            border: 3px solid #1a0000;
+        }
+        /* 成功时亮特殊绿光 */
+        .led-green {
+            background: #5fb03e;
+            box-shadow: 0 0 22px #a0f07a, inset 0 2px 10px white;
+        }
+        /* 错误闪动高亮红光 */
+        .led-error {
+            background: #ff0000;
+            box-shadow: 0 0 25px #ff3333, inset 0 2px 10px white;
+        }
+
+        .status-message {
+            letter-spacing: 3px;
+        }
+
+        @media (max-width: 500px) {
+            .wheel { width: 60px; height: 80px; }
+            .wheel-number { font-size: 44px; }
+            .wheel-unit { width: 60px; }
+            .brand { font-size: 24px; padding: 8px 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="lock-body">
+        <div class="shackle"></div>
+
+        <div class="dial-panel">
+            <div class="wheels" id="wheelContainer">
+                <!-- 修改为 3 个滚轮 -->
+                <div class="wheel-unit" data-index="0">
+                    <div class="wheel"><div class="wheel-number" id="digit0">0</div></div>
+                    <div class="wheel-indicator"></div>
+                </div>
+                <div class="wheel-unit" data-index="1">
+                    <div class="wheel"><div class="wheel-number" id="digit1">0</div></div>
+                    <div class="wheel-indicator"></div>
+                </div>
+                <div class="wheel-unit" data-index="2">
+                    <div class="wheel"><div class="wheel-number" id="digit2">0</div></div>
+                    <div class="wheel-indicator"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="keyhole-block">
+            <div class="keyhole-large"></div>
+            <div class="brand">BOX</div>
+        </div>
+
+        <div class="lock-status">
+            <span class="status-message" id="statusMsg">🔒 已锁定</span>
+            <div class="led-big" id="statusLed"></div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ----- 修改为三位密码 965 -----
+            const SECRET = "965";           
+            const MAX_DIGITS = 3;
+
+            let currentCode = ['', '', ''];   
+            let currentPosition = 0;           
+            let unlocked = false;
+            let errorCount = 0;   // 记录错误次数
+
+            const digitEls = [
+                document.getElementById('digit0'),
+                document.getElementById('digit1'),
+                document.getElementById('digit2')
+            ];
+            const wheelUnits = document.querySelectorAll('.wheel-unit');
+            const statusMsg = document.getElementById('statusMsg');
+            const statusLed = document.getElementById('statusLed');
+
+            function updateWheelsDisplay() {
+                for (let i = 0; i < MAX_DIGITS; i++) {
+                    let char = currentCode[i] === '' ? '0' : currentCode[i];
+                    digitEls[i].textContent = char;
+                }
+                wheelUnits.forEach((unit, idx) => {
+                    if (idx === currentPosition && !unlocked) {
+                        unit.classList.add('active-wheel');
+                    } else {
+                        unit.classList.remove('active-wheel');
+                    }
+                });
+            }
+
+            // 获取当前的锁定状态文字 (根据错误次数判断是否显示“支出”)
+            function getLockedText() {
+                return errorCount >= 3 ? '提示：支出' : '🔒 已锁定';
+            }
+
+            function resetLocked(clearAll = true) {
+                unlocked = false;
+                if (clearAll) {
+                    currentCode = ['', '', ''];  
+                    currentPosition = 0;
+                }
+                statusMsg.textContent = getLockedText();
+                statusLed.className = 'led-big';
+                updateWheelsDisplay();
+            }
+
+            function doUnlock() {
+                unlocked = true;
+                errorCount = 0; // 解锁成功重置错误次数
+                statusMsg.textContent = '🔓 已解锁';
+                
+                // ===== 成功后新标签页跳转 =====
+                window.open('sujinriji5-lige.html', '_blank'); 
+                
+                statusLed.className = 'led-big led-green';
+                wheelUnits.forEach(unit => unit.classList.remove('active-wheel'));
+            }
+
+            // 统一的错误处理逻辑
+            function triggerError() {
+                errorCount++;
+                unlocked = false;
+                
+                // 错误满3次显示"支出"，否则显示"错误"
+                statusMsg.textContent = errorCount >= 3 ? '支出' : '⚠️ 错误';
+                statusLed.className = 'led-big led-error';
+                
+                // 屏幕闪烁暗红特效
+                document.body.style.backgroundColor = '#4a0000';
+                
+                // 清空重置滚轮
+                currentCode = ['', '', ''];
+                currentPosition = 0;
+                updateWheelsDisplay();
+
+                setTimeout(() => {
+                    document.body.style.backgroundColor = '';
+                    statusLed.className = 'led-big';
+                    // 闪烁结束后，状态保持为计算后的锁定文字
+                    statusMsg.textContent = getLockedText(); 
+                }, 500);
+            }
+
+            function checkCode() {
+                for (let i = 0; i < MAX_DIGITS; i++) {
+                    if (currentCode[i] === '') return false;
+                }
+                return currentCode.join('') === SECRET;
+            }
+
+            function tryUnlockIfFull() {
+                for (let i = 0; i < MAX_DIGITS; i++) {
+                    if (currentCode[i] === '') return false;
+                }
+                if (checkCode()) {
+                    doUnlock();
+                    return true;
+                } else {
+                    triggerError();
+                    return false;
+                }
+            }
+
+            function handleDigit(digit) {
+                if (unlocked) {
+                    unlocked = false;
+                    currentCode = ['', '', ''];
+                    currentCode[0] = digit;   
+                    currentPosition = 1;        
+                    statusMsg.textContent = getLockedText();
+                    statusLed.className = 'led-big';
+                    updateWheelsDisplay();
+                    return;
+                }
+
+                if (currentPosition < 0 || currentPosition >= MAX_DIGITS) currentPosition = 0;
+                
+                currentCode[currentPosition] = digit;
+
+                if (currentPosition < MAX_DIGITS - 1) {
+                    currentPosition++;
+                }
+                updateWheelsDisplay();
+
+                let allFilled = true;
+                for (let i = 0; i < MAX_DIGITS; i++) {
+                    if (currentCode[i] === '') { allFilled = false; break; }
+                }
+                if (allFilled && !unlocked) {
+                    tryUnlockIfFull();
+                }
+            }
+
+            function handleBackspace() {
+                if (unlocked) {
+                    resetLocked(true);
+                    return;
+                }
+                if (currentPosition < 0) currentPosition = 0;
+                
+                currentCode[currentPosition] = '';
+
+                if (currentPosition > 0) {
+                    currentPosition--;
+                }
+                updateWheelsDisplay();
+            }
+
+            function handleEnter() {
+                if (unlocked) {
+                    resetLocked(true);
+                    return;
+                }
+
+                for (let i = 0; i < MAX_DIGITS; i++) {
+                    if (currentCode[i] === '') {
+                        statusMsg.textContent = '不足3位';
+                        statusLed.className = 'led-big led-error';
+                        document.body.style.backgroundColor = '#4a0000';
+                        setTimeout(() => {
+                            document.body.style.backgroundColor = '';
+                            statusLed.className = 'led-big';
+                            statusMsg.textContent = getLockedText();
+                        }, 400);
+                        
+                        currentCode = ['', '', ''];
+                        currentPosition = 0;
+                        updateWheelsDisplay();
+                        return;
+                    }
+                }
+                
+                if (currentCode.join('') === SECRET) {
+                    doUnlock();
+                } else {
+                    triggerError();
+                }
+            }
+
+            document.addEventListener('keydown', function(e) {
+                const key = e.key;
+                if (key >= '0' && key <= '9') {
+                    e.preventDefault();
+                    handleDigit(key);
+                } else if (key === 'Backspace') {
+                    e.preventDefault();
+                    handleBackspace();
+                } else if (key === 'Enter') {
+                    e.preventDefault();
+                    handleEnter();
+                } else if (key === 'Escape') {
+                    e.preventDefault();
+                    resetLocked(true);
+                } else if (key === 'ArrowLeft') {
+                    e.preventDefault();
+                    if (!unlocked) {
+                        currentPosition = Math.max(0, currentPosition - 1);
+                        updateWheelsDisplay();
+                    }
+                } else if (key === 'ArrowRight') {
+                    e.preventDefault();
+                    if (!unlocked) {
+                        currentPosition = Math.min(MAX_DIGITS - 1, currentPosition + 1);
+                        updateWheelsDisplay();
+                    }
+                }
+            });
+
+            wheelUnits.forEach((unit, idx) => {
+                unit.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (!unlocked) {
+                        currentPosition = idx;
+                        updateWheelsDisplay();
+                    }
+                });
+            });
+
+            resetLocked(true);
+            updateWheelsDisplay();
+
+        })();
+    </script>
+    <script src="./jinzhi.js"></script>
+</body>
+</html>

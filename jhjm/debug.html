@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS加载问题排查 - 锦华纺织厂</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        h1, h2, h3 {
+            color: #333;
+        }
+        
+        .status-box {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 5px solid #ccc;
+        }
+        
+        .success {
+            border-left-color: #4CAF50;
+            background-color: #e8f5e9;
+        }
+        
+        .error {
+            border-left-color: #f44336;
+            background-color: #ffebee;
+        }
+        
+        .warning {
+            border-left-color: #ff9800;
+            background-color: #fff3e0;
+        }
+        
+        .info {
+            border-left-color: #2196F3;
+            background-color: #e3f2fd;
+        }
+        
+        .test-button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .test-button:hover {
+            background-color: #0b7dda;
+        }
+        
+        code {
+            background-color: #f1f1f1;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        
+        pre {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .file-test {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px dashed #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 JS文件加载问题排查工具</h1>
+        <p>此页面将帮助您诊断为什么外部JS文件无法加载。</p>
+        
+        <div class="section">
+            <h2>1. 当前页面信息</h2>
+            <div class="info status-box" id="page-info">
+                <p>正在收集页面信息...</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>2. JS文件路径测试</h2>
+            <p>测试以下JS文件是否能成功加载：</p>
+            
+            <div class="file-test">
+                <h3>文件 1: <code>../js/search-engine.js</code></h3>
+                <button class="test-button" onclick="testFile('../js/search-engine.js', 'file1-status')">测试加载</button>
+                <div id="file1-status"></div>
+            </div>
+            
+            <div class="file-test">
+                <h3>文件 2: <code>../js/storage.js</code></h3>
+                <button class="test-button" onclick="testFile('../js/storage.js', 'file2-status')">测试加载</button>
+                <div id="file2-status"></div>
+            </div>
+            
+            <div class="file-test">
+                <h3>文件 3: <code>../js/navigation.js</code></h3>
+                <button class="test-button" onclick="testFile('../js/navigation.js', 'file3-status')">测试加载</button>
+                <div id="file3-status"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>3. 手动测试路径</h2>
+            <p>手动输入要测试的文件路径：</p>
+            <input type="text" id="custom-path" value="../js/search-engine.js" style="width: 300px; padding: 5px;">
+            <button class="test-button" onclick="testCustomPath()">测试自定义路径</button>
+            <div id="custom-path-result"></div>
+        </div>
+        
+        <div class="section">
+            <h2>4. 相对路径计算</h2>
+            <p>基于当前页面位置，计算相对路径的实际URL：</p>
+            <div id="path-calculation"></div>
+        </div>
+        
+        <div class="section">
+            <h2>5. 网络请求监控</h2>
+            <p>尝试加载文件并监控网络状态：</p>
+            <button class="test-button" onclick="testAllFiles()">测试所有JS文件</button>
+            <button class="test-button" onclick="clearNetworkLog()">清空日志</button>
+            <pre id="network-log"></pre>
+        </div>
+        
+        <div class="section">
+            <h2>6. 解决方案建议</h2>
+            <div id="solutions">
+                <p>根据测试结果，这里将显示解决方案...</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>7. 快速修复（创建测试JS文件）</h2>
+            <p>如果JS文件不存在，可以使用以下代码创建测试文件：</p>
+            <button class="test-button" onclick="showTestFiles()">显示测试文件代码</button>
+            <div id="test-files-code" style="display: none;">
+                <h3>search-engine.js 测试代码：</h3>
+                <pre><code>// search-engine.js - 测试版本
+console.log('search-engine.js 加载成功 - 测试版本');
+
+// 设置标志
+window.searchEngineLoaded = true;
+window.performSearch = function(term) {
+    console.log('搜索功能被调用:', term);
+    return true;
+};
+
+// 绑定事件到搜索按钮
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSearch);
+} else {
+    initSearch();
+}
+
+function initSearch() {
+    console.log('初始化搜索功能...');
+    const btn = document.getElementById('search-button');
+    const input = document.getElementById('search-input');
+    
+    if (btn && input) {
+        console.log('找到搜索元素，绑定事件');
+        btn.addEventListener('click', function() {
+            const term = input.value;
+            if (term.trim()) {
+                alert('搜索功能工作正常！搜索词: ' + term);
+            } else {
+                alert('请输入搜索内容');
+            }
+        });
+    }
+}</code></pre>
+                
+                <h3>创建测试文件的命令（如果使用Node.js）：</h3>
+                <pre><code>// 创建js目录
+mkdir js
+
+// 创建search-engine.js
+echo "console.log('search-engine.js loaded'); window.searchEngineLoaded = true;" > js/search-engine.js
+
+// 创建storage.js
+echo "console.log('storage.js loaded'); window.storageModuleLoaded = true;" > js/storage.js
+
+// 创建navigation.js
+echo "console.log('navigation.js loaded'); window.navigationModuleLoaded = true;" > js/navigation.js</code></pre>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 页面加载后立即执行
+        document.addEventListener('DOMContentLoaded', function() {
+            logToNetwork('页面加载完成');
+            
+            // 显示当前页面信息
+            showPageInfo();
+            
+            // 计算并显示路径
+            calculatePaths();
+            
+            // 尝试自动测试主要文件
+            setTimeout(function() {
+                logToNetwork('开始自动测试JS文件...');
+                testFile('../js/search-engine.js', 'file1-status', true);
+            }, 1000);
+        });
+        
+        // 显示页面信息
+        function showPageInfo() {
+            const pageInfoDiv = document.getElementById('page-info');
+            const info = `
+                <p><strong>当前页面URL:</strong> ${window.location.href}</p>
+                <p><strong>页面路径:</strong> ${window.location.pathname}</p>
+                <p><strong>主机:</strong> ${window.location.host}</p>
+                <p><strong>协议:</strong> ${window.location.protocol}</p>
+                <p><strong>页面所在目录:</strong> ${getCurrentDirectory()}</p>
+                <p><strong>User Agent:</strong> ${navigator.userAgent}</p>
+            `;
+            pageInfoDiv.innerHTML = info;
+        }
+        
+        // 获取当前页面所在目录
+        function getCurrentDirectory() {
+            const path = window.location.pathname;
+            const lastSlash = path.lastIndexOf('/');
+            if (lastSlash > 0) {
+                return path.substring(0, lastSlash + 1);
+            }
+            return '/';
+        }
+        
+        // 计算路径
+        function calculatePaths() {
+            const pathDiv = document.getElementById('path-calculation');
+            const currentDir = getCurrentDirectory();
+            const testPaths = [
+                '../js/search-engine.js',
+                '../js/storage.js', 
+                '../js/navigation.js'
+            ];
+            
+            let html = '<ul>';
+            testPaths.forEach(path => {
+                // 尝试解析相对路径
+                const resolvedUrl = resolveRelativePath(currentDir, path);
+                html += `<li><code>${path}</code> → <strong>${resolvedUrl}</strong></li>`;
+            });
+            html += '</ul>';
+            
+            pathDiv.innerHTML = html;
+        }
+        
+        // 解析相对路径
+        function resolveRelativePath(basePath, relativePath) {
+            // 简单路径解析
+            const baseParts = basePath.split('/').filter(p => p);
+            const relativeParts = relativePath.split('/').filter(p => p);
+            
+            // 处理 ..
+            for (let i = 0; i < relativeParts.length; i++) {
+                if (relativeParts[i] === '..') {
+                    if (baseParts.length > 0) {
+                        baseParts.pop();
+                    }
+                    relativeParts.splice(i, 1);
+                    i--;
+                }
+            }
+            
+            // 构建新路径
+            const resultParts = [...baseParts, ...relativeParts];
+            return '/' + resultParts.join('/');
+        }
+        
+        // 测试单个文件
+        function testFile(path, statusDivId, silent = false) {
+            const statusDiv = document.getElementById(statusDivId);
+            statusDiv.innerHTML = '<div class="info status-box">测试中...</div>';
+            
+            if (!silent) {
+                logToNetwork(`开始测试文件: ${path}`);
+            }
+            
+            // 创建script元素测试加载
+            const script = document.createElement('script');
+            script.src = path;
+            
+            // 设置超时
+            const timeoutId = setTimeout(() => {
+                script.onload = script.onerror = null;
+                const errorMsg = `❌ 文件加载超时: ${path}`;
+                statusDiv.innerHTML = `<div class="error status-box">${errorMsg}</div>`;
+                if (!silent) logToNetwork(errorMsg);
+                updateSolutions();
+            }, 5000);
+            
+            // 成功加载
+            script.onload = function() {
+                clearTimeout(timeoutId);
+                const successMsg = `✅ 文件加载成功: ${path}`;
+                statusDiv.innerHTML = `<div class="success status-box">${successMsg}</div>`;
+                if (!silent) logToNetwork(successMsg);
+                updateSolutions();
+            };
+            
+            // 加载失败
+            script.onerror = function() {
+                clearTimeout(timeoutId);
+                const errorMsg = `❌ 文件加载失败: ${path}`;
+                statusDiv.innerHTML = `<div class="error status-box">${errorMsg}</div>`;
+                if (!silent) logToNetwork(errorMsg);
+                updateSolutions();
+            };
+            
+            // 添加到页面
+            document.head.appendChild(script);
+            
+            // 尝试通过fetch检测
+            fetch(path, { method: 'HEAD' })
+                .then(response => {
+                    if (!silent) {
+                        logToNetwork(`HEAD请求: ${path} - 状态: ${response.status}`);
+                    }
+                })
+                .catch(err => {
+                    if (!silent) {
+                        logToNetwork(`HEAD请求失败: ${path} - 错误: ${err.message}`);
+                    }
+                });
+        }
+        
+        // 测试自定义路径
+        function testCustomPath() {
+            const path = document.getElementById('custom-path').value;
+            const resultDiv = document.getElementById('custom-path-result');
+            resultDiv.innerHTML = '<div class="info status-box">测试中...</div>';
+            
+            fetch(path)
+                .then(response => {
+                    if (response.ok) {
+                        resultDiv.innerHTML = `<div class="success status-box">✅ 文件存在: ${path} (状态: ${response.status})</div>`;
+                    } else {
+                        resultDiv.innerHTML = `<div class="error status-box">❌ 文件不存在或错误: ${path} (状态: ${response.status})</div>`;
+                    }
+                })
+                .catch(err => {
+                    resultDiv.innerHTML = `<div class="error status-box">❌ 无法访问: ${path} (错误: ${err.message})</div>`;
+                });
+        }
+        
+        // 测试所有文件
+        function testAllFiles() {
+            logToNetwork('=== 开始批量测试所有JS文件 ===');
+            testFile('../js/search-engine.js', 'file1-status', true);
+            setTimeout(() => testFile('../js/storage.js', 'file2-status', true), 1000);
+            setTimeout(() => testFile('../js/navigation.js', 'file3-status', true), 2000);
+        }
+        
+        // 网络日志
+        function logToNetwork(message) {
+            const logElement = document.getElementById('network-log');
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.textContent += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+            
+            // 同时输出到控制台
+            console.log(`[排查工具] ${message}`);
+        }
+        
+        // 清空网络日志
+        function clearNetworkLog() {
+            document.getElementById('network-log').textContent = '';
+        }
+        
+        // 显示解决方案
+        function updateSolutions() {
+            const solutionsDiv = document.getElementById('solutions');
+            let solutions = '<h3>可能的解决方案：</h3><ol>';
+            
+            // 根据当前情况提供建议
+            solutions += '<li><strong>检查文件是否存在</strong>：确认js文件夹中有这些文件</li>';
+            solutions += '<li><strong>检查文件权限</strong>：确保Web服务器可以读取这些文件</li>';
+            solutions += '<li><strong>使用绝对路径</strong>：尝试使用绝对路径如 <code>/js/search-engine.js</code></li>';
+            solutions += '<li><strong>检查控制台错误</strong>：按F12打开开发者工具，查看Console标签页</li>';
+            solutions += '<li><strong>检查网络请求</strong>：在Network标签页查看JS文件是否成功加载</li>';
+            solutions += '<li><strong>清除缓存</strong>：按Ctrl+F5强制刷新页面</li>';
+            solutions += '<li><strong>检查文件内容</strong>：确保JS文件没有语法错误</li>';
+            solutions += '</ol>';
+            
+            solutionsDiv.innerHTML = solutions;
+        }
+        
+        // 显示测试文件代码
+        function showTestFiles() {
+            document.getElementById('test-files-code').style.display = 'block';
+        }
+        
+        // 初始日志
+        logToNetwork('JS加载排查工具已启动');
+        logToNetwork(`当前URL: ${window.location.href}`);
+        logToNetwork(`页面路径: ${window.location.pathname}`);
+    </script>
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>素锦日记 · 1997</title>
+    <style>
+        /* ========== 基础复古粉调 ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #ffdbdb;  /* 柔和粉底 */
+            background-image: url('data:image/gif;base64,R0lGODlhBAAEAIABAAAAAP///yH5BAEAAAEALAAAAAAEAAQAAAIFhB6nq4gAOw=='); /* 极淡像素点 */
+            color: #4d2e2e;
+            font-family: "楷体", "KaiTi", "Microsoft YaHei", serif;
+            line-height: 1.7;
+            padding: 15px 10px;
+            max-width: 780px;
+            margin: 0 auto;
+            border-left: 1px solid #dba8a8;
+            border-right: 1px solid #dba8a8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== 复古标题栏 ========== */
+        .header {
+            background: #b97a7a;  /* 粉褐 */
+            background: linear-gradient(145deg, #c98989, #b36868);
+            color: #fff0ed;
+            padding: 18px 10px;
+            text-align: center;
+            border: 2px solid #e5b3b3;
+            border-top: none;
+            box-shadow: 0 4px 6px rgba(150, 60, 60, 0.2);
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 26px;
+            letter-spacing: 2px;
+            text-shadow: 3px 3px 0 #964b4b;
+            font-weight: bold;
+        }
+        .header .subtitle {
+            font-size: 14px;
+            margin-top: 6px;
+            color: #fff0da;
+            font-style: italic;
+        }
+
+        /* ========== 日记主容器 ========== */
+        .diary-container {
+            background-color: #fffbf2;   /* 旧米白 */
+            border: 2px solid #c4877a;
+            border-left: 18px solid #c4877a;  /* 粗边穿孔效果 */
+            padding: 30px 25px;
+            margin: 15px 0 30px;
+            box-shadow: 8px 8px 0 #dba8a8;
+            position: relative;
+            transition: all 0.2s;
+        }
+        /* 穿孔装订线 */
+        .diary-container::before {
+            content: "";
+            position: absolute;
+            left: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 130px;
+            background: #a56b5e;
+            border-radius: 6px;
+            box-shadow: inset -1px -1px 0 #6e3f34;
+        }
+
+        /* 日记日期样式 */
+        .diary-date {
+            text-align: right;
+            font-size: 15px;
+            color: #ab5d4d;
+            border-bottom: 1px dashed #d9a29b;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            font-family: "宋体", monospace;
+        }
+
+        /* 日记正文 */
+        .diary-content {
+            font-size: 17px;
+            text-indent: 2em;
+            word-spacing: 0.5px;
+        }
+        .diary-content p {
+            margin-bottom: 1.2em;
+        }
+        /* 段落中加粗日期/方向 — 突出且怀旧 */
+        .diary-content strong {
+            color: #b3432e;
+            font-weight: 800;
+            background-color: #fff0e0;
+            padding: 0 2px;
+            border-bottom: 1px dotted #d47b7b;
+        }
+        /* 人物名微标记 */
+        .character-name {
+            color: #b14f4f;
+            font-weight: 600;
+            text-decoration: underline wavy #dba8a8 1px;
+        }
+
+        /* 闪烁光标 */
+        .blink {
+            animation: blink 1s step-end infinite;
+            color: #b32626;
+            font-size: 1.2rem;
+            margin-left: 2px;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* 情感落款 */
+        .diary-sign {
+            margin-top: 25px;
+            text-align: right;
+            font-size: 15px;
+            color: #6e4b4b;
+            border-top: 1px dashed #e3b5b5;
+            padding-top: 10px;
+            font-style: italic;
+        }
+
+        /* 复古按钮组 — 纯粹装饰，无弹窗 */
+        .button-panel {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0 10px;
+        }
+        .retro-btn {
+            background: #edb8b8;
+            border: 3px outset #d47b7b;
+            color: #4d2626;
+            padding: 6px 16px;
+            font-family: "宋体", "Courier New", monospace;
+            font-weight: bold;
+            font-size: 14px;
+            letter-spacing: 1px;
+            cursor: default;  /* 无交互，仅装饰 */
+            box-shadow: 2px 2px 0 #b16d6d;
+            transition: 0.1s;
+        }
+        .retro-btn:hover {
+            background: #e2a0a0;
+            border-style: inset;
+            box-shadow: 1px 1px 0 #b16d6d;
+        }
+
+        /* 怀旧分割线 */
+        .hr-97 {
+            border: none;
+            height: 2px;
+            background: repeating-linear-gradient(90deg, #d47b7b, #d47b7b 6px, #fad2d2 6px, #fad2d2 12px);
+            margin: 20px 0;
+        }
+
+        /* 页脚—访客计数器 & 版权 */
+        .footer {
+            text-align: center;
+            font-size: 13px;
+            color: #7b5454;
+            border-top: 1px solid #cf9f9f;
+            margin-top: auto;
+            padding-top: 15px;
+        }
+        .footer span {
+            background: #f3d2d2;
+            padding: 3px 6px;
+            border: 1px solid #b57c7c;
+            font-family: "Courier New", monospace;
+            margin: 0 4px;
+        }
+        .footer a {
+            color: #883e3e;
+            text-decoration: none;
+            border-bottom: 1px dotted #b57373;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+            color: #5e2a2a;
+        }
+
+            /* 给整个头部容器添加白底圆角 */
+    .white-bg-rounded {
+        background-color: #ffffff;
+        border-radius: 60px; /* 较大的圆角，使整体呈胶囊状 */
+        padding: 8px 16px;    /* 内边距让内部元素不贴边 */
+        display: inline-flex;  /* 改为行内弹性盒，让背景根据内容收缩 */
+        align-items: center;
+        gap: 12px;            /* logo 和搜索框之间的间距 */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* 可选：增加一点层次感 */
+        max-width: 100%;       /* 响应式限制 */
+        flex-wrap: wrap;       /* 极小屏幕时允许换行 */
+    }
+
+    /* 保持原有布局结构，但移除可能干扰的背景 */
+    .header-container {
+        /* 原有样式可能还存在，这里我们覆盖关键项 */
+        display: inline-flex;  /* 与上面的 white-bg-rounded 保持一致 */
+        align-items: center;
+        /* 如果有背景或边框会被 white-bg-rounded 覆盖 */
+    }
+
+    /* 调整 logo 大小以适应新的内边距 */
+    .logo {
+        height: 40px;
+        width: auto;
+        display: block;
+    }
+
+    /* 搜索容器占满剩余空间 */
+    .search-container {
+        flex: 1;
+        min-width: 200px;      /* 防止搜索框被压缩过小 */
+    }
+
+    /* 保持搜索栏内部 flex 布局，不需要额外背景 */
+    .search-bar {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        gap: 8px;
+    }
+
+    /* 搜索图标样式微调 */
+    .search-icon {
+        width: 20px;
+        height: 20px;
+        fill: #5f6368;
+        flex-shrink: 0;
+    }
+
+    /* 输入框占满剩余空间，无边框，背景透明 */
+    .search-input {
+        border: none;
+        background: transparent;
+        outline: none;
+        flex: 1;
+        font-size: 16px;
+        padding: 8px 0;
+        min-width: 120px;
+    }
+
+    /* 搜索按钮样式：白色背景，圆角，柔和边框 */
+    .search-button {
+        border: 1px solid #e0e0e0;
+        background-color: #f8f9fa;
+        border-radius: 40px;
+        padding: 8px 20px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.2s, box-shadow 0.2s;
+        flex-shrink: 0;
+        color: #3c4043;
+    }
+
+    .search-button:hover {
+        background-color: #f1f3f4;
+        border-color: #dadce0;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    /* 占位符颜色 */
+    .search-input::placeholder {
+        color: #9aa0a6;
+    }
+
+        /* 移动端优化 */
+        @media (max-width: 600px) {
+            .diary-container {
+                padding: 20px 15px;
+                border-left-width: 12px;
+            }
+            .diary-container::before {
+                height: 90px;
+                left: -8px;
+            }
+            .diary-content {
+                font-size: 16px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="sousuolan.css">
+    
+</head>
+<body>
+    <!-- 顶部区域：Logo和搜索栏 -->
+    <div class="header-container white-bg-rounded">
+    <img src="search.png" alt=" " class="logo">
+    <div class="search-container">
+        <div class="search-bar">
+            <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+            </svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="搜索其他关键词...注意联想...">
+            <button class="search-button" id="searchButton">搜索</button>
+        </div>
+    </div>
+  </div>
+
+
+
+    <!-- 页眉 — 1997风格标题 -->
+    <div class="header">
+        <h1>✎ 素锦的日记本 ✎</h1>
+      <!--   <div class="subtitle">「老厂·徒弟·小雨」</div> -->
+         <div class="subtitle">记录心情 · 1997年 · 日记 2 / 7</div>
+    </div>
+
+    <!-- 日记主体 -->
+    <div class="diary-container">
+        <!-- 装饰日期线 (浮动日期) -->
+        <div class="diary-date">
+            <span>最后更新：1997年6月10日 ｜ 当日天气：小雨 ｜ 心情：<span style="color:#b33;">悲</span></span>
+        </div>
+
+        <!-- 日记内容 —— 整合所有事件，优化语气与细节，保留日期加重、方向加粗 -->
+        <div class="diary-content" id="diaryText">
+            <p><strong>1997年3月21日</strong></p>
+            <p>今天下班后送小雨回家。这丫头进厂快一年了，我还是头一回往她家那边走。她家在老城区，巷子七拐八绕，把我这来了十几年的老职工都绕晕了。</p>
+            <p>“师傅，您记好咯——从厂门口往<strong>北</strong>走，过两个红绿灯，看见那棵大槐树就朝<strong>东</strong>拐，顺着巷子到三岔口再往<strong>西</strong>，最后走五十步朝<strong>南</strong>一拐就到啦！”小雨一边比划，眼睛亮得像星星。</p>
+            <p>我笑她：“这么绕的路，亏你记得住。”她扬起脸：“从小走到大，闭着眼都能摸回去！”多好的姑娘，又聪明又肯干，学手艺一点就通。我带过这么多徒弟，属她最贴心。</p>
+
+            <p><strong>1997年4月20日</strong></p> 
+<p>今儿是小雨过生日。前些天她就跟我念叨，说今年生日正好赶上周日，能好好歇一天。</p><p>下班我去买了个小蛋糕，照着上回的路线往她家走。巷子里七拐八绕的，这回倒没绕晕，就是心里头不是滋味——听小雨说她爹娘<strong>农历三月四</strong>走的，那年的生日，怕是不好过...</p><p>推门进去，小雨正蹲在地上洗衣服，一个小丫头趴在凳子上画画。我这才知道她还有个妹妹，叫小雪，念小学三年级。这孩子，进厂快一年了，愣是没跟我提过。</p><p>看见我来，小雨愣了愣，手在围裙上蹭了蹭：“师傅，您咋来了？”</p><p>“来给我徒弟过生日呀！”</p><p>她眼圈一下子就红了，又笑着把小雪拉过来：“快叫师傅！今儿周日，小雪不用上学，在家陪我呢。”</p><p>小雪怯生生喊了声“师傅”，眼睛却一直盯着我手里的蛋糕盒子。我瞅了瞅她画的画，是一只好看的鸟，羽毛画得细细的，活灵活现。</p><p>“画得真好！”我夸她。</p><p>小雪眼睛亮起来：“老师也这么说！说我有天分，将来能考艺术特招，去大城市念书！”</p><p>小雨在旁边笑，眼里头带着得意，又有点说不清的东西。</p><p>蛋糕拆开，小雨翻了半天抽屉，找出一截红蜡烛。小雪歪着脑袋数了数，忽然说：“姐，一根不够，你等我一下。”</p><p>说着从床底下翻出个铁盒子，里头是她攒的铅笔头、彩色粉笔头，还有几根用过的短蜡烛。她一根一根摆在桌上，认认真真数：“一、二、三……姐，正好八根！”</p><p>我乐了：“怎么非得八根？”</p><p>小雪仰起脸：“<strong>八是姐姐的幸运数字！</strong>而且呀，姐姐名字叫小雨，雨字你数数，正好八画！”</p><p>小雨脸一红，拿眼瞪妹妹：“瞎说啥！”又转过头跟我解释，“师傅，我就是觉着八这数字顺溜，听着踏实。如果当初爹娘八号再出门的话...”</p>
+<p>屋里静了一下。小雪把八根蜡烛一根根插好，歪歪扭扭的，火苗一跳一跳，照得小雨脸上忽明忽暗。</p>
+<!-- <p>小雪又说：“我也喜欢四！但姐说了，八是咱们的福气，想我娘的时候，就想想雨字怎么写，一横一竖，最后那几点，就跟眼泪似的，但流完了就晴天。等我将来考上艺术学校，挣了钱，第一件事就是给姐买个大蛋糕，插八根大蜡烛！”</p> -->
+
+<p>小雨<!-- 被她逗笑了，笑着笑着眼圈又红了。她 -->从兜里掏出皱巴巴两块钱：“去，到巷口买瓶汽水，给师傅倒一碗。”</p><p>小雪接过钱，蹦蹦跳跳跑出去。小雨对着八根蜡烛愣了一会儿神，凑上去轻轻吹灭，嘴里念叨了两句什么...<!-- ，我没听清，也没问。 --></p>
+<p>“...无法摆脱4...<strong>7年了</strong>...小雪她...” 我没太听清</p>
+<p>等她妹妹抱着汽水回来，小雨正切蛋糕。她切了块最大的给我，又切了块大的给妹妹，自己碗里只剩一小块。小雪把汽水递给我，又跑回桌边继续画她那幅画。</p><p>我接过来尝了一口蛋糕，甜的，但心里头有点酸，又有点热乎。看着小雪低头画画的样子，心想这孩子是真聪明，将来怕真是要飞到大城市去的。<!-- 到那时候，小雨一个人守着这老屋子，怕是更冷清了。 --></p><p>走的时候天黑了，月亮刚上来。小雪追出来两步，冲我喊：“师傅再见！等我画画得了奖，送您一张！”</p><p>我应着，心想这孩子说话跟她姐一样，透着一股让人疼的劲儿。巷子走到头，回头还能看见那屋里的灯，昏黄的一点光。<!-- 雨字八画—— -->但愿<strong>8这个数</strong>真能给她们姐妹带来好运气。</p>
+            <p><strong>1997年5月28日</strong></p>
+            <p>今天干活时，我忍不住跟小雨说了心里话：“师傅<strong>这周六</strong>打算去看个<strong>电影</strong>……和一个认识不久的朋友。”</p>
+            <p>小雨立刻放下手里的零件，眼睛瞪得溜圆：“师傅！是男的啵？是不是？”</p>
+            <p>我脸一下子热起来，轻轻推她一下：“死丫头，问这么多干嘛。”她笑得咯咯响，说师傅你也该有自己的日子啦，别整天围着车间和我转。那一刻我心里暖融融的——这丫头，明面上我照顾她，其实她一直悄悄惦记着我。</p>
+            <p>“师傅，看完<strong>电影</strong>一定给我讲讲好不好看！”她追着问。我点头说好。那个下午，车间里的斜阳特别温柔，我们俩边干活边聊天，笑声落在刨花和图纸上。</p>
+
+            <p><strong>1997年6月6日</strong></p>
+            <p>小雨今天没来。</p>
+            <p>起初我没在意，年轻人嘛，也许睡过头。可到下午她都没出现，也没托人捎话。下班后我去宿舍找，门锁着。隔壁的说，昨天下班还见她，今天一早就不见人影。我心里忽然一阵慌。</p>
+
+            <p><strong>1997年6月7日</strong></p>
+            <p>还是没来。我请了假，顺着三月里小雨指的路去找她家——从厂门口往北，过两个红绿灯，看见大槐树往东拐，顺巷子到三岔口往西，五十步再往南一拐。我敲了半小时门，没人应。邻居说这两天都没见着她。</p>
+            <p>往回走的路上，腿像灌了铅。那孩子说的“闭着眼都能摸回去”，可她现在摸到哪儿去了？</p>
+
+            <p><strong>1997年6月10日</strong></p>
+            <p>四天了。厂里报了警，我也去派出所录了话。警察问什么都答不上来，只记得那条路——<strong>往北，往东，往西，往南</strong>。还有她说“谢谢师傅”时圆圆的笑脸。</p>
+            <p>今天整理她的工位，看见我给她画的图纸，边角上用圆珠笔工工整整写着“师傅的图纸画的真好”。我就站在那儿，眼泪止不住地流。</p>
+            <p>小雨啊，你到底去了哪儿？<!-- 你不是要听师傅讲那天的<strong>电影</strong>吗？不是说我该有自己的日子吗？ -->你怎么就这样不见了？</p>
+            <p>每天下班我还是往她宿舍那边望。总想着，也许哪天一推门，她就蹦蹦跳跳跑过来，喊我一声“师傅”<!-- ，然后问：“<strong>电影</strong>好看吗？” --></p>
+            <p>可是没有。一天都没有。</p>
+            <p>那条路我记得牢牢的：厂门口往北，过两个红绿灯，东拐，西拐，走五十步往南拐……可是走多少遍，都再也见不到她了。</p>
+            <!-- <p><span style="color:#b33;">那场电影我也没去看——哪还有心思呢。</span></p> -->
+            <p>小雨，师傅想你啊。<span class="blink">_</span></p>
+        </div>
+
+        <!-- 复古签名 -->
+        <div class="diary-sign">
+            —— 素锦 于 10日深夜
+        </div>
+    </div>
+
+    <!-- 装饰性按钮条 (无任何弹窗/交互，纯风格) -->
+   <!--  <div class="button-panel">
+        <span class="retro-btn">◀ 上一篇</span>
+        <span class="retro-btn">返回目录</span>
+        <span class="retro-btn">下一篇 ▶</span>
+    </div> -->
+
+    <hr class="hr-97">
+
+    <!-- 页脚 + 访客计数器 (保留原功能但简化) -->
+    <div class="footer">
+        <p>© 1997 素锦的个人日记 | 本日记仅代表个人观点<!--  | 访问次数: <span id="visitCount">10001</span> --></p>
+        <p>最佳分辨率 800×600 | 建议使用 IE 4.0 浏览</p>
+       <!--  <p>
+            <a href="javascript:void(0)" onclick="return false;">留言本</a> · 
+            <a href="javascript:void(0)" onclick="return false;">返回主页</a> · 
+            <a href="javascript:void(0)" onclick="return false;">关于本站</a>
+        </p> -->
+    </div>
+
+    <!-- 极简脚本：仅保留计数器累加 & 打字机闪烁效果 (移除所有弹窗) -->
+    <script>
+        (function() {
+            // 访客计数器
+            let count = localStorage.getItem('diaryVisitCount') || 10001;
+            count = parseInt(count) + 1;
+            localStorage.setItem('diaryVisitCount', count);
+            document.getElementById('visitCount').textContent = count.toString().padStart(5, '0');
+
+            // 让最后的闪烁光标自然存在 (html里已有blink span)
+            // 给页面加一点渐入效果
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.9s';
+                document.body.style.opacity = '1';
+            }, 30);
+
+            // 确保所有“按钮”和链接点击不产生任何动作 (但也不报错)
+            const inertLinks = document.querySelectorAll('a[href="javascript:void(0)"]');
+            inertLinks.forEach(link => {
+                link.addEventListener('click', (e) => e.preventDefault());
+            });
+            // 完全无弹窗，无额外函数
+        })();
+    </script>
+    <!-- 保留原有引用但无实质影响 -->
+      <!-- 外部JS文件引用 -->
+    <script src="./search-engine.js"></script>
+    <script src="./storage.js"></script>
+    <script src="./navigation.js"></script>
+    <script src="./visitor.js"></script>
+    <script src="./search-ass.js"></script>
+    <script src="logo-return.js"></script>
+   <!--  <script src="return.js"></script> -->
+</body>
+</html>

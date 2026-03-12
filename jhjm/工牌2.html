@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1997 锦华纺织厂 · 设备科 王强</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #918870;
+            background-image: 
+                radial-gradient(circle at 18% 42%, rgba(100, 80, 45, 0.2) 2px, transparent 3px),
+                radial-gradient(circle at 83% 67%, rgba(70, 50, 30, 0.25) 1px, transparent 3px),
+                linear-gradient(125deg, #b2a182 0%, #7f6e58 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', monospace;
+            padding: 20px;
+            margin: 0;
+            position: relative;
+        }
+        body::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(45deg, rgba(230,210,170,0.03) 0px, rgba(230,210,170,0.03) 6px, rgba(40,30,10,0.02) 6px, rgba(40,30,10,0.02) 12px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* 工牌主体 — 工业/设备科气质 保留但简化线条 */
+        .badge {
+            position: relative;
+            width: 400px;
+            max-width: 92vw;
+            background: #dacdb6;      
+            background: linear-gradient(160deg, #efe2cc 0%, #cdbb9f 80%);
+            border: 12px solid #4f5d4f;  
+            border-radius: 12px 30px 12px 30px; 
+            box-shadow: 
+                0 18px 24px -12px #1f1a10,
+                0 0 0 4px #747a62 inset,        
+                inset 0 -12px 18px rgba(60, 50, 30, 0.4),
+                inset 0 8px 15px #fffae8;
+            padding: 20px 22px 24px;
+            z-index: 10;
+            &::after {
+                content: "";
+                position: absolute;
+                top: 10px; left: 10px; right: 10px; bottom: 10px;
+                border-radius: 10px 20px 10px 20px;
+                background: repeating-linear-gradient(35deg, 
+                    transparent, 
+                    transparent 12px, 
+                    rgba(80, 80, 50, 0.04) 12px, 
+                    rgba(80, 80, 50, 0.04) 24px);
+                pointer-events: none;
+            }
+        }
+
+        /* 厂区头 — 锦华纺织厂 + 设备科特色 不变 */
+        .factory-header {
+            text-align: center;
+            border-bottom: 4px solid #5a6045;
+            padding-bottom: 8px;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
+        .factory-name {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #2d3e2d;
+            text-shadow: 2px 2px 0 #b79f7a, 4px 4px 0 #3a3a2a;
+            line-height: 1.1;
+        }
+        .slogan {
+            font-size: 0.72rem;
+            color: #eef0da;
+            background: #43523b;
+            display: inline-block;
+            padding: 5px 18px;
+            border-radius: 40px;
+            margin-top: 6px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            border: 1px solid #b5aa7a;
+            box-shadow: inset 0 -2px 4px #1d321d;
+            text-shadow: 0 1px 2px #131313;
+        }
+
+        /* 照片+名字区 — 全部居中: flex 居中 + 内部元素微调 */
+        .photo-id-section {
+            display: flex;
+            gap: 18px;
+            margin: 12px 0 22px;
+            align-items: center;
+            justify-content: center;  /* 水平居中 */
+            flex-wrap: wrap;          /* 避免极端挤压 */
+        }
+        .photo-placeholder {
+            width: 120px;
+            height: 140px;
+            background: #a18f70;
+            background: linear-gradient(145deg, #7f6d50, #bbaa88);
+            border: 6px solid #44553a;
+            border-radius: 6px 18px 6px 18px;
+            box-shadow: 
+                0 6px 10px rgba(0,0,0,0.6),
+                inset -4px -4px 10px #554e3a,
+                inset 4px 4px 14px #eeddbb;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-0.8deg);
+            flex-shrink: 0;
+            margin: 0 auto;           /* 额外确保自身居中 */
+        }
+        /* 照片中的「模拟像」 */
+        .photo-placeholder::before {
+            content: "";
+            width: 76px;
+            height: 90px;
+            background: #373d2b;
+            background: radial-gradient(circle at 35% 35%, #676d4f, #262e1c);
+            border-radius: 4px;
+            border: 3px solid #5c6b44;
+            box-shadow: inset 0 0 0 3px #cfb991, 0 2px 6px black;
+            margin-bottom: 6px;
+        }
+        .photo-placeholder::after {
+            content: "王强";   /* 改名为王强 (已存在) */
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #f8f2da;
+            text-shadow: 2px 2px 0 #253121;
+            background: #435a3a;
+            padding: 4px 14px;
+            border-radius: 30px;
+            letter-spacing: 1px;
+            border: 1px solid #dbbc83;
+            font-family: 'Courier New', monospace;
+            white-space: nowrap;
+        }
+
+        /* 右侧名字/职务 quick info (原注释掉, 保持不动) */
+        /* .name-title {...} */   /* 完全保留原注释, 无修改 */
+
+        /* 职工信息主体 — 保持详细但更简约统一, 并使其内部居中 */
+        .info-panel {
+            background: #d9cfb2;
+            background: linear-gradient(165deg, #f3e7cf, #ccbb98);
+            border: 4px solid #5b714c;
+            border-radius: 24px 6px 24px 6px;
+            padding: 18px 20px 12px;
+            margin: 6px 0 20px;
+            box-shadow: inset 0 3px 8px #b3a07d, 0 8px 10px rgba(0,0,0,0.4);
+        }
+
+        .info-row {
+            display: flex;
+            align-items: baseline;
+            border-bottom: 2px dotted #858b60;
+            padding: 8px 0;
+            font-size: 1.3rem;
+            /* 让整行内容居中显示：通过两侧自动外边距 + 内容区flex控制 */
+            /* justify-content: center; */
+        }
+        .info-row:last-of-type {
+            border-bottom: none;
+        }
+        .info-label {
+            width: 100px;
+            font-weight: 800;
+            color: #2b442b;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-shadow: 0 1px 2px #bb9d73;
+            /* 让标签右对齐，视觉上更靠近冒号效果，同时保持居中组平衡 */
+            text-align: right;
+            margin-right: 8px;
+        }
+        .info-value {
+            flex: 0 1 auto;          /* 不拉伸，宽度由内容决定 */
+            font-weight: 700;
+            color: #1e2e1a;
+            font-family: 'Courier New', 'Lucida Console', monospace;
+            font-size: 1.4rem;
+            background: #e7d9bd;
+            padding: 2px 12px;
+            border-radius: 30px;
+            border: 1px solid #7e9166;
+            box-shadow: inset 0 2px 5px #ffffea, 1px 1px 0 #3a4f2a;
+            line-height: 1.5;
+            display: inline-flex;     /* 改为inline-flex 使内部徽章同行 */
+            align-items: center;
+            gap: 8px;
+            min-width: 140px;         /* 稍微给点宽度让内容更稳，不改变原有结构 */
+            justify-content: center;   /* 内容居中 */
+        }
+        /* 设备科徽章 (未用到但保留样式) */
+        .dept-badge {
+            background: #57754b;
+            color: #ffefcd;
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-size: 1.0rem;
+            font-weight: bold;
+            border: 1px solid #dbb179;
+            margin-left: 6px;
+            white-space: nowrap;
+        }
+
+        /* 编号/年份区域 — 工号970303，整体居中 */
+        .footer-badge {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+           /*  justify-content: center;  */  /* 改为居中，之前是space-between */
+            gap: 15px;                 /* 加上间距 */
+            background: #2c422c;
+            color: #e0cbab;
+            padding: 10px 18px;
+            border-radius: 40px 10px 40px 10px;
+            border: 4px solid #7b8d63;
+            box-shadow: inset 0 -3px 5px #233321, 0 6px 10px black;
+            margin-top: 14px;
+        }
+        .emp-id {
+            font-size: 1.5rem;
+            font-weight: 800;
+            font-family: 'Courier New', monospace;
+            color: #f2e2c1;
+            background: #1b2e1b;
+            padding: 4px 14px 4px 22px;
+            border-radius: 40px;
+            border-left: 8px solid #b89f6a;
+            letter-spacing: 3px;
+            box-shadow: inset 0 -2px 3px #5d6b40;
+        }
+        .year {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: #f2e1b9;
+            text-shadow: 3px 3px 0 #334d26;
+            background: #405a38;
+            padding: 4px 15px;
+            border-radius: 30px 0 30px 0;
+            border: 2px solid #c6a66b;
+        }
+
+        /* 钢印/水印行 — 本身有居中样式 (flex + center) 保留不变 */
+        .watermark {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 0.65rem;
+            color: #7f8865;
+            font-weight: 600;
+            text-transform: uppercase;
+            border-top: 2px double #9b8e6b;
+            padding-top: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .watermark span {
+            background: rgba(70, 80, 40, 0.25);
+            padding: 3px 14px;
+            border-radius: 30px;
+            backdrop-filter: blur(2px);
+            border: 1px solid #7c6e49;
+        }
+
+        /* 磨损装饰保留但减少数量 更简约 */
+        .badge .scuff {
+            position: absolute;
+            background: rgba(50, 50, 20, 0.08);
+            width: 70px;
+            height: 25px;
+            transform: rotate(-8deg);
+            border-radius: 40%;
+            filter: blur(5px);
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        /* 油印戳记 保留但淡化 (已注释掉但保留样式) */
+        .stamp {
+            position: absolute;
+            bottom: 50px;
+            left: 20px;
+            font-size: 1.2rem;
+            font-family: 'Courier New', monospace;
+            font-weight: 800;
+            color: #a50f0f;
+            opacity: 0.2;
+            transform: rotate(-12deg);
+            border: 3px double #a03f3f;
+            padding: 4px 12px;
+            border-radius: 30px 0 30px 0;
+            background: rgba(200,180,120,0.1);
+            pointer-events: none;
+            z-index: 15;
+            letter-spacing: 3px;
+        }
+
+        /* 去除原 photo-id-section 内部多余 &nbsp; 并使其完全居中 */
+        .photo-id-section {
+            text-align: center;
+        }
+        /* 确保照片自身无偏移 */
+        .photo-placeholder {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        /* 去除可能遗留的空格占位（&nbsp; 已从html中清理） */
+    </style>
+</head>
+<body>
+    <div class="badge">
+        <!-- 磨损划痕保留两个主要的 -->
+        <div class="scuff" style="top: 25px; right: 30px; width: 50px; height: 18px; background: rgba(240,230,190,0.2); filter: blur(6px);"></div>
+        <div class="scuff" style="bottom: 70px; left: 50px; width: 90px; height: 15px; background: rgba(40,30,10,0.1); transform: rotate(5deg);"></div>
+
+        <!-- 厂名不变 -->
+        <div class="factory-header">
+            <div class="factory-name">锦华纺织厂</div>
+           <!--  <div class="slogan">⚙️ 保障运转 · 设备先行 ⚙️</div> -->
+        </div>
+
+        <!-- 照片 + 右侧姓名/职务 (王强) — 完全居中，清理了多余空格，只留照片区，照片自带名字“王强” -->
+        <div class="photo-id-section">
+            <!-- 删除了所有 &nbsp; 保持干净，照片本身就是头像+王强 -->
+            <div class="photo-placeholder"></div>
+            <!-- 注释掉原来的 .name-title 区块，符合要求“不要乱加东西” -->
+        </div>
+
+        <!-- 职工信息 (反映“管全厂设备管理”) 调整描述更贴合管理职责，现在姓名直接写在info里，与照片中的“王强”呼应，且居中 -->
+        <div class="info-panel">
+            <div class="info-row">
+                <span class="info-label">姓名</span>
+                <span class="info-value">王强</span>   <!-- 明确姓名，完全居中 -->
+            </div>
+            <div class="info-row">
+                <span class="info-label">车间</span>
+                <span class="info-value">机动车间</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">职位</span>
+                <span class="info-value">车工</span>   <!-- 保持原内容 -->
+            </div>
+            <!-- 下面注释掉的行完全保留不动 (原注释) -->
+            <!-- <div class="info-row">
+                <span class="info-label">技术等级</span>
+                <span class="info-value">高级电工 · 设备管理师</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">进厂时间</span>
+                <span class="info-value">1988.06</span>   
+            </div> -->
+        </div>
+
+        <!-- 工号 + 年份（1997） 工号改为970303，整体已居中 -->
+        <div class="footer-badge">
+            <span class="emp-id">JHFZ-970303</span>   <!-- 改工号 970303 -->
+            <span class="year">1997</span>
+        </div>
+
+        <!-- 下方小字细节 不变，本身居中 -->
+        <!-- <div class="watermark">
+            <span>锦华·专用</span>
+            <span>97' 核发</span>
+            <span>钢印  J.H.</span>
+        </div> -->
+
+        <!-- 油印戳记 设备科·存档 (注释掉，保留原样) -->
+        <!-- <div class="stamp">设备科 · 存档</div> -->
+
+        <!-- 隐藏签名微调 保留不动 -->
+        <div style="font-family: 'Brush Script MT', cursive; position: absolute; bottom: 38px; right: 30px; color: #3e4833; opacity: 0.15; font-size: 1.4rem; transform: rotate(-3deg);">总工办 · 核</div>
+    </div>
+    <!-- 简约工牌 · 锦华纺织厂设备科 王强 工号970303 全厂设备管理 -->
+</body>
+</html>

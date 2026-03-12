@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1996–1997年临渠县订单原料台账 - 锦华纺织厂</title>
+    <!-- 外部样式表 -->
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/search-assistant.css">
+    <link rel="stylesheet" href="css/visitor.css">
+    <!-- 针对子页面内容过宽问题的内嵌样式 -->
+    <style>
+        /* 针对子页面内容区域的优化样式 */
+        .subpage-container {
+            /* 保持原有背景和边框，但优化宽度和内边距 */
+            width: 100%;
+            max-width: 1200px;
+            box-sizing: border-box;
+            margin: 20px auto;
+            background-color: #FFFFFF;
+            border: 1px solid #999999;
+            padding: 20px;
+            font-family: "宋体", Arial, sans-serif;
+            font-size: 14px;
+            color: #333333;
+            background-color: #F5F5DC;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABZJREFUeNpi+P//PwMDAwPD////GfAAQAAEPwC1WpQZAAAAAElFTkSuQmCC');
+            position: relative;
+            overflow-x: hidden; /* 防止水平滚动条 */
+        }
+
+        /* 修复列表项圆点溢出问题 */
+        .record-section ul {
+            margin-left: 20px;
+            padding-left: 10px;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .record-section li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+            padding-right: 10px; /* 为圆点留出空间 */
+            position: relative;
+        }
+
+        /* 确保圆点符号在容器内 */
+        .record-section ul li::before {
+            content: "•";
+            position: absolute;
+            left: -15px;
+            color: #333;
+        }
+
+        /* 段落文本优化 */
+        .record-section p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+            text-align: justify;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+        }
+
+        /* 表格响应式优化 */
+        .subpage-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            table-layout: fixed; /* 固定表格布局防止溢出 */
+        }
+
+        .subpage-table td, .subpage-table th {
+            border: 1px solid #999999;
+            padding: 8px 12px;
+            font-size: 14px;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* 特殊样式 - 红笔圈出效果 */
+        .red-circle-row {
+            position: relative;
+        }
+        
+        .red-circle-row::after {
+            content: "";
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border: 2px solid #FF0000;
+            border-radius: 5px;
+            pointer-events: none;
+        }
+        
+        .handwritten-note {
+            font-family: "楷体", "楷体_GB2312", "SimKai", serif;
+            color: #990000;
+            font-weight: bold;
+            font-style: italic;
+        }
+        
+        /* 缺失数据样式 */
+        .missing-data {
+            color: #FF0000;
+            font-weight: bold;
+            background-color: #FFF0F0;
+        }
+        
+        .suspicious-row {
+            background-color: #FFFFE0;
+        }
+
+        /* 标题区域优化 */
+        .subpage-title {
+            font-size: 22px;
+            color: #990000;
+            margin: 5px 0;
+            line-height: 1.3;
+            text-align: center;
+            overflow-wrap: break-word;
+        }
+
+        .subpage-subtitle {
+            font-size: 18px;
+            color: #333366;
+            margin: 10px 0 5px 0;
+            border-bottom: 1px dashed #999999;
+            padding-bottom: 3px;
+            text-align: center;
+            overflow-wrap: break-word;
+        }
+
+        /* 段落中的强调文本 */
+        .record-section strong {
+            color: #990000;
+        }
+
+        /* 内部提醒样式 */
+        .internal-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border: 2px solid #990000;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            padding: 20px;
+            min-width: 300px;
+            max-width: 500px;
+            z-index: 9999;
+            font-family: "宋体", Arial, sans-serif;
+            display: none;
+        }
+        
+        .internal-alert-content {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #333;
+            text-align: center;
+        }
+        
+        .internal-alert-title {
+            font-size: 18px;
+            color: #990000;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .internal-alert-button {
+            display: block;
+            margin: 0 auto;
+            background-color: #990000;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-family: "宋体", Arial, sans-serif;
+        }
+        
+        .internal-alert-button:hover {
+            background-color: #770000;
+        }
+        
+        .internal-alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 9998;
+            display: none;
+        }
+
+        /* 移动端优化 */
+        @media (max-width: 768px) {
+            .subpage-container {
+                padding: 15px;
+                margin: 10px auto;
+                width: 95%;
+            }
+            
+            .record-section ul {
+                margin-left: 15px;
+                padding-left: 5px;
+            }
+            
+            .record-section li {
+                margin-bottom: 6px;
+            }
+            
+            .record-section ul li::before {
+                left: -12px;
+            }
+            
+            .subpage-table td, .subpage-table th {
+                padding: 6px 8px;
+                font-size: 13px;
+            }
+            
+            .internal-alert {
+                min-width: 250px;
+                max-width: 90%;
+                padding: 15px;
+            }
+            
+            .red-circle-row::after {
+                top: -2px;
+                left: -2px;
+                right: -2px;
+                bottom: -2px;
+                border-width: 1px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .subpage-container {
+                padding: 12px;
+                width: 98%;
+            }
+            
+            .record-section ul {
+                margin-left: 10px;
+                padding-left: 0;
+            }
+            
+            .record-section li {
+                margin-bottom: 5px;
+                padding-right: 5px;
+            }
+            
+            .record-section ul li::before {
+                left: -10px;
+            }
+            
+            .subpage-table {
+                font-size: 12px;
+            }
+            
+            .subpage-table td, .subpage-table th {
+                padding: 4px 6px;
+                font-size: 12px;
+            }
+            
+            .internal-alert {
+                min-width: 200px;
+                padding: 12px;
+            }
+            
+            /* 小屏幕下将部分表格转换为垂直布局 */
+            @media (max-width: 360px) {
+                .subpage-table {
+                    display: block;
+                    overflow-x: auto;
+                    white-space: nowrap;
+                }
+                
+                .record-section ul li::before {
+                    left: -8px;
+                    font-size: 12px;
+                }
+                
+                .red-circle-row::after {
+                    display: none; /* 在小屏幕上隐藏红圈效果 */
+                }
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 内部提醒弹窗 -->
+    <div class="internal-alert-overlay" id="alertOverlay"></div>
+    <div class="internal-alert" id="internalAlert">
+        <div class="internal-alert-title" id="alertTitle">系统提醒</div>
+        <div class="internal-alert-content" id="alertContent"></div>
+        <button class="internal-alert-button" id="alertButton">确定</button>
+    </div>
+    
+    <!-- 子页面固定搜索栏 - 更新版 -->
+    <div class="subpage-search-fixed" id="subpage-search">
+        <img src="https://sylvie-seven-cq.top/gallery3/search-logo.png" alt="搜索logo" class="subpage-search-logo">
+        <input type="text" class="subpage-search-input" placeholder="搜索台账内容..." id="searchInput">
+        <button class="subpage-search-button" id="searchButton">搜索</button>
+    </div>
+    
+    <!-- 子页面容器 -->
+    <div class="subpage-container">
+        <!-- 访问计数器 -->
+        <!-- <div class="counter">您是第 <span id="visit-count">8888</span> 位访问者</div> -->
+        
+        <!-- 跑马灯 -->
+        <div class="marquee">
+            <marquee behavior="scroll" direction="left" scrollamount="3">锦华纺织厂原料台账管理系统 - 内部审计使用 - 注意：此台账涉及账实不符问题</marquee>
+        </div>
+        
+        <!-- 导航菜单 -->
+        <!-- <div class="nav-menu">
+            <a href="#">首页</a> | 
+            <a href="#">工厂简介</a> | 
+            <a href="#">生产车间</a> | 
+            <a href="#">后勤管理</a> | 
+            <a href="#">卫生检查</a> | 
+            <a href="#">联系我们</a>
+        </div> -->
+        
+        <!-- 页面标题 -->
+        <div class="subpage-header">
+            <h1 class="subpage-title">1996–1997年临渠县订单原料台账</h1>
+            <h2 class="subpage-subtitle">锦华纺织厂特种合金原料记录 - 内部审计文件</h2>
+        </div>
+        
+        <!-- 主要内容 -->
+        <div class="content">
+            <div class="record-section">
+                <h3 class="subpage-section-title">台账基本信息</h3>
+                <table class="subpage-table">
+                    <tr>
+                        <th width="30%">台账名称</th>
+                        <td>临渠县订单特种合金原料台账</td>
+                    </tr>
+                    <tr>
+                        <th>记录期间</th>
+                        <td>1996年1月 - 1997年12月</td>
+                    </tr>
+                    <tr>
+                        <th>原料类型</th>
+                        <td>特种合金（用于纺织机械配件）</td>
+                    </tr>
+                    <tr>
+                        <th>记录部门</th>
+                        <td>仓储科 - 原料仓库</td>
+                    </tr>
+                    <tr>
+                        <th>审核状态</th>
+                        <td><span class="missing-data">存在问题 - 账实不符</span></td>
+                    </tr>
+                    <tr>
+                        <th>最后更新</th>
+                        <td>1997年6月25日</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="record-section">
+                <h3 class="subpage-section-title">特别说明</h3>
+                <p>本台账记录1996年至1997年临渠县订单所需特种合金原料的入库情况。经多次盘点，<strong>台账记录与仓库实物存在严重不符</strong>，多批次签收记录显示原料已入库，但仓库无实物。</p>
+                <p class="handwritten-note">注：朱师傅于1997年5月审计时发现此问题，并手写批注："账实不符，疑内部盗窃"。</p>
+            </div>
+            
+            <div class="record-section">
+                <h3 class="subpage-section-title">特种合金原料入库记录</h3>
+                <table class="subpage-table">
+                    <tr>
+                        <th>序号</th>
+                        <th>入库日期</th>
+                        <th>批次号</th>
+                        <th>原料名称</th>
+                        <th>数量(吨)</th>
+                        <th>签收人</th>
+                        <th>仓库状态</th>
+                        <th>备注</th>
+                    </tr>
+                    <tr>
+                        <td>01</td>
+                        <td>1996-03-15</td>
+                        <td>TH960315</td>
+                        <td>特种合金A型</td>
+                        <td>2.5</td>
+                        <td>老刘</td>
+                        <td>已入库</td>
+                        <td>正常</td>
+                    </tr>
+                    <tr class="suspicious-row">
+                        <td>02</td>
+                        <td>1996-05-22</td>
+                        <td>TH960522</td>
+                        <td>特种合金B型</td>
+                        <td>3.0</td>
+                        <td>老刘</td>
+                        <td class="missing-data">无实物</td>
+                        <td class="handwritten-note">签收但无实物</td>
+                    </tr>
+                    <tr>
+                        <td>03</td>
+                        <td>1996-08-10</td>
+                        <td>TH960810</td>
+                        <td>特种合金A型</td>
+                        <td>2.0</td>
+                        <td>老刘</td>
+                        <td>已入库</td>
+                        <td>正常</td>
+                    </tr>
+                    <tr class="suspicious-row">
+                        <td>04</td>
+                        <td>1996-11-05</td>
+                        <td>TH961105</td>
+                        <td>特种合金C型</td>
+                        <td>4.0</td>
+                        <td>老刘</td>
+                        <td class="missing-data">无实物</td>
+                        <td class="handwritten-note">签收但无实物</td>
+                    </tr>
+                    <tr>
+                        <td>05</td>
+                        <td>1997-01-18</td>
+                        <td>TH970118</td>
+                        <td>特种合金A型</td>
+                        <td>3.5</td>
+                        <td>老刘</td>
+                        <td>已入库</td>
+                        <td>正常</td>
+                    </tr>
+                    <tr class="suspicious-row">
+                        <td>06</td>
+                        <td>1997-03-30</td>
+                        <td>TH970330</td>
+                        <td>特种合金B型</td>
+                        <td>2.8</td>
+                        <td>老刘</td>
+                        <td class="missing-data">无实物</td>
+                        <td class="handwritten-note">签收但无实物</td>
+                    </tr>
+                    <tr>
+                        <td>07</td>
+                        <td>1997-05-12</td>
+                        <td>TH970512</td>
+                        <td>特种合金A型</td>
+                        <td>2.0</td>
+                        <td>张明</td>
+                        <td>已入库</td>
+                        <td>正常</td>
+                    </tr>
+                    <tr class="red-circle-row suspicious-row">
+                        <td>08</td>
+                        <td>1997-06-20</td>
+                        <td>TH970620</td>
+                        <td>特种合金C型</td>
+                        <td class="missing-data">5.0</td>
+                        <td>老刘</td>
+                        <td class="missing-data">无实物</td>
+                        <td class="handwritten-note missing-data">缺失3吨，已上报公安</td>
+                    </tr>
+                </table>
+                <p style="margin-top: 10px; font-size: 12px; color: #666;">注：红色标记行表示账实不符的记录，最后一行被红笔圈出</p>
+            </div>
+            
+            <div class="record-section">
+                <h3 class="subpage-section-title">问题分析</h3>
+                <ul>
+                    <li>总计8批特种合金原料入库记录，其中<strong>4批存在账实不符问题</strong></li>
+                    <li>所有问题批次的签收人均为<strong>老刘</strong></li>
+                    <li>问题批次入库时间跨度为1996年5月至1997年6月</li>
+                    <li>累计缺失原料：3.0 + 4.0 + 2.8 + 5.0 = <strong class="missing-data">14.8吨</strong></li>
+                    <li>最后一批(1997年6月20日)缺失最为严重，直接导致生产延期</li>
+                </ul>
+            </div>
+            
+            <div class="record-section">
+                <h3 class="subpage-section-title">朱师傅审计批注</h3>
+                <div style="border: 1px dashed #999; padding: 15px; background-color: #FFF8E1; font-family: '楷体', '楷体_GB2312', serif;">
+                    <p style="margin-bottom: 10px;"><strong>审计日期：</strong>1997年5月28日</p>
+                    <p style="margin-bottom: 10px;"><strong>审计人：</strong>朱建国（审计科）</p>
+                    <p style="margin-bottom: 10px;"><strong>批注内容：</strong></p>
+                    <p>经核对临渠县订单原料台账与仓库实际库存，发现严重账实不符问题：</p>
+                    <ul style="margin-left: 20px;">
+                        <li>4批次特种合金显示已签收入库，但仓库无实物</li>
+                        <li>所有问题批次签收人均为老刘（仓储科）</li>
+                        <li>缺失原料价值约人民币24万元（按当时市价）</li>
+                        <li>问题持续时间长达一年，期间无人发现</li>
+                    </ul>
+                    <p style="margin-top: 10px; color: #990000; font-weight: bold;">初步判断：账实不符，疑内部盗窃。建议立即停止老刘的仓库管理权限，并上报厂领导及公安机关。</p>
+                    <p style="margin-top: 15px; text-align: right;">签字：<span style="border-bottom: 1px solid #333; padding: 0 20px;">朱建国</span></p>
+                </div>
+            </div>
+            
+            <div class="record-section">
+                <h3 class="subpage-section-title">处理进展</h3>
+                <table class="subpage-table">
+                    <tr>
+                        <th width="30%">发现问题</th>
+                        <td>1997年5月28日，朱师傅审计时发现账实不符</td>
+                    </tr>
+                    <tr>
+                        <th>初步处理</th>
+                        <td>1997年6月1日，暂停老刘的仓库管理权限</td>
+                    </tr>
+                    <tr>
+                        <th>上报公安</th>
+                        <td>1997年6月20日，发现又一批原料缺失后，立即上报公安机关</td>
+                    </tr>
+                    <tr>
+                        <th>当前状态</th>
+                        <td class="missing-data">公安机关已介入调查，案件正在侦办中</td>
+                    </tr>
+                    <tr>
+                        <th>影响评估</th>
+                        <td>临渠县订单延期，工厂可能面临违约赔偿</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="record-section">
+                <h3 class="subpage-section-title">相关文件</h3>
+                <table class="subpage-table">
+                    <tr>
+                        <th>文件编号</th>
+                        <th>文件名称</th>
+                        <th>日期</th>
+                        <th>负责人</th>
+                    </tr>
+                    <tr>
+                        <td>AJ970528</td>
+                        <td>临渠县订单原料审计报告</td>
+                        <td>1997-05-28</td>
+                        <td>朱建国</td>
+                    </tr>
+                    <tr>
+                        <td>BG970620</td>
+                        <td>关于原料缺失报案材料</td>
+                        <td>1997-06-20</td>
+                        <td>厂办公室</td>
+                    </tr>
+                    <tr>
+                        <td>ZD970601</td>
+                        <td>暂停老刘工作权限通知</td>
+                        <td>1997-06-01</td>
+                        <td>人事科</td>
+                    </tr>
+                    <tr>
+                        <td>SC970625</td>
+                        <td>临渠县订单延期说明</td>
+                        <td>1997-06-25</td>
+                        <td>生产科</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <!-- 操作按钮 -->
+            <div class="navigation-buttons" style="margin-top: 30px;">
+                <button class="nav-btn" onclick="window.print()">打印台账</button>
+                <button class="nav-btn" onclick="exportToPDF()">导出PDF</button>
+                <button class="nav-btn" onclick="searchMissingData()">搜索缺失记录</button>
+                <a href="#" class="nav-btn home">返回列表</a>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="subpage-footer">
+            <p>锦华纺织厂原料台账管理系统 &copy; 1997 | 最后更新: 1997-06-25</p>
+            <p>地址：江苏省苏州市工业园区锦华路88号 | 电话：0512-88886666</p>
+            <p>注意：此文件涉及内部审计问题，请妥善保管</p>
+            <p style="color: #990000; font-weight: bold;">保密级别：内部审计文件 - 限相关人员查阅</p>
+        </div>
+        
+        <!-- 访客统计部分 -->
+       
+        <!-- 外部JavaScript文件 -->
+   <script src="search-engine.js"></script>
+    <script src="storage.js"></script>
+    <script src="navigation.js"></script>
+    <script src="visitor.js"></script>
+    <script src="search-ass.js"></script>
+    <script>
+        // 页面初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查外部JS是否加载失败
+            setupExternalJSFailureCheck();
+            
+            // 初始化内部提醒系统
+            initInternalAlert();
+            
+            // 页面加载完成后的其他初始化
+            console.log('临渠县订单原料台账页面加载完成');
+            
+            // 检查内容宽度问题
+            checkContentWidth();
+            
+            // 为可疑行添加点击事件
+            addRowClickEvents();
+        });
+        
+        // 初始化内部提醒系统
+        function initInternalAlert() {
+            const alertButton = document.getElementById('alertButton');
+            const alertOverlay = document.getElementById('alertOverlay');
+            
+            alertButton.addEventListener('click', function() {
+                hideInternalAlert();
+            });
+            
+            alertOverlay.addEventListener('click', function() {
+                hideInternalAlert();
+            });
+            
+            // 监听ESC键关闭提醒
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    hideInternalAlert();
+                }
+            });
+        }
+        
+        // 显示内部提醒
+        function showInternalAlert(title, message) {
+            document.getElementById('alertTitle').textContent = title;
+            document.getElementById('alertContent').textContent = message;
+            document.getElementById('internalAlert').style.display = 'block';
+            document.getElementById('alertOverlay').style.display = 'block';
+            
+            // 聚焦到确定按钮
+            setTimeout(function() {
+                document.getElementById('alertButton').focus();
+            }, 100);
+        }
+        
+        // 隐藏内部提醒
+        function hideInternalAlert() {
+            document.getElementById('internalAlert').style.display = 'none';
+            document.getElementById('alertOverlay').style.display = 'none';
+        }
+        
+        // 检查外部JS是否加载失败
+        function setupExternalJSFailureCheck() {
+            const searchButton = document.getElementById('searchButton');
+            const searchInput = document.getElementById('searchInput');
+            
+            // 延迟检查外部JS是否成功加载
+            setTimeout(function() {
+                // 检查外部search-engine.js是否已加载
+                if (!window.searchEngineLoaded) {
+                    // 外部JS加载失败，绑定备用搜索函数
+                    searchButton.addEventListener('click', handleSearch);
+                    searchInput.addEventListener('keypress', function(e) {
+                        if(e.key === 'Enter') {
+                            handleSearch();
+                        }
+                    });
+                    
+                    console.log('外部JS加载失败，已启用备用搜索功能');
+                } else {
+                    console.log('外部JS已成功加载');
+                    // 如果外部JS加载成功，确保搜索功能正常工作
+                    searchButton.addEventListener('click', function() {
+                        const searchTerm = searchInput.value.trim();
+                        if (searchTerm === '') {
+                            showInternalAlert('搜索提示', '请输入搜索内容');
+                        } else {
+                            showInternalAlert('搜索功能', '正在搜索: ' + searchTerm);
+                            // 这里可以调用外部搜索函数
+                            // externalSearchFunction(searchTerm);
+                        }
+                    });
+                }
+            }, 1000); // 延迟1秒检查，给外部JS足够时间加载
+        }
+        
+        // 处理搜索（备用函数）
+        function handleSearch() {
+            const searchTerm = document.getElementById('searchInput').value.trim();
+            if(searchTerm === '') {
+                showInternalAlert('搜索提示', '请输入搜索内容');
+                return;
+            }
+            
+            // 简单的页面内搜索
+            const searchTerms = searchTerm.toLowerCase().split(' ');
+            const content = document.body.innerText.toLowerCase();
+            let found = false;
+            
+            for (const term of searchTerms) {
+                if (content.includes(term)) {
+                    found = true;
+                    break;
+                }
+            }
+            
+            if (found) {
+                // 高亮显示搜索词
+                highlightSearchTerms(searchTerms);
+                showInternalAlert('搜索结果', '找到与 "' + searchTerm + '" 相关的内容');
+            } else {
+                showInternalAlert('搜索结果', '未找到与 "' + searchTerm + '" 相关的内容');
+            }
+        }
+        
+        // 高亮显示搜索词
+        function highlightSearchTerms(terms) {
+            // 移除之前的高亮
+            const elements = document.querySelectorAll('.search-highlight');
+            elements.forEach(el => {
+                const parent = el.parentNode;
+                parent.replaceChild(document.createTextNode(el.textContent), el);
+                parent.normalize();
+            });
+            
+            // 在主要内容区域高亮显示
+            const contentDiv = document.querySelector('.content');
+            if (!contentDiv) return;
+            
+            let html = contentDiv.innerHTML;
+            terms.forEach(term => {
+                if (term.length < 2) return; // 太短的词不处理
+                const regex = new RegExp(`(${term})`, 'gi');
+                html = html.replace(regex, '<span class="search-highlight" style="background-color: yellow;">$1</span>');
+            });
+            
+            contentDiv.innerHTML = html;
+        }
+        
+        // 检查内容宽度问题
+        function checkContentWidth() {
+            const container = document.querySelector('.subpage-container');
+            const content = document.querySelector('.content');
+            
+            if (container && content) {
+                const containerWidth = container.offsetWidth;
+                const contentWidth = content.scrollWidth;
+                
+                if (contentWidth > containerWidth) {
+                    console.log('检测到内容宽度问题：内容宽度(' + contentWidth + 'px) > 容器宽度(' + containerWidth + 'px)');
+                    // 可以在这里添加额外的调整逻辑
+                }
+            }
+        }
+        
+        // 添加行点击事件
+        function addRowClickEvents() {
+            const suspiciousRows = document.querySelectorAll('.suspicious-row');
+            suspiciousRows.forEach(row => {
+                row.addEventListener('click', function() {
+                    const batch = this.cells[2]?.textContent || '未知批次';
+                    const date = this.cells[1]?.textContent || '未知日期';
+                    const material = this.cells[3]?.textContent || '未知原料';
+                    const quantity = this.cells[4]?.textContent || '未知数量';
+                    
+                    showInternalAlert(
+                        '问题记录详情',
+                        `批次: ${batch}\n日期: ${date}\n原料: ${material}\n数量: ${quantity}\n状态: 账实不符\n签收人: 老刘`
+                    );
+                });
+                
+                // 添加鼠标悬停效果
+                row.style.cursor = 'pointer';
+                row.title = '点击查看详情';
+            });
+            
+            // 红笔圈出的行特殊处理
+            const redCircleRow = document.querySelector('.red-circle-row');
+            if (redCircleRow) {
+                redCircleRow.addEventListener('click', function() {
+                    showInternalAlert(
+                        '严重问题记录',
+                        '1997年6月20日批次\n特种合金C型 5.0吨\n签收人: 老刘\n仓库状态: 无实物\n备注: 缺失3吨，已上报公安\n\n这是最严重的一起缺失事件，直接导致公安机关介入。'
+                    );
+                });
+            }
+        }
+        
+        // 导出PDF功能（模拟）
+        function exportToPDF() {
+            showInternalAlert('PDF导出功能', 'PDF生成中...\n注意：此文件包含敏感审计信息，请妥善保管。');
+        }
+        
+        // 搜索缺失数据
+        function searchMissingData() {
+            document.getElementById('searchInput').value = '缺失 无实物 账实不符';
+            handleSearch();
+        }
+        
+        // 窗口调整大小时重新检查
+        window.addEventListener('resize', checkContentWidth);
+    </script>
+<script src="logo-return.js"></script>
+ <script src="./jinzhi.js"></script>
+</body>
+</html>

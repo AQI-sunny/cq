@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>日记访问</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    font-family: "Microsoft YaHei", Arial, sans-serif;
+    background: linear-gradient(135deg,#ffd86b,#ffb347);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
+}
+
+.box{
+    background:rgba(255,255,255,0.85);
+    backdrop-filter: blur(6px);
+    padding:40px 50px;
+    border-radius:14px;
+    text-align:center;
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    width:320px;
+}
+
+h2{
+    margin-bottom:20px;
+    color:#444;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    font-size:16px;
+    border-radius:8px;
+    border:1px solid #ddd;
+    outline:none;
+    transition:0.25s;
+}
+
+input:focus{
+    border-color:#ffb347;
+    box-shadow:0 0 5px rgba(255,179,71,0.5);
+}
+
+button{
+    width:100%;
+    padding:12px;
+    margin-top:15px;
+    border:none;
+    border-radius:8px;
+    background:#ffb347;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.25s;
+}
+
+button:hover{
+    background:#ffa62b;
+    transform:translateY(-1px);
+}
+
+.error{
+    color:#e74c3c;
+    margin-top:12px;
+    font-size:14px;
+}
+
+.tip{
+    margin-top:10px;
+    font-size:12px;
+    color:#888;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>🔒 日记访问验证</h2>
+
+    <input 
+        type="password" 
+        id="password" 
+        placeholder="请输入8位数字密码"
+        onkeypress="enterSubmit(event)"
+    >
+
+    <button onclick="checkPassword()">打开日记</button>
+
+    <div id="msg" class="error"></div>
+
+    <div class="tip">仅限授权访问</div>
+</div>
+
+<script>
+
+function checkPassword(){
+    var pass = document.getElementById("password").value;
+
+    if(pass === "19970701"){
+        window.location.href = "素锦日记7-xghg演讲.html";
+    }else{
+        document.getElementById("msg").innerText =
+        "密码错误，请重试（提示：七月初发生了一件大事，请输入具体日期）";
+    }
+}
+
+function enterSubmit(event){
+    if(event.key === "Enter"){
+        checkPassword();
+    }
+}
+
+</script>
+ <script src="./jinzhi.js"></script>
+</body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>素锦日记 </title>
+    <style>
+        /* 基础样式 - 1997复古风格 + 粉色背景 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "楷体", "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            /* 粉色主题背景：柔和的粉 */
+            background-color: #ffdbdb;
+            /* 极淡的像素点纹理，增加复古感 */
+            background-image: url('data:image/gif;base64,R0lGODlhBAAEAIABAAAAAP///yH5BAEAAAEALAAAAAAEAAQAAAIFhB6nq4gAOw==');
+            color: #5e3a3a;        /* 深褐色文字，与粉背景搭配 */
+            line-height: 1.6;
+            padding: 10px;
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #cc9999;
+            border-top: none;
+        }
+        
+        /* 1997风格标题栏 — 粉调 */
+        .header {
+            background-color: #cc7f7f;   /* 粉褐 */
+            color: #fff0f0;
+            padding: 15px 10px;
+            text-align: center;
+            border-bottom: 3px double #ffcccc;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            text-shadow: 2px 2px 0 #b14b4b;
+        }
+        
+        .header .subtitle {
+            font-size: 14px;
+            margin-top: 5px;
+            color: #ffe4e4;
+        }
+        
+        /* 日记本样式 — 保持米白，与粉色背景区分 */
+        .diary-container {
+            background-color: #fffef0;
+            border: 2px solid #d99885;    /* 粉棕色 */
+            border-left: 15px solid #d99885;
+            padding: 20px;
+            margin: 20px 10px;
+            box-shadow: 5px 5px 10px rgba(180, 100, 100, 0.15);
+            min-height: 400px;
+            position: relative;
+        }
+        
+        /* 日记本穿孔效果 (颜色微调) */
+        .diary-container::before {
+            content: "";
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            width: 8px;
+            height: 100px;
+            background-color: #c07a6a;
+            border-radius: 4px;
+            transform: translateY(-50%);
+        }
+        
+        .diary-date {
+            text-align: right;
+            font-size: 14px;
+            color: #b2725a;
+            border-bottom: 1px dotted #d99885;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .diary-content {
+            font-size: 16px;
+            text-indent: 2em;
+            line-height: 1.8;
+        }
+        
+        .diary-content p {
+            margin-bottom: 15px;
+        }
+        
+        /* 交互按钮 — 粉嫩系 */
+        .button-container {
+            text-align: center;
+            margin: 25px 0;
+        }
+        
+        .retro-button {
+            background-color: #f3b3b3;    /* 浅粉 */
+            color: #4d2e2e;
+            border: 2px outset #d47b7b;
+            padding: 8px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 5px;
+            font-family: "宋体", sans-serif;
+            font-weight: bold;
+        }
+        
+        .retro-button:hover {
+            background-color: #e89c9c;
+            border-style: inset;
+        }
+        
+        /* 弹窗相关样式已全部移除，但保留按钮但无弹窗功能 */
+        
+        /* 1997风格的页脚 */
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #946b6b;
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid #cc9999;
+        }
+        
+        .footer a {
+            color: #b35959;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 闪烁光标动画 */
+        .blink {
+            animation: blink 1s infinite;
+            color: #cc0000;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+                border: none;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .diary-container {
+                padding: 15px;
+                margin: 10px 5px;
+                border-left: 10px solid #d99885;
+            }
+            
+            .diary-content {
+                font-size: 15px;
+            }
+        }
+        
+        /* 复古水平线 粉色调 */
+        .retro-hr {
+            border: 0;
+            height: 1px;
+            background-image: linear-gradient(to right, transparent, #d47b7b, transparent);
+            margin: 20px 0;
+        }
+        
+        /* 重点文本 */
+        .highlight {
+            color: #b3432e;
+            font-weight: bold;
+        }
+        
+        .character-name {
+            color: #b3685a;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- 页眉 -->
+    <div class="header">
+        <h1>素锦的日记本 </h1>
+        <div class="subtitle">记录心情 · 1997年 · 日记 5 / 7<!-- 第5篇 --></div>
+    </div>
+    
+    <!-- 日记内容 -->
+    <div class="diary-container">
+        <div class="diary-date">1997年██月██日 星期日 多云</div>
+        
+        <!-- <div class="diary-content" id="diaryText">
+            <p>今天发生了一件让我心里堵得慌的事情。</p>
+            <p>电影散场本来挺开心的，结果刚出电影院，就看到<span class="character-name">方</span>居然正好也在，还主动上来跟<span class="character-name">振华</span>打招呼！他俩聊得热络，我站在旁边根本插不上话，这感觉真是糟透了。</p>
+            - <p>众所周知，<span class="character-name">方</span>这个人风评一直不太好。大家私下里都说她心思多、很会来事儿，还做过一些让人不太舒服的事情。虽然我没亲眼见过，但那么多人都这么觉得，肯定不是空穴来风吧？</p> -- 
+
+            <p>< -- <span class="character-name">振华</span>难道看不出方对他有意思吗，为什么还有问必答的，真让人讨厌！ - >难道<span class="character-name">振华</span>看不出她那种故意套近乎的样子？还是<span class="character-name">振华</span>本来就对她...</p>
+            <p>我真的越想越烦，但<span class="character-name">振华</span>又好像只是正常聊天，我要是因为这个生气，会不会显得我太小气了...< -- <span class="character-name">振华</span> - >可我就是控制不住自己往坏处想。</p>
+            <p>心里好乱，又好酸... <span class="blink">_</span></p>
+        </div> -->
+        <div class="diary-content" id="diaryText">
+    <p>今天发生的事，让我的心彻底凉了半截，甚至连拿着笔的手到现在都还在不受控制地发抖。</p>
+    <p>为了暗中追查<span class="character-name">小雨</span>失踪的事，我这几天几乎没怎么合眼。顺着那些零碎又隐秘的线索，我一路摸到了红星娱乐城。那地方乌烟瘴气的，震耳欲聋的音乐和昏暗闪烁的灯光让人觉得反胃，但我心里记挂着<span class="character-name">小雨</span>的安危，只能硬着头皮往那龙潭虎穴里钻。</p>
+    <p>我在里面假装找人转悠了半天，终于趁着前台那个烫发女人去里间接电话、四下无人的空档，大着胆子溜到收银台前，翻开了那本半掩着的账单。上面密密麻麻的数据我来不及细看，可就在一页的边缘，一行字像尖针一样狠狠扎进了我眼里——上面赫然记着一笔大额的人头交易款，而收款人那栏，龙飞凤舞地写着“<span class="character-name">临渠李哥</span>”四个字。</p>
+    <p>看到这几个字的瞬间，我脑子里“嗡”地一声，浑身的血液仿佛都凝固了。临渠李哥？难不成是他？是那个平时对我嘘寒问暖、总是把我护在身后的<span class="character-name">他</span>？不，怎么可能呢！他明明是个本分踏实的人，连说话都温声细语的，怎么会和娱乐城的黑账扯上关系？</p>
+    <p>理智死死地扯着我，我打心底里不愿怀疑他。可是，前不久的一幕突然不受控制地跳进脑海——那天傍晚，我分明看到他在巷子口，和那群地痞混混在一块儿，那群混混还给他递烟！当时他跟我解释说是碰巧问个路，我还傻乎乎地信了。现在回想起来，那群平时飞扬跋扈的混混，当时对他分明是毕恭毕敬的态度！</p>
+    <p>难道<span class="character-name">小雨</span>的失踪也和他有关？他到底背着我藏着多少见不得光的事情？他靠近我，到底是真的动了情，还是另有隐情...</p>
+    <p>这一路上我是怎么走回来的，我都记不清了。心里翻江倒海，恐惧、震惊，还有难以言喻的委屈交织在一起。我实在是想不明白，一个口口声声说想一直护着我的人，背地里怎么会做这种勾当？如果这一切真的是他在背后操纵，如果<!-- <span class="character-name">小雨</span>真的是被他 -->...</p>
+    <p>唉，我原本以为<!-- 自己命苦了这么些年， -->总算是遇到了一个知冷知热的良人，能安稳过下半生。可如今看来，这满眼的深情背后，竟是深不见底的黑洞。如果真是如此，实在是令我心寒到了骨子里。我到底该不该去当面质问他... <span class="blink">_</span></p>
+</div>
+    </div>
+    
+    <!-- 交互按钮 — 仅保留外观，所有弹窗已移除，点击无弹窗（按钮功能全部注释/移除） -->
+    <!-- <div class="button-container">
+        <button class="retro-button" id="btnWhy">为什么素锦这么生气？</button>
+        <button class="retro-button" id="btnBackground">周的风评如何？</button>
+        <button class="retro-button" id="btnFeeling">素锦此刻的心情</button>
+        <button class="retro-button" id="btnNext">后续会怎样？</button>
+    </div> -->
+    
+    <hr class="retro-hr">
+    
+    <!-- 页脚 -->
+    <div class="footer">
+        <p>© 1997 素锦的个人日记 | 本日记仅代表个人观点 | 访问次数: <span id="visitCount">00001</span></p>
+        <p>最佳分辨率 800×600 | 本页使用 IE 4.0 及以上版本浏览效果最佳</p>
+        <!-- <p><a href="javascript:void(0)" id="guestbookLink">留言本</a> | <a href="javascript:void(0)" id="homeLink">返回主页</a></p> -->
+    </div>
+    
+    <!-- 
+        所有弹窗结构已被删除 (原 .custom-modal 整个移除)
+        按钮点击不会触发任何弹窗，完全无功能 (保留外观)
+        留言本/主页链接同样无弹窗，仅作为复古装饰。
+    -->
+
+    <script>
+        // 页面访问计数器 (保留，无弹窗关联)
+        document.addEventListener('DOMContentLoaded', function() {
+            // 模拟访问计数
+            let count = localStorage.getItem('diaryVisitCount') || 10001;
+            count = parseInt(count) + 1;
+            localStorage.setItem('diaryVisitCount', count);
+            document.getElementById('visitCount').textContent = count.toString().padStart(5, '0');
+            
+            // ★ 所有弹窗相关代码已全部移除，按钮点击无反应，但保留复古感。
+            // 按钮现在没有任何事件监听，纯展示。
+            
+            // 但为了防止控制台报错（比如有人点击id），可以置空或者只做简单提示（可选静默）。
+            // 完全移除弹窗逻辑：下面的函数不再绑定任何弹窗。
+            
+            // 但我们保留链接的装饰性行为（无弹窗，但可简单地在控制台提示，或不作处理）。
+            // 让它们完全“无反应”，符合“内部弹窗全部注释掉”的要求。
+            
+            // 以下只保留打字机效果，不涉及任何弹窗。
+            
+            // 添加打字机效果到日记最后一行
+            const diaryText = document.getElementById('diaryText');
+            const lastParagraph = diaryText.querySelector('p:last-child');
+            const originalText = lastParagraph.innerHTML;
+            lastParagraph.innerHTML = originalText.replace('<span class="blink">_</span>', '');
+            
+            // 模拟打字机效果
+            setTimeout(() => {
+                const text = "唉！好乱！！！简直是一团乱麻...脑子里是...心里也是... ";
+                let i = 0;
+                const typeWriter = () => {
+                    if (i < text.length) {
+                        lastParagraph.innerHTML = text.substring(0, i+1) + '<span class="blink">_</span>';
+                        i++;
+                        setTimeout(typeWriter, 100);
+                    }
+                };
+                typeWriter();
+            }, 1000);
+            
+            // 添加页面加载效果
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 1s';
+                document.body.style.opacity = '1';
+            }, 100);
+            
+            // --- 所有按钮及链接的事件均被注释/移除，彻底无弹窗 ---
+            // 原弹窗相关函数、变量全部删除。
+            // 以下仅保留“无操作”以确保点击不报错，但无任何UI反馈。
+            
+            // 按钮置空（无操作）
+            const btnWhy = document.getElementById('btnWhy');
+            const btnBg = document.getElementById('btnBackground');
+            const btnFeel = document.getElementById('btnFeeling');
+            const btnNext = document.getElementById('btnNext');
+            const guestLink = document.getElementById('guestbookLink');
+            const homeLink = document.getElementById('homeLink');
+            
+            // 为了符合“注释掉所有内部弹窗”，我们不给它们添加任何功能。
+            // 甚至连 console.log 都不加，完全静默。这样点击按钮不会有任何反应，符合要求。
+            // 但为了页面完整性，保留按钮的存在感。
+            
+            // 如果有需求让链接完全无动作，保持 javascript:void(0) 即可。
+            // 这里不附加任何监听器。
+            
+            // 可选：为防止用户误以为故障，可以设置一个非常复古的“状态栏提示”但不用弹窗 —— 但为了严谨，什么都不做。
+            // 完全按照指令：内部弹窗全部注释掉（已经移除结构和相关JS）。
+            
+        });
+    </script>
+    <!-- 原 logo-return 脚本保留，不影响 -->
+    <script src="logo-return.js"></script>
+    <script src="return.js"></script>
+</body>
+</html>

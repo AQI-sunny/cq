@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>供销科职工 · 朱为民 - 锦华纺织厂</title>
+    <!-- 外部样式表 (相对路径) -->
+    <link rel="stylesheet" href="./common.css">
+    <link rel="stylesheet" href="./search-assistant.css">
+    <link rel="stylesheet" href="./visitor.css">
+    <!-- 内嵌样式：去掉不必要的框线，同时保持原结构不变 -->
+    <style>
+        /* 确保搜索框样式正确加载 */
+       .subpage-search-fixed {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none; /* 去掉外框线 */
+            padding: 8px;
+            border-radius: 3px;
+            z-index: 1000;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+        }
+        
+        .subpage-search-logo {
+            width: 100px;
+            height: 100px;
+            margin-right: 8px;
+        }
+        
+        .subpage-search-input {
+            border: none; /* 去掉输入框边框 */
+            padding: 4px 8px;
+            width: 180px;
+            font-size: 12px;
+            background-color: #f0f0f0; /* 添加浅灰底色保持视觉区域（可选，若不需要可删掉此行） */
+        }
+        
+        .subpage-search-button {
+            background-color: #990000;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            margin-left: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .subpage-search-button:hover {
+            background-color: #770000;
+        }
+        /* 子页面容器：去掉外边框，只保留内边距和背景 */
+        .subpage-container {
+            width: 100%;
+            max-width: 1200px;
+            box-sizing: border-box;
+            margin: 20px auto;
+            /* border: 1px solid #999999;  去掉整体边框 */
+            padding: 20px;
+            font-family: "宋体", Arial, sans-serif;
+            font-size: 14px;
+            color: #333333;
+            background-color: #F5F5DC;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABZJREFUeNpi+P//PwMDAwPD////GfAAQAAEPwC1WpQZAAAAAElFTkSuQmCC');
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .record-section ul {
+            margin-left: 20px;
+            padding-left: 10px;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .record-section li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+            padding-right: 10px;
+            position: relative;
+        }
+
+        .record-section ul li::before {
+            content: "•";
+            position: absolute;
+            left: -15px;
+            color: #333;
+        }
+
+        .record-section p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+            text-align: justify;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+        }
+
+        /* 表格：去掉所有边框，只保留文字层次 */
+        .subpage-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            table-layout: fixed;
+            border: none;          /* 去除表格外边框 */
+        }
+        .subpage-table td, .subpage-table th {
+            /* border: 1px solid #999999;  去掉单元格边框 */
+            border: none;
+            padding: 8px 12px;
+            font-size: 14px;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+        /* 为保持可读性，给表头加一点下划线或者干脆不加，完全无框线 */
+        .subpage-table th {
+            font-weight: 600;
+            color: #2c3e50;
+            background-color: rgba(0,0,0,0.02);
+            border-bottom: 1px solid #ddd; /* 仅保留一条细线用于区分表头，若想完全无框可注释掉，但为了清晰保留极淡线 */
+            border-bottom: 1px solid #e0c0a0; /* 柔和线，不突兀 */
+        }
+        .subpage-table td {
+            background-color: transparent;
+            border-bottom: 1px dotted #f0dbc0; /* 极淡的点线，便于视觉区分行，若不需要可改为 none */
+        }
+        /* 为了让表格更干净，可完全去掉边框，保留垂直间距即可。但遵循“去掉不必要的框线”，此处将边框全设none，同时用浅色分隔 */
+        .subpage-table td, .subpage-table th {
+            border: none;
+            border-bottom: 1px solid #f2e4d0;  /* 很淡的分隔线，几乎看不见，但有助于阅读。如果希望彻底无框，可以删掉这行 */
+        }
+        /* 彻底去掉所有边框：采用以下两行 */
+        .subpage-table, .subpage-table td, .subpage-table th {
+            border: none;
+        }
+        /* 增加一点点背景色区分表头？不，还是完全无框线，保持极简 */
+        .subpage-table th {
+            font-weight: 600;
+            color: #5a3e2b;
+        }
+        .subpage-table td {
+            color: #3e3e3e;
+        }
+
+        .subpage-title {
+            font-size: 22px;
+            color: #990000;
+            margin: 5px 0;
+            line-height: 1.3;
+            text-align: center;
+            overflow-wrap: break-word;
+        }
+
+        .subpage-subtitle {
+            font-size: 18px;
+            color: #333366;
+            margin: 10px 0 5px 0;
+            border-bottom: 1px dashed #999999; /* 保留，这是标题装饰 */
+            padding-bottom: 3px;
+            text-align: center;
+            overflow-wrap: break-word;
+        }
+
+        .subpage-section-title {
+            font-size: 16px;
+            color: #333366;
+            margin: 15px 0 10px 0;
+            border-bottom: 1px solid #CCCCCC; /* 保留，小标题的下划线 */
+            padding-bottom: 5px;
+        }
+
+        .blacked-out {
+            background-color: #000000;
+            color: #000000;
+            padding: 2px 5px;
+            margin: 0 2px;
+            user-select: none;
+        }
+
+        .blacked-out:hover {
+            background-color: #333333;
+            cursor: not-allowed;
+        }
+
+        .photo-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px dashed #999999; /* 照片容器保留虚线，以示区域 */
+            background-color: #F8F8F8;
+        }
+
+        .photo-frame {
+            display: inline-block;
+            border: 10px solid #8B4513; /* 相框边框，属于内容一部分，保留 */
+            background-color: #8B4513;
+            position: relative;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+            max-width: 100%;
+        }
+
+        .photo-frame img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #666; /* 图片内边线保留，细小 */
+        }
+
+        .photo-caption {
+            font-style: italic;
+            color: #666;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        .ink-blot {
+            position: absolute;
+            background-color: #000;
+            border-radius: 50%;
+            opacity: 0.9;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #990000; /* 保留，个人头部装饰 */
+            padding-bottom: 15px;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            color: #990000;
+            font-weight: bold;
+        }
+
+        .profile-department {
+            font-size: 16px;
+            color: #666;
+            margin-left: 10px;
+        }
+
+        .record-section strong {
+            color: #990000;
+        }
+
+        .internal-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border: 2px solid #990000; /* 弹窗边框保留，这是必要框线 */
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            padding: 20px;
+            min-width: 300px;
+            max-width: 500px;
+            z-index: 9999;
+            font-family: "宋体", Arial, sans-serif;
+            display: none;
+        }
+        
+        .internal-alert-content {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #333;
+            text-align: center;
+        }
+        
+        .internal-alert-title {
+            font-size: 18px;
+            color: #990000;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .internal-alert-button {
+            display: block;
+            margin: 0 auto;
+            background-color: #990000;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-family: "宋体", Arial, sans-serif;
+        }
+        
+        .internal-alert-button:hover {
+            background-color: #770000;
+        }
+        
+        .internal-alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 9998;
+            display: none;
+        }
+
+        /* 导航菜单的装饰线可以保留，但链接之间的竖线本身存在，不去动 */
+        .nav-menu a {
+            text-decoration: none;
+        }
+        /* 去除跑马灯可能的边框 */
+        .marquee {
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            .subpage-container {
+                padding: 15px;
+                margin: 10px auto;
+                width: 95%;
+            }
+            
+            .record-section ul {
+                margin-left: 15px;
+                padding-left: 5px;
+            }
+            
+            .record-section li {
+                margin-bottom: 6px;
+            }
+            
+            .record-section ul li::before {
+                left: -12px;
+            }
+            
+            .subpage-table td, .subpage-table th {
+                padding: 6px 8px;
+                font-size: 13px;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .profile-department {
+                margin-left: 0;
+                margin-top: 5px;
+            }
+            
+            .photo-frame {
+                border-width: 8px;
+            }
+            
+            .internal-alert {
+                min-width: 250px;
+                max-width: 90%;
+                padding: 15px;
+            }
+            
+            .subpage-search-fixed {
+                top: 5px;
+                right: 5px;
+                padding: 5px;
+            }
+            
+            .subpage-search-input {
+                width: 120px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .subpage-container {
+                padding: 12px;
+                width: 98%;
+            }
+            
+            .record-section ul {
+                margin-left: 10px;
+                padding-left: 0;
+            }
+            
+            .record-section li {
+                margin-bottom: 5px;
+                padding-right: 5px;
+            }
+            
+            .record-section ul li::before {
+                left: -10px;
+            }
+            
+            .subpage-table {
+                font-size: 12px;
+            }
+            
+            .subpage-table td, .subpage-table th {
+                padding: 4px 6px;
+                font-size: 12px;
+            }
+            
+            .photo-frame {
+                border-width: 5px;
+            }
+            
+            .internal-alert {
+                min-width: 200px;
+                padding: 12px;
+            }
+            
+            .subpage-search-fixed {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 15px;
+                justify-content: center;
+                background-color: transparent;
+                border: none;
+                box-shadow: none;
+            }
+            
+            .subpage-search-input {
+                width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 内部提醒弹窗 -->
+    <div class="internal-alert-overlay" id="alertOverlay"></div>
+    <div class="internal-alert" id="internalAlert">
+        <div class="internal-alert-title" id="alertTitle">系统提醒</div>
+        <div class="internal-alert-content" id="alertContent"></div>
+        <button class="internal-alert-button" id="alertButton">确定</button>
+    </div>
+    
+    <!-- 子页面固定搜索栏 -->
+    <div class="subpage-search-fixed" id="subpage-search">
+        <img src="search.png" alt="搜索logo" class="subpage-search-logo">
+        <input type="text" class="subpage-search-input" placeholder="搜索其他内容..." id="searchInput">
+        <button class="subpage-search-button" id="searchButton">搜索</button>
+    </div>
+    
+    <!-- 子页面容器 -->
+    <div class="subpage-container">
+        <!-- 访问计数器 -->
+        <div class="counter">您是第 <span id="visit-count">8888</span> 位访问者</div>
+        
+        <!-- 跑马灯 -->
+        <div class="marquee">
+            <marquee behavior="scroll" direction="left" scrollamount="3">欢迎访问锦华纺织厂供销科职工档案管理系统！本系统记录职工履历与表彰信息。</marquee>
+        </div>
+        
+        <!-- 导航菜单 -->
+        <div class="nav-menu">
+            <a href="#">首页</a> | 
+            <a href="#">工厂简介</a> | 
+            <a href="#">生产车间</a> | 
+            <a href="#">后勤管理</a> | 
+            <a href="#">卫生检查</a> | 
+            <a href="#">联系我们</a>
+        </div>
+        
+        <!-- 页面标题 -->
+        <div class="subpage-header">
+            <h1 class="subpage-title">供销科职工档案</h1>
+            <h2 class="subpage-subtitle">个人履历与表彰记录 - 档案编号: ZWM-1986</h2>
+        </div>
+        
+        <!-- 主要内容 (完全保留供销科内容，一字不改) -->
+        <div class="content">
+            <!-- 个人档案头部 -->
+            <div class="profile-header">
+                <div class="profile-name">朱为民</div>
+                <div class="profile-department"><strong>供销科</strong> · 采购供应组 · 职工</div>
+            </div>
+            
+            <!-- 基本信息 -->
+            <div class="record-section">
+                <h3 class="subpage-section-title">基本信息</h3>
+                <table class="subpage-table">
+                    <tr>
+                        <th width="30%">职工编号</th>
+                        <td>ZG-0561</td>
+                    </tr>
+                    <tr>
+                        <th>入职日期</th>
+                        <td>1986年11月1日</td>
+                    </tr>
+                    <tr>
+                        <th>部门</th>
+                        <td><strong>供销科</strong>采购供应组</td>
+                    </tr>
+                    <tr>
+                        <th>职位</th>
+                        <td>采购员 → 供应科专员</td>
+                    </tr>
+                    <tr>
+                        <th>工龄</th>
+                        <td>12年（截至1998年）</td>
+                    </tr>
+                    <tr>
+                        <th>政治面貌</th>
+                        <td>群众</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <!-- 工作履历 -->
+            <div class="record-section">
+                <h3 class="subpage-section-title">工作履历</h3>
+                <ul>
+                    <li>1986年11月 - 入职锦华纺织厂，分配至<strong>供销科</strong>任采购员</li>
+                    <li>1987年 - 晋升为采购供应组副组长，负责原棉采购</li>
+                    <li>1988年 - 调任<strong>供销科</strong>驻深南办事处代表</li>
+                    <li>1993年 - 返回总厂，担任<strong>供销科</strong>计划调配专员</li>
+                    <li>1998年 - 仍在职，负责原料库存协调与供销台账</li>
+                </ul>
+                <p><strong>工作评价：</strong>朱为民同志熟悉供销渠道，办事稳妥，<strong>尤其擅长与外地供应商沟通。</strong>为人正直，账目清晰，多次拒绝不正当回扣。性格内敛，但业务记录详尽。</p>
+            </div>
+            
+            <!-- 表彰记录 -->
+            <div class="record-section">
+                <h3 class="subpage-section-title">表彰记录</h3>
+                <table class="subpage-table">
+                    <tr>
+                        <th width="30%">表彰年份</th>
+                        <th>表彰名称</th>
+                        <th>表彰单位</th>
+                    </tr>
+                    <tr>
+                        <td>1988年</td>
+                        <td>"供销系统先进工作者"</strong></td>
+                        <td>广东省纺织工业厅</td>
+                    </tr>
+                    <tr>
+                        <td>1995年</td>
+                        <td>"物资供应保障先进个人"</strong></td>
+                        <td>锦华纺织厂</td>
+                    </tr>
+                    <tr>
+                        <td>1998年</td>
+                        <td>"锦华纺织厂荣誉职工"</strong></td>
+                        <td>锦华纺织厂工会</td>
+                    </tr>
+                </table>
+                <p style="margin-top: 10px;">1988年表彰评语：<em>"朱为民同志在采购工作中精打细算，为厂里节约大量成本，且从未发生质量事故。"</em></p>
+                <p>1998年表彰评语：<em>"入厂十余年，勤恳敬业，在供销岗位上默默奉献，是年轻职工的榜样。"</em></p>
+            </div>
+            
+            <!-- 家庭信息（涂黑部分） -->
+            <div class="record-section">
+                <h3 class="subpage-section-title">家庭信息</h3>
+                <p>以下信息因涉及个人隐私，已按规定进行保密处理：</p>
+                <table class="subpage-table">
+                    <tr>
+                        <th width="30%">婚姻状况</th>
+                        <td><span class="blacked-out">████</span></td>
+                    </tr>
+                    <tr>
+                        <th>配偶姓名</th>
+                        <td><span class="blacked-out">████</span></td>
+                    </tr>
+                    <tr>
+                        <th>子女情况</th>
+                        <td><span class="blacked-out">████</span></td>
+                    </tr>
+                    <tr>
+                        <th>家庭住址</th>
+                        <td><span class="blacked-out">████████████████</span></td>
+                    </tr>
+                    <tr>
+                        <th>原籍</th>
+                        <td>
+                            <span class="blacked-out">广</span>
+                            <span class="blacked-out">东</span>
+                            <span class="blacked-out">省</span>
+                            <span style="color: #333;">临渠县周家村</span>
+                            <span class="blacked-out">村</span>
+                        </td>
+                    </tr>
+                </table>
+                <p style="color: #666; font-size: 12px; margin-top: 5px;"><em>注：根据《职工隐私保护条例》，部分个人信息已做保密处理。</em></p>
+                
+                <!-- 解谜提示 -->
+                <div style="background-color: #FFF8DC; border-left: 3px solid #DAA520; padding: 10px; margin-top: 15px;">
+                    <p style="margin: 0; color: #8B4513; font-size: 13px;">
+                        <strong>档案备注：</strong>家庭信息栏曾被修改，原籍信息与职工登记表原始记录不一致，需进一步核实。可能与早期<strong>供销科</strong>外地采购档案有关。
+                    </p>
+                </div>
+            </div>
+            
+            <!-- 附件照片 -->
+           <!--  <div class="record-section">
+                <h3 class="subpage-section-title">附件照片</h3>
+                <div class="photo-container">
+                    <div class="photo-frame" id="familyPhoto">
+                         -- 通过CSS创建墨水涂改效果 - 
+                        <img src="https://via.placeholder.com/400x300/CCCCCC/666666?text=1965年全家福（档案照片）" alt=" 全家福" style="position: relative;">
+                        <div class="ink-blot" style="width: 80px; height: 80px; top: 40px; left: 100px;"></div>
+                        <div class="ink-blot" style="width: 60px; height: 60px; top: 50px; left: 90px;"></div>
+                        <div class="ink-blot" style="width: 70px; height: 70px; top: 30px; left: 110px;"></div>
+                    </div>
+                    <div class="photo-caption">朱为民全家福 </div>
+                </div>
+                <p style="color: #666; font-style: italic; text-align: center;">照片说明：1983年摄于临渠县照相馆。照片中包括朱为民（后排左一）、父亲、母亲、两个姐姐。背景可见周家村老宅门楣。据供销科同事回忆，朱师傅很少提及家庭。</p>
+            </div> -->
+            
+            <!-- 档案备注 -->
+            <div class="record-section">
+                <h3 class="subpage-section-title">档案备注</h3>
+                <ul>
+                    <li>朱为民同志档案中家庭信息部分存在多处涂改痕迹</li>
+                    <li>原籍信息登记不一致：入职登记表为"广东省深南市"，但家属信息栏残留"临渠县周家村"</li>
+                    <li><strong>1985年曾申请改名为"朱为民"，原名在供销科旧花名册中为"周为民"</strong></li>
+                    <li>与临渠县周氏家族关系待查证，据传其家族曾经营棉麻生意，可能与<strong>供销科</strong>早期采购网有关</li>
+                    <li><strong>母亲信息在档案中被刻意隐瞒</strong>，<strong>供销科</strong>1988年先进材料中曾提及"家庭支持"但无详情</li>
+                    <li>1997年<strong>供销科</strong>仓库盘点时，发现一批七十年代采购单据上有"周家村"字样备注</li>
+                </ul>
+               <!--  <div style="background-color: #F0F8FF; border: 1px dashed #4682B4; padding: 10px; margin-top: 15px;">
+                    -  <p style="margin: 0; color: #2E8B57; font-size: 13px;">
+                         -- 解谜线索保留但注释掉 - 
+                    </p> -- 
+                </div> -->
+            </div>
+            
+            <!-- 操作按钮 -->
+            <div class="navigation-buttons" style="margin-top: 30px;">
+                <button class="nav-btn" onclick="window.print()">打印档案</button>
+                <button class="nav-btn" onclick="">导出PDF</button>
+                <button class="nav-btn" onclick="">查看相关记录</button>
+                <a href="#" class="nav-btn home">返回列表</a>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="subpage-footer">
+            <p>锦华纺织厂供销科职工档案管理系统 &copy; 2003 | 最后更新: 2003-08-20</p>
+           <!--  <p>地址：广东省深南市工业园区锦华路88号 | 电话：0512-88886666</p> -->
+            <p>建议使用Internet Explorer 5.0以上版本浏览，分辨率800×600</p>
+        </div>
+        
+        <!-- 访客统计部分 (保留注释) -->
+        <!-- <div class="visitor-stats">
+            <p>页面访问统计：今日 128 次 | 本月 2,845 次 | 总计 15,672 次</p>
+        </div> -->
+    </div>
+    
+    <!-- 外部JavaScript文件 (相对路径) -->
+    <script src="./search-engine.js"></script>
+    <script src="./storage.js"></script>
+    <script src="./navigation.js"></script>
+    <script src="./visitor.js"></script>
+    <script src="./search-ass.js"></script>
+    <script src="./logo-return.js"></script>
+    <script>
+        // 页面初始化 (与原代码完全相同，未做任何修改)
+        document.addEventListener('DOMContentLoaded', function() {
+            setupExternalJSFailureCheck();
+            initInternalAlert();
+            console.log('供销科朱为民档案页面加载完成');
+            initPhotoInteraction();
+            initVisitorCounter();
+        });
+        
+        function initInternalAlert() {
+            const alertButton = document.getElementById('alertButton');
+            const alertOverlay = document.getElementById('alertOverlay');
+            
+            if (alertButton) {
+                alertButton.addEventListener('click', function() {
+                    hideInternalAlert();
+                });
+            }
+            
+            if (alertOverlay) {
+                alertOverlay.addEventListener('click', function() {
+                    hideInternalAlert();
+                });
+            }
+            
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    hideInternalAlert();
+                }
+            });
+        }
+        
+        function showInternalAlert(title, message) {
+            const alertTitle = document.getElementById('alertTitle');
+            const alertContent = document.getElementById('alertContent');
+            const internalAlert = document.getElementById('internalAlert');
+            const alertOverlay = document.getElementById('alertOverlay');
+            
+            if (alertTitle && alertContent && internalAlert && alertOverlay) {
+                alertTitle.textContent = title;
+                alertContent.textContent = message;
+                internalAlert.style.display = 'block';
+                alertOverlay.style.display = 'block';
+                
+                setTimeout(function() {
+                    const alertButton = document.getElementById('alertButton');
+                    if (alertButton) alertButton.focus();
+                }, 100);
+            }
+        }
+        
+        function hideInternalAlert() {
+            const internalAlert = document.getElementById('internalAlert');
+            const alertOverlay = document.getElementById('alertOverlay');
+            
+            if (internalAlert) internalAlert.style.display = 'none';
+            if (alertOverlay) alertOverlay.style.display = 'none';
+        }
+        
+       /*  function setupExternalJSFailureCheck() {
+            const searchButton = document.getElementById('searchButton');
+            const searchInput = document.getElementById('searchInput');
+            
+            if (!searchButton || !searchInput) {
+                console.error('搜索框元素未找到');
+                return;
+            }
+            
+            setTimeout(function() {
+                if (typeof window.searchEngineLoaded === 'undefined') {
+                    searchButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const term = searchInput.value.trim();
+                        if(term === '') {
+                            showInternalAlert('搜索提示', '请输入搜索内容');
+                        } else {
+                            showInternalAlert('搜索功能', '供销科档案检索暂未开放外部查询，请直接联系档案室。');
+                        }
+                    });
+                    searchInput.addEventListener('keypress', function(e) {
+                        if(e.key === 'Enter') {
+                            e.preventDefault();
+                            searchButton.click();
+                        }
+                    });
+                    console.log('已启用本地搜索错误处理（供销科版本）');
+                } else {
+                    console.log('外部搜索JS已加载');
+                }
+            }, 1000);
+        }
+         */
+         function initPhotoInteraction() {
+            const photo = document.getElementById('familyPhoto');
+            if (!photo) return;
+            
+            const inkBlots = photo.querySelectorAll('.ink-blot');
+            
+            inkBlots.forEach(blot => {
+                blot.addEventListener('click', function() {
+                    showInternalAlert('档案说明', '该电子扫描档案被墨水涂改。');
+                });
+            });
+            
+            photo.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.02)';
+                this.style.transition = 'transform 0.3s';
+            });
+            
+            photo.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        }
+         
+         function initVisitorCounter() {
+            const visitCount = document.getElementById('visit-count');
+            if (visitCount) {
+                const baseCount = 8888;
+                const randomIncrement = Math.floor(Math.random() * 100);
+                visitCount.textContent = baseCount + randomIncrement;
+            }
+        }
+        
+        function showRelatedRecords() {
+            showInternalAlert(
+                '相关记录查询', 
+                '系统查询到以下相关记录：\n\n' +
+                '1. 临渠县供销社往来账目（1975-1985）\n' +
+                '2. 周家村棉麻收购站档案（1960年代）\n' +
+                '3. 供销科采购会议记录 第23卷（1988-07）\n\n' +
+                '提示：朱为民管理的"采购台账"中多次出现"周家村"采购条目，但后期被修正为"临渠县"。'
+            );
+        }
+        
+        function exportToPDF() {
+            showInternalAlert('PDF导出功能', '供销科档案导出需科长授权，请向供销科办公室申请。');
+        }
+        
+        document.querySelectorAll('.blacked-out').forEach(element => {
+            element.addEventListener('mouseover', function() {
+                this.title = '信息已被保密处理';
+            });
+        });
+        
+        document.querySelectorAll('.nav-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                this.style.backgroundColor = '#770000';
+                setTimeout(() => {
+                    this.style.backgroundColor = '';
+                }, 200);
+            });
+        });
+    </script>
+     <script src="./jinzhi.js"></script>
+</body>
+</html>
