@@ -696,20 +696,28 @@
 
             // ---------- 七篇日记验证逻辑（完全隐藏答案） ----------
             const validLinksMap = {
-                1: ['https://sylvie-seven-cq.top/jhjm/sujinriji1'],
+                1: ['https://sylvie-seven-cq.top/jhjm/sujinriji1',
+                'https://sylvie-seven-cq.top/jhjm/sujinriji1.html',
+                    'https://sylvie-seven-cq.top/jhjm/sujinriji1.2.html'
+                ],
                 2: [
                     'https://sylvie-seven-cq.top/jhjm/素锦日记-小雨',
+                'https://sylvie-seven-cq.top/jhjm/%E7%B4%A0%E9%94%A6%E6%97%A5%E8%AE%B0-%E5%B0%8F%E9%9B%A8.html',
                     'https://sylvie-seven-cq.top/jhjm/%E7%B4%A0%E9%94%A6%E6%97%A5%E8%AE%B0-%E5%B0%8F%E9%9B%A8'
                 ],
-                3: ['https://sylvie-seven-cq.top/jhjm/sujinriji-chicu'],
+                3: ['https://sylvie-seven-cq.top/jhjm/sujinriji-chicu',
+                    'https://sylvie-seven-cq.top/jhjm/sujinriji-chicu.html'],
                 4: [
-                    'https://sylvie-seven-cq.top/jhjm/素锦日记4-小学后门',
+                    'https://sylvie-seven-cq.top/jhjm/素锦日记4-小学后门',   
+                  'https://sylvie-seven-cq.top/jhjm/%E7%B4%A0%E9%94%A6%E6%97%A5%E8%AE%B04-%E5%B0%8F%E5%AD%A6%E5%90%8E%E9%97%A8.html',
                     'https://sylvie-seven-cq.top/jhjm/%E7%B4%A0%E9%94%A6%E6%97%A5%E8%AE%B04-%E5%B0%8F%E5%AD%A6%E5%90%8E%E9%97%A8'
                 ],
-                5: ['https://sylvie-seven-cq.top/jhjm/sujinriji5-lige'],
+                5: ['https://sylvie-seven-cq.top/jhjm/sujinriji5-lige',
+                    'https://sylvie-seven-cq.top/jhjm/sujinriji5-lige.html'],
                 6: [
                     'https://sylvie-seven-cq.top/jhjm/素锦日记6-lfg',
-                    'https://sylvie-seven-cq.top/jhjm/%E7%B4%A0%E9%94%A6%E6%97%A5%E8%AE%B06-lfg'
+                    'https://sylvie-seven-cq.top/jhjm/%E7%B4%A0%E9%94%A6%E6%97%A5%E8%AE%B06-lfg',
+                    'https://sylvie-seven-cq.top/jhjm/%E7%B4%A0%E9%94%A6%E6%97%A5%E8%AE%B06-lfg.html'
                 ],
                 7: [
                     'https://sylvie-seven-cq.top/jhjm/素锦日记7-xghg演讲.html',
@@ -772,10 +780,10 @@
 
                 if (verifiedCount === totalDiaries) {
                     unlockBtn.disabled = false;
-                    unlockBtn.innerHTML = '<i class="fa-solid fa-unlock-alt"></i> 七钥齐备 · 进入旧梦';
+                    unlockBtn.innerHTML = '<i class="fa-solid fa-unlock-alt"></i> 七篇日记集齐 · 进入旧梦下部';
                 } else {
                     unlockBtn.disabled = true;
-                    unlockBtn.innerHTML = '<i class="fa-solid fa-lock"></i> 集齐七把钥匙 · 开启旧梦下部';
+                    unlockBtn.innerHTML = '<i class="fa-solid fa-lock"></i> 集齐七篇日记 · 开启旧梦下部';
                 }
             }
 
