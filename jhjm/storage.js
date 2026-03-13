@@ -27,6 +27,8 @@ const PageSystem = (function() {
             'xgxg.html',
             '流动人口.html',
             'zhoujiacun.html',
+            
+            '名单-升职.html',
             'zwm履历.html',
             '资产评估.html',
             '招工.html',
@@ -566,3 +568,4 @@ window.saveSearchHistory = PageSystem.saveSearchHistory;
 window.getSearchHistory = PageSystem.getSearchHistory;
 window.loadRecentPages = PageSystem.loadRecentPages;
 window.goToPage = PageSystem.goToPage;
+
