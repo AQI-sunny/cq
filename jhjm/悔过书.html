@@ -427,7 +427,7 @@
     <script>
         (function() {
             // ---------- 密码验证功能 (完全保留原样) ----------
-            document.getElementById('yinmimimaButton').addEventListener('click', function() {
+            /* document.getElementById('yinmimimaButton').addEventListener('click', function() {
                 const yinmimima = document.getElementById('yinmimimaInput').value;
                 const messageElement = document.getElementById('yinmimimaMessage');
                 const letterContainer = document.getElementById('letterContainer');
@@ -444,7 +444,43 @@
                     messageElement.style.color = '#B22222';
                     letterContainer.style.display = 'none';
                 }
-            });
+            }); */
+            // 添加错误计数变量
+let errorCount = 0;
+
+document.getElementById('yinmimimaButton').addEventListener('click', function() {
+    const yinmimima = document.getElementById('yinmimimaInput').value;
+    const messageElement = document.getElementById('yinmimimaMessage');
+    const letterContainer = document.getElementById('letterContainer');
+    
+    if (yinmimima === '19900519yaya') {
+        // 密码正确
+        messageElement.textContent = '密码正确！已显示悔过书内容';
+        messageElement.style.color = '#228B22';
+        letterContainer.style.display = 'block';
+        
+        // 滚动到悔过书位置
+        letterContainer.scrollIntoView({ behavior: 'smooth' });
+        
+        // 重置错误计数
+        errorCount = 0;
+    } else {
+        // 密码错误
+        errorCount++;
+        
+        // 根据错误次数显示不同提示
+        if (errorCount >= 5) {
+            messageElement.textContent = '密码错误，请重新输入。提示：生日为农历哦';
+        } else if (errorCount >= 3) {
+            messageElement.textContent = '密码错误，请重新输入。提示：小名全拼哦';
+        } else {
+            messageElement.textContent = '密码错误，请重新输入。提示：最重要的人小名+生日';
+        }
+        
+        messageElement.style.color = '#B22222';
+        letterContainer.style.display = 'none';
+    }
+});
 
             // 密码框回车触发验证
             document.getElementById('yinmimimaInput').addEventListener('keypress', function(e) {
