@@ -474,7 +474,7 @@ document.getElementById('yinmimimaButton').addEventListener('click', function() 
         } else if (errorCount >= 3) {
             messageElement.textContent = '密码错误，请重新输入。提示：小名全拼哦';
         } else {
-            messageElement.textContent = '密码错误，请重新输入。提示：最重要的人小名+生日';
+            messageElement.textContent = '密码错误，请重新输入。提示：最重要的人生日+小名';
         }
         
         messageElement.style.color = '#B22222';
@@ -645,6 +645,7 @@ document.getElementById('yinmimimaButton').addEventListener('click', function() 
         })();
     </script>
  <script src="./jinzhi.js"></script>
+    <script src="./storage.js"></script>
     <!-- 注意：原注释中的 visitor.js 未在script列表，但链接中引入了visitor.css，保持原样 -->
     <!-- 外部logo-return.js已在列表中 -->
 </body>
