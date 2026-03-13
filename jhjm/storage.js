@@ -568,4 +568,3 @@ window.saveSearchHistory = PageSystem.saveSearchHistory;
 window.getSearchHistory = PageSystem.getSearchHistory;
 window.loadRecentPages = PageSystem.loadRecentPages;
 window.goToPage = PageSystem.goToPage;
-
