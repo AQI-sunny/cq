@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -387,6 +388,26 @@
             background-color: #2b6fd8;
         }
 
+        .bam-blue {
+    width: 7px;
+    height: 14px;
+    background-color: #00008B;
+    border-radius: 2px;
+    /* 可选：加一个中间的凹槽感 */
+    border-top: 2px solid #00008B;
+    border-bottom: 2px solid #00008B;
+    box-shadow: inset 0 2px 0 rgba(255,255,255,0.2); 
+}
+.mj-tile {
+    width: 60px;          /* 示例宽度 */
+    height: 80px;         /* 示例高度 */
+    border: 2px solid #333;
+    border-radius: 6px;
+    padding: 8px;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
         /* 响应式调整 */
         @media (max-width: 900px) {
             .header-container {
@@ -714,13 +735,22 @@
     </div>
 
     <!-- 11. 八条 -->
-    <div class="mj-tile">
+    <!--  <div class="mj-tile">
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px 6px;">
             <div class="bam"></div><div class="bam"></div><div class="bam"></div><div class="bam"></div>
             <div class="bam"></div><div class="bam"></div><div class="bam"></div><div class="bam"></div>
         </div>
+    </div>  -->
+    <!-- 11. 八条 -->
+<div class="mj-tile">
+    <!-- 修改为 2 列布局，共 8 个元素会自动排列成 4 行 -->
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px 10px; justify-items: center; align-items: center; height: 100%;">
+        <div class="bam-blue"></div><div class="bam-blue"></div>
+        <div class="bam-blue"></div><div class="bam-blue"></div>
+        <div class="bam-blue"></div><div class="bam-blue"></div>
+        <div class="bam-blue"></div><div class="bam-blue"></div>
     </div>
-
+</div>
     <!-- 12. 六万 -->
     <div class="mj-tile">
         <div class="char-box">
@@ -760,5 +790,6 @@
     <script src="./visitor.js"></script>
     <script src="./search-ass.js"></script>
 <script src="./logo-return.js"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"6ad5be551a4043168991b3957da0f003","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
