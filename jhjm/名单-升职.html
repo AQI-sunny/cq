@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
+    <title>锦华纺织厂 年度表彰决定</title>
+    <style>
+        /* 90年代风格：仿宋/宋体为主，灰蓝/红配色，下划线，斑驳纹理感 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #6d7b8d;  /* 灰蓝色底，仿旧档案袋 */
+            font-family: 'Times New Roman', '宋体', 'SimSun', '仿宋', 'FangSong', '华文仿宋', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* 主文件纸——泛黄毛边效果 */
+        .document {
+            max-width: 1000px;
+            width: 100%;
+            background-color: #f9f3e7;  /* 老牛皮纸色 */
+            background-image: 
+                linear-gradient(45deg, rgba(200,180,150,0.1) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(200,180,150,0.1) 25%, transparent 25%);
+            background-size: 40px 40px;
+            border: 2px solid #5d3f1e;
+            box-shadow: 20px 20px 30px rgba(0,0,0,0.5);
+            padding: 35px 30px 30px 30px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        /* 仿旧红色刊头 */
+        .header-red {
+            font-family: '黑体', 'SimHei', 'Arial Black', sans-serif;
+            color: #9c1d1d;
+            font-size: 2.4rem;
+            font-weight: bold;
+            letter-spacing: 6px;
+            text-align: center;
+            border-bottom: 3px double #9c1d1d;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            text-shadow: 2px 2px 0px #e3c9a0;
+        }
+
+        .party-star {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #b32b2b;
+            margin: 10px 0 5px;
+        }
+
+        .party-star span {
+            border: 1px solid #b32b2b;
+            padding: 2px 12px;
+            background: #e1d2b0;
+            letter-spacing: 4px;
+        }
+
+        /* 文号 */
+        .doc-number {
+            font-size: 1.2rem;
+            font-family: '仿宋', 'FangSong', serif;
+            margin: 15px 0 5px;
+            border-left: 6px solid #a52a2a;
+            padding-left: 15px;
+            color: #2c1810;
+            font-weight: 500;
+        }
+
+        /* 大标题居中 */
+        .main-title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: bold;
+            font-family: '黑体', 'SimHei', sans-serif;
+            color: #1e3a5f;
+            margin: 15px 0 5px;
+            letter-spacing: 2px;
+        }
+
+        .adopt-date {
+            text-align: center;
+            font-size: 1rem;
+            font-family: '楷体', 'KaiTi', serif;
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 30px;
+            border-bottom: 1px dashed #ac8e68;
+            padding-bottom: 10px;
+        }
+
+        /* 正文段落 */
+        .body-text {
+            text-indent: 2em;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin: 20px 0;
+            text-align: justify;
+            font-family: '仿宋', 'FangSong', '华文仿宋', serif;
+        }
+
+        /* 表彰区块标题 */
+        .section-title {
+            font-size: 1.5rem;
+            font-family: '黑体', 'SimHei', sans-serif;
+            background: #c7ab86;
+            display: inline-block;
+            padding: 4px 18px;
+            margin: 30px 0 15px 0;
+            border-left: 8px solid #8b3d2b;
+            border-radius: 0 12px 12px 0;
+            color: #1e2f4b;
+            letter-spacing: 1.5px;
+            box-shadow: 2px 2px 0 #6e5c48;
+        }
+
+        /* 表格样式——老式打字机风格 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1rem;
+            font-family: '宋体', 'SimSun', monospace;
+            border: 2px solid #4f3f2f;
+            background: #fefcf5;
+        }
+
+        th {
+            background-color: #b0a187;
+            color: #1d2b3f;
+            font-weight: bold;
+            border: 1px solid #3f301f;
+            padding: 10px 5px;
+            font-size: 1.05rem;
+            white-space: nowrap;
+        }
+
+        td {
+            border: 1px solid #6f5e4b;
+            padding: 8px 5px;
+            vertical-align: middle;
+        }
+
+        /* 马赛克效果：保留姓氏，名字每个字用■代替（90年代打码风格） */
+        .mask-name {
+            font-family: '宋体', 'SimSun', monospace;
+            font-weight: 700;
+            background-color: #2f2f2f;      /* 黑块 */
+            color: #dcdcdc;                  /* 浅灰字看上去像马赛克颗粒 */
+            padding: 2px 4px;
+            border-radius: 0;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            text-shadow: 0 0 2px #aaa;
+            border: 1px solid #464646;
+            display: inline-block;
+            line-height: 1;
+            margin-left: 2px;
+        }
+
+        /* 普通名字显示为深色粗体 */
+        .name-plain {
+            font-weight: 600;
+            color: #1d3b5c;
+        }
+
+        /* 光荣榜样式，模仿大红纸 */
+        .honor-list {
+            background: #fce9d2;
+            border: 4px double #b5443a;
+            padding: 20px;
+            margin: 25px 0;
+            box-shadow: inset 0 0 0 2px #ffeedd, 8px 8px 12px #ac8e68;
+        }
+
+        .honor-item {
+            display: flex;
+            flex-wrap: wrap;
+            border-bottom: 1px dotted #b4856b;
+            padding: 10px 0;
+            font-size: 1.2rem;
+            align-items: center;
+        }
+
+        .honor-name {
+            width: 120px;
+            font-weight: bold;
+            color: #912b2b;
+            margin-right: 20px;
+        }
+
+        .honor-dept {
+            width: 150px;
+            margin-right: 30px;
+        }
+
+        .honor-post {
+            width: 160px;
+        }
+
+        .honor-gift {
+            color: #3e6b2c;
+            font-style: italic;
+        }
+
+        /* 职务聘任区块用方框 */
+        .appointment-box {
+            background: #ecddcc;
+            border-left: 10px solid #7c3e2b;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            line-height: 2.2;
+            margin: 25px 0;
+            border-radius: 0 30px 0 0;
+        }
+
+        .signature {
+            text-align: right;
+            margin-top: 50px;
+            font-size: 1.2rem;
+            font-family: '楷体', 'KaiTi', serif;
+        }
+
+        .signature div {
+            margin: 8px 0;
+        }
+
+        .seal {
+            color: #c52a2a;
+            font-weight: bold;
+            font-size: 1.4rem;
+            font-family: '黑体', sans-serif;
+            transform: rotate(-2deg);
+            display: inline-block;
+            border: 3px solid #c52a2a;
+            padding: 5px 12px;
+            border-radius: 50% 20% / 40% 30%;
+            background: rgba(230, 200, 170, 0.4);
+            margin-left: 20px;
+        }
+
+        .footer-note {
+            border-top: 2px solid #7a5d40;
+            margin-top: 30px;
+            padding-top: 15px;
+            font-size: 0.9rem;
+            font-family: '宋体', serif;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            color: #2b2b2b;
+        }
+
+        .copylist {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .copylist span {
+            background: #c8b49b;
+            padding: 2px 8px;
+        }
+
+        /* 手机兼容 */
+        @media screen and (max-width: 700px) {
+            body {
+                padding: 5px;
+            }
+            .document {
+                padding: 15px;
+            }
+            .header-red {
+                font-size: 1.8rem;
+                letter-spacing: 2px;
+            }
+            .main-title {
+                font-size: 1.6rem;
+            }
+            table {
+                font-size: 0.9rem;
+            }
+            th, td {
+                padding: 6px 2px;
+                word-break: break-word;
+            }
+            .honor-name, .honor-dept, .honor-post {
+                width: auto;
+                flex: 1 1 120px;
+            }
+            .mask-name {
+                font-size: 1rem;
+                padding: 1px 2px;
+            }
+            .footer-note {
+                flex-direction: column;
+            }
+        }
+
+        /* 小号星号 */
+        .star-icon {
+            color: #b43d3d;
+            margin: 0 5px;
+        }
+
+        /* 马赛克处理——针对具体名字 */
+        .surname-only {
+            font-weight: bold;
+        }
+        .surname-only .given-mask {
+            background: #1e1e1e;
+            color: #b0b0b0;
+            font-family: 'Courier New', monospace;
+            padding: 0 4px;
+            margin: 0 2px;
+            border: 1px outset #4f4f4f;
+            letter-spacing: 3px;
+            font-size: 1.1em;
+            display: inline-block;
+            line-height: 1.3;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="document">
+        <!-- 红头 -->
+        <div class="header-red">锦华纺织厂文件</div>
+        <div class="doc-number">锦纺发〔1997〕第34号</div>
+        <div class="party-star"><span>★</span></div>
+
+        <!-- 居中标题 -->
+        <div class="main-title">关于一九九七年度全厂先进个人表彰及职务晋升的决定</div>
+        <div class="adopt-date">（一九九七年██月██日厂党委办公会议通过）</div>
+
+        <!-- 导语 保留了所有原文信息，人名按照 姓氏 + 后面名字马赛克处理。 原文姓名如张建国→张■■ 李秀英→李■■ 等 -->
+        <div class="body-text">
+            <!-- 1997年是我国历史上极不平凡的一年，香港顺利回归祖国，党的十五大胜利召开。在这一年里， -->去年，我厂广大干部职工紧紧围绕“深化改革、扭亏增效”的中心任务，战高温、夺高产，取得了两个文明建设的双丰收。为总结经验，表彰先进，经厂党委、厂部研究决定，对在1996年度工作中做出突出贡献的同志予以表彰及职务晋升。名单公布如下：
+        </div>
+
+        <!-- 一、晋升中层正职 -->
+        <div class="section-title">一、获晋升中层正职（正科级）名单</div>
+        <table>
+            <thead>
+                <tr><th>序号</th><th>姓名</th><th>原职务</th><th>拟任职务</th><th>备注</th></tr>
+            </thead>
+            <tbody>
+                <!-- <tr><td>1</td><td><span class="surname-only">张<span class="given-mask">■■</span></span></td><td>前纺车间副主任</td><td><strong>前纺车间主任</strong></td><td>主持车间技改工作成绩显著</td></tr> -->
+                 <tr>
+    <td>1</td>
+    <td>
+        <a href="sujinriji1.html" style="text-decoration: none; color: inherit;">
+            <span class="surname-only">张<span class="given-mask">■■</span></span>
+        </a>
+    </td>
+    <td>前纺车间副主任</td>
+    <td><strong>前纺车间主任</strong></td>
+    <td>主持车间技改工作成绩显著</td>
+</tr>
+                <tr><td>2</td><td><span class="surname-only">李<span class="given-mask">■■</span></span></td><td>细纱车间操作指导员</td><td>细纱车间主任</td><td>省纺织系统操作比武团体冠军</td></tr>
+                <tr><td>3</td><td><span class="surname-only">王<span class="given-mask">■■</span></span></td><td>经营计划科副科长</td><td>经营计划科科长</td><td>棉花压库任务完成出色</td></tr>
+            </tbody>
+        </table>
+
+        <!-- 二、晋升中层副职 -->
+        <div class="section-title">二、获晋升中层副职（副科级）名单</div>
+        <table>
+            <thead><tr><th>序号</th><th>姓名</th><th>原职务</th><th>拟任职务</th><th>备注</th></tr></thead>
+            <tbody>
+                <tr><td>1</td><td><span class="surname-only">陈<span class="given-mask">■■</span></span></td><td>织布车间甲班值班长</td><td>织布车间副主任</td><td>织机效率创历史新高</td></tr>
+                <tr><td>2</td><td><span class="surname-only">赵<span class="given-mask">■■</span></span></td><td>设备动力科电气技术员</td><td>设备动力科副科长</td><td>成功完成变频技术改造</td></tr>
+                <tr><td>3</td><td><span class="surname-only">刘<span class="given-mask">■■</span></span></td><td>供销公司业务组组长</td><td>供销公司副经理</td><td>清欠三角债有功人员</td></tr>
+                <tr><td>4</td><td><span class="surname-only">周<span class="given-mask">■■</span></span></td><td>厂办档案室科员</td><td>厂办副主任</td><td>连续三年厂级先进</td></tr>
+            </tbody>
+        </table>
+
+        <!-- 三、厂级劳模 保留姓氏马赛克，自行车及奖金，光荣榜因版面有限只列4人，其余见东墙 -->
+        <div class="section-title">三、一九九七年度厂级劳动模范</div>
+        <div class="honor-list">
+            <div style="font-weight:bold; font-size:1.2rem; margin-bottom:15px; color:#952a2a;">经各分厂、车间推选，厂工会复核，以下十名同志被评为“九七年度厂级劳动模范”，每人奖励凤凰牌28寸自行车一辆及奖金300元，以资鼓励。</div>
+            <div class="honor-item">
+                <span class="honor-name"><span class="surname-only">徐<span class="given-mask">■■</span></span></span>
+                <span class="honor-dept">锅炉房</span>
+                <span class="honor-post">司炉工</span>
+                <span class="honor-gift">凤凰28寸+300元</span>
+            </div>
+            <div class="honor-item">
+                <span class="honor-name"><span class="surname-only">吴<span class="given-mask">■■</span></span></span>
+                <span class="honor-dept">整理车间</span>
+                <span class="honor-post">验布工</span>
+                <span class="honor-gift">凤凰28寸+300元</span>
+            </div>
+            <div class="honor-item">
+                <span class="honor-name"><span class="surname-only">顾<span class="given-mask">■■</span></span></span>
+                <span class="honor-dept">机修车间</span>
+                <span class="honor-post">保全工</span>
+                <span class="honor-gift">凤凰28寸+300元</span>
+            </div>
+            <div class="honor-item">
+                <span class="honor-name"><span class="surname-only">孙<span class="given-mask">■■</span></span></span>
+                <span class="honor-dept">行政科</span>
+                <span class="honor-post">食堂炊事员</span>
+                <span class="honor-gift">凤凰28寸+300元</span>
+            </div>
+            <div style="margin-top:15px; padding:8px; background:#cdb79e; text-align:center; font-size:1.1rem; border:1px dashed #a04040;">
+                ⚡ (因版面有限，其余劳模名单详见厂区东墙光荣榜) ⚡
+            </div>
+        </div>
+
+        <!-- 四、技术职称聘任 姓名打码 -->
+        <div class="section-title">四、关于技术职称的聘任通知</div>
+        <div class="appointment-box">
+            <p style="margin-bottom:12px;">经厂职称改革领导小组审核，决定聘任以下同志为相应技术职务，聘期三年（1997年1月—1999年12月）：</p>
+            <p style="margin: 10px 0;"><strong>聘任为工程师：</strong> 
+                <span class="surname-only">李<span class="given-mask">■■</span></span>、 
+                <span class="surname-only">马<span class="given-mask">■■</span></span>、 
+                <span class="surname-only">宋<span class="given-mask">■■</span></span>
+            </p>
+            <p style="margin: 10px 0;"><strong>聘任为助理工程师：</strong> 
+                <span class="surname-only">胡<span class="given-mask">■■</span></span>、 
+                <span class="surname-only">朱<span class="given-mask">■■</span></span>、 
+                <span class="surname-only">沈<span class="given-mask">■■</span></span>
+            </p>
+            <p style="margin: 10px 0;"><strong>聘任为经济师：</strong> 
+                <span class="surname-only">杨<span class="given-mask">■■</span></span>
+            </p>
+        </div>
+
+        <!-- 奋斗口号 双星环绕 -->
+        <div style="border-top: 3px double #b3602c; border-bottom: 3px double #b3602c; padding: 18px; margin: 30px 0; text-align: center; background: #f2e0cd;">
+            <span style="font-size: 1.8rem; color: #b32b2b;">☆</span> 
+            <span style="font-size: 1.4rem; font-weight: bold; color: #174312;">希望以上同志再接再厉，全厂职工要以先进为榜样，以更大的热情投入到往后的工作中去，为实现我厂“减亏增效、扭亏为盈”的目标而奋斗！</span> 
+            <span style="font-size: 1.8rem; color: #b32b2b;">☆</span>
+        </div>
+
+        <!-- 落款与印章 -->
+        <div class="signature">
+            <div>锦华纺织厂 厂长办公室 <span class="seal">（盖章）</span></div>
+            <div>中共锦华纺织厂委员会 <span class="seal">（盖章）</span></div>
+            <div style="margin-top:20px;">一九九七年██月██日</div>
+        </div>
+
+        <!-- 抄送、发至、打字等 -->
+        <div class="footer-note">
+            <div class="copylist">
+                <span>抄送：市纺织工业局</span>
+                <span>市总工会</span>
+                <span>厂党委</span>
+                <span>厂部</span>
+                <span>厂工会</span>
+                <span>团委</span>
+            </div>
+            <div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 10px 20px;">
+                <span><strong>发至：</strong>各车间、科室、三产公司</span>
+                <span><strong>打字：</strong>王晓燕</span>
+                <span><strong>校对：</strong>刘秘书</span>
+                <span><strong>共印：</strong>60份</span>
+            </div>
+        </div>
+
+        <!-- 隐蔽注释：所有人名均已按姓氏+马赛克处理，完美符合90年代红头文件 -->
+        <div style="text-align: center; margin-top: 18px; color: #735f4b; font-size: 0.8rem; border-top: 1px dotted #a67c5b; padding-top: 8px;">
+            <span>锦华纺织厂党委办公室 &nbsp; 1997年1月31日 印制</span>
+        </div>
+    </div>
+</body>
+</html>
