@@ -357,8 +357,10 @@ const PageSystem = (function() {
     function getPageNumber() {
         const currentFile = getCurrentFileName();
         
-        // 在页面列表中查找当前文件
-        const pageIndex = CONFIG.PAGE_LIST.indexOf(currentFile);
+        // 修复问题：通过忽略大小写和首尾空格进行容错匹配
+        const pageIndex = CONFIG.PAGE_LIST.findIndex(
+            filename => filename.toLowerCase().trim() === currentFile.toLowerCase().trim()
+        );
         
         if (pageIndex !== -1) {
             return {
