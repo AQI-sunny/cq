@@ -16,78 +16,58 @@ const PageSystem = (function() {
         
         // 页码系统配置
         PAGE_LIST: [
- '企业档案.html',
+            '企业档案.html',
             '李zh.html',
-             '风采.html',
- 'qdb2.html',
-
- 'zyym.html',
- '小雨宿舍.html',
- 'lzklzk.html',
- 'qdb01.html',
- 'xgxg.html',
- '流动人口.html',
- 'zhoujiacun.html',
- 'zwm履历.html',
-
- '资产评估.html',
- '招工.html',
- '招工horror.html',
- 'swzl.html',
- '东南西北.html',
-
- '供销科.html',
-  '厂报.html',
- '保卫科.html',
-
-
-  '小雪奖.html',
-
- 'hqxx.html',
- '简报.html',
-
-
- '工牌2.html',
- '工牌柯.html',
- '平面图.html',
-
- 'bbji.html',
-
- 'shouyin.html',
-
-
-
-
- '病退申请.html',
-
- '磁带.html',
- '票根.html',
-
-
- '影剧院.html',
-
- '工具箱.html',
- '悔过书.html',
- '幼儿园.html',
-  '魏笔记.html',
- '黄毛.html',
- '癞皮狗.html',
- '丫丫病历.html',
- '老虎机.html',
-/*  '记事本.html', */
-/*  '账本.html', */
- '排班表.html',
-/*  '辞职.html', */
- 'xy日记.html',
-
- 'sujinriji1.html',
-    '素锦日记-小雨.html',
-   'sujinriji-chicu.html',
-  '素锦日记4-小学后门.html',
- 'sujinriji5-lige.html',
-  '素锦日记6-lfg.html',
-
-  '素锦日记7-xghg演讲.html'
+            '风采.html',
+            'qdb2.html',
+            'zyym.html',
+            '小雨宿舍.html',
+            'lzklzk.html',
+            'qdb01.html',
+            'xgxg.html',
+            '流动人口.html',
+            'zhoujiacun.html',
+            'zwm履历.html',
+            '资产评估.html',
+            '招工.html',
+            '招工horror.html',
+            'swzl.html',
+            '东南西北.html',
+            '供销科.html',
+            '厂报.html',
+            '保卫科.html',
+            '小雪奖.html',
+            'hqxx.html',
+            '简报.html',
+            '工牌2.html',
+            '工牌柯.html',
+            '平面图.html',
+            'bbji.html',
+            'shouyin.html',
+            '病退申请.html',
+            '磁带.html',
+            '票根.html',
+            '影剧院.html',
+            '工具箱.html',
+            '悔过书.html',
+            '幼儿园.html',
+            '魏笔记.html',
+            '黄毛.html',
+            '癞皮狗.html',
+            '丫丫病历.html',
+            '老虎机.html',
+            /*  '记事本.html', */
+            /*  '账本.html', */
+            '排班表.html',
+            /*  '辞职.html', */
+            'xy日记.html',
+            'sujinriji1.html',
+            '素锦日记-小雨.html',
+            'sujinriji-chicu.html',
+            '素锦日记4-小学后门.html',
+            'sujinriji5-lige.html',
+            '素锦日记6-lfg.html',
+            '素锦日记7-xghg演讲.html'
             // 在这里继续添加您的页面文件
         ],
         
@@ -118,6 +98,10 @@ const PageSystem = (function() {
                 }
                 #page-system-counter:hover {
                     opacity: 0.9;
+                }
+                #page-system-counter.miss {
+                    background: rgba(139, 0, 0, 0.8);
+                    color: #ffcccc;
                 }
                 @media (max-width: 768px) {
                     #page-system-counter {
@@ -386,7 +370,8 @@ const PageSystem = (function() {
         if (pageIndex !== -1) {
             return {
                 current: pageIndex + 1,
-                total: CONFIG.PAGE_LIST.length
+                total: CONFIG.PAGE_LIST.length,
+                isInList: true
             };
         }
         
@@ -402,7 +387,13 @@ const PageSystem = (function() {
         const guessInfo = guessPageFromFilename(currentFile);
         if (guessInfo) return guessInfo;
         
-        return null;
+        // 如果都不在列表中，返回miss信息
+        return {
+            current: 'miss',
+            total: CONFIG.PAGE_LIST.length,
+            isInList: false,
+            filename: currentFile
+        };
     }
     
     // 从URL参数获取页码
@@ -415,7 +406,8 @@ const PageSystem = (function() {
                 const pageNum = parseInt(urlParams.get(param)) || 1;
                 return {
                     current: pageNum,
-                    total: CONFIG.PAGE_LIST.length || pageNum + 5
+                    total: CONFIG.PAGE_LIST.length || pageNum + 5,
+                    isInList: false
                 };
             }
         }
@@ -441,7 +433,8 @@ const PageSystem = (function() {
             if (current > 0) {
                 return {
                     current: current,
-                    total: CONFIG.PAGE_LIST.length || current + 3
+                    total: CONFIG.PAGE_LIST.length || current + 3,
+                    isInList: false
                 };
             }
         }
@@ -458,7 +451,8 @@ const PageSystem = (function() {
             if (pageNum > 0) {
                 return {
                     current: pageNum,
-                    total: CONFIG.PAGE_LIST.length || pageNum + 3
+                    total: CONFIG.PAGE_LIST.length || pageNum + 3,
+                    isInList: false
                 };
             }
         }
@@ -478,8 +472,16 @@ const PageSystem = (function() {
         
         const counter = document.createElement('div');
         counter.id = 'page-system-counter';
-        counter.textContent = `${pageInfo.current}/${pageInfo.total}`;
-        counter.title = `当前第 ${pageInfo.current} 页，共 ${pageInfo.total} 页`;
+        
+        // 根据是否在列表中设置不同的显示内容和样式
+        if (pageInfo.current === 'miss' || !pageInfo.isInList) {
+            counter.textContent = `miss/${pageInfo.total}`;
+            counter.title = `当前页面不在列表中，共 ${pageInfo.total} 页`;
+            counter.classList.add('miss');
+        } else {
+            counter.textContent = `${pageInfo.current}/${pageInfo.total}`;
+            counter.title = `当前第 ${pageInfo.current} 页，共 ${pageInfo.total} 页`;
+        }
         
         document.body.appendChild(counter);
     }
@@ -526,6 +528,12 @@ const PageSystem = (function() {
         CONFIG.PAGE_LIST = newList;
     }
     
+    // 检查当前页面是否在列表中
+    function isCurrentPageInList() {
+        const currentFile = getCurrentFileName();
+        return CONFIG.PAGE_LIST.includes(currentFile);
+    }
+    
     // ==================== 返回公共API ====================
     
     return {
@@ -550,6 +558,8 @@ const PageSystem = (function() {
         // 页码
         updatePageList: updatePageList,
         refreshPageCounter: initPageCounter,
+        isCurrentPageInList: isCurrentPageInList,
+        getPageNumber: getPageNumber,
         
         // 导航
         goToPage: goToPage,
