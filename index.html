@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AQI Game - 网页解谜与工具平台</title>
+    <title>AQI Game - 网解游戏与tool平台</title>
     <style>
         * {
             margin: 0;
@@ -452,6 +452,63 @@
             margin-top: 10px;
         }
 
+        .footer-links {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-btn {
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    border: 1px solid transparent;
+}
+
+.footer-btn-xhs {
+    background-color: #ff5e6c;
+    color: white;
+    border-color: #ff3b4a;
+}
+
+.footer-btn-xhs:hover {
+    background-color: #ff3b4a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(255,94,108,0.25);
+}
+
+.footer-btn-taptap {
+    background-color: #1e2e3d;
+    color: white;
+    border-color: #0f1a24;
+}
+
+.footer-btn-taptap:hover {
+    background-color: #0f1a24;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(30,46,61,0.25);
+}
+
+.footer-btn-group {
+    background-color: #2b6c4e;
+    color: white;
+    border-color: #1e4f39;
+}
+
+.footer-btn-group:hover {
+    background-color: #1e4f39;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(43,108,78,0.25);
+}
+
         .footer-bottom {
             text-align: center;
             padding-top: 20px;
@@ -633,7 +690,7 @@
         </div>
 
         <!-- 新增页脚部分 -->
-        <div class="footer-container">
+        <!-- <div class="footer-container">
             <div class="footer-content">
                 <div class="footer-section">
                     <h3 class="footer-title">关注作者</h3>
@@ -653,13 +710,68 @@
                             </div>
                         </div>
                         <p class="qrcode-text">扫描二维码关注公众号和小红书<br>获取最新游戏资讯</p>
-                         <p class="qrcode-text">
-                            或者关注：
+     <p class="qrcode-text">
+        或者关注：
         <a href="https://www.taptap.cn/user/39581437" target="_blank" rel="noopener noreferrer">AQI阿七的taptap个人主页</a>
     </p>
                     </div>
                 </div>
+            </div> -->
+            <div class="footer-container">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3 class="footer-title">关注作者</h3>
+            <div class="qrcode-container">
+                <!-- 二维码区域保持完全不变 -->
+                <div class="qrcode-row">
+                    <div class="qrcode-item">
+                        <div class="qrcode">
+                            <img src="./gallery/vx.jpg" alt="微信公众号二维码">
+                        </div>
+                        <div class="qrcode-label">微信公众号</div>
+                    </div>
+                    <div class="qrcode-item">
+                        <div class="qrcode">
+                            <img src="./gallery/xhs.jpg" alt="小红薯二维码">
+                        </div>
+                        <div class="qrcode-label">小红薯</div>
+                    </div>
+                </div>
+               
+                
+                <!-- 链接区域改造：按钮样式 + 新增业主群按钮，二维码图片未改动 -->
+                <div class="footer-links">
+                    <!-- 小红书按钮（新链接+指定锚文本） -->
+                    <a href="https://www.xiaohongshu.com/user/profile/62a9c2e9000000001b0285d6?xsec_token=ABwztV_zmfjJVEQ2L9a0_Hmj9rj02UomqKY2VLNFMlC7Y=&xsec_source=pc_search" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       class="footer-btn footer-btn-xhs">
+                        @AQI棖柒本柒
+                    </a>
+                    
+                    <!-- TapTap按钮（更新锚文本） -->
+                    <a href="https://www.taptap.cn/user/39581437" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       class="footer-btn footer-btn-taptap">
+                        AQI棖柒
+                    </a>
+                    
+                    <!-- 新增：业主群按钮 -->
+                    <a href="https://mp.weixin.qq.com/s/F_861rNiqxw9E1TqpQAIIQ" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       class="footer-btn footer-btn-group">
+                        栖乔华苑•静乔公寓业主群
+                    </a>
+                </div>
+
+                 <p class="qrcode-text">扫描二维码<br>或<br>点击上方按钮<br>关注公众号和小红书<br>获取最新游戏资讯~</p>
             </div>
+        </div>
+    </div>
+</div>
+ 
 
             <div class="footer-bottom">
                 <p>© 2025 AQI Game Platform - 网页游戏与工具平台 | 探索数字世界的无限可能</p>
@@ -733,4 +845,3 @@
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v67327c56f0bb4ef8b305cae61679db8f1769101564043" integrity="sha512-rdcWY47ByXd76cbCFzznIcEaCN71jqkWBBqlwhF1SY7KubdLKZiEGeP7AyieKZlGP9hbY/MhGrwXzJC/HulNyg==" data-cf-beacon='{"version":"2024.11.0","token":"6ad5be551a4043168991b3957da0f003","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
-
