@@ -14,7 +14,7 @@ const PageSystem = (function() {
             CURRENT_PAGE: 'search_system_current_page'
         },
         
-        // 页码系统配置
+        // 页码系统配置 (严格按照顺序，无重复页面)
         PAGE_LIST: [
             '企业档案.html',
             '李zh.html',
@@ -42,8 +42,8 @@ const PageSystem = (function() {
             '工牌2.html',
             '工牌柯.html',
             '平面图.html',
-            /* 'bbji.html', */
-             '通讯录.html',
+            '通讯录.html',
+            'bbji.html',
             'shouyin.html',
             '病退申请.html',
             '磁带.html',
@@ -57,11 +57,7 @@ const PageSystem = (function() {
             '癞皮狗.html',
             '丫丫病历.html',
             '老虎机.html',
-            /*  '记事本.html', */
-            /*  '账本.html', */
             '排班表.html',
-            
-            /*  '辞职.html', */
             'xy日记.html',
             'sujinriji1.html',
             '素锦日记-小雨.html',
@@ -70,7 +66,6 @@ const PageSystem = (function() {
             'sujinriji5-lige.html',
             '素锦日记6-lfg.html',
             '素锦日记7-xghg演讲.html'
-            // 在这里继续添加您的页面文件
         ],
         
         // 限制数量
@@ -100,10 +95,6 @@ const PageSystem = (function() {
                 }
                 #page-system-counter:hover {
                     opacity: 0.9;
-                }
-                #page-system-counter.miss {
-                    background: rgba(139, 0, 0, 0.8);
-                    color: #ffcccc;
                 }
                 @media (max-width: 768px) {
                     #page-system-counter {
@@ -372,12 +363,17 @@ const PageSystem = (function() {
         if (pageIndex !== -1) {
             return {
                 current: pageIndex + 1,
-                total: CONFIG.PAGE_LIST.length,
-                isInList: true
+                total: CONFIG.PAGE_LIST.length
+            };
+        } else {
+            // 如果不在 PAGE_LIST 内，直接返回 miss 和 总页数
+            return {
+                current: 'miss',
+                total: CONFIG.PAGE_LIST.length
             };
         }
         
-        // 备选方案：从URL参数获取
+        // 备选方案：从URL参数获取 (由于上面已经 return，下面的代码将不再执行，保留原状不删改)
         const urlInfo = getPageFromURL();
         if (urlInfo) return urlInfo;
         
@@ -389,13 +385,7 @@ const PageSystem = (function() {
         const guessInfo = guessPageFromFilename(currentFile);
         if (guessInfo) return guessInfo;
         
-        // 如果都不在列表中，返回miss信息
-        return {
-            current: 'miss',
-            total: CONFIG.PAGE_LIST.length,
-            isInList: false,
-            filename: currentFile
-        };
+        return null;
     }
     
     // 从URL参数获取页码
@@ -408,8 +398,7 @@ const PageSystem = (function() {
                 const pageNum = parseInt(urlParams.get(param)) || 1;
                 return {
                     current: pageNum,
-                    total: CONFIG.PAGE_LIST.length || pageNum + 5,
-                    isInList: false
+                    total: CONFIG.PAGE_LIST.length || pageNum + 5
                 };
             }
         }
@@ -435,8 +424,7 @@ const PageSystem = (function() {
             if (current > 0) {
                 return {
                     current: current,
-                    total: CONFIG.PAGE_LIST.length || current + 3,
-                    isInList: false
+                    total: CONFIG.PAGE_LIST.length || current + 3
                 };
             }
         }
@@ -453,8 +441,7 @@ const PageSystem = (function() {
             if (pageNum > 0) {
                 return {
                     current: pageNum,
-                    total: CONFIG.PAGE_LIST.length || pageNum + 3,
-                    isInList: false
+                    total: CONFIG.PAGE_LIST.length || pageNum + 3
                 };
             }
         }
@@ -464,7 +451,14 @@ const PageSystem = (function() {
     
     // 获取当前文件名
     function getCurrentFileName() {
-        return window.location.pathname.split('/').pop() || 'index.html';
+        let filename = window.location.pathname.split('/').pop() || 'index.html';
+        try {
+            // 加入解码：解决地址栏中文URL被转码后无法与配置列表匹配的问题
+            filename = decodeURIComponent(filename);
+        } catch (e) {
+            // 忽略解码错误
+        }
+        return filename;
     }
     
     // 显示页码计数器
@@ -474,16 +468,8 @@ const PageSystem = (function() {
         
         const counter = document.createElement('div');
         counter.id = 'page-system-counter';
-        
-        // 根据是否在列表中设置不同的显示内容和样式
-        if (pageInfo.current === 'miss' || !pageInfo.isInList) {
-            counter.textContent = `miss/${pageInfo.total}`;
-            counter.title = `当前页面不在列表中，共 ${pageInfo.total} 页`;
-            counter.classList.add('miss');
-        } else {
-            counter.textContent = `${pageInfo.current}/${pageInfo.total}`;
-            counter.title = `当前第 ${pageInfo.current} 页，共 ${pageInfo.total} 页`;
-        }
+        counter.textContent = `${pageInfo.current}/${pageInfo.total}`;
+        counter.title = `当前第 ${pageInfo.current} 页，共 ${pageInfo.total} 页`;
         
         document.body.appendChild(counter);
     }
@@ -530,12 +516,6 @@ const PageSystem = (function() {
         CONFIG.PAGE_LIST = newList;
     }
     
-    // 检查当前页面是否在列表中
-    function isCurrentPageInList() {
-        const currentFile = getCurrentFileName();
-        return CONFIG.PAGE_LIST.includes(currentFile);
-    }
-    
     // ==================== 返回公共API ====================
     
     return {
@@ -560,8 +540,6 @@ const PageSystem = (function() {
         // 页码
         updatePageList: updatePageList,
         refreshPageCounter: initPageCounter,
-        isCurrentPageInList: isCurrentPageInList,
-        getPageNumber: getPageNumber,
         
         // 导航
         goToPage: goToPage,
