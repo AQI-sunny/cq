@@ -174,6 +174,32 @@
             margin: 20px 0;
         }
 
+        /* 搜索受限提示样式 */
+.search-restriction-notice {
+    color: #ff0000;           /* 鲜红色 */
+    font-weight: bold;        /* 加粗 */
+    font-size: 16px;          /* 字号 */
+    text-align: center;       /* 居中 */
+    margin-top: 10px;         /* 与搜索栏的间距 */
+    text-shadow: 1px 1px 0px #fff; /* 文字白边，增强对比度 */
+    letter-spacing: 2px;      /* 字间距 */
+    animation: alert-blink 1s infinite; /* 增加闪烁动画，更显眼 */
+}
+
+/* 闪烁动画定义 */
+@keyframes alert-blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+/* 手机端适配调整 */
+@media (max-width: 600px) {
+    .search-restriction-notice {
+        font-size: 14px;
+        margin-top: 5px;
+    }
+}
         /* ---------- 手机端专用微调 (仅增强兼容，不改变原有结构) ---------- */
         @media (max-width: 600px) {
             .container {
@@ -240,6 +266,7 @@
                 margin-left: 0;
             }
         }
+    
     </style>
 
     <!-- 用户指定的外部 CSS 文件 (保持原样不动) -->
@@ -260,9 +287,19 @@
                     <input type="text" class="search-input" placeholder="搜索其他内容...">
                     <button class="search-button">搜索</button>
                 </div>
+                
+            </div>
+            
+        </div>
+         <div class="header-container">
+        <div class="search-container">
+              <!-- 新增提示行 -->
+                <div class="search-restriction-notice">⚠️此页面搜索受限⚠️</div>
+                <!-- ❗仅能搜索1个关键词⚠️请点击logo❗跳转搜索首页进行搜索 -->
+                 <div class="search-restriction-notice">⚠️仅能搜索1个关键词⚠️</div>
+                  <div class="search-restriction-notice">⚠️请点击logo跳转搜索首页进行搜索⚠️</div>
             </div>
         </div>
-        
         <!-- 滚动公告 (保留) -->
         <div class="marquee">
             <marquee behavior="scroll" direction="left">注意：本记录仅供内部参考，严禁外传！</marquee>
