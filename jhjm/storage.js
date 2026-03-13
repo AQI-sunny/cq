@@ -39,6 +39,7 @@ const PageSystem = (function() {
             '厂报.html',
             '保卫科.html',
             '小雪奖.html',
+            
             'hqxx.html',
             '简报.html',
             '工牌2.html',
@@ -359,9 +360,13 @@ const PageSystem = (function() {
     function getPageNumber() {
         const currentFile = getCurrentFileName();
         
-        // 修复问题：通过忽略大小写和首尾空格进行容错匹配
+        // 匹配逻辑：将当前文件名和列表项都去掉 .html 后缀进行对比
         const pageIndex = CONFIG.PAGE_LIST.findIndex(
-            filename => filename.toLowerCase().trim() === currentFile.toLowerCase().trim()
+            filename => {
+                const cleanListItem = filename.replace(/\.html$/i, '').toLowerCase().trim();
+                const cleanCurrentFile = currentFile.toLowerCase().trim();
+                return cleanListItem === cleanCurrentFile;
+            }
         );
         
         if (pageIndex !== -1) {
@@ -370,25 +375,19 @@ const PageSystem = (function() {
                 total: CONFIG.PAGE_LIST.length
             };
         } else {
-            // 如果不在 PAGE_LIST 内，直接返回 miss 和 总页数
             return {
                 current: 'miss',
                 total: CONFIG.PAGE_LIST.length
             };
         }
         
-        // 备选方案：从URL参数获取 (由于上面已经 return，下面的代码将不再执行，保留原状不删改)
+        // 备选方案（下方的 return 已被阻断，仅保留结构）
         const urlInfo = getPageFromURL();
         if (urlInfo) return urlInfo;
-        
-        // 备选方案：从data属性获取
         const dataInfo = getPageFromData();
         if (dataInfo) return dataInfo;
-        
-        // 备选方案：从文件名猜测
         const guessInfo = guessPageFromFilename(currentFile);
         if (guessInfo) return guessInfo;
-        
         return null;
     }
     
@@ -457,12 +456,11 @@ const PageSystem = (function() {
     function getCurrentFileName() {
         let filename = window.location.pathname.split('/').pop() || 'index.html';
         try {
-            // 加入解码：解决地址栏中文URL被转码后无法与配置列表匹配的问题
             filename = decodeURIComponent(filename);
-        } catch (e) {
-            // 忽略解码错误
-        }
-        return filename;
+        } catch (e) {}
+        
+        // 【核心修改】去掉 .html 后缀以实现忽略后缀匹配
+        return filename.replace(/\.html$/i, '');
     }
     
     // 显示页码计数器
@@ -482,13 +480,10 @@ const PageSystem = (function() {
     
     // 获取页面标题
     function getPageTitle(url) {
-        // 如果有关键词数据，从中查找
         if (keywordsData?.recentPages) {
             const pageInfo = keywordsData.recentPages.find(p => p.url === url);
             if (pageInfo?.title) return pageInfo.title;
         }
-        
-        // 从文件名生成标题
         const fileName = url.split('/').pop() || '';
         return fileName.replace('.html', '').replace(/[-_]/g, ' ') || '未知页面';
     }
@@ -514,41 +509,23 @@ const PageSystem = (function() {
     }
     
     // ==================== 更新配置 ====================
-    
-    // 更新页面列表
     function updatePageList(newList) {
         CONFIG.PAGE_LIST = newList;
     }
     
     // ==================== 返回公共API ====================
-    
     return {
-        // 初始化
         init: init,
-        
-        // 历史记录
         saveSearchHistory: saveSearchHistory,
         getSearchHistory: getSearchHistory,
-        
-        // 面包屑
         getBreadcrumb: getBreadcrumb,
         getParentPageInfo: getParentPageInfo,
-        
-        // 当前页面
         getCurrentPageInfo: getCurrentPageInfo,
-        
-        // 近期访问
         getRecentPages: getRecentPages,
         loadRecentPages: loadRecentPages,
-        
-        // 页码
         updatePageList: updatePageList,
         refreshPageCounter: initPageCounter,
-        
-        // 导航
         goToPage: goToPage,
-        
-        // 清理
         clearHistory: clearHistory
     };
 })();
@@ -560,10 +537,7 @@ if (document.readyState === 'loading') {
     setTimeout(() => PageSystem.init(), 100);
 }
 
-// 暴露为全局对象
 window.PageSystem = PageSystem;
-
-// 为了向后兼容，保留旧的函数名（可选）
 window.saveSearchHistory = PageSystem.saveSearchHistory;
 window.getSearchHistory = PageSystem.getSearchHistory;
 window.loadRecentPages = PageSystem.loadRecentPages;
