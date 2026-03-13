@@ -42,7 +42,8 @@ const PageSystem = (function() {
             '工牌2.html',
             '工牌柯.html',
             '平面图.html',
-            'bbji.html',
+            /* 'bbji.html', */
+             '通讯录.html',
             'shouyin.html',
             '病退申请.html',
             '磁带.html',
@@ -59,6 +60,7 @@ const PageSystem = (function() {
             /*  '记事本.html', */
             /*  '账本.html', */
             '排班表.html',
+            
             /*  '辞职.html', */
             'xy日记.html',
             'sujinriji1.html',

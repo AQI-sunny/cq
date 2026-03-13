@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>锦华纺织厂 行政通讯录 · 1997内部版</title>
+    <style>
+        /* 强烈复古风 —— 模拟90年代针式打印/油印效果 */
+        body {
+            background: #b8a99a;  /* 旧式牛皮纸信封底色 */
+            font-family: 'Courier New', 'Lucida Console', 'NSimSun', '宋体', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 30px 20px;
+            padding: 0;
+        }
+        .page {
+            max-width: 780px;
+            width: 100%;
+            background: #f3ebd2;   /* 泛黄草纸色 */
+            background-image: 
+                linear-gradient(rgba(200,180,140,0.1) 1px, transparent 1px),
+                radial-gradient(circle at 30% 40%, rgba(150,120,80,0.08) 1px, transparent 1px);
+            background-size: 100% 4px, 20px 20px;  /* 隐约横纹 + 旧纸斑点 */
+            box-shadow: 12px 16px 24px rgba(0,0,0,0.4), 0 0 0 1px #5e4b3c inset, 0 0 0 2px #cbb99c inset;
+            padding: 28px 32px 24px 32px;
+            border: 1px solid #ab8e6f;
+            position: relative;
+        }
+
+        /* 模拟老式油印字迹略有深浅不一 + 轻微洇墨 */
+        .content {
+            color: #1e2b3f;  /* 深蓝黑，类似复写纸/圆珠笔 */
+            font-size: 15.5px;
+            line-height: 1.55;
+            letter-spacing: 0.02em;
+            text-shadow: 0.5px 0.5px 0 rgba(0,0,0,0.05);  /* 微微重影 */
+        }
+
+        /* 标题区 — 庄重且带铅字感 */
+        .header-title {
+            font-size: 24px;
+            font-weight: 600;
+            font-family: 'Blackletter', 'Old English Text MT', 'SimHei', '黑体', serif;
+            text-align: center;
+            letter-spacing: 3px;
+            color: #2f2e1f;
+            margin: 0.2em 0 0 0;
+            text-transform: uppercase;
+            border-bottom: 3px double #7a5b3e;
+            padding-bottom: 6px;
+            word-spacing: 6px;
+            text-shadow: 2px 2px 0 #bba88b;
+        }
+        .header-sub {
+            text-align: center;
+            font-size: 17px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            margin: 4px 0 18px 0;
+            background: #d9c9af;
+            display: inline-block;
+            padding: 2px 20px 3px 20px;
+            border-left: 3px solid #7f603e;
+            border-right: 3px solid #7f603e;
+            letter-spacing: 2px;
+            color: #2c3e1f;
+        }
+
+        /* 三个分类小标题 — 模拟铅字印章 */
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            background: #cfbc9c;
+            display: inline-block;
+            padding: 2px 18px 3px 12px;
+            margin: 20px 0 8px 0;
+            border-top: 2px solid #7b5f40;
+            border-bottom: 2px solid #7b5f40;
+            font-family: 'Courier New', 'NSimSun', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 2px 3px 0 #886e4f;
+        }
+
+        /* 表格风格——无显式表格线，用空格和点线营造九十年代通讯录版式 */
+        .dept-block {
+            margin: 10px 0 8px 12px;
+            border-left: 2px dotted #6f523b;
+            padding-left: 14px;
+        }
+        .row {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin: 3px 0;
+            border-bottom: 1px dashed #b8a98b;
+            padding-bottom: 2px;
+        }
+        .dept {
+            width: 110px;
+            font-weight: bold;
+            color: #3e2f1c;
+            font-size: 15.5px;
+        }
+        .name {
+            width: 90px;
+            padding-left: 6px;
+            font-weight: normal;
+        }
+        .title {
+            width: 95px;
+            padding-left: 6px;
+            color: #3f3f2b;
+        }
+        .phone {
+            width: 85px;
+            padding-left: 6px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        /* 手写补充区专用样式 — 模拟钢笔手写体 */
+        .handwrite-area {
+            margin: 28px 0 15px 20px;
+            padding: 12px 20px 12px 26px;
+            background: #e6d8bf;
+            border: 2px dashed #7a4e2c;
+            box-shadow: inset 0 0 0 1px #cfb48c;
+            font-family: 'KaiTi', '华文楷体', '楷体', 'STKaiti', cursive;
+            border-radius: 0px 20px 0px 20px;  /* 不规则的旧纸角 */
+            position: relative;
+        }
+        .handwrite-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2a3f10;
+            margin: 0 0 10px 0;
+            border-bottom: 2px solid #9c7e5c;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        .handwrite-line {
+            font-size: 18px;
+            line-height: 1.9;
+            color: #142b51;   /* 深蓝墨水色 */
+            text-shadow: 1px 1px 1px #baa07d;
+            margin: 6px 0;
+            border-left: 4px solid #6b4d32;
+            padding-left: 14px;
+            font-style: italic;
+            word-spacing: 4px;
+        }
+        .handwrite-line small {
+            font-size: 15px;
+            font-family: 'Courier New', monospace;
+            color: #2c573b;
+            background: #eedbbd;
+            padding: 0 6px;
+        }
+        .bp-note {
+            font-size: 16px;
+            background: #cfbc93;
+            padding: 5px 10px;
+            margin-top: 8px;
+            border-left: 8px solid #3f301f;
+            font-family: 'Courier New', '楷体', cursive;
+        }
+        .ps-line {
+            margin-top: 14px;
+            font-size: 16.5px;
+            font-family: 'KaiTi', cursive;
+            color: #261f0c;
+            background: #dac9ac;
+            padding: 4px 8px;
+        }
+
+        /* 紧急联络小方块 — 仿老式便签角 */
+        .emergency-box {
+            margin: 25px 0 10px 0;
+            background: #d9c4a2;
+            border: 3px solid #754c29;
+            padding: 12px 18px 10px 18px;
+            font-family: 'Courier New', monospace;
+            box-shadow: 5px 5px 0 #937554;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .emergency-item {
+            font-size: 17px;
+            font-weight: bold;
+            color: #1f2f0f;
+            white-space: nowrap;
+            border-right: 1px solid #a9845b;
+            padding-right: 20px;
+            margin-right: 10px;
+        }
+        .emergency-item:last-child {
+            border-right: none;
+        }
+        .emergency-phone {
+            font-family: 'Courier New', monospace;
+            background: #2d2d1a;
+            color: #eae2bf;
+            padding: 3px 9px;
+            margin-left: 5px;
+            letter-spacing: 1px;
+            border: 1px solid #cfaa76;
+        }
+
+        /* 页脚缮印信息 — 针打小字 */
+        .footer-print {
+            margin-top: 28px;
+            border-top: 3px double #b78f62;
+            padding-top: 12px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            color: #3d3a28;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            background: #ebddc6;
+            padding: 10px 8px 4px 8px;
+        }
+        .footer-left {
+            font-weight: bold;
+            color: #332812;
+        }
+        .footer-right {
+            font-style: italic;
+            letter-spacing: 1px;
+            border-left: 2px solid #8f794b;
+            padding-left: 12px;
+        }
+        .small-warning {
+            font-size: 13px;
+            width: 100%;
+            text-align: right;
+            margin-top: 8px;
+            border-top: 1px dashed #a78358;
+            padding-top: 5px;
+            color: #5a3f21;
+        }
+
+        /* 手写区里模拟bp机数字、涂抹感 */
+        .handwrite-phone {
+            font-family: 'Courier New', monospace;
+            font-size: 19px;
+            font-weight: bold;
+            background: #f2e1c7;
+            border: 1px solid #7b623c;
+            padding: 2px 8px 2px 8px;
+            margin: 0 4px;
+        }
+        hr.dashed {
+            border: none;
+            border-top: 3px dashed #ab8b63;
+            margin: 24px 0 10px 0;
+        }
+        /* 模拟原稿上钢笔略微晕染 */
+        .ink-blot {
+            position: relative;
+            display: inline-block;
+        }
+        .ink-blot::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background: rgba(72, 52, 22, 0.1);
+            bottom: 2px;
+            left: 2px;
+            filter: blur(2px);
+            pointer-events: none;
+        }
+
+        /* 内部电话标注短横 */
+        .muted-note {
+            font-size: 13px;
+            color: #646157;
+            margin-left: 4px;
+        }
+        /* 模拟个别字敲打偏移 */
+        .offset {
+            margin-left: -1px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <div class="content">
+
+        <!-- 主标题 仿铅字 -->
+        <div class="header-title">锦华纺织厂 行政通讯录</div>
+        <div style="text-align: center; margin-top: 2px;">
+            <span class="header-sub">（一九九七年三月 印发）</span>
+        </div>
+
+        <!-- 主要生产车间 -->
+        <div class="section-title">⚙️ 主要生产车间</div>
+        <div class="dept-block">
+            <div class="row"><span class="dept">前纺车间</span><span class="name">赵████</span><span class="title">主任</span><span class="phone">3102</span></div>
+            <div class="row"><span class="dept">细纱车间</span><span class="name">陈████</span><span class="title">主任</span><span class="phone">3225</span></div>
+            <div class="row"><span class="dept">准备车间</span><span class="name">周████</span><span class="title">主任</span><span class="phone">3310</span></div>
+            <div class="row"><span class="dept">织布车间</span><span class="name">刘████</span><span class="title">主任</span><span class="phone">3408</span></div>
+            <div class="row"><span class="dept">成品检验</span><span class="name">吴████</span><span class="title">组长</span><span class="phone">3512</span></div>
+        </div>
+
+        <!-- 职能科室 -->
+        <div class="section-title">📁 职能科室</div>
+        <div class="dept-block">
+            <div class="row"><span class="dept">供销科</span><span class="name">罗████</span><span class="title">科长</span><span class="phone">4113</span></div>
+            <div class="row"><span class="dept">财务科</span><span class="name">杨████</span><span class="title">科长</span><span class="phone">4217</span></div>
+            <div class="row"><span class="dept">劳资人事科</span><span class="name">胡████</span><span class="title">科长</span><span class="phone">4315</span></div>
+            <div class="row"><span class="dept">保卫科</span><span class="name">刘████</span><span class="title">科长</span><span class="phone">5218</span></div>
+            <div class="row"><span class="dept">设备动力科</span><span class="name">宋████</span><span class="title">科长</span><span class="phone">4519</span></div>
+        </div>
+
+        <!-- 后勤保障部门 -->
+        <div class="section-title">🚛 后勤保障部门</div>
+        <div class="dept-block">
+            <div class="row"><span class="dept">总务科</span><span class="name">魏████</span><span class="title">科长</span><span class="phone">5112</span></div>
+            <div class="row"><span class="dept">职工医院</span><span class="name">唐████</span><span class="title">-</span><span class="phone">5218</span></div>
+            <div class="row"><span class="dept">运输科</span><span class="name">刘████</span><span class="title">-</span><span class="phone">5314</span></div>
+            <!-- <div class="row"><span class="dept">家属区值班室</span><span class="name">-</span><span class="title">-</span><span class="phone">5410</span></div> -->
+        </div>
+
+        <!-- 手写补充区（钢笔手写体） -->
+        <div class="handwrite-area">
+            <!-- <div class="handwrite-title">✍️ 【手写补充区】</div> -->
+             <div class="handwrite-title"></div>
+            <!-- <div class="handwrite-line" style="font-size: 19px;">
+                <span class="ink-blot">刘福根（保卫科）</span>
+            </div>
+            <div class="handwrite-line">
+                📟 <span style="font-family:'Courier New';">BP机：</span> <span class="handwrite-phone">126 - 呼 8832615</span>
+                <br><small style="margin-left:38px;">（备注：听到传呼后回厂部总机转5218）</small>
+            </div>
+
+            <div class="handwrite-line" style="margin-top: 12px;">
+                📞 <span style="font-family:'Courier New';">住宅电话 / 手机：</span> <span class="handwrite-phone">139 0825 1XXX</span>
+                <br><small style="margin-left:38px;">（备注：晚上九点后打宅电，手机信号不好时多拨两次）</small>
+            </div> -->
+            <!-- 常用紧急联络 也是手写风格但加框处理 更像便签 -->
+             <div class="handwrite-line" style="font-size: 19px;">
+                <span class="ink-blot">刘福根（保卫科）</span>
+            </div>
+             <div class="handwrite-line">
+                📟 <span style="font-family:'Courier New';">BP机：</span> <span class="handwrite-phone">127-36578</span>
+                <br><small style="margin-left:38px;">（备注：听到传呼后回厂部总机转5218）</small>
+            </div>
+            <div style="margin-top: 20px; background: #dac09a; padding: 6px 12px; border-left: 7px solid #5d452c;">
+                <div style="font-size:20px; font-weight:bold;">📢 常用紧急联络：</div>
+                <div style="font-size:18px; padding-left:10px;font-family:'Courier New';">厂夜间值班室：<strong>5218</strong>（找老刘）</div>
+                <div style="font-size:18px; padding-left:10px;font-family:'Courier New';">深南市公安局：0825-222XXX</div>
+                <div style="font-size:18px; padding-left:10px;font-family:'Courier New';">消防队：119</div>
+            </div>
+        </div>
+
+        <!-- 原有印刷信息内的“常用紧急联络”其实手写区已有，但原稿页脚之前还有排版信息，我们额外保留一个clean版本符合原貌 -->
+        <!-- 为了更忠实原稿，下方再展示一个干净印刷紧急联络（原稿确实在最后有） 但不要重复太生硬，合并展示：我们保持手写区里的紧急联络即可，但原稿的确在底部也有“印刷排版信息”前有“常用紧急联络”几个字，我们复用上面手写区包含了，为避免冗余，下面仅放印刷页脚。但原稿手写区和印刷区是分开的，更好再现：我们在手写区后放一条虚线，再还原印刷联络（其实手写已经包括，但为排版完整，以备注形式保留）但原稿在手写补充区下面还有‘常用紧急联络：’等，我们就按原稿手写区里的内容即可。加个分割线表示回到打字稿。 但原稿最末尾还有消防队119等，手写区写了，就不再单独提。但要包含“印刷排版信息”页脚。 -->
+        <hr class="dashed" />
+
+        <!-- 原稿中这部分可能是单独成区的，但手写区写了，我们再加一个版本来强调“印刷排版信息”之前的部分：把“常用紧急联络”再以原始小字形式列一下 以示区分。其实手写区后面紧跟着就是印刷页脚，我们保持原样。也可以补一个无边框的简洁版联络，但就不影响手写独特性。 我们下面增加一个“常用紧急联络”的简单复刻，采用仿针打字体 -->
+        <div style="margin: 12px 0 0 12px; font-family: 'Courier New'; background: #e6d7bd; padding: 6px 14px; border: 1px solid #b8864b;">
+            <div style="font-weight: bold; font-size: 16px;">📞 常用紧急联络（印刷体备忘）：</div>
+            <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+                <span>厂夜间值班室：4408 (小周)</span>
+                <span>深南市公安局：0825-222XXX</span>
+                <span>消防队：119</span>
+            </div>
+        </div>
+
+        <!-- 印刷排版信息（页脚）完全按照原稿缮印 -->
+        <div class="footer-print">
+            <div class="footer-left">锦华纺织厂 打字室 缮印</div>
+            <div class="footer-right">1997年3月 第1版 共印80份</div>
+            <div class="small-warning">本名册仅限内部使用，请勿外传。</div>
+        </div>
+
+        <!-- 再加一个极隐秘的模拟老式针孔 -->
+        <div style="height: 8px;"></div>
+        <!-- 模拟装订孔 -->
+        <div style="position: absolute; left: 8px; top: 120px; width: 6px; height: 6px; border-radius: 50%; background: #6f5e4b; box-shadow: 0 50px 0 #6f5e4b, 0 100px 0 #6f5e4b, 0 150px 0 #6f5e4b, 0 200px 0 #6f5e4b;"></div>
+        <div style="position: absolute; right: 8px; top: 120px; width: 6px; height: 6px; border-radius: 50%; background: #6f5e4b; box-shadow: 0 50px 0 #6f5e4b, 0 100px 0 #6f5e4b, 0 150px 0 #6f5e4b, 0 200px 0 #6f5e4b;"></div>
+    </div>
+    <!-- 最后一排小字暗示年代 -->
+    <div style="text-align: center; margin-top: 8px; font-size: 12px; color: #745f45; font-family: 'Courier New';">[ 内部参考 · 请勿携带离厂 ]</div>
+</div>
+</body>
+</html>

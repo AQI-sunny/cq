@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><!-- 1997  -->寻呼机<!--  · liufugen --></title>
+    <title><!-- 1997  -->拨号<!--  · liufugen --></title>
     <style>
-        /*  BB机风格 —— 光标永远跟随数字 */
+        /*   光标永远跟随数字 */
         * {
             margin: 0;
             padding: 0;
@@ -25,7 +25,7 @@
             position: relative;
         }
 
-        /* 主设备 —— 经典BB机造型 */
+        /* 主设备 —— 经典  */
         .beeper {
             background: #2b2b28;
             padding: 1.8rem 1.5rem 2rem 1.5rem;
@@ -360,7 +360,7 @@
     <script>
         (function() {
             // 新密码：12736568 (8位)
-            const TARGET_CODE = "12736578";
+            const TARGET_CODE = "5218";
             let currentInput = "";
 
             // DOM 元素
@@ -374,7 +374,7 @@
                 const raw = currentInput;
                 // 构造视觉字符串: 已输入的数字 + 占位符，每4位后加一个空格
                 let visual = '';
-                for (let i = 0; i < 8; i++) {
+                for (let i = 0; i < 4; i++) {
                     if (i < raw.length) {
                         visual += raw[i];
                     } else {
@@ -387,7 +387,7 @@
 
                 // 光标策略: 只要在8位以内，光标就显示 (视觉上跟在已输数字后面)
                 // 当输满8位，光标仍然可见，但稍微弱化以示提醒（同时可继续按CLR或ENTER）
-                if (currentInput.length >= 8) {
+                if (currentInput.length >= 4) {
                     cursor.style.opacity = '0.4';   // 满位时仍然显示光标，但变淡
                 } else {
                     cursor.style.opacity = '1';
@@ -432,12 +432,12 @@
 
             // 处理数字输入
             function handleDigit(digit) {
-                if (currentInput.length < 8) {
+                if (currentInput.length < 4) {
                     currentInput += digit;
                     updateLCD();
                     setStatus(`已输 ${currentInput.length}/8`, false);
                 } else {
-                    setStatus('8位已满 · 请按拨号键', false);
+                    setStatus('4位已满 · 请按拨号键', false);
                     errorVibrate();  // 提示不能再输
                 }
             }
@@ -469,7 +469,7 @@
                 } else {
                     setStatus('✗ 拒绝访问', true);
                     errorVibrate();
-                    // 按照真实BB机习惯，输错不自动清空 (但CLR可用)
+                    // 按照真实 习惯，输错不自动清空 (但CLR可用)
                 }
             }
 
