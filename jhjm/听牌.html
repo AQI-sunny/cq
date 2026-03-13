@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🀄 麻将听牌 · 图解 + 计算器</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(145deg, #1a3f2c 0%, #2d5a3f 100%);
+            --card-bg: #f7f3e9;
+            --primary-gold: #c9a86b;
+            --mj-green: #2d5a3f;
+            --accent-red: #d42828;
+            --tile-text: #2d2d2d;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            color: #2d2216;
+        }
+
+        .main-wrapper {
+            max-width: 1100px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 48px;
+            box-shadow: 0 25px 40px -10px rgba(0,0,0,0.6), 0 0 0 6px #e3c184 inset;
+            padding: 40px 30px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            text-align: center;
+            letter-spacing: 4px;
+            text-shadow: 3px 3px 0 #b48b4a;
+            margin-bottom: 10px;
+        }
+
+        .subhead {
+            display: block;
+            text-align: center;
+            font-size: 1.3rem;
+            background: #e7d7b5;
+            padding: 8px 30px;
+            border-radius: 60px;
+            border: 2px solid #ab7e44;
+            width: fit-content;
+            margin: 0 auto 30px;
+            box-shadow: 0 4px 0 #7b5c32;
+        }
+
+        /* --- 科普区域样式 --- */
+        .intro {
+            background: #dac29c;
+            border-radius: 30px;
+            padding: 20px 25px;
+            border: 2px solid #9c7a4a;
+            margin-bottom: 35px;
+            line-height: 1.6;
+        }
+        .highlight { background: #dd982e; padding: 2px 10px; border-radius: 20px; font-weight: bold; }
+
+        .tile-set {
+            background: linear-gradient(165deg, #266a41, #1d4f31);
+            border-radius: 40px;
+            padding: 20px;
+            border: 4px solid #f3cf86;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 0 #3d2f1b;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            color: #ffecb3;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 2px 2px 0 #6a3f1f;
+        }
+
+        .section-title span {
+            background: #c9a04b;
+            padding: 4px 15px;
+            border-radius: 30px;
+            /* font-size: 1rem; */
+            /* color: #1e2f0c; */
+        }
+
+        .tiles-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .tile-box {
+            width: 60px;
+            height: 80px;
+            background: linear-gradient(145deg, #ffffff, #f2e4cb);
+            border-radius: 10px;
+            border: 2px solid #443c2b;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: 800;
+            box-shadow: 0 4px 0 #2f281a;
+        }
+        .tile-box.waiting { border: 4px solid #d4320f; transform: scale(1.05); background: #fff1d2; }
+        .tile-num { font-size: 1.8rem; line-height: 1; }
+        .tile-text { font-size: 0.8rem; }
+
+        /* --- 计算器区域样式 --- */
+        .calc-container {
+            background: #eee5d3;
+            border-radius: 35px;
+            padding: 25px;
+            border: 3px solid #b37b48;
+            margin-top: 40px;
+        }
+
+        .palette-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        .row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+
+        .btn-tile {
+            width: 48px;
+            height: 65px;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #999;
+        }
+        .btn-tile:active { transform: translateY(2px); box-shadow: 0 1px 0 #999; }
+        .btn-tile.m { color: #d32f2f; }
+        .btn-tile.t { color: #2e7d32; }
+        .btn-tile.p { color: #1976d2; }
+
+        .hand-display {
+            background: #2a5a41;
+            min-height: 100px;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .tile-in-hand {
+            width: 50px;
+            height: 70px;
+            background: white;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            border: 2px solid #000;
+        }
+        .tile-in-hand .del {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #d32f2f;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btns { display: flex; gap: 15px; margin-bottom: 20px; }
+        button {
+            flex: 1;
+            padding: 15px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #888;
+        }
+        .btn-main { background: #e67e22; color: white; box-shadow: 0 5px 0 #a05817; }
+        .btn-clear { background: #95a5a6; color: white; box-shadow: 0 5px 0 #6d797a; }
+
+        .result-box {
+            background: #fff;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            border: 3px solid var(--primary-gold);
+        }
+        .wait-tag {
+            display: inline-block;
+            background: #f1c40f;
+            padding: 8px 20px;
+            border-radius: 30px;
+            margin: 5px;
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+
+        hr { border: none; height: 4px; background: var(--primary-gold); margin: 40px 0; border-radius: 2px; }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <h1>🀄 麻 · 将 · 馆 ⭐ 听 · 牌</h1>
+    <span class="subhead">图文详解 + 实时计算工具</span>
+
+    <!-- 第一部分：听牌图文科普 (保持原逻辑，修正术语) -->
+    <div class="intro">
+        <p><strong> 听牌 (Tenpai)</strong> —— 指手牌只差 <span class="highlight">最后一张</span> 就能胡牌的状态。</p>
+        <p>标准胡牌型通常由“4组面子（顺子或刻子）+ 1对将头”组成。当你手握13张牌并满足以下形态时，即进入听牌阶段。</p>
+    </div>
+
+    <!-- 科普例1 -->
+    <!-- <div class="tile-set">
+        <div class="section-title">📌 典型：三面听 <span>听 2、5、8 万</span></div>
+        <div class="tiles-row">
+            
+            <div class="tile-box"><div class="tile-num">2</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">3</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">4</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">5</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">6</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">7</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">8</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">8</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">3</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">4</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">5</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">6</div><div class="tile-text">万</div></div>
+            <div class="tile-box waiting"><div class="tile-num">?</div><div class="tile-text">听</div></div>
+        </div>
+        <p style="color:#fdf2d0; margin-top:12px; font-size:0.95rem; text-align:center;">此牌型下，无论摸到 2万、5万 还是 8万，都能瞬间完成胡牌构筑。</p>
+    </div> -->
+    <!-- 科普3：胡牌构件与听牌实例 -->
+<div class="knowledge-section" style="background: #eee5d3; border-radius: 25px; padding: 25px; border: 2px solid #c9a86b; margin-bottom: 30px; color: #2d2216;">
+    <h2 style="color: #b13e3e; margin-bottom: 20px; border-bottom: 2px solid #b13e3e; display: inline-block; font-size: 1.6rem;">🀄 胡牌基础构件</h2>
+    
+    <div style="margin-bottom: 15px;">
+        <p style="font-size: 1.1rem; font-weight: bold; color: #2d5a3f;">1. 顺子 (Shùnzi) —— “连号的三张”</p>
+        <p style="font-size: 0.95rem; margin: 5px 0 10px 15px; line-height: 1.5;">指同一种花色（万、筒、条）中数字相连的三张。例如：🀇🀈🀉 (123万)。字牌（东、南等）无法组成顺子。</p>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <p style="font-size: 1.1rem; font-weight: bold; color: #2d5a3f;">2. 刻子 (Kèzi) —— “一模一样的三张”</p>
+        <p style="font-size: 0.95rem; margin: 5px 0 10px 15px; line-height: 1.5;">指三张完全一样的牌。序数牌和字牌均可。例如：🀋🀋🀋 (555万) 或 🀄🀄🀄 (中中中)。</p>
+    </div>
+
+    <div style="margin-bottom: 25px;">
+        <p style="font-size: 1.1rem; font-weight: bold; color: #2d5a3f;">3. 将头 (Jiāngtóu) —— “一对儿 / 雀头”</p>
+        <p style="font-size: 0.95rem; margin: 5px 0 10px 15px; line-height: 1.5;">指两张完全一样的牌。它是胡牌公式（4面子+1对）中唯一的支点，没有将头无法胡牌。</p>
+    </div>
+
+    <!-- 听牌例1 -->
+    <div class="tile-set" style="background: linear-gradient(165deg, #266a41, #1d4f31); border-radius: 35px; padding: 20px; border: 4px solid #f3cf86; margin-bottom: 25px; box-shadow: 0 8px 0 #3d2f1b;">
+        <div class="section-title" style="font-size: 1.5rem; color: #ffecb3; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; text-shadow: 2px 2px 0 #6a3f1f;">
+            📌 典型：三面听 <span style="background: #c9a04b; padding: 3px 12px; border-radius: 20px; font-size: 0.9rem; color: #1e2f0c; text-shadow: none;">听 2、5、8 万</span>
+        </div>
+        <div class="tiles-row" style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;">
+            <!-- 234 567 88 3456 -->
+            <div class="tile-box"><div class="tile-num">2</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">3</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">4</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">5</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">6</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">7</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">8</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">8</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">3</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">4</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">5</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">6</div><div class="tile-text">万</div></div>
+            <div class="tile-box waiting" style="border: 3px solid #d4320f; transform: scale(1.05); background: #fff1d2;"><div class="tile-num">?</div><div class="tile-text">听</div></div>
+        </div>
+        <p style="color:#fdf2d0; margin-top:12px; font-size:0.95rem; text-align:center;">此牌型下，无论摸到 2万、5万 还是 8万，都能瞬间完成胡牌构筑。</p>
+    </div>
+
+    <!-- 科普例2 -->
+    <div class="tile-set" style="background: linear-gradient(165deg, #266a41, #1d4f31); border-radius: 35px; padding: 20px; border: 4px solid #f3cf86; box-shadow: 0 8px 0 #3d2f1b;">
+        <div class="section-title" style="font-size: 1.5rem; color: #ffecb3; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; text-shadow: 2px 2px 0 #6a3f1f;">
+            🀂 单骑听 <span style="background: #c9a04b; padding: 3px 12px; border-radius: 20px; font-size: 0.9rem; color: #1e2f0c; text-shadow: none;">听 9条 (单钓将)</span>
+        </div>
+        <div class="tiles-row" style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;">
+            <div class="tile-box"><div class="tile-num">1</div><div class="tile-text">条</div></div>
+            <div class="tile-box"><div class="tile-num">2</div><div class="tile-text">条</div></div>
+            <div class="tile-box"><div class="tile-num">3</div><div class="tile-text">条</div></div>
+            <div class="tile-box"><div class="tile-num">4</div><div class="tile-text">筒</div></div>
+            <div class="tile-box"><div class="tile-num">5</div><div class="tile-text">筒</div></div>
+            <div class="tile-box"><div class="tile-num">6</div><div class="tile-text">筒</div></div>
+            <div class="tile-box"><div class="tile-num">7</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">8</div><div class="tile-text">万</div></div>
+            <div class="tile-box"><div class="tile-num">9</div><div class="tile-text">万</div></div>
+            <!-- <div class="tile-box"><div class="tile-num">9</div><div class="tile-text">万</div></div> -->
+            <!-- <div class="tile-box"><div class="tile-num">8</div><div class="tile-text">条</div></div> -->
+            <div class="tile-box"><div class="tile-num">8</div><div class="tile-text">条</div></div>
+            <div class="tile-box waiting" style="border: 3px solid #d4320f; transform: scale(1.05); background: #fff1d2;"><div class="tile-num">8</div><div class="tile-text">条</div></div>
+        </div>
+        <p style="color:#fdf2d0; margin-top:12px; font-size:0.95rem; text-align:center;">此例为典型的“单骑听”，只要凑齐最后一张 9条 即可将原本的单张凑成“将头”胡牌。</p>
+    </div>
+</div>
+
+    <!-- 科普例2 -->
+    <!-- <div class="tile-set">
+        <div class="section-title">🀂 单骑听 <span>听 9条 (单钓将)</span></div>
+        <div class="tiles-row">
+            <div class="tile-box"><div class="tile-num">1</div><div class="tile-text">条</div></div>
+            <div class="tile-box"><div class="tile-num">2</div><div class="tile-text">条</div></div>
+            <div class="tile-box"><div class="tile-num">3</div><div class="tile-text">条</div></div>
+            <div class="tile-box"><div class="tile-num">4</div><div class="tile-text">条</div></div>
+            <div class="tile-box"><div class="tile-num">5</div><div class="tile-text">条</div></div>
+            <div class="tile-box"><div class="tile-num">6</div><div class="tile-text">条</div></div>
+            <div class="tile-box"><div class="tile-num">7</div><div class="tile-text">条</div></div>
+            <div class="tile-box"><div class="tile-num">8</div><div class="tile-text">条</div></div>
+            <div class="tile-box"><div class="tile-num">9</div><div class="tile-text">条</div></div>
+            <div class="tile-box"><div class="tile-num">9</div><div class="tile-text">条</div></div>
+            <div class="tile-box"><div class="tile-num">9</div><div class="tile-text">条</div></div>
+            <div class="tile-box"><div class="tile-num">9</div><div class="tile-text">条</div></div>
+            <div class="tile-box waiting"><div class="tile-num">9</div><div class="tile-text">条</div></div>
+        </div>
+        
+    </div> -->
+
+    <hr>
+
+    <!-- 第二部分：实时听牌计算器 (功能增强版) -->
+    <div class="calc-container">
+        <h2 style="text-align: center; margin-bottom: 20px;">🧮 听牌自动计算器</h2>
+        <div class="section-title" style="color:#2d2216; text-shadow:none;">① 点击选择手牌 (满13张停止)</div>
+        
+        <div class="palette-grid">
+            <div class="row" id="row-m"></div>
+            <div class="row" id="row-p"></div>
+            <div class="row" id="row-t"></div>
+            <div class="row" id="row-z"></div>
+        </div>
+
+        <div class="section-title" style="color:#2d2216; text-shadow:none;">② 当前手牌 (<span id="hand-count">0</span>/13)</div>
+        <div class="hand-display" id="hand-display">
+            <div style="color:rgba(255,255,255,0.4)">等待添加手牌...</div>
+        </div>
+
+        <div class="action-btns">
+            <button class="btn-main" onclick="runCalc()">🔍 开始计算听牌</button>
+            <button class="btn-clear" onclick="clearHand()">🗑️ 清空重选</button>
+        </div>
+
+        <div class="result-box">
+            <div id="res-text" style="font-size:1.1rem; color:#666;">计算结果将显示在这里</div>
+            <div id="res-list" style="margin-top:10px;"></div>
+        </div>
+    </div>
+
+    <div style="margin-top:30px; text-align:center; color:#8d7a5b; font-size:0.9rem;">
+        注意：本工具支持标准平胡（4面子+1雀头）及七对子。不包含十三幺等特殊地方规则。
+    </div>
+</div>
+
+<script>
+    // 基础数据
+    let hand = [];
+    const suits = { m: '万', p: '筒', t: '条' };
+    const zNames = ['', '东', '南', '西', '北', '白', '发', '中'];
+
+    // 初始化牌池
+    function initPalette() {
+        for (let s in suits) {
+            const row = document.getElementById(`row-${s}`);
+            for (let i = 1; i <= 9; i++) {
+                const btn = document.createElement('div');
+                btn.className = `btn-tile ${s}`;
+                btn.innerHTML = `<b>${i}</b><small>${suits[s]}</small>`;
+                btn.onclick = () => addTile(s, i);
+                row.appendChild(btn);
+            }
+        }
+        const rowZ = document.getElementById('row-z');
+        for (let i = 1; i <= 7; i++) {
+            const btn = document.createElement('div');
+            btn.className = 'btn-tile z';
+            btn.innerHTML = `<b>${zNames[i]}</b>`;
+            btn.onclick = () => addTile('z', i);
+            rowZ.appendChild(btn);
+        }
+    }
+
+    function addTile(type, num) {
+        if (hand.length >= 13) return;
+        hand.push({ type, num });
+        updateUI();
+    }
+
+    function removeTile(idx) {
+        hand.splice(idx, 1);
+        updateUI();
+    }
+
+    function clearHand() {
+        hand = [];
+        updateUI();
+        document.getElementById('res-text').innerText = "计算结果将显示在这里";
+        document.getElementById('res-list').innerHTML = "";
+    }
+
+    function updateUI() {
+        const display = document.getElementById('hand-display');
+        const countText = document.getElementById('hand-count');
+        countText.innerText = hand.length;
+        
+        // 自动排序
+        const order = { m: 1, p: 2, t: 3, z: 4 };
+        hand.sort((a, b) => (order[a.type] - order[b.type]) || (a.num - b.num));
+
+        if (hand.length === 0) {
+            display.innerHTML = '<div style="color:rgba(255,255,255,0.4)">等待添加手牌...</div>';
+            return;
+        }
+
+        display.innerHTML = '';
+        hand.forEach((t, i) => {
+            const div = document.createElement('div');
+            div.className = `tile-in-hand ${t.type}`;
+            div.innerHTML = t.type === 'z' ? `<b>${zNames[t.num]}</b>` : `<b>${t.num}</b><small>${suits[t.type]}</small>`;
+            div.onclick = () => removeTile(i);
+            const del = document.createElement('div');
+            del.className = 'del'; del.innerText = '×';
+            div.appendChild(del);
+            display.appendChild(div);
+        });
+    }
+
+    // --- 核心计算算法 ---
+    function runCalc() {
+        if (hand.length !== 13) {
+            alert("请选满13张牌再进行计算！");
+            return;
+        }
+
+        const counts = new Array(34).fill(0);
+        const map = { m: 0, p: 9, t: 18, z: 27 };
+        hand.forEach(t => counts[map[t.type] + t.num - 1]++);
+
+        let results = [];
+        for (let i = 0; i < 34; i++) {
+            if (counts[i] < 4) {
+                let temp = [...counts];
+                temp[i]++;
+                if (checkHu(temp)) {
+                    let name = "";
+                    if (i < 9) name = (i + 1) + "万";
+                    else if (i < 18) name = (i - 8) + "筒";
+                    else if (i < 27) name = (i - 17) + "条";
+                    else name = zNames[i - 26];
+                    results.push(name);
+                }
+            }
+        }
+
+        const resText = document.getElementById('res-text');
+        const resList = document.getElementById('res-list');
+        resList.innerHTML = "";
+
+        if (results.length > 0) {
+            resText.innerHTML = "🎉 <strong>听牌了！</strong> 摸到以下牌即可胡牌：";
+            results.forEach(r => {
+                const span = document.createElement('span');
+                span.className = 'wait-tag';
+                span.innerText = r;
+                resList.appendChild(span);
+            });
+        } else {
+            resText.innerText = "尚未听牌，尝试调整一下手牌吧。";
+        }
+    }
+
+    function checkHu(cards) {
+        // 1. 七对子
+        let pairs = 0;
+        for (let c of cards) if (c === 2) pairs++; else if (c === 4) pairs += 2;
+        if (pairs === 7) return true;
+
+        // 2. 标准型
+        for (let i = 0; i < 34; i++) {
+            if (cards[i] >= 2) {
+                let copy = [...cards];
+                copy[i] -= 2;
+                if (isAllMeld(copy)) return true;
+            }
+        }
+        return false;
+    }
+
+    function isAllMeld(cards) {
+        let i = 0;
+        while (i < 34 && cards[i] === 0) i++;
+        if (i === 34) return true;
+
+        // 刻子
+        if (cards[i] >= 3) {
+            cards[i] -= 3;
+            if (isAllMeld(cards)) return true;
+            cards[i] += 3;
+        }
+
+        // 顺子
+        if (i < 25 && (i % 9 < 7)) { // 字牌无顺子，且不能跨数轴
+            if (cards[i + 1] > 0 && cards[i + 2] > 0) {
+                cards[i]--; cards[i + 1]--; cards[i + 2]--;
+                if (isAllMeld(cards)) return true;
+                cards[i]++; cards[i + 1]++; cards[i + 2]++;
+            }
+        }
+        return false;
+    }
+
+    window.onload = initPalette;
+</script>
+</body>
+</html>
