@@ -408,6 +408,22 @@
     box-sizing: border-box;
 }
 
+/* 模拟真实的麻将牌外观 */
+.mj-tile {
+    width: 60px;          /* 牌的宽度 */
+    height: 84px;         /* 牌的高度，按比例大约 1 : 1.4 */
+    background-color: #f8f9f6; /* 偏暖的米白色 */
+    border-radius: 6px;   /* 麻将牌圆角 */
+    /* 简单的立体阴影效果 */
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3), 
+                inset -1px -1px 3px rgba(0,0,0,0.1),
+                inset 1px 1px 2px rgba(255,255,255,0.8);
+    padding: 6px;         /* 给图案留白 */
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
         /* 响应式调整 */
         @media (max-width: 900px) {
             .header-container {
@@ -672,14 +688,14 @@
     </div>
 
     <!-- 3. 三筒 (斜角排列) -->
-    <div class="mj-tile">
+     <div class="mj-tile">
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; width: 50px; height: 50px;">
             <div class="dot-black" style="grid-column: 1; grid-row: 1;"></div>
             <div class="dot-red" style="grid-column: 2; grid-row: 2; justify-self: center; align-self: center;"></div>
             <div class="dot-black" style="grid-column: 3; grid-row: 3; justify-self: end; align-self: end;"> </div>
         </div>
         <br>
-    </div>
+    </div> 
 
     <!-- 4. 二条 (第1个) -->
     <div class="mj-tile" style="flex-direction: column; gap: 12px;">
@@ -742,13 +758,27 @@
         </div>
     </div>  -->
     <!-- 11. 八条 -->
-<div class="mj-tile">
-    <!-- 修改为 2 列布局，共 8 个元素会自动排列成 4 行 -->
+<!-- <div class="mj-tile">
+     - 修改为 2 列布局，共 8 个元素会自动排列成 4 行  >
     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px 10px; justify-items: center; align-items: center; height: 100%;">
         <div class="bam-blue"></div><div class="bam-blue"></div>
         <div class="bam-blue"></div><div class="bam-blue"></div>
         <div class="bam-blue"></div><div class="bam-blue"></div>
         <div class="bam-blue"></div><div class="bam-blue"></div>
+    </div>
+</div> --><div class="mj-tile">
+    <div style="width: 100%; height: 100%; padding: 12%; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+        <svg viewBox="0 0 100 140" width="100%" height="100%">
+            <g stroke-linecap="round" stroke-linejoin="round">
+                <!-- 上面的 W：X轴固定在 22 和 78 (保证垂直)，整体Y坐标变小(上移) -->
+                <path d="M 22 10 L 22 50 L 50 30 L 78 50 L 78 10" fill="none" stroke="#4a8f3c" stroke-width="24" />
+                <path d="M 22 10 L 22 50 L 50 30 L 78 50 L 78 10" fill="none" stroke="#f4f6f5" stroke-width="5" />
+
+                <!-- 下面的 M：X轴固定在 22 和 78 (保证垂直)，整体Y坐标变大(下移) -->
+                <path d="M 22 130 L 22 90 L 50 110 L 78 90 L 78 130" fill="none" stroke="#4a8f3c" stroke-width="24" />
+                <path d="M 22 130 L 22 90 L 50 110 L 78 90 L 78 130" fill="none" stroke="#f4f6f5" stroke-width="5" />
+            </g>
+        </svg>
     </div>
 </div>
     <!-- 12. 六万 -->
