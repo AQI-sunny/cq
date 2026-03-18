@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深南野生动物园 - 志愿者项目</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f9f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background: linear-gradient(to right, #2d5016, #4a7c3a);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+        }
+        
+        .logo-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .logo-text p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+            padding: 5px 0;
+            position: relative;
+        }
+        
+        nav a:hover {
+            opacity: 0.8;
+        }
+        
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #ffc107;
+            border-radius: 3px;
+        }
+        
+        /* 志愿者页面标题 */
+        .page-header {
+            background: linear-gradient(to right, #1a5f7a, #2d8cb5);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 0 0 15px 15px;
+        }
+        
+        .page-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .page-header p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        /* 标签切换导航 */
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .tab-btn {
+            background-color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #333;
+        }
+        
+        .tab-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(to right, #1a5f7a, #2d8cb5);
+            color: white;
+        }
+        
+        /* 标签内容区 */
+        .tab-content {
+            display: none;
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tab-content h3 {
+            color: #2d5016; /* 改为绿色标题 */
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e8f5e8;
+        }
+        
+        /* 志愿者项目卡片 */
+        .volunteer-projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .project-card {
+            background-color: #f9fdf9;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #e8f5e8;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .project-card.unavailable {
+            opacity: 0.7;
+        }
+        
+        .project-card.unavailable:hover {
+            transform: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .project-header {
+            background: linear-gradient(to right, #4a7c3a, #2d5016);
+            color: white; /* 改为白色文字 */
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        /* .project-header i {
+            font-size: 1.8rem;
+        } */
+         .project-header {
+    background: linear-gradient(to right, #4CAF50, #2E7D32); /* 更鲜亮的绿色渐变 */
+    color: white; /* 白色文字 */
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+        
+        .project-body {
+            padding: 20px;
+        }
+        
+        .project-details {
+            margin: 15px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #555;
+            font-size: 0.95rem;
+        }
+        
+        .detail-item i {
+            color: #4a7c3a;
+        }
+        
+        .requirements {
+            background-color: #f0f7ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #4a7c3a; /* 改为绿色边框 */
+        }
+        
+        .requirements h4 {
+            color: #2d5016; /* 改为绿色标题 */
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .requirements ul {
+            padding-left: 20px;
+        }
+        
+        .requirements li {
+            margin-bottom: 8px;
+        }
+        
+        .apply-btn {
+            display: inline-block;
+            background: linear-gradient(to right, #4a7c3a, #2d5016); /* 改为绿色按钮 */
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .apply-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 124, 58, 0.3);
+        }
+        
+        .apply-btn.unavailable {
+            background: linear-gradient(to right, #cccccc, #999999);
+            cursor: not-allowed;
+        }
+        
+        .apply-btn.unavailable:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .unavailable-notice {
+            background-color: #fff8e1;
+            color: #856404;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #ffc107;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+        
+        /* 常见问题 */
+        .faq-list {
+            margin-top: 20px;
+        }
+        
+        .faq-item {
+            margin-bottom: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e8f5e8;
+        }
+        
+        .faq-question {
+            background-color: #f9fdf9;
+            padding: 18px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #2d5016;
+        }
+        
+        .faq-question:hover {
+            background-color: #f0f8f0;
+        }
+        
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 20px;
+            max-height: 500px;
+        }
+        
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+        
+        .faq-question i {
+            transition: transform 0.3s;
+        }
+        
+        /* 申请表单 */
+        .application-form {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2d5016; /* 改为绿色标签 */
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4a7c3a;
+            box-shadow: 0 0 0 2px rgba(74, 124, 58, 0.1);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* 成功案例 */
+        .success-stories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .story-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e8f5e8;
+        }
+        
+        .story-card h4 {
+            color: #2d5016; /* 改为绿色标题 */
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .story-card .quote {
+            font-style: italic;
+            color: #555;
+            margin: 15px 0;
+            padding-left: 15px;
+            border-left: 3px solid #4a7c3a;
+        }
+        
+        .stats-box {
+            background-color: #f0f7ff;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+            border-left: 4px solid #4a7c3a;
+        }
+        
+        .stats-box h4 {
+            color: #2d5016;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .stat-item h5 {
+            color: #2d5016;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2d5016;
+        }
+        
+        .stat-desc {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* 底部样式 */
+        footer {
+            background-color: #2d5016;
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 40px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .footer-column h4 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            color: white;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column a {
+            color: #c8e6c9;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column a:hover {
+            color: white;
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .contact-info i {
+            margin-right: 10px;
+            width: 20px;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #4a7c3a;
+            color: #c8e6c9;
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .volunteer-projects,
+            .success-stories {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tab-btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部 -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-paw"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>深南野生动物园</h1>
+                    <p>Shennan Wildlife Zoo</p>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">首页</a></li>
+                    <li><a href="#">动物展区</a></li>
+                    <li><a href="#">游览指南</a></li>
+                    <li><a href="#">最新公告</a></li>
+                    <li><a href="#" class="active">志愿者项目</a></li>
+                    <li><a href="#">联系我们</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 志愿者页面标题 -->
+    <div class="page-header">
+        <div class="container">
+            <h2><i class="fas fa-hands-helping"></i> 动物园志愿者项目</h2>
+            <p>加入我们的志愿者团队，为野生动物保护贡献力量，获得难忘的体验和宝贵的知识</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 标签切换导航 -->
+        <div class="tab-nav">
+            <button class="tab-btn active" data-tab="projects">
+                <i class="fas fa-list"></i> 志愿者项目
+            </button>
+            <button class="tab-btn" data-tab="faq">
+                <i class="fas fa-question-circle"></i> 常见问题
+            </button>
+            <button class="tab-btn" data-tab="application">
+                <i class="fas fa-edit"></i> 在线申请
+            </button>
+            <button class="tab-btn" data-tab="stories">
+                <i class="fas fa-heart"></i> 成功案例
+            </button>
+        </div>
+        
+        <!-- 志愿者项目标签 -->
+        <div id="projects" class="tab-content active">
+            <h3><i class="fas fa-tasks"></i> 志愿者项目介绍</h3>
+            <p>我们提供多种志愿者项目，满足不同兴趣和技能的需求。无论您是学生、专业人士还是退休人员，都能找到适合您的项目。</p>
+            
+            <div class="volunteer-projects">
+                <!-- 项目1 - 动物保育员助手（可申请） -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <i class="fas fa-leaf"></i>
+                        <h3>动物保育员助手</h3>
+                    </div>
+                    <div class="project-body">
+                        <p>协助动物保育员进行日常喂养、笼舍清洁和动物行为观察。适合喜欢与动物亲密接触的志愿者。</p>
+                        
+                        <div class="project-details">
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <span>时长：4-8小时/周</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>最少3个月</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-users"></i>
+                                <span>需要团队协作</span>
+                            </div>
+                        </div>
+                        
+                        <div class="requirements">
+                            <h4><i class="fas fa-check-circle"></i> 申请要求</h4>
+                            <ul>
+                                <li>年满18周岁</li>
+                                <li>身体健康，无动物过敏史</li>
+                                <li>能适应户外工作环境</li>
+                                <li>有责任心，热爱动物</li>
+                            </ul>
+                        </div>
+                        
+                        <button class="apply-btn" onclick="switchTab('application')">立即申请</button>
+                    </div>
+                </div>
+                
+                <!-- 项目2 - 教育导览员（暂时无法申请） -->
+                <div class="project-card unavailable">
+                    <div class="project-header">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h3>教育导览员</h3>
+                    </div>
+                    <div class="project-body">
+                        <p>为游客提供导览服务，讲解动物知识，协助举办教育活动。适合喜欢与人交流、有讲解能力的志愿者。</p>
+                        
+                        <div class="project-details">
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <span>时长：3-6小时/周</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>最少6个月</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-microphone"></i>
+                                <span>需要良好沟通能力</span>
+                            </div>
+                        </div>
+                        
+                        <div class="requirements">
+                            <h4><i class="fas fa-check-circle"></i> 申请要求</h4>
+                            <ul>
+                                <li>年满16周岁</li>
+                                <li>良好的沟通表达能力</li>
+                                <li>对动物知识有基本了解</li>
+                                <li>周末和节假日可工作</li>
+                            </ul>
+                        </div>
+                        
+                        <button class="apply-btn unavailable" onclick="showUnavailableMessage()">暂时无法申请</button>
+                        <div class="unavailable-notice">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>此项目目前名额已满，预计2026年3月重新开放</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 项目3 - 野生动物摄影师（暂时无法申请） -->
+                <div class="project-card unavailable">
+                    <div class="project-header">
+                        <i class="fas fa-camera"></i>
+                        <h3>野生动物摄影师</h3>
+                    </div>
+                    <div class="project-body">
+                        <p>为动物园拍摄动物照片和视频，用于宣传、研究和记录。适合有摄影技能的志愿者。</p>
+                        
+                        <div class="project-details">
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <span>时长：灵活安排</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>最少2个月</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-camera-retro"></i>
+                                <span>需自备摄影设备</span>
+                            </div>
+                        </div>
+                        
+                        <div class="requirements">
+                            <h4><i class="fas fa-check-circle"></i> 申请要求</h4>
+                            <ul>
+                                <li>年满18周岁</li>
+                                <li>有摄影经验，提供作品集</li>
+                                <li>了解基本动物行为知识</li>
+                                <li>能配合动物园的拍摄需求</li>
+                            </ul>
+                        </div>
+                        
+                        <button class="apply-btn unavailable" onclick="showUnavailableMessage()">暂时无法申请</button>
+                        <div class="unavailable-notice">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>此项目正在调整中，预计2026年2月重新开放</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 项目4 - 栖息地维护志愿者（暂时无法申请） -->
+                <div class="project-card unavailable">
+                    <div class="project-header">
+                        <i class="fas fa-tree"></i>
+                        <h3>栖息地维护志愿者</h3>
+                    </div>
+                    <div class="project-body">
+                        <p>协助维护和改善动物栖息地，参与园艺工作和环境美化项目。适合喜欢户外劳动的志愿者。</p>
+                        
+                        <div class="project-details">
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <span>时长：4-8小时/周</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>最少1个月</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-seedling"></i>
+                                <span>园艺经验优先</span>
+                            </div>
+                        </div>
+                        
+                        <div class="requirements">
+                            <h4><i class="fas fa-check-circle"></i> 申请要求</h4>
+                            <ul>
+                                <li>年满18周岁</li>
+                                <li>身体健康，能从事体力劳动</li>
+                                <li>有园艺经验者优先</li>
+                                <li>能适应各种天气条件</li>
+                            </ul>
+                        </div>
+                        
+                        <button class="apply-btn unavailable" onclick="showUnavailableMessage()">暂时无法申请</button>
+                        <div class="unavailable-notice">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>此项目冬季暂停，预计2026年4月春季重新开放</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background-color: #e8f5e8; padding: 20px; border-radius: 10px; margin-top: 30px; border-left: 4px solid #4a7c3a;">
+                <h4 style="color: #2d5016; margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-info-circle"></i> 申请提示
+                </h4>
+                <p style="color: #2d5016;">目前只有<strong>动物保育员助手</strong>项目开放申请，其他项目因名额已满或季节性调整暂时无法申请。我们建议您先申请当前开放的项目，后续有机会可以申请转岗。</p>
+            </div>
+        </div>
+        
+        <!-- 常见问题标签 -->
+        <div id="faq" class="tab-content">
+            <h3><i class="fas fa-question-circle"></i> 志愿者常见问题</h3>
+            <p>以下是一些关于志愿者项目的常见问题，如果您有其他疑问，请随时联系我们。</p>
+            
+            <div class="faq-list">
+                <!-- 问题1 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>志愿者有年龄限制吗？</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>大部分志愿者项目要求年满16周岁，部分特殊项目（如动物保育员助手）要求年满18周岁。我们也为14-16周岁的青少年提供特定的周末志愿者项目，但需要有监护人同意。</p>
+                    </div>
+                </div>
+                
+                <!-- 问题2 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>志愿者需要培训吗？</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>是的，所有志愿者都需要参加基础培训，包括动物园安全规则、动物行为基础知识和志愿服务规范。根据具体项目，可能还需要额外的专业培训，培训时间一般为2-4周。</p>
+                    </div>
+                </div>
+                
+                <!-- 问题3 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>志愿者有津贴或补贴吗？</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>志愿者项目是无偿的志愿服务，但我们会提供交通补贴和午餐。志愿者还可以免费参观动物园，参加专属的讲座和活动，并获得志愿服务证书。</p>
+                    </div>
+                </div>
+                
+                <!-- 问题4 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>我可以同时申请多个项目吗？</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>可以，但请确保您有足够的时间精力投入。我们建议初次申请的志愿者先专注于一个项目，适应后再考虑增加其他项目。在申请表中您可以注明您的首选项目和备选项目。</p>
+                    </div>
+                </div>
+                
+                <!-- 问题5 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>为什么有些项目暂时无法申请？</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>部分项目因季节性调整、名额已满或项目优化而暂时关闭。我们会在项目重新开放时在网站和社交媒体上发布通知。目前只有动物保育员助手项目开放申请，建议您先申请此项目。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 在线申请标签 -->
+        <div id="application" class="tab-content">
+            <h3><i class="fas fa-edit"></i> 志愿者在线申请</h3>
+            <p>请填写以下申请表，我们会尽快审核您的申请并与您联系。目前只开放<strong>动物保育员助手</strong>项目的申请。</p>
+            
+            <form class="application-form" id="volunteerForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fullName"><i class="fas fa-user"></i> 姓名 *</label>
+                        <input type="text" id="fullName" name="fullName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="birthDate"><i class="fas fa-birthday-cake"></i> 出生日期 *</label>
+                        <input type="date" id="birthDate" name="birthDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email"><i class="fas fa-envelope"></i> 电子邮箱 *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone"><i class="fas fa-phone"></i> 联系电话 *</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="project"><i class="fas fa-tasks"></i> 申请项目 *</label>
+                    <select id="project" name="project" required>
+                        <option value="">请选择志愿者项目</option>
+                        <option value="animal_care">动物保育员助手（开放申请）</option>
+                        <option value="education" disabled>教育导览员（暂时无法申请）</option>
+                        <option value="photography" disabled>野生动物摄影师（暂时无法申请）</option>
+                        <option value="habitat" disabled>栖息地维护志愿者（暂时无法申请）</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="availability"><i class="fas fa-calendar-check"></i> 可服务时间 *</label>
+                    <select id="availability" name="availability" required>
+                        <option value="">请选择可服务时间</option>
+                        <option value="weekday">工作日（周一至周五）</option>
+                        <option value="weekend">周末（周六、周日）</option>
+                        <option value="both">工作日和周末均可</option>
+                        <option value="flexible">时间灵活，可协商</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="experience"><i class="fas fa-star"></i> 相关经验与技能</label>
+                    <textarea id="experience" name="experience" rows="4" placeholder="请描述您与动物相关的经验、技能或您为什么想成为动物园志愿者..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="motivation"><i class="fas fa-heart"></i> 申请动机</label>
+                    <textarea id="motivation" name="motivation" rows="4" placeholder="请简要说明您申请志愿者项目的动机和期望..."></textarea>
+                </div>
+                
+                <button type="submit" class="apply-btn" style="width: 100%;">
+                    <i class="fas fa-paper-plane"></i> 提交申请
+                </button>
+            </form>
+        </div>
+        
+        <!-- 成功案例标签 -->
+        <div id="stories" class="tab-content">
+            <h3><i class="fas fa-heart"></i> 志愿者成功案例</h3>
+            <p>听听我们志愿者的真实故事，了解志愿者项目如何改变他们的生活。</p>
+            
+            <div class="success-stories">
+
+                <div class="story-card">
+                    <h4><i class="fas fa-user-tie"></i> 李明的故事</h4>
+                    <p class="detail-item"><i class="fas fa-calendar-alt"></i> 志愿者时间：3年</p>
+                    <p class="detail-item"><i class="fas fa-tasks"></i> 参与项目：教育导览员</p>
+                    <div class="quote">
+                        "退休后我加入了动物园志愿者团队，这给我的生活带来了新的意义。每周与游客分享动物知识，看到孩子们对自然产生兴趣，这种成就感无法用言语形容。我还结识了许多志同道合的朋友。"
+                    </div>
+                </div>
+                <!-- 故事1 -->
+                
+                
+                <!-- 故事2 -->
+                <div class="story-card">
+                    <h4><i class="fas fa-user-graduate"></i> 馨雨的故事</h4>
+                    <p class="detail-item"><i class="fas fa-calendar-alt"></i> 志愿者时间：2年</p>
+                    <p class="detail-item"><i class="fas fa-tasks"></i> 参与项目：动物保育员助手</p>
+                    <div class="quote">
+                        "去年参加<strong>学校志愿者活动</strong>时，我选择成为了<strong>小熊猫馆</strong>的一员。
+
+每天看着小熊猫们享用早餐，是我最开心的时刻。<strong>‘米糕’总是第一个跑过来，‘贝果’则喜欢慢慢品尝。</strong>
+
+这段经历让我明白了细心和耐心的重要。照顾小动物的过程，也让我收获了许多温暖与成长。"
+                    </div>
+                </div>
+                
+                <!-- 故事3 -->
+                <div class="story-card">
+                    <h4><i class="fas fa-camera"></i> 王芳的故事</h4>
+                    <p class="detail-item"><i class="fas fa-calendar-alt"></i> 志愿者时间：1年半</p>
+                    <p class="detail-item"><i class="fas fa-tasks"></i> 参与项目：野生动物摄影师</p>
+                    <div class="quote">
+                        "作为一名业余摄影师，动物园给了我绝佳的拍摄机会。我的作品被用于动物园的宣传材料，还举办了一次个人摄影展。这段经历不仅提升了我的摄影技巧，还让我对动物保护有了更深的理解。"
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stats-box">
+                <h4><i class="fas fa-chart-line"></i> 志愿者项目成果</h4>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <h5>志愿者总数</h5>
+                        <div class="stat-value">320+</div>
+                        <div class="stat-desc">自项目启动以来</div>
+                    </div>
+                    <div class="stat-item">
+                        <h5>服务总时长</h5>
+                        <div class="stat-value">50,000+</div>
+                        <div class="stat-desc">志愿服务小时</div>
+                    </div>
+                    <div class="stat-item">
+                        <h5>项目满意度</h5>
+                        <div class="stat-value">98%</div>
+                        <div class="stat-desc">志愿者反馈</div>
+                    </div>
+                    <div class="stat-item">
+                        <h5>长期志愿者</h5>
+                        <div class="stat-value">45%</div>
+                        <div class="stat-desc">服务超过1年</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h4>深南野生动物园</h4>
+                    <p>致力于野生动物保护、公众教育和科学研究，为游客提供亲近自然的体验。</p>
+                    <div class="contact-info" style="margin-top: 15px;">
+                        <div><i class="fas fa-map-marker-alt"></i> 深南市生态保护区1号</div>
+                        <div><i class="fas fa-phone"></i> (0755) 1234-5678</div>
+                        <div><i class="fas fa-envelope"></i> volunteer@shennanzoo.com</div>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>志愿者办公室</h4>
+                    <ul>
+                        <li>办公时间：周一至周五 9:00-17:00</li>
+                        <li>咨询电话：(0755) 1234-5678 转 801</li>
+                        <li>电子邮件：volunteer@shennanzoo.com</li>
+                        <li>地址：动物园西门志愿者中心</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>快速链接</h4>
+                    <ul>
+                        <li><a href="#" onclick="switchTab('projects')">志愿者项目</a></li>
+                        <li><a href="#" onclick="switchTab('faq')">常见问题</a></li>
+                        <li><a href="#" onclick="switchTab('application')">在线申请</a></li>
+                        <li><a href="#" onclick="switchTab('stories')">成功案例</a></li>
+                        <li><a href="#">动物领养计划</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 深南野生动物园 版权所有 | 志愿者项目页面</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 标签切换功能
+        function switchTab(tabId) {
+            // 移除所有标签按钮的active类
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 隐藏所有标签内容
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 激活选中的标签按钮
+            document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+            
+            // 显示选中的标签内容
+            document.getElementById(tabId).classList.add('active');
+            
+            // 如果是申请标签，滚动到表单顶部
+            if (tabId === 'application') {
+                document.getElementById('application').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        // 为标签按钮添加点击事件
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                switchTab(tabId);
+            });
+        });
+        
+        // FAQ展开/收起功能
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const faqItem = this.parentElement;
+                faqItem.classList.toggle('active');
+            });
+        });
+        
+        // 表单提交处理
+        document.getElementById('volunteerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 获取表单数据
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // 简单验证
+            if (!data.fullName || !data.birthDate || !data.email || !data.phone || !data.project || !data.availability) {
+                alert('请填写所有必填字段（带*号）');
+                return;
+            }
+            
+            // 检查是否选择了可申请的项目
+            if (data.project !== 'animal_care') {
+                alert('目前只有动物保育员助手项目开放申请，请选择此项目或等待其他项目重新开放。');
+                return;
+            }
+            
+            // 模拟提交成功
+            alert('感谢您的申请！我们已经收到您的动物保育员助手项目申请，志愿者办公室将在3-5个工作日内与您联系。');
+            
+            // 重置表单
+            this.reset();
+            
+            // 切换到成功案例标签
+            switchTab('stories');
+        });
+        
+        // 显示无法申请的消息
+        function showUnavailableMessage() {
+            alert('此项目暂时无法申请。目前只有动物保育员助手项目开放申请，建议您先申请此项目。');
+        }
+        
+        // 项目卡片的申请按钮点击事件
+        document.querySelectorAll('.apply-btn').forEach(btn => {
+            if (!btn.getAttribute('onclick') && !btn.classList.contains('unavailable')) {
+                btn.addEventListener('click', function() {
+                    switchTab('application');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

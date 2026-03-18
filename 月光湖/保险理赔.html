@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保险理赔记录系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, #1a3a8f, #2d5cc2);
+            color: white;
+            padding: 24px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .header i {
+            font-size: 28px;
+        }
+        
+        .lock-icon {
+            font-size: 22px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 50%;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        /* 密码输入区域 */
+        .password-section {
+            text-align: center;
+            padding: 20px 0;
+        }
+        
+        .password-section h2 {
+            color: #1a3a8f;
+            margin-bottom: 8px;
+            font-size: 22px;
+        }
+        
+        .password-section p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 15px;
+        }
+        
+        .password-hint {
+            background-color: #f0f7ff;
+            border-left: 4px solid #2d5cc2;
+            padding: 12px 16px;
+            margin: 25px auto 30px;
+            max-width: 500px;
+            text-align: left;
+            border-radius: 0 8px 8px 0;
+            color: #1a3a8f;
+        }
+        
+        .password-input {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .password-input input {
+            width: 180px;
+            padding: 14px 18px;
+            border: 2px solid #d1d9e6;
+            border-radius: 10px;
+            font-size: 18px;
+            text-align: center;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+        
+        .password-input input:focus {
+            border-color: #2d5cc2;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(45, 92, 194, 0.1);
+        }
+        
+        .btn {
+            background: linear-gradient(90deg, #2d5cc2, #3a6ff0);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(90deg, #1a3a8f, #2d5cc2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(45, 92, 194, 0.2);
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            margin-top: 15px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        /* 记录显示区域 */
+        .records-section {
+            display: none;
+        }
+        
+        .section-title {
+            color: #1a3a8f;
+            font-size: 22px;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f5ff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            font-size: 20px;
+        }
+        
+        .records-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .record-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eaeff5;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .record-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .record-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, #2d5cc2, #3a6ff0);
+        }
+        
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+        
+        .policy-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a3a8f;
+        }
+        
+        .policy-type {
+            background-color: #f0f7ff;
+            color: #2d5cc2;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .record-details {
+            margin-top: 15px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0f5ff;
+        }
+        
+        .detail-label {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .detail-value {
+            color: #333;
+            font-weight: 500;
+            text-align: right;
+            max-width: 60%;
+        }
+        
+        .amount {
+            color: #e74c3c;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .highlight {
+            background-color: #fff8e1;
+            padding: 3px 6px;
+            border-radius: 4px;
+            color: #d35400;
+            font-weight: 500;
+        }
+        
+        .notes {
+            margin-top: 35px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #f39c12;
+        }
+        
+        .notes-title {
+            color: #d35400;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #888;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .logout-btn {
+            background-color: #f8f9fa;
+            color: #666;
+            border: 1px solid #ddd;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+        
+        .logout-btn:hover {
+            background-color: #e9ecef;
+            color: #333;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 12px;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+            
+            .records-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .password-input {
+                flex-direction: column;
+            }
+            
+            .password-input input {
+                width: 100%;
+                max-width: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <i class="fas fa-file-contract"></i>
+                保险理赔记录系统
+            </h1>
+            <div class="lock-icon">
+                <i class="fas fa-lock"></i>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- 密码输入区域 -->
+            <div class="password-section" id="passwordSection">
+                <h2>访问受保护内容</h2>
+                <p>此页面包含敏感的保险理赔记录，需要授权才能查看</p>
+                
+                <div class="password-hint">
+                    <i class="fas fa-lightbulb"></i> 密码提示：<strong>受益人生日</strong>（四位数字）
+                </div>
+                
+                <div class="password-input">
+                    <input type="password" id="passwordInput" maxlength="4" placeholder="请输入4位数字密码">
+                    <button class="btn" id="submitBtn">
+                        <i class="fas fa-unlock-alt"></i>
+                        解锁查看
+                    </button>
+                </div>
+                
+                <div class="error-message" id="errorMessage">
+                    <i class="fas fa-exclamation-circle"></i> 密码错误，请重新输入
+                </div>
+            </div>
+            
+            <!-- 记录显示区域 -->
+            <div class="records-section" id="recordsSection">
+                <div class="section-title">
+                    <i class="fas fa-folder-open"></i>
+                    保险理赔记录
+                </div>
+                
+                <div class="records-container">
+                    <!-- 保单1 -->
+                    <div class="record-card">
+                        <div class="record-header">
+                            <div class="policy-name">叶雅婷意外险</div>
+                            <div class="policy-type">个人意外险</div>
+                        </div>
+                        <div class="record-details">
+                            <div class="detail-row">
+                                <div class="detail-label">投保人：</div>
+                                <div class="detail-value">叶雅婷</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">受益人：</div>
+                                <div class="detail-value">纪国昌<br><span class="highlight">(2004年5月20日更改)</span></div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">理赔金额：</div>
+                                <div class="detail-value amount">50万元</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 保单2 -->
+                    <div class="record-card">
+                        <div class="record-header">
+                            <div class="policy-name">陈万鑫父母火灾险</div>
+                            <div class="policy-type">财产保险</div>
+                        </div>
+                        <div class="record-details">
+                            <div class="detail-row">
+                                <div class="detail-label">投保人：</div>
+                                <div class="detail-value">陈万鑫父亲</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">受益人：</div>
+                                <div class="detail-value">纪国昌<br><span class="highlight">(2004年11月更改)</span></div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">理赔金额：</div>
+                                <div class="detail-value amount">60万元</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 保单3 -->
+                    <div class="record-card">
+                        <div class="record-header">
+                            <div class="policy-name">陈叶曳信托基金</div>
+                            <div class="policy-type">信托基金</div>
+                        </div>
+                        <div class="record-details">
+                            <div class="detail-row">
+                                <div class="detail-label">设立人：</div>
+                                <div class="detail-value">纪国昌<br><span class="highlight">(2005年1月)</span></div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">资金来源：</div>
+                                <div class="detail-value">上述保险金</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">管理人：</div>
+                                <div class="detail-value">纪国昌<br><span class="highlight">(陈叶曳25岁前为唯一管理人)</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="notes">
+                    <div class="notes-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        备注
+                    </div>
+                    <p>陈叶曳25岁前，纪国昌为信托基金唯一管理人，有权支配所有资金。</p>
+                </div>
+                
+                <div class="footer">
+                    <p>系统最后更新：2023年11月 | 仅供授权人员查看</p>
+                    <button class="logout-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        退出查看
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('passwordInput');
+            const submitBtn = document.getElementById('submitBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const passwordSection = document.getElementById('passwordSection');
+            const recordsSection = document.getElementById('recordsSection');
+            const logoutBtn = document.getElementById('logoutBtn');
+            
+            // 正确的密码
+            const correctPassword = '1211';
+            
+            // 提交密码
+            submitBtn.addEventListener('click', function() {
+                const enteredPassword = passwordInput.value;
+                
+                if (enteredPassword === correctPassword) {
+                    // 密码正确，显示记录
+                    passwordSection.style.display = 'none';
+                    recordsSection.style.display = 'block';
+                    errorMessage.style.display = 'none';
+                } else {
+                    // 密码错误
+                    errorMessage.style.display = 'block';
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                    
+                    // 添加抖动效果
+                    passwordInput.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        passwordInput.style.animation = '';
+                    }, 500);
+                }
+            });
+            
+            // 允许按回车键提交
+            passwordInput.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    submitBtn.click();
+                }
+            });
+            
+            // 退出查看
+            logoutBtn.addEventListener('click', function() {
+                passwordSection.style.display = 'block';
+                recordsSection.style.display = 'none';
+                passwordInput.value = '';
+                passwordInput.focus();
+            });
+            
+            // 添加抖动动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes shake {
+                    0%, 100% {transform: translateX(0);}
+                    10%, 30%, 50%, 70%, 90% {transform: translateX(-5px);}
+                    20%, 40%, 60%, 80% {transform: translateX(5px);}
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // 自动聚焦到密码输入框
+            passwordInput.focus();
+            
+            // 限制输入只能为数字
+            passwordInput.addEventListener('input', function() {
+                this.value = this.value.replace(/\D/g, '');
+            });
+        });
+    </script>
+</body>
+</html>

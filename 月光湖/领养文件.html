@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>领养文件详情 - SZFY20041224</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4a6fa5 0%, #2c3e50 100%);
+            color: white;
+            padding: 30px 40px;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .file-id {
+            font-size: 18px;
+            opacity: 0.9;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            padding-left: 15px;
+            border-left: 5px solid #4a6fa5;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 12px;
+            color: #4a6fa5;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .info-card {
+            background-color: #f9fafc;
+            border-radius: 10px;
+            padding: 25px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #eef1f6;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .info-card h3 {
+            color: #4a6fa5;
+            margin-bottom: 15px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .info-card h3 i {
+            margin-right: 10px;
+            width: 24px;
+        }
+        
+        .info-item {
+            margin-bottom: 12px;
+            display: flex;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #555;
+            min-width: 100px;
+        }
+        
+        .info-value {
+            color: #333;
+            flex: 1;
+        }
+        
+        .highlight {
+            background-color: #fff8e1;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin-top: 25px;
+        }
+        
+        .explanation {
+            background-color: #f0f7ff;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+            line-height: 1.7;
+        }
+        
+        .explanation h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .explanation ul {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .explanation li {
+            margin-bottom: 8px;
+        }
+        
+        .footer-note {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 14px;
+            border-top: 1px solid #eee;
+            margin-top: 30px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-left: 15px;
+        }
+        
+        .status-completed {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 25px;
+            }
+            
+            .header {
+                padding: 25px;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .deceased {
+            color: #d32f2f;
+            font-weight: 600;
+        }
+        
+        .relationship-note {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-style: italic;
+        }
+        
+        .legal-reference {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #4a6fa5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>xx福利院领养文件</h1>
+            <div class="file-id">文件编号：SNFY20041224</div>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-file-contract"></i> 领养基本信息</h2>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3><i class="fas fa-user-friends"></i> 领养人信息</h3>
+                        <div class="info-item">
+                            <span class="info-label">姓名：</span>
+                            <span class="info-value">纪远昌</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">性别：</span>
+                            <span class="info-value">男</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">年龄：</span>
+                            <span class="info-value">26岁</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">与被领养人关系：</span>
+                            <span class="info-value">孩子父母的同学兼好友</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">领养时婚姻状况：</span>
+                            <span class="info-value">已婚</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">职业：</span>
+                            <span class="info-value">工程师</span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3><i class="fas fa-baby"></i> 被领养人信息</h3>
+                        <div class="info-item">
+                            <span class="info-label">姓名：</span>
+                            <span class="info-value">陈叶曳</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">性别：</span>
+                            <span class="info-value">女</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">年龄：</span>
+                            <span class="info-value">6个月（领养时）</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">出生日期：</span>
+                            <span class="info-value">2004年6月15日</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">领养日期：</span>
+                            <span class="info-value">2004年12月24日</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <p><strong>备注：</strong>纪远昌先生与已故生父母叶雅婷、陈万鑫是同学兼好友关系，在婴儿失去所有直系亲属后，自愿提出领养申请，并承诺提供稳定的家庭环境。</p>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-users"></i> 生父母及亲属信息</h2>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3><i class="fas fa-female"></i> 生母信息</h3>
+                        <div class="info-item">
+                            <span class="info-label">姓名：</span>
+                            <span class="info-value">叶雅婷</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">性别：</span>
+                            <span class="info-value">女</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">年龄：</span>
+                            <span class="info-value">25岁（已故）</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">状态：</span>
+                            <span class="info-value deceased">已故</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">死亡原因：</span>
+                            <span class="info-value">交通事故</span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3><i class="fas fa-male"></i> 生父信息</h3>
+                        <div class="info-item">
+                            <span class="info-label">姓名：</span>
+                            <span class="info-value">陈万鑫</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">性别：</span>
+                            <span class="info-value">男</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">年龄：</span>
+                            <span class="info-value">26岁（已故）</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">状态：</span>
+                            <span class="info-value deceased">已故</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">死亡原因：</span>
+                            <span class="info-value">交通事故</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <h3><i class="fas fa-family"></i> 其他亲属情况</h3>
+                    <div class="info-item">
+                        <span class="info-label">祖父母：</span>
+                        <span class="info-value deceased">均已故</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">外祖父母：</span>
+                        <span class="info-value deceased">均已故</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">叔伯姑舅姨：</span>
+                        <span class="info-value">无</span>
+                    </div>
+                    
+                    <div class="relationship-note">
+                        文件记录显示，婴儿的所有直系亲属（父母、祖父母、外祖父母）均已去世，无其他可承担抚养责任的近亲属。
+                    </div>
+                </div>
+            </div>
+            
+            <div class="explanation">
+                <h3>领养背景与情况说明</h3>
+                <p>此领养案例发生于2004年12月24日，为特殊情况下符合法律规定的领养案例。</p>
+                
+                <ul>
+                    <li><strong>领养资格：</strong>纪远昌先生完全符合领养人条件，领养时年满26周岁，具备抚养教育能力，无违法犯罪记录，与生父母有同学好友关系。</li>
+                    <li><strong>紧急情况：</strong>被领养人陈叶曳当时仅6个月大，父母双亡且无其他直系亲属，属于查找不到生父母的儿童范畴。</li>
+                    <li><strong>亲属情况：</strong>文件注明"爷爷奶奶也死亡"，生父母的父母均已去世，婴儿无其他直系亲属在世。</li>
+                    <li><strong>关系证明：</strong>纪远昌是生父母的同学兼好友，提供身份证明及与生父母的关系证明，符合特殊关系领养规定。</li>
+                    <li><strong>审查过程：</strong>经社会调查、家庭评估、背景审查等程序，确认纪远昌具备领养资格和抚养能力。</li>
+                </ul>
+                
+                <div class="legal-reference">
+                    <strong>法律依据：</strong>本领养依据1998年修正的《收养法》相关规定办理，符合法律要求。
+                </div>
+                
+                <p>在婴儿所有直系亲属均已故且无其他合适抚养人的情况下，由生父母的同学兼好友纪远昌提出领养，经审核批准，确保婴儿能够在稳定的家庭环境中健康成长。</p>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-clipboard-check"></i> 文件状态</h2>
+                <div class="info-card">
+                    <div class="info-item">
+                        <span class="info-label">文件有效性：</span>
+                        <span class="info-value">有效 <span class="status-badge status-completed">已完成登记</span></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">办理机构：</span>
+                        <span class="info-value">深南市民政局收养登记处</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">登记日期：</span>
+                            <span class="info-value">2004年12月24日</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">经办人：</span>
+                        <span class="info-value">王建国</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">档案存放地：</span>
+                        <span class="info-value">深南市档案局，档案编号DN-2004-124</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-note">
+            <p>本页面基于领养文件扫描件SZFY20041224内容生成，相关信息为文件记录内容。</p>
+            <p>© 2004-2024 收养登记信息系统</p>
+        </div>
+    </div>
+
+    <script>
+        // 添加简单的交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const infoCards = document.querySelectorAll('.info-card');
+            
+            infoCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // 模拟文件编号点击效果
+            const fileId = document.querySelector('.file-id');
+            fileId.addEventListener('click', function() {
+                this.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                setTimeout(() => {
+                    this.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>

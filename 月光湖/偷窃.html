@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深南大学校园论坛 - 管理员登录</title>
+    <link rel="icon" type="image/jpeg" href="https://sylvie-seven-cq.top/gallery3/search-logo.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* 登录页面样式 */
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .login-box {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            padding: 40px;
+            width: 100%;
+        }
+        
+        .login-logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 30px;
+            display: block;
+        }
+        
+        .login-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .login-subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+        
+        .form-input {
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #4285f4;
+        }
+        
+        .login-button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .login-button:hover {
+            background-color: #2b6fd8;
+        }
+        
+        .login-error {
+            background-color: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .login-error.show {
+            display: block;
+        }
+        
+        .login-hint {
+            text-align: center;
+            margin-top: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        /* 论坛页面样式（登录后显示） */
+        .forum-container {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+        }
+        
+        /* 搜索栏相关样式 */
+        .header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+        }
+
+        .search-container {
+            flex: 0 0 33.33%;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            padding: 12px 20px;
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+        }
+
+        .search-bar:hover {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.35);
+        }
+
+        .search-bar:focus-within {
+            box-shadow: 0 1px 8px rgba(32,33,36,0.45);
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            color: #9aa0a6;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: transparent;
+        }
+
+        .search-button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .search-button:hover {
+            background-color: #2b6fd8;
+        }
+        
+        /* 页面主要内容 */
+        .admin-notice {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: #856404;
+        }
+        
+        .forum-post {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .post-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #d32f2f;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .post-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .post-author {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .post-time {
+            color: #888;
+        }
+        
+        .post-ip {
+            background-color: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        .post-content {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+        
+        .post-content p {
+            margin-bottom: 15px;
+        }
+        
+        .post-evidence {
+            background-color: #f9f9f9;
+            border-left: 4px solid #4285f4;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .post-evidence h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .deleted-notice {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .comments-section {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .comments-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .comment {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 15px;
+        }
+        
+        .comment:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .comment-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .comment-content {
+            font-size: 15px;
+        }
+        
+        .admin-controls {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .admin-btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .restore-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .restore-btn:hover {
+            background-color: #218838;
+        }
+        
+        .perma-delete-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .perma-delete-btn:hover {
+            background-color: #c82333;
+        }
+        
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #f8f9fa;
+            color: #6c757d;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .logout-btn:hover {
+            background-color: #e2e6ea;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 900px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .search-container {
+                width: 80%;
+            }
+            
+            .forum-post {
+                padding: 20px;
+            }
+            
+            .post-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .logout-btn {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 20px;
+                align-self: flex-end;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+            
+            .post-title {
+                font-size: 20px;
+            }
+            
+            .search-container {
+                width: 100%;
+            }
+            
+            .login-box {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 登录页面 -->
+    <div class="login-container" id="loginPage">
+        <div class="login-box">
+            <img src="https://sylvie-seven-cq.top/gallery3/search-logo.png" alt="校园论坛Logo" class="login-logo">
+            <h1 class="login-title">深南大学校园论坛</h1>
+            <p class="login-subtitle">管理员登录以查看已删除内容</p>
+            
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="username" class="form-label">管理员账号</label>
+                    <input type="text" id="username" class="form-input" placeholder="请输入管理员账号" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">管理员密码</label>
+                    <input type="password" id="password" class="form-input" placeholder="请输入管理员密码" required>
+                </div>
+                
+                <button type="submit" class="login-button">登录</button>
+                
+                <div class="login-error" id="loginError">
+                    账号或密码错误！请重试。
+                </div>
+            </form>
+            
+            <div class="login-hint">
+                <p>提示：默认管理员账号：admin，密码：shenandaxue2023</p>
+                <p style="margin-top: 5px; font-size: 12px;">此页面仅限管理员访问，普通用户无法查看已删除内容</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 论坛页面（登录后显示） -->
+    <div class="forum-container" id="forumPage">
+        <button class="logout-btn" id="logoutBtn">退出登录</button>
+        
+        <!-- 头部搜索栏 -->
+        <div class="header-container">
+            <div class="logo">
+                <img src="https://sylvie-seven-cq.top/gallery3/search-logo.png" alt="校园论坛Logo" style="width:100%; height:100%; object-fit:contain; border-radius:8px;">
+            </div>
+            <div class="search-container">
+                <div class="search-bar">
+                    <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                    </svg>
+                    <input type="text" class="search-input" placeholder="在校园论坛中搜索..." value="郑馨雨">
+                    <button class="search-button">搜索</button>
+                </div>
+            </div>
+            <div style="flex: 0 0 33.33%;"></div> <!-- 占位保持平衡 -->
+        </div>
+        
+        <!-- 管理员提示 -->
+        <div class="admin-notice">
+            ⚠️ <strong>管理员视图</strong> - 您正在以管理员身份查看已删除内容。此页面普通用户无法访问。
+        </div>
+        
+        <!-- 论坛帖子内容 -->
+        <div class="forum-post">
+            <h1 class="post-title">「机械学院郑某偷窃实锤」 - 已删除内容</h1>
+            
+            <div class="post-meta">
+                <div>
+                    <span class="post-author">发帖ID：深大叶爷</span>
+                    <span style="margin: 0 10px;">|</span>
+                    <span class="post-time">发帖时间：12月19日 21:30</span>
+                </div>
+                <div class="post-ip">IP地址：深南大学女生宿舍5号楼543室</div>
+            </div>
+            
+            <div class="post-content">
+                <p><strong>标题：机械学院郑馨雨偷窃我的宝格丽项链，证据确凿，已报警处理！</strong></p>
+                
+                <p>我是深南大学商学院大三学生，今天我必须曝光机械学院的郑馨雨（学号：2021XXXXXX）偷窃行为！</p>
+                
+                <p>上周五（12月15日）我在宿舍举办生日聚会，邀请了几个同学包括郑馨雨。当天我戴了一条宝格丽Serpenti系列玫瑰金项链，价值2.3万元，是母亲送我的生日礼物。聚会结束后我发现项链不见了，找遍了整个房间都没有。</p>
+                
+                <div class="post-evidence">
+                    <h3>📁 证据材料：</h3>
+                    <p>1. <strong>监控证据</strong>：宿舍楼走廊监控显示，郑馨雨是最后一个离开我房间的人，离开时神色慌张，手一直放在口袋里。</p>
+                    <p>2. <strong>目击证人</strong>：同宿舍楼的李同学看到郑馨雨第二天在洗手间偷偷试戴一条玫瑰金项链，与我的项链描述一致。</p>
+                    <p>3. <strong>消费记录对比</strong>：郑馨雨家庭经济条件一般，但最近突然在朋友圈晒出高档餐厅消费记录，与其经济状况不符。</p>
+                    <p>4. <strong>行为异常</strong>：自从我项链丢失后，郑馨雨一直回避我，消息不回，课上故意坐得离我很远。</p>
+                </div>
+                
+                <p>我已经向深南大学派出所报案，警方已受理并开始调查。今天在辅导员陪同下，我已经正式向学校纪检部门提交了举报材料。</p>
+                
+                <p><strong>我的要求：</strong></p>
+                <ul style="padding-left: 20px; margin-bottom: 15px;">
+                    <li>郑馨雨必须立即归还我的项链！</li>
+                    <li>学校应对郑馨雨进行严肃处理，这种品德败坏的学生不配留在深南大学！</li>
+                    <li>机械学院应加强学生道德教育，避免类似事件再次发生！</li>
+                </ul>
+                
+                <p>我不是在无端指责，所有证据都已提交给警方和学校。对于这种偷窃行为，我绝不妥协！也请认识郑馨雨的同学小心保管自己的财物。</p>
+                
+                <p style="font-weight: bold; color: #d32f2f;">最新更新：刚刚接到警方通知，他们已经掌握了关键证据，建议郑馨雨主动投案自首，争取宽大处理！</p>
+            </div>
+            
+            <div class="deleted-notice">
+                ⚠️ 此帖子已被管理员于12月20日09:15删除，删除理由：事件正在调查中，为避免对当事人造成不必要影响，暂时删除帖子。
+            </div>
+            
+            <!-- 管理员操作 -->
+            <div class="admin-controls">
+                <button class="admin-btn restore-btn">恢复此帖</button>
+                <button class="admin-btn perma-delete-btn">永久删除</button>
+                <button class="admin-btn" style="background-color:#6c757d; color:white;">编辑内容</button>
+            </div>
+        </div>
+        
+        <!-- 评论部分 -->
+        <div class="comments-section">
+            <h2 class="comments-title">帖子删除前的评论（共8条）</h2>
+            
+            <div class="comment">
+                <div class="comment-meta">
+                    <span class="comment-author">正义使者</span>
+                    <span class="comment-time">12月19日 22:05</span>
+                </div>
+                <div class="comment-content">支持楼主！偷窃行为绝对不能容忍，学校必须严肃处理！</div>
+            </div>
+            
+            <div class="comment">
+                <div class="comment-meta">
+                    <span class="comment-author">机械学院路人</span>
+                    <span class="comment-time">12月19日 22:20</span>
+                </div>
+                <div class="comment-content">我是机械学院的，对这件事感到震惊。希望学院能公正处理，不要包庇。</div>
+            </div>
+            
+            <div class="comment">
+                <div class="comment-meta">
+                    <span class="comment-author">理智吃瓜</span>
+                    <span class="comment-time">12月19日 23:15</span>
+                </div>
+                <div class="comment-content">事情没有最终结论前，大家不要网暴当事人。等待警方和学校的调查结果吧。</div>
+            </div>
+            
+            <div class="comment">
+                <div class="comment-meta">
+                    <span class="comment-author">深南学子</span>
+                    <span class="comment-time">12月20日 08:30</span>
+                </div>
+                <div class="comment-content">帖子怎么被删了？是学校干预了吗？希望不是要压下去...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 登录功能
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorElement = document.getElementById('loginError');
+            
+            // 默认管理员账号密码
+            const correctUsername = 'admin';
+            const correctPassword = 'shenandaxue2023';
+            
+            if (username === correctUsername && password === correctPassword) {
+                // 登录成功
+                errorElement.classList.remove('show');
+                
+                // 隐藏登录页面，显示论坛页面
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('forumPage').style.display = 'block';
+                
+                // 保存登录状态（简单实现）
+                sessionStorage.setItem('adminLoggedIn', 'true');
+            } else {
+                // 登录失败
+                errorElement.classList.add('show');
+                document.getElementById('password').value = '';
+                document.getElementById('password').focus();
+            }
+        });
+        
+        // 检查是否已登录
+        if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('forumPage').style.display = 'block';
+        }
+        
+        // 退出登录功能
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            sessionStorage.removeItem('adminLoggedIn');
+            location.reload();
+        });
+        
+        // 搜索功能
+        document.querySelector('.search-button').addEventListener('click', function() {
+            const searchTerm = document.querySelector('.search-input').value;
+            if (searchTerm.trim()) {
+                alert(`搜索: ${searchTerm}\n\n此功能为演示，实际将跳转至搜索结果页面。`);
+            }
+        });
+        
+        document.querySelector('.search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.querySelector('.search-button').click();
+            }
+        });
+        
+        // 管理员按钮功能
+        document.querySelector('.restore-btn').addEventListener('click', function() {
+            if (confirm('确定要恢复此帖子吗？恢复后所有用户将可见。')) {
+                alert('帖子已恢复！');
+                document.querySelector('.deleted-notice').style.backgroundColor = '#d4edda';
+                document.querySelector('.deleted-notice').style.color = '#155724';
+                document.querySelector('.deleted-notice').innerHTML = '✅ 此帖子已恢复，所有用户现在可以查看。';
+            }
+        });
+        
+        document.querySelector('.perma-delete-btn').addEventListener('click', function() {
+            if (confirm('确定要永久删除此帖子吗？此操作不可撤销！')) {
+                alert('帖子已永久删除！');
+                document.querySelector('.forum-post').style.display = 'none';
+                document.querySelector('.comments-section').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

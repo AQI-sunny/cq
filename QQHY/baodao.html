@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>39层地标入籍 · 静乔并入栖乔华苑</title>
+    <!-- 使用Inter字体，现代且易读 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #eef2f6;  /* 柔和底调 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem 1.2rem;
+            line-height: 1.5;
+            color: #1a2b3f;
+        }
+
+        /* 主容器 —— 卡片感，大圆角，细腻阴影 */
+        .paper {
+            max-width: 1000px;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 36px;
+            box-shadow: 0 30px 60px -20px rgba(0, 30, 40, 0.2), 0 8px 20px -8px rgba(0, 20, 30, 0.15);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        /* 顶端融合色带 —— 象征新与旧、高与广的握手 */
+        .ridge {
+            height: 8px;
+            background: linear-gradient(90deg, #2f6655 0%, #4f8b7a 30%, #cc7f4b 70%, #b36a3a 100%);
+        }
+
+        /* 内边距，让内容呼吸 */
+        .content {
+            padding: 2.8rem 2.5rem;
+        }
+
+        /* 手机端紧凑一些 */
+        @media (max-width: 600px) {
+            .content {
+                padding: 1.8rem 1.5rem;
+            }
+            body {
+                padding: 1rem 0.8rem;
+            }
+            .paper {
+                border-radius: 28px;
+            }
+        }
+
+        /* 头部区域 */
+        .header {
+            margin-bottom: 2.2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid #e8edf3;
+            padding-bottom: 1.2rem;
+        }
+
+        .title-block h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            color: #0b2b2b;
+            margin-bottom: 0.3rem;
+        }
+
+        .title-block h1 span {
+            background: linear-gradient(145deg, #1f4e43, #255f4b);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            font-weight: 800;
+        }
+
+        .subhead {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: #546e7a;
+            margin-top: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .subhead .date-tag {
+            background: #dce9e2;
+            color: #1d5a47;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .byline {
+            color: #4d6875;
+            font-weight: 400;
+            background: #f0f4fa;
+            padding: 0.35rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+        @media (max-width: 550px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.8rem;
+            }
+            .title-block h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* 引言/重点短句 */
+        .lede {
+            background: #f4f9fc;
+            border-left: 6px solid #cc7f4b;
+            padding: 1.2rem 2rem;
+            border-radius: 0 60px 60px 0;
+            margin-bottom: 2.5rem;
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: #1c3a47;
+            box-shadow: 0 6px 12px -8px rgba(0,0,0,0.1);
+        }
+
+        /* 网格布局，让各部分更规整 */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2.5rem 0 2rem;
+        }
+
+        .info-card {
+            background: #f9fbfd;
+            border-radius: 28px;
+            padding: 1.8rem 1.8rem 2rem;
+            box-shadow: inset 0 1px 3px rgba(255,255,255,0.9), 0 8px 18px -12px #2b4a3f33;
+            border: 1px solid #e2eef0;
+        }
+
+        .info-card h2 {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1c4b3e;
+            margin-bottom: 1.2rem;
+            border-bottom: 2px dotted #bcd0cb;
+            padding-bottom: 0.6rem;
+        }
+
+        .badge-building {
+            background: #306654;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.2rem 0.9rem;
+            border-radius: 40px;
+            margin-left: 0.5rem;
+            letter-spacing: 0.3px;
+        }
+
+        .stat-list {
+            list-style: none;
+        }
+        .stat-list li {
+            margin-bottom: 0.9rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font-size: 1rem;
+        }
+        .stat-list li strong {
+            color: #0b3b2f;
+            font-weight: 600;
+            min-width: 7rem;
+        }
+        .emph-num {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #cc7f4b;
+            margin-right: 0.2rem;
+        }
+
+        .quote-block {
+            background: #eaf3f0;
+            padding: 1.4rem 1.8rem;
+            border-radius: 24px;
+            margin: 1.8rem 0 1.2rem;
+            font-style: normal;
+            box-shadow: 0 6px 14px -10px #173e33;
+        }
+        .quote-block p {
+            font-size: 1.05rem;
+            color: #1a423b;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        .quote-block footer {
+            margin-top: 0.5rem;
+            color: #4b6b62;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* 改造亮点卡片（用于栖乔） */
+        .upgrade-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+        .upgrade-item {
+            background: white;
+            border-radius: 20px;
+            padding: 0.9rem 0.9rem 0.9rem 1.2rem;
+            border-left: 4px solid #3f8b74;
+            font-weight: 500;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.02);
+        }
+
+        /* 破墙并院部分 */
+        .breakthrough {
+            background: linear-gradient(115deg, #f7fbfa 0%, #f1f7f4 100%);
+            border-radius: 30px;
+            padding: 2rem 2.2rem;
+            margin: 2.2rem 0 2.2rem;
+            border: 1px solid #cbdcd6;
+        }
+
+        .breakthrough h3 {
+            font-size: 1.8rem;
+            font-weight: 650;
+            color: #1d5f4b;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .door-number {
+            background: #2d5e4c;
+            color: white;
+            padding: 0.3rem 1.3rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.5rem;
+            display: inline-block;
+            margin: 1rem 0 1.4rem;
+            box-shadow: 0 6px 12px rgba(34, 88, 67, 0.2);
+            border: 2px solid #febf8e;
+        }
+
+        .feature-icons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem 2rem;
+            margin: 1.5rem 0 0.5rem;
+        }
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: white;
+            padding: 0.4rem 1.2rem 0.4rem 1rem;
+            border-radius: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .feature span {
+            font-size: 1.6rem;
+        }
+
+        /* 街道负责人引语 */
+        .street-saying {
+            background: #1a3630;
+            color: #f1efe7;
+            border-radius: 28px;
+            padding: 1.8rem 2.2rem;
+            margin: 2.5rem 0 1.8rem;
+        }
+        .street-saying p {
+            font-size: 1.3rem;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+        .street-saying .signature {
+            margin-top: 1rem;
+            font-weight: 500;
+            color: #f7c7a2;
+        }
+
+        /* 结尾门牌强调 */
+        .final-note {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            background: #eef7f2;
+            border-radius: 40px;
+            padding: 1.1rem 2rem;
+            margin-top: 2.5rem;
+        }
+        .new-plaque {
+            background: #b16834;
+            color: white;
+            font-weight: 700;
+            font-size: 1.5rem;
+            padding: 0.3rem 2rem;
+            border-radius: 60px;
+            letter-spacing: 0.5px;
+            border: 3px solid #ffd8b0;
+        }
+        .footnote {
+            color: #2a5b4b;
+            font-weight: 400;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px dashed #bfd8d0;
+            margin: 1.5rem 0;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 700px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            .upgrade-grid {
+                grid-template-columns: 1fr;
+            }
+            .breakthrough h3 {
+                font-size: 1.5rem;
+            }
+            .door-number {
+                font-size: 1.2rem;
+                padding: 0.2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="paper">
+        <div class="ridge"></div>
+        <div class="content">
+            <!-- 报头 -->
+            <div class="header">
+                <div class="title-block">
+                    <h1>39层地标<span>“入籍”</span></h1>
+                    <div class="subhead">
+                        <span class="date-tag">2026年3月18日</span>
+                        <span>静乔公寓正式并入栖乔华苑</span>
+                    </div>
+                </div>
+                <div class="byline">记者 程萋</div>
+            </div>
+
+            <!-- 导语/改变 -->
+            <div class="lede">
+                ⬩ 一栋39层的超高层单体公寓楼，并入一个刚完成翻新的“巨无霸”混合社区，会带来怎样的改变？3月13日，随着行政区划调整落地和物业交割完成，静乔公寓正式整体并入一墙之隔的栖乔华苑。
+            </div>
+
+            <!-- 两个核心信息模块：七年静乔 & 全新栖乔 -->
+            <div class="grid-2">
+                <!-- 静乔卡片 -->
+                <div class="info-card">
+                    <h2>⏺ 七年地标“静乔” <span class="badge-building">2018翻新</span></h2>
+                    <ul class="stat-list">
+                        <li><strong>建成年份：</strong>1998 · 39层 · 120米</li>
+                        <li><strong>户数：</strong><span class="emph-num">400+</span>户</li>
+                        <li><strong>先天困境：</strong>无中心花园 · 无健身区 · 快递堆积</li>
+                        <li><strong>物业费收缴率：</strong>连年走低</li>
+                    </ul>
+                    <div class="quote-block">
+                        <p>“39层住了400多户，像个垂直的村子，但出了电梯没地方去。”</p>
+                        <footer>—— 静乔公寓老居民 陈阿姨（住龄20年）</footer>
+                    </div>
+                    <p style="color: #2d5e4c;">看着隔壁栖乔翻新后的宽阔马路、成片绿化和儿童乐园，静乔居民动了“并过去”的心思。</p>
+                </div>
+                <!-- 栖乔卡片 (2026翻新) -->
+                <div class="info-card">
+                    <h2>⏺ 全新“栖乔” <span class="badge-building">2026整体翻新</span></h2>
+                    <p style="margin-bottom: 0.8rem;"><strong>始建于2000年 · 混合社区</strong> — 临街公寓 · 多层住宅 · 联排别墅区</p>
+                    <div style="background: #e0f0e6; padding: 1rem; border-radius: 20px; margin: 0.6rem 0;">
+                        <span style="font-weight:700;">容纳近3000户</span> · 唯一的缺口：东侧围墙外39层静乔公寓
+                    </div>
+                    <div class="upgrade-grid">
+                        <div class="upgrade-item">🛣️ 道路系统<br><small>人车分流，全路铺装</small></div>
+                        <div class="upgrade-item">🌳 两大中心花园+三广场+环形步道</div>
+                        <div class="upgrade-item">📹 全小区智能门禁/监控</div>
+                        <div class="upgrade-item">🏪 沿街底商整治，社区食堂/超市</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 破墙：39层高楼“入籍”  -->
+            <div class="breakthrough">
+                <h3>🗼 破墙 · 39层高楼“入籍”</h3>
+                <p style="font-size:1.1rem; color: #1d423a;">并院动议始于2025年底。栖乔居民曾有疑虑：增加400多户会挤占资源吗？39层消防压力如何分担？</p>
+                <p style="background: #ffffffc0; padding: 0.8rem 1.2rem; border-radius: 28px; margin: 0.8rem 0;font-weight:500;">经过<strong>六轮居民议事会</strong>，方案敲定：静乔公寓独立成“静乔组团”，共享全部公共设施，保留独立出入口。</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin: 1.2rem 0;">
+                    <div style="background: #c7713d; width: 60px; height: 6px; border-radius: 6px;"></div>
+                    <span style="font-weight:600;">今年3月，围墙正式拆除</span>
+                </div>
+                <p>一条新建步道将静乔公寓大堂与栖乔华苑中心花园直接连通。从此，静乔居民下楼即入公园。</p>
+            </div>
+
+            <!-- 1+1>2 社区生态 -->
+            <div style="margin: 2rem 0 1.5rem;">
+                <h2 style="font-size: 2rem; font-weight: 650; color: #1d4f41; letter-spacing: -0.3px;">1+1＞2 · 超大社区的治理实验</h2>
+                <div class="feature-icons">
+                    <div class="feature"><span>🏔️</span> 垂直与水平：39层高层住户与别墅区共享步道</div>
+                    <div class="feature"><span>🏛️</span> 新与旧：2018外立面 & 2026整体翻新和谐并存</div>
+                    <div class="feature"><span>📦</span> 大与小：物业统一管理，400多户告别“孤岛”</div>
+                </div>
+            </div>
+
+            <!-- 街道负责人点睛 -->
+            <div class="street-saying">
+                <p>“静乔有高度，栖乔有广度。这次合并是一次大胆的尝试，39层地标从此有了大社区的支撑，而栖乔华苑也因为静乔的加入，补上了超高层住宅这一业态。”</p>
+                <div class="signature">—— 街道负责人</div>
+            </div>
+
+            <!-- 门牌更新段落，重点显示 01A 幢 -->
+            <hr>
+            <div class="final-note">
+                <div style="display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;">
+                    <span style="font-size: 1.2rem;">🏷️ 静乔公寓门牌号现已统一更换为</span>
+                    <span class="new-plaque">栖乔华苑 01A 幢</span>
+                </div>
+                <div class="footnote">
+                    两个小区的融合正在进行最后的细节打磨。
+                </div>
+            </div>
+
+            <!-- 收尾微细节 (写实脚注) -->
+            <div style="margin-top: 1.8rem; color: #6f8d84; font-size: 0.9rem; border-top: 1px solid #d2e4dd; padding-top: 1.2rem; display: flex; justify-content: space-between; flex-wrap: wrap;">
+                <span>⬩ 静乔组团保留独立出入口，原大堂同步升级</span>
+                <span>⬩ 栖乔华苑业委会 · 静乔公寓工作组</span>
+            </div>
+        </div>
+        <!-- 底部极细装饰线 -->
+        <div style="height: 4px; background: linear-gradient(90deg, #3b7a65, #e0ac7c, #3b7a65);"></div>
+    </div>
+    <!-- 可选：非常微小的说明，保持干净 -->
+    <!-- <div style="margin-top: 1rem; font-size: 0.75rem; color: #7e9b92;">社区新闻 · 写实记录 · 门牌号01A幢确认</div> -->
+     <div style="margin-top: 1rem; font-size: 0.75rem; color: #7e9b92;">社区新闻 · 写实记录</div>
+</body>
+</html>

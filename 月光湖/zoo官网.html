@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深南野生动物园 - 寒潮通知</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f9f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background: linear-gradient(to right, #2d5016, #4a7c3a);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+        }
+        
+        .logo-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .logo-text p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+            padding: 5px 0;
+            position: relative;
+        }
+        
+        nav a:hover {
+            opacity: 0.8;
+        }
+        
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #ffc107;
+            border-radius: 3px;
+        }
+        
+        /* 主要内容区 */
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* 通知卡片 */
+        .notice-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .notice-header {
+            background-color: #d32f2f;
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .notice-header i {
+            font-size: 1.8rem;
+        }
+        
+        .notice-header h2 {
+            font-size: 1.6rem;
+        }
+        
+        .notice-body {
+            padding: 30px;
+        }
+        
+        .notice-date {
+            color: #d32f2f;
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .notice-body h3 {
+            color: #2d5016;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8f5e8;
+        }
+        
+        .affected-areas {
+            margin: 25px 0;
+        }
+        
+        .area-item {
+            background-color: #f9fdf9;
+            border-left: 4px solid #4a7c3a;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-radius: 0 8px 8px 0;
+            transition: transform 0.3s;
+        }
+        
+        .area-item:hover {
+            transform: translateX(5px);
+            background-color: #f0f8f0;
+        }
+        
+        .area-item h4 {
+            color: #2d5016;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .area-item p {
+            color: #555;
+            font-size: 0.95rem;
+        }
+        
+        /* 志愿者活动 */
+        .volunteer-section {
+            background-color: #f0f7ff;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+        
+        .volunteer-section h3 {
+            color: #1a5f7a;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .volunteer-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+        
+        .volunteer-list li {
+            padding: 12px 15px;
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            border-left: 4px solid #1a5f7a;
+        }
+        
+        .volunteer-note {
+            background-color: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            border-left: 4px solid #ffc107;
+        }
+        
+        /* 图片展示区 */
+        .images-section {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            height: fit-content;
+        }
+        
+        .images-section h3 {
+            color: #2d5016;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8f5e8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .main-image {
+            width: 100%;
+            height: 250px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 1.1rem;
+            background: linear-gradient(to right, #e8f5e8, #f5f9f5);
+        }
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .gallery-item {
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 0.9rem;
+            background: linear-gradient(to right, #e8f5e8, #f5f9f5);
+        }
+        
+        /* 底部样式 */
+        footer {
+            background-color: #2d5016;
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 40px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .footer-column h4 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column a {
+            color: #c8e6c9;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column a:hover {
+            color: white;
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .contact-info i {
+            margin-right: 10px;
+            width: 20px;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #4a7c3a;
+            color: #c8e6c9;
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+            
+            .volunteer-list li {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+        
+        .map-placeholder, .gallery-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .placeholder-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #4a7c3a;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部 -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-paw"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>深南野生动物园</h1>
+                    <p>Shennan Wildlife Zoo</p>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">首页</a></li>
+                    <li><a href="#">动物展区</a></li>
+                    <li><a href="#">游览指南</a></li>
+                    <li><a href="#" class="active">最新公告</a></li>
+                    <li><a href="#">志愿者项目</a></li>
+                    <li><a href="#">联系我们</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 主要内容区 -->
+        <div class="main-content">
+            <!-- 左侧通知内容 -->
+            <div class="left-column">
+                <!-- 寒潮通知 -->
+                <div class="notice-card">
+                    <div class="notice-header">
+                        <i class="fas fa-snowflake"></i>
+                        <h2>寒潮通知与防寒预案</h2>
+                    </div>
+                    <div class="notice-body">
+                        <div class="notice-date">
+                            <i class="far fa-calendar-alt"></i> 发布日期：2025年12月5日
+                        </div>
+                        
+                        <p>根据气象部门预报，我市将迎来一次强寒潮天气过程，气温将骤降至零度以下。为保障动物福利和游客安全，深南野生动物园将启动防寒预案。</p>
+                        
+                        <h3><i class="fas fa-calendar-day"></i> 防寒预案启动时间</h3>
+                        <p><strong>12月10日起</strong>，动物园将全面启动冬季防寒预案，各动物场馆将采取相应保暖措施。</p>
+                        
+                        <h3><i class="fas fa-exclamation-triangle"></i> 受影响区域及措施</h3>
+                        <div class="affected-areas">
+                            <div class="area-item">
+                                <h4><i class="fas fa-temperature-high"></i> 1. 爬行馆</h4>
+                                <p>增设加热灯和保温垫，确保爬行动物生活区域温度维持在适宜范围。部分对温度敏感的物种将暂时移至室内恒温区。</p>
+                            </div>
+                            <div class="area-item">
+                                <h4><i class="fas fa-fire-alt"></i> 2. 小熊猫馆</h4>
+                                <p>临时加装暖气片，增加室内保暖设施。室外活动区域将提供防风屏障和加温休息点，确保小熊猫舒适过冬。</p>
+                            </div>
+                            <div class="area-item">
+                                <h4><i class="fas fa-leaf"></i> 3. 灵长类馆</h4>
+                                <p>增加室内取暖设备，提供更多保暖垫料。黑猩猩、金丝猴等灵长类动物将根据气温调整室外活动时间。</p>
+                            </div>
+                        </div>
+                        
+                       
+                        <h3 style="margin-top: 25px;"><i class="fas fa-info-circle"></i> 游客提示</h3>
+                        <p>1. 寒潮期间部分动物室外活动时间可能缩短，请留意场馆公告；<br>
+                        2. 园区路面可能结冰，请游客注意防滑保暖；<br>
+                        3. 如有需要，游客中心提供热水和保暖毯借用服务。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧图片展示 -->
+            <div class="right-column">
+                <div class="images-section">
+                    <h3><i class="fas fa-map"></i> 动物园整体地图</h3>
+                    <div class="main-image map-placeholder">
+                        <div>
+                            <div class="placeholder-icon">
+                                <i class="fas fa-map-marked-alt"></i>
+                            </div>
+                            <p>深南野生动物园导览图</p>
+                            <p>（地图图片占位）</p>
+                        </div>
+                    </div>
+                    
+                    <h3><i class="fas fa-images"></i> 各场馆图片</h3>
+                    <div class="gallery">
+                        <div class="gallery-item gallery-placeholder">
+                            <div class="placeholder-icon">
+                                <i class="fas fa-spider"></i>
+                            </div>
+                            <p>爬行馆</p>
+                        </div>
+                        <div class="gallery-item gallery-placeholder">
+                            <div class="placeholder-icon">
+                                <i class="fas fa-cat"></i>
+                            </div>
+                            <p>小熊猫馆</p>
+                        </div>
+                        <div class="gallery-item gallery-placeholder">
+                            <div class="placeholder-icon">
+                                <i class="fas fa-monkey"></i>
+                            </div>
+                            <p>灵长类馆</p>
+                        </div>
+                        <div class="gallery-item gallery-placeholder">
+                            <div class="placeholder-icon">
+                                <i class="fas fa-hippo"></i>
+                            </div>
+                            <p>大型动物区</p>
+                        </div>
+                        <div class="gallery-item gallery-placeholder">
+                            <div class="placeholder-icon">
+                                <i class="fas fa-feather-alt"></i>
+                            </div>
+                            <p>鸟类园</p>
+                        </div>
+                        <div class="gallery-item gallery-placeholder">
+                            <div class="placeholder-icon">
+                                <i class="fas fa-water"></i>
+                            </div>
+                            <p>水族馆</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h4>深南野生动物园</h4>
+                    <p>致力于野生动物保护、公众教育和科学研究，为游客提供亲近自然的体验。</p>
+                    <div class="contact-info" style="margin-top: 15px;">
+                        <div><i class="fas fa-map-marker-alt"></i> 深南市生态保护区1号</div>
+                        <div><i class="fas fa-phone"></i> (0755) 1234-5678</div>
+                        <div><i class="fas fa-envelope"></i> info@shennanzoo.com</div>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>开放时间</h4>
+                    <ul>
+                        <li>周一至周五：9:00-17:00</li>
+                        <li>周末及节假日：8:30-17:30</li>
+                        <li>最后入园时间：闭园前1小时</li>
+                        <li>寒潮期间时间可能调整</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>快速链接</h4>
+                    <ul>
+                        <li><a href="#">门票预订</a></li>
+                        <li><a href="#">志愿者招募</a></li>
+                        <li><a href="#">动物领养计划</a></li>
+                        <li><a href="#">教育活动</a></li>
+                        <li><a href="#">无障碍设施</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 深南野生动物园 版权所有 | 设计用于展示目的</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 简单交互：点击区域项目时显示提示
+        document.querySelectorAll('.area-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const title = this.querySelector('h4').textContent;
+                alert(`您查看了${title}的防寒措施信息`);
+            });
+        });
+        
+        // 模拟图片加载效果
+        document.querySelectorAll('.gallery-item, .main-image').forEach(item => {
+            item.addEventListener('click', function() {
+                const text = this.querySelector('p').textContent;
+                alert(`此处将显示${text}的实际图片`);
+            });
+        });
+    </script>
+    <!-- 引入图片指纹系统 -->
+<script src="zoo-image-fingerprint.js"></script>
+
+<!-- 如果需要使用完整的哈希算法，可以引入crypto-js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</body>
+</html>

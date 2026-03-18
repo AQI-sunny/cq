@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏预告 · 双境沉梦</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #0b1a31 0%, #123456 70%, #1d3f6e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 点缀：紫色+红色的光晕与粒子 */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 70vw;
+            height: 70vw;
+            top: -20%;
+            left: -15%;
+            background: radial-gradient(circle at 30% 30%, rgba(170, 90, 255, 0.15) 0%, rgba(255, 70, 120, 0.08) 50%, transparent 80%);
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+            filter: blur(60px);
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            width: 80vw;
+            height: 80vw;
+            bottom: -30%;
+            right: -20%;
+            background: radial-gradient(circle at 70% 70%, rgba(220, 60, 210, 0.2) 0%, rgba(40, 100, 255, 0.1) 50%, transparent 80%);
+            border-radius: 50%;
+            z-index: 0;
+            filter: blur(80px);
+            pointer-events: none;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #ffb3d9;
+            border-radius: 50%;
+            box-shadow: 0 0 12px 4px #ff4080, 0 0 20px 6px #aa55ff;
+            top: 20%;
+            left: 15%;
+            opacity: 0.6;
+            animation: float 12s infinite alternate ease-in-out;
+        }
+
+        .sparkle:nth-child(2) {
+            width: 6px;
+            height: 6px;
+            top: 70%;
+            left: 85%;
+            background: #c77dff;
+            box-shadow: 0 0 20px 6px #b266ff, 0 0 30px 10px #ff4d6d;
+            animation: float 18s infinite alternate-reverse;
+        }
+
+        .sparkle:nth-child(3) {
+            width: 4px;
+            height: 4px;
+            top: 40%;
+            left: 45%;
+            background: #80b3ff;
+            box-shadow: 0 0 20px 6px #3d7eff, 0 0 35px 8px #ff66b2;
+            animation: pulse 8s infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+            100% { transform: translate(40px, -30px) scale(1.4); opacity: 0.9; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(2); box-shadow: 0 0 40px 12px #ff3366, 0 0 70px 20px #a64dff; }
+        }
+
+        /* 主卡片——预告核心 */
+        .preview-container {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(8, 28, 50, 0.45);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 180, 255, 0.25);
+            border-radius: 48px;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 30px 60px -15px rgba(0, 5, 20, 0.8), 0 0 0 1px rgba(70, 140, 255, 0.3) inset, 0 0 40px 0 rgba(180, 0, 255, 0.3);
+        }
+
+        /* 标题区域 蓝色为主+紫红细节 */
+        .header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+
+        .header h1 {
+            font-size: 3.2rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            background: linear-gradient(135deg, #b0daff, #6eb6ff 40%, #c27eff 70%, #ff8a9f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px #2f7eff, 0 0 30px #b05eff;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 4px 6px #021122);
+        }
+
+        .header .sub {
+            color: #bfd9ff;
+            font-size: 1.3rem;
+            border-bottom: 2px dashed #ff6680;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+            border-image: linear-gradient(to right, #ff4d79, #aa5eff) 1;
+            border-bottom-style: solid;
+            border-bottom-width: 2px;
+            border-bottom-color: transparent;
+            background: linear-gradient(to right, #ff4d79, #aa5eff) bottom / 100% 2px no-repeat;
+        }
+
+        /* 双预告网格 */
+        .preview-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem 1.8rem;
+            margin: 2rem 0 1.5rem;
+        }
+
+        /* 共用卡片样式 */
+        .preview-card {
+            background: rgba(3, 15, 30, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 36px;
+            border: 1px solid;
+            border-image-slice: 1;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 20px 30px -10px rgba(0, 10, 25, 0.8), 0 0 0 1px rgba(70, 160, 255, 0.3) inset;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 个性边框颜色 (红/紫点缀) */
+        .card-moon {
+            border-color: #ff7799;
+            box-shadow: 0 0 20px rgba(255, 100, 150, 0.4), 0 20px 30px -10px #021826;
+        }
+        .card-moon:hover {
+            transform: translateY(-8px);
+            border-color: #ff99bb;
+            box-shadow: 0 0 35px #ff5577, 0 25px 40px -8px #0a0015;
+        }
+
+        .card-garden {
+            border-color: #c37eff;
+            box-shadow: 0 0 20px #b26bff, 0 20px 30px -10px #021826;
+        }
+        .card-garden:hover {
+            transform: translateY(-8px);
+            border-color: #dd99ff;
+            box-shadow: 0 0 40px #b05eff, 0 25px 40px -8px #1e002a;
+        }
+
+        /* 图片区域 (月光湖) */
+        .image-preview {
+            height: 220px;
+            background: #08263f;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 2px solid;
+            border-image: linear-gradient(90deg, #ff5f7c, #c45bff) 1;
+        }
+
+        .lake-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.7s ease;
+            filter: saturate(1.1) brightness(1.05);
+        }
+
+        .preview-card:hover .lake-img {
+            transform: scale(1.07);
+        }
+
+        /* 模拟网页预览 (栖乔华苑) */
+        .web-preview {
+            height: 220px;
+            background: #102b41;
+            display: flex;
+            flex-direction: column;
+            border-bottom: 2px solid #c663ff;
+        }
+
+        .web-bar {
+            background: linear-gradient(145deg, #1f3c5b, #142e47);
+            padding: 0.7rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #a054cf;
+        }
+
+        .web-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .web-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff6680;
+            box-shadow: 0 0 8px #ff2233;
+        }
+
+        .web-dot:nth-child(2) {
+            background: #f0b34b;
+            box-shadow: 0 0 8px #ffb347;
+        }
+        .web-dot:nth-child(3) {
+            background: #4acf7a;
+            box-shadow: 0 0 8px #2ecc71;
+        }
+
+        .web-address {
+            flex: 1;
+            background: rgba(0, 10, 25, 0.6);
+            border-radius: 24px;
+            padding: 0.3rem 1rem;
+            color: #aacbff;
+            font-size: 0.9rem;
+            border: 1px solid #a055ff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            box-shadow: 0 0 6px #b45eff;
+        }
+
+        .web-content {
+            flex: 1;
+            background: #0c233b;
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            align-items: center;
+            justify-items: center;
+        }
+
+        .web-block {
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(145deg, #1d4970, #0d2d4a);
+            border-radius: 12px;
+            border: 1px solid #6f45b0;
+            box-shadow: 0 0 6px #cc66ff;
+        }
+
+        .web-block:nth-child(2) {
+            background: linear-gradient(145deg, #2d4f7a, #1a3150);
+        }
+        .web-block:last-child {
+            background: linear-gradient(145deg, #3f2b6b, #291b47);
+            border-color: #ff7799;
+        }
+
+        .web-text-line {
+            width: 80%;
+            height: 8px;
+            background: #5982af;
+            border-radius: 10px;
+            margin: 12px auto 0;
+            opacity: 0.8;
+        }
+
+        /* 卡片底部文字 */
+        .card-footer {
+            padding: 1.5rem 1.8rem 1.8rem;
+            color: #e2f0ff;
+        }
+
+        .card-footer h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            background: linear-gradient(to right, #b5dcff, #ffffff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.4rem;
+            text-shadow: 0 0 6px #0088ff;
+        }
+
+        .card-footer p {
+            color: #b6d6ff;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tag {
+            background: rgba(255, 70, 120, 0.25);
+            border: 1px solid #ff6680;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            color: #ffb0c3;
+            display: inline-block;
+            box-shadow: 0 0 10px #ff3d6b;
+        }
+
+        .tag-purple {
+            background: rgba(160, 100, 255, 0.25);
+            border: 1px solid #b573ff;
+            color: #e3c4ff;
+            box-shadow: 0 0 10px #aa55ff;
+        }
+
+        /* 底部点缀日期 */
+        .footer-note {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            color: #7fa5cc;
+            border-top: 1px solid rgba(255, 80, 130, 0.3);
+            padding-top: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .date {
+            background: rgba(170, 90, 255, 0.2);
+            border-radius: 50px;
+            padding: 0.4rem 1.5rem;
+            border: 1px solid #ff5678;
+            color: #ffd0df;
+            font-weight: 500;
+            letter-spacing: 1px;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 0 20px #b30086;
+        }
+
+        .reminder {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .reminder span {
+            width: 8px;
+            height: 8px;
+            background: #ff5fa2;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #ff3159;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 760px) {
+            .preview-grid {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            .preview-container {
+                padding: 1.8rem 1.2rem;
+            }
+            .card-footer h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 抽象闪烁点 (红/紫点缀) -->
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+
+    <div class="preview-container">
+        <div class="header">
+            <h1>✦ 游戏预告 ✦</h1>
+            <div class="sub">深南大学月光湖 · 栖乔华苑</div>
+        </div>
+
+        <!-- 双卡片：图片预告 & 网页预告 -->
+        <div class="preview-grid">
+            <!-- 月光湖 图片预告（以蓝色为主，红紫点缀） -->
+            <div class="preview-card card-moon">
+                <div class="image-preview">
+                    <!-- 蓝色调为主的湖景，带红紫光效 -->
+                    <img class="lake-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2317436b'/%3E%3Cstop offset='50%25' stop-color='%23235288'/%3E%3Cstop offset='100%25' stop-color='%2335286e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='200' fill='url(%23g1)'/%3E%3Ccircle cx='300' cy='50' r='30' fill='%23ffec99' opacity='0.4' filter='url(%23glow)'/%3E%3Ccircle cx='120' cy='160' r='40' fill='%23b380ff' opacity='0.35' /%3E%3Ccircle cx='280' cy='140' r='60' fill='%234d7eff' opacity='0.25' /%3E%3Cpath d='M0 150 L400 120 L400 200 L0 200 Z' fill='%23002244' opacity='0.7' /%3E%3Cpath d='M50 180 Q 150 140 250 170 T 380 150' stroke='%23ff99c8' stroke-width='2' fill='none' stroke-dasharray='6 6' /%3E%3Ccircle cx='80' cy='70' r='6' fill='%23ff7799' /%3E%3Ccircle cx='360' cy='40' r='10' fill='%23c397ff' opacity='0.7' /%3E%3Ctext x='40' y='110' fill='%23ffffff' font-size='28' font-weight='bold' font-family='monospace' opacity='0.8'%3E🌙%3C/text%3E%3C/svg%3E"
+                    alt="月光湖 蓝色幻境">
+                </div>
+                <div class="card-footer">
+                    <h2>月光湖谜案</h2>
+                    <p>
+                        <span class="tag">🌙 蓝月升起</span>
+                        <span class="tag tag-purple">✨ 红紫雾霭</span>
+                    </p>
+                    <p style="font-size: 0.95rem; margin-top: 10px; color: #b5d2ff;">图片预告 — 静谧中暗涌绯色与紫芒</p>
+                </div>
+            </div>
+
+            <!-- 栖乔华苑 网页预告（模拟站点） -->
+            <div class="preview-card card-garden">
+                <div class="web-preview">
+                    <!-- 仿地址栏、网页缩略图 红紫点缀 -->
+                    <div class="web-bar">
+                        <div class="web-dots">
+                            <span class="web-dot"></span>
+                            <span class="web-dot"></span>
+                            <span class="web-dot"></span>
+                        </div>
+                        <div class="web-address">✨ qiqiao.garden/preview ✨</div>
+                    </div>
+                    <div class="web-content">
+                        <div class="web-block" style="background: linear-gradient(145deg, #2f3180, #1b1e5a); border-color: #ff7799;"></div>
+                        <div class="web-block" style="background: linear-gradient(145deg, #773d8f, #452b63); border-color: #cc66ff;"></div>
+                        <div class="web-block" style="background: linear-gradient(145deg, #ad4589, #632a53); border-color: #ff5577;"></div>
+                        <div class="web-block" style="background: linear-gradient(145deg, #31688f, #1e3c5a); border-color: #aa7eff;"></div>
+                        <div class="web-block" style="background: linear-gradient(145deg, #6d469b, #342653); border-color: #ff3366;"></div>
+                        <div class="web-block" style="background: linear-gradient(145deg, #3c2b70, #1f173f); border-color: #d966ff;"></div>
+                    </div>
+                    <div class="web-text-line" style="background: #9a73cf; width: 60%;"></div>
+                </div>
+                <div class="card-footer">
+                    <h2>栖乔华苑</h2>
+                    <p>
+                        <span class="tag tag-purple">🌸 紫藤绕梁</span>
+                        <span class="tag">🔥 红枫点缀</span>
+                    </p>
+                    <p style="font-size: 0.95rem; margin-top: 10px; color: #b5d2ff;">网页预告 — 交互式华苑，蓝紫界面跃动朱红</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部发布时间/倒计时点缀 -->
+        <div class="footer-note">
+            <div class="reminder">
+                <span></span> <span style="background:#b300ff;"></span> <span style="background:#ff3366;"></span>
+                <!-- 双境即将开启 ·  -->敬请期待
+            </div>
+            <!-- <div class="date">
+                🕒 预告: 2025 · 月满之时
+            </div> -->
+            <div class="date">
+                🕒 预告: 2026 · 5月
+            </div>
+        </div>
+    </div>
+</body>
+</html>

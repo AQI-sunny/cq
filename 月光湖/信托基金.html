@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>信托基金条款 | 陈叶曳成长基金</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        /* 头部 */
+        .header {
+            background: linear-gradient(90deg, #0f172a, #1e293b);
+            color: white;
+            padding: 28px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 8px;
+        }
+        
+        .header h1 i {
+            color: #6366f1;
+            font-size: 32px;
+        }
+        
+        .subtitle {
+            color: #cbd5e1;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        
+        /* 内容区域 */
+        .content {
+            padding: 40px;
+        }
+        
+        /* 基本信息卡片 */
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .info-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 5px solid #6366f1;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+        
+        .info-card h3 {
+            color: #0f172a;
+            font-size: 18px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-card h3 i {
+            color: #6366f1;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .info-label {
+            color: #64748b;
+            font-weight: 500;
+        }
+        
+        .info-value {
+            color: #0f172a;
+            font-weight: 600;
+            text-align: right;
+            max-width: 60%;
+        }
+        
+        .highlight-red {
+            color: #dc2626;
+            background-color: #fef2f2;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .highlight-blue {
+            color: #1d4ed8;
+            background-color: #dbeafe;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        /* 条款区域 */
+        .clause-section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            color: #0f172a;
+            font-size: 22px;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .section-title i {
+            color: #6366f1;
+        }
+        
+        .clause-list {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .clause-item {
+            display: flex;
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px dashed #cbd5e1;
+        }
+        
+        .clause-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .clause-number {
+            background: #6366f1;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .clause-content {
+            flex: 1;
+        }
+        
+        .clause-content p {
+            line-height: 1.6;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+        
+        .clause-note {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 12px 16px;
+            margin-top: 10px;
+            border-radius: 0 8px 8px 0;
+            color: #92400e;
+            font-size: 14px;
+        }
+        
+        /* 年龄分析区域 */
+        .age-analysis {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 40px;
+            border: 1px solid #bae6fd;
+        }
+        
+        .analysis-title {
+            color: #0369a1;
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+        
+        .analysis-card {
+            background: white;
+            border-radius: 10px;
+            padding: 22px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .analysis-card h4 {
+            color: #0c4a6e;
+            margin-bottom: 15px;
+            font-size: 17px;
+        }
+        
+        .timeline {
+            margin-top: 25px;
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #6366f1;
+            border-radius: 3px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+            padding-left: 20px;
+        }
+        
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -30px;
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #6366f1;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #6366f1;
+        }
+        
+        .timeline-date {
+            color: #6366f1;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .timeline-desc {
+            color: #475569;
+            line-height: 1.5;
+        }
+        
+        /* 结论区域 */
+        .conclusion {
+            background: #fef2f2;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 40px;
+            border-left: 5px solid #dc2626;
+        }
+        
+        .conclusion h3 {
+            color: #991b1b;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .conclusion p {
+            color: #7f1d1d;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .conclusion ul {
+            padding-left: 20px;
+            color: #7f1d1d;
+            line-height: 1.6;
+        }
+        
+        .conclusion li {
+            margin-bottom: 8px;
+        }
+        
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+            font-size: 14px;
+            border-top: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+        
+        .confidential {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f1f5f9;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 25px;
+            }
+            
+            .header {
+                padding: 22px 25px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .info-cards, .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .clause-item {
+                flex-direction: column;
+            }
+            
+            .clause-number {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1><i class="fas fa-file-contract"></i> 信托基金条款文件</h1>
+            <div class="subtitle">陈叶曳成长基金 | 设立日期：2005年1月15日 | 文件编号：CTY-2005-001</div>
+        </div>
+        
+        <!-- 主要内容 -->
+        <div class="content">
+            <!-- 基本信息 -->
+            <div class="info-cards">
+                <div class="info-card">
+                    <h3><i class="fas fa-info-circle"></i> 基金基本信息</h3>
+                    <div class="info-item">
+                        <div class="info-label">信托名称：</div>
+                        <div class="info-value">陈叶曳成长基金</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">设立日期：</div>
+                        <div class="info-value">2005年1月15日</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">资金来源：</div>
+                        <div class="info-value">叶雅婷、陈万鑫、陈万鑫父母保险金</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">总金额：</div>
+                        <div class="info-value"><span class="highlight-red">210万元</span></div>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <h3><i class="fas fa-user-circle"></i> 关键人员信息</h3>
+                    <div class="info-item">
+                        <div class="info-label">受益人：</div>
+                        <div class="info-value">陈叶曳</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">文件中出生日期：</div>
+                        <div class="info-value">2003年6月15日 <span class="highlight-red">(虚报)</span></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">实际出生日期：</div>
+                        <div class="info-value">2004年6月15日 <span class="highlight-blue">(真实)</span></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">基金管理人：</div>
+                        <div class="info-value">纪国昌</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 条款内容 -->
+            <div class="clause-section">
+                <h2 class="section-title"><i class="fas fa-gavel"></i> 信托核心条款</h2>
+                <div class="clause-list">
+                    <div class="clause-item">
+                        <div class="clause-number">1</div>
+                        <div class="clause-content">
+                            <p><strong>陈叶曳25周岁前，纪国昌为基金唯一管理人，拥有资金的全权支配权。</strong></p>
+                            <p>管理人有权进行投资、提取、使用基金资金，无需受益人同意。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="clause-item">
+                        <div class="clause-number">2</div>
+                        <div class="clause-content">
+                            <p><strong>若陈叶曳在25周岁前死亡，基金剩余资金全部归管理人纪国昌所有。</strong></p>
+                            <div class="clause-note">
+                                <i class="fas fa-exclamation-triangle"></i> 注意：此条款使纪国昌在受益人早逝情况下直接获得全部剩余资金。
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="clause-item">
+                        <div class="clause-number">3</div>
+                        <div class="clause-content">
+                            <p><strong>若管理人纪国昌在陈叶曳25周岁前死亡，基金剩余资金将捐赠给指定慈善机构。</strong></p>
+                            <p>慈善机构为：中华慈善总会青少年成长基金。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 年龄与时间线分析 -->
+            <div class="age-analysis">
+                <h2 class="analysis-title"><i class="fas fa-chart-line"></i> 年龄虚报的时间线分析</h2>
+                
+                <div class="analysis-grid">
+                    <div class="analysis-card">
+                        <h4>基于文件信息（虚报年龄）</h4>
+                        <p>文件中出生：<strong>2003年6月15日</strong></p>
+                        <p>满25周岁时间：<strong>2028年6月15日</strong></p>
+                        <p>纪国昌控制期：<strong>23年5个月</strong> (2005.1.15 - 2028.6.15)</p>
+                    </div>
+                    
+                    <div class="analysis-card">
+                        <h4>基于真实信息</h4>
+                        <p>实际出生：<strong>2004年6月15日</strong></p>
+                        <p>满25周岁时间：<strong>2029年6月15日</strong></p>
+                        <p>纪国昌应控制期：<strong>24年5个月</strong> (2005.1.15 - 2029.6.15)</p>
+                    </div>
+                </div>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">2004年6月15日</div>
+                        <div class="timeline-desc">陈叶曳实际出生</div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">2005年1月15日</div>
+                        <div class="timeline-desc">信托基金设立，纪国昌将陈叶曳年龄虚报为2003年出生</div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">2028年6月15日</div>
+                        <div class="timeline-desc"><strong>文件中陈叶曳"满25岁"</strong> - 纪国昌控制权按文件应结束</div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">2029年6月15日</div>
+                        <div class="timeline-desc"><strong>陈叶曳实际满25岁</strong> - 此时纪国昌已"超期控制"1年</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 关键发现 -->
+            <div class="conclusion">
+                <h3><i class="fas fa-search"></i> 关键发现与分析</h3>
+                <p><strong>矛盾点：</strong>文件中将陈叶曳出生年份虚报为2003年（比实际2004年早1年），导致"25岁"时间点提前1年。</p>
+                
+                <p><strong>但为何说"多设4年"？可能存在以下情况：</strong></p>
+                <ul>
+                    <li>原始条款可能不是"25岁"而是"<strong>21岁</strong>"，虚报年龄使控制期从实际2025年延长到文件2024年？</li>
+                    <li>或信托中另有条款规定"<strong>基金管理至受益人29岁</strong>"，虚报年龄使控制期从实际2033年提前到文件2028年？</li>
+                    <li>又或者"4年"是<strong>其他时间差的误述</strong>（如保险金累计时间、其他关联日期）</li>
+                </ul>
+                
+                <p><strong>纪国昌的动机：</strong>通过虚报受益人年龄，提前"满足"条款中的年龄条件，从而在实际年龄到达前终止信托，实现资金控制或转移。</p>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>本文件为机密文件，仅限授权人员查阅</p>
+            <div class="confidential">
+                <i class="fas fa-lock"></i>
+                <span>机密等级：三级 | 最后更新：2023年11月</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加简单的交互效果
+            const infoCards = document.querySelectorAll('.info-card');
+            const clauseItems = document.querySelectorAll('.clause-item');
+            
+            infoCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.transition = 'transform 0.3s ease';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+            
+            clauseItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                });
+            });
+            
+            // 高亮显示关键数字
+            const highlights = document.querySelectorAll('.highlight-red, .highlight-blue');
+            highlights.forEach(hl => {
+                hl.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.05)';
+                    this.style.transition = 'transform 0.2s ease';
+                });
+                
+                hl.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

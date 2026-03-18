@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灰信 · PC端聊天界面（仿截图）</title>
+    <style>
+        /* 基础重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            background: #e5e9f0;  /* 灰信背景色 */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        /* PC主容器：宽高固定，模拟桌面应用窗口，但完全响应式（手机下缩小） */
+        .pc-frame {
+            width: 100%;
+            max-width: 1200px;        /* PC大屏最大宽度 */
+            min-width: 320px;          /* 手机兼容 */
+            height: 800px;             /* 固定高度，PC端足够显示全部 */
+            background-color: #f2f4f8;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 0 1px #c0c8d2 inset;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* 顶部栏：口  Q搜索  10:34  完全按照截图排列 */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background: #f0f2f5;
+            border-bottom: 2px solid #cdd3db;
+            font-size: 18px;
+            font-weight: 500;
+            color: #1f2a3a;
+        }
+        .top-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        .square-icon {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        .search-area {
+            display: flex;
+            align-items: center;
+            background: #e1e5eb;
+            border-radius: 40px;
+            padding: 6px 18px;
+            border: 1px solid #bcc4d0;
+            gap: 8px;
+        }
+        .search-area span:first-child {
+            font-size: 20px;
+            color: #5a6b7c;
+        }
+        .search-area span:last-child {
+            font-size: 16px;
+            color: #2c3e50;
+            font-weight: 400;
+        }
+        .top-time {
+            font-weight: 600;
+            font-size: 18px;
+            color: #1f2a3a;
+        }
+
+        /* 主内容：左右结构 (聊天列表 + 聊天详情) */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;          /* 防止溢出 */
+            background: #ffffff;
+        }
+
+        /* 左侧聊天列表 (可上下滑动) */
+        .chat-sidebar {
+            width: 280px;              /* PC固定宽度，手机自适应用flex-shrink */
+            background: #f7fafd;
+            border-right: 2px solid #d0d8e2;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;           /* 列表滑动 */
+            scrollbar-width: thin;
+            padding: 8px 0;
+        }
+        .chat-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-sidebar::-webkit-scrollbar-thumb {
+            background: #b7c2d0;
+            border-radius: 10px;
+        }
+
+        /* 左侧聊天条目 — 完全复现截图文字 */
+        .chat-item {
+            display: flex;
+            flex-direction: column;
+            padding: 14px 16px 12px 20px;
+            border-bottom: 1px solid #e0e6ed;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+        .chat-item.active {
+            background: #dfe6f0;        /* 激活底色 */
+            border-left: 5px solid #2a6bbf;
+        }
+        .item-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        .item-name-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .item-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #7e8fa0;        /* 默认，会被覆盖 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+        }
+        .item-name {
+            font-weight: 650;
+            font-size: 16px;
+            color: #1e2c41;
+        }
+        .item-time {
+            font-size: 13px;
+            color: #7a8b9f;
+            white-space: nowrap;
+        }
+        .item-lastmsg {
+            padding-left: 48px;          /* 与头像对齐 */
+            font-size: 14px;
+            color: #5f728b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+
+        /* 右侧聊天面板 (固定宽度撑满剩余) */
+        .chat-detail {
+            flex: 1;
+            background: #fafdff;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* 右侧对话头部 (当前聊天对象) */
+        .detail-header {
+            padding: 16px 24px 12px 24px;
+            background: #f2f6fc;
+            border-bottom: 2px solid #d7e0e9;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .detail-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #6f8ab1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            font-weight: 500;
+        }
+        .detail-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1d2d44;
+        }
+
+        /* 聊天记录区域 — 可上下滑动 */
+        .message-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 28px 20px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            background: #fafdff;
+            scroll-behavior: smooth;
+        }
+        .message-area::-webkit-scrollbar {
+            width: 8px;
+        }
+        .message-area::-webkit-scrollbar-thumb {
+            background: #bac4d2;
+            border-radius: 12px;
+        }
+
+        /* 日期分割线 (例如“今天 10:22”) */
+        .date-divider {
+            text-align: center;
+            margin: 10px 0 6px;
+        }
+        .date-divider span {
+            background: #e3e9f2;
+            padding: 6px 24px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #43566e;
+            display: inline-block;
+            border: 1px solid #cad2de;
+        }
+
+        /* 消息行 (对方/自己) */
+        .message-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            max-width: 80%;
+        }
+        .message-row.own {
+            flex-direction: row-reverse;
+            align-self: flex-end;
+        }
+        .msg-avatar-sm {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #8e9fb1;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .msg-bubble {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 12px 20px;
+            border: 1px solid #d7e0ea;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #1b2738;
+            word-break: break-word;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+        .message-row.own .msg-bubble {
+            background: #e0f0ff;
+            border-color: #b9d1f0;
+        }
+
+        /* 底部输入条 (发送) */
+        .input-footer {
+            padding: 16px 24px 20px 24px;
+            background: #f2f6fb;
+            border-top: 2px solid #d4dee9;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .input-footer .plus-icon {
+            font-size: 32px;
+            color: #557088;
+            cursor: default;
+        }
+        .input-footer .fake-input {
+            background: white;
+            border-radius: 40px;
+            padding: 14px 24px;
+            width: 100%;
+            border: 1px solid #bac8d9;
+            font-size: 17px;
+            color: #526477;
+        }
+
+        /* 注释区域 - 明显标注修改位置 */
+        .modify-note {
+            background: #eaeef3;
+            padding: 10px 24px;
+            font-size: 14px;
+            border-top: 2px dashed #7e8d9e;
+            color: #1e3b5c;
+            font-family: monospace;
+        }
+
+        /* 手机兼容：窄屏时左侧宽度稍微自适应 */
+        @media (max-width: 600px) {
+            .chat-sidebar {
+                width: 100px;           /* 手机下变窄，但保留功能 */
+            }
+            .item-lastmsg {
+                padding-left: 0;
+                max-width: 70px;
+            }
+            .item-name {
+                font-size: 13px;
+            }
+            .top-bar {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="pc-frame">
+    <!-- 顶部栏: 口  Q搜索  10:34  完全按照截图 -->
+    <div class="top-bar">
+        <div class="top-left">
+            <span class="square-icon">口</span>
+            <div class="search-area">
+                <span>🔍</span>
+                <span>Q搜索</span>
+            </div>
+        </div>
+        <div class="top-time">10:34</div>
+    </div>
+
+    <!-- 主内容: 左右分区 -->
+    <div class="main-content">
+        <!-- 左侧聊天列表 (条目可上下滑动) 所有文字仿照截图顺序，头像/文字完全可修改 -->
+        <div class="chat-sidebar">
+            <!-- 
+                【修改指南】
+                每个 .chat-item 就是一个聊天。
+                - .item-avatar：修改文字(emoji) 和背景色 style="background: #xxxxxx;"
+                - .item-name：昵称
+                - .item-time：时间
+                - .item-lastmsg：最后消息
+                按截图顺序排列。
+            -->
+            <!-- 1. 今天不打游戏了 (默认激活) -->
+            <div class="chat-item active" data-target="chat1">
+                <div class="item-header">
+                    <div class="item-name-area">
+                        <div class="item-avatar" style="background: #6082b0;">🎮</div>
+                        <span class="item-name">今天不打游戏了</span>
+                    </div>
+                    <span class="item-time">10:22</span>
+                </div>
+                <div class="item-lastmsg">动画表情 睡睡</div>
+            </div>
+            <!-- 2. 睡睡 -->
+            <div class="chat-item" data-target="chat2">
+                <div class="item-header">
+                    <div class="item-name-area">
+                        <div class="item-avatar" style="background: #8aa38b;">😴</div>
+                        <span class="item-name">睡睡</span>
+                    </div>
+                    <span class="item-time">昨天</span>
+                </div>
+                <div class="item-lastmsg">回家 昨天19:07</div>
+            </div>
+            <!-- 3. tap工作人员“邀请” -->
+            <div class="chat-item" data-target="chat3">
+                <div class="item-header">
+                    <div class="item-name-area">
+                        <div class="item-avatar" style="background: #b58d7b;">tap</div>
+                        <span class="item-name">工作人员邀请</span>
+                    </div>
+                    <span class="item-time">昨天19:07</span>
+                </div>
+                <div class="item-lastmsg">倒头就</div>
+            </div>
+            <!-- 4. pureniods.net（根据截图文本） -->
+            <div class="chat-item" data-target="chat4">
+                <div class="item-header">
+                    <div class="item-name-area">
+                        <div class="item-avatar" style="background: #7890b0;">🌐</div>
+                        <span class="item-name">pureniods.net</span>
+                    </div>
+                    <span class="item-time">昨天18:27</span>
+                </div>
+                <div class="item-lastmsg">sp... 哼</div>
+            </div>
+            <!-- 5. 文件脑图文件.zip (以文件脑图为名) -->
+            <div class="chat-item" data-target="chat5">
+                <div class="item-header">
+                    <div class="item-name-area">
+                        <div class="item-avatar" style="background: #9b8b78;">📁</div>
+                        <span class="item-name">文件脑图</span>
+                    </div>
+                    <span class="item-time">昨天17:36</span>
+                </div>
+                <div class="item-lastmsg">文件脑图文件.zip</div>
+            </div>
+            <!-- 6. Yuan -->
+            <div class="chat-item" data-target="chat6">
+                <div class="item-header">
+                    <div class="item-name-area">
+                        <div class="item-avatar" style="background: #b5926a;">Yuan</div>
+                        <span class="item-name">Yuan</span>
+                    </div>
+                    <span class="item-time">星期天</span>
+                </div>
+                <div class="item-lastmsg">有无群友愿意...</div>
+            </div>
+            <!-- 7. 折叠置顶聊天 -->
+            <div class="chat-item" data-target="chat7">
+                <div class="item-header">
+                    <div class="item-name-area">
+                        <div class="item-avatar" style="background: #8fa5b9;">📌</div>
+                        <span class="item-name">折叠置顶聊天</span>
+                    </div>
+                    <span class="item-time"></span>
+                </div>
+                <div class="item-lastmsg">置顶消息</div>
+            </div>
+        </div>
+
+        <!-- 右侧聊天详情 (可滑动) -->
+        <div class="chat-detail">
+            <!-- 头部动态变化 (随点击切换) -->
+            <div class="detail-header" id="detailHeader">
+                <div class="detail-avatar" id="headerAvatar" style="background: #6082b0;">🎮</div>
+                <span class="detail-name" id="headerName">今天不打游戏了</span>
+            </div>
+
+            <!-- 聊天记录滑动区域 (七个不同内容对应左侧点击) 每个都有独立id，按截图填充文字 -->
+            <!-- chat1 今天不打游戏了 的对话 -->
+            <div id="chat1" class="message-area" style="display: flex;">
+                <div class="date-divider"><span>今天 10:22</span></div>
+                <div class="message-row">
+                    <div class="msg-avatar-sm" style="background:#6082b0;">🎮</div>
+                    <div class="msg-bubble">动画表情 😴</div>
+                </div>
+                <div class="message-row own">
+                    <div class="msg-avatar-sm" style="background:#3f5f7a;">我</div>
+                    <div class="msg-bubble">睡睡</div>
+                </div>
+                <div class="message-row">
+                    <div class="msg-avatar-sm" style="background:#6082b0;">🎮</div>
+                    <div class="msg-bubble">回家</div>
+                </div>
+
+                <div class="date-divider"><span>昨天19:07</span></div>
+                <div class="message-row">
+                    <div class="msg-avatar-sm" style="background:#b58d7b;">tap</div>
+                    <div class="msg-bubble">工作人员“邀请” 倒头就</div>
+                </div>
+
+                <div class="date-divider"><span>昨天18:27</span></div>
+                <div class="message-row">
+                    <div class="msg-avatar-sm" style="background:#7890b0;">🌐</div>
+                    <div class="msg-bubble">pureniods.net、sp... 哼</div>
+                </div>
+
+                <div class="date-divider"><span>昨天17:36</span></div>
+                <div class="message-row">
+                    <div class="msg-avatar-sm" style="background:#9b8b78;">📁</div>
+                    <div class="msg-bubble">文件脑图文件.zip</div>
+                </div>
+                <div class="message-row own">
+                    <div class="msg-avatar-sm" style="background:#3f5f7a;">我</div>
+                    <div class="msg-bubble">睡睡</div>
+                </div>
+
+                <div class="date-divider"><span>星期天</span></div>
+                <div class="message-row">
+                    <div class="msg-avatar-sm" style="background:#b5926a;">Y</div>
+                    <div class="msg-bubble">Yuan：有无群友愿意.. 折叠置顶聊天</div>
+                </div>
+                <div class="message-row">
+                    <div class="msg-avatar-sm" style="background:#8fa5b9;">📌</div>
+                    <div class="msg-bubble">折叠置顶聊天</div>
+                </div>
+            </div>
+
+            <!-- chat2 睡睡 -->
+            <div id="chat2" class="message-area" style="display: none;">
+                <div class="date-divider"><span>昨天</span></div>
+                <div class="message-row"><div class="msg-avatar-sm" style="background:#8aa38b;">😴</div><div class="msg-bubble">回家 昨天19:07</div></div>
+                <div class="message-row own"><div class="msg-avatar-sm">我</div><div class="msg-bubble">嗯嗯</div></div>
+            </div>
+            <!-- chat3 工作人员邀请 -->
+            <div id="chat3" class="message-area" style="display: none;">
+                <div class="date-divider"><span>昨天19:07</span></div>
+                <div class="message-row"><div class="msg-avatar-sm" style="background:#b58d7b;">tap</div><div class="msg-bubble">工作人员“邀请” 倒头就</div></div>
+            </div>
+            <!-- chat4 pureniods.net -->
+            <div id="chat4" class="message-area" style="display: none;">
+                <div class="date-divider"><span>昨天18:27</span></div>
+                <div class="message-row"><div class="msg-avatar-sm" style="background:#7890b0;">🌐</div><div class="msg-bubble">pureniods.net、sp... 哼</div></div>
+            </div>
+            <!-- chat5 文件脑图 -->
+            <div id="chat5" class="message-area" style="display: none;">
+                <div class="date-divider"><span>昨天17:36</span></div>
+                <div class="message-row"><div class="msg-avatar-sm" style="background:#9b8b78;">📁</div><div class="msg-bubble">文件脑图文件.zip</div></div>
+                <div class="message-row own"><div class="msg-avatar-sm">我</div><div class="msg-bubble">收到了</div></div>
+            </div>
+            <!-- chat6 Yuan -->
+            <div id="chat6" class="message-area" style="display: none;">
+                <div class="date-divider"><span>星期天</span></div>
+                <div class="message-row"><div class="msg-avatar-sm" style="background:#b5926a;">Y</div><div class="msg-bubble">Yuan：有无群友愿意..</div></div>
+            </div>
+            <!-- chat7 折叠置顶聊天 -->
+            <div id="chat7" class="message-area" style="display: none;">
+                <div class="date-divider"><span>置顶</span></div>
+                <div class="message-row"><div class="msg-avatar-sm" style="background:#8fa5b9;">📌</div><div class="msg-bubble">折叠置顶聊天 无新消息</div></div>
+            </div>
+
+            <!-- 底部发送条 -->
+            <div class="input-footer">
+                <span class="plus-icon">➕</span>
+                <div class="fake-input">发送</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 醒目的注释行，说明修改位置（不会影响滑动和布局） -->
+    <div class="modify-note">
+        【修改头像/文字】左侧 .chat-item → .item-avatar(背景/文字) .item-name(昵称) .item-time .item-lastmsg。<br>
+        【修改聊天内容】右侧 #chat1～#chat7 → .msg-avatar-sm 和 .msg-bubble 内的文字/表情。 完全按截图定制。
+    </div>
+</div>
+
+<script>
+    (function() {
+        const chatItems = document.querySelectorAll('.chat-item');
+        const headerAvatar = document.getElementById('headerAvatar');
+        const headerName = document.getElementById('headerName');
+
+        // 所有聊天内容div
+        const chatContents = {
+            chat1: document.getElementById('chat1'),
+            chat2: document.getElementById('chat2'),
+            chat3: document.getElementById('chat3'),
+            chat4: document.getElementById('chat4'),
+            chat5: document.getElementById('chat5'),
+            chat6: document.getElementById('chat6'),
+            chat7: document.getElementById('chat7')
+        };
+
+        // 头部映射 (与左侧一致)
+        const headerMap = {
+            chat1: { avatar: '🎮', name: '今天不打游戏了', bg: '#6082b0' },
+            chat2: { avatar: '😴', name: '睡睡', bg: '#8aa38b' },
+            chat3: { avatar: 'tap', name: '工作人员邀请', bg: '#b58d7b' },
+            chat4: { avatar: '🌐', name: 'pureniods.net', bg: '#7890b0' },
+            chat5: { avatar: '📁', name: '文件脑图', bg: '#9b8b78' },
+            chat6: { avatar: 'Y', name: 'Yuan', bg: '#b5926a' },
+            chat7: { avatar: '📌', name: '折叠置顶聊天', bg: '#8fa5b9' }
+        };
+
+        function switchTo(targetId) {
+            // 隐藏所有聊天区域
+            Object.values(chatContents).forEach(div => { if (div) div.style.display = 'none'; });
+            if (chatContents[targetId]) chatContents[targetId].style.display = 'flex';
+
+            // 更新左侧激活状态
+            chatItems.forEach(item => {
+                const target = item.getAttribute('data-target');
+                if (target === targetId) item.classList.add('active');
+                else item.classList.remove('active');
+            });
+
+            // 更新右侧头部
+            if (headerMap[targetId]) {
+                headerAvatar.textContent = headerMap[targetId].avatar;
+                headerName.textContent = headerMap[targetId].name;
+                headerAvatar.style.backgroundColor = headerMap[targetId].bg;
+            }
+        }
+
+        // 绑定点击
+        chatItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const target = item.getAttribute('data-target');
+                if (target) switchTo(target);
+            });
+        });
+
+        // 默认激活第一个
+        switchTo('chat1');
+    })();
+</script>
+</body>
+</html>

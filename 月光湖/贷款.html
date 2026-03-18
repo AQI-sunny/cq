@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>内部档案查询系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #0a1929;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(10, 30, 60, 0.3) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(10, 30, 60, 0.3) 0%, transparent 20%);
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: #132f4c;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid #1e4976;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #0a1929, #1a3a5f);
+            padding: 20px 30px;
+            border-bottom: 2px solid #2a4a7a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .badge {
+            background-color: #1e4976;
+            color: #66b2ff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-right: 20px;
+        }
+        
+        .title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #e0e0e0;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            color: #90caf9;
+            margin-top: 3px;
+        }
+        
+        .lock-icon {
+            font-size: 24px;
+            color: #ff6b6b;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .password-section {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .password-prompt {
+            font-size: 18px;
+            margin-bottom: 25px;
+            color: #b0bec5;
+        }
+        
+        .hint {
+            font-size: 15px;
+            color: #ffa726;
+            margin-bottom: 30px;
+            background-color: rgba(255, 167, 38, 0.1);
+            padding: 12px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        
+        .password-input {
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto 30px;
+        }
+        
+        .password-input input {
+            width: 100%;
+            padding: 15px 20px;
+            background-color: #0a1929;
+            border: 2px solid #2a4a7a;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 18px;
+            letter-spacing: 2px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .password-input input:focus {
+            border-color: #66b2ff;
+            box-shadow: 0 0 0 2px rgba(102, 178, 255, 0.2);
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #90caf9;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(to right, #1a3a5f, #2a4a7a);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        .submit-btn:hover {
+            background: linear-gradient(to right, #2a4a7a, #3a5a8a);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .error-message {
+            color: #ff6b6b;
+            margin-top: 20px;
+            font-size: 16px;
+            display: none;
+        }
+        
+        .data-section {
+            display: none;
+        }
+        
+        .data-header {
+            background-color: #1a3a5f;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            border-left: 5px solid #66b2ff;
+        }
+        
+        .data-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #e0e0e0;
+        }
+        
+        .data-subtitle {
+            font-size: 14px;
+            color: #90caf9;
+            margin-top: 5px;
+        }
+        
+        .record-card {
+            background-color: #0a1929;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid #1e4976;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .record-title {
+            font-size: 20px;
+            color: #66b2ff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #1e4976;
+        }
+        
+        .record-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .detail-item {
+            margin-bottom: 15px;
+        }
+        
+        .detail-label {
+            font-size: 15px;
+            color: #b0bec5;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-size: 18px;
+            color: #e0e0e0;
+            font-weight: 500;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 15px;
+            background-color: #ff6b6b;
+            color: white;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .sms-section {
+            background-color: #0a1929;
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 1px solid #1e4976;
+        }
+        
+        .sms-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #66b2ff;
+        }
+        
+        .sms-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        
+        .sms-content {
+            background-color: #1a3a5f;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto;
+            border: 1px solid #2a4a7a;
+        }
+        
+        .sms-date {
+            font-size: 14px;
+            color: #90caf9;
+            margin-bottom: 15px;
+        }
+        
+        .sms-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+        
+        .sms-text p {
+            margin-bottom: 10px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #90caf9;
+            font-size: 14px;
+            border-top: 1px solid #1e4976;
+            background-color: #0a1929;
+        }
+        
+        .access-log {
+            font-size: 13px;
+            color: #b0bec5;
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .lock-icon {
+                margin-top: 15px;
+            }
+            
+            .record-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <div class="badge">内部机密</div>
+                <div>
+                    <div class="title">银行贷款记录查询系统</div>
+                    <div class="subtitle">深南市公安局经济犯罪侦查科</div>
+                </div>
+            </div>
+            <div class="lock-icon">
+                <i class="fas fa-lock"></i>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div id="passwordSection" class="password-section">
+                <div class="password-prompt">此档案属于机密信息，请输入访问密码</div>
+                <div class="hint">密码提示：wsw银行卡号</div>
+                
+                <div class="password-input">
+                    <input type="password" id="passwordInput" placeholder="请输入访问密码" maxlength="19">
+                    <button class="toggle-password" id="togglePassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                
+                <button class="submit-btn" id="submitPassword">验证密码并查看档案</button>
+                
+                <div id="errorMessage" class="error-message">
+                    <i class="fas fa-exclamation-circle"></i> 密码错误，请重新输入
+                </div>
+            </div>
+            
+            <div id="dataSection" class="data-section">
+                <div class="data-header">
+                    <div class="data-title">银行贷款记录档案 #FC-2024-1107</div>
+                    <div class="data-subtitle">查询时间：<span id="currentTime"></span> | 查询人员：内部授权用户</div>
+                </div>
+                
+                <div class="record-card">
+                    <div class="record-title">万兆安（万丝望父亲）银行贷款记录</div>
+                    
+                    <div class="record-details">
+                        <div class="detail-item">
+                            <div class="detail-label">贷款银行</div>
+                            <div class="detail-value">深南市商业银行</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">贷款金额</div>
+                            <div class="detail-value">800万元（人民币）</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">担保人</div>
+                            <div class="detail-value">纪远昌（提供学术成果专利作为抵押）</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">贷款状态</div>
+                            <div class="detail-value">
+                                <span class="status-badge">2024年11月已逾期</span>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">贷款申请日期</div>
+                            <div class="detail-value">2023年5月15日</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">贷款期限</div>
+                            <div class="detail-value">18个月</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">关联账户</div>
+                            <div class="detail-value">**** **** **** 3476</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sms-section">
+                    <div class="sms-header">
+                        <i class="fas fa-sms sms-icon"></i>
+                        <div>关联通信记录（短信截图内容）</div>
+                    </div>
+                    
+                    <div class="sms-content">
+                        <div class="sms-date">12月10日 14:23</div>
+                        <div class="sms-text">
+                            <p><strong>万行长：</strong>你那800万贷款展期的事...</p>
+                            <p><strong>纪教授：</strong>放心，我已经在催审批</p>
+                            <p><strong>万行长：</strong>令嫒在学校很优秀，学生会的工作我很支持</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; font-size: 14px; color: #b0bec5; text-align: center;">
+                        <i class="fas fa-info-circle"></i> 注：此短信记录已由技术科核实真实性
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div>深南市公安局经济犯罪侦查科内部系统 | 仅供授权人员使用</div>
+            <div class="access-log">最后更新：2024年12月15日 | 档案等级：机密</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置当前时间
+            const now = new Date();
+            const formattedTime = now.getFullYear() + '年' + 
+                                  (now.getMonth() + 1) + '月' + 
+                                  now.getDate() + '日 ' + 
+                                  now.getHours().toString().padStart(2, '0') + ':' + 
+                                  now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('currentTime').textContent = formattedTime;
+            
+            // 密码验证逻辑
+            const correctPassword = "6214850268881234"; // wsw银行卡号通常以621485开头
+            const passwordInput = document.getElementById('passwordInput');
+            const togglePasswordBtn = document.getElementById('togglePassword');
+            const submitBtn = document.getElementById('submitPassword');
+            const errorMessage = document.getElementById('errorMessage');
+            const passwordSection = document.getElementById('passwordSection');
+            const dataSection = document.getElementById('dataSection');
+            
+            // 切换密码显示/隐藏
+            togglePasswordBtn.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                // 切换图标
+                const icon = this.querySelector('i');
+                if (type === 'text') {
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+            
+            // 提交密码验证
+            submitBtn.addEventListener('click', function() {
+                const inputPassword = passwordInput.value.trim();
+                
+                // 验证密码（支持wsw银行卡号或完整卡号）
+                if (inputPassword === "wsw银行卡号" || inputPassword === correctPassword) {
+                    // 密码正确
+                    passwordSection.style.display = 'none';
+                    dataSection.style.display = 'block';
+                    errorMessage.style.display = 'none';
+                    
+                    // 添加进入动画
+                    dataSection.style.animation = 'fadeIn 0.8s ease-in';
+                } else {
+                    // 密码错误
+                    errorMessage.style.display = 'block';
+                    passwordInput.style.borderColor = '#ff6b6b';
+                    passwordInput.style.boxShadow = '0 0 0 2px rgba(255, 107, 107, 0.2)';
+                    
+                    // 清空输入框
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                    
+                    // 3秒后恢复边框
+                    setTimeout(() => {
+                        passwordInput.style.borderColor = '#2a4a7a';
+                        passwordInput.style.boxShadow = 'none';
+                    }, 3000);
+                }
+            });
+            
+            // 按Enter键提交
+            passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    submitBtn.click();
+                }
+            });
+            
+            // 添加CSS动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>

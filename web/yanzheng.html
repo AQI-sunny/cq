@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> 验证 </title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Roboto', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #c1dfff 0%, #a4d0f0 40%, #c9b2e6 80%, #f7c6e0 100%);
+            /* 蓝色为主，渗透青、粉、紫 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            margin: 0;
+            position: relative;
+        }
+
+        /* 装饰云纹/光晕 */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 240, 245, 0.5) 0%, rgba(198, 226, 255, 0.3) 60%);
+            border-radius: 50%;
+            top: 5%;
+            left: 3%;
+            filter: blur(60px);
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle at 70% 80%, #e5c3ff 0%, #b5d5ff 60%, transparent 90%);
+            bottom: 0;
+            right: 0;
+            filter: blur(75px);
+            z-index: 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 48px 24px 48px 24px;
+            box-shadow: 0 30px 50px rgba(30, 60, 120, 0.25), 0 10px 20px rgba(255, 200, 240, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+            max-width: 700px;
+            width: 100%;
+            padding: 2.5rem 2.2rem;
+            z-index: 10;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            transition: box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 40px 60px rgba(48, 98, 170, 0.3), 0 15px 30px rgba(245, 170, 220, 0.3);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #1b3a5c;
+            text-shadow: 3px 3px 0 #f2d7fc, 1px 1px 0 #ffffff;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        h1 span {
+            background: #93c5fd;
+            color: #152c44;
+            font-size: 0.9rem;
+            padding: 0.3rem 1rem;
+            border-radius: 60px;
+            border: 1px solid white;
+            box-shadow: 0 4px 6px #b1d0ff;
+            font-weight: 400;
+            text-shadow: none;
+        }
+
+        .subhead {
+            color: #2e437a;
+            background: linear-gradient(to right, #ffffffb0, #f1d5fa);
+            display: inline-block;
+            padding: 0.3rem 1.5rem;
+            border-radius: 40px;
+            font-size: 1rem;
+            margin-top: 0.2rem;
+            margin-bottom: 2rem;
+            border: 1px solid white;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 6px 12px #aac7ff;
+        }
+
+        .question-item {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border-radius: 36px 18px 36px 18px;
+            padding: 1.8rem 1.8rem 1.5rem;
+            margin-bottom: 2rem;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 0 #6d8fc6, 0 12px 24px -8px #8fbbff;
+            transition: transform 0.1s ease, border-color 0.2s;
+        }
+
+        .question-item:focus-within {
+            border-color: #f9b8d4;
+            box-shadow: 0 8px 0 #ba9fc9, 0 16px 28px -8px #cba2f0;
+        }
+
+        .q-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #072242;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .q-title .badge {
+            background: #aad0f5;
+            color: #132b44;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px #cbacf0;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.9rem;
+            margin: 0.8rem 0 0.4rem;
+        }
+
+        .option {
+            background: white;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 50px 16px 50px 16px;
+            padding: 0.8rem 0.5rem 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 5px 0 #b3c9f0, 0 6px 12px rgba(116, 139, 206, 0.2);
+            background: linear-gradient(135deg, #ffffff 70%, #f0eaff);
+        }
+
+        .option:hover {
+            transform: translateY(-2px);
+            border-color: #dab0ff;
+            box-shadow: 0 8px 0 #a888cf, 0 12px 18px -6px #e2b2f5;
+        }
+
+        input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 2px solid #3973b0;
+            border-radius: 50% 30% 50% 30%;
+            margin-right: 12px;
+            background: white;
+            transition: 0.1s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: inset 0 2px 3px #c9dcff;
+        }
+
+        input[type="radio"]:checked {
+            background: #71a9f0;
+            border-color: #fa99ca;
+            box-shadow: 0 0 0 3px #ffc8e5, 0 0 0 5px #c8b0fa30;
+            background-image: radial-gradient(circle at 65% 35%, white, #a777e6);
+        }
+
+        .option-text {
+            font-size: 1.1rem;
+            color: #1d3d5c;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        /* 第二题特殊样式 突出7又7分之4栋 */
+        .question-item[data-q="2"] .option[data-correct="true"] .option-text {
+            color: #c63b7a;
+            font-weight: 700;
+            text-shadow: 0 0 5px #fad3ff;
+        }
+
+        .footer-area {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .info-message {
+            background: #d6e9ff;
+            border-radius: 32px;
+            padding: 0.8rem 1.6rem;
+            color: #192f52;
+            font-size: 1rem;
+            border: 1px solid white;
+            box-shadow: 0 4px 0 #a491cd;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .info-message i {
+            font-style: normal;
+            background: white;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #3b5e9c;
+            font-weight: 700;
+            border: 1px solid #b6a0e0;
+        }
+
+        .check-btn {
+            background: linear-gradient(145deg, #3670b3, #628fdb);
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 60px 20px 60px 20px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 5px #0d2680;
+            border: 2px solid #ffffffd0;
+            box-shadow: 0 10px 0 #1f3c70, 0 12px 20px #cfb5f0;
+            cursor: pointer;
+            transition: 0.1s ease;
+            letter-spacing: 2px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .check-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 4px 0 #1f3c70, 0 10px 20px #bba6e6;
+        }
+
+        .check-btn:disabled {
+            opacity: 0.5;
+            transform: translateY(0);
+            box-shadow: 0 6px 0 #2a4270;
+            pointer-events: none;
+            filter: grayscale(0.3);
+        }
+
+        .reset-link {
+            background: rgba(245, 225, 255, 0.7);
+            border-radius: 40px;
+            padding: 0.5rem 1.5rem;
+            color: #1b3572;
+            border: 2px dashed #acb9f0;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            backdrop-filter: blur(4px);
+            transition: 0.1s;
+        }
+
+        .reset-link:hover {
+            background: #ebd2fc;
+            border: 2px solid #f8b0d0;
+        }
+
+        .flower-deco {
+            display: flex;
+            gap: 0.3rem;
+            font-size: 1.8rem;
+            opacity: 0.8;
+            color: #f279b0;
+        }
+
+        /* 紫色 / 粉色点缀 */
+        .question-item:nth-child(2) .badge {
+            background: #e1bcf0;
+            color: #301751;
+        }
+
+        .question-item:nth-child(3) .badge {
+            background: #facde2;
+            color: #62284b;
+        }
+        /* 内部弹窗样式 - 添加到你的CSS文件中 */
+.custom-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease;
+}
+
+.popup-content {
+    background: linear-gradient(145deg, #ffffff, #f0f5ff);
+    border-radius: 32px 16px 32px 16px;
+    padding: 2rem 2.5rem;
+    max-width: 400px;
+    width: 90%;
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 20px 30px rgba(48, 98, 170, 0.3), 0 8px 0 #6d8fc6, 0 15px 25px rgba(245, 170, 220, 0.3);
+    position: relative;
+    animation: slideUp 0.3s ease;
+}
+
+.popup-message {
+    color: #1b3a5c;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.8rem;
+    text-align: left;
+    padding: 0.5rem;
+}
+
+.popup-close {
+    background: linear-gradient(145deg, #3670b3, #628fdb);
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 40px 12px 40px 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    border: 2px solid #ffffffd0;
+    box-shadow: 0 5px 0 #1f3c70;
+    cursor: pointer;
+    transition: 0.1s ease;
+    display: block;
+    margin: 0 auto;
+    width: fit-content;
+}
+
+.popup-close:active {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 #1f3c70;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+        /* 手机优化 */
+        @media (max-width: 480px) {
+            .card {
+                padding: 1.5rem;
+            }
+            .q-title {
+                font-size: 1.2rem;
+            }
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-area {
+                flex-direction: column-reverse;
+                align-items: stretch;
+            }
+            .check-btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <h1>
+                请验证你是否为冰淇淋
+                <!-- <span>墟境调和</span> -->
+                 <span>OvO</span>
+            </h1>
+            <div class="flower-deco">
+                🌸 · 💠 · ✦
+            </div>
+        </div>
+        <!-- <div class="subhead">
+            ⚡ 回答三个问题，全部正确方可前往预告 ⚡
+        </div> -->
+        <div class="subhead">
+            ❗请回答以下问题
+        </div>
+
+        <!-- 问题1：林中的猫真名 -->
+        <div class="question-item" data-q="1">
+            <div class="q-title">
+                <span class="badge">1</span> 用户“林中的猫”真名为？
+            </div>
+            <div class="options-grid" data-question="1">
+                <label class="option">
+                    <input type="radio" name="q1" value="林猫"> <span class="option-text">林猫</span>
+                </label>
+                <label class="option">
+                    <input type="radio" name="q1" value="林墨" data-correct="true"> <span class="option-text">林墨</span>
+                </label>
+                <label class="option">
+                    <input type="radio" name="q1" value="林柚"> <span class="option-text">林柚</span>
+                </label>
+                <label class="option">
+                    <input type="radio" name="q1" value="林默"> <span class="option-text">林默</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- 问题2：墟境调和局实际办公地点为？ (正确选项林墨7又7分之4栋，注意题干要求正确答案包含林墨？但题干中写“正确答案为林墨7又7分之4栋”，可能是一个整体，我们完整显示) 
+             但选项里单独只有7又7分之4栋，故正确选项应当是“7又7分之4栋”，但题干强调“林墨7又7分之4栋”，为了符合选项，保持原选项，并将正确设为“7又7分之4栋” 并且把名字加点前缀标记? 
+             按照题干选项有 7栋401、7栋404、7又7分之4栋、7又7分之3栋，所以正确就是7又7分之4栋。我们尊重原题。
+        -->
+        <div class="question-item" data-q="2">
+            <div class="q-title">
+                <span class="badge">2</span> 墟境调和局实际办公地点为？
+            </div>
+            <div class="options-grid" data-question="2">
+                <label class="option">
+                    <input type="radio" name="q2" value="7栋401"> <span class="option-text">7栋401</span>
+                </label>
+                <label class="option">
+                    <input type="radio" name="q2" value="7栋404"> <span class="option-text">7栋404</span>
+                </label>
+                <!-- 正确选项标记data-correct，同时题目里选项就是“7又7分之4栋” 不用加林墨，题干提示正确答案为林墨7又7分之4栋，可能是笔误，我们保留选项并正确指向7又7分之4栋 -->
+                <label class="option">
+                    <input type="radio" name="q2" value="7又7分之4栋" data-correct="true"> <span class="option-text">7又7分之4栋</span>
+                </label>
+                <label class="option">
+                    <input type="radio" name="q2" value="7又7分之3栋"> <span class="option-text">7又7分之3栋</span>
+                </label>
+            </div>
+            <!-- 附加紫色小提示 以符合林墨的提示（但非必要），不干扰验证 也可加一条注释风格-->
+            <!-- <div style="font-size: 0.9rem; margin-top: 0.8rem; color: #732d82; background: #e3cef5; padding: 0.2rem 1rem; border-radius: 30px; display: inline-block; border: 1px solid white;">
+                💜 传说中与林墨有渊源的一栋
+            </div> -->
+        </div>
+
+        <!-- 问题3：锦华旧梦讲的是谁的故事？ -->
+        <div class="question-item" data-q="3">
+            <div class="q-title">
+                <span class="badge">3</span> 锦华旧梦讲的是谁的故事？
+            </div>
+            <div class="options-grid" data-question="3">
+                <label class="option">
+                    <input type="radio" name="q3" value="蒋晴天"> <span class="option-text">蒋晴天</span>
+                </label>
+                <label class="option">
+                    <input type="radio" name="q3" value="花大姐" data-correct="true"> <span class="option-text">花大姐</span>
+                </label>
+                <label class="option">
+                    <input type="radio" name="q3" value="咕咕姨"> <span class="option-text">咕咕姨</span>
+                </label>
+                <label class="option">
+                    <input type="radio" name="q3" value="乔晶"> <span class="option-text">乔晶</span>
+                </label>
+            </div>
+            <!-- 淡粉色装饰 -->
+            <!-- <div style="height: 6px; width: 80px; background: #fdbbda; border-radius: 10px; margin-top: 0.6rem;"></div> -->
+        </div>
+
+        <!-- 底部：验证与重置，显示当前状态 -->
+        <div class="footer-area">
+            <!-- <div class="info-message" id="progressDisplay">
+                <i>🔍</i> <span id="progressText">尚未选择</span>
+            </div> -->
+            <button class="check-btn" id="verifyBtn">
+                <span>✦</span> 核验 · 前往 <span>✦</span>
+            </button>
+            <a href="#" class="reset-link" id="resetBtn" onclick="return false;">⟲ 重置选项</a>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // 获取所有radio组
+            const q1Radios = document.querySelectorAll('input[name="q1"]');
+            const q2Radios = document.querySelectorAll('input[name="q2"]');
+            const q3Radios = document.querySelectorAll('input[name="q3"]');
+            const verifyBtn = document.getElementById('verifyBtn');
+            const progressSpan = document.getElementById('progressText');
+            const resetLink = document.getElementById('resetBtn');
+
+            // 辅助: 根据data-correct属性判断某个radio是否正确选项
+            function isCorrectRadio(radio) {
+                return radio.hasAttribute('data-correct') && radio.getAttribute('data-correct') === 'true';
+            }
+
+            // 获取当前选中选项是否正确 (针对某一组name)
+            function getSelectedCorrectStatus(radioName) {
+                const radios = document.querySelectorAll(`input[name="${radioName}"]`);
+                let selectedRadio = null;
+                for (let r of radios) {
+                    if (r.checked) {
+                        selectedRadio = r;
+                        break;
+                    }
+                }
+                if (!selectedRadio) return null; // 未选
+                return isCorrectRadio(selectedRadio);
+            }
+
+            // 更新底部提示信息
+            function updateProgress() {
+                const status1 = getSelectedCorrectStatus('q1');
+                const status2 = getSelectedCorrectStatus('q2');
+                const status3 = getSelectedCorrectStatus('q3');
+
+                const totalSelected = [status1, status2, status3].filter(s => s !== null).length;
+                if (totalSelected === 0) {
+                    progressSpan.innerText = '尚未选择任何答案';
+                } else {
+                    const correctCount = [status1, status2, status3].filter(s => s === true).length;
+                    progressSpan.innerText = `已选 ${totalSelected}/3 题，正确 ${correctCount}`;
+                }
+            }
+
+            // 检查是否所有题目都选择了正确选项
+            function allAnswersCorrect() {
+                const status1 = getSelectedCorrectStatus('q1');
+                const status2 = getSelectedCorrectStatus('q2');
+                const status3 = getSelectedCorrectStatus('q3');
+                return status1 === true && status2 === true && status3 === true;
+            }
+
+            // 重置所有radio
+            function resetAllRadios() {
+                const allRadios = document.querySelectorAll('input[type="radio"]');
+                allRadios.forEach(radio => radio.checked = false);
+                updateProgress();
+            }
+
+            // 监听所有radio变化
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    updateProgress();
+                });
+            });
+
+            // 点击验证
+            /* verifyBtn.addEventListener('click', function() {
+                if (allAnswersCorrect()) {
+                    // 全部正确，跳转
+                    window.location.href = 'https://sylvie-seven-cq.top/web/yugao.html';
+                } else {
+                    // 否则提示错误，但不跳转
+                    const status1 = getSelectedCorrectStatus('q1');
+                    const status2 = getSelectedCorrectStatus('q2');
+                    const status3 = getSelectedCorrectStatus('q3');
+
+                    let message = '❌ 有些答案不正确，请再核对：\n';
+                    if (status1 === null) message += '· 第一题未选择\n';
+                    else if (status1 === false) message += '· 第一题选错了，真名是“林墨”\n';
+
+                    if (status2 === null) message += '· 第二题未选择\n';
+                    else if (status2 === false) message += '· 第二题不对，办公地点是“7又7分之4栋”\n';
+
+                    if (status3 === null) message += '· 第三题未选择\n';
+                    else if (status3 === false) message += '· 第三题错了，锦华旧梦讲“花大姐”的故事\n';
+
+                    if (status1 === false || status2 === false || status3 === false || status1 === null || status2 === null || status3 === null) {
+                        alert(message);
+                    } else {
+                        // 以防万一：当有些情况遗漏
+                        alert('尚未全部正确，再试试吧✨');
+                    }
+                }
+            });
+ */
+ 
+ verifyBtn.addEventListener('click', function() {
+    // 先隐藏之前的弹窗（如果存在）
+    const existingPopup = document.querySelector('.custom-popup');
+    if (existingPopup) {
+        existingPopup.remove();
+    }
+    
+    if (allAnswersCorrect()) {
+        // 全部正确，跳转
+        window.location.href = 'https://sylvie-seven-cq.top/web/yugao.html';
+    } else {
+        // 否则提示错误，但不跳转
+        const status1 = getSelectedCorrectStatus('q1');
+        const status2 = getSelectedCorrectStatus('q2');
+        const status3 = getSelectedCorrectStatus('q3');
+
+        /* let message = '❌某些答案不正确哦 '; */
+        let message = '❌阿欧，木有通过验证~';
+        /* if (status1 === null) message += '<br>第一题未选择'; */
+        /* else if (status1 === false) message += '<br>· 第一题选错咯'; */
+        /* else if (status1 === false) message += '<br>第一题选错咯';
+        if (status2 === null) message += '<br>第二题未选择';
+        else if (status2 === false) message += '<br>第二题选错咯';
+        
+        if (status3 === null) message += '<br>第三题未选择';
+        else if (status3 === false) message += '<br>第三题选错咯'; */
+        
+        // 创建内部弹窗
+        const popup = document.createElement('div');
+        popup.className = 'custom-popup';
+        popup.innerHTML = `
+            <div class="popup-content">
+                <div class="popup-message">${message}</div>
+                <button class="popup-close">知道了</button>
+            </div>
+        `;
+        
+        document.body.appendChild(popup);
+        
+        // 添加关闭功能
+        popup.querySelector('.popup-close').addEventListener('click', function() {
+            popup.remove();
+        });
+        
+        // 点击弹窗外部也可以关闭（可选）
+        popup.addEventListener('click', function(e) {
+            if (e.target === popup) {
+                popup.remove();
+            }
+        });
+    }
+});
+           
+
+            // 重置按钮
+            resetLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                resetAllRadios();
+            });
+
+            // 初始化进度
+            updateProgress();
+
+            // 附加彩蛋：悬浮或点击时效果，无干扰
+            // 可以默认一个温馨提醒：林墨提示——第二题正确选项是7又7分之4栋，但无需额外操作
+            // 给第二个问题正确选项加个小标识，视觉上已经用紫色强调过了
+        })();
+    </script>
+
+    <!-- 小点缀: 漂浮圆圈 青/粉/紫 -->
+    <div style="position: fixed; bottom: 15px; left: 15px; opacity: 0.5; pointer-events: none; font-size: 2rem; filter: drop-shadow(0 0 6px #bca2f0);">
+        🐈‍⬛ 🌷 🌊
+    </div>
+    <div style="position: fixed; top: 20px; right: 20px; opacity: 0.4; pointer-events: none; font-size: 3rem; transform: rotate(10deg);">
+        ✦ ✦ ✦
+    </div>
+</body>
+</html>

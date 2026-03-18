@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>线索集齐 · 简约过渡</title>
+    <style>
+        /* 极简重置 + 柔和风格 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #f7f3ee 0%, #e8e0d7 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            line-height: 1.5;
+            color: #2c2b28;
+        }
+
+        /* 主卡片 —— 干净、留白、轻盈 */
+        .container {
+            max-width: 680px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 48px;
+            box-shadow: 0 20px 40px -16px rgba(0, 0, 0, 0.15),
+                        0 4px 12px rgba(0, 0, 0, 0.03),
+                        inset 0 1px 2px rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 3rem 2.5rem;
+            transition: all 0.2s ease;
+        }
+
+        /* 内容区域弹性列 */
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 2.25rem;
+        }
+
+        /* 图标 —— 抽象线索符号 / 微妙动效 */
+        .icon-group {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 0.25rem;
+        }
+
+        .icon-dot {
+            width: 16px;
+            height: 16px;
+            background: #8f7a66;
+            border-radius: 50%;
+            opacity: 0.5;
+            transition: all 0.3s;
+        }
+
+        /* 四个小点代表线索，中间一个完成标记 */
+        .icon-clue {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            justify-content: center;
+            background: #fffbf5;
+            padding: 0.6rem 1.4rem 0.6rem 1.2rem;
+            border-radius: 80px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+
+        .clue-marker {
+            font-size: 1.8rem;
+            line-height: 1;
+            letter-spacing: 6px;
+            color: #9b8c7c;
+            font-weight: 300;
+        }
+
+        .clue-check {
+            background: #d6cdc2;
+            color: #3f3a35;
+            font-size: 1rem;
+            font-weight: 460;
+            padding: 0.2rem 0.9rem;
+            border-radius: 50px;
+            border: 1px solid #fffdfa;
+            box-shadow: inset 0 1px 2px white, 0 2px 3px rgba(0,0,0,0.05);
+        }
+
+        /* 主标题 —— 干净有力 */
+        h1 {
+            font-size: 2.6rem;
+            font-weight: 450;
+            letter-spacing: -0.01em;
+            color: #1f1d1b;
+            margin: 0;
+            line-height: 1.2;
+            text-shadow: 0 2px 3px rgba(255, 255, 255, 0.7);
+        }
+
+        .sub {
+            font-size: 1.1rem;
+            font-weight: 380;
+            color: #6a625a;
+            max-width: 360px;
+            margin: 0 auto;
+            border-bottom: 1px dashed #cdc3b9;
+            padding-bottom: 1.5rem;
+        }
+
+        /* 指引 —— 手风琴式轻提示 */
+        .next-step {
+            background: #f3ede7;
+            border-radius: 120px;
+            padding: 0.9rem 2.2rem;
+            width: fit-content;
+            margin: 0 auto;
+            border: 1px solid #fefefe;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02), inset 0 1px 4px white;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+        }
+
+        .next-step:hover {
+            background: #f1e9e1;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05), inset 0 1px 4px white;
+            transform: scale(1.01);
+        }
+
+        .next-step a {
+            text-decoration: none;
+            color: #4a423b;
+            font-size: 1.3rem;
+            font-weight: 440;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .arrow-hint {
+            font-size: 1.8rem;
+            line-height: 1;
+            opacity: 0.7;
+            transition: transform 0.2s ease;
+        }
+
+        .next-step:hover .arrow-hint {
+            transform: translateX(5px) translateY(-1px);
+            opacity: 1;
+        }
+
+        /* 可选的小点缀 —— 极简装饰线 */
+        .foot-note {
+            display: flex;
+            justify-content: center;
+            gap: 0.6rem;
+            font-size: 0.9rem;
+            color: #b7aaa0;
+            margin-top: 0.5rem;
+            font-weight: 350;
+            letter-spacing: 0.3px;
+        }
+
+        .foot-note span {
+            background: #e5dbd3;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 4px;
+            align-self: center;
+        }
+
+        /* 完全无边框 / 极简点缀 */
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #cfc6be, transparent);
+            width: 40%;
+            margin: 1rem auto 0.2rem;
+        }
+
+        /* 让按钮区域稍微突出互动感 */
+        .action-hint {
+            margin-top: 0.75rem;
+        }
+
+        /* 小屏幕字体微调 */
+        @media (max-width: 480px) {
+            .container {
+                padding: 2.2rem 1.5rem;
+                border-radius: 36px;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .next-step a {
+                font-size: 1.1rem;
+            }
+            .icon-clue {
+                padding: 0.4rem 1rem;
+            }
+            .clue-marker {
+                font-size: 1.5rem;
+                letter-spacing: 4px;
+            }
+        }
+
+        /* ---- 无弹窗视觉反馈样式 ---- */
+        .transition-flash {
+            transition: background 0.4s ease;
+        }
+        .feedback-highlight {
+            background: #ddd3c9 !important; 
+        }
+        /* 页面退出淡出效果 (可选) */
+        .fade-out {
+            opacity: 0;
+            transition: opacity 0.28s cubic-bezier(0.2, 0.9, 0.3, 1);
+        }
+        /* 内联提示——不使用alert，完全依靠视觉 */
+        .inline-tip {
+            font-size: 0.9rem;
+            color: #8f7a66;
+            background: #e9dfd7;
+            padding: 0.2rem 1.2rem;
+            border-radius: 60px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+            height: 0;
+            overflow: hidden;
+            margin-top: -0.5rem;
+        }
+        .inline-tip.show-tip {
+            opacity: 1;
+            height: auto;
+            padding: 0.3rem 1.2rem;
+            margin-top: 0.25rem;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="transition-flash">
+    <div class="container">
+        <div class="content">
+            <!-- 线索聚合图标：极简符号代表“集齐” -->
+            <div class="icon-group">
+                <div class="icon-clue">
+                    <span class="clue-marker">⚬⚬⚬⚬</span>
+                    <span class="clue-check">✓</span>
+                </div>
+            </div>
+
+            <!-- 主信息：此处线索已集齐 -->
+            <h1>线索已集齐</h1>
+            <div class="sub">
+                所有碎片就位 · 等待新的启程
+            </div>
+
+            <!-- 明确指引：移步其他页面 (无弹窗) -->
+            <div class="action-hint">
+                <div class="next-step">
+                    <a href="#" id="navigate-link">
+                        <span>请移步其他页面</span>
+                        <span class="arrow-hint">⟶</span>
+                    </a>
+                </div>
+                <!-- 极简内联提示区 (替代弹窗) 默认隐藏，点击后短暂显示 -->
+                <div id="soft-tip" class="inline-tip">✨ 正在准备移步…</div>
+            </div>
+
+            <!-- 几乎隐形的脚注，只加强“移步”的心理暗示 -->
+            <hr>
+            <div class="foot-note">
+                <span></span> 下一步已就绪 <span></span>
+            </div>
+
+            <!-- 最小装饰：隐约的三个点代表更多选择，但保持极简 -->
+            <div style="display: flex; gap: 6px; margin-top: 0.25rem; opacity: 0.4;">
+                <div style="width: 3px; height: 3px; border-radius: 50%; background: #b0a79f;"></div>
+                <div style="width: 3px; height: 3px; border-radius: 50%; background: #b0a79f;"></div>
+                <div style="width: 3px; height: 3px; border-radius: 50%; background: #b0a79f;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // 无任何 alert / confirm / prompt 弹窗。
+            // 完全依靠视觉反馈模拟“移步”行为。
+            const link = document.getElementById('navigate-link');
+            const tip = document.getElementById('soft-tip');
+            const body = document.body;
+
+            if (link) {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();  // 阻止实际跳转，用于视觉演示。
+
+                    // ----- 柔和视觉反馈  (无弹窗) -----
+                    
+                    // 1. 显示内联提示文字 (持续1.5秒后消失)
+                    if (tip) {
+                        tip.classList.add('show-tip');
+                        setTimeout(() => {
+                            tip.classList.remove('show-tip');
+                        }, 1500);
+                    }
+
+                    // 2. 背景短暂高亮，模拟“页面转换”
+                    body.classList.add('feedback-highlight');
+                    setTimeout(() => {
+                        body.classList.remove('feedback-highlight');
+                    }, 400);
+
+                    // 3. 让卡片有一个轻微的“浮动”反馈 (可选)
+                    const container = document.querySelector('.container');
+                    if (container) {
+                        container.style.transform = 'scale(0.98)';
+                        container.style.transition = 'transform 0.2s ease';
+                        setTimeout(() => {
+                            container.style.transform = 'scale(1)';
+                        }, 200);
+                    }
+
+                    // 4. 真正静默跳转的示例代码 (目前被注释，如需真实跳转放开下面)
+                    //    并且依然不产生弹窗。
+                    // window.location.href = '新页面.html';   // 无弹窗直接跳转
+                    
+                    // 为了演示“移步”效果但不离开当前页，我们可以模拟一个淡出再淡入
+                    // 但保留在演示页。如果您需要真实跳转，请取消注释下行并删除后续模拟代码。
+                    // return;  // 若使用真实跳转，下面的模拟代码就不需要了。
+
+                    // 模拟移步的视觉过渡 (不弹窗，只是让页面淡出一点再恢复，暗示“离开”)
+                    document.body.style.opacity = '1';
+                    document.body.style.transition = 'opacity 0.3s';
+                    document.body.style.opacity = '0.7';
+                    setTimeout(() => {
+                        document.body.style.opacity = '1';
+                    }, 280);
+
+                    // 同时让箭头有一个快速的飞行动画
+                    const arrow = document.querySelector('.arrow-hint');
+                    if (arrow) {
+                        arrow.style.transform = 'translateX(15px)';
+                        arrow.style.opacity = '0';
+                        setTimeout(() => {
+                            arrow.style.transform = '';
+                            arrow.style.opacity = '';
+                        }, 300);
+                    }
+                });
+            }
+
+            // 保留原有呼吸动效 (不影响任何弹窗)
+            const dots = document.querySelectorAll('.icon-dot');
+            let step = 0;
+            setInterval(() => {
+                dots.forEach((dot, idx) => {
+                    const scale = 1 + Math.sin(step + idx) * 0.1;
+                    dot.style.transform = `scale(${scale})`;
+                    dot.style.opacity = 0.5 + (scale - 1) * 1.5;
+                });
+                step += 0.2;
+            }, 200);
+        })();
+    </script>
+</body>
+</html>

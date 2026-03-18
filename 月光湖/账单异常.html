@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>财务报销异常记录 | 内部审计系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-image: 
+                linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #dc3545;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #2c3e50, #34495e);
+            padding: 25px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .header-left .subtitle {
+            font-size: 15px;
+            color: #bdc3c7;
+            font-weight: 300;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+        
+        .audit-badge {
+            background-color: #dc3545;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .alert-icon {
+            font-size: 28px;
+            margin-right: 15px;
+            color: #ffc107;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eaeaea;
+        }
+        
+        .page-subtitle {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        
+        .report-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .report-title {
+            font-size: 22px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .report-title i {
+            margin-right: 12px;
+            color: #3498db;
+        }
+        
+        .report-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .detail-item {
+            margin-bottom: 15px;
+        }
+        
+        .detail-label {
+            font-size: 15px;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .detail-value {
+            font-size: 18px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .highlight {
+            color: #dc3545;
+        }
+        
+        .bank-card {
+            display: inline-block;
+            background: linear-gradient(to right, #2c3e50, #34495e);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+        
+        .issues-section {
+            background-color: #fff8e1;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 5px solid #ffc107;
+        }
+        
+        .issues-title {
+            font-size: 20px;
+            color: #e65100;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .issues-title i {
+            margin-right: 12px;
+            color: #e65100;
+        }
+        
+        .issues-list {
+            list-style-type: none;
+            counter-reset: issue-counter;
+        }
+        
+        .issue-item {
+            margin-bottom: 20px;
+            padding-left: 35px;
+            position: relative;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #5d4037;
+        }
+        
+        .issue-item:before {
+            counter-increment: issue-counter;
+            content: counter(issue-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background-color: #dc3545;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .virtual-accounts {
+            background-color: #ffebee;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: monospace;
+            color: #c62828;
+            border: 1px dashed #ef9a9a;
+        }
+        
+        .analysis-section {
+            background-color: #e8f5e9;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 5px solid #4caf50;
+        }
+        
+        .analysis-title {
+            font-size: 20px;
+            color: #2e7d32;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .analysis-title i {
+            margin-right: 12px;
+            color: #2e7d32;
+        }
+        
+        .analysis-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .analysis-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .analysis-label {
+            font-size: 15px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+        
+        .analysis-value {
+            font-size: 18px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .footer {
+            background-color: #f8f9fa;
+            padding: 25px 40px;
+            border-top: 1px solid #eaeaea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-left {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        .footer-right {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .footer-btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+        
+        .btn-print {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-print:hover {
+            background-color: #5a6268;
+        }
+        
+        .btn-export {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .btn-export:hover {
+            background-color: #218838;
+        }
+        
+        .btn-report {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn-report:hover {
+            background-color: #c82333;
+        }
+        
+        .metadata {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px dashed #ddd;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .header-right {
+                margin-top: 15px;
+            }
+            
+            .report-details, .analysis-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .metadata {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        
+        /* 打印样式 */
+        @media print {
+            .header, .footer, .footer-btn {
+                display: none;
+            }
+            
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <h1>内部审计系统</h1>
+                <div class="subtitle">财务报销异常记录查询</div>
+            </div>
+            <div class="header-right">
+                <div class="alert-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="audit-badge">异常记录</div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <h2 class="page-title">财务报销异常记录</h2>
+            <div class="page-subtitle">审计编号：AU20241215-027 | 审核状态：已确认异常</div>
+            
+            <div class="report-card">
+                <div class="report-title">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    2024年12月志愿者活动报销明细
+                </div>
+                
+                <div class="report-details">
+                    <div class="detail-item">
+                        <div class="detail-label">报销人</div>
+                        <div class="detail-value highlight">万丝望</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">报销项目</div>
+                        <div class="detail-value">动物园志愿者交通补贴</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">报销金额</div>
+                        <div class="detail-value highlight">总计8,400元</div>
+                        <div style="font-size: 15px; color: #7f8c8d; margin-top: 5px;">
+                            （人均200元 × 42人次）
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">报销银行卡</div>
+                        <div class="detail-value">
+                            <div class="bank-card">622848 **** **** 0518</div>
+                            <div style="font-size: 14px; color: #7f8c8d; margin-top: 5px;">
+                                （万丝望个人卡）
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">报销日期</div>
+                        <div class="detail-value">2024年12月10日</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">审核人</div>
+                        <div class="detail-value">张明（财务部）</div>
+                    </div>
+                </div>
+                
+                <div class="metadata">
+                    <div>记录生成时间：2024年12月15日 14:30:22</div>
+                    <div>数据来源：财务报销系统</div>
+                </div>
+            </div>
+            
+            <div class="issues-section">
+                <div class="issues-title">
+                    <i class="fas fa-exclamation-circle"></i>
+                    审计发现问题
+                </div>
+                
+                <ol class="issues-list">
+                    <li class="issue-item">
+                        <strong>参与人数不符：</strong>实际参与动物园志愿者活动的人员为<strong class="highlight">38人</strong>，但报销单据中申报人数为<strong class="highlight">42人</strong>，存在4人差额。
+                    </li>
+                    
+                    <li class="issue-item">
+                        <strong>虚拟账号问题：</strong>多申报的4人对应ID为虚拟账号，无法对应实际志愿者：
+                        <div class="virtual-accounts">wws_01, wws_02, wws_03, wws_04</div>
+                        上述账号在志愿者系统中无注册记录、无活动参与记录。
+                    </li>
+                    
+                    <li class="issue-item">
+                        <strong>资金流向异常：</strong>报销款项转入<strong class="highlight">万丝望个人银行卡</strong>，而非对公账户或活动专用账户，不符合《志愿者活动经费管理规定》第8条。
+                    </li>
+                </ol>
+            </div>
+            
+            <div class="analysis-section">
+                <div class="analysis-title">
+                    <i class="fas fa-chart-bar"></i>
+                    异常数据分析
+                </div>
+                
+                <div class="analysis-content">
+                    <div class="analysis-item">
+                        <div class="analysis-label">实际应报销金额</div>
+                        <div class="analysis-value">7,600元</div>
+                        <div style="font-size: 14px; color: #7f8c8d; margin-top: 5px;">
+                            38人 × 200元/人
+                        </div>
+                    </div>
+                    
+                    <div class="analysis-item">
+                        <div class="analysis-label">多报销金额</div>
+                        <div class="analysis-value highlight">800元</div>
+                        <div style="font-size: 14px; color: #7f8c8d; margin-top: 5px;">
+                            4人 × 200元/人
+                        </div>
+                    </div>
+                    
+                    <div class="analysis-item">
+                        <div class="analysis-label">异常比例</div>
+                        <div class="analysis-value highlight">9.5%</div>
+                        <div style="font-size: 14px; color: #7f8c8d; margin-top: 5px;">
+                            多报金额/总报销金额
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; padding: 15px; background-color: white; border-radius: 8px;">
+                    <div style="font-size: 15px; color: #7f8c8d; margin-bottom: 10px;">
+                        <i class="fas fa-clipboard-check"></i> 审计结论
+                    </div>
+                    <div style="font-size: 16px; color: #2c3e50; line-height: 1.6;">
+                        该笔报销存在<strong class="highlight">虚报参与人数、使用虚拟账号、资金转入个人账户</strong>等多处异常，
+                        涉嫌违规套取志愿者活动经费。建议移交纪检监察部门进一步调查处理。
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-left">
+                <div>内部审计系统 v2.3 | 仅供内部使用</div>
+                <div style="font-size: 13px; color: #95a5a6; margin-top: 5px;">
+                    本记录已加密存储，任何未经授权的访问将受到法律追究
+                </div>
+            </div>
+            
+            <div class="footer-right">
+                <button class="footer-btn btn-print" onclick="window.print()">
+                    <i class="fas fa-print"></i> 打印记录
+                </button>
+                <button class="footer-btn btn-export" id="exportBtn">
+                    <i class="fas fa-file-export"></i> 导出PDF
+                </button>
+                <button class="footer-btn btn-report" id="reportBtn">
+                    <i class="fas fa-flag"></i> 提交监察
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 导出PDF按钮点击事件（模拟）
+            const exportBtn = document.getElementById('exportBtn');
+            exportBtn.addEventListener('click', function() {
+                alert('PDF导出功能需要连接内部服务器，请在内部网络环境下使用。');
+            });
+            
+            // 提交监察按钮点击事件
+            const reportBtn = document.getElementById('reportBtn');
+            reportBtn.addEventListener('click', function() {
+                const confirmed = confirm('确认将此异常记录提交给纪检监察部门吗？此操作不可撤销。');
+                if (confirmed) {
+                    reportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 提交中...';
+                    reportBtn.disabled = true;
+                    
+                    // 模拟提交过程
+                    setTimeout(() => {
+                        alert('已成功提交至纪检监察部门，案件编号：JC20241215001');
+                        reportBtn.innerHTML = '<i class="fas fa-check"></i> 已提交';
+                        reportBtn.style.backgroundColor = '#28a745';
+                    }, 1500);
+                }
+            });
+            
+            // 高亮显示关键信息
+            const highlightElements = document.querySelectorAll('.highlight');
+            highlightElements.forEach(el => {
+                // 添加轻微的闪烁效果引起注意
+                el.style.transition = 'color 0.5s ease';
+                setTimeout(() => {
+                    el.style.color = '#dc3545';
+                }, 500);
+            });
+            
+            // 虚拟账号点击效果
+            const virtualAccounts = document.querySelector('.virtual-accounts');
+            virtualAccounts.addEventListener('click', function() {
+                const originalText = this.textContent;
+                this.textContent = '系统验证：无此用户记录';
+                this.style.backgroundColor = '#ffcdd2';
+                this.style.color = '#b71c1c';
+                
+                setTimeout(() => {
+                    this.textContent = originalText;
+                    this.style.backgroundColor = '#ffebee';
+                    this.style.color = '#c62828';
+                }, 2000);
+            });
+            
+            // 打印页面时的提示
+            window.addEventListener('beforeprint', function() {
+                document.querySelector('.container').style.borderTop = 'none';
+            });
+            
+            window.addEventListener('afterprint', function() {
+                document.querySelector('.container').style.borderTop = '5px solid #dc3545';
+            });
+        });
+    </script>
+</body>
+</html>
