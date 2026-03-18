@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -578,10 +577,72 @@
                 height: 70px;
             }
         }
+
+        /* ----- 彩蛋专属样式 ----- */
+        .egg-tip {
+            display: none;
+        }
+        body.dark-mode .normal-tip {
+            display: none;
+        }
+        body.dark-mode .egg-tip {
+            display: inline-block;
+            color: transparent;
+            user-select: text;
+        }
+        body.dark-mode .egg-tip::selection {
+            background-color: var(--accent-color);
+            color: #ffffff;
+        }
+
+        /* ----- 新增：返回顶部按钮样式 ----- */
+        #scrollTopBtn {
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            width: 50px;
+            height: 50px;
+            background-color: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #scrollTopBtn:hover {
+            background-color: var(--button-hover-bg);
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        #scrollTopBtn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        @media (max-width: 768px) {
+            #scrollTopBtn {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+            }
+        }
     </style>
      <link rel="icon" type="image/png" href="./gallery/AQIgame.png">
 </head>
 <body>
+    <!-- 新增：返回顶部按钮 -->
+    <button id="scrollTopBtn" aria-label="返回顶部">
+        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+    </button>
+
     <!-- 暗夜模式切换按钮 -->
     <div class="mode-toggle-container">
         <button class="mode-toggle" id="modeToggle" aria-label="切换暗夜模式"></button>
@@ -781,7 +842,10 @@ var _hmt = _hmt || [];
                     </a>
                 </div>
 
-                 <p class="qrcode-text">扫描二维码<br>或<br>点击上方按钮<br>关注公众号和小红书<br>获取最新游戏资讯~</p>
+                 <p class="qrcode-text">
+                    <span class="normal-tip">扫描二维码<br>或<br>点击上方按钮<!-- <br>关注公众号和小红书 --><br>获取最新游戏资讯~</span>
+                    <span class="egg-tip">red2 blue/black3 green2</span>
+                 </p>
             </div>
         </div>
     </div>
@@ -818,10 +882,28 @@ var _hmt = _hmt || [];
             }
         });
         
-        // Logo点击返回顶部
+        // Logo点击返回顶部及新彩蛋逻辑
         const logoLink = document.getElementById('logoLink');
+        let logoClickCount = 0;
+        let logoClickTimer = null;
+
         logoLink.addEventListener('click', (e) => {
             e.preventDefault();
+            
+            // 彩蛋逻辑：记录点击次数
+            logoClickCount++;
+            if (logoClickCount === 7) {
+                window.location.href = './web/yanzheng.html';
+                logoClickCount = 0; // 跳转后重置计数
+            }
+            
+            // 3秒内未连续点击满7次则自动重置计数，防止意外触发
+            clearTimeout(logoClickTimer);
+            logoClickTimer = setTimeout(() => {
+                logoClickCount = 0;
+            }, 3000);
+
+            // 保持原有的返回顶部功能
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth'
@@ -854,6 +936,24 @@ var _hmt = _hmt || [];
                     `;
                     document.head.appendChild(styleSheet);
                 }
+            });
+        });
+
+        // 新增：右下角返回顶部按钮逻辑
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            // 当页面向下滚动超过 300px 时显示按钮
+            if (window.scrollY > 300) {
+                scrollTopBtn.style.display = 'flex';
+            } else {
+                scrollTopBtn.style.display = 'none';
+            }
+        });
+        
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
             });
         });
     </script>
