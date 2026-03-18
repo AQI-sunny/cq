@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>台球 · 精选图片</title>
+  <!-- 简单字体 & 图标 (保留少量用于氛围) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #f3f5f7;
+      color: #202124;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 主容器 — 完全移动优先 */
+    .container {
+      width: 100%;
+      max-width: 560px;  /* 舒适移动宽度，大屏居中留白 */
+      margin: 0 auto;
+      padding: 12px 16px;
+      flex: 1;
+    }
+
+    /* --- 极简头部，保留搜索框影子，只展示台球主题 --- */
+    .search-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      background: white;
+      padding: 8px 16px;
+      border-radius: 40px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03), 0 2px 5px rgba(0,0,0,0.05);
+      border: 1px solid #eaeef2;
+    }
+
+    .logo-icon {
+      font-size: 26px;
+      color: #2a5c4b; /* 台球绿 */
+      background: #ecf7f2;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .search-header input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 16px;
+      padding: 8px 0;
+      color: #1e2b2a;
+    }
+
+    .search-header input::placeholder {
+      color: #8b9a98;
+      font-weight: 400;
+    }
+
+    .search-header button {
+      background: transparent;
+      border: none;
+      font-size: 18px;
+      color: #2a5c4b;
+      padding: 8px;
+    }
+
+    /* 标签栏 —— 保持简洁，只突出台球相关 */
+    .filter-tabs {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      gap: 12px;
+      padding: 8px 0 16px 0;
+      margin-bottom: 4px;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+      white-space: nowrap;
+      scrollbar-color: #b0c4c0 #e5eeea;
+    }
+
+    .filter-tabs span {
+      display: inline-block;
+      padding: 8px 18px;
+      background: #f0f5f3;
+      border-radius: 32px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #1e3d36;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+      cursor: default;
+      flex-shrink: 0;
+    }
+
+    .filter-tabs span.active {
+      background: #2a5c4b;
+      color: white;
+      border-color: #1f4a3c;
+      box-shadow: 0 2px 6px rgba(42,92,75,0.2);
+    }
+
+    /* 工具标 — 在移动端隐藏或缩小 */
+    .tools-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: white;
+      padding: 6px 16px;
+      border-radius: 32px;
+      border: 1px solid #d0ddd8;
+      color: #2f5547;
+      font-size: 14px;
+      margin-left: 4px;
+    }
+    .tools-label i {
+      font-size: 13px;
+    }
+
+    /* 图片网格 — 两列瀑布流，适合移动端 */
+    .image-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    /* 卡片样式 — 干净，圆润 */
+    .image-card {
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 30, 20, 0.06);
+      transition: transform 0.15s ease, box-shadow 0.2s;
+      border: 1px solid #edf3f0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .image-card:active {
+      transform: scale(0.98);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    /* 图片容器 — 统一比例，突出台球 */
+    .img-container {
+      position: relative;
+      width: 100%;
+      padding-top: 100%; /* 1:1 正方形，台球特写舒服 */
+      background: #d9e3de;
+      overflow: hidden;
+    }
+
+    .img-container img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;       /* 确保裁切后填满，台球主体突出 */
+      background-color: #eef3f0;
+      transition: opacity 0.2s;
+    }
+
+    /* 底部文字 */
+    .image-info {
+      padding: 12px 12px 14px;
+      background: white;
+    }
+
+    .image-title {
+      font-size: 15px;
+      font-weight: 590;
+      color: #152b25;
+      margin-bottom: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .image-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #4d6a61;
+    }
+
+    .image-meta i {
+      font-size: 10px;
+      color: #718f84;
+    }
+
+    /* 无更多提示 — 因为只有两张，但保留 */
+    .more-section {
+      margin: 36px 0 20px;
+      text-align: center;
+    }
+
+    .more-button {
+      background: white;
+      border: 1px solid #cbdad3;
+      border-radius: 60px;
+      padding: 14px 26px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #2a5c4b;
+      display: inline-block;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      backdrop-filter: blur(2px);
+    }
+
+    /* 模态框 — 大图查看 (保留，适配移动) */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(10, 20, 16, 0.9);
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .modal-content {
+      max-width: 92vw;
+      max-height: 80vh;
+      border-radius: 32px;
+      box-shadow: 0 25px 50px -8px black;
+      border: 3px solid white;
+      object-fit: contain;
+      background: #111;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      color: white;
+      font-size: 48px;
+      cursor: pointer;
+      font-weight: 200;
+      text-shadow: 0 2px 10px black;
+      z-index: 1001;
+    }
+
+    /* 移动微调 */
+    @media (max-width: 400px) {
+      .container { padding: 8px 12px; }
+      .filter-tabs span { padding: 6px 14px; font-size: 14px; }
+      .image-title { font-size: 14px; }
+    }
+
+    /* 纯粹为了展示两张图片时的优雅：如果只有两张，让它们稍微大一点呼吸 */
+    .image-grid:only-child {
+      margin-top: 12px;
+    }
+
+    /* 自定义占位背景，万一图片加载慢 (直接使用绿色调) */
+    .img-container img {
+      background: linear-gradient(145deg, #bdd6cf, #dcebe4);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 头部 — 依然保留搜索栏风格，但文本占位符改成台球相关 -->
+    <div class="search-header">
+      <div class="logo-icon">
+        <i class="fas fa-circle-notch"></i>  <!-- 台球抽象小图标 -->
+      </div>
+      <input type="text" placeholder="台球 高清壁纸" value="台球 精选">
+      <button aria-label="搜索"><i class="fas fa-search"></i></button>
+    </div>
+
+    <!-- 标签栏 — 只保留台球相关标签，并把“全部”设为激活 -->
+    <div class="filter-tabs">
+      <span class="active">全部</span>
+      <span>台球</span>
+      <span>斯诺克</span>
+      <span>8球</span>
+      <span>球杆</span>
+      <span>比赛</span>
+      <div class="tools-label">
+        <i class="fas fa-sliders-h"></i>
+        <span>筛选</span>
+      </div>
+    </div>
+
+    <!-- 图片网格：只包含两个图片：台球1.png 和 台球2.png (直接写死文件名，假设位于相同目录) -->
+    <div class="image-grid" id="imageGrid">
+      <!-- 卡片1 - 台球1.png -->
+      <div class="image-card" data-url="台球1.png">
+        <div class="img-container">
+          <img src="台球1.png" alt="台球特写1" loading="lazy" onerror="this.src='https://picsum.photos/id/15/400/400?grayscale&seed=fallback1'">
+        </div>
+        <div class="image-info">
+          <div class="image-title">🎱 精准击球 · 台球1</div>
+          <div class="image-meta">
+            <i class="fas fa-link"></i>
+            <span>billiardspro.com</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 卡片2 - 台球2.png -->
+      <div class="image-card" data-url="台球2.png">
+        <div class="img-container">
+          <img src="台球2.png" alt="台球特写2" loading="lazy" onerror="this.src='https://picsum.photos/id/25/400/400?grayscale&seed=fallback2'">
+        </div>
+        <div class="image-info">
+          <div class="image-title">🎱 绿绒聚焦 · 台球2</div>
+          <div class="image-meta">
+            <i class="fas fa-link"></i>
+            <span>snookerfan.net</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 浏览更多按钮 (装饰，无功能) -->
+    <div class="more-section">
+      <div class="more-button">发现更多台球瞬间</div>
+    </div>
+  </div>
+
+  <!-- 模态框 (大图查看) 与之前一样，但只显示台球图片 -->
+  <div id="imageModal" class="modal">
+    <span class="modal-close" id="closeModal">&times;</span>
+    <img class="modal-content" id="modalImage" src="" alt="大图预览">
+  </div>
+
+  <script>
+    (function() {
+      // 完全只使用提供的两张图片: 台球1.png, 台球2.png
+      // 无需动态生成网格，因为已经在HTML写死了两个卡片。
+      // 但依然要保证点击卡片展示大图，并兼容移动触摸。
+      
+      const modal = document.getElementById('imageModal');
+      const modalImg = document.getElementById('modalImage');
+      const closeBtn = document.getElementById('closeModal');
+
+      // 获取所有卡片
+      const cards = document.querySelectorAll('.image-card');
+
+      // 点击卡片展示大图 (data-url直接指向原图文件名)
+      cards.forEach(card => {
+        card.addEventListener('click', (e) => {
+          // 获取大图url，优先使用 data-url 属性
+          let largeUrl = card.dataset.url;  // 直接就是 "台球1.png" 或 "台球2.png"
+          
+          // 如果data-url不存在（后备），则从img的src获取
+          if (!largeUrl) {
+            const img = card.querySelector('img');
+            largeUrl = img ? img.src : '';
+          }
+          
+          if (largeUrl) {
+            modal.style.display = 'flex';
+            modalImg.src = largeUrl;
+          }
+        });
+      });
+
+      // 关闭模态框 (点击X 或 背景)
+      closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+      });
+
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+
+      // 可选：阻止搜索框提交
+      const searchForm = document.querySelector('.search-header');
+      searchForm.addEventListener('submit', (e) => e.preventDefault());
+      const searchBtn = searchForm.querySelector('button');
+      searchBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+      });
+
+      // 标签点击切换激活 (视觉模拟，不影响图片)
+      const filters = document.querySelectorAll('.filter-tabs span:not(.tools-label)');
+      filters.forEach(tab => {
+        tab.addEventListener('click', function() {
+          filters.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+
+      // 针对移动端优化: 如果图片加载失败，显示优雅的备用图(但依然保持台球氛围)
+      // 已经在img加了onerror备用为picsum灰度图，但优先用本地图片。
+
+      // 如果不想有任何备用干扰，可以保留onerror但主题不突出。
+      // 现在更干净: 我们完全信任两张台球图片存在。如果不存在，优雅降级。
+    })();
+  </script>
+  <!-- 少量底部空间 -->
+  <div style="height: 20px;"></div>
+</body>
+</html>
