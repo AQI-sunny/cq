@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>情侣百件小事打卡清单</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            background-color: #fef6f9;
+            color: #333;
+            line-height: 1.6;
+            padding: 16px 12px;
+            max-width: 800px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px dashed #ff9ec0;
+        }
+        
+        h1 {
+            color: #e84393;
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #ffe6ee;
+            border-radius: 5px;
+            margin: 12px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #fd79a8, #e84393);
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            font-size: 0.85rem;
+            color: #666;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            background-color: #fd79a8;
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-width: 120px;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        
+        button:active {
+            transform: scale(0.98);
+            background-color: #e84393;
+        }
+        
+        #generateBtn {
+            background-color: #6c5ce7;
+        }
+        
+        #generateBtn:active {
+            background-color: #5b4fcf;
+        }
+        
+        .checklist {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        
+        @media (max-width: 640px) {
+            .checklist {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .list-item {
+            background-color: white;
+            border-radius: 12px;
+            padding: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+            border-left: 4px solid #ff9ec0;
+        }
+        
+        .list-item:active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .list-item.checked {
+            background-color: #fff0f6;
+            border-left-color: #e84393;
+            opacity: 0.8;
+        }
+        
+        .checkbox {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 2px solid #ff9ec0;
+            margin-right: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: all 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .checkbox:active {
+            transform: scale(1.1);
+        }
+        
+        .checkbox.checked {
+            background-color: #fd79a8;
+            border-color: #fd79a8;
+        }
+        
+        .checkmark {
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+        
+        .checkbox.checked .checkmark {
+            opacity: 1;
+        }
+        
+        .item-text {
+            flex: 1;
+            font-size: 0.9rem;
+            color: #444;
+            word-break: break-word;
+        }
+        
+        .list-item.checked .item-text {
+            color: #888;
+            text-decoration: line-through;
+        }
+        
+        .item-number {
+            display: inline-block;
+            width: 32px;
+            color: #e84393;
+            font-weight: bold;
+            margin-right: 6px;
+        }
+        
+        .list-item.checked .item-number {
+            color: #fd79a8;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 16px;
+            border-top: 1px dashed #ddd;
+            color: #888;
+            font-size: 0.8rem;
+        }
+        
+        /* 图片生成区域样式 */
+        #imageContainer {
+            display: none;
+            max-width: 100%;
+            margin: 15px auto;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .image-controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .save-btn {
+            background-color: #00b894;
+        }
+        
+        .save-btn:active {
+            background-color: #00a085;
+        }
+        
+        .back-btn {
+            background-color: #636e72;
+        }
+        
+        .back-btn:active {
+            background-color: #4d5356;
+        }
+        
+        .tips {
+            background-color: #fff9fb;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 15px 0;
+            border-left: 4px solid #fd79a8;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        /* 自定义弹窗样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            padding: 20px;
+        }
+        
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 24px;
+            padding: 24px 20px;
+            max-width: 320px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .modal-overlay.show .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            background-color: #fd79a8;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: white;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #e84393;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .modal-message {
+            font-size: 1rem;
+            color: #444;
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 12px 0;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        
+        .modal-btn.confirm {
+            background-color: #fd79a8;
+            color: white;
+        }
+        
+        .modal-btn.confirm:active {
+            background-color: #e84393;
+        }
+        
+        .modal-btn.cancel {
+            background-color: #f0f0f0;
+            color: #666;
+        }
+        
+        .modal-btn.cancel:active {
+            background-color: #e0e0e0;
+        }
+        
+        /* 加载提示 */
+        .loading-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) scale(0.9);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        
+        .loading-toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) scale(1);
+        }
+        
+        /* 详情弹窗特殊样式 */
+        .detail-modal .modal-content {
+            max-width: 280px;
+        }
+        
+        .detail-modal .modal-icon {
+            background-color: #6c5ce7;
+            font-size: 28px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>💕 情侣一百件小事</h1>
+        <div class="subtitle">点击圆圈标记完成，可生成纪念图</div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="progress-text">已完成 <span id="completedCount">0</span> / 100</div>
+    </div>
+    
+    <div class="tips">
+        💡 点击圆圈标记完成/未完成，长按任务查看详情
+    </div>
+    
+    <div class="controls">
+        <button id="checkAllBtn">全部完成</button>
+        <button id="uncheckAllBtn">全部重置</button>
+        <button id="generateBtn">生成纪念图</button>
+    </div>
+    
+    <div class="checklist" id="checklist"></div>
+    
+    <div id="imageContainer"></div>
+    <div class="image-controls" id="imageControls" style="display:none;">
+        <button class="save-btn" id="saveImageBtn">保存图片</button>
+        <button class="back-btn" id="backToListBtn">返回清单</button>
+    </div>
+    
+    <div class="footer">
+        <p>让爱在简单小事中生长 💖</p>
+        <p>无高消费 · 无结婚 · 无难度要求</p>
+    </div>
+    
+    <!-- 自定义弹窗 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="modal-icon" id="modalIcon">💬</div>
+            <div class="modal-title" id="modalTitle">提示</div>
+            <div class="modal-message" id="modalMessage"></div>
+            <div class="modal-buttons">
+                <button class="modal-btn confirm" id="modalConfirmBtn">确定</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 加载提示 -->
+    <div class="loading-toast" id="loadingToast">图片生成中...</div>
+
+    <script>
+        // 清单数据
+        const checklistItems = [
+            "一起做大扫除", "合作做一顿饭", "窝在沙发看综艺", "睡前一起泡脚", "拼装简易家具",
+            "在家里关灯一块看电影", "教对方家乡话", "一起晾晒衣物", "一起去天台晒被子", "一起做手工",
+            "一起坐公交从起点到终点", "逛对方的大学校园", "探索附近的小公园", "晚上一起逛超市买早餐", "一起逛老街小店",
+            "一起用50元做晚餐", "一起骑车探索新路线", "一起看广场舞", "一起参观免费博物馆", "一起爬山看夜景",
+            "晚间一起散步半小时", "草坪上一起躺平看云", "在雨中一起撑伞漫步", "在秋天一起踩落叶", "冬天在窗边一起看雪喝热饮",
+            "一起在河边打水漂", "在某个清晨一起看日出", "一起去野外露营", "一起喂鸽子（无论何处）", "夏夜边散步边吃冰棍",
+            "玩双人游戏（无论手游端游）", "一起跟着视频做甜品", "为对方搭配衣服", "完成一幅数字油画", "互相按摩肩膀",
+            "一起拍搞怪照片", "拍出对方满意的照片~", "互相教生活小窍门", "一起尝试新奇零食", "一起健身",
+            "翻看旧聊天记录并分享给对方", "向对方分享你的童年", "一起逛对方的高中校园", "记录对方的优点", "一起规划下个月周末",
+            "一起喝点小酒", "互相分享冷笑话", "一起刮彩票", "回忆初次见面", "在对方压力大的时候给予一个抱抱",
+            "一起包饺子", "一起打扫最乱角落", "为对方亲手做礼物", "一起规划旅行路线", "制作拼贴画",
+            "一起照顾家中绿植", "一起决定下周菜单", "一起整理快递纸箱", "合作修小家电", "比赛折千纸鹤",
+            "在夏天一起边吃西瓜边追番", "冬天一起吃火锅", "互相写一封手写信", "一起在公园找喜欢的花", "一起收集树叶做书签",
+            "一起跨年倒数计时", "一起在冬至吃汤圆", "一起睡到自然醒", "给对方过一次生日", "庆祝私人纪念日",
+            "玩蒙眼猜食物", "模仿对方习惯", "一起用空气炸锅做美食", "一起玩扑克和麻将", "一起拼500片拼图",
+            "模仿某个电影片段", "为对方起专属外号", "比赛在商场猜价格", "一起玩你画我猜", "听老歌猜歌名",
+            "一起整理旧衣捐赠", "散步捡垃圾", "留纸箱给保洁", "帮邻居收衣服", "喂小区流浪猫",
+            "捐赠旧书", "对服务人员道谢", "一起去草原骑马", "一起看海", "一起整理塑料袋复用",
+            "一起为小目标存钱", "讨论想养的宠物", "想象十年后的日常", "倾诉一次工作上的烦恼", "吃一顿真正意义上的烛光晚餐",
+            "背过对方或被对方背过", "提醒对方增减衣物", "帮对方整理行李", "保存对方送的礼物", "有365天的火花"
+        ];
+
+        // 从本地存储加载完成状态
+        let completedItems = JSON.parse(localStorage.getItem('coupleChecklist')) || Array(100).fill(false);
+        
+        // DOM 元素
+        const checklistElement = document.getElementById('checklist');
+        const progressBar = document.getElementById('progressBar');
+        const completedCountElement = document.getElementById('completedCount');
+        const checkAllBtn = document.getElementById('checkAllBtn');
+        const uncheckAllBtn = document.getElementById('uncheckAllBtn');
+        const generateBtn = document.getElementById('generateBtn');
+        const imageContainer = document.getElementById('imageContainer');
+        const imageControls = document.getElementById('imageControls');
+        const saveImageBtn = document.getElementById('saveImageBtn');
+        const backToListBtn = document.getElementById('backToListBtn');
+        
+        // 弹窗元素
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalIcon = document.getElementById('modalIcon');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+        
+        // 加载提示
+        const loadingToast = document.getElementById('loadingToast');
+        
+        // 长按定时器
+        let longPressTimer = null;
+        
+        // 显示弹窗
+        function showModal(options = {}) {
+            const { icon = '💬', title = '提示', message = '', confirmText = '确定', onConfirm } = options;
+            
+            modalIcon.textContent = icon;
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modalConfirmBtn.textContent = confirmText;
+            
+            modalOverlay.classList.add('show');
+            
+            const handleConfirm = () => {
+                modalOverlay.classList.remove('show');
+                if (onConfirm) onConfirm();
+                modalConfirmBtn.removeEventListener('click', handleConfirm);
+            };
+            
+            modalConfirmBtn.addEventListener('click', handleConfirm, { once: true });
+        }
+        
+        // 显示加载提示
+        function showLoading(text = '处理中...', duration = 1500) {
+            loadingToast.textContent = text;
+            loadingToast.classList.add('show');
+            
+            setTimeout(() => {
+                loadingToast.classList.remove('show');
+            }, duration);
+        }
+        
+        // 初始化清单
+        function renderChecklist() {
+            checklistElement.innerHTML = '';
+            
+            checklistItems.forEach((item, index) => {
+                const listItem = document.createElement('div');
+                listItem.className = `list-item ${completedItems[index] ? 'checked' : ''}`;
+                listItem.dataset.index = index;
+                
+                listItem.innerHTML = `
+                    <div class="checkbox ${completedItems[index] ? 'checked' : ''}">
+                        <span class="checkmark">✓</span>
+                    </div>
+                    <div class="item-text">
+                        <span class="item-number">${index + 1}.</span> ${item}
+                    </div>
+                `;
+                
+                // 点击复选框切换状态
+                const checkbox = listItem.querySelector('.checkbox');
+                checkbox.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleItem(index);
+                });
+                
+                // 移动端长按显示详情
+                listItem.addEventListener('touchstart', (e) => {
+                    longPressTimer = setTimeout(() => {
+                        showModal({
+                            icon: '📝',
+                            title: '任务详情',
+                            message: `${index + 1}. ${item}`,
+                            confirmText: '知道了'
+                        });
+                    }, 500);
+                });
+                
+                listItem.addEventListener('touchend', () => {
+                    clearTimeout(longPressTimer);
+                });
+                
+                listItem.addEventListener('touchmove', () => {
+                    clearTimeout(longPressTimer);
+                });
+                
+                listItem.addEventListener('touchcancel', () => {
+                    clearTimeout(longPressTimer);
+                });
+                
+                checklistElement.appendChild(listItem);
+            });
+            
+            updateProgress();
+        }
+        
+        // 切换项目完成状态
+        function toggleItem(index) {
+            completedItems[index] = !completedItems[index];
+            localStorage.setItem('coupleChecklist', JSON.stringify(completedItems));
+            renderChecklist();
+        }
+        
+        // 更新进度
+        function updateProgress() {
+            const completed = completedItems.filter(item => item).length;
+            const percentage = (completed / 100) * 100;
+            
+            progressBar.style.width = `${percentage}%`;
+            completedCountElement.textContent = completed;
+        }
+        
+        // 一键全选
+        checkAllBtn.addEventListener('click', () => {
+            showModal({
+                icon: '✅',
+                title: '一键全部完成',
+                message: '确定要将所有任务标记为已完成吗？',
+                confirmText: '确定',
+                onConfirm: () => {
+                    completedItems = Array(100).fill(true);
+                    localStorage.setItem('coupleChecklist', JSON.stringify(completedItems));
+                    renderChecklist();
+                    showLoading('已全部完成', 1000);
+                }
+            });
+        });
+        
+        // 一键取消全选
+        uncheckAllBtn.addEventListener('click', () => {
+            showModal({
+                icon: '🔄',
+                title: '一键全部重置',
+                message: '确定要重置所有任务的完成状态吗？',
+                confirmText: '确定',
+                onConfirm: () => {
+                    completedItems = Array(100).fill(false);
+                    localStorage.setItem('coupleChecklist', JSON.stringify(completedItems));
+                    renderChecklist();
+                    showLoading('已全部重置', 1000);
+                }
+            });
+        });
+        
+        // 生成图片
+        generateBtn.addEventListener('click', generateImage);
+        
+        // 保存图片
+        saveImageBtn.addEventListener('click', saveImage);
+        
+        // 返回清单
+        backToListBtn.addEventListener('click', () => {
+            imageContainer.style.display = 'none';
+            imageControls.style.display = 'none';
+            document.querySelector('.controls').style.display = 'flex';
+            document.getElementById('checklist').style.display = 'grid';
+        });
+        
+        // 生成图片函数
+        function generateImage() {
+            showLoading('图片生成中...', 2000);
+            
+            setTimeout(() => {
+                const completed = completedItems.filter(item => item).length;
+                const percentage = (completed / 100) * 100;
+                
+                // 创建画布
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // 设置画布尺寸（适应手机屏幕）
+                const width = Math.min(750, window.innerWidth - 30);
+                const height = 1100;
+                canvas.width = width;
+                canvas.height = height;
+                
+                // 绘制背景
+                const gradient = ctx.createLinearGradient(0, 0, width, height);
+                gradient.addColorStop(0, '#ffebf3');
+                gradient.addColorStop(1, '#ffe6f0');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, width, height);
+                
+                // 绘制标题
+                ctx.fillStyle = '#e84393';
+                ctx.font = 'bold 28px "PingFang SC", "Microsoft YaHei", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('💕 情侣百件小事打卡', width/2, 70);
+                
+                // 绘制进度
+                ctx.fillStyle = '#666';
+                ctx.font = '20px "PingFang SC", "Microsoft YaHei", sans-serif';
+                ctx.fillText(`已完成 ${completed} / 100 件`, width/2, 120);
+                
+                // 绘制进度条背景
+                const progressBarWidth = width * 0.8;
+                const progressBarX = (width - progressBarWidth) / 2;
+                const progressBarY = 160;
+                const progressBarHeight = 24;
+                const progressBarRadius = 12;
+                
+                // 进度条背景
+                ctx.fillStyle = '#ffe6ee';
+                roundRect(ctx, progressBarX, progressBarY, progressBarWidth, progressBarHeight, progressBarRadius);
+                ctx.fill();
+                
+                // 进度条前景
+                const filledWidth = (progressBarWidth * percentage) / 100;
+                ctx.fillStyle = '#fd79a8';
+                roundRect(ctx, progressBarX, progressBarY, filledWidth, progressBarHeight, progressBarRadius);
+                ctx.fill();
+                
+                // 绘制百分比文字
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 16px "PingFang SC", "Microsoft YaHei", sans-serif';
+                ctx.fillText(`${percentage.toFixed(1)}%`, progressBarX + filledWidth/2, progressBarY + progressBarHeight/2 + 5);
+                
+                // 绘制日期
+                const now = new Date();
+                const dateStr = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日`;
+                ctx.fillStyle = '#888';
+                ctx.font = '18px "PingFang SC", "Microsoft YaHei", sans-serif';
+                ctx.fillText(`打卡日期：${dateStr}`, width/2, 220);
+                
+                // 绘制已完成的项目
+                ctx.fillStyle = '#333';
+                ctx.font = '18px "PingFang SC", "Microsoft YaHei", sans-serif';
+                ctx.textAlign = 'left';
+                
+                const completedList = [];
+                completedItems.forEach((completed, index) => {
+                    if (completed) {
+                        completedList.push(`${index + 1}. ${checklistItems[index]}`);
+                    }
+                });
+                
+                // 如果完成的项目超过12个，只显示前12个
+                const displayList = completedList.slice(0, 12);
+                const startY = 280;
+                const lineHeight = 32;
+                
+                ctx.fillText('✅ 已完成项目：', 30, startY);
+                
+                displayList.forEach((item, index) => {
+                    ctx.fillStyle = '#e84393';
+                    ctx.fillText('✓', 30, startY + (index + 1) * lineHeight);
+                    ctx.fillStyle = '#555';
+                    
+                    // 文本截断
+                    let displayText = item;
+                    if (ctx.measureText(displayText).width > width - 70) {
+                        displayText = displayText.substring(0, 12) + '...';
+                    }
+                    ctx.fillText(displayText, 55, startY + (index + 1) * lineHeight);
+                });
+                
+                // 如果还有更多完成的项目，显示省略号
+                if (completedList.length > 12) {
+                    ctx.fillStyle = '#888';
+                    ctx.fillText(`... 还有 ${completedList.length - 12} 项已完成`, 55, startY + 13 * lineHeight);
+                }
+                
+                // 绘制页脚
+                ctx.fillStyle = '#888';
+                ctx.font = '14px "PingFang SC", "Microsoft YaHei", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('用心记录每一个共同经历的时刻 💖', width/2, height - 40);
+                ctx.font = '12px "PingFang SC", "Microsoft YaHei", sans-serif';
+                ctx.fillText('—— 简单小事，温暖日常 ——', width/2, height - 20);
+                
+                // 显示图片
+                imageContainer.innerHTML = '';
+                const img = new Image();
+                img.src = canvas.toDataURL('image/png');
+                img.style.width = '100%';
+                img.style.borderRadius = '16px';
+                img.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                imageContainer.appendChild(img);
+                
+                // 显示图片和控件，隐藏清单
+                imageContainer.style.display = 'block';
+                imageControls.style.display = 'flex';
+                document.querySelector('.controls').style.display = 'none';
+                document.getElementById('checklist').style.display = 'none';
+                
+                // 滚动到图片位置
+                setTimeout(() => {
+                    imageContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            }, 100);
+        }
+        
+        // 圆角矩形函数
+        function roundRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+        
+        // 保存图片函数
+        function saveImage() {
+            const img = imageContainer.querySelector('img');
+            if (!img) return;
+            
+            // 创建临时链接
+            const link = document.createElement('a');
+            link.href = img.src;
+            link.download = `情侣打卡_${new Date().toISOString().slice(0,10)}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showModal({
+                icon: '💾',
+                title: '保存成功',
+                message: '图片已保存到相册',
+                confirmText: '好的'
+            });
+        }
+        
+        // 初始化页面
+        renderChecklist();
+        
+        // 欢迎提示
+        window.addEventListener('load', () => {
+            const firstVisit = !localStorage.getItem('coupleChecklist');
+            if (firstVisit) {
+                setTimeout(() => {
+                    showModal({
+                        icon: '💕',
+                        title: '欢迎使用',
+                        message: '点击圆圈标记完成，长按任务查看详情。完成后可生成纪念图保存哦！',
+                        confirmText: '开始打卡'
+                    });
+                }, 500);
+            }
+        });
+        
+        // 点击遮罩关闭弹窗
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
