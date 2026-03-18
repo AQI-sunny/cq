@@ -216,6 +216,7 @@
             display: flex;
             flex-direction: column;
             border-bottom: 2px solid #c663ff;
+            cursor: pointer; /* 提示可点击 */
         }
 
         .web-bar {
@@ -412,25 +413,26 @@
 
         <!-- 双卡片：图片预告 & 网页预告 -->
         <div class="preview-grid">
-            <!-- 月光湖 图片预告（以蓝色为主，红紫点缀） -->
+            <!-- 月光湖 图片预告（以蓝色为主，红紫点缀）使用给定图片链接 -->
             <div class="preview-card card-moon">
                 <div class="image-preview">
-                    <!-- 蓝色调为主的湖景，带红紫光效 -->
-                    <img class="lake-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2317436b'/%3E%3Cstop offset='50%25' stop-color='%23235288'/%3E%3Cstop offset='100%25' stop-color='%2335286e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='200' fill='url(%23g1)'/%3E%3Ccircle cx='300' cy='50' r='30' fill='%23ffec99' opacity='0.4' filter='url(%23glow)'/%3E%3Ccircle cx='120' cy='160' r='40' fill='%23b380ff' opacity='0.35' /%3E%3Ccircle cx='280' cy='140' r='60' fill='%234d7eff' opacity='0.25' /%3E%3Cpath d='M0 150 L400 120 L400 200 L0 200 Z' fill='%23002244' opacity='0.7' /%3E%3Cpath d='M50 180 Q 150 140 250 170 T 380 150' stroke='%23ff99c8' stroke-width='2' fill='none' stroke-dasharray='6 6' /%3E%3Ccircle cx='80' cy='70' r='6' fill='%23ff7799' /%3E%3Ccircle cx='360' cy='40' r='10' fill='%23c397ff' opacity='0.7' /%3E%3Ctext x='40' y='110' fill='%23ffffff' font-size='28' font-weight='bold' font-family='monospace' opacity='0.8'%3E🌙%3C/text%3E%3C/svg%3E"
-                    alt="月光湖 蓝色幻境">
+                    <!-- 替换为指定图片链接: https://sylvie-seven-cq.top/月光湖/flyshihuo.png -->
+                    <img class="lake-img" src="https://sylvie-seven-cq.top/月光湖/flyshihuo.png" alt="月光湖 蓝色幻境">
                 </div>
                 <div class="card-footer">
                     <h2>月光湖谜案</h2>
                     <p>
-                        <span class="tag">🌙 蓝月升起</span>
-                        <span class="tag tag-purple">✨ 红紫雾霭</span>
+                        <!-- <span class="tag">🌙 蓝月升起</span>
+                        <span class="tag tag-purple">✨ 红紫雾霭</span> -->
+                        <span class="tag">微微难</span>
+                        <span class="tag tag-purple">约3~7h</span>
                     </p>
-                    <p style="font-size: 0.95rem; margin-top: 10px; color: #b5d2ff;">图片预告 — 静谧中暗涌绯色与紫芒</p>
+                    <p style="font-size: 0.95rem; margin-top: 10px; color: #b5d2ff;">图片预告 — 郑馨雨死亡的真相</p>
                 </div>
             </div>
 
-            <!-- 栖乔华苑 网页预告（模拟站点） -->
-            <div class="preview-card card-garden">
+            <!-- 栖乔华苑 网页预告（模拟站点）点击后跳转至指定链接 -->
+            <div class="preview-card card-garden" onclick="window.open('https://sylvie-seven-cq.top/QQHY/baodao.html', '_blank')" style="cursor: pointer;">
                 <div class="web-preview">
                     <!-- 仿地址栏、网页缩略图 红紫点缀 -->
                     <div class="web-bar">
@@ -439,7 +441,7 @@
                             <span class="web-dot"></span>
                             <span class="web-dot"></span>
                         </div>
-                        <div class="web-address">✨ qiqiao.garden/preview ✨</div>
+                        <div class="web-address">✨ .../QQHY/baodao.html ✨</div>
                     </div>
                     <div class="web-content">
                         <div class="web-block" style="background: linear-gradient(145deg, #2f3180, #1b1e5a); border-color: #ff7799;"></div>
@@ -454,27 +456,42 @@
                 <div class="card-footer">
                     <h2>栖乔华苑</h2>
                     <p>
-                        <span class="tag tag-purple">🌸 紫藤绕梁</span>
-                        <span class="tag">🔥 红枫点缀</span>
+                        <!-- <span class="tag tag-purple">🌸 紫藤绕梁</span>
+                        <span class="tag">🔥 红枫点缀</span> -->
+                        <span class="tag">简单</span>
+                        <span class="tag tag-purple">约1~2h</span>
                     </p>
-                    <p style="font-size: 0.95rem; margin-top: 10px; color: #b5d2ff;">网页预告 — 交互式华苑，蓝紫界面跃动朱红</p>
+                    <p style="font-size: 0.95rem; margin-top: 10px; color: #b5d2ff;">网页 — 点击卡片跳转</p>
                 </div>
             </div>
         </div>
 
-        <!-- 底部发布时间/倒计时点缀 -->
+        <!-- 底部发布时间/倒计时点缀 严格按照注释：我注释掉的不要再加，因此保留未注释部分，且未添加多余日期行 -->
         <div class="footer-note">
             <div class="reminder">
                 <span></span> <span style="background:#b300ff;"></span> <span style="background:#ff3366;"></span>
                 <!-- 双境即将开启 ·  -->敬请期待
             </div>
-            <!-- <div class="date">
-                🕒 预告: 2025 · 月满之时
-            </div> -->
+            <!-- 原本注释掉的日期行，不再出现。仅保留当前未注释的预告日期 -->
             <div class="date">
                 🕒 预告: 2026 · 5月
             </div>
         </div>
     </div>
+
+    <!-- 确保图片加载失败时显示备用样式，但不影响整体 -->
+    <script>
+        (function() {
+            // 针对图片可能404的情况，保留原有风格（静默处理，不影响布局）
+            const img = document.querySelector('.lake-img');
+            if (img) {
+                img.onerror = function() {
+                    // 如果图片加载失败，使用之前的内联svg风格作为后备，保持视觉连贯
+                    this.style.background = '#14365c';
+                    this.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'200\' viewBox=\'0 0 400 200\'%3E%3Cdefs%3E%3ClinearGradient id=\'g1\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2317436b\'/%3E%3Cstop offset=\'50%25\' stop-color=\'%23235288\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%2335286e\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=\'400\' height=\'200\' fill=\'url(%23g1)\'/%3E%3Ccircle cx=\'300\' cy=\'50\' r=\'30\' fill=\'%23ffec99\' opacity=\'0.4\' /%3E%3Ccircle cx=\'120\' cy=\'160\' r=\'40\' fill=\'%23b380ff\' opacity=\'0.35\' /%3E%3Ccircle cx=\'280\' cy=\'140\' r=\'60\' fill=\'%234d7eff\' opacity=\'0.25\' /%3E%3Cpath d=\'M0 150 L400 120 L400 200 L0 200 Z\' fill=\'%23002244\' opacity=\'0.7\' /%3E%3Cpath d=\'M50 180 Q 150 140 250 170 T 380 150\' stroke=\'%23ff99c8\' stroke-width=\'2\' fill=\'none\' stroke-dasharray=\'6 6\' /%3E%3Ccircle cx=\'80\' cy=\'70\' r=\'6\' fill=\'%23ff7799\' /%3E%3Ccircle cx=\'360\' cy=\'40\' r=\'10\' fill=\'%23c397ff\' opacity=\'0.7\' /%3E%3Ctext x=\'40\' y=\'110\' fill=\'%23ffffff\' font-size=\'28\' font-weight=\'bold\' font-family=\'monospace\' opacity=\'0.8\'%3E🌙%3C/text%3E%3C/svg%3E';
+                };
+            }
+        })();
+    </script>
 </body>
 </html>
