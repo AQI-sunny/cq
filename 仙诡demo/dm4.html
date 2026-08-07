@@ -1,0 +1,2549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> 仙门诡事（Demo 演示版）</title>
+<style>
+/* ========== 基础样式 ========== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+@font-face {
+  font-family: 'GameMono';
+  src: local('Noto Sans Mono'), local('Source Code Pro'), local('Consolas'), local('monospace');
+}
+
+:root {
+  --primary: #38a6ff;
+  --primary-dim: #2b7fd4;
+  --primary-glow: rgba(0,130,255,0.14);
+  --bg: #05080f;
+  --bg-panel: #0a0f1c;
+  --bg-input: #0d1424;
+  --border: #152440;
+  --border-bright: #1f3a66;
+  --text: #c3d6f2;
+  --text-dim: #5e7ea8;
+  --red: #ff4d5e;
+  --gold: #ffd76e;
+  --cyan: #4fc3ff;
+  --purple: #a78bfa;
+  --fragment: #ff9f43;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'GameMono', 'Noto Sans SC', 'PingFang SC', monospace;
+  font-size:17px;
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ========== 扫描线效果 ========== */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.08) 2px,
+    rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ========== 顶部标题栏 ========== */
+.header {
+  text-align: center;
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid var(--border-bright);
+  background: linear-gradient(180deg, rgba(0,130,255,0.06) 0%, transparent 100%);
+  position: relative;
+}
+.header::before {
+  content: '[ 尘封案牍 · 档案管理 ]';
+  position: absolute;
+  top: 6px;
+  right: 16px;
+  font-size:12px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+}
+.header h1 {
+  font-size:clamp(24px, 4.8vw, 38px);
+  color: var(--primary);
+  text-shadow: 0 0 20px rgba(56, 166, 255, 0.45), 0 0 40px rgba(0,130,255,0.15);
+  letter-spacing: 8px;
+  margin-bottom: 4px;
+  animation: titleGlow 3s ease-in-out infinite alternate;
+}
+@keyframes titleGlow {
+  from { text-shadow: 0 0 20px rgba(0, 90, 255, 0.4), 0 0 40px rgba(0,130,255,0.12); }
+  to { text-shadow: 0 0 30px rgba(0, 150, 255, 0.6), 0 0 60px rgba(0,180,255,0.25); }
+}
+.header .subtitle {
+  font-size:13px;
+  color: var(--text-dim);
+  letter-spacing: 4px;
+}
+
+/* ========== 主布局 ========== */
+.main-container {
+  display: grid;
+  grid-template-columns: 220px 1fr 220px;
+  grid-template-rows: 1fr auto;
+  gap: 0;
+  height: calc(100vh - 90px);
+  max-height: calc(100vh - 90px);
+}
+
+/* ========== 左侧面板 ========== */
+.left-panel {
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 12px;
+  background: var(--bg-panel);
+}
+.panel-section {
+  margin-bottom: 16px;
+}
+.panel-title {
+  font-size:13px;
+  color: var(--primary-dim);
+  letter-spacing: 3px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.panel-title::before {
+  content: '▸';
+  color: var(--primary);
+}
+.location-item, .character-item {
+  padding: 4px 8px;
+  font-size:14px;
+  border-left: 2px solid transparent;
+  transition: all 0.2s;
+  margin-bottom: 2px;
+  cursor: default;
+}
+.location-item:hover, .character-item:hover {
+  background: var(--primary-glow);
+  border-left-color: var(--primary);
+}
+.location-item .loc-code {
+  color: var(--cyan);
+  font-size:12px;
+  margin-right: 6px;
+}
+.location-item .loc-name {
+  color: var(--text);
+  font-size:14px;
+}
+.location-item.locked {
+  color: var(--text-dim);
+  opacity: 0.5;
+}
+.location-item.locked .loc-code {
+  color: var(--red);
+}
+.character-item .char-num {
+  color: var(--purple);
+  font-size:12px;
+  margin-right: 6px;
+  min-width: 14px;
+  display: inline-block;
+}
+.character-item .char-gender {
+  font-size:12px;
+  color: var(--text-dim);
+  margin-left: 4px;
+}
+.character-item .char-name {
+  font-size:13px;
+  color: var(--primary);
+  margin-left: 2px;
+}
+.character-item.locked {
+  color: var(--text-dim);
+  opacity: 0.5;
+}
+.character-item.locked .char-num {
+  color: var(--red);
+}
+
+/* ========== 中间剧情区 ========== */
+.center-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.story-img {
+  margin: 8px 0;
+  text-align: center;
+}
+.story-img img {
+  width: 100%;
+  max-height: 280px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.45);
+}
+.story-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+  scroll-behavior: smooth;
+}
+.story-area::-webkit-scrollbar { width: 6px; }
+.story-area::-webkit-scrollbar-track { background: var(--bg); }
+.story-area::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+
+/* 开场白 */
+.welcome-block {
+  border: 1px solid var(--border-bright);
+  padding: 20px;
+  margin-bottom: 20px;
+  background: rgba(0,130,255,0.03);
+  position: relative;
+}
+.welcome-block::before {
+  content: '[ 系统初始化完成 ]';
+  position: absolute;
+  top: -9px;
+  left: 16px;
+  background: var(--bg);
+  padding: 0 8px;
+  font-size:12px;
+  color: var(--primary-dim);
+  letter-spacing: 2px;
+}
+.welcome-block p {
+  margin-bottom: 8px;
+  text-indent: 2em;
+}
+.welcome-block .highlight {
+  color: var(--primary);
+}
+
+/* 剧情条目 */
+.story-entry {
+  margin-bottom: 16px;
+  border-left: 2px solid var(--border);
+  padding: 12px 16px;
+  background: rgba(0,130,255,0.02);
+  animation: fadeIn 0.4s ease-out;
+  position: relative;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.story-entry .entry-header {
+  font-size:13px;
+  color: var(--cyan);
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.story-entry .entry-header .timestamp {
+  color: var(--primary-dim);
+  font-size:12px;
+}
+.story-entry .entry-body {
+  font-size:16px;
+  line-height: 1.9;
+}
+.story-entry .entry-body .narrator {
+  color: var(--text-dim);
+  font-style: italic;
+}
+.story-entry .entry-body .dialogue {
+  color: var(--gold);
+}
+.story-entry .entry-body .action {
+  color: var(--primary);
+}
+.story-entry .entry-body .story-loc {
+  color: var(--gold);
+  font-weight: bold;
+  border-bottom: 1px dashed var(--gold);
+  padding: 0 3px;
+  background: rgba(255,215,111,0.1);
+  box-shadow: 0 0 8px rgba(255,215,111,0.15);
+}
+.hidden-loc {
+  color: var(--red);
+  font-weight: bold;
+  letter-spacing: 1px;
+  border-bottom: 1px dashed var(--red);
+  padding: 0 3px;
+  background: rgba(255,68,68,0.08);
+}
+.story-entry.system-entry {
+  border-left-color: var(--cyan);
+  background: rgba(79,195,255,0.04);
+}
+.story-entry.system-entry .entry-header {
+  color: var(--cyan);
+}
+.story-entry .item-hint {
+  margin-top: 10px;
+  padding: 6px 10px;
+  border: 1px dashed var(--border-bright);
+  border-radius: 4px;
+  font-size:13px;
+  color: var(--text-dim);
+  background: rgba(94,126,168,0.06);
+}
+.story-entry .item-hint code {
+  color: var(--primary);
+  margin: 0 3px;
+}
+.story-entry .fragment-alert {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(255,149,0,0.08);
+  border: 1px solid var(--fragment);
+  border-radius: 4px;
+  color: var(--fragment);
+  font-size:14px;
+  animation: fragmentPulse 1.5s ease-in-out 3;
+}
+@keyframes fragmentPulse {
+  0%, 100% { box-shadow: 0 0 5px rgba(255,149,0,0.2); }
+  50% { box-shadow: 0 0 20px rgba(255,149,0,0.4); }
+}
+.story-entry .unlock-alert {
+  margin-top: 12px;
+  padding: 14px;
+  background: rgba(0,229,255,0.06);
+  border: 1px solid var(--cyan);
+  border-radius: 4px;
+  color: var(--cyan);
+  font-size:16px;
+  text-align: center;
+  letter-spacing: 2px;
+  animation: unlockFlash 0.5s ease-out 3;
+}
+@keyframes unlockFlash {
+  0%, 100% { background: rgba(0,229,255,0.06); }
+  50% { background: rgba(0,229,255,0.15); }
+}
+.story-entry.locked-entry {
+  border-left-color: var(--red);
+  background: rgba(255,68,68,0.03);
+}
+.story-entry.locked-entry .entry-header {
+  color: var(--red);
+}
+
+/* ========== 底部输入区 ========== */
+.input-area {
+  border-top: 1px solid var(--border-bright);
+  padding: 12px 20px;
+  background: var(--bg-input);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.input-prompt {
+  color: var(--primary);
+  font-size:16px;
+  white-space: nowrap;
+  animation: promptBlink 1.2s step-end infinite;
+}
+@keyframes promptBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+#queryInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--primary);
+  font-family: inherit;
+  font-size:17px;
+  caret-color: var(--primary);
+  letter-spacing: 1px;
+}
+#queryInput::placeholder {
+  color: var(--text-dim);
+  font-size:14px;
+}
+#submitBtn {
+  background: transparent;
+  border: 1px solid var(--primary-dim);
+  color: var(--primary);
+  padding: 6px 18px;
+  font-family: inherit;
+  font-size:14px;
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+#submitBtn:hover {
+  background: var(--primary-glow);
+  border-color: var(--primary);
+  box-shadow: 0 0 10px rgba(0,130,255,0.25);
+}
+
+/* ========== 右侧面板 ========== */
+.right-panel {
+  border-left: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 12px;
+  background: var(--bg-panel);
+}
+.progress-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  font-size:14px;
+  border-bottom: 1px solid rgba(21,36,64,0.4);
+}
+.progress-item .label {
+  color: var(--text-dim);
+}
+.progress-item .value {
+  color: var(--primary);
+  font-weight: bold;
+}
+.progress-item .value.warning {
+  color: var(--fragment);
+}
+.progress-item .value.danger {
+  color: var(--red);
+}
+.progress-item .value.success {
+  color: var(--primary);
+}
+
+.fragment-bar {
+  margin-top: 4px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.fragment-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+  font-size:13px;
+}
+.fragment-row .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--text-dim);
+  background: transparent;
+  transition: all 0.3s;
+}
+.fragment-row .dot.collected {
+  background: var(--fragment);
+  border-color: var(--fragment);
+  box-shadow: 0 0 6px rgba(255,149,0,0.5);
+}
+.fragment-row .frag-text {
+  color: var(--text-dim);
+}
+.fragment-row .frag-text.collected {
+  color: var(--fragment);
+}
+
+.tjy-status {
+  margin-top: 8px;
+  padding: 10px;
+  text-align: center;
+  border: 1px dashed var(--border-bright);
+  border-radius: 4px;
+  font-size:13px;
+  letter-spacing: 2px;
+}
+.tjy-status.locked {
+  color: var(--red);
+  border-color: rgba(255,68,68,0.3);
+}
+.tjy-status.unlocked {
+  color: var(--cyan);
+  border-color: var(--cyan);
+  animation: tjyPulse 2s ease-in-out infinite;
+}
+@keyframes tjyPulse {
+  0%, 100% { box-shadow: inset 0 0 10px rgba(0,229,255,0.05); }
+  50% { box-shadow: inset 0 0 20px rgba(0,229,255,0.15); }
+}
+
+/* ========== 物品线索面板 ========== */
+.item-list {
+  margin-top: 4px;
+}
+.item-line {
+  padding: 3px 0;
+  border-bottom: 1px dashed var(--border);
+  font-size:12px;
+  display: flex;
+  flex-direction: column;
+}
+.item-line:last-child {
+  border-bottom: none;
+}
+.item-name {
+  color: var(--gold);
+  font-size:13px;
+}
+.item-tag {
+  color: var(--text-dim);
+  font-size:12px;
+}
+.item-score-tip {
+  margin-top: 6px;
+  color: var(--text-dim);
+  font-size:11px;
+  line-height: 1.6;
+}
+.item-score-tip code {
+  color: var(--purple);
+  font-size:12px;
+}
+.story-warn-lost {
+  display: block;
+  margin: 8px 0;
+  padding: 8px 10px;
+  border: 1px dashed rgba(255,68,68,0.35);
+  background: rgba(255,68,68,0.06);
+  color: var(--red);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.query-log-title {
+  margin-top: 12px;
+}
+.query-log {
+  max-height: 200px;
+  overflow-y: auto;
+}
+.query-log-item {
+  font-size:12px;
+  color: var(--text-dim);
+  padding: 2px 8px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.query-log-item:hover {
+  color: var(--primary);
+}
+
+/* ========== 帮助弹窗 ========== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.8);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: var(--bg-panel);
+  border: 1px solid var(--primary-dim);
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 560px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 0 40px rgba(0,130,255,0.18);
+}
+.modal h2 {
+  color: var(--primary);
+  font-size:19px;
+  letter-spacing: 4px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+.modal .help-section {
+  margin-bottom: 14px;
+}
+.modal .help-section h3 {
+  color: var(--cyan);
+  font-size:14px;
+  margin-bottom: 6px;
+  letter-spacing: 2px;
+}
+.modal .help-section p, .modal .help-section li {
+  font-size:14px;
+  color: var(--text);
+  line-height: 1.8;
+}
+.modal .help-section code {
+  background: rgba(0,130,255,0.12);
+  color: var(--primary);
+  padding: 1px 6px;
+  border-radius: 2px;
+  font-size:13px;
+}
+.modal .close-btn {
+  display: block;
+  margin: 16px auto 0;
+  padding: 8px 24px;
+  background: transparent;
+  border: 1px solid var(--primary-dim);
+  color: var(--primary);
+  cursor: pointer;
+  font-family: inherit;
+  font-size:14px;
+  letter-spacing: 2px;
+}
+.modal .close-btn:hover {
+  background: var(--primary-glow);
+}
+
+/* ========== 响应式 ========== */
+@media (max-width: 900px) {
+  .main-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto auto;
+    height: auto;
+    max-height: none;
+  }
+  .left-panel, .right-panel {
+    border: none;
+    border-bottom: 1px solid var(--border);
+    max-height: 160px;
+  }
+  .left-panel {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 8px 12px;
+  }
+  .left-panel .panel-section {
+    min-width: 200px;
+    margin-bottom: 0;
+  }
+  .center-panel {
+    min-height: 50vh;
+  }
+  .story-area {
+    padding: 12px;
+  }
+  .input-area {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+  }
+}
+@media (max-width: 500px) {
+  .header h1 { letter-spacing: 4px; }
+  .header::before { display: none; }
+  body { font-size:16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- 顶部标题 -->
+<div class="header">
+  <h1>仙门诡事</h1>
+  <div class="subtitle">── 尘封案牍 · 历代奇案 ──</div>
+</div>
+
+<!-- 主容器 -->
+<div class="main-container">
+
+  <!-- 左侧面板：地点与人物 -->
+  <div class="left-panel">
+    <div class="panel-section">
+      <div class="panel-title">已解锁地点</div>
+      <div id="locationList"></div>
+    </div>
+    <div class="panel-section">
+      <div class="panel-title">已解锁人物</div>
+      <div id="characterList"></div>
+    </div>
+  </div>
+
+  <!-- 中间：剧情展示区 -->
+  <div class="center-panel">
+    <div class="story-area" id="storyArea">
+      <!-- 开场白由JS插入 -->
+    </div>
+    <div class="input-area">
+      <span class="input-prompt">▸</span>
+      <input type="text" id="queryInput" placeholder="输入指令，如 list / inbox / help（忽略大小写）" autocomplete="off" spellcheck="false">
+      <button id="submitBtn">查 询</button>
+    </div>
+  </div>
+
+  <!-- 右侧面板：进度 -->
+  <div class="right-panel">
+    <div class="panel-section">
+      <div class="panel-title">调查进度</div>
+      <div class="progress-item">
+        <span class="label">已查阅案卷</span>
+        <span class="value" id="queryCount">0</span>
+      </div>
+      <div class="progress-item">
+        <span class="label">已解锁案卷</span>
+        <span class="value" id="fileCount">0 / 0</span>
+      </div>
+      <div class="progress-item">
+        <span class="label">碎片收集</span>
+        <span class="value warning" id="fragmentCount">0 / 3</span>
+      </div>
+      <div class="fragment-bar" id="fragmentBar">
+        <div class="fragment-row">
+          <span class="dot" id="frag1dot"></span>
+          <span class="frag-text" id="frag1text">？？？</span>
+        </div>
+        <div class="fragment-row">
+          <span class="dot" id="frag2dot"></span>
+          <span class="frag-text" id="frag2text">？？？</span>
+        </div>
+        <div class="fragment-row">
+          <span class="dot" id="frag3dot"></span>
+          <span class="frag-text" id="frag3text">？？？</span>
+        </div>
+      </div>
+      <div class="tjy-status locked" id="tjyStatus">
+        ── 隐藏地点 · 未解锁 ──
+      </div>
+    </div>
+    <div class="panel-section">
+      <div class="panel-title">物品线索</div>
+      <div class="item-list" id="itemList"></div>
+      <div class="item-score-tip">输入 <code>item 代码 原属 现属</code> 标记物品归属（0 = 未定）</div>
+    </div>
+    <div class="panel-section">
+      <div class="panel-title query-log-title">查询记录</div>
+      <div class="query-log" id="queryLog"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 帮助弹窗 -->
+<div class="modal-overlay" id="helpModal">
+  <div class="modal">
+    <h2>── 尘封案牍 · 指令指南 ──</h2>
+    <div class="help-section">
+      <h3>▸ 游戏说明</h3>
+      <p>本指南不会公开时间、地点、人物的任何对应关系。案卷中时间与人物均以编号呈现，其真实含义需通过<span style="color:var(--gold)">陆续解锁的案卷</span>自行比对推理。</p>
+      <!-- <p>案卷正文中，人物一律以<span style="color:var(--cyan)">代号【1】～【7】</span>指代；地点不作字母代号，而是以<span style="color:var(--gold)">金色高亮</span>标注为重点。左侧面板同样只显示编号，不作透露。</p>
+     --></div>
+    <div class="help-section">
+      <h3>▸ 指令列表</h3>
+      <p><code>LIST</code> ── 文件列表：仅列出接下来待查阅的三个案卷编号，其余需自行推演（亦可用 <code>LB</code>）<br>
+         <code>INBOX</code> ── 消息列表：查看系统阶段性推送的消息（亦可用 <code>XX</code>）<br>
+         <!-- <code>编号-编号-编号</code> ── 查阅案卷，如 <code>T1-QLF-14</code>（可加前缀"查询"）<br>
+          --><code>NAME1XXX</code> ── 为代号1的人物设定名字，如 <code>NAME1阿基</code><br>
+         <code>SAVE</code> ── 将存档保存至本地（亦可用 <code>BC</code>）<br>
+         <code>BZ</code> ── 打开本指南（等同 <code>帮助</code> / <code>HELP</code>）<br>
+         <code>状态</code> ── 查看当前调查进度（亦可用 <code>ZT</code>）<br>
+         <code>清空</code> ── 清空剧情区显示（亦可用 <code>QK</code>）</p>
+      <p style="margin-top:6px;color:var(--text-dim);">※ 所有指令均忽略大小写，本指南以大写字形标注。拼音首字母指令与本义指令完全等同。</p>
+      <p style="margin-top:6px;color:var(--red);font-size:12px;">※ 当前为 Demo 演示版：部分案卷已被封存，请过段时日再来查阅。</p>
+    </div>
+    <div class="help-section">
+      <h3>▸ 物品解读</h3>
+      <p>案卷中提及的物品，输入其首字母编号即可查看解读。例：<code>LYS</code> 留影石。</p>
+      <p>每份案卷底部会提示该卷提及的物品编号；输入该编号（忽略大小写）即可阅读相关解读。</p>
+    </div>
+    <div class="help-section">
+      <h3>▸ 档案机制</h3>
+      <p>每份案卷由 <code>时间-地点-人物</code> 三段编号构成。查阅案卷后，对应地点与人物将在左侧面板解锁；地点为何物，尽在案卷正文的高亮重点之中。</p>
+      <p>游戏具有自动存档功能，但仍推荐您常使用 <code>SAVE</code> 指令将存档保存至本地。</p>
+    </div>
+    <button class="close-btn" onclick="document.getElementById('helpModal').classList.remove('active')">关 闭</button>
+  </div>
+</div>
+
+<!-- 登录弹窗 -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal" style="max-width:420px;">
+    <h2>── 尘封案牍 · 入档手续 ──</h2>
+    <div class="help-section">
+      <p>请为本次调查设定用户名：</p>
+      <input type="text" id="usernameInput" style="width:100%;margin-top:10px;background:var(--bg-input);border:1px solid var(--primary-dim);color:var(--primary);padding:8px 10px;font-family:inherit;font-size:17px;outline:none;letter-spacing:1px;" placeholder="输入用户名，如 aqi" autocomplete="off">
+    </div>
+    <button class="close-btn" id="usernameBtn" style="width:100%;">登 录</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  数据定义
+// ============================================================
+
+const LOCATIONS = {
+  qlf: '青岚峰', ymj: '幽冥涧', xsg: '玄霜谷',
+  lyy: '龙吟渊', bhl: '碧湖岭', xyz: '星陨泽',
+  tjy: '天机崖'
+};
+
+const CHARACTERS = {
+  '1': { name: '▇▃', gender: '男' },
+  '2': { name: '▬▘▂', gender: '男' },
+  '3': { name: '▂▋', gender: '女' },
+  '4': { name: '▂▄', gender: '男' },
+  '5': { name: '▄▞', gender: '男' },
+  '6': { name: '▃▃▃▬', gender: '男' },
+  '7': { name: '▘▂▮', gender: '女' }
+};
+
+// 物品解读库（首字母编号 -> 解读，忽略大小写）
+const ITEMS = {
+  lys: { name: '留影石', text: '刻有古老留影阵的灵石，注入灵力可重现往昔影像。曾在星陨泽被寻获，影像记录了五人身处某高崖前的画面。' },
+  tjyp: { name: '天机玉牌', text: '温润玉牌，上刻"天机"二字。与留影石共鸣时，可投射出通往某隐藏崖壁的方位图。' },
+  sy: { name: '碎玉', text: '自某玉器碎裂而下的玉片，以灵力刻有"崖"字，断面与天机玉牌吻合。' },
+  qxd: { name: '清心丹', text: '▂▋所炼碧绿丹药，可安神定魄。但某些清心丹上，曾出现过不应有的裂纹与温度……' },
+  dhd: { name: '定魂丹', text: '比清心丹更对症的丹药，供心神不宁者服用。' },
+  yyp: { name: '炎阳佩', text: '▄▞以地火亲手炼制的赤红玉佩，内蕴充沛火灵气，为其最满意的作品。' },
+  lmtz: { name: '灵脉图纸', text: '▄▞花费三月绘制的灵脉走向图，标注了多条支流，其中两条灵脉呈逆流之态。' },
+  ymd: { name: '幽冥灯', text: '▬▘▂随身法器，淡青灯火可破浓雾照明，巡查封印之必备。' },
+  shz: { name: '锁魂针', text: '上古法器，可封锁目标的全部灵力，对修士等同死亡。一旦发动，施术者将再无法制造替身。' },
+  klts: { name: '傀儡替身术', text: '以施术者自身精血为引，可造出与本体完全一致的替身，代价三十年阳寿。本体与替身不可同时现身于同一地点。' },
+  zhf: { name: '镇魂符', text: '用于探测魂魄是否存于体内的符篆。若对"遗体"毫无反应，则其魂魄既不在体内，也未离开此界。' }
+};
+
+// ============================================================
+//  遗落物品：该物品已确认遗落在别处，面板与解读同步标注
+// ============================================================
+const LOST_ITEMS = {
+  klts: '傀儡替身术真本残卷遗落在别处。若欲寻回，须谨记崖顶七人之约。'
+};
+
+const TIMES = {
+  'T1': '辰时七刻·灵根觉醒',
+  'T2': '午时一刻·血月当空',
+  'T3': '申时五刻·剑鸣九霄',
+  'T4': '戌时二刻·龙脉震颤',
+  'T5': '子时七刻·天火焚城',
+  'T6': '寅时四刻·万籁俱寂',
+  'T7': '卯时七刻·轮回重启'
+};
+
+// ============================================================
+//  场景配图 / 配乐（案卷解锁展示时渲染）
+//  - img：案卷解锁后随正文展示的图片（与仙门2.html 同目录）
+//  - audio：预留字段，后续接入玩家配音，在解锁时自动播放
+//  未配置的地点或有明确"药庐"字样的案卷，回退至药庐图。
+// ============================================================
+const STORY_MEDIA = {
+  qlf: { img: 'qinglanfeng.png' },
+  ymj: { img: 'youmingjian.png' },
+  xsg: { img: 'yaolu.png' },
+  lyy: {},
+  bhl: { img: 'bihulingkuangdong.png' },
+  xyz: {},
+  tjy: {}
+};
+function getSceneMedia(location, text) {
+  const base = STORY_MEDIA[location];
+  if (base && base.img) return base.img;
+  if (text && text.indexOf('药庐') !== -1) return 'yaolu.png';
+  return '';
+}
+
+// ============================================================
+//  剧情文本库（约50条）
+// ============================================================
+const STORIES = {
+// ─────────────────── T1 ───────────────────
+'T1-qlf-14': {
+  title: '青岚峰·灵根觉醒大典',
+  text: `灵根觉醒大典在青岚峰举行，三十六根白玉石柱围成法阵，阵纹在晨光中流转。▇▃端坐高台主持测灵，▂▄怀抱青霄剑列席一侧，目光扫过台下。
+
+大典之前，已有三人离席：▬▘▂去了幽冥涧，▄▞去了龙吟渊，▘▂▮去了玄霜谷。▇▃今日频频望向幽冥涧方向，像在等什么消息。
+
+他走下高台，对▂▄淡淡道：<span class="dialogue">"▬▘▂已往幽冥涧巡查封印，▄▞在龙吟渊炼器，▂▋与▘▂▮在玄霜谷调药。你若有疑，不妨先从这三处着手。"</span>
+
+台下弟子屏息肃立，无人知晓——天机崖石刻上那句"七子归位，轮回重启"，正在某处悄然应验。
+
+<span class="narrator">命运的齿轮，从这一刻起，不再停歇。</span>`
+},
+
+'T1-ymj-2': {
+  title: '幽冥涧·封印巡查',
+  text: `幽冥涧终年不见天光。两侧绝壁如兽牙合拢，将天空挤成一线，黑雾自涧底升腾，带着刺骨的寒意。
+
+▬▘▂比往常提前了整整两个时辰，独自走在涧底的碎石小径上。作为禁地的守护者，巡查封印本是他的每日功课，但今日另有打算。
+
+<span class="action">他蹲在封印大阵前，手指轻轻抚过阵眼。</span>
+
+那里，有一道新鲜的剑痕。
+
+▬▘▂皱眉细看——这剑痕像是火属性剑气所留，可又不太像焚天剑诀的路数。
+
+他缓缓起身，望向空荡的谷口，心中如明镜：<span class="dialogue">有人在试探封印。是谁？▄▞？还是……别人？</span>
+
+他没有声张。将剑痕的位置记在心底，转身离开。
+
+走出几步，他停下，回头看了一眼剑痕的方向：<span class="dialogue">"这剑痕来得蹊跷，该去问问今日在青岚峰主持大典的人。"</span>他负手而立，目光沉入雾中，<span class="dialogue">"至于替身与封印的渊源，青岚峰藏书阁的古卷里，或许早有记载。"</span>
+
+<span class="narrator">他在这里镇守百年，等的，就是这一日。</span>`
+},
+
+'T1-xsg-37': {
+  title: '玄霜谷·清心丹',
+  text: `玄霜谷药庐内，药香袅袅。▂▋将一枚晕着紫烟的丹药递到▘▂▮面前：<span class="dialogue">"清心丹，你近日气色很差。"</span>
+
+▘▂▮接过，指尖几不可察地一颤：<span class="dialogue">"这丹……药力比往日重了三分。"</span>
+
+<span class="dialogue">"有些药，得提前备好。"</span>▂▋不看向丹炉，而望向窗外西北的云海，<span class="dialogue">"就像有些人，得提前知道该往哪里走。"</span>
+
+<span class="dialogue">"哪里？"</span>▘▂▮顺着她的目光追问。
+
+▂▋沉默片刻，吐出两个字：<span class="dialogue">"高处。"</span>
+
+▘▂▮低叹：<span class="dialogue">"我曾祖父说过，崖上风大，站不稳，会掉下来。"</span>
+
+▂▋的动作顿了那么一瞬间。她走到窗边，将大窗推开一道细缝。风立刻灌了进来，卷走她未曾出口的半句话。
+
+<span class="action">▘▂▮攥紧掌中的丹药，指节发白。祖父——天机子——百年之前，究竟在天机崖上刻下了什么？</span>
+
+▂▋将窗合拢，声音平淡：<span class="dialogue">"▃▃▃▬最近总往碧湖岭矿洞跑，说是要查些旧账。你若想弄明白，不妨跟过去看看。"</span>她瞥了▘▂▮一眼，<span class="dialogue">"血月之后，星陨泽的那枚留影石，也该重见天日了。"</span>
+
+<span class="narrator">窗外风起，吹向西北。</span>`
+},
+
+'T1-lyy-5': {
+  title: '龙吟渊·灵脉图纸',
+  text: `龙吟渊深处，地火焰炽，赤红的光在壁上跳动。▄▞伏在炼器台前，摊开一张泛黄的灵脉图纸。
+
+<span class="action">他蘸朱砂，在图纸角落画下一个三角形标记，笔顿了顿，又在一旁注了一行小字：</span>
+
+<div class="narrator" style="margin:8px 0;padding:8px 10px;border:1px dashed var(--border-bright);color:var(--gold);">"青岚灵脉自碧湖而起，经幽冥、过玄霜，汇聚于龙吟渊。然此非终点。灵脉尽头，上接某处。需血引。七人之血，方可启之。"</div>
+
+他将图纸折好放入袖中，声音沉如炉灰：<span class="dialogue">"若我活不过那一日……愿后来人，能看见它。"</span>
+
+▄▞望向那团赤金烈焰，火光映着他的眼睛。许多念头在心底翻涌，他终究没有说出口——有些路，注定只能一个人走。
+
+他忽然开口，像是在对炉火说话，又更像是在自言自语：<span class="dialogue">"若我想追查灵脉的起点，碧湖岭矿工留下的日志，或许能补上最后一块拼图——▃▃▃▬那小子整日泡在矿洞里，去问问他便是。"</span>他顿了顿，又低声补了一句：<span class="dialogue">"至于星陨泽泽底，那枚留影石，自有它的去处。"</span>
+
+<span class="narrator">有些牺牲，从一开始就不被看见。</span>`
+},
+
+'T1-bhl-6': {
+  title: '碧湖岭·矿工日志',
+  demoText: `碧湖岭矿洞深处，一盏油灯忽明忽暗。▃▃▃▬蹲在石台前，翻弄着一册泛黄的矿工当值日志。
+
+其中一页被人撕去大半，仅残留一行字迹：
+
+<div class="narrator" style="margin:8px 0;padding:8px 10px;border:1px dashed var(--border-bright);color:var(--gold);">"……卯时七刻，西山有光，疑是地火喷发。然巡检之后，并无异样。"</div>
+
+▃▃▃▬将这一页折好收起，低声自语：<span class="dialogue">"卯时七刻……灵脉震动之前，西山就已经有光了？"</span>
+
+他抬笔在残页背面写下两行备忘：<span class="dialogue">"西山异象，需问幽冥涧的守涧人。"</span>又补一笔，<span class="dialogue">"玄霜谷的丹炉——▂▋的丹药，从来不只一味药那么简单。"</span>
+
+他抬头望向矿道深处，蓝色的灵光映着他平静的面容。他需要一个关键的地点——一个所有人都会在特定时刻聚集的地方。
+
+他合上日志，将残页收入怀中。有些事，他暂时不愿对任何人提起。
+
+<span class="narrator">他没有告诉任何人。有些事，他藏在心里已经很多年。</span>`,
+  text: `碧湖岭矿洞深处，一盏油灯忽明忽暗。▃▃▃▬蹲在石台前，翻弄着一册泛黄的矿工当值日志。
+
+其中一页被人撕去大半，仅残留一行字迹：
+
+<div class="narrator" style="margin:8px 0;padding:8px 10px;border:1px dashed var(--border-bright);color:var(--gold);">"……卯时七刻，西山有光，疑是地火喷发。然巡检之后，并无异样。"</div>
+
+▃▃▃▬将这一页折好收起，低声自语：<span class="dialogue">"卯时七刻……灵脉震动之前，西山就已经有光了？"</span>
+
+他抬笔在残页背面写下两行备忘：<span class="dialogue">"西山异象，需问幽冥涧的守涧人。"</span>又补一笔，<span class="dialogue">"玄霜谷的丹炉——▂▋的丹药，从来不只一味药那么简单。"</span>
+
+他抬头望向矿道深处，蓝色的灵光映着他平静的面容。作为复仇计划的总策划，他需要一个关键的地点——一个所有人都会在特定时刻聚集的地方。
+
+天机崖？▃▃▃▬笑了一下。早在五年前，他就已经找到了那个地方。
+
+<span class="narrator">他没有告诉任何人。这盘棋，从五年前就开始落了子。</span>`
+},
+
+// ─────────────────── T2 ───────────────────
+'T2-qlf-6': {
+  title: '青岚峰·傀儡替身术',
+  text: `血月当空。
+
+青岚峰藏书阁中，▃▃▃▬在油灯下摊开一册古卷，烛火摇曳，将他的影子在书页上拖得很长。
+
+他翻到记录"傀儡替身术"的一卷。其中一页被撕去大半，仅剩残页末尾一行边注：
+
+<div class="narrator" style="margin:8px 0;padding:8px 10px;border:1px dashed var(--border-bright);color:var(--gold);">"崖顶七人，天地为证。肉身可替，魂不可代。"</div>
+
+▃▃▃▬将这一页小心折好，收入袖中，低声道：<span class="dialogue">"写这句话的人，一百年前就算准了今日。这一局，从那一夜开始，就已布定。"</span>
+
+<span class="action">他望向窗外那轮血月，气息却极稳。</span>
+
+<span class="narrator">窗外血月无声。藏书阁里的灯，一夜未熄。</span>
+
+<div class="story-warn-lost">「物榜 · 傀儡替身术」——该物遗落在别处。此处残卷仅余灰烬，真本下落不明。</div>`
+},
+
+'T2-ymj-24': {
+  title: '幽冥涧·阵眼剑痕',
+  text: `血月幽光，渗入幽冥涧。
+
+▬▘▂蹲在封印大阵之前，指尖轻轻滑过阵眼，那道新鲜的剑痕清晰可感。身后，▂▄将青霄剑横在膝前，剑尖悬着一缕残余的剑气，细细辨认。
+
+<span class="dialogue">"封印是人为所毁。"</span>▬▘▂开口，<span class="dialogue">"阵眼上，是一道新剑痕。"</span>
+
+<span class="dialogue">"火属性的，"</span>▂▄皱眉，<span class="dialogue">"像▄▞的焚天剑诀——又不全是。"</span>
+
+▬▘▂沉默着，片刻之后才说：<span class="dialogue">"▄▞此刻在龙渊。若真是他，这时间，对不上。"</span>
+
+<span class="dialogue">"你信这话吗？"</span>▂▄收剑。
+
+<span class="dialogue">"我信的是天机子刻在天机崖上的那八个字。"</span>▬▘▂移开目光，<span class="dialogue">"七子归位——总有一天，我们都会站到那崖上去。"</span>
+
+<span class="dialogue">"那就等那一天。"</span>▂▄收剑入鞘。
+
+夜色里，两人各自离去。血月的光，在两人之间投下一道暗红的界线。
+
+<span class="narrator">血月之下，封印阵眼的剑痕微微泛光，像一只没有闭上的眼睛。</span>`
+},
+
+'T2-xsg-37': {
+  title: '玄霜谷·玉牌',
+  text: `玄霜谷药庐，丹炉幽蓝。
+
+▂▋正在炼丹。▘▂▮坐在一旁绕药线，目光却几次不经心地滑过▂▋的袖口——那里露出一角玉牌，似乎刻着什么字。
+
+<span class="dialogue">"师姐的这块玉牌……"</span>▘▂▮轻声，<span class="dialogue">"是哪来的？"</span>
+
+▂▋将玉牌掩回袖中：<span class="dialogue">"没什么，一块旧玉。"</span>
+
+▘▂▮没有再问。但她记住了那两个字——<span class="dialogue">"天机"</span>，那是祖父留下的遗物。▂▋手中，怎么会有？
+
+丹炉里幽蓝火焰跳动，药庐内一片沉默。两个女子各怀心事，都在等那个"高处"到来。
+
+<span class="narrator">幽蓝的炉火映着两个人的影子。谁也没有说破——那块玉牌，和一百年前的某个夜晚有关。</span>`
+},
+
+'T2-lyy-5': {
+  title: '龙吟渊·余烬',
+  text: `龙吟渊，锻造室中，炉火已熄大半。
+
+▄▞将炎阳佩投入余烬，火光瞬间涨起，化作赤金。
+
+他盯着光焰，低声说：<span class="dialogue">"若我活不到那一日……也愿有人，看见这份心思。"</span>
+
+窗外传来暗河的水声，潺潺不绝，倒映着岩壁的幽光。他从怀中摸出一只贴身玉瓶，握了握，又放回去——那里面是什么，他始终没说。
+
+<span class="action">案头搁着一枚暖玉坠子，是▂▋三年前炼好送他的。他从不离身，今夜却将它解下，轻轻放回匣中。</span>
+
+他站了许久，最后看了一眼炉火，转身走入夜色。
+
+<span class="narrator">炉火在他离开后，自己燃尽了最后一寸。</span>`
+},
+
+'T2-bhl-1': {
+  title: '碧湖岭·污染灵石',
+  text: `碧湖岭矿洞深处，▇▃独自巡查。
+
+他从石壁上抠下一块灵石，托在指间，灵石表面覆着一层极淡的暗红纹路——那是魔气，已经渗入了矿脉。
+
+▇▃的脸色沉下来，声音很轻：<span class="dialogue">"封印，撑不了太久……幽冥涧的魔气，正在浸入矿脉。"</span>
+
+他将灵石收入袖中，抬眼望向矿洞深处的黑暗。
+
+▇▃低声：<span class="dialogue">"明日，我还会再来一趟。这条矿脉，近来总是不让人安心。"</span>
+
+一百年前，他在这条矿脉深处，埋下过一个秘密。今日，那秘密似乎要开口说话了。
+
+<span class="narrator">矿洞深处的黑暗，安静得像是有了呼吸。</span>`
+},
+
+'T2-bhl-67': {
+  title: '碧湖岭·夜的跟随',
+  text: `碧湖岭矿洞入口，月色把两道影子拉得老长。▘▂▮敛了气息，远远缀在▃▃▃▬身后。
+
+▃▃▃▬没有回头，却先开了口：<span class="dialogue">"从玄霜谷跟到这儿，是▂▋让你来的？"</span>
+
+▘▂▮在他身后两步站定：<span class="dialogue">"她说你总往矿洞跑，在查些旧账。我想亲眼看看，你到底在挖什么。"</span>
+
+▃▃▃▬侧过身，月光照着他平静的侧脸：<span class="dialogue">"旧账么……百年前的账，谁也别想赖掉。你若真想弄明白，就看一看这条矿脉。"</span>
+
+他说完，转身向洞内走去。▘▂▮在原地站了一会儿，终究迈步跟上。灵石在矿壁上泛着微光，照着一前一后两道身影。
+
+洞外月色依旧。没有人知道他和她，在里面说了什么。
+
+<span class="narrator">矿洞深处，隐隐传来低语声，又被石壁吞没。</span>`
+},
+
+// ─────────────────── T3 ───────────────────
+'T3-qlf-12': {
+  title: '青岚峰·剑鸣',
+  text: `<span class="dialogue">"▄▞师兄不见了！"</span>
+
+主殿会议室的门被人猛地撞开。▬▘▂大步而入，衣袍上还沾着涧底的露气。
+
+▇▃从一堆案卷中抬起头，语气极平：<span class="dialogue">"详细说。"</span>
+
+▬▘▂：<span class="dialogue">"龙吟渊锻造室，炉火已经冷透。炎阳佩搁在余烬旁，案头那只玉瓶原封未动——还有▂▋送他的暖玉坠，也整整齐齐收在匣中，一尘不染。"</span>
+
+他顿了顿，声音沉下去：<span class="dialogue">"像是他亲自打点好了一切，才走的。走得从容，没有打斗，也没有人看到。"</span>
+
+▇▃放下笔，目光一沉：<span class="dialogue">"子时前后，谁最后见过他？"</span>
+
+▂▋垂眸片刻：<span class="dialogue">"昨夜我路过龙吟渊，远远见他站在暗河边，像是在等什么人。他回头望了我一眼……那眼神，我说不清。"</span>
+
+<span class="dialogue">"像是诀别？"</span>▇▃问。
+
+▂▋摇头，轻声：<span class="dialogue">"像是他终于想通了一件，压了很久很久的事。"</span>
+
+两人对视。殿外，一声剑鸣陡然而至——青岚峰护山大阵，异常启动了。
+
+<span class="narrator">护山大阵的剑鸣响彻山巅。那是一个信号——有人在叩击这宗门百年的根基。</span>`
+},
+
+'T3-ymj-4': {
+  title: '幽冥涧·赤色发丝',
+  text: `幽冥涧禁地边缘，▂▄独自弯腰搜寻。
+
+他在石缝间捻起一绺赤红的发丝，发梢带着焦痕，像是刻意遗留于此。
+
+▂▄对着月光细看，低声说：<span class="dialogue">"▄▞，不会无缘无故出现在这里……龙吟渊那边，究竟藏了什么？"</span>
+
+他抬头望向西北方向的云海——天机崖，就在那边。
+
+▂▄攥紧那绺发丝，目光渐渐沉定：<span class="dialogue">"七子归位……快了。"</span>
+
+<span class="narrator">涧底的风掠过他攥紧的指节。那绺红发在月光下，像是一枚烧红的烙铁。</span>`
+},
+
+'T3-xsg-7': {
+  title: '玄霜谷·清心丹未服',
+  demoText: `玄霜谷客房中，▘▂▮独坐窗前，指间轻捻着那枚清心丹。
+
+她没有服用。
+
+窗外的血月已落。但今夜发生的一切，让她心底提起了警惕——有些事，正在悄然发生。
+
+而这，或许只是开始。
+
+<span class="action">▘▂▮将清心丹放回袖中，指尖触及袖底那片碎玉。她尚未告诉任何人——天机崖上，她拾到过一枚半毁的日晷针，针尖所指，恰是卯时七刻。</span>
+
+她默默计算了一下时间。有些时刻，她等得住。
+
+<span class="narrator">一枚碎玉，一道残针，都在指向同一时刻。</span>`,
+text: `玄霜谷客房中，▘▂▮独坐窗前，指间轻捻着那枚清心丹。
+
+她没有服用。
+
+窗外的血月已落。但今夜发生的一切，让她心底提起了警惕——有些事，正在悄然发生。
+
+但这只是开始。
+
+<span class="action">▘▂▮将清心丹放回袖中，指尖触及袖底那片碎玉。她尚未告诉任何人——天机崖上，她拾到过一枚半毁的日晷针，针尖所指，恰是卯时七刻。</span>
+
+她默默计算了一下时间。那是轮回重启的时刻。她等得住。
+
+<span class="narrator">一枚碎玉，一道残针，都在指向同一时刻。</span>`
+},
+
+'T3-lyy-25': {
+  title: '龙吟渊·暗河倒影',
+  text: `龙吟渊深处，炉火冷透。▬▘▂独自站在锻造室前，看着案头那只未动过的玉瓶出神。
+
+他蹲下身，将一块碎玉轻轻放在炉边，低声说：<span class="dialogue">"天机崖……亏欠你的，今天先还一半。"</span>
+
+他直起腰，正要离开，脚步却忽然顿住。
+
+暗河的水面，映着一道极淡的倒影——像是有人在水下，又像是水光晃了晃。他屏息凝视半晌，倒影终究只是水波。
+
+<span class="dialogue">"是我多心了。"</span>他低声道，却把目光移向暗河上游的阴影，久久没有收回来。
+
+<span class="narrator">地下水声依旧。有些话，他没有对任何人说。</span>`
+},
+
+'T3-bhl-16': {
+  title: '碧湖岭·日志残页',
+  text: `碧湖岭矿洞深处，▃▃▃▬将一页泛黄的日志残页，从册中撕下，折好收入怀中。
+
+他走出矿洞，站在月光下，望向西北——天机崖的方向。
+
+他将残页重新展开，借着月色读了又读，眉头越拧越紧。残页背面，有人以细笔写过一行小字：
+
+<div class="narrator" style="margin:8px 0;padding:8px 10px;border:1px dashed var(--border-bright);color:var(--gold);">"崖上去的人，有的会站着回来，有的……不一定会。"</div>
+
+他看了很久，最后将这一行字小心遮去：<span class="dialogue">"前辈留的这句话，到底是记给谁的？"</span>
+
+迎面，他遇到了▇▃。
+
+▇▃刚从矿脉深处巡查出来，袖口沾着矿灰，指间还捻着一枚新取的灵石。
+
+▇▃驻足：<span class="dialogue">"▃▃▃▬，你脸色不好。"</span>
+
+▃▃▃▬垂眸，将残页收好：<span class="dialogue">"矿洞底下……今日总觉得有人来过。地上的脚印，多了几道。"</span>
+
+▇▃看了一眼他的神色，缓缓点头：<span class="dialogue">"夜深了，早些回去吧。山里的东西，一时半刻跑不掉。"</span>
+
+▃▃▃▬没有接话，只在心底想：跑不掉？▇▃——你说的究竟是矿脉里藏着的东西，还是百年前那些就该还清的账？
+
+<span class="narrator">月光下两道身影交错而过。谁都没有回头。</span>`
+},
+
+'T3-xyz-3': {
+  title: '星陨泽·留影石',
+  fragment: 1,
+  fragmentText: '碎片一：留影石影像——五人站在崖壁前',
+  text: `黄昏时分，▂▋独自一人来到星陨泽。她穿着深色的斗篷，斗篷的帽檐压得很低。
+
+沼泽中的雾气在暮色中呈现出诡异的紫红色。▂▋似乎对这里的地形很熟悉，她避开了所有看似坚实的地面，沿着一条隐秘的路径前行。
+
+<span class="action">在沼泽中心那座半沉的小岛上，她跪下身来，双手拨开泥土。</span>
+
+泥土下方，一枚拳头大小的石头散发着微弱的荧光。石头的表面刻满了细密的符文，是一种极古老的留影阵。
+
+<span class="dialogue">"天机子前辈……你果然在这里留了东西。"</span>
+
+▂▋将留影石捧起，注入灵力。石头的表面浮现出一幅模糊的影像——
+
+<span class="action">画面中，五个人影站在一处高耸入云的崖壁前。崖壁上刻着一个巨大的"天"字。五人的面目模糊不清，但可以看出他们正在举行某种仪式。</span>
+
+<span class="dialogue">"这是……"</span>▂▋的呼吸急促起来。<span class="dialogue">"天机崖。这就是天机崖的留影！"</span>
+
+她将留影石小心收好，目光复杂地望向远方。在那里，群山之巅，某处她从未到过的地方，或许就藏着一切的真相。
+
+<span class="narrator">留影石的光芒在她掌心跳动，像一颗不安的心脏。五个人影站在崖壁前的画面，在她脑海中反复回放。</span>`
+},
+
+'T3-tjy-14367': {
+  title: '天机崖·五人取线索',
+  text: `<span class="narrator">[此为天机崖解锁后的回溯卷宗]</span>
+
+五道灵光同时射向天际。▇▃、▂▋、▂▄、▃▃▃▬、▘▂▮——五人在同一时刻感应到了天机崖的召唤。
+
+天机崖隐藏在一片永恒的迷雾之中。崖壁高不见顶，上面的"天"字在雷云中若隐若现。
+
+<span class="dialogue">"天机子留下的考验……需要五个人同时破解。"</span>▂▋取出留影石对照，<span class="dialogue">"每个人需要找到属于自己的线索。"</span>
+
+五人分头行动。▇▃在崖壁东侧发现了一组古老的卦象；▂▋在西侧找到了第二枚留影石；▂▄在崖顶的裂缝中抽出了一卷帛书；▃▃▃▬在崖底的石碑上解读出了一段隐文；▘▂▮则在崖壁的一道暗缝中发现了一枚冰冷的玉环。
+
+<span class="dialogue">"所有的线索都指向同一个结论——"</span>▃▃▃▬的声音发颤，<span class="dialogue">"有人，从最开始，就在欺骗我们所有人。"</span>
+
+<span class="narrator">五人对视，风从崖顶呼啸而过，将他们的衣袍吹得猎猎作响。真相的轮廓，已经隐约可见。</span>`
+},
+
+// ─────────────────── T4 ───────────────────
+'T4-qlf-123': {
+  title: '青岚峰·▂▄之"死"',
+  text: `<span class="dialogue">"▂▄死了。"</span>
+
+▂▋闯入主殿。
+
+▇▃与▬▘▂同时抬头。▬▘▂：<span class="dialogue">"在哪里？"</span>
+
+▂▋：<span class="dialogue">"幽冥涧。"</span>
+
+众人赶赴幽冥涧。▂▄靠在封印石碑前，青霄剑插在胸口。
+
+▬▘▂蹲下验尸，面色渐渐凝重：<span class="dialogue">"真正死因是锁魂针从后颈刺入。剑伤，是死后伪造的。"</span>
+
+▇▃：<span class="dialogue">"锁魂针？药峰秘库的锁魂针？"</span>
+
+▂▋脸色苍白：<span class="dialogue">"锁魂针三枚，钥匙由我掌管……但三日前，▘▂▮借过钥匙。"</span>
+
+▇▃看向▬▘▂。▬▘▂面无表情。
+
+<span class="narrator">但▬▘▂心里清楚——▂▄没有死。他袖中的替身符，已被触发。此刻，真正的▂▄一定藏在某处。</span>
+
+而那枚锁魂针……▬▘▂摸了摸自己袖中另一根针。
+
+这根针，是他自己放的。`
+},
+
+'T4-ymj-1234': {
+  title: '幽冥涧·玉牌',
+  fragment: 2,
+  fragmentText: '碎片二：玉牌刻有"天机"二字',
+  text: `幽冥涧，封印碑前。
+
+▂▋蹲在▂▄"尸体"旁，趁▬▘▂转身之际，迅速从▂▄袖中抽出一枚玉牌——背面，刻着"天机"二字。
+
+她将玉牌藏入袖中，起身，神色如常：<span class="dialogue">"锁魂针……后颈刺入。"</span>
+
+▬▘▂没有看到这一幕。
+
+<span class="narrator">但幽冥涧角落的留影石，完整地记录了一切。▘▂▮后来发现它时，没有取出，只是默默收起。</span>
+
+▂▋低头看着▂▄的"尸体"，心中默念：下一个，该我了。
+
+<span class="action">她的舌下，早已含好那枚假死药。三天前，就备下了。</span>`
+},
+
+'T4-xsg-6': {
+  title: '玄霜谷·古籍',
+  text: `玄霜谷药庐中，▃▃▃▬翻阅古籍，烛火映着他专注的面容。
+
+他面前摊着一页纸，上面记录着他拼合起来的线索：
+
+- ▄▞图纸：<span class="dialogue">"灵脉上接某处"</span>
+- ▂▄剑上刻字：<span class="dialogue">"聚"</span>
+- 天机崖五人行动：所有人都在找同一个地方
+- 残页：<span class="dialogue">"卯时七刻，西山有光"</span>
+- 日晷针：指向卯时七刻
+
+▃▃▃▬看着这张纸，轻声道：<span class="dialogue">"卯时七刻……天机崖。现在只差最后一个坐标了——七人齐。"</span>
+
+<span class="action">他落笔，写下最后一个字，然后将纸折好收入怀中。</span>
+
+<span class="narrator">烛火一跳。纸页合拢的瞬间，玄霜谷外响起一声若有若无的钟鸣。</span>`
+},
+
+'T4-lyy-5': {
+  title: '龙吟渊·▄▞之"尸"仍在',
+  text: `龙吟渊深处，▄▞的"尸体"仍静静靠在岩壁上。
+
+无人再来查看。宗门上下，都因▂▄的死讯乱了阵脚。
+
+<span class="narrator">但暗河的水声里，有人在呼吸。真正的▄▞将一切都收入眼底——▬▘▂放下的碎玉还在身侧，而所有人，都在朝天机崖的方向汇聚。</span>`
+},
+
+'T4-bhl-7': {
+  title: '碧湖岭·石门',
+  text: `碧湖岭矿洞巷道深处，▘▂▮提着一盏小灯，独自前行。矿壁上的灵石发出微光，照亮她的路。
+
+巷道尽头，一处被碎石掩埋的入口。
+
+<span class="action">▘▂▮蹲下，将碎石扒开——露出一块刻着"天机"二字的石门。</span>
+
+她伸手抚过石门，低声道：<span class="dialogue">"祖父……你留下的东西，我会找到的。"</span>
+
+她站起身，将石门重新掩好。
+
+<span class="narrator">现在还不是时候。要等七个人都到天机崖——那一天，快了。</span>`
+},
+
+// ─────────────────── T5 ───────────────────
+'T5-qlf-1236': {
+  title: '青岚峰·审讯',
+  text: `主殿审讯▂▋。
+
+▇▃：<span class="dialogue">"锁魂针失窃，你如何解释？"</span>
+
+▂▋：<span class="dialogue">"三日前，▘▂▮借过药库钥匙。"</span>
+
+▘▂▮不在场。但她的传讯玉简在侧：她取的是冰魄草，未动锁魂针。
+
+▃▃▃▬调出秘库记录：<span class="dialogue">"确有借取记录……但锁魂针库存未变。"</span>
+
+▂▋起身：<span class="dialogue">"我去药庐取记录玉简！我有证据！"</span>
+
+▇▃命▬▘▂陪同前往。
+
+<span class="action">一刻钟后，▬▘▂独自返回：</span><span class="dialogue">"▂▋死了。七窍流血，彼岸花毒。尸体尚温，应是一刻内毙命。我全程跟随，只在药庐外等候片刻。"</span>
+
+▃▃▃▬放下笔，声音平静：<span class="dialogue">"彼岸花毒发作，需半盏茶。若她是在主殿时中的毒……"</span>
+
+所有人看向▂▋用过的茶杯——杯已碎，碎片散落一地。
+
+<span class="narrator">▬▘▂看着那堆碎片，心里知道：▂▋没有死。她舌下含着解药，那杯子，是她自己摔的。</span>
+
+只差最后一步了。`
+},
+
+'T5-ymj-4': {
+  title: '幽冥涧·▂▄"遗体"未动',
+  text: `幽冥涧石室。▂▄的"遗体"仍靠在封印石碑前，青霄剑插在胸口。
+
+无人再来查看。▂▋的死讯，让所有人都无暇顾及这具"尸体"。
+
+<span class="narrator">而在石室上方的岩缝里，一双眼睛正透过缝隙注视着这里。真正的▂▄按着胸口的替身符，耐心地等着——等到所有人都以为他死了，他才能活。</span>
+
+等到卯时七刻。`
+},
+
+'T5-xsg-3': {
+  title: '玄霜谷·药庐',
+  text: `玄霜谷药庐内，▂▋的"尸体"倒在地上，七窍渗着血迹。丹炉仍在燃烧，映着她苍白的侧脸。
+
+<span class="narrator">但她的舌下，含着一枚解药——彼岸花毒的解药，是她自己配的。</span>
+
+她暂时不能动。要等所有人离开。
+
+天机崖，卯时七刻。她会去的。
+
+<span class="narrator">炉火噼啪作响，像是倒数的钟。</span>`
+},
+
+'T5-xsg-7': {
+  title: '玄霜谷·碎玉刻痕',
+  fragment: 3,
+  fragmentText: '碎片三：碎玉上刻有"崖"字',
+  text: `玄霜谷药庐外，暮色四合。▘▂▮独自坐在寒泉旁，指间捏着那枚她藏了很久的碎玉。
+
+她没有告诉任何人——天机崖上，除了那枚断裂的日晷针，她还拾到了这块碎玉。
+
+碎玉上刻着一个字。
+
+<span class="dialogue">"'崖'。"</span>▘▂▮低声念出。
+
+她的手指抚过那个字。刻痕很深，笔力遒劲，与天机崖上的刻字出自同一人手笔——她祖父，天机子。
+
+<span class="action">她将碎玉与袖底那枚玉牌残片比对。断面，完美吻合。</span>
+
+<span class="dialogue">"碎玉、日晷针、纸条……都在指向同一时刻。"</span>▘▂▮的声音平静得出奇，<span class="dialogue">"卯时七刻。天机崖。"</span>
+
+她抬眼望向西北，目光穿过暮色，落在云海之上。
+
+<span class="narrator">一枚碎玉，一道残针——从一开始，祖父就把通向终局的路，铺在了他们脚下。</span>`
+},
+
+'T5-lyy-5': {
+  title: '龙吟渊·▄▞"遗体"未动',
+  text: `龙吟渊。▄▞的"尸体"仍靠在岩壁上，▬▘▂放下的碎玉还静静躺在身侧。
+
+没有人来取走它。宗门上下，正为▂▋的死讯而喧哗。
+
+<span class="narrator">暗河的水声里，真正的▄▞睁开眼。他知道——下一个登上天机崖的，就是他自己。</span>`
+},
+
+'T5-bhl-7': {
+  title: '碧湖岭·▘▂▮独处',
+  text: `碧湖岭矿洞最深处。▘▂▮独自坐在那块刻有"天机"的石门前，掌心的玉牌碎片微微发光。
+
+她把玩着碎片，低声自语：<span class="dialogue">"祖父百年前预言七子归位。如今，叛徒将死，亡者可归，恩怨将了。"</span>
+
+她抬起头，目光穿过矿壁，仿佛能看到百里外的天机崖。
+
+<span class="dialogue">"卯时七刻。一个都不能少。"</span>
+
+<span class="narrator">她将玉牌碎片收回袖底，起身离开矿洞。月光下，她的影子被拉得很长——像是一柄即将出鞘的剑。</span>`
+},
+
+// ─────────────────── T6 ───────────────────
+'T6-qlf-16': {
+  title: '青岚峰·两个▬▘▂',
+  text: `宗门法器全部失灵。▇▃命▬▘▂去龙吟渊检查龙脉核心。
+
+▬▘▂领命离去。一炷香后——
+
+▃▃▃▬突然道：<span class="dialogue">"掌门，我看到▬▘▂长老在主殿侧室翻书架。"</span>
+
+▇▃：<span class="dialogue">"他明明去了龙吟渊。"</span>
+
+▃▃▃▬：<span class="dialogue">"我看到的是▬▘▂。侧室书架被翻过，地上散落着一堆卷宗。"</span>
+
+两人冲入侧室——空无一人。书架有明显的翻动痕迹。
+
+半个时辰后，龙吟渊传来消息：▬▘▂尸体被发现，心口插着冰魄针，死亡时间已超六个时辰。
+
+▇▃：<span class="dialogue">"六个时辰前……他正与我们在此议事。"</span>
+
+▃▃▃▬缓缓道：<span class="dialogue">"那么，我们刚才看到的——是谁？"</span>
+
+他从袖中取出三样东西：
+
+<div class="narrator" style="margin:8px 0;padding:8px 10px;border:1px dashed var(--border-bright);color:var(--gold);">1. 矿工日志残页："卯时七刻，西山有光"<br>2. 断裂的日晷针："天机子·断针示后人"<br>3. 泛黄的纸条："天机崖·卯时七刻·七人齐"</div>
+
+▃▃▃▬将三样东西摊在▇▃面前：<span class="dialogue">"我没告诉过任何人，我在天机崖，找到过这三样东西。"</span>
+
+▇▃面色剧变：<span class="dialogue">"天机崖？！你去过天机崖？！"</span>
+
+▃▃▃▬：<span class="dialogue">"不止我去过。▂▄去过，▂▋去过，▘▂▮去过……你也去过。百年前，你就去过。"</span>
+
+▇▃后退一步，撞在书架上。
+
+<span class="narrator">百年前的秘密——那个弑师的夜晚——终于，要浮出水面了。</span>`
+},
+
+'T6-ymj-4': {
+  title: '幽冥涧·▂▄"遗体"未动',
+  text: `幽冥涧石室。▂▄的"遗体"仍靠在封印石碑前。
+
+<span class="narrator">无人再来查看。龙吟渊传来▬▘▂的死讯，整个宗门陷入恐慌——"▬▘▂"方才还在主殿议事，尸体却已在龙吟渊躺了六个时辰。那他们看到的▬▘▂，是谁？</span>
+
+真正的▂▄藏身暗处，将这一切收入眼底。
+
+<span class="action">他摸出那枚与▬▘▂同批的替身符，轻轻摩挲。</span>
+
+<span class="dialogue">"▬▘▂前辈……你也等不下去了。"</span>他低声道，<span class="dialogue">"天机崖，卯时七刻。所有人都会到齐。"</span>
+
+他等了百年，就等这一天。`
+},
+
+'T6-xsg-3': {
+  title: '玄霜谷·▂▋"遗体"未动',
+  text: `玄霜谷药庐。▂▋的"遗体"躺在丹炉旁，七窍血迹未干。
+
+<span class="narrator">子时，药庐灵火熄灭的瞬间，"遗体"的眼睫微微颤动。舌下的解药，已含了整整一日。</span>
+
+她缓缓睁开眼，无声地坐起，擦去脸上的血渍。
+
+<span class="action">她将早已备好的夜行衣披上，从暗格中取出那枚天机玉牌残片，放入怀中。</span>
+
+<span class="dialogue">"▬▘▂死了？"</span>她低声道，<span class="dialogue">"不……他不会死。他和我一样，都在等那一天。"</span>
+
+天机崖，卯时七刻。她会去的。
+
+<span class="narrator">炉火噼啪一声，复又归于沉寂。</span>`
+},
+
+'T6-lyy-25': {
+  title: '龙吟渊·两具"尸体"',
+  text: `龙吟渊深处，▬▘▂的"尸体"靠在▄▞的"尸体"旁边。两具"尸体"一左一右，心口各有伤痕，地下暗河从两人之间流过。
+
+但▬▘▂没有死。
+
+他袖中藏着一枚替身符——和▂▄用的是同一批。
+
+他听着暗河的水声，等待最后的时间到来。
+
+天机崖，卯时七刻。所有人都会到齐。
+
+<span class="narrator">他等了百年，就等这一天。</span>`
+},
+
+'T6-bhl-7': {
+  title: '碧湖岭·▘▂▮独处',
+  text: `碧湖岭。▘▂▮站在那扇刻有"天机"的石门前，月光如水。
+
+她缓缓伸手，抚过石门上"天机"二字。
+
+<span class="dialogue">"▬▘▂前辈也'死'了。"</span>她低声道，<span class="dialogue">"五具'尸体'，五枚替身符。百年前你们欠下的债，今夜终于要还了。"</span>
+
+她收回手，从袖中取出那枚断裂的日晷针，针尖指向卯时七刻。
+
+<span class="action">她将日晷针收入怀中，转身离去。身影没入夜色。</span>
+
+<span class="narrator">竹林沙沙作响，像是在低语，又像是在倒计时。天亮之前，七人将齐天机崖。</span>`
+},
+
+// ─────────────────── T7 ───────────────────
+'T7-tjy-1234567': {
+  title: '天机崖·七子归位',
+  isFinal: true,
+  text: `卯时七刻。
+
+天机崖之巅，晨光初破云海。崖壁上"七子归位，轮回重启"八个大字，在晨曦中泛起金光。
+
+七人并肩立于崖顶——
+
+▄▞、▂▄、▂▋、▬▘▂，"死"而复生，从四个方向走来。▇▃被▃▃▃▬押着，面色灰白。▘▂▮站在石壁前，面纱未摘。
+
+▃▃▃▬将手中的三样证据，摊开在所有人面前。
+
+<span class="dialogue">"我第一个死，所以最安全。龟息丹假死，傀儡替身替我受死。"</span>▄▞道。
+
+<span class="dialogue">"幽冥涧那个'▂▄'，是我的替你符。真正的我，一直活着。"</span>▂▄道。
+
+<span class="dialogue">"彼岸花毒，是我自己配的。解药含在舌下。那茶杯，是我自己摔的。"</span>▂▋道。
+
+<span class="dialogue">"我等了百年。我早知道▇▃弑师夺位时，用过锁魂针。所以我一直带着一枚锁魂针——为了在最后，证明当年的真相。"</span>▬▘▂道。
+
+▃▃▃▬：<span class="dialogue">"五位天机子后人，加上▬▘▂前辈卧底百年。我们，等了太久。"</span>
+
+▇▃忽然狂笑：<span class="dialogue">"你们以为赢了？你们以为就凭你们几个，就能撼动我青岚宗百年的根基？"</span>
+
+▘▂▮抬手，掀开面纱，露出一张与天机子七分相似的脸。
+
+<span class="dialogue">"祖父……我来讨债了。"</span>
+
+地面，阵纹亮起。百年前天机子刻下的预言——"七子归位，轮回重启"——八个字，在今日全部应验。
+
+轮回大阵启动。▘▂▮的声音在阵中回荡：
+
+<span class="dialogue">"百年前，你们弑我祖父，篡改天道。今日，我以七人之魂献祭，复活天机子！你们所有人——都是祭品！"</span>
+
+▄▞：<span class="dialogue">"你——你要献祭所有人？！"</span>
+
+▘▂▮：<span class="dialogue">"包括我。天机子归来，万古如新。"</span>
+
+阵法，吞噬一切。
+
+阵眼中心，所有人被阵法锁住。
+
+而你——一直在旁记录这一切的弟子——额头浮现出天机印的微光。
+
+你记起来了。百年前飞升时刻，天雷落下，你将自己的魂魄一分为二，投入轮回。
+
+你早知道会被背叛。你也早知道，会有一场献祭。
+
+你用百年布下一局，连你自己也无法预测——这局棋走到最后，你会如何选择。
+
+<div class="narrator" style="margin:8px 0;padding:8px 10px;border:1px dashed var(--border-bright);color:var(--gold);">你是天机子。你是一切的开端，也是一切的终结。</div>
+
+三条路——
+
+一、助▘▂▮：你以天机子身份，助她完成阵法。天机子复活——你回到肉身，屠尽叛徒，重掌青岚。但你永堕心魔。复活的，只是执念，曾经的本心已失。
+
+二、破阵法：你以天机印之力，震碎轮回阵。你承认历史不可追，放过所有人，也放过自己。▇▃被废修为，▘▂▮被囚禁，▄▞、▂▄、▂▋、▃▃▃▬重建宗门。但真相，永不公开。百年恩怨，埋入黄土。
+
+三、以身补阵：你不复活，不杀人，不原谅。你将自己最后一缕魂魄，注入阵眼，补全轮回裂隙。所有人活下来。你——魂飞魄散。
+
+阵光散去前，你听到▃▃▃▬笔尖落在竹简上的声音：
+
+<div class="narrator" style="margin:8px 0;padding:8px 10px;border:1px dashed var(--border-bright);color:var(--gold);">《仙门诡事·卷一》终<br>七子轮回案，无人生还，无人无辜。<br>唯见案头新芽破土，不知何人所种。<br>——或许，这就是下一卷的开端。</div>
+
+你闭上眼。
+
+青岚峰上，日出如常。`
+},
+
+// ─────────── 空地点查询 ───────────
+'T3-xsg-7_empty': { title: '玄霜谷·▘▂▮', text: '▘▂▮独自坐在玄霜谷的角落里，面色苍白。她的眼神空洞，似乎在想着什么很远的事情。<span class="narrator">她没有注意到你的到来。或者说，她看到了，但不想说话。</span>' },
+};
+
+// 默认的空查询回复
+// ============================================================
+//  游戏状态
+// ============================================================
+const SAVE_KEY = 'xianmen_gushi_save_v1';
+const ARCHIVE_NAME = '尘封案牍';
+
+// ============================================================
+//  Demo 演示版模式
+//  - 开启时：T4 及以后的案卷（含终局）一律封存；标记 demoHidden 的
+//    案卷一并封存（死法、假死、杀人动机、结局等关键剧情不对外展示）。
+//    查询被封存案卷时提示「该案卷已被隐藏，请过段时日再来查阅」。
+//  - 部分案卷提供净化版正文（demoText），删去敏感剧透，保留日常情节。
+//  - 游戏内输入「demo」可临时切换本开关（仅供演示调试，不写入存档）。
+// ============================================================
+let DEMO_MODE = true;
+
+// 开发者模式密码验证阶段：输入「开发」后，需输入正确密码方可开启
+let devPassStage = false;
+
+let gameState = {
+  username: '',
+  isDev: false,
+  fragments: [false, false, false], // 碎片1,2,3
+  tjyUnlocked: false,
+  unlockedLocations: {}, // 地点编号 -> 已解锁
+  unlockedCharacters: {}, // 人物编号 -> 已解锁
+  names: {}, // 人物代号 -> 玩家自定义名字
+  files: {}, // 已解锁案卷编号 -> true
+  itemOrigin: {}, // 物品代码 -> 原属人物代号（0 = 未定）
+  itemHolder: {}, // 物品代码 -> 现属人物代号（0 = 未定）
+  inboxDelivered: [], // 已送达消息id
+  queryCount: 0,
+  queryHistory: [],
+  inputHistory: [],
+  inputHistoryIndex: -1
+};
+
+// 系统阶段性推送的消息
+const INBOX = [
+  { id: 0, stage: () => true, from: '档案管理处', text: '欢迎入职尘封案牍。输入 list 查看现有案卷编号，输入 inbox 随时回看消息。' },
+  { id: 1, stage: (g) => Object.keys(g.files).length >= 1, from: '档案管理处', text: '你已查阅了第一份案卷。案卷中的人物均以代号出现，可用 name<代号><名字> 为它们命名，便于推理。' },
+  { id: 2, stage: (g) => g.fragments.filter(Boolean).length >= 1, from: '档案管理处', text: '你发现了一片碎片线索。传闻有些隐秘地点，唯有集齐碎片方能显现。' },
+  { id: 3, stage: (g) => Object.keys(g.files).filter(k => !isDemoHiddenKey(k)).length >= Math.ceil(visibleStoryKeys().length / 2), from: '档案管理处', text: '案卷已翻阅过半。试着比对不同时间下同一地点、同一人物留下的记录。' },
+  { id: 4, stage: (g) => g.tjyUnlocked, from: '档案管理处', text: '碎片齐聚，隐藏地点已显现。查阅文件列表（list）可找到属于它的案卷。' },
+  { id: 5, stage: (g) => g.tjyUnlocked && !!g.files['T7-tjy-1234567'], from: '档案管理处', text: '最后一卷已阅毕。所有谜底，尽在终局。' }
+];
+
+// ============================================================
+//  存档系统（自动存档 + save 本地存档）
+// ============================================================
+function saveGame() {
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify(gameState));
+  } catch (e) { /* 存档失败不影响游戏 */ }
+}
+
+function loadGame() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    Object.keys(saved).forEach(k => {
+      if (k !== 'inputHistoryIndex') gameState[k] = saved[k];
+    });
+    // 游戏开始时默认关闭开发者模式（即使旧存档曾开启过）
+    gameState.isDev = false;
+    // 键名迁移：老版本存档中的旧编号对应新键，保证“已查阅”状态不丢失
+    const KEY_ALIASES = {
+      'T3-bhl-6': 'T3-bhl-16',
+      'T4-qlf-12': 'T4-qlf-123',
+      'T4-ymj-34': 'T4-ymj-1234',
+      'T5-qlf-126': 'T5-qlf-1236'
+    };
+    Object.entries(KEY_ALIASES).forEach(([oldKey, newKey]) => {
+      if (gameState.files[oldKey] && !gameState.files[newKey]) {
+        gameState.files[newKey] = true;
+        delete gameState.files[oldKey];
+      }
+    });
+  } catch (e) { /* 读档失败则使用默认状态 */ }
+}
+
+function saveToLocalFile() {
+  saveGame();
+  try {
+    const blob = new Blob([JSON.stringify(gameState, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = '仙门诡事_存档.json';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(a.href);
+    }, 200);
+    addSystemEntry('✔ 存档已保存至本地：' + new Date().toLocaleString());
+  } catch (e) {
+    addErrorEntry('存档导出失败：' + e.message);
+  }
+}
+
+// 重置全部进度（仅调试模式可用）
+function resetAllProgress() {
+  gameState.fragments = [false, false, false];
+  gameState.tjyUnlocked = false;
+  gameState.unlockedLocations = {};
+  gameState.unlockedCharacters = {};
+  gameState.names = {};
+  gameState.files = {};
+  gameState.itemOrigin = {};
+  gameState.itemHolder = {};
+  gameState.inboxDelivered = [];
+  gameState.queryCount = 0;
+  gameState.queryHistory = [];
+  gameState.inputHistory = [];
+  gameState.inputHistoryIndex = -1;
+  try {
+    localStorage.removeItem(SAVE_KEY);
+  } catch (e) { /* 忽略 */ }
+  saveGame();
+  renderLocations();
+  renderCharacters();
+  updateProgress();
+  const log = document.getElementById('queryLog');
+  if (log) log.innerHTML = '';
+  renderWelcome();
+  addSystemEntry('🛠 已清空全部进度，存档已重置。（用户名与调试模式保留）');
+}
+
+// ============================================================
+//  初始化
+// ============================================================
+function init() {
+  loadGame();
+  renderLocations();
+  renderCharacters();
+  updateProgress();
+  if (gameState.username) {
+    renderWelcome();
+    addSystemEntry('欢迎回来！' + gameState.username);
+    checkInbox();
+  } else {
+    document.getElementById('loginModal').classList.add('active');
+    document.getElementById('usernameInput').focus();
+  }
+  document.getElementById('queryInput').focus();
+}
+
+function doLogin() {
+  const input = document.getElementById('usernameInput');
+  const un = input.value.trim();
+  if (!un) return;
+  gameState.username = un;
+  saveGame();
+  document.getElementById('loginModal').classList.remove('active');
+  if (document.getElementById('storyArea').children.length === 0) renderWelcome();
+  addSystemEntry('欢迎！' + un);
+  checkInbox();
+  document.getElementById('queryInput').focus();
+}
+
+function renderLocations() {
+  const container = document.getElementById('locationList');
+  container.innerHTML = '';
+  Object.entries(LOCATIONS).forEach(([code, name]) => {
+    let locked = !gameState.unlockedLocations[code] || (code === 'tjy' && !gameState.tjyUnlocked);
+    const div = document.createElement('div');
+    div.className = 'location-item' + (locked ? ' locked' : '');
+    div.id = 'loc-' + code;
+    div.innerHTML = locked
+      ? '？？？ 🔒'
+      : `<span class="loc-code">${code.toUpperCase()}</span><span class="loc-name">${name}</span>`;
+    container.appendChild(div);
+  });
+}
+
+function renderCharacters() {
+  const container = document.getElementById('characterList');
+  container.innerHTML = '';
+  Object.entries(CHARACTERS).forEach(([num, char]) => {
+    const locked = !gameState.unlockedCharacters[num];
+    const div = document.createElement('div');
+    div.className = 'character-item' + (locked ? ' locked' : '');
+    const named = gameState.names[num] ? escapeHtml(gameState.names[num]) : '';
+    div.innerHTML = locked
+      ? `<span class="char-num">${num}</span>？？？ 🔒`
+      : `<span class="char-num">${num}</span>${named ? `<span class="char-name">${named}</span>` : ''}`;
+    container.appendChild(div);
+  });
+}
+
+// ============================================================
+//  物品线索面板
+// ============================================================
+// 已获得物品：出现在任一已查阅案卷正文中的物品
+function obtainedItemCodes() {
+  const hit = {};
+  Object.keys(gameState.files).forEach(k => {
+    const s = STORIES[k];
+    if (!s || !s.text) return;
+    Object.keys(ITEMS).forEach(code => {
+      if (!hit[code] && s.text.indexOf(ITEMS[code].name) !== -1) hit[code] = true;
+    });
+  });
+  return hit;
+}
+
+// 人物代号的展示（未定义则显示【n】；n=0 显示未定）
+function charLabel(n) {
+  if (!n) return '未定';
+  if (gameState.names[n]) return escapeHtml(gameState.names[n]);
+  return '【' + n + '】';
+}
+
+function renderItems() {
+  const box = document.getElementById('itemList');
+  if (!box) return;
+  const hits = obtainedItemCodes();
+  const codes = Object.keys(hits);
+  if (codes.length === 0) {
+    box.innerHTML = '<div style="color:var(--text-dim);font-size:12px;">暂无物品线索。</div>';
+    return;
+  }
+  codes.sort();
+  box.innerHTML = codes.map(code => {
+    const it = ITEMS[code];
+    const ori = gameState.itemOrigin[code] || 0;
+    const hol = gameState.itemHolder[code] || 0;
+    const lost = LOST_ITEMS[code] ? '<div class="item-tag" style="color:var(--red)">该物遗落在别处</div>' : '';
+    return `<div class="item-line">
+      <span class="item-name">${escapeHtml(it.name)} <code style="color:var(--purple);font-size:11px;">${code.toUpperCase()}</code></span>
+      <span class="item-tag">原属：${charLabel(ori)}</span>
+      <span class="item-tag">现属：${charLabel(hol)}</span>${lost}
+    </div>`;
+  }).join('');
+}
+
+function renderWelcome() {
+  const area = document.getElementById('storyArea');
+  area.innerHTML = `
+    <div class="welcome-block">
+      <p>尘封案牍，收录仙门秘辛之地。此处封存着历代案卷。</p>
+      <p>案卷记载：某仙门之内，接连发生"死亡"事件。然而诡异的是，死者的遗体上找不到任何魂魄离去的痕迹。是凶杀？是幻术？还是…… </p>
+      <p>案卷中的时间与人物均以编号呈现，地点以高亮标注为重点。你的职责，是逐一解锁案卷，比对编号，推理出真相的全貌。</p>
+      <p>输入 <span class="highlight">list</span> 查看案卷列表；输入 <span class="highlight">inbox</span> 查看消息；输入 <span class="highlight">帮助</span> 查看指令指南。</p>
+      <p style="color:var(--text-dim);font-size:13px;margin-top:12px;">※ 注意收集散落各处的碎片线索。集齐三枚碎片，将解锁被隐藏的关键地点。</p>
+      <p style="color:var(--red);font-size:13px;margin-top:12px;">※ 当前为 Demo 演示版，剧情及逻辑尚未完善，敬请谅解。</p>
+      <p style="color:var(--red);font-size:13px;margin-top:12px;">※ 当前为 Demo 演示版：仅开放部分前期案卷，后期案卷请过段时日再来查阅。</p>
+    
+    
+      </div>
+  `;
+}
+
+// ============================================================
+//  查询逻辑
+// ============================================================
+// Demo 演示版：判断某案卷键是否被封存（T4 及以后一律封存；其余看 demoHidden 标记）
+function isDemoHiddenKey(qk) {
+  if (!DEMO_MODE) return false;
+  const t = String(qk).slice(0, 2);
+  if ( t === 'T5' || t === 'T6' || t === 'T7') return true;
+  const s = STORIES[qk];
+  return !!(s && s.demoHidden);
+}
+
+// Demo 演示版：当前对玩家开放的案卷键（列表与计数均以此为准）
+function visibleStoryKeys() {
+  return Object.keys(STORIES).filter(k => !k.endsWith('_empty') && !isDemoHiddenKey(k)).sort();
+}
+
+function processQuery(input) {
+  // 指令拼音首字母别名（忽略大小写）：XX=消息(INBOX)、ZT=状态、LB=文件列表(LIST)、QK=清空、BC=保存(SAVE)
+  const ALIASES = { xx: 'inbox', zt: '状态', lb: 'list', qk: '清空', bc: 'save' };
+  let trimmed = input.trim();
+  const aliasKey = trimmed.toLowerCase();
+  if (ALIASES[aliasKey]) trimmed = ALIASES[aliasKey];
+
+  // 开发者密码验证阶段：等待输入密码，密码错误则禁止开启开发者模式
+  if (devPassStage) {
+    devPassStage = false;
+    if (trimmed === '02') {
+      gameState.isDev = true;
+      saveGame();
+      addSystemEntry('🛠 开发者调试模式已开启。此模式下输入"清空"将重置全部进度。');
+    } else {
+      addSystemEntry('❌ 密码错误，禁止开启开发者模式。');
+    }
+    return;
+  }
+
+  // 帮助命令（或 bz）
+  if (trimmed === '帮助' || trimmed.toLowerCase() === 'help' || trimmed.toLowerCase() === 'bz') {
+    document.getElementById('helpModal').classList.add('active');
+    return;
+  }
+
+  // 状态命令
+  if (trimmed === '状态') {
+    addStatusEntry();
+    return;
+  }
+
+  // 开发者调试模式（隐藏指令，不出现在任何游戏内提示中）
+  // 开启需先通过密码验证（密码 02）；密码错误则本次禁止开启
+  if (trimmed === '开发') {
+    if (gameState.isDev) {
+      gameState.isDev = false;
+      saveGame();
+      addSystemEntry('开发者调试模式已关闭。');
+      return;
+    }
+    devPassStage = true;
+    addSystemEntry('🛠 请输入开发者密码以开启调试模式：');
+    return;
+  }
+
+  // Demo 演示模式开关（隐藏指令，仅供演示调试，不写入存档）
+  if (trimmed.toLowerCase() === 'demo') {
+    DEMO_MODE = !DEMO_MODE;
+    addSystemEntry(DEMO_MODE
+      ? '🎬 Demo 演示模式已开启：关键案卷已封存，仅开放部分前期案卷。'
+      : 'Demo 演示模式已关闭：全部案卷恢复开放（仅供演示调试）。');
+    return;
+  }
+
+  // 清空命令（调试模式下重置全部进度）
+  if (trimmed === '清空') {
+    if (gameState.isDev) {
+      resetAllProgress();
+    } else {
+      renderWelcome();
+    }
+    return;
+  }
+
+  // name命令：name<代号><名字>，为代号人物设定名字
+  const nameMatch = trimmed.match(/^name(\d)\s*(.+)$/i);
+  if (nameMatch) {
+    const num = nameMatch[1];
+    if (!CHARACTERS[num]) {
+      addErrorEntry('无效的人物代号。代号范围：1-7');
+      return;
+    }
+    const nm = nameMatch[2].trim();
+    gameState.names[num] = nm;
+    saveGame();
+    renderCharacters();
+    addSystemEntry(`已将人物代号【${num}】命名为「${escapeHtml(nm)}」。今后案卷中该人物将以「${escapeHtml(nm)}」指代。`);
+    return;
+  }
+
+  // list命令：文件列表
+  if (trimmed.toLowerCase() === 'list') {
+    showFileList();
+    return;
+  }
+
+  // inbox命令：消息列表
+  if (trimmed.toLowerCase() === 'inbox') {
+    showInbox();
+    return;
+  }
+
+  // save命令：存档到本地
+  if (trimmed.toLowerCase() === 'save') {
+    saveToLocalFile();
+    return;
+  }
+
+  // 物品归属标记：item<代码> <原属> <现属>，如 item lmt 5 4（0 = 未定/清除）
+  const itemMark = trimmed.match(/^item\s+([a-z]+)\s+([0-7])\s+([0-7])$/i);
+  if (itemMark) {
+    const code = itemMark[1].toLowerCase();
+    if (!ITEMS[code]) {
+      addErrorEntry('无效的物品代码。可查看右侧「物品线索」中的代码。');
+      return;
+    }
+    if (!obtainedItemCodes()[code]) {
+      addErrorEntry('该物品尚未获得，无法标记归属。');
+      return;
+    }
+    const ori = +itemMark[2];
+    const hol = +itemMark[3];
+    gameState.itemOrigin[code] = ori;
+    gameState.itemHolder[code] = hol;
+    saveGame();
+    renderItems();
+    addSystemEntry(`📍 物品线索标记：${ITEMS[code].name} — 原属 ${charLabel(ori)} / 现属 ${charLabel(hol)}`);
+    return;
+  }
+
+  // 物品解读：输入物品首字母编号查看解读（忽略大小写）
+  const itemMatch = trimmed.match(/^(?:查询\s*)?([a-z]+)$/i);
+  if (itemMatch) {
+    const code = itemMatch[1].toLowerCase();
+    if (ITEMS[code]) {
+      // 仅当该物品已在已查阅案卷中出现时才开放解读
+      const unlocked = Object.keys(gameState.files).some(k => {
+        const s = STORIES[k];
+        return s && s.text && s.text.indexOf(ITEMS[code].name) !== -1;
+      });
+      if (!unlocked) {
+        addErrorEntry('该物品尚未在已查阅的案卷中出现，暂无解读。');
+        return;
+      }
+      const it = ITEMS[code];
+      addSystemEntry(`📖 物品解读 · ${it.name}<br><span class="narrator">${it.text}</span>`);
+      if (LOST_ITEMS[code]) {
+        addSystemEntry(`<div class="story-warn-lost">⚠ 该物遗落在别处：${LOST_ITEMS[code]}</div>`);
+      }
+      return;
+    }
+  }
+
+  // 解析查询（可直接输入 T1-qlf-14，也可带前缀"查询"，忽略大小写）
+  const match = trimmed.match(/^(?:查询\s*)?T(\d)-([a-z]+)-(\d+)$/i);
+  if (!match) {
+    addErrorEntry('未知指令，请检查格式。输入 help 查看指令列表');
+    return;
+  }
+
+  const timeNum = match[1];
+  const location = match[2].toLowerCase();
+  let charsStr = match[3];
+
+  // 验证时间
+  const timeKey = 'T' + timeNum;
+  if (!TIMES[timeKey]) {
+    addErrorEntry('无效的时间编号。时间范围：T1-T7');
+    return;
+  }
+
+  // 验证地点
+  if (!LOCATIONS[location]) {
+    addErrorEntry('无效的地点编号。可输入 list 查看全部案卷编号');
+    return;
+  }
+
+  // 人物代号排序
+  let chars = charsStr.split('').map(Number);
+
+  // 每份案卷必有人物在场：拒绝 0 编号
+  if (chars.length === 1 && chars[0] === 0) {
+    addErrorEntry('无效的查询：人物编号不能为 0。案卷中既有时间与地点，就必然有相应人物在场。');
+    return;
+  }
+
+  // 验证人物
+  for (const c of chars) {
+    if (c < 1 || c > 7 || !CHARACTERS[String(c)]) {
+      addErrorEntry('无效的人物编号。人物范围：1-7');
+      return;
+    }
+  }
+  // 去重并排序
+  chars = [...new Set(chars)].sort((a, b) => a - b);
+
+  const sortedCharsStr = chars.join('');
+
+  // 构建查询键
+  const queryKey = `${timeKey}-${location}-${sortedCharsStr}`;
+
+  // Demo 演示版：被封存的案卷一律拦截，提示稍后再来
+  if (isDemoHiddenKey(queryKey)) {
+    addDemoHiddenEntry(timeKey, location, chars);
+    return;
+  }
+
+  // 天机崖锁定检查
+  if (location === 'tjy' && !gameState.tjyUnlocked) {
+    addLockedEntry(timeKey, location);
+    return;
+  }
+
+  // 记录查询
+  gameState.queryCount++;
+  gameState.inputHistory.push(trimmed);
+  gameState.inputHistoryIndex = gameState.inputHistory.length;
+
+  // 添加到查询日志
+  addQueryLog(trimmed);
+
+  // 更新进度
+  updateProgress();
+
+  // 检查碎片
+  let fragmentFound = checkFragment(timeKey, location, chars);
+
+  // 查找剧情
+  let story = STORIES[queryKey];
+  let foundRealStory = !!story;
+
+  // 特殊处理：T3-tjy-13467（天机崖解锁后的回溯查询）
+  if (timeKey === 'T3' && location === 'tjy' && sortedCharsStr === '13467' && gameState.tjyUnlocked) {
+    story = STORIES['T3-tjy-14367']; // 使用预设的特殊剧情
+    queryKey = 'T3-tjy-14367'; // 以实际案卷键记录已阅，避免列表中重复提示待查阅
+    foundRealStory = true;
+  }
+
+  // 特殊处理：T5-xsg-3 (▂▋尸体) 和 T5-xsg-7 (▘▂▮捡碎玉)
+  // T5-xsg-3 -> 直接命中
+  // T5-xsg-7 -> 直接命中并获取碎片三
+
+  // 0人查询（空地点）已取消：案卷必有在场人物，0 编号在解析阶段即被拒绝
+
+  if (!story) {
+    // 生成默认回复（不透露任何时间地点人物的具体含义）
+    story = {
+      _missing: true,
+      title: `${timeKey}-${location.toUpperCase()}-${sortedCharsStr}`,
+      text: `<span class="narrator">该编号组合未能检索到对应案卷。试着查阅其他编号，或先从已解锁的案卷中寻找线索。</span>`
+    };
+  }
+
+  addStoryEntry(timeKey, location, chars, story, fragmentFound);
+
+  // 解锁对应地点与人物（仅当命中真实案卷）
+  if (foundRealStory) {
+    gameState.files[queryKey] = true;
+    unlockEntry(location, chars);
+    updateProgress();
+  }
+
+  // 自动存档
+  saveGame();
+  // 检查是否有新消息
+  checkInbox();
+
+  // 检查天机崖解锁
+  if (!gameState.tjyUnlocked) {
+    checkTjyUnlock();
+  }
+}
+
+function checkFragment(timeKey, location, chars) {
+  const sorted = [...new Set(chars)].sort((a, b) => a - b);
+
+  // 碎片一：T3-xyz-3
+  if (timeKey === 'T3' && location === 'xyz' && sorted.length === 1 && sorted[0] === 3) {
+    if (!gameState.fragments[0]) {
+      gameState.fragments[0] = true;
+      return 1;
+    }
+  }
+
+  // 碎片二：T4-ymj-43 (3和4)
+  if (timeKey === 'T4' && location === 'ymj' && sorted.length === 2 && sorted[0] === 3 && sorted[1] === 4) {
+    if (!gameState.fragments[1]) {
+      gameState.fragments[1] = true;
+      return 2;
+    }
+  }
+
+  // 碎片三：T5-xsg-7
+  if (timeKey === 'T5' && location === 'xsg' && sorted.length === 1 && sorted[0] === 7) {
+    if (!gameState.fragments[2]) {
+      gameState.fragments[2] = true;
+      return 3;
+    }
+  }
+
+  return 0;
+}
+
+function checkTjyUnlock() {
+  if (gameState.fragments[0] && gameState.fragments[1] && gameState.fragments[2]) {
+    gameState.tjyUnlocked = true;
+    gameState.unlockedLocations.tjy = true;
+
+    // 更新UI
+    renderLocations();
+
+    const tjyStatus = document.getElementById('tjyStatus');
+    tjyStatus.className = 'tjy-status unlocked';
+    tjyStatus.textContent = '── 天机崖 · 已解锁 ──';
+
+    // 添加解锁通知到剧情区
+    const area = document.getElementById('storyArea');
+    const entry = document.createElement('div');
+    entry.className = 'story-entry';
+    entry.style.borderLeftColor = 'var(--cyan)';
+    entry.innerHTML = `
+      <div class="unlock-alert">
+        ✦ 你拼合了所有线索——留影石中的崖壁影像、天机玉牌上的刻字、碎玉上的"崖"字——<br>
+        三枚碎片汇聚为一幅完整的地形图。<br><br>
+        <span style="font-size:19px;letter-spacing:4px;">天 机 崖</span><br>
+        <span style="font-size:13px;color:var(--text-dim);">地点已解锁。输入 list 可查看属于它的案卷编号。</span>
+      </div>
+    `;
+    area.appendChild(entry);
+    area.scrollTop = area.scrollHeight;
+    saveGame();
+    checkInbox();
+  }
+}
+
+// 解锁对应地点与人物
+function unlockEntry(location, chars) {
+  if (location) gameState.unlockedLocations[location] = true;
+  chars.forEach(c => {
+    const key = String(c);
+    if (CHARACTERS[key]) gameState.unlockedCharacters[key] = true;
+  });
+  renderLocations();
+  renderCharacters();
+}
+
+// ============================================================
+//  UI渲染
+// ============================================================
+// 案卷正文渲染规则：
+//   - 人物：一律以代号【n】指代；若玩家用 name 指令设定过名字，则显示该名字
+//   - 地点：不作字母代号，以金色高亮标注为重点
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function maskUnlocked(text) {
+  if (!text) return text;
+  let result = String(text);
+  // 隐藏地点未解锁前，涉及天机崖的叙述一律打码为红色提示
+  if (!gameState.tjyUnlocked) {
+    result = result.split('天机崖').join('<span class="hidden-loc">该地点已被隐藏</span>');
+  }
+  Object.entries(LOCATIONS).forEach(([code, name]) => {
+    result = result.split(name).join('<span class="story-loc">' + name + '</span>');
+  });
+  Object.entries(CHARACTERS).forEach(([num, char]) => {
+    const display = gameState.names[num] ? escapeHtml(gameState.names[num]) : '【' + num + '】';
+    result = result.split(char.name).join(display);
+  });
+  return result;
+}
+
+// 系统消息条目
+function addSystemEntry(message, rawHtml) {
+  const area = document.getElementById('storyArea');
+  const entry = document.createElement('div');
+  entry.className = 'story-entry system-entry';
+  entry.innerHTML = rawHtml
+    ? `<div class="entry-body">${message}</div>`
+    : `<div class="entry-header">📋 系统</div><div class="entry-body">${message}</div>`;
+  area.appendChild(entry);
+  area.scrollTop = area.scrollHeight;
+}
+
+// list：文件列表（固定三条起始案卷 + 已解锁案卷一览，不提示未解锁编号）
+function showFileList() {
+  const keys = visibleStoryKeys();
+  const unlockedCount = keys.filter(k => gameState.files[k]).length;
+  // 固定的起始案卷（T1 批次前三卷）
+  const fixedKeys = keys.filter(k => k.startsWith('T1-')).slice(0, 3);
+  // 玩家已解锁的案卷（起始三条已在上面展示，此处去重）
+  const unlocked = keys.filter(k => gameState.files[k] && fixedKeys.indexOf(k) === -1);
+  const fixedRows = fixedKeys.map(k =>
+    `<div style="padding:2px 0;">
+      <code style="color:var(--cyan)">${k.toUpperCase()}</code>
+      <span style="font-size:12px;color:var(--text-dim)">起始案卷</span>
+    </div>`
+  ).join('');
+  const unlockedRows = unlocked.length === 0
+    ? '<div style="padding:4px 0;color:var(--text-dim);font-size:13px;">尚未查阅其他案卷。</div>'
+    : unlocked.map(k =>
+        `<div style="padding:2px 0;">
+          <code style="color:var(--primary)">${k.toUpperCase()}</code>
+          <span style="font-size:12px;color:var(--text-dim)">已查阅</span>
+        </div>`
+      ).join('');
+  addSystemEntry(`📂 文件列表（已解锁 <span style="color:var(--primary)">${unlockedCount}</span> / 共 ${keys.length}）<br><span style="color:var(--text-dim)">起始案卷：</span><br>${fixedRows}<br><span style="color:var(--text-dim)">已查阅案卷：</span><br>${unlockedRows}<br><span style="font-size:12px;color:var(--text-dim);">※ 其余编号需自行推演，可从已阅案卷的编号中摸索规律。</span>`, true);
+}
+
+// inbox：消息列表
+function showInbox() {
+  const delivered = gameState.inboxDelivered;
+  if (delivered.length === 0) {
+    addSystemEntry('📥 消息列表（0）暂无消息。');
+    return;
+  }
+  const rows = INBOX.filter(m => delivered.includes(m.id)).map(m =>
+    `<div style="padding:5px 0;border-bottom:1px dashed var(--border);">
+       <span style="color:var(--cyan)">[${m.from}]</span> ${m.text}
+     </div>`
+  ).join('');
+  addSystemEntry(`📥 消息列表（${delivered.length}）${rows}`, true);
+}
+
+// 检查并推送到达阶段的消息
+function checkInbox() {
+  INBOX.forEach(m => {
+    if (gameState.inboxDelivered.includes(m.id)) return;
+    if (m.stage(gameState)) {
+      gameState.inboxDelivered.push(m.id);
+      addSystemEntry(`📥 新消息 · [${m.from}] ${m.text}`);
+      saveGame();
+    }
+  });
+}
+
+function addStoryEntry(timeKey, location, chars, story, fragment) {
+  const area = document.getElementById('storyArea');
+  const entry = document.createElement('div');
+  entry.className = 'story-entry';
+
+  const charNames = chars.length === 0 ? '空' : chars.map(c => CHARACTERS[String(c)].name).join('、');
+
+  const titleText = story.title || `${TIMES[timeKey]} · ${LOCATIONS[location]} · ${charNames}`;
+  let headerHTML = `
+    <div class="entry-header">
+      <span>📜 ${maskUnlocked(titleText)}</span>
+      <span class="timestamp">[${timeKey.toUpperCase()}-${location.toUpperCase()}-${chars.join('')}]</span>
+    </div>
+  `;
+
+  // Demo 演示版：使用净化版正文（demoText），完整版剧透内容不对外展示
+  const bodySrc = (DEMO_MODE && story.demoText) ? story.demoText : story.text;
+
+  let bodyHTML = `<div class="entry-body">${maskUnlocked(bodySrc)}</div>`;
+
+  // 案卷提及物品提示
+  let itemHTML = '';
+  const mentioned = Object.entries(ITEMS).filter(([code, it]) =>
+    bodySrc && bodySrc.indexOf(it.name) !== -1
+  );
+  if (mentioned.length > 0) {
+    const codes = mentioned.map(([code, it]) => `<code>${code.toUpperCase()}</code>`).join(' ');
+    itemHTML = `<div class="item-hint">🔍 本案卷提及物品：${codes}（输入编号查看解读）</div>`;
+  }
+
+  let fragmentHTML = '';
+  if (fragment > 0) {
+    const fragTexts = {
+      1: '碎片一获得：留影石中浮现崖壁影像——五人站在天机崖前的画面。',
+      2: '碎片二获得：玉牌上刻有"天机"二字。▂▄一直在暗中调查天机崖。',
+      3: '碎片三获得：碎玉上刻有"崖"字。三枚碎片——留影石、天机玉牌、碎玉——指向同一地点。'
+    };
+    fragmentHTML = `<div class="fragment-alert">✦ ${maskUnlocked(fragTexts[fragment])} [碎片 ${gameState.fragments.filter(Boolean).length}/3]</div>`;
+  }
+
+  if (story.isFinal) {
+    entry.style.borderLeftColor = 'var(--gold)';
+    entry.style.background = 'rgba(255,215,0,0.03)';
+  }
+
+  // 场景配图（案卷解锁展示时渲染；audio 预留；未检索到的案卷不配图）
+  const mediaImg = story._missing ? null : getSceneMedia(location, story.text);
+  let mediaHTML = '';
+  if (mediaImg) {
+    mediaHTML = `<div class="story-img"><img src="${mediaImg}" alt="场景影像" loading="lazy"></div>`;
+  }
+
+  entry.innerHTML = headerHTML + mediaHTML + bodyHTML + itemHTML + fragmentHTML;
+  area.appendChild(entry);
+  area.scrollTop = area.scrollHeight;
+}
+
+function addLockedEntry(timeKey, location) {
+  const area = document.getElementById('storyArea');
+  const entry = document.createElement('div');
+  entry.className = 'story-entry locked-entry';
+  entry.innerHTML = `
+    <div class="entry-header">
+      <span>🔒 未解锁地点</span>
+      <span class="timestamp">[${timeKey.toUpperCase()}-${location.toUpperCase()}]</span>
+    </div>
+    <div class="entry-body">
+      <span class="narrator">该地点尚未解锁。</span>
+      <p style="margin-top:8px;color:var(--text-dim);font-size:14px;">提示：该地点隐藏于重重迷雾之中，需要更多线索方能显现。</p>
+    </div>
+  `;
+  area.appendChild(entry);
+  area.scrollTop = area.scrollHeight;
+}
+
+// Demo 演示版：被封存案卷的提示条目
+function addDemoHiddenEntry(timeKey, location, chars) {
+  const area = document.getElementById('storyArea');
+  const entry = document.createElement('div');
+  entry.className = 'story-entry locked-entry';
+  entry.innerHTML = `
+    <div class="entry-header">
+      <span>🔒 案卷封存</span>
+      <span class="timestamp">[${timeKey.toUpperCase()}-${location.toUpperCase()}-${chars.join('')}]</span>
+    </div>
+    <div class="entry-body">
+      <span class="narrator" style="color:var(--red);">该案卷已被隐藏，请过段时日再来查阅。</span>
+    </div>
+  `;
+  area.appendChild(entry);
+  area.scrollTop = area.scrollHeight;
+}
+
+function addErrorEntry(message) {
+  const area = document.getElementById('storyArea');
+  const entry = document.createElement('div');
+  entry.className = 'story-entry';
+  entry.style.borderLeftColor = 'var(--red)';
+  entry.innerHTML = `
+    <div class="entry-header" style="color:var(--red)">⚠ 查询错误</div>
+    <div class="entry-body" style="color:var(--red)">${message}</div>
+  `;
+  area.appendChild(entry);
+  area.scrollTop = area.scrollHeight;
+}
+
+function addStatusEntry() {
+  const area = document.getElementById('storyArea');
+  const entry = document.createElement('div');
+  entry.className = 'story-entry';
+  entry.style.borderLeftColor = 'var(--cyan)';
+
+  const frags = gameState.fragments.map((f, i) => f ? '✓' : '✗').join(' ');
+
+  entry.innerHTML = `
+    <div class="entry-header" style="color:var(--cyan)">📊 当前调查状态</div>
+    <div class="entry-body">
+      <p>已查阅卷宗：<span style="color:var(--primary)">${gameState.queryCount}</span> 份</p>
+      <p>碎片收集：<span style="color:var(--fragment)">${gameState.fragments.filter(Boolean).length} / 3</span> [${frags}]</p>
+      <p>天机崖：<span style="color:${gameState.tjyUnlocked ? 'var(--cyan)' : 'var(--red)'}">${gameState.tjyUnlocked ? '已解锁' : '未解锁'}</span></p>
+    </div>
+  `;
+  area.appendChild(entry);
+  area.scrollTop = area.scrollHeight;
+}
+
+function addQueryLog(query) {
+  const log = document.getElementById('queryLog');
+  const item = document.createElement('div');
+  item.className = 'query-log-item';
+  item.textContent = query;
+  item.onclick = () => {
+    document.getElementById('queryInput').value = query;
+    document.getElementById('queryInput').focus();
+  };
+  log.insertBefore(item, log.firstChild);
+}
+
+function updateProgress() {
+  document.getElementById('queryCount').textContent = gameState.queryCount;
+  const fragCount = gameState.fragments.filter(Boolean).length;
+  document.getElementById('fragmentCount').textContent = fragCount + ' / 3';
+
+  // 已解锁案卷计数
+  const totalFiles = visibleStoryKeys().length;
+  document.getElementById('fileCount').textContent = Object.keys(gameState.files).filter(k => !isDemoHiddenKey(k)).length + ' / ' + totalFiles;
+
+  // 更新碎片指示（未收集前不显示碎片名称）
+  const fragNames = ['碎片一 · 留影石', '碎片二 · 天机玉牌', '碎片三 · 碎玉刻痕'];
+  for (let i = 0; i < 3; i++) {
+    const dot = document.getElementById(`frag${i + 1}dot`);
+    const text = document.getElementById(`frag${i + 1}text`);
+    text.textContent = gameState.fragments[i] ? fragNames[i] : '？？？';
+    if (gameState.fragments[i]) {
+      dot.classList.add('collected');
+      text.classList.add('collected');
+    }
+  }
+
+  // 刷新物品线索面板
+  renderItems();
+}
+
+// ============================================================
+//  事件绑定
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  init();
+
+  // 防止查看源代码：未开启开发者模式（指令"开发"）时，禁用右键与查看源码相关快捷键
+  document.addEventListener('contextmenu', (e) => {
+    if (!gameState.isDev) e.preventDefault();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (gameState.isDev) return;
+    const k = e.key;
+    if (k === 'F12' || k === 'Shift+F10') { e.preventDefault(); return; }
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I', 'J', 'C'].includes(k.toUpperCase())) {
+      e.preventDefault();
+      return;
+    }
+    if ((e.ctrlKey || e.metaKey) && k.toUpperCase() === 'U') { e.preventDefault(); return; }
+    if ((e.ctrlKey || e.metaKey) && k.toUpperCase() === 'S') { e.preventDefault(); return; }
+  });
+
+  // 任意位置按回车：聚焦指令输入框（焦点已在输入框/弹窗输入框时不干扰）
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    const t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
+    const help = document.getElementById('helpModal');
+    if (help && help.classList.contains('active')) return;
+    const q = document.getElementById('queryInput');
+    if (q) q.focus();
+  });
+
+  const input = document.getElementById('queryInput');
+  const btn = document.getElementById('submitBtn');
+
+  // 提交
+  function submit() {
+    const val = input.value.trim();
+    if (!val) return;
+    processQuery(val);
+    input.value = '';
+    input.focus();
+  }
+
+  btn.addEventListener('click', submit);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      submit();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (gameState.inputHistory.length > 0) {
+        if (gameState.inputHistoryIndex > 0) gameState.inputHistoryIndex--;
+        input.value = gameState.inputHistory[gameState.inputHistoryIndex] || '';
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (gameState.inputHistoryIndex < gameState.inputHistory.length - 1) {
+        gameState.inputHistoryIndex++;
+        input.value = gameState.inputHistory[gameState.inputHistoryIndex] || '';
+      } else {
+        gameState.inputHistoryIndex = gameState.inputHistory.length;
+        input.value = '';
+      }
+    }
+  });
+
+  // 点击弹窗外关闭
+  document.getElementById('helpModal').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('helpModal')) {
+      document.getElementById('helpModal').classList.remove('active');
+    }
+  });
+
+  // 登录
+  document.getElementById('usernameBtn').addEventListener('click', doLogin);
+  document.getElementById('usernameInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') doLogin();
+  });
+});
+</script>
+</body>
+</html>
