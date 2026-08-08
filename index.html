@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -12,7 +12,6 @@
         }
 
         :root {
-            /* 亮色主题变量 */
             --bg-primary: linear-gradient(135deg, #e3f2fd, #bbdefb, #90caf9, #64b5f6);
             --bg-secondary: rgba(255, 255, 255, 0.85);
             --bg-card: rgba(255, 255, 255, 0.85);
@@ -30,7 +29,6 @@
         }
 
         body.dark-mode {
-            /* 暗色主题变量 */
             --bg-primary: linear-gradient(135deg, #0a1929, #0d1b2a, #1b263b, #415a77);
             --bg-secondary: rgba(13, 27, 42, 0.85);
             --bg-card: rgba(20, 30, 48, 0.85);
@@ -61,7 +59,6 @@
             margin: 0 auto;
         }
 
-        /* Logo 样式 - 放在标题左侧 */
         .header-content {
             display: flex;
             align-items: center;
@@ -90,7 +87,6 @@
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
         }
 
-        /* 模式切换按钮 */
         .mode-toggle-container {
             position: fixed;
             top: 20px;
@@ -164,7 +160,6 @@
             overflow: hidden;
         }
 
-        /* 游戏背景图片功能 */
         .nav-card.with-bg {
             position: relative;
             isolation: isolate;
@@ -253,10 +248,10 @@
             margin: 5px;
         }
 
-            .nav-link:hover {
-                background: var(--button-hover-bg);
-                transform: scale(1.05);
-            }
+        .nav-link:hover {
+            background: var(--button-hover-bg);
+            transform: scale(1.05);
+        }
 
         .features {
             background: var(--bg-secondary);
@@ -267,12 +262,12 @@
             box-shadow: 0 4px 15px var(--shadow-color);
         }
 
-            .features h2 {
-                text-align: center;
-                font-size: 2.2rem;
-                margin-bottom: 30px;
-                color: var(--text-title);
-            }
+        .features h2 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            color: var(--text-title);
+        }
 
         .features-grid {
             display: grid;
@@ -322,21 +317,20 @@
             box-shadow: 0 4px 15px var(--shadow-color);
         }
 
-            .welcome-section h2 {
-                font-size: 2rem;
-                margin-bottom: 20px;
-                color: var(--text-title);
-            }
+        .welcome-section h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--text-title);
+        }
 
-            .welcome-section p {
-                font-size: 1.1rem;
-                line-height: 1.7;
-                max-width: 800px;
-                margin: 0 auto;
-                color: var(--text-secondary);
-            }
+        .welcome-section p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            max-width: 800px;
+            margin: 0 auto;
+            color: var(--text-secondary);
+        }
 
-        /* 新增页脚样式 */
         .footer-container {
             background: var(--bg-secondary);
             backdrop-filter: blur(10px);
@@ -372,11 +366,11 @@
             list-style: none;
         }
 
-            .contact-info li {
-                margin-bottom: 12px;
-                display: flex;
-                align-items: center;
-            }
+        .contact-info li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
 
         .contact-icon {
             font-size: 1.2rem;
@@ -392,10 +386,10 @@
             transition: color 0.3s ease;
         }
 
-            .contact-link:hover {
-                color: var(--text-title);
-                text-decoration: underline;
-            }
+        .contact-link:hover {
+            color: var(--text-title);
+            text-decoration: underline;
+        }
 
         .qrcode-container {
             display: flex;
@@ -431,11 +425,11 @@
             background: white;
         }
 
-            .qrcode img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
+        .qrcode img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
         .qrcode-label {
             font-size: 0.9rem;
@@ -452,61 +446,73 @@
         }
 
         .footer-links {
-    margin-top: 16px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    justify-content: center;
-    align-items: center;
-}
+            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            align-items: center;
+        }
 
-.footer-btn {
-    display: inline-block;
-    padding: 8px 18px;
-    border-radius: 30px;
-    font-size: 14px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-    border: 1px solid transparent;
-}
+        .footer-btn {
+            display: inline-block;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            border: 1px solid transparent;
+        }
 
-.footer-btn-xhs {
-    background-color: #ff5e6c;
-    color: white;
-    border-color: #ff3b4a;
-}
+        .footer-btn-xhs {
+            background-color: #ff5e6c;
+            color: white;
+            border-color: #ff3b4a;
+        }
 
-.footer-btn-xhs:hover {
-    background-color: #ff3b4a;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(255,94,108,0.25);
-}
+        .footer-btn-xhs:hover {
+            background-color: #ff3b4a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255,94,108,0.25);
+        }
 
-.footer-btn-taptap {
-    background-color: #1e2e3d;
-    color: white;
-    border-color: #0f1a24;
-}
+        .footer-btn-taptap {
+            background-color: #1e2e3d;
+            color: white;
+            border-color: #0f1a24;
+        }
 
-.footer-btn-taptap:hover {
-    background-color: #0f1a24;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(30,46,61,0.25);
-}
+        .footer-btn-taptap:hover {
+            background-color: #0f1a24;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(30,46,61,0.25);
+        }
 
-.footer-btn-group {
-    background-color: #2b6c4e;
-    color: white;
-    border-color: #1e4f39;
-}
+        .footer-btn-group {
+            background-color: #2b6c4e;
+            color: white;
+            border-color: #1e4f39;
+        }
 
-.footer-btn-group:hover {
-    background-color: #1e4f39;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(43,108,78,0.25);
-}
+        .footer-btn-group:hover {
+            background-color: #1e4f39;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(43,108,78,0.25);
+        }
+
+        .footer-btn-support {
+            background-color: #6c5ce7;
+            color: white;
+            border-color: #5a4bd1;
+        }
+
+        .footer-btn-support:hover {
+            background-color: #5a4bd1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(108,92,231,0.25);
+        }
 
         .footer-bottom {
             text-align: center;
@@ -578,7 +584,6 @@
             }
         }
 
-        /* ----- 彩蛋专属样式 ----- */
         .egg-tip {
             display: none;
         }
@@ -595,7 +600,6 @@
             color: #ffffff;
         }
 
-        /* ----- 新增：返回顶部按钮样式 ----- */
         #scrollTopBtn {
             display: none;
             position: fixed;
@@ -635,56 +639,46 @@
             }
         }
     </style>
-     <link rel="icon" type="image/png" href="./gallery/AQIgame.png">
+    <link rel="icon" type="image/png" href="./gallery/AQIgame.png">
 
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-GMCT2H7LVB"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-GMCT2H7LVB');
-</script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GMCT2H7LVB"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-GMCT2H7LVB');
+    </script>
 
     <script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?e09174db384708313cceee3f542d5fae";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?e09174db384708313cceee3f542d5fae";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-V0TVNPQNEG"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-V0TVNPQNEG');
-</script>
-    
-    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V0TVNPQNEG"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-V0TVNPQNEG');
+    </script>
 </head>
 <body>
-    <!-- 新增：返回顶部按钮 -->
     <button id="scrollTopBtn" aria-label="返回顶部">
         <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
     </button>
 
-    <!-- 暗夜模式切换按钮 -->
     <div class="mode-toggle-container">
         <button class="mode-toggle" id="modeToggle" aria-label="切换暗夜模式"></button>
     </div>
 
     <div class="container">
         <header>
-            <!-- Logo和标题放在同一行 -->
             <div class="header-content">
-                <!-- Logo放在标题左侧 -->
                 <a href="#" class="logo-link" id="logoLink">
                     <img src="./gallery/AQIgame.png" alt="AQI Game Logo">
                 </a>
@@ -694,19 +688,11 @@ var _hmt = _hmt || [];
                     <p class="subtitle">网页游戏与实用工具平台</p>
                 </div>
             </div>
-            
         </header>
 
         <div class="welcome-section">
             <h2>欢迎来到AQI Game平台</h2>
              <p>这里是一个集网页解谜游戏与实用工具于一体的数字空间。无论你是喜欢网页解谜游戏，还是喜欢摸鱼放松的休闲小游戏，或是需要便捷的网页工具，这里都能满足你的需求~关注不亏，常看常新~</p>
-            <!-- <p>
-                作者阿柒的个人介绍：
-            </p>
-            <p>
-                一个为了摸鱼什么事情都能做的出来的people！（除了高数）
-                梦想是能做出一款火爆的游戏0v0！
-            </p> -->
         </div>
 
         <div class="nav-container">
@@ -740,7 +726,6 @@ var _hmt = _hmt || [];
             </div>
         </div>
         
-
         <div class="nav-container">
             <div class="nav-card with-bg" style="--card-bg-image: url('./xjthj/bgs0.jpg')">
                 <span class="nav-icon">🗝️</span>
@@ -755,21 +740,14 @@ var _hmt = _hmt || [];
                 <p class="nav-description">住在同一个小区里的花大姐年轻时似乎经历了不少事......</p>
                 <a href="https://sylvie-seven-cq.top/jhjm/begin.html" class="nav-link">开始解谜</a>
             </div>
-
-
-           
         </div>
 
         <div class="nav-container">
-           
-            
-
             <div class="nav-card">
                 <span class="nav-icon">❤️</span>
                 <h3 class="nav-title">情侣百件小事打卡清单</h3>
                 <p class="nav-description">完成后可生成纪念图保存哦！没有奖品ww！纯打卡！</p>
                 <a href="https://sylvie-seven-cq.top/web/love.html" class="nav-link">开始打卡</a>
-                 
             </div>
 
             <div class="nav-card">
@@ -777,10 +755,8 @@ var _hmt = _hmt || [];
                 <h3 class="nav-title">小说阅读器</h3>
                 <p class="nav-description">方便快捷隐蔽的txt小说阅读工具，<br>支持上传背景、单行阅读、双击消失的个性化设置！</p>
                 <a href="https://sylvie-seven-cq.top/reader/1.0" class="nav-link">开始阅读</a>
-                 <a href="https://sylvie-seven-cq.top/reader/2.0" class="nav-link">使用2.0版本</a>
+                <a href="https://sylvie-seven-cq.top/reader/2.0" class="nav-link">使用2.0版本</a>
             </div>
-
-             
         </div>
 
         <div class="features">
@@ -800,8 +776,7 @@ var _hmt = _hmt || [];
             </div>
         </div>
 
-        <!-- 新增页脚部分 -->
-        <!-- <div class="footer-container">
+        <div class="footer-container">
             <div class="footer-content">
                 <div class="footer-section">
                     <h3 class="footer-title">关注作者</h3>
@@ -820,72 +795,47 @@ var _hmt = _hmt || [];
                                 <div class="qrcode-label">小红薯</div>
                             </div>
                         </div>
-                        <p class="qrcode-text">扫描二维码关注公众号和小红书<br>获取最新游戏资讯</p>
-     <p class="qrcode-text">
-        或者关注：
-        <a href="https://www.taptap.cn/user/39581437" target="_blank" rel="noopener noreferrer">AQI阿七的taptap个人主页</a>
-    </p>
-                    </div>
-                </div>
-            </div> -->
-            <div class="footer-container">
-    <div class="footer-content">
-        <div class="footer-section">
-            <h3 class="footer-title">关注作者</h3>
-            <div class="qrcode-container">
-                <!-- 二维码区域保持完全不变 -->
-                <div class="qrcode-row">
-                    <div class="qrcode-item">
-                        <div class="qrcode">
-                            <img src="./gallery/vx.jpg" alt="微信公众号二维码">
-                        </div>
-                        <div class="qrcode-label">微信公众号</div>
-                    </div>
-                    <div class="qrcode-item">
-                        <div class="qrcode">
-                            <img src="./gallery/xhs.jpg" alt="小红薯二维码">
-                        </div>
-                        <div class="qrcode-label">小红薯</div>
-                    </div>
-                </div>
-               
                 
-                <!-- 链接区域改造：按钮样式 + 新增业主群按钮，二维码图片未改动 -->
-                <div class="footer-links">
-                    <!-- 小红书按钮（新链接+指定锚文本） -->
-                    <a href="https://www.xiaohongshu.com/user/profile/62a9c2e9000000001b0285d6?xsec_token=ABwztV_zmfjJVEQ2L9a0_Hmj9rj02UomqKY2VLNFMlC7Y=&xsec_source=pc_search" 
-                       target="_blank" 
-                       rel="noopener noreferrer" 
-                       class="footer-btn footer-btn-xhs">
-                        @AQI棖柒本柒
-                    </a>
-                    
-                    <!-- TapTap按钮（更新锚文本） -->
-                    <a href="https://www.taptap.cn/user/39581437" 
-                       target="_blank" 
-                       rel="noopener noreferrer" 
-                       class="footer-btn footer-btn-taptap">
-                        AQI棖柒
-                    </a>
-                    
-                    <!-- 新增：业主群按钮 -->
-                    <a href="https://mp.weixin.qq.com/s/F_861rNiqxw9E1TqpQAIIQ" 
-                       target="_blank" 
-                       rel="noopener noreferrer" 
-                       class="footer-btn footer-btn-group">
-                        栖乔华苑•静乔公寓业主群
-                    </a>
-                </div>
+                        <div class="footer-links">
+                            <a href="https://www.xiaohongshu.com/user/profile/62a9c2e9000000001b0285d6?xsec_token=ABwztV_zmfjJVEQ2L9a0_Hmj9rj02UomqKY2VLNFMlC7Y=&xsec_source=pc_search" 
+                               target="_blank" 
+                               rel="noopener noreferrer" 
+                               class="footer-btn footer-btn-xhs">
+                                @AQI棖柒本柒
+                            </a>
+                            
+                            <a href="https://www.taptap.cn/user/39581437" 
+                               target="_blank" 
+                               rel="noopener noreferrer" 
+                               class="footer-btn footer-btn-taptap">
+                                AQI棖柒
+                            </a>
+                            
+                            <a href="https://mp.weixin.qq.com/s/F_861rNiqxw9E1TqpQAIIQ" 
+                               target="_blank" 
+                               rel="noopener noreferrer" 
+                               class="footer-btn footer-btn-group">
+                                栖乔华苑•静乔公寓业主群
+                            </a>
+                        </div>
 
-                 <p class="qrcode-text">
-                    <span class="normal-tip">扫描二维码<br>或<br>点击上方按钮<!-- <br>关注公众号和小红书 --><br>获取最新游戏资讯~</span>
-                    <span class="egg-tip">logo * 7</span>
-                 </p>
+                        <p class="qrcode-text">
+                            <span class="normal-tip">扫描二维码<br>或<br>点击上方按钮<br>获取最新游戏资讯~</span>
+                            <span class="egg-tip">logo * 7</span>
+                        </p>
+
+                        <div class="footer-links" style="margin-top: 12px;">
+                            <a href="https://www.ifdian.net/a/AQIgame" 
+                               target="_blank" 
+                               rel="noopener noreferrer" 
+                               class="footer-btn footer-btn-support">
+                                ❤️ 支持作者
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
- 
 
             <div class="footer-bottom">
                 <p>© 2025 AQI Game Platform - 网页游戏与工具平台 | 探索数字世界的无限可能</p>
@@ -895,21 +845,16 @@ var _hmt = _hmt || [];
     </div>
 
     <script>
-        // 暗夜模式切换功能
         const modeToggle = document.getElementById('modeToggle');
         const body = document.body;
         
-        // 检查本地存储中是否有模式偏好
         const savedMode = localStorage.getItem('themeMode');
         if (savedMode === 'dark') {
             body.classList.add('dark-mode');
         }
         
-        // 切换模式
         modeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
-            
-            // 保存用户偏好到本地存储
             if (body.classList.contains('dark-mode')) {
                 localStorage.setItem('themeMode', 'dark');
             } else {
@@ -917,52 +862,35 @@ var _hmt = _hmt || [];
             }
         });
         
-        // Logo点击返回顶部及新彩蛋逻辑
         const logoLink = document.getElementById('logoLink');
         let logoClickCount = 0;
         let logoClickTimer = null;
 
         logoLink.addEventListener('click', (e) => {
             e.preventDefault();
-            
-            // 彩蛋逻辑：记录点击次数
             logoClickCount++;
             if (logoClickCount === 7) {
                 window.location.href = './web/yanzheng.html';
-                logoClickCount = 0; // 跳转后重置计数
+                logoClickCount = 0;
             }
-            
-            // 3秒内未连续点击满7次则自动重置计数，防止意外触发
             clearTimeout(logoClickTimer);
             logoClickTimer = setTimeout(() => {
                 logoClickCount = 0;
             }, 3000);
-
-            // 保持原有的返回顶部功能
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth'
             });
         });
         
-        // 为带有背景的卡片设置背景图片
         document.addEventListener('DOMContentLoaded', function() {
             const cardsWithBg = document.querySelectorAll('.nav-card.with-bg');
-            
             cardsWithBg.forEach(card => {
-                // 获取通过CSS变量设置的背景图片URL
                 const style = getComputedStyle(card);
                 const bgImage = style.getPropertyValue('--card-bg-image').trim();
-                
-                // 如果找到了背景图片URL，则应用为伪元素的背景
                 if (bgImage && bgImage !== 'none') {
-                    // 移除url()包装和引号
                     const cleanUrl = bgImage.replace(/^url\(["']?|["']?\)$/g, '');
-                    
-                    // 设置伪元素背景
                     card.style.setProperty('--card-bg-image-value', `url(${cleanUrl})`);
-                    
-                    // 添加CSS规则到伪元素
                     const styleSheet = document.createElement('style');
                     styleSheet.textContent = `
                         .nav-card.with-bg[style*="${cleanUrl}"]::before {
@@ -974,10 +902,8 @@ var _hmt = _hmt || [];
             });
         });
 
-        // 新增：右下角返回顶部按钮逻辑
         const scrollTopBtn = document.getElementById('scrollTopBtn');
         window.addEventListener('scroll', () => {
-            // 当页面向下滚动超过 300px 时显示按钮
             if (window.scrollY > 300) {
                 scrollTopBtn.style.display = 'flex';
             } else {
@@ -992,6 +918,6 @@ var _hmt = _hmt || [];
             });
         });
     </script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v67327c56f0bb4ef8b305cae61679db8f1769101564043" integrity="sha512-rdcWY47ByXd76cbCFzznIcEaCN71jqkWBBqlwhF1SY7KubdLKZiEGeP7AyieKZlGP9hbY/MhGrwXzJC/HulNyg==" data-cf-beacon='{"version":"2024.11.0","token":"6ad5be551a4043168991b3957da0f003","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v67327c56f0bb4ef8b305cae61679db8f1769101564043" integrity="sha512-rdcWY47ByXd76cbCFzznIcEaCN71jqkWBBqlwhF1SY7KubdLKZiEGeP7AyieKZlGP9hbY/MhGrwXzJC/HulNyg==" data-cf-beacon='{"version":"2024.11.0","token":"6ad5be551a4043168991b3957da0f003","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":true}}' crossorigin="anonymous"></script>
 </body>
 </html>
