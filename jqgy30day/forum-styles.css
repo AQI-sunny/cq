@@ -83,7 +83,7 @@ body {
   width: 40px;
   height: 40px;
   margin-right: 12px;
-  background: url('https://sylvie-seven-cq.top/gallery/%E5%A5%87%E9%97%BB%E5%BC%82%E4%BA%8B%E9%A6%86%20logo.png') no-repeat center center;
+  background: url('/gallery/%E5%A5%87%E9%97%BB%E5%BC%82%E4%BA%8B%E9%A6%86%20logo.png') no-repeat center center;
   background-size: contain;
   border: 1px solid #5D0000;
   position: relative;

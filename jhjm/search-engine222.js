@@ -17,19 +17,19 @@ class SearchEngine {
                 {
                     "id": "medical_record",
                     "keywords": ["5ZC05bCP5Lir"], // "吴小丫"的正确base64
-                    "targetUrl": "https://sylvie-seven-cq.top/jhjm/丫丫病历.html",
+                    "targetUrl": "/jhjm/丫丫病历.html",
                     "description": "医疗档案页面"
                 },
                 {
                     "id": "company_file",
                     "keywords": ["6ZSm5Y2O57q657uH5Y6C"], // "锦华纺织厂"
-                    "targetUrl": "https://sylvie-seven-cq.top/jhjm/企业档案.html",
+                    "targetUrl": "/jhjm/企业档案.html",
                     "description": "企业信息页面"
                 },
                 {
                     "id": "recruitment",
                     "keywords": ["5rGC5Lqk"], // "锦华招聘"
-                    "targetUrl": "https://sylvie-seven-cq.top/jhjm/招工.html",
+                    "targetUrl": "/jhjm/招工.html",
                     "description": "招聘页面"
                 },
                 {
@@ -38,7 +38,7 @@ class SearchEngine {
                         "5Li05rig", // "临渠"
                         "6JCN5bGx"  // "萍山"
                     ],
-                    "targetUrl": "https://sylvie-seven-cq.top/jhjm/流动人口.html",
+                    "targetUrl": "/jhjm/流动人口.html",
                     "description": "人口管理页面"
                 },
                 {
@@ -47,13 +47,13 @@ class SearchEngine {
                         "57qi5pif5aix5LmQ5Z+O", // "红星娱乐城"
                         "57qi5pif5aix5LmQ" // "红星娱乐"
                     ],
-                    "targetUrl": "https://sylvie-seven-cq.top/jhjm/老虎机.html",
+                    "targetUrl": "/jhjm/老虎机.html",
                     "description": "娱乐设施页面"
                 },
                 {
                     "id": "asset_assessment",
                     "keywords": ["5Zub5Y+35LuT5bqT"], // "四号仓库"
-                    "targetUrl": "https://sylvie-seven-cq.top/jhjm/资产评估.html",
+                    "targetUrl": "/jhjm/资产评估.html",
                     "description": "资产评估页面"
                 }
             ],

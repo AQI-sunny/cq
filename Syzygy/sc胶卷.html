@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/jpeg" href="https://sylvie-seven-cq.top/gallery/search.png">
+    <link rel="icon" type="image/jpeg" href="../gallery/search.png">
     <title>彩色胶卷处理 - 搜索结果</title>
     <style>
         body {
@@ -156,7 +156,7 @@
 </head>
 <body>
     <div class="container">
-        <img src="https://sylvie-seven-cq.top/gallery/search.png" alt="Logo" class="logo">
+        <img src="../gallery/search.png" alt="Logo" class="logo">
         <div class="search-container">
             <div class="suggestion-container">
                 <input type="text" class="search-box" id="searchInput" placeholder="搜索其他关键词..." value="彩色胶卷处理">
@@ -174,7 +174,7 @@
             <h2>猜你想搜</h2>
             <ul id="relatedSearchesList">
                 <!-- 固定显示三个关键词 -->
-                <li><a href="https://sylvie-seven-cq.top/Syzygy/影像馆.html" class="related-search" data-keyword="时光影像馆">时光影像馆</a></li>
+                <li><a href="./影像馆.html" class="related-search" data-keyword="时光影像馆">时光影像馆</a></li>
                 
                  </ul>
         </div>
@@ -191,7 +191,7 @@
                 document.getElementById('loadingIndicator').style.display = 'block';
 
                 // 修正为正确的JSON文件URL（包含.json扩展名）
-                const url = 'https://sylvie-seven-cq.top/Syzygy/meizhaoledejson2.json?v=' + Date.now();
+                const url = './meizhaoledejson2.json?v=' + Date.now();
                 const response = await fetch(url);
 
                 if (!response.ok) {
@@ -368,7 +368,7 @@
                     title: "珍藏每一刻美好————用镜头记录您生命中的珍贵瞬间，让美好回忆永存",
                     source: "在线工具网站",
                     date: "2025-9-7",
-                    url: "https://sylvie-seven-cq.top/Syzygy/影像馆.html"
+                    url: "./影像馆.html"
                 }
             ]
         };

@@ -10,7 +10,7 @@
         // 备用链接数组（按优先级排序）
         backupLinks: [
             './horrorsy.html',
-            'https://sylvie-seven-cq.top/xjthj/horrorsy.html'
+            '/xjthj/horrorsy.html'
         ],
         
         // 按钮样式

@@ -10,7 +10,7 @@
         // 备用链接数组（按优先级排序）
         backupLinks: [
             './tap-sc备用.html',
-            'https://sylvie-seven-cq.top/Syzygy/search.html'
+            '/Syzygy/search.html'
         ],
         
         // 按钮样式

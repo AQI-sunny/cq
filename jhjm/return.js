@@ -10,7 +10,7 @@
         // 备用链接数组（按优先级排序）
         backupLinks: [
             './search1.0.html',
-            'https://sylvie-seven-cq.top/jhjm/search1.0.html'
+            '/jhjm/search1.0.html'
         ],
         
         // 按钮样式

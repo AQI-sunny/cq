@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/jpeg" href="https://sylvie-seven-cq.top/gallery/search.png">
+    <link rel="icon" type="image/jpeg" href="../gallery/search.png">
     <title>超市后台密码提示 - 搜索结果</title>
     <!-- ch-->
     <style>
@@ -130,7 +130,7 @@
 </head>
 <body>
     <div class="container">
-        <img src="https://sylvie-seven-cq.top/gallery/search.png" alt="Logo" class="logo">
+        <img src="../gallery/search.png" alt="Logo" class="logo">
         <div class="search-container">
             <input type="text" class="search-box" id="searchInput" placeholder="搜索其他关键词..." value="超市后台密码提示">
             <button class="search-button" id="searchButton">搜索</button>
@@ -163,7 +163,7 @@
                 document.getElementById('loadingIndicator').style.display = 'block';
 
                 // 修正为正确的JSON文件URL（包含.json扩展名）
-                const url = 'https://sylvie-seven-cq.top/Syzygy/meizhaoledejson2.json?v=' + Date.now();
+                const url = './meizhaoledejson2.json?v=' + Date.now();
                 const response = await fetch(url);
 
                 if (!response.ok) {
@@ -305,7 +305,7 @@
                     title: "暂无搜索结果！",
                     source: "请尝试其他关键词",
                     date: "2025-9-7",
-                    url: "https://sylvie-seven-cq.top/Syzygy/system-responselxq.html"
+                    url: "./system-responselxq.html"
                 }
             ],
             "提示密码": [
@@ -313,7 +313,7 @@
                     title: "暂无搜索结果......",
                     source: "请尝试其他关键词",
                     date: "2025-9-7",
-                    url: "https://sylvie-seven-cq.top/Syzygy/system-responselxq.html"
+                    url: "./system-responselxq.html"
                 }
             ],
             "密码": [
@@ -321,7 +321,7 @@
                     title: "暂无搜索结果......",
                     source: "请尝试其他关键词",
                     date: "2025-9-7",
-                    url: "https://sylvie-seven-cq.top/Syzygy/system-responselxq.html"
+                    url: "./system-responselxq.html"
                 }
             ]
         };

@@ -17,7 +17,7 @@
         containerId: 'xiaou-container',
         orbId: 'xiaou-orb',
         panelId: 'xiaou-panel',
-        homeUrl: 'https://sylvie-seven-cq.top/jinhua/search'
+        homeUrl: '/jinhua/search'
     };
     
     // 存储原始函数引用

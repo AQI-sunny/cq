@@ -4,7 +4,7 @@
 const SearchSystem = {
     // 配置信息
     config: null,
-    configUrl: 'https://sylvie-seven-cq.top/jhjm/sc-data.json',
+    configUrl: '/jhjm/sc-data.json',
     
     // 存储键名
     STORAGE_KEYS: {
@@ -53,8 +53,8 @@ const SearchSystem = {
             this.config = {
                 searchRules: [],
                 generalSearch: {
-                    defaultEngine: "https://sylvie-seven-cq.top/jhjm/search?q=",
-                    fallbackUrl: "https://sylvie-seven-cq.top/jhjm/search"
+                    defaultEngine: "/jhjm/search?q=",
+                    fallbackUrl: "/jhjm/search"
                 },
                 recentPages: []
             };
@@ -364,7 +364,7 @@ window.SearchSystem = SearchSystem;
 // 页面加载时记录访问（参考你的visitedLinks逻辑）
 document.addEventListener('DOMContentLoaded', function() {
     const currentUrl = window.location.href;
-    const mainPageUrl = 'https://sylvie-seven-cq.top/jhjm/search';
+    const mainPageUrl = '/jhjm/search';
     
     // 判断是否为搜索结果页
     const isSearchResultPage = currentUrl.includes('search?q=');
